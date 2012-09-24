@@ -1,0 +1,5 @@
+LIBRARY "beamc"
+
+EXPORTS
+    beamc_read_product
+	beamc_create_product

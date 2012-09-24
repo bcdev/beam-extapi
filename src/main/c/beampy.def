@@ -1,0 +1,4 @@
+LIBRARY "beampy"
+
+EXPORTS
+    PyInit_beampy
