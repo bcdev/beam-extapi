@@ -1,6 +1,9 @@
-LIBRARY "beamc"
+LIBRARY "beam-capi"
 
 EXPORTS
+	beam_is_jvm_created
+	beam_create_jvm
+	beam_destroy_jvm
 	beam_read_product
 	beam_create_product
 	beam_release_object

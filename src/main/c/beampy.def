@@ -1,4 +1,4 @@
-LIBRARY "beampy"
+LIBRARY "beam-pyapi"
 
 EXPORTS
     PyInit_beampy

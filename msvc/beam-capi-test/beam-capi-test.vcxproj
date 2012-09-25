@@ -10,19 +10,22 @@
       <Platform>Win32</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\src\main\c\beamc-test.c" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{D495F9EA-1520-4E29-AD99-9D0B6A3C8FD3}</ProjectGuid>
+    <ProjectGuid>{26FC978C-9B89-4AAF-8E18-87945FC1CF86}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>beampyapi</RootNamespace>
+    <RootNamespace>beamcapitest</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
@@ -39,70 +42,49 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <TargetExt>.pyd</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <TargetExt>.pyd</TargetExt>
+    <TargetName>$(ProjectName)</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;BEAMPYAPI_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(PYTHON_HOME)\include;$(JDK32_HOME)\include;$(JDK32_HOME)\include\win32</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(JDK32_HOME)\include;$(JDK32_HOME)\include\win32;</AdditionalIncludeDirectories>
       <UndefinePreprocessorDefinitions>__cplusplus</UndefinePreprocessorDefinitions>
-      <PrecompiledHeaderFile>
-      </PrecompiledHeaderFile>
-      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(PYTHON_HOME)\libs;$(OutDir)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>python32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <ModuleDefinitionFile>..\..\src\main\c\beampy.def</ModuleDefinitionFile>
+      <AdditionalLibraryDirectories>$(OutDir)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>kernel32.lib;user32.lib;shell32.lib;beam-capi.lib</AdditionalDependencies>
     </Link>
-    <ProjectReference>
-      <UseLibraryDependencyInputs>true</UseLibraryDependencyInputs>
-    </ProjectReference>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;BEAMPYAPI_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(PYTHON_HOME)\include;$(JDK32_HOME)\include;$(JDK32_HOME)\include\win32</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(JDK32_HOME)\include;$(JDK32_HOME)\include\win32;</AdditionalIncludeDirectories>
       <UndefinePreprocessorDefinitions>__cplusplus</UndefinePreprocessorDefinitions>
-      <PrecompiledHeaderFile>
-      </PrecompiledHeaderFile>
     </ClCompile>
     <Link>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>$(PYTHON_HOME)\libs;$(OutDir)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>python32.lib;beam-capi.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <ModuleDefinitionFile>..\..\src\main\c\beampy.def</ModuleDefinitionFile>
+      <AdditionalLibraryDirectories>$(OutDir);$(JDK32_HOME)\lib</AdditionalLibraryDirectories>
+      <AdditionalDependencies>kernel32.lib;user32.lib;shell32.lib;beam-capi.lib</AdditionalDependencies>
     </Link>
-    <ProjectReference>
-      <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
-    </ProjectReference>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClCompile Include="..\..\src\main\c\beampy.c" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\..\src\main\c\beampy.def" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\..\src\main\c\beampy.h" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

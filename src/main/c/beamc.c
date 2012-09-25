@@ -1,55 +1,14 @@
 #include "beamc.h"
 
+#define STRING_CLASS     "java/lang/String"
+#define PRODUCT_IO_CLASS "org/esa/beam/framework/dataio/ProductIO"
+#define PRODUCT_CLASS    "org/esa/beam/framework/datamodel/Product"
+
 static JavaVM* jvm = NULL; 
 static JNIEnv* env = NULL; 
 
-static jboolean is_jvm_created() 
-{
-	return jvm != NULL && env != NULL;
-}
-
-static jint create_jvm() 
-{
-    JavaVMInitArgs vm_args; 
-    JavaVMOption options[4];
-    char* beam_home;
-
-	if (is_jvm_created()) {
-		return 0;
-	}
-
-	/* use BEAM settings */
-	beam_home = getenv("BEAM_HOME");
-    options[0].optionString = "-Djava.compiler=NONE";           /* disable JIT */
-    options[1].optionString = "-Djava.class.path=c:\\myclasses"; /* user classes */
-    options[2].optionString = "-Djava.library.path=c:\\mylibs";  /* set native library path */
-    options[3].optionString = "-verbose:jni";                   /* print JNI-related messages */
-
-    vm_args.version = JNI_VERSION_1_6;
-    vm_args.options = options;
-    vm_args.nOptions = 4;
-    vm_args.ignoreUnrecognized = 0;
-
-	return JNI_CreateJavaVM(&jvm, (void**) &env, &vm_args);
-}
-
-static jint destroy_jvm() 
-{
-	jint res;
-
-    if (!is_jvm_created()) {
-		return 0;
-	}
-	
-	res = (*jvm)->DestroyJavaVM(jvm);
-	if (res == 0) {
-	    jvm = NULL;
-	    env = NULL;
-        return 1;
-	}
-
-	return res;
-}
+#define RETURN_IF_NO_JVM_V() if (jvm == NULL) {return;}
+#define RETURN_IF_NO_JVM(A) if (jvm == NULL) {return (A);}
 
 Product beam_read_product(const char* file_path)
 {
@@ -58,28 +17,34 @@ Product beam_read_product(const char* file_path)
 	jobject product;
 	jstring file_path_s;
 
-	if (!is_jvm_created()) {
+	RETURN_IF_NO_JVM(NULL);
+
+    product_io_class = (*env)->FindClass(env, PRODUCT_IO_CLASS);
+	if (product_io_class == NULL) {
+		return NULL;
+	}
+    method = (*env)->GetStaticMethodID(env, product_io_class, "readProduct", "(L" STRING_CLASS ";)L" PRODUCT_CLASS ";");
+	if (method == NULL) {
 		return NULL;
 	}
 
-    product_io_class = (*env)->FindClass(env, "org.esa.beam.framework.dataio.ProductIO");
-    method = (*env)->GetStaticMethodID(env, product_io_class, "readProduct", "(Ljava/lang/String;)Lorg/esa/beam/framework/datamodel/Product");
-
 	file_path_s = (*env)->NewStringUTF(env, file_path);
     product = (*env)->CallStaticObjectMethod(env, product_io_class, method, file_path_s);
-	(*env)->ReleaseStringUTFChars(env, file_path_s, file_path);
 
-	return (*env)->NewGlobalRef(env, product);
+	return product != NULL ? (*env)->NewGlobalRef(env, product) : NULL;
 }
 
 Product beam_create_product(const char* op_name, const char** parameters, Product source_product, ...)
 {
+    RETURN_IF_NO_JVM(NULL);
 	/* TODO - implement */
 	return NULL;
 }
 
 void beam_release_object(jobject* object)
 {
+	RETURN_IF_NO_JVM_V();
+
 	if (*object != NULL) {
 		(*env)->DeleteGlobalRef(env, *object);
 		*object = NULL;
@@ -95,13 +60,21 @@ char* product_get_name(Product product)
 	char* product_name;
 	const char* chars;
 
-	if (!is_jvm_created()) {
+	RETURN_IF_NO_JVM(NULL);
+
+    product_class = (*env)->FindClass(env, PRODUCT_CLASS);
+	if (product_class == NULL) {
+		return NULL;
+	}
+    method = (*env)->GetMethodID(env, product_class, "getName", "()L" STRING_CLASS ";");
+	if (method == NULL) {
 		return NULL;
 	}
 
-    product_class = (*env)->FindClass(env, "org.esa.beam.framework.datamodel.Product");
-    method = (*env)->GetMethodID(env, product_class, "getName", "(V)Ljava/lang/String");
-    str = (*env)->CallObjectMethod(env, product, method);
+	str = (*env)->CallObjectMethod(env, product, method);
+	if (str == NULL) {
+		return NULL;
+	}
 
 	len = (*env)->GetStringUTFLength(env, str);
 	chars = (*env)->GetStringUTFChars(env, str, 0);
@@ -121,12 +94,16 @@ int product_get_num_bands(Product product)
 	jmethodID method;
 	jint num_bands;
 
-	if (!is_jvm_created()) {
+	RETURN_IF_NO_JVM(-1);
+
+    product_class = (*env)->FindClass(env, PRODUCT_CLASS);
+	if (product_class == NULL) {
 		return -1;
 	}
-
-    product_class = (*env)->FindClass(env, "org.esa.beam.framework.datamodel.Product");
-    method = (*env)->GetMethodID(env, product_class, "getNumBands", "(V)I");
+    method = (*env)->GetMethodID(env, product_class, "getNumBands", "()I");
+	if (method == NULL) {
+		return -1;
+	}
     num_bands = (*env)->CallIntMethod(env, product, method);
 
 	return num_bands;
@@ -141,14 +118,20 @@ char** product_get_band_names(Product product)
 	char** band_names;
 	jsize i;
 
-	if (!is_jvm_created()) {
+	RETURN_IF_NO_JVM(NULL);
+
+    product_class = (*env)->FindClass(env, PRODUCT_CLASS);
+	if (product_class == NULL) {
 		return NULL;
 	}
-
-    product_class = (*env)->FindClass(env, "org.esa.beam.framework.datamodel.Product");
-    method = (*env)->GetMethodID(env, product_class, "getBandNames", "(V)[Ljava/lang/String");
+    method = (*env)->GetMethodID(env, product_class, "getBandNames", "()[L" STRING_CLASS ";");
+	if (method == NULL) {
+		return NULL;
+	}
     str_array = (*env)->CallObjectMethod(env, product, method);
-
+	if (str_array == NULL) {
+		return NULL;
+	}
 	array_len = (*env)->GetArrayLength(env, str_array);
 
 	band_names = (char**) malloc(array_len * sizeof (char*));
@@ -166,5 +149,67 @@ char** product_get_band_names(Product product)
 	}
 
 	return band_names;
+}
+
+
+/* Java VM functions */
+
+
+jboolean beam_is_jvm_created() 
+{
+	return jvm != NULL;
+}
+
+jboolean beam_create_jvm(const char* option_strings[], int option_count) 
+{
+	JavaVMInitArgs vm_args; 
+    JavaVMOption* options;
+	int res;
+
+	if (jvm != NULL) {
+		return JNI_TRUE;
+	}
+
+	options = (JavaVMOption*) calloc(option_count, sizeof (JavaVMOption));
+	{
+		int i;
+		for (i = 0; i < option_count; i++) {
+			options[i].optionString = (char*) option_strings[i];
+		}
+	}
+
+	vm_args.version = JNI_VERSION_1_6;
+	vm_args.options = options;
+	vm_args.nOptions = 4;
+	vm_args.ignoreUnrecognized = 0;
+	res = JNI_CreateJavaVM(&jvm, (void**) &env, &vm_args);
+
+	free(options);
+
+	if (res != 0) {
+		fprintf(stderr, "beam-extapi error: JNI_CreateJavaVM failed with exit code %d\n", res);
+		return JNI_FALSE;
+	}
+
+	return JNI_TRUE;
+}
+
+jboolean beam_destroy_jvm() 
+{
+	jint res;
+
+    if (jvm == NULL) {
+		return JNI_TRUE;
+	}
+	
+	res = (*jvm)->DestroyJavaVM(jvm);
+	if (res != 0) {
+		fprintf(stderr, "beam-extapi error: DestroyJavaVM failed with exit code %d\n", res);
+		return JNI_FALSE;
+	}
+
+	jvm = NULL;
+	env = NULL;
+    return JNI_TRUE;
 }
 
