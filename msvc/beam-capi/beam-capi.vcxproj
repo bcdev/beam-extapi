@@ -59,7 +59,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ModuleDefinitionFile>..\..\src\main\c\beamc.def</ModuleDefinitionFile>
       <AdditionalDependencies>kernel32.lib;user32.lib;shell32.lib;jvm.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>%JDK32_HOME%\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(JDK32_HOME)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -82,7 +82,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <ModuleDefinitionFile>..\..\src\main\c\beamc.def</ModuleDefinitionFile>
       <AdditionalDependencies>kernel32.lib;user32.lib;shell32.lib;jvm.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>%JDK32_HOME%\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(JDK32_HOME)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>

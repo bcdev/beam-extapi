@@ -1,15 +1,17 @@
 #include "beampy.h"
 
-PyObject* beampy_system(PyObject* self, PyObject* args);
-PyObject* beampy_read_product(PyObject* self, PyObject* args);
-PyObject* beampy_create_product(PyObject* self, PyObject* args);
+PyObject* py_system(PyObject* self, PyObject* args);
+PyObject* py_beam_read_product(PyObject* self, PyObject* args);
+PyObject* py_beam_create_product(PyObject* self, PyObject* args);
+PyObject* py_product_get_name(PyObject* self, PyObject* args);
 
 static PyObject* beampy_error;
 
 static PyMethodDef beampy_methods[] = {
-    {"system",  beampy_system, METH_VARARGS, "Execute a shell command (test function)."},
-    {"read_product",  beampy_read_product, METH_VARARGS, "Reads a data product."},
-    {"create_product",  beampy_create_product, METH_VARARGS, "Reads a data product."},
+    {"system",  py_system, METH_VARARGS, "Execute a shell command (test function)."},
+    {"beam_read_product",  py_beam_read_product, METH_VARARGS, "Reads a data product."},
+    {"beam_create_product",  py_beam_create_product, METH_VARARGS, "Creates a data product using an operator."},
+    {"product_get_name",  py_product_get_name, METH_VARARGS, "Gets the product's name."},
     {NULL, NULL, 0, NULL}  /* Sentinel */
 };
 
@@ -23,11 +25,12 @@ static struct PyModuleDef beampy_module = {
 
 PyMODINIT_FUNC PyInit_beampy(void) 
 {
-    PyObject *m;
+    PyObject* m;
 
     m = PyModule_Create(&beampy_module);
-    if (m == NULL)
+    if (m == NULL) {
         return NULL;
+	}
 
     beampy_error = PyErr_NewException("beampy.error", NULL, NULL);
     Py_INCREF(beampy_error);
@@ -36,8 +39,8 @@ PyMODINIT_FUNC PyInit_beampy(void)
     return m;
 }
 
-
-static PyObject* beampy_system(PyObject* self, PyObject* args)
+/* For testing only as it doesn't need a Java VM */
+static PyObject* py_system(PyObject* self, PyObject* args)
 {
     const char* command;
     int sts;
@@ -50,10 +53,11 @@ static PyObject* beampy_system(PyObject* self, PyObject* args)
         PyErr_SetString(beampy_error, "System command failed");
         return NULL;
     }
+
     return PyLong_FromLong(sts);
 }
 
-static PyObject* beampy_read_product(PyObject* self, PyObject* args)
+static PyObject* py_beam_read_product(PyObject* self, PyObject* args)
 {
     const char* file_path;
     jobject product;
@@ -61,29 +65,26 @@ static PyObject* beampy_read_product(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "s", &file_path)) {
         return NULL;
 	}
-    product = beamc_read_product(file_path);
+    product = beam_read_product(file_path);
 
-    return PyLong_FromUnsignedLongLong((unsigned long long) product);
+    return PyLong_FromUnsignedLongLong((unsigned PY_LONG_LONG) product);
 }
 
-static PyObject* beampy_get_product_name(PyObject* self, PyObject* args)
-{
-    const char* file_path;
-    jobject product;
-	unsigned PY_LONG_LONG product_p;
-
-    if (!PyArg_ParseTuple(args, "K", &product_p)) {
-        return NULL;
-	}
-
-
-    product = beamc_get_product_name((jobject) product_p);
-    return PyLong_FromUnsignedLongLong((unsigned long long) product);
-}
-
-
-static PyObject* beampy_create_product(PyObject* self, PyObject* args)
+static PyObject* py_beam_create_product(PyObject* self, PyObject* args)
 {
     return NULL;
 }
 
+static PyObject* py_product_get_name(PyObject* self, PyObject* args)
+{
+    const char* product_name;
+	unsigned PY_LONG_LONG product;
+
+    if (!PyArg_ParseTuple(args, "K", &product)) {
+        return NULL;
+	}
+
+    product_name = product_get_name((jobject) product);
+
+    return PyUnicode_FromString(product_name);
+}

@@ -51,9 +51,9 @@ static jint destroy_jvm()
 	return res;
 }
 
-ObjectId beamc_read_product(const char* file_path)
+Product beam_read_product(const char* file_path)
 {
-	jclass product_io;
+	jclass product_io_class;
 	jmethodID method;
 	jobject product;
 	jstring file_path_s;
@@ -62,83 +62,109 @@ ObjectId beamc_read_product(const char* file_path)
 		return NULL;
 	}
 
-    product_io = (*env)->FindClass(env, "org.esa.beam.framework.dataio.ProductIO");
-    method = (*env)->GetStaticMethodID(env, product_io, "readProduct", "(Ljava/lang/String;)Lorg/esa/beam/framework/datamodel/Product");
+    product_io_class = (*env)->FindClass(env, "org.esa.beam.framework.dataio.ProductIO");
+    method = (*env)->GetStaticMethodID(env, product_io_class, "readProduct", "(Ljava/lang/String;)Lorg/esa/beam/framework/datamodel/Product");
 
 	file_path_s = (*env)->NewStringUTF(env, file_path);
-    product = (*env)->CallStaticObjectMethod(env, product_io, method, file_path_s);
+    product = (*env)->CallStaticObjectMethod(env, product_io_class, method, file_path_s);
 	(*env)->ReleaseStringUTFChars(env, file_path_s, file_path);
 
-	product = (*env)->NewGlobalRef(env, product);
-
-	return (ObjectId) product;
+	return (*env)->NewGlobalRef(env, product);
 }
 
-void beamc_release_object(ObjectId object_id)
+Product beam_create_product(const char* op_name, const char** parameters, Product source_product, ...)
 {
-	if (object_id != 0) {
-		(*env)->DeleteGlobalRef(env, (jobject) object_id);
+	/* TODO - implement */
+	return NULL;
+}
+
+void beam_release_object(jobject* object)
+{
+	if (*object != NULL) {
+		(*env)->DeleteGlobalRef(env, *object);
+		*object = NULL;
 	}
 }
 
-void beamc_release_string(StringId string_id)
-{
-	if (string_id != NULL) {
-		(*env)->ReleaseStringUTFChars(env, string_id->jstr, string_id->chars);
-		free(string_id);
-	}
-}
-
-const char* beamc_get_product_name(ObjectId product_id)
+char* product_get_name(Product product)
 {
 	jclass product_class;
 	jmethodID method;
-	jobject jproduct;
-	jobject jproduct_name;
-	const char* product_name;
+	jobject str;
+	jsize len;
+	char* product_name;
+	const char* chars;
 
 	if (!is_jvm_created()) {
 		return NULL;
 	}
 
-	jproduct = (jobject) product_id;
-
     product_class = (*env)->FindClass(env, "org.esa.beam.framework.datamodel.Product");
     method = (*env)->GetMethodID(env, product_class, "getName", "(V)Ljava/lang/String");
-    jproduct_name = (*env)->CallObjectMethod(env, jproduct, method);
+    str = (*env)->CallObjectMethod(env, product, method);
 
-	product_name = (*env)->GetStringUTFChars(env, jproduct_name, 0);
+	len = (*env)->GetStringUTFLength(env, str);
+	chars = (*env)->GetStringUTFChars(env, str, 0);
 
-	(*env)->ReleaseStringUTFChars(env, jproduct_name, product_name);
+	product_name = (char*) malloc((len + 1) * sizeof (char));
+	strcpy(product_name, chars);
+
+	(*env)->ReleaseStringUTFChars(env, str, chars);
 
 	return product_name;
 }
 
 
-int beamc_get_product_num_bands(ObjectId product)
+int product_get_num_bands(Product product)
 {
-	jclass product_io;
+	jclass product_class;
 	jmethodID method;
-	jobject product;
-	jstring file_path_s;
+	jint num_bands;
+
+	if (!is_jvm_created()) {
+		return -1;
+	}
+
+    product_class = (*env)->FindClass(env, "org.esa.beam.framework.datamodel.Product");
+    method = (*env)->GetMethodID(env, product_class, "getNumBands", "(V)I");
+    num_bands = (*env)->CallIntMethod(env, product, method);
+
+	return num_bands;
+}
+
+char** product_get_band_names(Product product)
+{
+	jclass product_class;
+	jmethodID method;
+	jarray str_array;
+	jsize array_len;
+	char** band_names;
+	jsize i;
 
 	if (!is_jvm_created()) {
 		return NULL;
 	}
 
-    product_io = (*env)->FindClass(env, "org.esa.beam.framework.dataio.ProductIO");
-    method = (*env)->GetStaticMethodID(env, product_io, "readProduct", "(Ljava/lang/String;)Lorg/esa/beam/framework/datamodel/Product");
+    product_class = (*env)->FindClass(env, "org.esa.beam.framework.datamodel.Product");
+    method = (*env)->GetMethodID(env, product_class, "getBandNames", "(V)[Ljava/lang/String");
+    str_array = (*env)->CallObjectMethod(env, product, method);
 
-	file_path_s = (*env)->NewStringUTF(env, file_path);
-    product = (*env)->CallStaticObjectMethod(env, product_io, method, file_path_s);
-	(*env)->ReleaseStringUTFChars(env, file_path_s, file_path);
+	array_len = (*env)->GetArrayLength(env, str_array);
 
-	return (JavaObject) product;
-}
+	band_names = (char**) malloc(array_len * sizeof (char*));
+	for (i = 0; i < array_len; i++) {
+	    jstring str = (*env)->GetObjectArrayElement(env, str_array, i);
+		jsize len = (*env)->GetStringUTFLength(env, str);
+		const char* chars = (*env)->GetStringUTFChars(env, str, 0);
 
-ObjectId beamc_create_product(const char* op_name, const char** parameters, ObjectId source_product, ...)
-{
-	/* TODO - implement */
-	return 0;
+	    char* band_name = (char*) malloc((len + 1) * sizeof (char));
+	    strcpy(band_name, chars);
+
+		(*env)->ReleaseStringUTFChars(env, str, chars);
+
+		band_names[i] = band_name;
+	}
+
+	return band_names;
 }
 

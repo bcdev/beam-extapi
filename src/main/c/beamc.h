@@ -3,18 +3,25 @@
 
 #include <jni.h>
 #include <stdlib.h>
+#include <string.h>
 
-typedef unsigned long long ObjectId;
+typedef jobject Product;
 
-struct StringRef {
-	jstring jstr;
-	const char* chars;
-};
+/*
+ * Global functions are prefixed by 'beam'. 
+ */
 
-typedef StringRef* StringId;
+Product beam_read_product(const char* file_path);
+Product beam_create_product(const char* op_name, const char** parameters, Product source_product, ...);
+void beam_release_object(jobject* object);
 
-ObjectId beamc_read_product(const char* file_path);
+/*
+ * Product functions are prefixed by 'product'. 
+ */
 
-ObjectId beamc_create_product(const char* op_name, const char** parameters, ObjectId source_product, ...);
+char* product_get_name(Product product);
+int product_get_num_bands(Product product);
+char** product_get_band_names(Product product);
+
 
 #endif /* _BEAMC_H */ 

@@ -1,5 +1,9 @@
 LIBRARY "beamc"
 
 EXPORTS
-    beamc_read_product
-	beamc_create_product
+	beam_read_product
+	beam_create_product
+	beam_release_object
+	product_get_name
+	product_get_num_bands
+	product_get_band_names
