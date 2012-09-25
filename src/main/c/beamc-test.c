@@ -130,6 +130,7 @@ int main(int argc, char** argv)
 	jobject product;
 	const char* product_path;
 	char* product_name;
+	char** band_names;
 	int num_bands;
 
 	if (argc <= 1) {
@@ -155,10 +156,21 @@ int main(int argc, char** argv)
 
 	product_name = product_get_name(product);
     num_bands = product_get_num_bands(product);
+    band_names = product_get_band_names(product);
 
-	printf("product_path = %s\n", product_path);
-	printf("product_name = %s\n", product_name);
-	printf("num_bands = %d\n", num_bands);
+	{
+		int i;
+
+		printf("product_path = %s\n", product_path);
+		printf("product_name = %s\n", product_name);
+		printf("num_bands = %d\n", num_bands);
+
+		for (i = 0; i < num_bands; i++) {
+			printf("band_names[%d] = %s\n", i, band_names[i]);
+		}
+	}
+
+	beam_release_object(&product);
 
 	if (!beam_destroy_jvm()) {
 		return 4;
