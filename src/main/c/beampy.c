@@ -27,6 +27,8 @@ PyMODINIT_FUNC PyInit_beampy(void)
 {
     PyObject* m;
 
+    printf("beam-pyapi: PyInit_beampy() called\n");
+
     m = PyModule_Create(&beampy_module);
     if (m == NULL) {
         return NULL;
@@ -88,3 +90,27 @@ static PyObject* py_product_get_name(PyObject* self, PyObject* args)
 
     return PyUnicode_FromString(product_name);
 }
+
+static int _python_init = 0;
+
+JNIEXPORT jboolean JNICALL Java_org_esa_beam_extapi_PythonApi_init(JNIEnv *env, jobject pythonApi)
+{
+    printf("beam-pyapi: Java_org_esa_beam_extapi_PythonApi_init() called\n");
+    if (!_python_init) {
+        _python_init = 1;
+
+        printf("beam-pyapi: initialising Python interpreter\n");
+
+        PyImport_AppendInittab("beampy", PyInit_beampy);
+        Py_SetProgramName("beam-pyapi");
+        Py_Initialize();
+        PyImport_ImportModule("beampy");
+    }
+    return JNI_TRUE;
+}
+
+JNIEXPORT void JNICALL Java_org_esa_beam_extapi_PythonApi_destroy(JNIEnv *env, jobject pythonApi)
+{
+    printf("beam-pyapi: Java_org_esa_beam_extapi_PythonApi_destroy() called\n");
+}
+

@@ -31,10 +31,10 @@ public class PythonApi {
      * This will create the Python VM in shared library "beam-pyapi".
      * @return true, if ok
      */
-    public native boolean init();
+    private native boolean init();
 
     /**
      * This will destroy the Python VM in shared library "beam-pyapi".
      */
-    public native void destroy();
+    private native void destroy();
 }

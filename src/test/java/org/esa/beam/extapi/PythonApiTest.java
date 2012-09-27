@@ -10,7 +10,7 @@ import org.junit.Test;
  *
  * @author Norman Fomferra
  */
-public class CApiTest {
+public class PythonApiTest {
     /**
      * Should print to stdout:
      * <pre>
@@ -21,10 +21,10 @@ public class CApiTest {
     @Test
     public void testThatNativeInitIsCalled() {
         try {
-            new CApi();
+            new PythonApi();
         } catch (Throwable e) {
             e.printStackTrace();
-            Assert.fail("CApi instance creation failed");
+            Assert.fail("PythonApi instance creation failed");
         }
     }
 }

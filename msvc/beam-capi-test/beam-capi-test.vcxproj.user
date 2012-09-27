@@ -8,7 +8,7 @@
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <LocalDebuggerCommandArguments>abc</LocalDebuggerCommandArguments>
+    <LocalDebuggerCommandArguments>C:\EOData\MERIS\MER_RR__1alpen.N1</LocalDebuggerCommandArguments>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LocalDebuggerEnvironment>PATH=%PATH%;%JDK32_HOME%\jre\bin;%JDK32_HOME%\jre\bin\server</LocalDebuggerEnvironment>

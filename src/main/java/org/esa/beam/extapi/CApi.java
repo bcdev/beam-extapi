@@ -26,10 +26,10 @@ public class CApi {
      * This will set the JNI instance in "beam-capi".
      * @return true, if ok
      */
-    public native boolean init();
+    private native boolean init();
 
     /**
      * This will clear the JNI instance in "beam-capi".
      */
-    public native void destroy();
+    private native void destroy();
 }
