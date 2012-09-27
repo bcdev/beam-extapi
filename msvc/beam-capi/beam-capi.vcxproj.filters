@@ -23,6 +23,9 @@
     <ClInclude Include="..\..\src\main\c\beamc.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\main\c\extapi_ExtApi.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\src\main\c\beamc.def">

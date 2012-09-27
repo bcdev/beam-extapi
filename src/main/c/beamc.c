@@ -5,7 +5,7 @@
 #define PRODUCT_CLASS    "org/esa/beam/framework/datamodel/Product"
 
 static JavaVM* jvm = NULL; 
-static JNIEnv* env = NULL; 
+static JNIEnv* jenv = NULL;
 
 #define RETURN_IF_NO_JVM_V() if (jvm == NULL) {return;}
 #define RETURN_IF_NO_JVM(A) if (jvm == NULL) {return (A);}
@@ -19,19 +19,19 @@ Product beam_read_product(const char* file_path)
 
 	RETURN_IF_NO_JVM(NULL);
 
-    product_io_class = (*env)->FindClass(env, PRODUCT_IO_CLASS);
+    product_io_class = (*jenv)->FindClass(jenv, PRODUCT_IO_CLASS);
 	if (product_io_class == NULL) {
 		return NULL;
 	}
-    method = (*env)->GetStaticMethodID(env, product_io_class, "readProduct", "(L" STRING_CLASS ";)L" PRODUCT_CLASS ";");
+    method = (*jenv)->GetStaticMethodID(jenv, product_io_class, "readProduct", "(L" STRING_CLASS ";)L" PRODUCT_CLASS ";");
 	if (method == NULL) {
 		return NULL;
 	}
 
-	file_path_s = (*env)->NewStringUTF(env, file_path);
-    product = (*env)->CallStaticObjectMethod(env, product_io_class, method, file_path_s);
+	file_path_s = (*jenv)->NewStringUTF(jenv, file_path);
+    product = (*jenv)->CallStaticObjectMethod(jenv, product_io_class, method, file_path_s);
 
-	return product != NULL ? (*env)->NewGlobalRef(env, product) : NULL;
+	return product != NULL ? (*jenv)->NewGlobalRef(jenv, product) : NULL;
 }
 
 Product beam_create_product(const char* op_name, const char** parameters, Product source_product, ...)
@@ -46,7 +46,7 @@ void beam_release_object(jobject* object)
 	RETURN_IF_NO_JVM_V();
 
 	if (*object != NULL) {
-		(*env)->DeleteGlobalRef(env, *object);
+		(*jenv)->DeleteGlobalRef(jenv, *object);
 		*object = NULL;
 	}
 }
@@ -62,27 +62,27 @@ char* product_get_name(Product product)
 
 	RETURN_IF_NO_JVM(NULL);
 
-    product_class = (*env)->FindClass(env, PRODUCT_CLASS);
+    product_class = (*jenv)->FindClass(jenv, PRODUCT_CLASS);
 	if (product_class == NULL) {
 		return NULL;
 	}
-    method = (*env)->GetMethodID(env, product_class, "getName", "()L" STRING_CLASS ";");
+    method = (*jenv)->GetMethodID(jenv, product_class, "getName", "()L" STRING_CLASS ";");
 	if (method == NULL) {
 		return NULL;
 	}
 
-	str = (*env)->CallObjectMethod(env, product, method);
+	str = (*jenv)->CallObjectMethod(jenv, product, method);
 	if (str == NULL) {
 		return NULL;
 	}
 
-	len = (*env)->GetStringUTFLength(env, str);
-	chars = (*env)->GetStringUTFChars(env, str, 0);
+	len = (*jenv)->GetStringUTFLength(jenv, str);
+	chars = (*jenv)->GetStringUTFChars(jenv, str, 0);
 
 	product_name = (char*) malloc((len + 1) * sizeof (char));
 	strcpy(product_name, chars);
 
-	(*env)->ReleaseStringUTFChars(env, str, chars);
+	(*jenv)->ReleaseStringUTFChars(jenv, str, chars);
 
 	return product_name;
 }
@@ -96,15 +96,15 @@ int product_get_num_bands(Product product)
 
 	RETURN_IF_NO_JVM(-1);
 
-    product_class = (*env)->FindClass(env, PRODUCT_CLASS);
+    product_class = (*jenv)->FindClass(jenv, PRODUCT_CLASS);
 	if (product_class == NULL) {
 		return -1;
 	}
-    method = (*env)->GetMethodID(env, product_class, "getNumBands", "()I");
+    method = (*jenv)->GetMethodID(jenv, product_class, "getNumBands", "()I");
 	if (method == NULL) {
 		return -1;
 	}
-    num_bands = (*env)->CallIntMethod(env, product, method);
+    num_bands = (*jenv)->CallIntMethod(jenv, product, method);
 
 	return num_bands;
 }
@@ -120,30 +120,30 @@ char** product_get_band_names(Product product)
 
 	RETURN_IF_NO_JVM(NULL);
 
-    product_class = (*env)->FindClass(env, PRODUCT_CLASS);
+    product_class = (*jenv)->FindClass(jenv, PRODUCT_CLASS);
 	if (product_class == NULL) {
 		return NULL;
 	}
-    method = (*env)->GetMethodID(env, product_class, "getBandNames", "()[L" STRING_CLASS ";");
+    method = (*jenv)->GetMethodID(jenv, product_class, "getBandNames", "()[L" STRING_CLASS ";");
 	if (method == NULL) {
 		return NULL;
 	}
-    str_array = (*env)->CallObjectMethod(env, product, method);
+    str_array = (*jenv)->CallObjectMethod(jenv, product, method);
 	if (str_array == NULL) {
 		return NULL;
 	}
-	array_len = (*env)->GetArrayLength(env, str_array);
+	array_len = (*jenv)->GetArrayLength(jenv, str_array);
 
 	band_names = (char**) malloc(array_len * sizeof (char*));
 	for (i = 0; i < array_len; i++) {
-	    jstring str = (*env)->GetObjectArrayElement(env, str_array, i);
-		jsize len = (*env)->GetStringUTFLength(env, str);
-		const char* chars = (*env)->GetStringUTFChars(env, str, 0);
+	    jstring str = (*jenv)->GetObjectArrayElement(jenv, str_array, i);
+		jsize len = (*jenv)->GetStringUTFLength(jenv, str);
+		const char* chars = (*jenv)->GetStringUTFChars(jenv, str, 0);
 
 	    char* band_name = (char*) malloc((len + 1) * sizeof (char));
 	    strcpy(band_name, chars);
 
-		(*env)->ReleaseStringUTFChars(env, str, chars);
+		(*jenv)->ReleaseStringUTFChars(jenv, str, chars);
 
 		band_names[i] = band_name;
 	}
@@ -182,7 +182,7 @@ jboolean beam_create_jvm(const char* option_strings[], int option_count)
 	vm_args.options = options;
 	vm_args.nOptions = 4;
 	vm_args.ignoreUnrecognized = 0;
-	res = JNI_CreateJavaVM(&jvm, (void**) &env, &vm_args);
+	res = JNI_CreateJavaVM(&jvm, (void**) &jenv, &vm_args);
 
 	free(options);
 
@@ -209,7 +209,55 @@ jboolean beam_destroy_jvm()
 	}
 
 	jvm = NULL;
-	env = NULL;
+	jenv = NULL;
     return JNI_TRUE;
+}
+
+/**
+ * The VM calls JNI_OnLoad when the native library is loaded (for example, through System.loadLibrary). 
+ * JNI_OnLoad must return the JNI version needed by the native library.
+ *
+ * In order to use any of the new JNI functions, a native library must export a JNI_OnLoad function
+ * that returns JNI_VERSION_1_2. If the native library does not export a JNI_OnLoad function, the VM 
+ * assumes that the library only requires JNI version JNI_VERSION_1_1. If the VM does not recognize
+ * the version number returned by JNI_OnLoad, the native library cannot be loaded.
+ *
+ * From: http://docs.oracle.com/javase/7/docs/technotes/guides/jni/spec/invocation.html#JNI_OnLoad 
+ */
+JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *vm, void *reserved)
+{
+    jvm = vm;
+	printf("beam-extapi: JNI_OnLoad called\n");
+	return JNI_VERSION_1_4;
+}
+
+/**
+ * The VM calls JNI_OnUnload when the class loader containing the native library is garbage collected.
+ * This function can be used to perform cleanup operations. Because this function is called in an 
+ * unknown context (such as from a finalizer), the programmer should be conservative on using Java VM 
+ * services, and refrain from arbitrary Java call-backs.
+ * 
+ * Note that JNI_OnLoad and JNI_OnUnload are two functions optionally supplied by JNI libraries, 
+ * not exported from the VM.
+ */
+JNIEXPORT void JNICALL JNI_OnUnload(JavaVM *vm, void *reserved)
+{
+	jvm = NULL;
+	jenv = NULL;
+	printf("beam-extapi: JNI_OnUnload called\n");
+}
+
+
+JNIEXPORT jboolean JNICALL Java_extapi_ExtApi_init(JNIEnv *env, jobject extApi)
+{
+    jenv = env;
+	printf("beam-extapi: Java_extapi_ExtApi_init called\n");
+	return JNI_TRUE;
+}
+
+JNIEXPORT jboolean JNICALL Java_extapi_ExtApi_destroy(JNIEnv *env, jobject extApi)
+{
+	printf("beam-extapi: Java_extapi_ExtApi_destroy called\n");
+	return JNI_TRUE;
 }
 

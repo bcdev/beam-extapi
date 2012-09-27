@@ -90,6 +90,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\main\c\beamc.h" />
+    <ClInclude Include="..\..\src\main\c\extapi_ExtApi.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\src\main\c\beamc.def" />
