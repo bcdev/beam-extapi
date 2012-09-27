@@ -1,4 +1,4 @@
-package extapi;
+package org.esa.beam.extapi;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -10,18 +10,18 @@ import org.junit.Test;
  *
  * @author Norman Fomferra
  */
-public class ExtApiTest {
+public class CApiTest {
     /**
      * Should print to stdout:
      * <pre>
      * beam-extapi: JNI_OnLoad called
-     * beam-extapi: Java_extapi_ExtApi_init called
+     * beam-extapi: Java_org_esa_beam_extapi_CApi_init called
      * </pre>
      */
     @Test
     public void testThatNativeInitIsCalled() {
         try {
-            new ExtApi();
+            new CApi();
         } catch (Throwable e) {
             e.printStackTrace();
             Assert.fail("ExtApi instance creation failed");

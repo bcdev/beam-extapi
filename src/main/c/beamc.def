@@ -1,8 +1,6 @@
 LIBRARY "beam-capi"
 
 EXPORTS
-	JNI_OnLoad
-	JNI_OnUnload
 	beam_is_jvm_created
 	beam_create_jvm
 	beam_destroy_jvm

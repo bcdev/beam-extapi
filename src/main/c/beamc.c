@@ -213,7 +213,7 @@ jboolean beam_destroy_jvm()
     return JNI_TRUE;
 }
 
-/**
+/*
  * The VM calls JNI_OnLoad when the native library is loaded (for example, through System.loadLibrary). 
  * JNI_OnLoad must return the JNI version needed by the native library.
  *
@@ -222,16 +222,6 @@ jboolean beam_destroy_jvm()
  * assumes that the library only requires JNI version JNI_VERSION_1_1. If the VM does not recognize
  * the version number returned by JNI_OnLoad, the native library cannot be loaded.
  *
- * From: http://docs.oracle.com/javase/7/docs/technotes/guides/jni/spec/invocation.html#JNI_OnLoad 
- */
-JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *vm, void *reserved)
-{
-    jvm = vm;
-	printf("beam-extapi: JNI_OnLoad called\n");
-	return JNI_VERSION_1_4;
-}
-
-/**
  * The VM calls JNI_OnUnload when the class loader containing the native library is garbage collected.
  * This function can be used to perform cleanup operations. Because this function is called in an 
  * unknown context (such as from a finalizer), the programmer should be conservative on using Java VM 
@@ -239,7 +229,18 @@ JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *vm, void *reserved)
  * 
  * Note that JNI_OnLoad and JNI_OnUnload are two functions optionally supplied by JNI libraries, 
  * not exported from the VM.
+ *
+ * From: http://docs.oracle.com/javase/7/docs/technotes/guides/jni/spec/invocation.html#JNI_OnLoad 
  */
+
+
+JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *vm, void *reserved)
+{
+    jvm = vm;
+	printf("beam-extapi: JNI_OnLoad called\n");
+	return JNI_VERSION_1_4;
+}
+
 JNIEXPORT void JNICALL JNI_OnUnload(JavaVM *vm, void *reserved)
 {
 	jvm = NULL;
@@ -247,17 +248,15 @@ JNIEXPORT void JNICALL JNI_OnUnload(JavaVM *vm, void *reserved)
 	printf("beam-extapi: JNI_OnUnload called\n");
 }
 
-
-JNIEXPORT jboolean JNICALL Java_extapi_ExtApi_init(JNIEnv *env, jobject extApi)
+JNIEXPORT jboolean JNICALL Java_org_esa_beam_extapi_CApi_init(JNIEnv *env, jobject extApi)
 {
     jenv = env;
-	printf("beam-extapi: Java_extapi_ExtApi_init called\n");
+	printf("beam-extapi: Java_org_esa_beam_extapi_CApi_init called\n");
 	return JNI_TRUE;
 }
 
-JNIEXPORT jboolean JNICALL Java_extapi_ExtApi_destroy(JNIEnv *env, jobject extApi)
+JNIEXPORT void JNICALL Java_org_esa_beam_extapi_CApi_destroy(JNIEnv *env, jobject extApi)
 {
-	printf("beam-extapi: Java_extapi_ExtApi_destroy called\n");
-	return JNI_TRUE;
+	printf("beam-extapi: Java_org_esa_beam_extapi_CApi_destroy called\n");
 }
 

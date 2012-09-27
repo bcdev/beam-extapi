@@ -23,7 +23,7 @@
     <ClInclude Include="..\..\src\main\c\beamc.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\main\c\extapi_ExtApi.h">
+    <ClInclude Include="..\..\src\main\c\org_esa_beam_extapi_CApi.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
   </ItemGroup>
