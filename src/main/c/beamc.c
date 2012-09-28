@@ -17,20 +17,27 @@ Product beam_read_product(const char* file_path)
 	jobject product;
 	jstring file_path_s;
 
+	BEAM_TRACE("beam_read_product 0\n");
+
 	RETURN_IF_NO_JVM(NULL);
 
-    product_io_class = (*jenv)->FindClass(jenv, PRODUCT_IO_CLASS);
+	BEAM_TRACE("beam_read_product 1\n");
+
+	product_io_class = (*jenv)->FindClass(jenv, PRODUCT_IO_CLASS);
 	if (product_io_class == NULL) {
 		return NULL;
 	}
+	BEAM_TRACE("beam_read_product 2\n");
     method = (*jenv)->GetStaticMethodID(jenv, product_io_class, "readProduct", "(L" STRING_CLASS ";)L" PRODUCT_CLASS ";");
 	if (method == NULL) {
 		return NULL;
 	}
+	BEAM_TRACE("beam_read_product 3\n");
 
 	file_path_s = (*jenv)->NewStringUTF(jenv, file_path);
     product = (*jenv)->CallStaticObjectMethod(jenv, product_io_class, method, file_path_s);
 
+	BEAM_TRACE("beam_read_product 4\n");
 	return product != NULL ? (*jenv)->NewGlobalRef(jenv, product) : NULL;
 }
 
@@ -213,6 +220,147 @@ jboolean beam_destroy_jvm()
     return JNI_TRUE;
 }
 
+/* 
+ * The following code uses a hard-coded classpath.
+ * TODO: Read environment variable 'BEAM_HOME' and generate classpath 
+ *       by scanning the denoted directory.
+ */
+
+#define BEAM_HOME "C:\\Program Files\\beam-4.10.3\\" 
+
+#define OS_PATH_SEP ";"
+#define OS_FILE_SEP "\\"
+
+#define BEAM_LJAR(F) BEAM_HOME ## "lib" ## OS_FILE_SEP ## F ## OS_PATH_SEP
+#define BEAM_MJAR(F) BEAM_HOME ## "modules" ## OS_FILE_SEP ## F ## OS_PATH_SEP
+
+static const char* beam_classpath =
+	
+	"-Djava.class.path="
+
+    BEAM_LJAR("clibwrapper-jiio-1.2-20090918.jar")
+    BEAM_LJAR("commons-codec-1.2.jar")
+    BEAM_LJAR("commons-collections-3.1.jar")
+    BEAM_LJAR("commons-httpclient-3.1.jar")
+    BEAM_LJAR("commons-lang-2.1.jar")
+    BEAM_LJAR("commons-logging-1.0.4.jar")
+    BEAM_LJAR("commons-pool-1.5.4.jar")
+    BEAM_LJAR("gt-api-2.7.4.jar")
+    BEAM_LJAR("gt-coverage-2.7.4.jar")
+    BEAM_LJAR("gt-cql-2.7.4.jar")
+    BEAM_LJAR("gt-data-2.7.4.jar")
+    BEAM_LJAR("gt-epsg-hsql-2.7.4.jar")
+    BEAM_LJAR("gt-geotiff-2.7.4.jar")
+    BEAM_LJAR("gt-main-2.7.4.jar")
+    BEAM_LJAR("gt-metadata-2.7.4.jar")
+    BEAM_LJAR("gt-opengis-2.7.4.jar")
+    BEAM_LJAR("gt-referencing-2.7.4.jar")
+    BEAM_LJAR("gt-render-2.7.4.jar")
+    BEAM_LJAR("gt-shapefile-2.7.4.jar")
+    BEAM_LJAR("gt-wms-2.7.4.jar")
+    BEAM_LJAR("gt-xml-2.7.4.jar")
+    BEAM_LJAR("hsqldb-1.8.0.7.jar")
+    BEAM_LJAR("imageio-ext-tiff-1.0.8.jar")
+    BEAM_LJAR("imageio-ext-utilities-1.0.8.jar")
+    BEAM_LJAR("jai-codec-1.1.3.jar")
+    BEAM_LJAR("jai-core-1.1.3.jar")
+    BEAM_LJAR("jai-imageio-1.2-20090918.jar")
+    BEAM_LJAR("Jama-1.0.2.jar")
+    BEAM_LJAR("javahelp-2.0.02.jar")
+    BEAM_LJAR("jcip-annotations-1.0.jar")
+    BEAM_LJAR("jcommon-1.0.16.jar")
+    BEAM_LJAR("jdom-1.0.jar")
+    BEAM_LJAR("jdom-1.1.jar")
+    BEAM_LJAR("jfreechart-1.0.13.jar")
+    BEAM_LJAR("jide-action-3.3.7.jar")
+    BEAM_LJAR("jide-common-3.3.7.jar")
+    BEAM_LJAR("jide-components-3.3.7.jar")
+    BEAM_LJAR("jide-dock-3.3.7.jar")
+    BEAM_LJAR("jide-grids-3.3.7.jar")
+    BEAM_LJAR("jnn-1.6.jar")
+    BEAM_LJAR("js-1.7R1.jar")
+    BEAM_LJAR("jsr-275-1.0-beta-2.jar")
+    BEAM_LJAR("jtar-1.0.4.jar")
+    BEAM_LJAR("jts-1.11.jar")
+    BEAM_LJAR("junit-4.8.2.jar")
+    BEAM_LJAR("jython-2.5.2.jar")
+    BEAM_LJAR("mlibwrapper-jai-1.1.3.jar")
+    BEAM_LJAR("netcdf-4.2.20.jar")
+    BEAM_LJAR("nujan-1.4.1.jar")
+    BEAM_LJAR("oro-2.0.8.jar")
+    BEAM_LJAR( "slf4j-api-1.6.1.jar")
+    BEAM_LJAR( "unidataCommon-4.2.20.jar")
+    BEAM_LJAR("vecmath-1.3.2.jar")
+    BEAM_LJAR("velocity-1.5.jar")
+    BEAM_LJAR("xmlpull-1.1.3.1.jar")
+    BEAM_LJAR("xpp3-1.1.4c.jar")
+    BEAM_LJAR("xpp3_min-1.1.4c.jar")
+    BEAM_LJAR("xstream-1.4.2.jar")
+
+    BEAM_MJAR("ceres-binding-0.13.1.jar")
+    BEAM_MJAR("ceres-binio-0.13.1.jar")
+    BEAM_MJAR("ceres-core-0.13.1.jar")
+    BEAM_MJAR("ceres-glayer-0.13.1.jar")
+    BEAM_MJAR("ceres-jai-0.13.1.jar")
+    BEAM_MJAR("ceres-ui-0.13.1.jar")
+    BEAM_MJAR("flint-processor-1.2.jar")
+    BEAM_MJAR("beam-aatsr-sst-1.5.1.jar")
+    BEAM_MJAR("beam-alos-reader-1.3.1.jar")
+    BEAM_MJAR("beam-atsr-reader-1.0.3.jar")
+    BEAM_MJAR("beam-avhrr-reader-1.2.1.jar")
+    BEAM_MJAR("beam-binning-2.1.1.jar")
+    BEAM_MJAR("beam-chris-reader-1.7.1.jar")
+    BEAM_MJAR("beam-cluster-analysis-1.1.2.jar")
+    BEAM_MJAR("beam-collocation-1.4.1.jar")
+    BEAM_MJAR("beam-core-4.10.3.jar")
+    BEAM_MJAR("beam-csv-dataio-4.10.3.jar")
+    BEAM_MJAR("beam-envisat-reader-1.5.1.jar")
+    BEAM_MJAR("beam-flhmci-1.6.103.jar")
+    BEAM_MJAR("beam-geotiff-1.2.1.jar")
+    BEAM_MJAR("beam-getasse30-reader-1.0.1.jar")
+    BEAM_MJAR("beam-gpf-4.10.3.jar")
+    BEAM_MJAR("beam-hdf5-writer-1.0.1.jar")
+    BEAM_MJAR("beam-landsat-reader-1.3.1.jar")
+    BEAM_MJAR("beam-meris-brr-2.3.2.jar")
+    BEAM_MJAR("beam-meris-case2-regional-1.5.5.jar")
+    BEAM_MJAR("beam-meris-cloud-1.6.1.jar")
+    BEAM_MJAR("beam-meris-glint-1.2.2.jar")
+    BEAM_MJAR("beam-meris-l2auxdata-1.2.2.jar")
+    BEAM_MJAR("beam-meris-ndvi-1.3.1.jar")
+    BEAM_MJAR("beam-meris-radiometry-1.1.1.jar")
+    BEAM_MJAR("beam-meris-sdr-2.3.2.jar")
+    BEAM_MJAR("beam-meris-smac-1.5.204.jar")
+    BEAM_MJAR("beam-merisl3-reader-1.2.1.jar")
+    BEAM_MJAR("beam-modis-reader-1.3.jar")
+    BEAM_MJAR("beam-mosaic-2.3.1.jar")
+    BEAM_MJAR("beam-netcdf-1.1.1.jar")
+    BEAM_MJAR("beam-obpg-reader-1.3.1.jar")
+    BEAM_MJAR("beam-pconvert-1.4.1.jar")
+    BEAM_MJAR("beam-pixel-extraction-1.2.jar")
+    BEAM_MJAR("beam-processing-4.10.3.jar")
+    BEAM_MJAR("beam-scripting-4.10.3.jar")
+    BEAM_MJAR("beam-spot-vgt-reader-1.2.1.jar")
+    BEAM_MJAR("beam-ui-4.10.3.jar")
+    BEAM_MJAR("beam-unmix-1.2.1.jar")
+    BEAM_MJAR("beam-visat-4.10.3.jar")
+    BEAM_MJAR("beam-visat-rcp-4.10.3.jar")
+    BEAM_MJAR("seadas-reader-1.3-20120621-01.jar");
+
+
+
+jboolean beam_create_jvm_with_defaults() 
+{
+	const char* jvm_options[5];
+
+	jvm_options[0] = beam_classpath;
+	jvm_options[1] = "-Djava.library.path=c:\\mylibs";
+	jvm_options[2] = "-Xms128M";
+	jvm_options[3] = "-Xmx512M";
+	jvm_options[4] = "-verbose:jni";
+
+	return beam_create_jvm(jvm_options, 5);
+}
+
 /*
  * The VM calls JNI_OnLoad when the native library is loaded (for example, through System.loadLibrary). 
  * JNI_OnLoad must return the JNI version needed by the native library.
@@ -237,7 +385,7 @@ jboolean beam_destroy_jvm()
 JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *vm, void *reserved)
 {
     jvm = vm;
-	printf("beam-extapi: JNI_OnLoad() called\n");
+	BEAM_TRACE("beam-extapi: JNI_OnLoad() called\n");
 	return JNI_VERSION_1_4;
 }
 
@@ -245,18 +393,33 @@ JNIEXPORT void JNICALL JNI_OnUnload(JavaVM *vm, void *reserved)
 {
 	jvm = NULL;
 	jenv = NULL;
-	printf("beam-extapi: JNI_OnUnload() called\n");
+	BEAM_TRACE("beam-extapi: JNI_OnUnload() called\n");
 }
 
 JNIEXPORT jboolean JNICALL Java_org_esa_beam_extapi_CApi_init(JNIEnv *env, jobject extApi)
 {
     jenv = env;
-	printf("beam-extapi: Java_org_esa_beam_extapi_CApi_init() called\n");
+	BEAM_TRACE("beam-extapi: Java_org_esa_beam_extapi_CApi_init() called\n");
 	return JNI_TRUE;
 }
 
 JNIEXPORT void JNICALL Java_org_esa_beam_extapi_CApi_destroy(JNIEnv *env, jobject extApi)
 {
-	printf("beam-extapi: Java_org_esa_beam_extapi_CApi_destroy() called\n");
+	BEAM_TRACE("beam-extapi: Java_org_esa_beam_extapi_CApi_destroy() called\n");
+}
+
+
+/*
+ * Simple logging.
+ */
+
+void beam_log(int level, const char* format, ...) 
+{ 
+	if (beam_log_level != 0 && level <= beam_log_level) {
+		va_list va;
+        va_start(va, format);
+		vprintf(format, va);
+		va_end(va);
+	}
 }
 
