@@ -3,12 +3,53 @@
 #define STRING_CLASS     "java/lang/String"
 #define PRODUCT_IO_CLASS "org/esa/beam/framework/dataio/ProductIO"
 #define PRODUCT_CLASS    "org/esa/beam/framework/datamodel/Product"
+#define BAND_CLASS       "org/esa/beam/framework/datamodel/Band"
+#define COPERATOR_CLASS  "org/esa/beam/extapi/COperator"
 
-static JavaVM* jvm = NULL; 
-static JNIEnv* jenv = NULL;
+#define RETURN_IF_NO_JVM_V() if (beam.jvm == NULL) {return;}
+#define RETURN_IF_NO_JVM(A) if (beam.jvm == NULL) {return (A);}
 
-#define RETURN_IF_NO_JVM_V() if (jvm == NULL) {return;}
-#define RETURN_IF_NO_JVM(A) if (jvm == NULL) {return (A);}
+JNIEnv* jenv = NULL;
+Beam beam;
+
+jint beam_register_operator(const OperatorInfo* operator_info)
+{
+	jclass coperator_class;
+	jmethodID method;
+	jobject product;
+	jstring op_name;
+	jstring op_desc;
+	jint op_type_id;
+
+	BEAM_TRACE("beam_register_operator 0\n");
+
+	RETURN_IF_NO_JVM(-1);
+
+	BEAM_TRACE("beam_register_operator 1\n");
+
+	coperator_class = (*jenv)->FindClass(jenv, COPERATOR_CLASS);
+	if (coperator_class == NULL) {
+		return -1;
+	}
+	BEAM_TRACE("beam_register_operator 2\n");
+    method = (*jenv)->GetStaticMethodID(jenv, coperator_class, "registerNativeOperator", "(IL" STRING_CLASS ";)V");
+	if (method == NULL) {
+		return -1;
+	}
+	BEAM_TRACE("beam_register_operator 3\n");
+
+	op_type_id = beam.operator_count++;
+
+	beam.operator_infos[op_type_id] = operator_info;
+
+	op_name = (*jenv)->NewStringUTF(jenv, operator_info->name);
+	op_desc = (*jenv)->NewStringUTF(jenv, operator_info->description);
+    product = (*jenv)->CallStaticObjectMethod(jenv, coperator_class, method, op_type_id, op_name, op_desc);
+
+	BEAM_TRACE("beam_register_operator 4\n");
+
+	return op_type_id;
+}
 
 Product beam_read_product(const char* file_path)
 {
@@ -158,13 +199,31 @@ char** product_get_band_names(Product product)
 	return band_names;
 }
 
+Band product_get_band(Product product, int index)
+{
+	jclass product_class;
+	jmethodID method;
+
+	RETURN_IF_NO_JVM(NULL);
+
+    product_class = (*jenv)->FindClass(jenv, PRODUCT_CLASS);
+	if (product_class == NULL) {
+		return NULL;
+	}
+    method = (*jenv)->GetMethodID(jenv, product_class, "getBand", "(I)[L" BAND_CLASS ";");
+	if (method == NULL) {
+		return NULL;
+	}
+    return (*jenv)->CallObjectMethod(jenv, product, method);
+}
+
 
 /* Java VM functions */
 
 
 jboolean beam_is_jvm_created() 
 {
-	return jvm != NULL;
+	return beam.jvm != NULL;
 }
 
 jboolean beam_create_jvm(const char* option_strings[], int option_count) 
@@ -173,7 +232,7 @@ jboolean beam_create_jvm(const char* option_strings[], int option_count)
     JavaVMOption* options;
 	int res;
 
-	if (jvm != NULL) {
+	if (beam.jvm != NULL) {
 		return JNI_TRUE;
 	}
 
@@ -189,7 +248,7 @@ jboolean beam_create_jvm(const char* option_strings[], int option_count)
 	vm_args.options = options;
 	vm_args.nOptions = 4;
 	vm_args.ignoreUnrecognized = 0;
-	res = JNI_CreateJavaVM(&jvm, (void**) &jenv, &vm_args);
+	res = JNI_CreateJavaVM(&beam.jvm, (void**) &jenv, &vm_args);
 
 	free(options);
 
@@ -205,17 +264,17 @@ jboolean beam_destroy_jvm()
 {
 	jint res;
 
-    if (jvm == NULL) {
+    if (beam.jvm == NULL) {
 		return JNI_TRUE;
 	}
 	
-	res = (*jvm)->DestroyJavaVM(jvm);
+	res = (*beam.jvm)->DestroyJavaVM(beam.jvm);
 	if (res != 0) {
 		fprintf(stderr, "beam-extapi error: DestroyJavaVM failed with exit code %d\n", res);
 		return JNI_FALSE;
 	}
 
-	jvm = NULL;
+	beam.jvm = NULL;
 	jenv = NULL;
     return JNI_TRUE;
 }
@@ -384,28 +443,16 @@ jboolean beam_create_jvm_with_defaults()
 
 JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *vm, void *reserved)
 {
-    jvm = vm;
+    beam.jvm = vm;
 	BEAM_TRACE("beam-extapi: JNI_OnLoad() called\n");
 	return JNI_VERSION_1_4;
 }
 
 JNIEXPORT void JNICALL JNI_OnUnload(JavaVM *vm, void *reserved)
 {
-	jvm = NULL;
+	beam.jvm = NULL;
 	jenv = NULL;
 	BEAM_TRACE("beam-extapi: JNI_OnUnload() called\n");
-}
-
-JNIEXPORT jboolean JNICALL Java_org_esa_beam_extapi_CApi_init(JNIEnv *env, jobject extApi)
-{
-    jenv = env;
-	BEAM_TRACE("beam-extapi: Java_org_esa_beam_extapi_CApi_init() called\n");
-	return JNI_TRUE;
-}
-
-JNIEXPORT void JNICALL Java_org_esa_beam_extapi_CApi_destroy(JNIEnv *env, jobject extApi)
-{
-	BEAM_TRACE("beam-extapi: Java_org_esa_beam_extapi_CApi_destroy() called\n");
 }
 
 
@@ -413,9 +460,9 @@ JNIEXPORT void JNICALL Java_org_esa_beam_extapi_CApi_destroy(JNIEnv *env, jobjec
  * Simple logging.
  */
 
-void beam_log(int level, const char* format, ...) 
+void beam_log(LogLevel level, const char* format, ...) 
 { 
-	if (beam_log_level != 0 && level <= beam_log_level) {
+	if (beam.log_level != 0 && level <= beam.log_level) {
 		va_list va;
         va_start(va, format);
 		vprintf(format, va);

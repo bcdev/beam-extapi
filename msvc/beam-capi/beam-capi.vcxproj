@@ -87,10 +87,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\main\c\beamc.c" />
+    <ClCompile Include="..\..\src\main\c\org_esa_beam_extapi_CApi.c" />
+    <ClCompile Include="..\..\src\main\c\org_esa_beam_extapi_COperator.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\main\c\beamc.h" />
     <ClInclude Include="..\..\src\main\c\org_esa_beam_extapi_CApi.h" />
+    <ClInclude Include="..\..\src\main\c\org_esa_beam_extapi_COperator.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\src\main\c\beamc.def" />

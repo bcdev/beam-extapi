@@ -153,31 +153,16 @@ static PyObject* py_product_get_band_names(PyObject* self, PyObject* args)
 static PyObject* py_product_get_band(PyObject* self, PyObject* args)
 {
 	unsigned PY_LONG_LONG product;
-	PY_LONG index;
-    int num_bands;
-	char** band_names;
-	PyObject* tuple;
+	int index;
+	Band band;
 
-    if (!PyArg_ParseTuple(args, "KI", &product, )) {
+    if (!PyArg_ParseTuple(args, "Ki", &product, &index)) {
         return NULL;
 	}
 
-    num_bands = product_get_num_bands((jobject) product);
-    band_names = product_get_band_names((jobject) product);
+    band = product_get_band((jobject) product, index);
 
-	tuple = PyTuple_New(num_bands);
-	{
-		PyObject* name;
-		int i;
-		for (i = 0; i < num_bands; i++) {
-			name = PyUnicode_FromString(band_names[i]);
-			PyTuple_SetItem(tuple, i, name); 
-			free(band_names[i]);
-		}
-		free(band_names);
-	}
-
-    return tuple;
+    return PyLong_FromUnsignedLongLong((unsigned PY_LONG_LONG) band);
 }
 
 static int _python_init = 0;

@@ -5,9 +5,11 @@ EXPORTS
 	beam_create_jvm
 	beam_create_jvm_with_defaults
 	beam_destroy_jvm
+	beam_register_operator
 	beam_read_product
 	beam_create_product
 	beam_release_object
 	product_get_name
 	product_get_num_bands
 	product_get_band_names
+	product_get_band

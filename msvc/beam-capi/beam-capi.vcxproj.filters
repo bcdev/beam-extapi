@@ -18,12 +18,21 @@
     <ClCompile Include="..\..\src\main\c\beamc.c">
       <Filter>Quelldateien</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\main\c\org_esa_beam_extapi_CApi.c">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\main\c\org_esa_beam_extapi_COperator.c">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\main\c\beamc.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\main\c\org_esa_beam_extapi_CApi.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\main\c\org_esa_beam_extapi_COperator.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
   </ItemGroup>
