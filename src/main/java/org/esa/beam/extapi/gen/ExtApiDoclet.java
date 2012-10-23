@@ -29,11 +29,8 @@ import org.apache.velocity.app.VelocityEngine;
 
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Properties;
-import java.util.Set;
+import java.io.InputStreamReader;
+import java.util.*;
 
 /**
  * @author Norman Fomferra
@@ -44,6 +41,7 @@ public class ExtApiDoclet extends Doclet {
     private Set<ApiClass> wrappedClasses;
     private Set<ApiClass> usedClasses;
     private Set<String> wrappedClassNames;
+    private Map<String, List<ApiMethod>> wrappedClassMethods;
 
 
     public static void main(String[] args) {
@@ -61,7 +59,8 @@ public class ExtApiDoclet extends Doclet {
 
     private ExtApiDoclet(RootDoc rootDoc) throws IOException {
         this.rootDoc = rootDoc;
-        wrappedClasses = new HashSet<ApiClass>();
+        wrappedClasses = new HashSet<ApiClass>(100);
+        wrappedClassMethods  = new HashMap<String, List<ApiMethod>>(100);
         usedClasses = new HashSet<ApiClass>();
 
         final Properties properties = new Properties();
@@ -77,56 +76,54 @@ public class ExtApiDoclet extends Doclet {
 
             if (classDoc.isPublic() && wrappedClassNames.contains(classDoc.qualifiedTypeName())) {
 
-                wrappedClasses.add(new ApiClass(classDoc));
+                ApiClass apiClass = new ApiClass(classDoc);
+                wrappedClasses.add(apiClass);
+                ArrayList<ApiMethod> apiMethods = new ArrayList<ApiMethod>(64);
+                wrappedClassMethods.put(apiClass.getJavaName(), apiMethods);
 
                 for (MethodDoc methodDoc : methodDocs) {
                     if (methodDoc.isPublic()) {
                         final Type retType = methodDoc.returnType();
+
+                        apiMethods.add(new ApiMethod(apiClass, methodDoc));
 
                         if (!retType.isPrimitive()) {
                             usedClasses.add(new ApiClass(retType));
                         }
 
                         final Parameter[] parameters = methodDoc.parameters();
-                        StringBuilder paramList = new StringBuilder();
                         for (Parameter parameter : parameters) {
                             final Type type = parameter.type();
-                            final String name = parameter.name();
-                            if (paramList.length() > 0) {
-                                paramList.append(", ");
-                            }
-                            paramList.append(mapTypeName(type));
-                            paramList.append(" ");
-                            paramList.append(name);
-
                             if (!type.isPrimitive()) {
                                 usedClasses.add(new ApiClass(type));
                             }
                         }
-
-                        //System.out.printf("%s %s_%s(%s) {%n}%n", mapTypeName(retType), classDoc.name(), methodDoc.name(), paramList);
                     }
                 }
+
+                Collections.sort(apiMethods);
+
             } else {
                 System.out.println("Ignored non-API class: " + classDoc.qualifiedTypeName());
             }
         }
 
-        final ArrayList<ApiClass> wrappedClasses = new ArrayList<ApiClass>();
-        Arrays.sort(wrappedClasses);
+        final ArrayList<ApiClass> wrappedClasses = new ArrayList<ApiClass>(this.wrappedClasses);
+        Collections.sort(wrappedClasses);
 
         VelocityContext velocityContext = new VelocityContext(System.getProperties());
         velocityContext.put("wrappedClasses", wrappedClasses);
+        velocityContext.put("wrappedClassMethods", wrappedClassMethods);
 
         VelocityEngine velocityEngine = new VelocityEngine();
         velocityEngine.init();
 
-        final FileWriter fileWriter = new FileWriter("beam_wrappers.c");
-        final boolean b = velocityEngine.resourceExists("CWrappers.vm");
-        velocityEngine.mergeTemplate("CWrappers.vm", velocityContext, fileWriter);
+        FileWriter writer = new FileWriter("beam_wrappers.c");
+        InputStreamReader reader = new InputStreamReader(getClass().getResourceAsStream("CWrappers.vm"));
+        velocityEngine.evaluate(velocityContext, writer, "gen", reader);
 
-
-        fileWriter.close();
+        writer.close();
+        reader.close();
     }
 
     @SuppressWarnings("UnusedDeclaration")
@@ -135,6 +132,9 @@ public class ExtApiDoclet extends Doclet {
             new ExtApiDoclet(root).start();
             return true;
         } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        } catch (Exception e) {
             e.printStackTrace();
             return false;
         }

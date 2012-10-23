@@ -2,23 +2,44 @@ package org.esa.beam.extapi.gen;
 
 import com.sun.javadoc.Type;
 
+
+// todo - use configurable mapping from Java name to extern name used in C/Python
+
 /**
  * @author Norman Fomferra
  */
 public class ApiClass implements Comparable<ApiClass> {
-    public final String javaName;
-    public final String simpleName;
-    public final String fullName;
+    private final Type type;
+    private final String javaName;
+    private final String externalName;
+    private final String resourceName;
 
-    public ApiClass(Type type) {
+    public ApiClass(Type type) throws ClassNotFoundException {
+        this.type = type;
         this.javaName = type.qualifiedTypeName();
-        this.simpleName = type.simpleTypeName().replace("$", ".");
-        this.fullName = javaName.replace("$", ".").replace(".", "_");
+        this.resourceName = type.qualifiedTypeName().replace(".", "/");
+        this.externalName = type.simpleTypeName();
+    }
+
+    public Type getType() {
+        return type;
+    }
+
+    public String getJavaName() {
+        return type.qualifiedTypeName();
+    }
+
+    public String getResourceName() {
+        return resourceName;
+    }
+
+    public String getExternalName() {
+        return externalName;
     }
 
     @Override
     public int compareTo(ApiClass other) {
-        return fullName.compareTo(other.fullName);
+        return javaName.compareTo(other.javaName);
     }
 
     @Override
