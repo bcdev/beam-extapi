@@ -1,0 +1,12 @@
+\#include "beam-wrappers.h"
+
+#foreach( $class in $cClassNames )
+static jclass $(class)_class;
+#end
+
+int beam_init_classes()
+{
+#foreach( $class in $cClassNames )
+= (*jenv)->FindClass(jenv, PRODUCT_CLASS);
+#end
+}
