@@ -14,7 +14,7 @@
  *     Yes, because BEAM API is Java and as such it is much less verbous and more concise to reuse JNI types, and is aloso less work
  *     No, because the C-API shall be independent of its implementation or origin
  *
- * Dublicate Java API (or parts) 1:1?  (e.g. any method in Java gets its C counterpart)
+ * Duplicate Java API (or parts) 1:1?  (e.g. any method in Java gets its C counterpart)
  *     Yes, because the Java API docs can be reused for C API.
  *     No, because a more concise C-API can be generated. And no, because changes in the Java API need to be reflected in the C API 
  *      which will introduce a lot of work.
