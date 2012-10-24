@@ -16,12 +16,28 @@
 
 package org.esa.beam.extapi.gen;
 
-import com.sun.javadoc.*;
+import com.sun.javadoc.ClassDoc;
+import com.sun.javadoc.DocErrorReporter;
+import com.sun.javadoc.Doclet;
+import com.sun.javadoc.LanguageVersion;
+import com.sun.javadoc.MethodDoc;
+import com.sun.javadoc.Parameter;
+import com.sun.javadoc.RootDoc;
+import com.sun.javadoc.Tag;
+import com.sun.javadoc.Type;
 
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
 
 /**
  * @author Norman Fomferra
@@ -124,12 +140,23 @@ public class ExtApiDoclet extends Doclet {
         generateFunctionSignature(apiMethod, writer);
 
         String returnType = apiMethod.getMethodDoc().returnType().simpleTypeName();
-        boolean isVoid = "void".equals(returnType);
+        boolean isVoid = isVoid(apiMethod.getMethodDoc().returnType());
 
         writer.printf("\n{\n");
-        writer.printf("    static jmethodID method = NULL;\n");
+        for (Parameter parameter : apiMethod.getMethodDoc().parameters()) {
+            if (isString(parameter.type())) {
+                writer.printf("    jstring %s = NULL;\n", getWrappedParameterName(parameter));
+            }
+        }
         if (!isVoid) {
-            writer.printf("    %s _result;\n", returnType);
+            writer.printf("    %s _result = (%s) 0;\n", returnType, returnType);
+        }
+        writer.printf("    static jmethodID method = NULL;\n");
+        writer.printf("\n");
+        if (isVoid) {
+            writer.printf("    if (beam_init_vm() != 0) return;\n");
+        } else {
+            writer.printf("    if (beam_init_vm() != 0) return _result;\n");
         }
         writer.printf("\n");
         writer.printf("    if (method == NULL) {\n");
@@ -141,21 +168,26 @@ public class ExtApiDoclet extends Doclet {
         if (isVoid) {
             writer.printf("        if (method == NULL) return;\n");
         } else {
-            writer.printf("        if (method == NULL) return 0;\n");
+            writer.printf("        if (method == NULL) return _result;\n");
         }
         writer.printf("    }\n");
         writer.printf("\n");
+
+        for (Parameter parameter : apiMethod.getMethodDoc().parameters()) {
+            if (isString(parameter.type())) {
+                writer.printf("    %s = (*jenv)->NewStringUTF(jenv, %s);\n", getWrappedParameterName(parameter), parameter.name());
+            }
+        }
 
         StringBuilder argList = new StringBuilder();
         if (!apiMethod.getMethodDoc().isStatic()) {
             argList.append("_self");
         }
-        Parameter[] parameters = apiMethod.getMethodDoc().parameters();
-        for (Parameter parameter : parameters) {
+        for (Parameter parameter : apiMethod.getMethodDoc().parameters()) {
             if (argList.length() > 0) {
                 argList.append(", ");
             }
-            argList.append(parameter.name());
+            argList.append(getWrappedParameterName(parameter));
         }
 
         if (isVoid) {
@@ -178,6 +210,13 @@ public class ExtApiDoclet extends Doclet {
         writer.printf("\n");
     }
 
+    private static String getWrappedParameterName(Parameter parameter) {
+        if (isString(parameter.type())) {
+            return parameter.name() + "_string";
+        }
+        return parameter.name();
+    }
+
     private void generateFunctionSignature(ApiMethod apiMethod, PrintWriter writer) {
         StringBuilder parameterList = new StringBuilder();
 
@@ -190,14 +229,14 @@ public class ExtApiDoclet extends Doclet {
             if (parameterList.length() > 0) {
                 parameterList.append(", ");
             }
-            parameterList.append(parameter.typeName());
+            parameterList.append(mapTypeName(parameter.type(), true));
             parameterList.append(" ");
             parameterList.append(parameter.name());
         }
 
 
         writer.printf("%s %s(%s)",
-                      apiMethod.getMethodDoc().returnType().simpleTypeName(),
+                      mapTypeName(apiMethod.getMethodDoc().returnType(), false),
                       apiMethod.getExternalName(),
                       parameterList);
     }
@@ -300,6 +339,26 @@ public class ExtApiDoclet extends Doclet {
         Collections.sort(this.wrappedClasses);
     }
 
+    private static String mapTypeName(Type type, boolean isParam) {
+        final String simpleTypeName = type.simpleTypeName();
+        if (simpleTypeName.equals("String")) {
+            return isParam ? "const char*" : "char*";
+        }
+        if (simpleTypeName.equals("long")) {
+            return "int64";
+        }
+        return simpleTypeName;
+    }
+
+    private static boolean isVoid(Type type) {
+        return type.qualifiedTypeName().equals("void");
+    }
+
+
+    private static boolean isString(Type type) {
+        return type.qualifiedTypeName().equals("java.lang.String");
+    }
+
     @SuppressWarnings("UnusedDeclaration")
     public static boolean start(RootDoc root) {
         try {
@@ -312,14 +371,6 @@ public class ExtApiDoclet extends Doclet {
             e.printStackTrace();
             return false;
         }
-    }
-
-    private static String mapTypeName(Type type) {
-        final String simpleTypeName = type.simpleTypeName();
-        if (simpleTypeName.equals("String")) {
-            return "char*";
-        }
-        return type.isPrimitive() ? simpleTypeName : simpleTypeName + "*";
     }
 
     @SuppressWarnings("UnusedDeclaration")

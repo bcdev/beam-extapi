@@ -18,7 +18,7 @@ public class ApiClass implements Comparable<ApiClass> {
         this.type = type;
         this.javaName = type.qualifiedTypeName();
         this.resourceName = type.qualifiedTypeName().replace(".", "/");
-        this.externalName = type.simpleTypeName();
+        this.externalName = type.typeName().replace('.', '_');
     }
 
     public Type getType() {
