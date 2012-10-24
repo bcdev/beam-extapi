@@ -105,10 +105,26 @@ public class ExtApiDoclet extends Doclet {
             }
             writer.write("\n");
 
+            writer.write("\n");
+            writer.write("char* beam_allocate_string(jstring str)\n" +
+                                 "{\n" +
+                                 "    int len = (*jenv)->GetStringUTFLength(jenv, str);\n" +
+                                 "    char* chars = (*jenv)->GetStringUTFChars(jenv, str, 0);\n" +
+                                 "    char* result = (char*) malloc((len + 1) * sizeof (char));\n" +
+                                 "    if (result != NULL) strcpy(result, chars);\n" +
+                                 "    (*jenv)->ReleaseStringUTFChars(jenv, str, chars);\n" +
+                                 "    return result;\n" +
+                                 "}\n" +
+                                 "\n");
+            writer.write("\n");
+
             /////////////////////////////////////////////////////////////////////////////////////
             // beam_init_api()
             //
             writer.write("int beam_init_api()\n{\n");
+
+            writer.printf("    if (beam_init_vm() != 0) return 1;\n");
+
             int errCode = 1000;
             for (ApiClass wrappedClass : wrappedClasses) {
                 writer.write(String.format("    %s_class = (*jenv)->FindClass(jenv, \"%s\");\n",
@@ -139,8 +155,10 @@ public class ExtApiDoclet extends Doclet {
 
         generateFunctionSignature(apiMethod, writer);
 
-        String returnType = apiMethod.getMethodDoc().returnType().simpleTypeName();
-        boolean isVoid = isVoid(apiMethod.getMethodDoc().returnType());
+        boolean returnsVoidValue = isVoid(apiMethod.getMethodDoc().returnType());
+        boolean returnsStringValue = isString(apiMethod.getMethodDoc().returnType());
+        boolean returnsPrimitive = apiMethod.getMethodDoc().returnType().isPrimitive();
+        boolean methodIsStatic = apiMethod.getMethodDoc().isStatic();
 
         writer.printf("\n{\n");
         for (Parameter parameter : apiMethod.getMethodDoc().parameters()) {
@@ -148,12 +166,16 @@ public class ExtApiDoclet extends Doclet {
                 writer.printf("    jstring %s = NULL;\n", getWrappedParameterName(parameter));
             }
         }
-        if (!isVoid) {
-            writer.printf("    %s _result = (%s) 0;\n", returnType, returnType);
+        if (!returnsVoidValue) {
+            String s = mapTypeName(apiMethod.getMethodDoc().returnType(), false);
+            writer.printf("    %s _result = (%s) 0;\n", s, s);
+            if (returnsStringValue) {
+                writer.printf("    jstring resultString = NULL;\n");
+            }
         }
         writer.printf("    static jmethodID method = NULL;\n");
         writer.printf("\n");
-        if (isVoid) {
+        if (returnsVoidValue) {
             writer.printf("    if (beam_init_vm() != 0) return;\n");
         } else {
             writer.printf("    if (beam_init_vm() != 0) return _result;\n");
@@ -161,11 +183,11 @@ public class ExtApiDoclet extends Doclet {
         writer.printf("\n");
         writer.printf("    if (method == NULL) {\n");
         writer.printf("        method = (*jenv)->%s(jenv, %s_class, \"%s\", \"%s\");\n",
-                      apiMethod.getMethodDoc().isStatic() ? "GetStaticMethodID" : "GetMethodID",
+                      methodIsStatic ? "GetStaticMethodID" : "GetMethodID",
                       apiMethod.getApiClass().getExternalName(),
                       apiMethod.getJavaName(),
                       apiMethod.getJavaSignature());
-        if (isVoid) {
+        if (returnsVoidValue) {
             writer.printf("        if (method == NULL) return;\n");
         } else {
             writer.printf("        if (method == NULL) return _result;\n");
@@ -180,7 +202,7 @@ public class ExtApiDoclet extends Doclet {
         }
 
         StringBuilder argList = new StringBuilder();
-        if (!apiMethod.getMethodDoc().isStatic()) {
+        if (!methodIsStatic) {
             argList.append("_self");
         }
         for (Parameter parameter : apiMethod.getMethodDoc().parameters()) {
@@ -190,19 +212,33 @@ public class ExtApiDoclet extends Doclet {
             argList.append(getWrappedParameterName(parameter));
         }
 
-        if (isVoid) {
+        if (returnsVoidValue) {
             writer.printf("    (*jenv)->%s(jenv, %s_class, method, %s);\n",
-                          apiMethod.getMethodDoc().isStatic() ? "CallStaticVoidMethod" : "CallVoidMethod",
+                          methodIsStatic ? "CallStaticVoidMethod" : "CallVoidMethod",
                           apiMethod.getApiClass().getExternalName(),
                           argList);
         } else {
-            writer.printf("    _result = (*jenv)->%s(jenv, %s_class, method, %s);\n",
-                          apiMethod.getMethodDoc().isStatic() ? "CallStaticObjectMethod" : "CallObjectMethod",
+            String typeName;
+            if (returnsPrimitive) {
+                String s = apiMethod.getMethodDoc().returnType().typeName();
+                typeName = Character.toUpperCase(s.charAt(0)) + s.substring(1);
+            } else {
+                typeName = "Object";
+            }
+            writer.printf("    %s = (*jenv)->%s(jenv, %s_class, method, %s);\n",
+                          returnsStringValue ? "resultString" : "_result",
+                          String.format(methodIsStatic ? "CallStatic%sMethod" : "Call%sMethod", typeName),
                           apiMethod.getApiClass().getExternalName(),
                           argList);
+
+            if (returnsStringValue) {
+                writer.printf("    _result = beam_allocate_string(result_string);\n");
+            } else if (!returnsPrimitive) {
+                writer.printf("    _result = _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;\n");
+            }
         }
 
-        if (!isVoid) {
+        if (!returnsVoidValue) {
             writer.printf("    return _result;\n");
         }
 
@@ -212,7 +248,7 @@ public class ExtApiDoclet extends Doclet {
 
     private static String getWrappedParameterName(Parameter parameter) {
         if (isString(parameter.type())) {
-            return parameter.name() + "_string";
+            return parameter.name() + "String";
         }
         return parameter.name();
     }
@@ -234,7 +270,6 @@ public class ExtApiDoclet extends Doclet {
             parameterList.append(parameter.name());
         }
 
-
         writer.printf("%s %s(%s)",
                       mapTypeName(apiMethod.getMethodDoc().returnType(), false),
                       apiMethod.getExternalName(),
@@ -251,6 +286,11 @@ public class ExtApiDoclet extends Doclet {
             for (ApiClass wrappedClass : wrappedClasses) {
                 writer.write(String.format("typedef void* %s;\n", wrappedClass.getExternalName()));
             }
+            writer.write("\n");
+
+            writer.write("\n");
+            writer.write("typedef unsigned char boolean;\n");
+            writer.write("typedef long long dlong;\n");
             writer.write("\n");
 
             writer.write("\n");
@@ -345,7 +385,7 @@ public class ExtApiDoclet extends Doclet {
             return isParam ? "const char*" : "char*";
         }
         if (simpleTypeName.equals("long")) {
-            return "int64";
+            return "dlong";
         }
         return simpleTypeName;
     }
