@@ -16,45 +16,32 @@
 
 package org.esa.beam.extapi.gen;
 
-import com.sun.javadoc.ClassDoc;
-import com.sun.javadoc.DocErrorReporter;
-import com.sun.javadoc.Doclet;
-import com.sun.javadoc.LanguageVersion;
-import com.sun.javadoc.MethodDoc;
-import com.sun.javadoc.Parameter;
-import com.sun.javadoc.RootDoc;
-import com.sun.javadoc.Tag;
-import com.sun.javadoc.Type;
+import com.sun.javadoc.*;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author Norman Fomferra
- * @version $Revision$ $Date$
  */
-public class ExtApiDoclet extends Doclet {
+public class ExtApiGen extends Doclet {
+
+    public static final String BEAM_CAPI_SRCDIR = "src/main/c/gen";
+    public static final String BEAM_CAPI_NAME = "beam_capi";
+
     private RootDoc rootDoc;
-    private ArrayList<ApiClass> wrappedClasses;
+    private ArrayList<ApiClass> apiClasses;
     private Set<ApiClass> usedClasses;
     private Set<String> wrappedClassNames;
-    private Map<String, List<ApiMethod>> wrappedClassMethods;
-
+    private Map<ApiMethod, String> externalFunctionNames;
 
     public static void main(String[] args) {
 
         com.sun.tools.javadoc.Main.main(new String[]{
-                "-doclet", ExtApiDoclet.class.getName(),
+                "-doclet", ExtApiGen.class.getName(),
                 "-sourcepath", "" +
                 "../beam/beam/beam-core/src/main/java;" +
                 "../beam/beam/beam-gpf/src/main/java",
@@ -65,10 +52,9 @@ public class ExtApiDoclet extends Doclet {
         });
     }
 
-    private ExtApiDoclet(RootDoc rootDoc) throws IOException {
+    private ExtApiGen(RootDoc rootDoc) throws IOException {
         this.rootDoc = rootDoc;
-        wrappedClasses = new ArrayList<ApiClass>(100);
-        wrappedClassMethods = new HashMap<String, List<ApiMethod>>(100);
+        apiClasses = new ArrayList<ApiClass>(100);
         usedClasses = new HashSet<ApiClass>();
 
         final Properties properties = new Properties();
@@ -80,30 +66,60 @@ public class ExtApiDoclet extends Doclet {
         collectAll();
         writeHeader();
         writeSource();
+        writeWinDef();
         printStats();
+    }
+
+    private void writeWinDef() throws IOException {
+        PrintWriter writer = new PrintWriter(new FileWriter(new File(BEAM_CAPI_SRCDIR, BEAM_CAPI_NAME + ".def")));
+        try {
+            writer.printf("LIBRARY \"%s\"\n\n", BEAM_CAPI_NAME);
+            writer.printf("EXPORTS\n" +
+                                  "\tbeam_is_jvm_created\n" +
+                                  "\tbeam_create_jvm\n" +
+                                  "\tbeam_create_jvm_with_defaults\n" +
+                                  "\tbeam_destroy_jvm\n");
+            for (ApiClass apiClass : apiClasses) {
+                for (ApiMethod apiMethod : apiClass.getApiMethods()) {
+                    writer.printf("\t%s\n", getExternalFunctionName(apiMethod));
+                }
+            }
+        } finally {
+            writer.close();
+        }
+    }
+
+    String getExternalFunctionName(ApiMethod apiMethod) {
+        return externalFunctionNames.get(apiMethod);
     }
 
     private void printStats() {
         int numClasses = 0;
         int numMethods = 0;
-        for (ApiClass wrappedClass : wrappedClasses) {
+        for (ApiClass apiClass : apiClasses) {
             numClasses++;
-            numMethods += wrappedClassMethods.get(wrappedClass.getJavaName()).size();
+            numMethods += apiClass.getApiMethods().size();
         }
         System.out.printf("#Classes: %d, #Methods: %d\n", numClasses, numMethods);
     }
 
     private void writeSource() throws IOException {
-        PrintWriter writer = new PrintWriter(new FileWriter("beam_wrappers.c"));
+        PrintWriter writer = new PrintWriter(new FileWriter(new File(BEAM_CAPI_SRCDIR, BEAM_CAPI_NAME + ".c")));
         try {
             generateFileInfo(writer);
-            writer.write("#include \"beam_wrappers.h\"\n");
-            writer.write("#include \"jni.h\"\n");
-            writer.write("\n");
-            for (ApiClass wrappedClass : wrappedClasses) {
-                writer.write(String.format("static jclass %s_class;\n", wrappedClass.getExternalName()));
+            writer.printf("#include <stdlib.h>\n");
+            writer.printf("#include <string.h>\n");
+            writer.printf("#include \"%s\"\n", BEAM_CAPI_NAME + ".h");
+            writer.printf("#include \"jni.h\"\n");
+            writer.printf("\n");
+            for (ApiClass apiClass : apiClasses) {
+                String classVarName = getExternalClassVarName(apiClass);
+                writer.write(String.format("static jclass %s;\n", classVarName));
             }
             writer.write("\n");
+
+            writer.write("static JavaVM* jvm = NULL;\n");
+            writer.write("static JNIEnv* jenv = NULL;\n");
 
             writer.write("\n");
             writer.write("char* beam_allocate_string(jstring str)\n" +
@@ -126,11 +142,12 @@ public class ExtApiDoclet extends Doclet {
             writer.printf("    if (beam_init_vm() != 0) return 1;\n");
 
             int errCode = 1000;
-            for (ApiClass wrappedClass : wrappedClasses) {
-                writer.write(String.format("    %s_class = (*jenv)->FindClass(jenv, \"%s\");\n",
-                                           wrappedClass.getExternalName(), wrappedClass.getResourceName()));
-                writer.write(String.format("    if (%s_class == NULL) return %d;\n",
-                                           wrappedClass.getExternalName(), errCode));
+            for (ApiClass apiClass : apiClasses) {
+                String classVarName = getExternalClassVarName(apiClass);
+                writer.write(String.format("    %s = (*jenv)->FindClass(jenv, \"%s\");\n",
+                                           classVarName, apiClass.getResourceName()));
+                writer.write(String.format("    if (%s == NULL) return %d;\n",
+                                           classVarName, errCode));
                 writer.write("\n");
                 errCode++;
             }
@@ -140,15 +157,18 @@ public class ExtApiDoclet extends Doclet {
             /////////////////////////////////////////////////////////////////////////////////////
             // Generate function code
             //
-            for (ApiClass wrappedClass : wrappedClasses) {
-                List<ApiMethod> apiMethods = wrappedClassMethods.get(wrappedClass.getJavaName());
-                for (ApiMethod apiMethod : apiMethods) {
+            for (ApiClass apiClass : apiClasses) {
+                for (ApiMethod apiMethod : apiClass.getApiMethods()) {
                     generateApiMethod(apiMethod, writer);
                 }
             }
         } finally {
             writer.close();
         }
+    }
+
+    private String getExternalClassVarName(ApiClass apiClass) {
+        return getExternalTypeName(apiClass) + "_class";
     }
 
     private void generateApiMethod(ApiMethod apiMethod, PrintWriter writer) throws IOException {
@@ -160,6 +180,8 @@ public class ExtApiDoclet extends Doclet {
         boolean returnsPrimitive = apiMethod.getMethodDoc().returnType().isPrimitive();
         boolean methodIsStatic = apiMethod.getMethodDoc().isStatic();
 
+        String externalClassVarName = getExternalClassVarName(apiMethod.getApiClass());
+
         writer.printf("\n{\n");
         for (Parameter parameter : apiMethod.getMethodDoc().parameters()) {
             if (isString(parameter.type())) {
@@ -167,7 +189,7 @@ public class ExtApiDoclet extends Doclet {
             }
         }
         if (!returnsVoidValue) {
-            String s = mapTypeName(apiMethod.getMethodDoc().returnType(), false);
+            String s = getExternalTypeName(apiMethod.getMethodDoc().returnType(), false);
             writer.printf("    %s _result = (%s) 0;\n", s, s);
             if (returnsStringValue) {
                 writer.printf("    jstring resultString = NULL;\n");
@@ -182,9 +204,9 @@ public class ExtApiDoclet extends Doclet {
         }
         writer.printf("\n");
         writer.printf("    if (method == NULL) {\n");
-        writer.printf("        method = (*jenv)->%s(jenv, %s_class, \"%s\", \"%s\");\n",
+        writer.printf("        method = (*jenv)->%s(jenv, %s, \"%s\", \"%s\");\n",
                       methodIsStatic ? "GetStaticMethodID" : "GetMethodID",
-                      apiMethod.getApiClass().getExternalName(),
+                      externalClassVarName,
                       apiMethod.getJavaName(),
                       apiMethod.getJavaSignature());
         if (returnsVoidValue) {
@@ -197,25 +219,24 @@ public class ExtApiDoclet extends Doclet {
 
         for (Parameter parameter : apiMethod.getMethodDoc().parameters()) {
             if (isString(parameter.type())) {
-                writer.printf("    %s = (*jenv)->NewStringUTF(jenv, %s);\n", getWrappedParameterName(parameter), parameter.name());
+                writer.printf("    %s = (*jenv)->NewStringUTF(jenv, %s);\n",
+                              getWrappedParameterName(parameter), parameter.name());
             }
         }
 
         StringBuilder argList = new StringBuilder();
         if (!methodIsStatic) {
-            argList.append("_self");
+            argList.append(", _self");
         }
         for (Parameter parameter : apiMethod.getMethodDoc().parameters()) {
-            if (argList.length() > 0) {
-                argList.append(", ");
-            }
+            argList.append(", ");
             argList.append(getWrappedParameterName(parameter));
         }
 
         if (returnsVoidValue) {
-            writer.printf("    (*jenv)->%s(jenv, %s_class, method, %s);\n",
+            writer.printf("    (*jenv)->%s(jenv, %s, method%s);\n",
                           methodIsStatic ? "CallStaticVoidMethod" : "CallVoidMethod",
-                          apiMethod.getApiClass().getExternalName(),
+                          externalClassVarName,
                           argList);
         } else {
             String typeName;
@@ -225,14 +246,14 @@ public class ExtApiDoclet extends Doclet {
             } else {
                 typeName = "Object";
             }
-            writer.printf("    %s = (*jenv)->%s(jenv, %s_class, method, %s);\n",
+            writer.printf("    %s = (*jenv)->%s(jenv, %s, method%s);\n",
                           returnsStringValue ? "resultString" : "_result",
                           String.format(methodIsStatic ? "CallStatic%sMethod" : "Call%sMethod", typeName),
-                          apiMethod.getApiClass().getExternalName(),
+                          externalClassVarName,
                           argList);
 
             if (returnsStringValue) {
-                writer.printf("    _result = beam_allocate_string(result_string);\n");
+                writer.printf("    _result = beam_allocate_string(resultString);\n");
             } else if (!returnsPrimitive) {
                 writer.printf("    _result = _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;\n");
             }
@@ -246,6 +267,10 @@ public class ExtApiDoclet extends Doclet {
         writer.printf("\n");
     }
 
+    private String getExternalClassName(ApiMethod apiMethod) {
+        return getExternalTypeName(apiMethod.getApiClass());
+    }
+
     private static String getWrappedParameterName(Parameter parameter) {
         if (isString(parameter.type())) {
             return parameter.name() + "String";
@@ -257,7 +282,7 @@ public class ExtApiDoclet extends Doclet {
         StringBuilder parameterList = new StringBuilder();
 
         if (!apiMethod.getMethodDoc().isStatic()) {
-            parameterList.append(apiMethod.getApiClass().getExternalName());
+            parameterList.append(getExternalClassName(apiMethod));
             parameterList.append(" _self");
         }
         Parameter[] parameters = apiMethod.getMethodDoc().parameters();
@@ -265,26 +290,26 @@ public class ExtApiDoclet extends Doclet {
             if (parameterList.length() > 0) {
                 parameterList.append(", ");
             }
-            parameterList.append(mapTypeName(parameter.type(), true));
+            parameterList.append(getExternalTypeName(parameter.type(), true));
             parameterList.append(" ");
             parameterList.append(parameter.name());
         }
 
         writer.printf("%s %s(%s)",
-                      mapTypeName(apiMethod.getMethodDoc().returnType(), false),
-                      apiMethod.getExternalName(),
+                      getExternalTypeName(apiMethod.getMethodDoc().returnType(), false),
+                      getExternalFunctionName(apiMethod),
                       parameterList);
     }
 
     private void writeHeader() throws IOException {
-        PrintWriter writer = new PrintWriter(new FileWriter("beam_wrappers.h"));
+        PrintWriter writer = new PrintWriter(new FileWriter(new File(BEAM_CAPI_SRCDIR, BEAM_CAPI_NAME + ".h")));
         try {
             generateFileInfo(writer);
 
             writer.write("\n");
             writer.write("/* Wrapped API classes */\n");
-            for (ApiClass wrappedClass : wrappedClasses) {
-                writer.write(String.format("typedef void* %s;\n", wrappedClass.getExternalName()));
+            for (ApiClass apiClass : apiClasses) {
+                writer.write(String.format("typedef void* %s;\n", getExternalTypeName(apiClass)));
             }
             writer.write("\n");
 
@@ -293,11 +318,13 @@ public class ExtApiDoclet extends Doclet {
             writer.write("typedef long long dlong;\n");
             writer.write("\n");
 
+            writer.write("int beam_init_vm();\n");
+
             writer.write("\n");
             writer.write("/* Non-API classes used in the API */\n");
             for (ApiClass usedClass : usedClasses) {
-                if (!wrappedClasses.contains(usedClass)) {
-                    writer.write(String.format("typedef void* %s;\n", usedClass.getExternalName()));
+                if (!apiClasses.contains(usedClass) && !isString(usedClass.getType())) {
+                    writer.write(String.format("typedef void* %s;\n", getExternalTypeName(usedClass)));
                 }
             }
             writer.write("\n");
@@ -305,12 +332,11 @@ public class ExtApiDoclet extends Doclet {
             /////////////////////////////////////////////////////////////////////////////////////
             // Generate function declarations
             //
-            for (ApiClass wrappedClass : wrappedClasses) {
+            for (ApiClass apiClass : apiClasses) {
                 writer.write("\n");
-                writer.printf("/* Functions for class %s */\n", wrappedClass.getExternalName());
+                writer.printf("/* Functions for class %s */\n", getExternalTypeName(apiClass));
                 writer.write("\n");
-                List<ApiMethod> apiMethods = wrappedClassMethods.get(wrappedClass.getJavaName());
-                for (ApiMethod apiMethod : apiMethods) {
+                for (ApiMethod apiMethod : apiClass.getApiMethods()) {
                     generateFunctionDeclaration(writer, apiMethod);
                 }
             }
@@ -322,7 +348,7 @@ public class ExtApiDoclet extends Doclet {
     private void generateFileInfo(PrintWriter writer) {
         writer.write(String.format("/*\n" +
                                            " * DO NOT EDIT THIS FILE, IT IS MACHINE-GENERATED\n" +
-                                           " * File generated at %s using %s\n" +
+                                           " * File created at %s using %s\n" +
                                            " */\n", new Date(), getClass().getName()));
         writer.write("\n");
     }
@@ -334,6 +360,9 @@ public class ExtApiDoclet extends Doclet {
 
     private void collectAll() throws ClassNotFoundException, NoSuchMethodException {
         final ClassDoc[] classDocs = rootDoc.classes();
+
+        Map<String, List<ApiMethod>> sameExternalFunctionNames = new HashMap<String, List<ApiMethod>>(1000);
+
         for (ClassDoc classDoc : classDocs) {
 
             final MethodDoc[] methodDocs = classDoc.methods();
@@ -341,9 +370,7 @@ public class ExtApiDoclet extends Doclet {
             if (classDoc.isPublic() && wrappedClassNames.contains(classDoc.qualifiedTypeName())) {
 
                 ApiClass apiClass = new ApiClass(classDoc);
-                wrappedClasses.add(apiClass);
-                ArrayList<ApiMethod> apiMethods = new ArrayList<ApiMethod>(64);
-                wrappedClassMethods.put(apiClass.getJavaName(), apiMethods);
+                apiClasses.add(apiClass);
 
                 for (MethodDoc methodDoc : methodDocs) {
                     if (methodDoc.isPublic()) {
@@ -353,7 +380,15 @@ public class ExtApiDoclet extends Doclet {
 
                             final Type retType = methodDoc.returnType();
 
-                            apiMethods.add(new ApiMethod(apiClass, methodDoc));
+                            ApiMethod apiMethod = new ApiMethod(apiClass, methodDoc);
+                            apiClass.addApiMethod(apiMethod);
+
+                            List<ApiMethod> apiMethods = sameExternalFunctionNames.get(getExternalBaseName(apiMethod));
+                            if (apiMethods == null) {
+                                apiMethods = new ArrayList<ApiMethod>(4);
+                                sameExternalFunctionNames.put(getExternalBaseName(apiMethod), apiMethods);
+                            }
+                            apiMethods.add(apiMethod);
 
                             if (!retType.isPrimitive()) {
                                 usedClasses.add(new ApiClass(retType));
@@ -376,18 +411,48 @@ public class ExtApiDoclet extends Doclet {
                 System.out.printf("Ignored non-API class: %s\n", classDoc.qualifiedTypeName());
             }
         }
-        Collections.sort(this.wrappedClasses);
+        Collections.sort(this.apiClasses);
+
+        externalFunctionNames = new HashMap<ApiMethod, String>(apiClasses.size() * 100);
+        for (ApiClass apiClass : apiClasses) {
+            for (ApiMethod apiMethod : apiClass.getApiMethods()) {
+                List<ApiMethod> apiMethods = sameExternalFunctionNames.get(getExternalBaseName(apiMethod));
+                if (apiMethods.size() > 1) {
+                    for (int i = 0; i < apiMethods.size(); i++) {
+                        externalFunctionNames.put(apiMethods.get(i), getExternalBaseName(apiMethods.get(i)) + (i + 1));
+                    }
+                } else {
+                    externalFunctionNames.put(apiMethods.get(0), getExternalBaseName(apiMethods.get(0)));
+                }
+            }
+        }
     }
 
-    private static String mapTypeName(Type type, boolean isParam) {
-        final String simpleTypeName = type.simpleTypeName();
-        if (simpleTypeName.equals("String")) {
-            return isParam ? "const char*" : "char*";
+    private String getExternalBaseName(ApiMethod apiMethod) {
+        return getExternalClassName(apiMethod) + "_" + apiMethod.getJavaName();
+    }
+
+    private String getExternalTypeName(ApiClass apiClass) {
+        return getExternalTypeName(apiClass.getType(), true);
+    }
+
+    private String getExternalTypeName(Type type, boolean isParam) {
+        if (type.isPrimitive()) {
+            final String typeName = type.typeName();
+            if (typeName.equals("byte")) {
+                return "char";
+            } else if (typeName.equals("long")) {
+                return "dlong";
+            } else {
+                return typeName;
+            }
+        } else {
+            if (isString(type)) {
+                return isParam ? "const char*" : "char*";
+            } else {
+                return type.typeName().replace('.', '_');
+            }
         }
-        if (simpleTypeName.equals("long")) {
-            return "dlong";
-        }
-        return simpleTypeName;
     }
 
     private static boolean isVoid(Type type) {
@@ -402,7 +467,7 @@ public class ExtApiDoclet extends Doclet {
     @SuppressWarnings("UnusedDeclaration")
     public static boolean start(RootDoc root) {
         try {
-            new ExtApiDoclet(root).start();
+            new ExtApiGen(root).start();
             return true;
         } catch (IOException e) {
             e.printStackTrace();

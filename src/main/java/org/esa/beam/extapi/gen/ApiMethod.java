@@ -11,7 +11,6 @@ public class ApiMethod implements Comparable<ApiMethod> {
     private final ApiClass apiClass;
     private final MethodDoc methodDoc;
     private final String javaName;
-    private final String externalName;
     private final String javaSignature;
 
     public ApiMethod(ApiClass apiClass, MethodDoc methodDoc) throws ClassNotFoundException, NoSuchMethodException {
@@ -19,7 +18,11 @@ public class ApiMethod implements Comparable<ApiMethod> {
         this.methodDoc = methodDoc;
         javaName = methodDoc.name();
         javaSignature = getTypeSignature(methodDoc);
-        externalName = apiClass.getExternalName() + "_" + javaName;
+    }
+
+    @Override
+    public String toString() {
+        return "ApiMethod[javaName=" + javaName + ",javaSignature=" + javaSignature + "]";
     }
 
     public ApiClass getApiClass() {
@@ -36,10 +39,6 @@ public class ApiMethod implements Comparable<ApiMethod> {
 
     public String getJavaSignature() {
         return javaSignature;
-    }
-
-    public String getExternalName() {
-        return externalName;
     }
 
     static String getTypeSignature(MethodDoc methodDoc) {
@@ -81,35 +80,41 @@ public class ApiMethod implements Comparable<ApiMethod> {
             comp = "L" + type.qualifiedTypeName().replace('.', '/') + ";";
         }
         if (!type.dimension().isEmpty()) {
-             return type.dimension().replace("]", "") + comp;
+            return type.dimension().replace("]", "") + comp;
         }
         return comp;
     }
 
     @Override
     public int compareTo(ApiMethod o) {
-        int n = javaName.compareTo(o.javaName);
-        return n == 0 ? javaSignature.compareTo(o.javaSignature) : n;
+        int n = apiClass.compareTo(o.apiClass);
+        if (n != 0) {
+            return n;
+        }
+        n = javaName.compareTo(o.javaName);
+        if (n != 0) {
+            return n;
+        }
+        return javaSignature.compareTo(o.javaSignature);
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof ApiMethod)) {
-            return false;
-        }
+        if (this == o) return true;
+        if (!(o instanceof ApiMethod)) return false;
 
         ApiMethod apiMethod = (ApiMethod) o;
 
-        return javaName.equals(apiMethod.javaName) && javaSignature.equals(apiMethod.javaSignature);
+        return apiClass.equals(apiMethod.apiClass)
+                && javaName.equals(apiMethod.javaName)
+                && javaSignature.equals(apiMethod.javaSignature);
 
     }
 
     @Override
     public int hashCode() {
-        int result = javaName.hashCode();
+        int result = apiClass.hashCode();
+        result = 31 * result + javaName.hashCode();
         result = 31 * result + javaSignature.hashCode();
         return result;
     }
