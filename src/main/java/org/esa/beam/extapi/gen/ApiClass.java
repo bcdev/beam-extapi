@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * @author Norman Fomferra
  */
-public class ApiClass implements Comparable<ApiClass> {
+class ApiClass implements Comparable<ApiClass> {
     private final String javaName;
     private final String resourceName;
     private final List<ApiMethod> apiMethods;

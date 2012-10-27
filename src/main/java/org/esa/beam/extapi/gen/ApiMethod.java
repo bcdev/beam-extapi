@@ -7,7 +7,7 @@ import com.sun.javadoc.Type;
 /**
  * @author Norman Fomferra
  */
-public class ApiMethod implements Comparable<ApiMethod> {
+class ApiMethod implements Comparable<ApiMethod> {
     private final ApiClass apiClass;
     private final MethodDoc methodDoc;
     private final String javaName;
