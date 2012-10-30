@@ -13,10 +13,6 @@ abstract class CodeGenParameter {
         this.parameter = parameter;
     }
 
-    public Parameter getParameter() {
-        return parameter;
-    }
-
     public String getName() {
         return parameter.name();
     }
@@ -25,19 +21,21 @@ abstract class CodeGenParameter {
         return parameter.type();
     }
 
-    public abstract String generateLocalVarDecl(CodeGenContext context);
+    public abstract String generateParamListDecl(CodeGenContext context);
 
-    public abstract String generatePreCallCode(CodeGenContext context);
+    public String generateLocalVarDecl(CodeGenContext context) {
+        return null;
+    }
 
-    public abstract String generatePostCallCode(CodeGenContext context);
+    public String generatePreCallCode(CodeGenContext context) {
+        return null;
+    }
 
     public abstract String generateCallArgExpr(CodeGenContext context);
 
-    public abstract String generateTargetVarName(CodeGenContext context);
-
-    public abstract String generateTargetVarType(CodeGenContext context);
-
-    public abstract String generateCallVarName(CodeGenContext context);
+    public String generatePostCallCode(CodeGenContext context) {
+        return null;
+    }
 
     static class PrimitiveScalar extends CodeGenParameter {
         PrimitiveScalar(Parameter parameter) {
@@ -45,41 +43,19 @@ abstract class CodeGenParameter {
         }
 
         @Override
-        public String generateCallArgExpr(CodeGenContext context) {
-            return parameter.name();
-        }
-
-        @Override
-        public String generateLocalVarDecl(CodeGenContext context) {
-            return null;
-        }
-
-        @Override
-        public String generatePreCallCode(CodeGenContext context) {
-            return null;
-        }
-
-        @Override
-        public String generatePostCallCode(CodeGenContext context) {
-            return null;
-        }
-
-        @Override
-        public String generateTargetVarName(CodeGenContext context) {
-            return parameter.name();
-        }
-
-        @Override
-        public String generateCallVarName(CodeGenContext context) {
-            return parameter.name();
-        }
-
-        @Override
-        public String generateTargetVarType(CodeGenContext context) {
+        public String generateParamListDecl(CodeGenContext context) {
+            final String typeName;
             if (parameter.typeName().equals("long")) {
-                return "dlong";
+                typeName = "dlong";
+            } else {
+                typeName = parameter.typeName();
             }
-            return parameter.typeName();
+            return String.format("%s %s", typeName, getName());
+        }
+
+        @Override
+        public String generateCallArgExpr(CodeGenContext context) {
+            return getName();
         }
     }
 
@@ -89,42 +65,55 @@ abstract class CodeGenParameter {
         }
 
         @Override
-        public String generateCallArgExpr(CodeGenContext context) {
-            return generateCallVarName(context);
+        public String generateParamListDecl(CodeGenContext context) {
+            return String.format("const char* %s", getName());
         }
 
         @Override
         public String generateLocalVarDecl(CodeGenContext context) {
-            return String.format("jstring %s = NULL;", generateCallVarName(context));
+            return String.format("jstring %sStr = NULL;", getName());
         }
 
         @Override
         public String generatePreCallCode(CodeGenContext context) {
-            return String.format("%s = (*jenv)->NewStringUTF(jenv, %s);",
-                                 generateCallVarName(context), parameter.name());
+            return String.format("%sStr = (*jenv)->NewStringUTF(jenv, %s);",
+                                 getName(), getName());
         }
 
         @Override
-        public String generatePostCallCode(CodeGenContext context) {
-            return null;
-        }
-
-        @Override
-        public String generateTargetVarName(CodeGenContext context) {
-            return parameter.name();
-        }
-
-        @Override
-        public String generateCallVarName(CodeGenContext context) {
-            return parameter.name() + "String";
-        }
-
-        @Override
-        public String generateTargetVarType(CodeGenContext context) {
-            return "const char*";
+        public String generateCallArgExpr(CodeGenContext context) {
+            return String.format("%sStr", getName());
         }
     }
 
+    static class StringArray extends CodeGenParameter {
+        StringArray(Parameter parameter) {
+            super(parameter);
+        }
+
+        @Override
+        public String generateParamListDecl(CodeGenContext context) {
+            return String.format("const char** %sElems, int %sLength",
+                                 getName(), getName());
+        }
+
+        @Override
+        public String generateLocalVarDecl(CodeGenContext context) {
+            return String.format("jobjectArray %sArray = NULL;", getName());
+        }
+
+        @Override
+        public String generatePreCallCode(CodeGenContext context) {
+            return String.format("%sArray = beam_new_jstring_array(%sElems, %sLength);",
+                                 getName(), getName(), getName());
+        }
+
+        @Override
+        public String generateCallArgExpr(CodeGenContext context) {
+            return String.format("%sArray", getName());
+        }
+
+    }
 
     static class ObjectScalar extends CodeGenParameter {
         ObjectScalar(Parameter parameter) {
@@ -132,38 +121,14 @@ abstract class CodeGenParameter {
         }
 
         @Override
+        public String generateParamListDecl(CodeGenContext context) {
+            String typeName = getType().typeName().replace('.', '_');
+            return String.format("%s %s", typeName, getName());
+        }
+
+        @Override
         public String generateCallArgExpr(CodeGenContext context) {
-            return parameter.name();
-        }
-
-        @Override
-        public String generateLocalVarDecl(CodeGenContext context) {
-            return null;
-        }
-
-        @Override
-        public String generatePreCallCode(CodeGenContext context) {
-            return null;
-        }
-
-        @Override
-        public String generatePostCallCode(CodeGenContext context) {
-            return null;
-        }
-
-        @Override
-        public String generateCallVarName(CodeGenContext context) {
-            return parameter.name();
-        }
-
-        @Override
-        public String generateTargetVarName(CodeGenContext context) {
-            return parameter.name();
-        }
-
-        @Override
-        public String generateTargetVarType(CodeGenContext context) {
-            return getType().typeName().replace('.', '_');
+            return getName();
         }
     }
 

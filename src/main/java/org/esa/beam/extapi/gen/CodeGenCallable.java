@@ -5,9 +5,7 @@ import com.sun.javadoc.ExecutableMemberDoc;
 import com.sun.javadoc.MethodDoc;
 import com.sun.javadoc.Type;
 
-import static org.esa.beam.extapi.gen.Generator.METHOD_VAR_NAME;
-import static org.esa.beam.extapi.gen.Generator.RESULT_VAR_NAME;
-import static org.esa.beam.extapi.gen.Generator.SELF_VAR_NAME;
+import static org.esa.beam.extapi.gen.Generator.*;
 
 /**
  * @author Norman Fomferra
@@ -77,6 +75,10 @@ abstract class CodeGenCallable implements Comparable<CodeGenCallable> {
         }
     }
 
+    public String generateParamListDecl(CodeGenContext context) {
+        return null;
+    }
+
     public abstract String generateLocalVarDecl(CodeGenContext context);
 
     public abstract String generateCallCode(CodeGenContext context);
@@ -117,12 +119,20 @@ abstract class CodeGenCallable implements Comparable<CodeGenCallable> {
                                                SELF_VAR_NAME));
         }
         for (CodeGenParameter parameter : parameters) {
+            String decl = parameter.generateParamListDecl(context);
+            if (decl != null) {
+                if (parameterList.length() > 0) {
+                    parameterList.append(", ");
+                }
+                parameterList.append(decl);
+            }
+        }
+        String decl = generateParamListDecl(context);
+        if (decl != null) {
             if (parameterList.length() > 0) {
                 parameterList.append(", ");
             }
-            parameterList.append(String.format("%s %s",
-                                               parameter.generateTargetVarType(context),
-                                               parameter.generateTargetVarName(context)));
+            parameterList.append(decl);
         }
         return parameterList.toString();
     }
@@ -136,7 +146,7 @@ abstract class CodeGenCallable implements Comparable<CodeGenCallable> {
             if (argumentList.length() > 0) {
                 argumentList.append(", ");
             }
-            argumentList.append(parameter.generateCallVarName(context));
+            argumentList.append(parameter.generateCallArgExpr(context));
         }
         return argumentList.toString();
     }
@@ -353,7 +363,7 @@ abstract class CodeGenCallable implements Comparable<CodeGenCallable> {
         @Override
         public String generateCallCode(CodeGenContext context) {
             return String.format("_resultString = %s\n" +
-                                         "%s = beam_allocate_string(_resultString);",
+                                         "%s = beam_alloc_string(_resultString);",
                                  generateCall(context), RESULT_VAR_NAME);
         }
 
@@ -363,4 +373,32 @@ abstract class CodeGenCallable implements Comparable<CodeGenCallable> {
         }
     }
 
+    static class StringArrayMethod extends ObjectMethod {
+        StringArrayMethod(CodeGenClass codeGenClass, CodeGenParameter[] codeGenParameters, MethodDoc methodDoc) {
+            super(codeGenClass, codeGenParameters, methodDoc);
+        }
+
+        @Override
+        public String generateParamListDecl(CodeGenContext context) {
+            return "size_t* resultArrayLength";
+        }
+
+        @Override
+        public String generateLocalVarDecl(CodeGenContext context) {
+            return super.generateLocalVarDecl(context) + "\n" +
+                    "jobjectArray _resultArray = NULL;";
+        }
+
+        @Override
+        public String generateCallCode(CodeGenContext context) {
+            return String.format("_resultArray = %s\n" +
+                                         "%s = beam_alloc_string_array(_resultArray, resultArrayLength);",
+                                 generateCall(context), RESULT_VAR_NAME);
+        }
+
+        @Override
+        public String generateReturnCode(CodeGenContext context) {
+            return String.format("return %s;", RESULT_VAR_NAME);
+        }
+    }
 }

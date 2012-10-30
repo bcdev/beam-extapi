@@ -4,6 +4,8 @@ import com.sun.javadoc.*;
 
 import java.util.*;
 
+import static org.esa.beam.extapi.gen.Generator.isStringArray;
+
 /**
  * @author Norman Fomferra
  */
@@ -54,10 +56,10 @@ class GeneratorInfo {
                             CodeGenCallable apiMethod = new CodeGenCallable.Constructor(codeGenClass, constructorDoc, parameters);
                             collect(codeGenClass, apiMethod, usedCodeGenClasses, sameTargetFunctionNames);
                         } catch (CodeGenException e) {
-                            System.out.printf("Skipping constructor of %s: %s\n", classDoc.qualifiedTypeName(), e.getMessage());
+                            System.out.printf("Skipping constructor: %s\n", e.getMessage());
                         }
                     } else {
-                        System.out.printf("Ignoring deprecated constructor: %s.%s\n", classDoc.qualifiedTypeName(), constructorDoc.name());
+                        System.out.printf("Ignoring deprecated constructor: %s#%s()\n", classDoc.qualifiedTypeName(), constructorDoc.name());
                     }
                 }
 
@@ -69,15 +71,15 @@ class GeneratorInfo {
                             CodeGenCallable apiMethod = createMethodCallable(codeGenClass, methodDoc, parameters);
                             collect(codeGenClass, apiMethod, usedCodeGenClasses, sameTargetFunctionNames);
                         } catch (CodeGenException e) {
-                            System.out.printf("Skipping method %s.%s: %s\n", classDoc.qualifiedTypeName(), methodDoc.name(), e.getMessage());
+                            System.out.printf("Skipping method: %s\n", e.getMessage());
                         }
                     } else {
-                        System.out.printf("Ignoring deprecated method: %s.%s\n", classDoc.qualifiedTypeName(), methodDoc.name());
+                        System.out.printf("Ignoring deprecated method: %s#%s()\n", classDoc.qualifiedTypeName(), methodDoc.name());
                     }
                 }
 
             } else {
-                System.out.printf("Ignored non-API class: %s\n", classDoc.qualifiedTypeName());
+                System.out.printf("Ignoring non-API class: %s\n", classDoc.qualifiedTypeName());
             }
         }
         Collections.sort(codeGenClasses);
@@ -101,23 +103,25 @@ class GeneratorInfo {
 
     private static CodeGenCallable createMethodCallable(CodeGenClass codeGenClass, MethodDoc methodDoc, CodeGenParameter[] parameters) throws CodeGenException {
         CodeGenCallable apiMethod;
-        if (methodDoc.returnType().dimension().isEmpty()) {
-            String s = methodDoc.returnType().qualifiedTypeName();
-            if (Generator.isVoid(methodDoc.returnType())) {
+        Type returnType = methodDoc.returnType();
+        if (returnType.dimension().isEmpty()) {
+            if (Generator.isVoid(returnType)) {
                 apiMethod = new CodeGenCallable.VoidMethod(codeGenClass, parameters, methodDoc);
-            } else if (Generator.isString(methodDoc.returnType())) {
+            } else if (Generator.isString(returnType)) {
                 apiMethod = new CodeGenCallable.StringMethod(codeGenClass, parameters, methodDoc);
-            } else if (methodDoc.returnType().isPrimitive()) {
+            } else if (returnType.isPrimitive()) {
                 apiMethod = new CodeGenCallable.PrimitiveMethod(codeGenClass, parameters, methodDoc);
             } else {
                 apiMethod = new CodeGenCallable.ObjectMethod(codeGenClass, parameters, methodDoc);
             }
+        } else if (isStringArray(returnType)) {
+            apiMethod = new CodeGenCallable.StringArrayMethod(codeGenClass, parameters, methodDoc);
         } else {
-            throw new CodeGenException(String.format("Member %s#%s(): cant't deal with return type %s%s",
+            throw new CodeGenException(String.format("member %s#%s(): can't deal with return type %s%s (not implemented yet)",
                                                      codeGenClass.getJavaName(),
                                                      methodDoc.name(),
-                                                     methodDoc.returnType().typeName(),
-                                                     methodDoc.returnType().dimension()));
+                                                     returnType.typeName(),
+                                                     returnType.dimension()));
         }
         return apiMethod;
     }
@@ -157,22 +161,25 @@ class GeneratorInfo {
         for (int i = 0; i < codeGenParameters.length; i++) {
             Parameter parameter = parameters[i];
             CodeGenParameter codeGenParameter;
-            boolean scalar = parameter.type().dimension().equals("");
+            Type parameterType = parameter.type();
+            boolean scalar = parameterType.dimension().equals("");
             if (scalar) {
-                if (parameter.type().isPrimitive()) {
+                if (parameterType.isPrimitive()) {
                     codeGenParameter = new CodeGenParameter.PrimitiveScalar(parameter);
-                } else if (parameter.type().qualifiedTypeName().equals("java.lang.String")) {
+                } else if (parameterType.qualifiedTypeName().equals("java.lang.String")) {
                     codeGenParameter = new CodeGenParameter.StringScalar(parameter);
                 } else {
                     codeGenParameter = new CodeGenParameter.ObjectScalar(parameter);
                 }
+            } else if (isStringArray(parameterType)) {
+                codeGenParameter = new CodeGenParameter.StringArray(parameter);
             } else {
-                throw new CodeGenException(String.format("Member %s#%s(): cant't deal with parameter %s of type %s%s",
+                throw new CodeGenException(String.format("member %s#%s(): can't deal with parameter %s of type %s%s (not implemented yet)",
                                                          codeGenClass.getJavaName(),
                                                          memberDoc.name(),
                                                          parameter.name(),
-                                                         parameter.type().typeName(),
-                                                         parameter.type().dimension()));
+                                                         parameterType.typeName(),
+                                                         parameterType.dimension()));
             }
             codeGenParameters[i] = codeGenParameter;
         }

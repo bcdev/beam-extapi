@@ -6,9 +6,11 @@ EXPORTS
 	beam_create_jvm_with_defaults
 	beam_destroy_jvm
 	ProductIO_getProductReader
+	ProductIO_getProductWriterExtensions
 	ProductIO_getProductWriter
 	ProductIO_readProduct1
 	ProductIO_readProduct2
+	ProductIO_readProduct3
 	ProductIO_getProductReaderForInput
 	ProductIO_writeProduct1
 	ProductIO_writeProduct2
@@ -99,6 +101,7 @@ EXPORTS
 	ColorPaletteDef_Point_createClone
 	FlagCoding_newFlagCoding
 	FlagCoding_getFlag
+	FlagCoding_getFlagNames
 	FlagCoding_addFlag
 	FlagCoding_getFlagMask
 	FlagCoding_acceptVisitor
@@ -158,6 +161,7 @@ EXPORTS
 	ImageInfo_getHistogramMatching2
 	IndexCoding_newIndexCoding
 	IndexCoding_getIndex
+	IndexCoding_getIndexNames
 	IndexCoding_addIndex
 	IndexCoding_getIndexValue
 	IndexCoding_acceptVisitor
@@ -176,6 +180,7 @@ EXPORTS
 	MetadataElement_removeElement
 	MetadataElement_getNumElements
 	MetadataElement_getElementAt
+	MetadataElement_getElementNames
 	MetadataElement_getElement
 	MetadataElement_containsElement
 	MetadataElement_getElementIndex
@@ -183,6 +188,7 @@ EXPORTS
 	MetadataElement_removeAttribute
 	MetadataElement_getNumAttributes
 	MetadataElement_getAttributeAt
+	MetadataElement_getAttributeNames
 	MetadataElement_getAttribute
 	MetadataElement_containsAttribute
 	MetadataElement_getAttributeIndex
@@ -270,6 +276,7 @@ EXPORTS
 	Product_removeTiePointGrid
 	Product_getNumTiePointGrids
 	Product_getTiePointGridAt
+	Product_getTiePointGridNames
 	Product_getTiePointGrid
 	Product_containsTiePointGrid
 	Product_addBand1
@@ -279,6 +286,7 @@ EXPORTS
 	Product_removeBand
 	Product_getNumBands
 	Product_getBandAt
+	Product_getBandNames
 	Product_getBand
 	Product_getBandIndex
 	Product_containsBand
@@ -317,6 +325,7 @@ EXPORTS
 	Product_getPreferredTileSize
 	Product_setPreferredTileSize1
 	Product_setPreferredTileSize2
+	Product_getAllFlagNames
 	Product_getAutoGrouping
 	Product_setAutoGrouping1
 	Product_setAutoGrouping2
@@ -383,6 +392,8 @@ EXPORTS
 	ProductManager_newProductManager
 	ProductManager_getProductCount
 	ProductManager_getProduct1
+	ProductManager_getProductDisplayNames
+	ProductManager_getProductNames
 	ProductManager_getProductByDisplayName
 	ProductManager_getProductByRefNo
 	ProductManager_getProduct2
@@ -399,6 +410,8 @@ EXPORTS
 	ProductNodeGroup_isTakingOverNodeOwnership
 	ProductNodeGroup_getNodeCount
 	ProductNodeGroup_get1
+	ProductNodeGroup_getNodeDisplayNames
+	ProductNodeGroup_getNodeNames
 	ProductNodeGroup_indexOf1
 	ProductNodeGroup_indexOf2
 	ProductNodeGroup_getByDisplayName
@@ -416,9 +429,12 @@ EXPORTS
 	ProductNodeGroup_acceptVisitor
 	ProductNodeGroup_dispose
 	ProductNodeGroup_updateExpression
-	RGBChannelDef_newRGBChannelDef
+	RGBChannelDef_newRGBChannelDef1
+	RGBChannelDef_newRGBChannelDef2
 	RGBChannelDef_getSourceName
 	RGBChannelDef_setSourceName
+	RGBChannelDef_getSourceNames
+	RGBChannelDef_setSourceNames
 	RGBChannelDef_isAlphaUsed
 	RGBChannelDef_isGammaUsed
 	RGBChannelDef_getGamma
@@ -691,6 +707,7 @@ EXPORTS
 	ProductUtils_createGeoTIFFMetadata2
 	ProductUtils_areaToPath
 	ProductUtils_addElementToHistory
+	ProductUtils_removeInvalidExpressions
 	ProductUtils_findSuitableQuicklookBandName
 	ProductUtils_copyBandsForGeomTransform1
 	ProductUtils_copyBandsForGeomTransform2

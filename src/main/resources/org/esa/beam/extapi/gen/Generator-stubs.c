@@ -10,7 +10,8 @@ char* beam_alloc_string(jstring str)
     return result;
 }
 
-void beam_alloc_string_array(jarray str_array, char*** str_array_data, size_t* str_array_length)
+char** beam_alloc_string_array(jarray str_array, size_t* str_array_length)
+    char** str_array_data;
     jarray str_array;
 	jsize length;
 	char** strings;
@@ -18,22 +19,25 @@ void beam_alloc_string_array(jarray str_array, char*** str_array_data, size_t* s
 
 	length = (*jenv)->GetArrayLength(jenv, str_array);
 
-	strings = (char**) malloc(array_len * sizeof (char*));
+	str_array_data = (char**) malloc(array_len * sizeof (char*));
 	for (i = 0; i < length; i++) {
 	    jstring str = (*jenv)->GetObjectArrayElement(jenv, str_array, i);
 		jsize len = (*jenv)->GetStringUTFLength(jenv, str);
 		const char* chars = (*jenv)->GetStringUTFChars(jenv, str, 0);
 
-	    char* band_name = (char*) malloc((len + 1) * sizeof (char));
-	    strcpy(band_name, chars);
+	    char* elems = (char*) malloc((len + 1) * sizeof (char));
+	    strcpy(elems, chars);
 
 		(*jenv)->ReleaseStringUTFChars(jenv, str, chars);
 
-		strings[i] = band_name;
+		str_array_data[i] = elems;
 	}
 
-	*str_array_data = strings;
-	*str_array_length = length;
+	if (str_array_length != NULL) {
+	    *str_array_length = length;
+	}
+
+	return str_array_data;
 }
 
 void beam_free_string_array(char** str_array_data, size_t str_array_length)
@@ -47,31 +51,17 @@ void beam_free_string_array(char** str_array_data, size_t str_array_length)
 }
 
 
-jarray beam_allocate_string_array_1(char** str_array_data, size_t str_array_length)
+jobjectArray beam_new_jstring_array(const char** str_array_data, size_t str_array_length)
 {
-    jarray str_array;
-	jsize length;
-	char** strings;
+    jobjectArray str_array;
+	jstring str;
 	jsize i;
 
-	str_array = (*jenv)->NewObjectArray(jenv, str_array);
-
-	length = (*jenv)->GetArrayLength(jenv, str_array);
-
-	strings = (char**) malloc(array_len * sizeof (char*));
-	for (i = 0; i < length; i++) {
-	    jstring str = (*jenv)->GetObjectArrayElement(jenv, str_array, i);
-		jsize len = (*jenv)->GetStringUTFLength(jenv, str);
-		const char* chars = (*jenv)->GetStringUTFChars(jenv, str, 0);
-
-	    char* band_name = (char*) malloc((len + 1) * sizeof (char));
-	    strcpy(band_name, chars);
-
-		(*jenv)->ReleaseStringUTFChars(jenv, str, chars);
-
-		strings[i] = band_name;
+	str_array = (*jenv)->NewObjectArray(jenv, str_array_length, classString, NULL);
+	for (i = 0; i < str_array_length; i++) {
+        str = (*jenv)->NewStringUTF(jenv, str_array_data[i]);
+		(*jenv)->SetObjectArrayElement(jenv, str_array, i, str);
 	}
 
-	*strings_data = strings;
-	*strings_length =  length;
+	return (*jenv)->NewGlobalRef(jenv, str_array);
 }

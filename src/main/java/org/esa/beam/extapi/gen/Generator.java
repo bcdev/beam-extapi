@@ -39,6 +39,7 @@ class Generator implements CodeGenContext {
     public static final String SELF_VAR_NAME = "_self";
     public static final String METHOD_VAR_NAME = "_method";
     public static final String RESULT_VAR_NAME = "_result";
+    public static final String CLASS_VAR_NAME_PATTERN = "class%s";
 
     final private GeneratorInfo generatorInfo;
 
@@ -100,7 +101,7 @@ class Generator implements CodeGenContext {
     }
 
     static String getTargetClassVarName(Type type) {
-        return "_class" + getTargetTypeName(type);
+        return String.format(CLASS_VAR_NAME_PATTERN, getTargetTypeName(type));
     }
 
     @Override
@@ -196,9 +197,11 @@ class Generator implements CodeGenContext {
             writer.printf("#include \"%s\"\n", BEAM_CAPI_NAME + ".h");
             writer.printf("#include \"jni.h\"\n");
             writer.printf("\n");
+            writer.write(String.format("static jclass %s;\n",
+                                       String.format(CLASS_VAR_NAME_PATTERN, "String")));
             for (CodeGenClass codeGenClass : getApiClasses()) {
-                String classVarName = getTargetClassVarName(codeGenClass.getType());
-                writer.write(String.format("static jclass %s;\n", classVarName));
+                writer.write(String.format("static jclass %s;\n",
+                                           getTargetClassVarName(codeGenClass.getType())));
             }
             writer.write("\n");
 
@@ -206,16 +209,11 @@ class Generator implements CodeGenContext {
             writer.write("static JNIEnv* jenv = NULL;\n");
 
             writer.write("\n");
-            writer.write("char* beam_allocate_string(jstring str)\n" +
-                                 "{\n" +
-                                 "    int len = (*jenv)->GetStringUTFLength(jenv, str);\n" +
-                                 "    const char* chars = (*jenv)->GetStringUTFChars(jenv, str, 0);\n" +
-                                 "    char* result = (char*) malloc((len + 1) * sizeof (char));\n" +
-                                 "    if (result != NULL) strcpy(result, chars);\n" +
-                                 "    (*jenv)->ReleaseStringUTFChars(jenv, str, chars);\n" +
-                                 "    return result;\n" +
-                                 "}\n" +
-                                 "\n");
+            writer.write("int beam_init_vm();\n");
+            writer.write("int beam_init_api();\n");
+            writer.write("char* beam_alloc_string(jstring str);\n");
+            writer.write("char** beam_alloc_string_array(jarray str_array, size_t* str_array_length);\n");
+            writer.write("jobjectArray beam_new_jstring_array(const char** str_array_data, size_t str_array_length);\n");
             writer.write("\n");
 
             /////////////////////////////////////////////////////////////////////////////////////
@@ -223,16 +221,20 @@ class Generator implements CodeGenContext {
             //
             writer.write("int beam_init_api()\n{\n");
 
-            writer.printf("    if (beam_init_vm() != 0) return 1;\n");
+            writer.printf("    if (beam_init_vm() != 0) return 1;\n\n");
 
             int errCode = 1000;
+            writeClassDef(writer,
+                          String.format(CLASS_VAR_NAME_PATTERN, "String"),
+                          "java/lang/String",
+                          errCode);
+
+            errCode++;
             for (CodeGenClass codeGenClass : getApiClasses()) {
-                String classVarName = getTargetClassVarName(codeGenClass.getType());
-                writer.write(String.format("    %s = (*jenv)->FindClass(jenv, \"%s\");\n",
-                                           classVarName, codeGenClass.getResourceName()));
-                writer.write(String.format("    if (%s == NULL) return %d;\n",
-                                           classVarName, errCode));
-                writer.write("\n");
+                writeClassDef(writer,
+                              getTargetClassVarName(codeGenClass.getType()),
+                              codeGenClass.getResourceName(),
+                              errCode);
                 errCode++;
             }
             writer.write("    return 0;\n");
@@ -249,6 +251,14 @@ class Generator implements CodeGenContext {
         } finally {
             writer.close();
         }
+    }
+
+    private void writeClassDef(PrintWriter writer, String classVarName, String classResourceName, int errCode) {
+        writer.write(String.format("    %s = (*jenv)->FindClass(jenv, \"%s\");\n",
+                                   classVarName, classResourceName));
+        writer.write(String.format("    if (%s == NULL) return %d;\n",
+                                   classVarName, errCode));
+        writer.write("\n");
     }
 
     void generateFunctionDeclaration(PrintWriter writer, CodeGenCallable callable) {
@@ -316,7 +326,6 @@ class Generator implements CodeGenContext {
         }
     }
 
-
     private void generateFileInfo(PrintWriter writer) {
         writer.write(String.format("/*\n" +
                                            " * DO NOT EDIT THIS FILE, IT IS MACHINE-GENERATED\n" +
@@ -324,6 +333,7 @@ class Generator implements CodeGenContext {
                                            " */\n", new Date(), GeneratorDoclet.class.getName()));
         writer.write("\n");
     }
+
 
     private void printStats() {
         int numClasses = 0;
@@ -348,6 +358,10 @@ class Generator implements CodeGenContext {
 
     static boolean isString(Type type) {
         return type.qualifiedTypeName().equals("java.lang.String");
+    }
+
+    static boolean isStringArray(Type type) {
+        return type.dimension().equals("[]") && isString(type);
     }
 
     // todo - code duplication in CodeGenParameter
