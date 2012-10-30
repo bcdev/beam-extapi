@@ -16,10 +16,14 @@
 
 package org.esa.beam.extapi.gen;
 
-import com.sun.javadoc.*;
+import com.sun.javadoc.DocErrorReporter;
+import com.sun.javadoc.Doclet;
+import com.sun.javadoc.LanguageVersion;
+import com.sun.javadoc.RootDoc;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.Properties;
+import java.util.Set;
 
 /**
  * @author Norman Fomferra
@@ -44,10 +48,9 @@ public class GeneratorDoclet extends Doclet {
     public static boolean start(RootDoc root) {
         try {
             final Properties properties = new Properties();
-            properties.load(GeneratorDoclet.class.getResourceAsStream("ExtApiClasses.txt"));
+            properties.load(GeneratorDoclet.class.getResourceAsStream("Generator-classes.txt"));
             Set<String> wrappedClassNames = properties.stringPropertyNames();
-            GeneratorInfo generatorInfo = new GeneratorInfo(root, wrappedClassNames);
-            generatorInfo.run();
+            GeneratorInfo generatorInfo = GeneratorInfo.create(root, wrappedClassNames);
             new Generator(generatorInfo).run();
             return true;
         } catch (IOException e) {

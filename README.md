@@ -1,7 +1,24 @@
 beam-extapi
 ===========
 
+Links
+-----
 
+* http://docs.oracle.com/javase/7/docs/technotes/guides/jni/
+* http://docs.oracle.com/javase/1.4.2/docs/guide/jni/spec/functions.html
+
+
+C-Code Generation Considerations
+--------------------------------
+
+* Take care of String if used as parameter (--> const char*) or return value (by reference: char*, int max_size). (done first option)
+* Don't forget to increase global reference count when returning objects from Java VM.  (done)
+* If we start from a limited number of API classes, we need to remove methods that have arguments for which no factory exists at all.
+* How to treat (primitive, string & object) arrays?
+* How to treat object collections lists, sets, maps?
+* How to treat generics?
+* How to treat Java SE classes: File, Date, etc?
+* How to treat and catch / throw Exceptions?
 
 
 Design Considerations
@@ -30,11 +47,3 @@ Shall C API functions return string buffers that users have to release later?
 Shall the API allow for modification of single structures elements that are passed as arguments by-reference?
 
 
-
-C-Code Generation Considerations
---------------------------------
-
-How to deal with Java SE classes if the are return values or parameters: File, Date, etc?
-Take care of String if used as parameter (--> const char*) or return value (by reference: char*, int max_size).
-Don't forget to increase global reference count when returning objects from Java VM.
-If we start from a limited number of API classes, we need to remove methods that have arguments for which no factory exists at all.

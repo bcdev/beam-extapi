@@ -6,11 +6,9 @@ EXPORTS
 	beam_create_jvm_with_defaults
 	beam_destroy_jvm
 	ProductIO_getProductReader
-	ProductIO_getProductWriterExtensions
 	ProductIO_getProductWriter
 	ProductIO_readProduct1
 	ProductIO_readProduct2
-	ProductIO_readProduct3
 	ProductIO_getProductReaderForInput
 	ProductIO_writeProduct1
 	ProductIO_writeProduct2
@@ -33,8 +31,11 @@ EXPORTS
 	ProductWriter_setIncrementalMode
 	ProductWriter_deleteOutput
 	ProductWriter_removeBand
+	AngularDirection_newAngularDirection1
+	AngularDirection_newAngularDirection2
 	AngularDirection_equals
 	AngularDirection_toString
+	Band_newBand
 	Band_getFlagCoding
 	Band_isFlagBand
 	Band_getIndexCoding
@@ -57,8 +58,9 @@ EXPORTS
 	Band_acceptVisitor
 	Band_toString
 	Band_removeFromFile
-	Band_createDefaultImageInfo
 	Band_dispose
+	ColorPaletteDef_newColorPaletteDef1
+	ColorPaletteDef_newColorPaletteDef2
 	ColorPaletteDef_isDiscrete
 	ColorPaletteDef_setDiscrete
 	ColorPaletteDef_getNumColors
@@ -77,17 +79,16 @@ EXPORTS
 	ColorPaletteDef_getCenterColor
 	ColorPaletteDef_removePointAt
 	ColorPaletteDef_addPoint
-	ColorPaletteDef_getPoints
-	ColorPaletteDef_setPoints
 	ColorPaletteDef_getIterator
 	ColorPaletteDef_clone
 	ColorPaletteDef_createDeepCopy
 	ColorPaletteDef_loadColorPaletteDef
 	ColorPaletteDef_storeColorPaletteDef
 	ColorPaletteDef_dispose
-	ColorPaletteDef_getColors
-	ColorPaletteDef_createColorPalette
 	ColorPaletteDef_computeColor
+	ColorPaletteDef_Point_newColorPaletteDef_Point1
+	ColorPaletteDef_Point_newColorPaletteDef_Point2
+	ColorPaletteDef_Point_newColorPaletteDef_Point3
 	ColorPaletteDef_Point_getSample
 	ColorPaletteDef_Point_setSample
 	ColorPaletteDef_Point_getColor
@@ -96,8 +97,8 @@ EXPORTS
 	ColorPaletteDef_Point_setLabel
 	ColorPaletteDef_Point_clone
 	ColorPaletteDef_Point_createClone
+	FlagCoding_newFlagCoding
 	FlagCoding_getFlag
-	FlagCoding_getFlagNames
 	FlagCoding_addFlag
 	FlagCoding_getFlagMask
 	FlagCoding_acceptVisitor
@@ -111,11 +112,13 @@ EXPORTS
 	GeoCoding_getMapCRS
 	GeoCoding_getGeoCRS
 	GeoCoding_getImageToMapTransform
+	GeoPos_newGeoPos1
+	GeoPos_newGeoPos2
+	GeoPos_newGeoPos3
 	GeoPos_getLat
 	GeoPos_getLon
 	GeoPos_setLocation
 	GeoPos_isValid
-	GeoPos_areValid
 	GeoPos_setInvalid
 	GeoPos_equals
 	GeoPos_hashCode
@@ -126,6 +129,7 @@ EXPORTS
 	GeoPos_getLonString1
 	GeoPos_getLatString2
 	GeoPos_getLonString2
+	ImageGeometry_newImageGeometry
 	ImageGeometry_getImage2MapTransform
 	ImageGeometry_getImageRect
 	ImageGeometry_getMapCrs
@@ -134,6 +138,8 @@ EXPORTS
 	ImageGeometry_calculateProductSize
 	ImageGeometry_createTargetGeometry
 	ImageGeometry_createCollocationTargetGeometry
+	ImageInfo_newImageInfo1
+	ImageInfo_newImageInfo2
 	ImageInfo_getColorPaletteDef
 	ImageInfo_getRgbChannelDef
 	ImageInfo_getNoDataColor
@@ -142,25 +148,27 @@ EXPORTS
 	ImageInfo_setHistogramMatching
 	ImageInfo_isLogScaled
 	ImageInfo_setLogScaled
-	ImageInfo_getColors
 	ImageInfo_getColorComponentCount
 	ImageInfo_createIndexColorModel
 	ImageInfo_createComponentColorModel
 	ImageInfo_clone
 	ImageInfo_createDeepCopy
 	ImageInfo_dispose
-	ImageInfo_setColors
 	ImageInfo_setColorPaletteDef
 	ImageInfo_getHistogramMatching2
+	IndexCoding_newIndexCoding
 	IndexCoding_getIndex
-	IndexCoding_getIndexNames
 	IndexCoding_addIndex
 	IndexCoding_getIndexValue
 	IndexCoding_acceptVisitor
+	MetadataAttribute_newMetadataAttribute1
+	MetadataAttribute_newMetadataAttribute2
+	MetadataAttribute_newMetadataAttribute3
 	MetadataAttribute_getParentElement
 	MetadataAttribute_equals
 	MetadataAttribute_acceptVisitor
 	MetadataAttribute_createDeepClone
+	MetadataElement_newMetadataElement
 	MetadataElement_getElementGroup
 	MetadataElement_getParentElement
 	MetadataElement_addElement
@@ -168,8 +176,6 @@ EXPORTS
 	MetadataElement_removeElement
 	MetadataElement_getNumElements
 	MetadataElement_getElementAt
-	MetadataElement_getElementNames
-	MetadataElement_getElements
 	MetadataElement_getElement
 	MetadataElement_containsElement
 	MetadataElement_getElementIndex
@@ -177,8 +183,6 @@ EXPORTS
 	MetadataElement_removeAttribute
 	MetadataElement_getNumAttributes
 	MetadataElement_getAttributeAt
-	MetadataElement_getAttributeNames
-	MetadataElement_getAttributes
 	MetadataElement_getAttribute
 	MetadataElement_containsAttribute
 	MetadataElement_getAttributeIndex
@@ -199,8 +203,11 @@ EXPORTS
 	MetadataElement_getRawStorageSize
 	MetadataElement_createDeepClone
 	MetadataElement_dispose
+	PixelPos_newPixelPos1
+	PixelPos_newPixelPos2
 	PixelPos_isValid
 	PixelPos_setInvalid
+	Placemark_newPlacemark
 	Placemark_createPointPlacemark
 	Placemark_getDescriptor
 	Placemark_getFeature
@@ -229,6 +236,8 @@ EXPORTS
 	PlacemarkGroup_add2
 	PlacemarkGroup_remove
 	PlacemarkGroup_dispose
+	Product_newProduct1
+	Product_newProduct2
 	Product_getFileLocation
 	Product_setFileLocation
 	Product_getProductType
@@ -261,8 +270,6 @@ EXPORTS
 	Product_removeTiePointGrid
 	Product_getNumTiePointGrids
 	Product_getTiePointGridAt
-	Product_getTiePointGridNames
-	Product_getTiePointGrids
 	Product_getTiePointGrid
 	Product_containsTiePointGrid
 	Product_addBand1
@@ -272,8 +279,6 @@ EXPORTS
 	Product_removeBand
 	Product_getNumBands
 	Product_getBandAt
-	Product_getBandNames
-	Product_getBands
 	Product_getBand
 	Product_getBandIndex
 	Product_containsBand
@@ -292,7 +297,6 @@ EXPORTS
 	Product_acceptVisitor
 	Product_addProductNodeListener
 	Product_removeProductNodeListener
-	Product_getProductNodeListeners
 	Product_getRefNo
 	Product_setRefNo
 	Product_resetRefNo
@@ -309,12 +313,10 @@ EXPORTS
 	Product_getQuicklookBandName
 	Product_setQuicklookBandName
 	Product_createPixelInfoString
-	Product_getRemovedChildNodes
 	Product_canBeOrthorectified
 	Product_getPreferredTileSize
 	Product_setPreferredTileSize1
 	Product_setPreferredTileSize2
-	Product_getAllFlagNames
 	Product_getAutoGrouping
 	Product_setAutoGrouping1
 	Product_setAutoGrouping2
@@ -325,15 +327,6 @@ EXPORTS
 	ProductData_createInstance2
 	ProductData_createInstance3
 	ProductData_createInstance4
-	ProductData_createUnsignedInstance1
-	ProductData_createInstance5
-	ProductData_createUnsignedInstance2
-	ProductData_createInstance6
-	ProductData_createUnsignedInstance3
-	ProductData_createInstance7
-	ProductData_createInstance8
-	ProductData_createInstance9
-	ProductData_createInstance10
 	ProductData_getType1
 	ProductData_getElemSize1
 	ProductData_getElemSize2
@@ -387,11 +380,9 @@ EXPORTS
 	ProductData_equals
 	ProductData_equalElems
 	ProductData_dispose
+	ProductManager_newProductManager
 	ProductManager_getProductCount
 	ProductManager_getProduct1
-	ProductManager_getProductDisplayNames
-	ProductManager_getProductNames
-	ProductManager_getProducts
 	ProductManager_getProductByDisplayName
 	ProductManager_getProductByRefNo
 	ProductManager_getProduct2
@@ -403,13 +394,11 @@ EXPORTS
 	ProductManager_removeAllProducts
 	ProductManager_addListener
 	ProductManager_removeListener
+	ProductNodeGroup_newProductNodeGroup1
+	ProductNodeGroup_newProductNodeGroup2
 	ProductNodeGroup_isTakingOverNodeOwnership
 	ProductNodeGroup_getNodeCount
 	ProductNodeGroup_get1
-	ProductNodeGroup_getNodeDisplayNames
-	ProductNodeGroup_getNodeNames
-	ProductNodeGroup_toArray1
-	ProductNodeGroup_toArray2
 	ProductNodeGroup_indexOf1
 	ProductNodeGroup_indexOf2
 	ProductNodeGroup_getByDisplayName
@@ -427,10 +416,9 @@ EXPORTS
 	ProductNodeGroup_acceptVisitor
 	ProductNodeGroup_dispose
 	ProductNodeGroup_updateExpression
+	RGBChannelDef_newRGBChannelDef
 	RGBChannelDef_getSourceName
 	RGBChannelDef_setSourceName
-	RGBChannelDef_getSourceNames
-	RGBChannelDef_setSourceNames
 	RGBChannelDef_isAlphaUsed
 	RGBChannelDef_isGammaUsed
 	RGBChannelDef_getGamma
@@ -492,28 +480,6 @@ EXPORTS
 	RasterDataNode_setPixelInt
 	RasterDataNode_setPixelFloat
 	RasterDataNode_setPixelDouble
-	RasterDataNode_getPixels1
-	RasterDataNode_getPixels2
-	RasterDataNode_getPixels3
-	RasterDataNode_getPixels4
-	RasterDataNode_getPixels5
-	RasterDataNode_getPixels6
-	RasterDataNode_setPixels1
-	RasterDataNode_setPixels2
-	RasterDataNode_setPixels3
-	RasterDataNode_readPixels1
-	RasterDataNode_readPixels2
-	RasterDataNode_readPixels3
-	RasterDataNode_readPixels4
-	RasterDataNode_readPixels5
-	RasterDataNode_readPixels6
-	RasterDataNode_writePixels1
-	RasterDataNode_writePixels2
-	RasterDataNode_writePixels3
-	RasterDataNode_writePixels4
-	RasterDataNode_writePixels5
-	RasterDataNode_writePixels6
-	RasterDataNode_readValidMask
 	RasterDataNode_readRasterDataFully1
 	RasterDataNode_readRasterDataFully2
 	RasterDataNode_readRasterData1
@@ -534,14 +500,9 @@ EXPORTS
 	RasterDataNode_setImageInfo
 	RasterDataNode_fireImageInfoChanged
 	RasterDataNode_getImageInfo2
-	RasterDataNode_getImageInfo3
-	RasterDataNode_createDefaultImageInfo1
-	RasterDataNode_createDefaultImageInfo2
 	RasterDataNode_getOverlayMaskGroup
 	RasterDataNode_createColorIndexedImage
 	RasterDataNode_createRgbImage
-	RasterDataNode_quantizeRasterData1
-	RasterDataNode_quantizeRasterData2
 	RasterDataNode_createPixelValidator
 	RasterDataNode_scale
 	RasterDataNode_scaleInverse
@@ -559,14 +520,14 @@ EXPORTS
 	RasterDataNode_getStx2
 	RasterDataNode_setStx
 	RasterDataNode_getValidShape
+	SampleCoding_newSampleCoding
 	SampleCoding_addElement
 	SampleCoding_addAttribute
 	SampleCoding_addSample
 	SampleCoding_getSampleCount
 	SampleCoding_getSampleName
 	SampleCoding_getSampleValue
-	TiePointGrid_getDiscontinuity1
-	TiePointGrid_getDiscontinuity2
+	TiePointGrid_getDiscontinuity
 	TiePointGrid_setDiscontinuity
 	TiePointGrid_isFloatingPointType
 	TiePointGrid_getGeophysicalDataType
@@ -577,7 +538,6 @@ EXPORTS
 	TiePointGrid_getOffsetY
 	TiePointGrid_getSubSamplingX
 	TiePointGrid_getSubSamplingY
-	TiePointGrid_getTiePoints
 	TiePointGrid_getPixelInt
 	TiePointGrid_dispose
 	TiePointGrid_getPixelFloat1
@@ -586,18 +546,6 @@ EXPORTS
 	TiePointGrid_setPixelInt
 	TiePointGrid_setPixelFloat
 	TiePointGrid_setPixelDouble
-	TiePointGrid_getPixels1
-	TiePointGrid_getPixels2
-	TiePointGrid_getPixels3
-	TiePointGrid_setPixels1
-	TiePointGrid_setPixels2
-	TiePointGrid_setPixels3
-	TiePointGrid_readPixels1
-	TiePointGrid_readPixels2
-	TiePointGrid_readPixels3
-	TiePointGrid_writePixels1
-	TiePointGrid_writePixels2
-	TiePointGrid_writePixels3
 	TiePointGrid_readRasterData
 	TiePointGrid_readRasterDataFully
 	TiePointGrid_writeRasterData
@@ -606,12 +554,12 @@ EXPORTS
 	TiePointGrid_cloneTiePointGrid
 	TiePointGrid_createZenithFromElevationAngleTiePointGrid
 	TiePointGrid_createSubset
+	VectorDataNode_newVectorDataNode1
+	VectorDataNode_newVectorDataNode2
+	VectorDataNode_newVectorDataNode3
 	VectorDataNode_getPlacemarkDescriptor
 	VectorDataNode_getPlacemarkGroup
 	VectorDataNode_setModified
-	VectorDataNode_fireFeaturesAdded
-	VectorDataNode_fireFeaturesRemoved
-	VectorDataNode_fireFeaturesChanged
 	VectorDataNode_getFeatureType
 	VectorDataNode_getFeatureCollection
 	VectorDataNode_getEnvelope
@@ -630,8 +578,6 @@ EXPORTS
 	GPF_createProduct4
 	GPF_createProduct5
 	GPF_createProduct6
-	GPF_createProduct7
-	GPF_createProduct8
 	GPF_createProductNS
 	GPF_createOperator
 	GPF_getOperatorSpiRegistry
@@ -644,8 +590,6 @@ EXPORTS
 	Operator_computeTileStack
 	Operator_dispose
 	Operator_getId
-	Operator_getSourceProducts
-	Operator_setSourceProducts
 	Operator_getSourceProduct1
 	Operator_setSourceProduct1
 	Operator_getSourceProduct2
@@ -662,6 +606,9 @@ EXPORTS
 	Operator_setLogger
 	Operator_getSpi
 	Operator_setSpi
+	OperatorException_newOperatorException1
+	OperatorException_newOperatorException2
+	OperatorException_newOperatorException3
 	OperatorSpi_createOperator1
 	OperatorSpi_createOperator2
 	OperatorSpi_createOperator3
@@ -689,21 +636,10 @@ EXPORTS
 	Tile_getHeight
 	Tile_getDataBufferIndex
 	Tile_getDataBuffer
-	Tile_getDataBufferByte
-	Tile_getDataBufferShort
-	Tile_getDataBufferInt
-	Tile_getDataBufferFloat
-	Tile_getDataBufferDouble
 	Tile_getScanlineOffset
 	Tile_getScanlineStride
 	Tile_getRawSamples
 	Tile_setRawSamples
-	Tile_getSamplesInt
-	Tile_getSamplesFloat
-	Tile_getSamplesDouble
-	Tile_setSamples1
-	Tile_setSamples2
-	Tile_setSamples3
 	Tile_isSampleValid
 	Tile_getSampleBoolean
 	Tile_setSample1
@@ -716,31 +652,15 @@ EXPORTS
 	Tile_getSampleBit
 	Tile_setSample5
 	Tile_iterator
+	Tile_Pos_newTile_Pos
 	Tile_Pos_equals
 	Tile_Pos_hashCode
 	Tile_Pos_toString
-	ProductUtils_createImageInfo
-	ProductUtils_createRgbImage
+	ProductUtils_newProductUtils
 	ProductUtils_createColorIndexedImage
 	ProductUtils_createSuitableMapInfo1
 	ProductUtils_createSuitableMapInfo2
 	ProductUtils_getOutputRasterSize
-	ProductUtils_createMapEnvelope1
-	ProductUtils_createMapEnvelope2
-	ProductUtils_getMinMax
-	ProductUtils_createMapBoundary
-	ProductUtils_createGeoBoundary1
-	ProductUtils_createGeoBoundary2
-	ProductUtils_createGeoBoundary3
-	ProductUtils_createGeoBoundary4
-	ProductUtils_createGeoBoundaryPaths1
-	ProductUtils_createGeoBoundaryPaths2
-	ProductUtils_createGeoBoundaryPaths3
-	ProductUtils_createPixelBoundary1
-	ProductUtils_createPixelBoundary2
-	ProductUtils_createPixelBoundary3
-	ProductUtils_createRectBoundary1
-	ProductUtils_createRectBoundary2
 	ProductUtils_copyFlagCodings
 	ProductUtils_copyFlagCoding
 	ProductUtils_copyIndexCoding
@@ -760,13 +680,8 @@ EXPORTS
 	ProductUtils_createDensityPlotImage
 	ProductUtils_overlayMasks
 	ProductUtils_getCenterGeoPos
-	ProductUtils_normalizeGeoPolygon
-	ProductUtils_normalizeGeoPolygon_old
-	ProductUtils_denormalizeGeoPolygon
 	ProductUtils_denormalizeGeoPos
 	ProductUtils_denormalizeGeoPos_old
-	ProductUtils_getRotationDirection
-	ProductUtils_getAngleSum
 	ProductUtils_convertToPixelPath
 	ProductUtils_convertToGeoPath
 	ProductUtils_copyMetadata1
@@ -776,10 +691,7 @@ EXPORTS
 	ProductUtils_createGeoTIFFMetadata2
 	ProductUtils_areaToPath
 	ProductUtils_addElementToHistory
-	ProductUtils_removeInvalidExpressions
 	ProductUtils_findSuitableQuicklookBandName
-	ProductUtils_computeSourcePixelCoordinates
-	ProductUtils_computeMinMaxY
 	ProductUtils_copyBandsForGeomTransform1
 	ProductUtils_copyBandsForGeomTransform2
 	ProductUtils_getScanLineTime

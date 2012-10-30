@@ -16,7 +16,8 @@
 
 package org.esa.beam.extapi.gen;
 
-import com.sun.javadoc.Doclet;
+import com.sun.javadoc.ExecutableMemberDoc;
+import com.sun.javadoc.MethodDoc;
 import com.sun.javadoc.Parameter;
 import com.sun.javadoc.Type;
 
@@ -30,10 +31,14 @@ import java.util.List;
 /**
  * @author Norman Fomferra
  */
-class Generator extends Doclet {
+class Generator implements CodeGenContext {
 
     public static final String BEAM_CAPI_SRCDIR = "src/main/c/gen";
     public static final String BEAM_CAPI_NAME = "beam_capi";
+
+    public static final String SELF_VAR_NAME = "_self";
+    public static final String METHOD_VAR_NAME = "_method";
+    public static final String RESULT_VAR_NAME = "_result";
 
     final private GeneratorInfo generatorInfo;
 
@@ -41,8 +46,70 @@ class Generator extends Doclet {
         this.generatorInfo = generatorInfo;
     }
 
-    public List<ApiClass> getApiClasses() {
-        return generatorInfo.getApiClasses();
+    static String getTargetTypeName(Type type) {
+        String name = getTargetComponentTypeName(type, false);
+        return name + type.dimension().replace("[]", "*");
+    }
+
+    static String getTypeSignature(ExecutableMemberDoc memberDoc) {
+        StringBuilder sb = new StringBuilder();
+        sb.append('(');
+        for (Parameter parameter : memberDoc.parameters()) {
+            sb.append(getTypeSignature(parameter.type()));
+        }
+        sb.append(')');
+        if (memberDoc instanceof MethodDoc) {
+            sb.append(getTypeSignature(((MethodDoc) memberDoc).returnType()));
+        } else {
+            sb.append('V');
+        }
+        return sb.toString();
+    }
+
+    private static String getTypeSignature(Type type) {
+        String comp;
+        if (type.isPrimitive()) {
+            if ("boolean".equals(type.typeName())) {
+                comp = "Z";
+            } else if ("byte".equals(type.typeName())) {
+                comp = "B";
+            } else if ("char".equals(type.typeName())) {
+                comp = "Constructor";
+            } else if ("short".equals(type.typeName())) {
+                comp = "S";
+            } else if ("int".equals(type.typeName())) {
+                comp = "I";
+            } else if ("long".equals(type.typeName())) {
+                comp = "J";
+            } else if ("float".equals(type.typeName())) {
+                comp = "F";
+            } else if ("double".equals(type.typeName())) {
+                comp = "D";
+            } else if ("void".equals(type.typeName())) {
+                comp = "V";
+            } else {
+                throw new IllegalStateException();
+            }
+        } else {
+            comp = "L" + type.qualifiedTypeName().replace('.', '/') + ";";
+        }
+        if (!type.dimension().isEmpty()) {
+            return type.dimension().replace("]", "") + comp;
+        }
+        return comp;
+    }
+
+    static String getTargetClassVarName(Type type) {
+        return "_class" + getTargetTypeName(type);
+    }
+
+    @Override
+    public String getTargetFunctionName(CodeGenCallable callable) {
+        return generatorInfo.getExternalFunctionName(callable);
+    }
+
+    public List<CodeGenClass> getApiClasses() {
+        return generatorInfo.getCodeGenClasses();
     }
 
     public void run() throws Exception {
@@ -61,9 +128,9 @@ class Generator extends Doclet {
                                   "\tbeam_create_jvm\n" +
                                   "\tbeam_create_jvm_with_defaults\n" +
                                   "\tbeam_destroy_jvm\n");
-            for (ApiClass apiClass : getApiClasses()) {
-                for (ApiMethod apiMethod : apiClass.getApiMethods()) {
-                    writer.printf("\t%s\n", getExternalFunctionName(apiMethod));
+            for (CodeGenClass codeGenClass : getApiClasses()) {
+                for (CodeGenCallable callable : codeGenClass.getCallableList()) {
+                    writer.printf("\t%s\n", getTargetFunctionName(callable));
                 }
             }
         } finally {
@@ -78,8 +145,8 @@ class Generator extends Doclet {
 
             writer.write("\n");
             writer.write("/* Wrapped API classes */\n");
-            for (ApiClass apiClass : getApiClasses()) {
-                writer.write(String.format("typedef void* %s;\n", getExternalTypeName(apiClass)));
+            for (CodeGenClass codeGenClass : getApiClasses()) {
+                writer.write(String.format("typedef void* %s;\n", codeGenClass.getTargetComponentTypeName()));
             }
             writer.write("\n");
 
@@ -89,26 +156,30 @@ class Generator extends Doclet {
             writer.write("typedef long long dlong;\n");
             writer.write("\n");
 
-            writer.write("int beam_init_vm();\n");
-
             writer.write("\n");
             writer.write("/* Non-API classes used in the API */\n");
-            for (ApiClass usedClass : generatorInfo.getUsedClasses()) {
-                if (!getApiClasses().contains(usedClass) && !isString(usedClass.getType())) {
-                    writer.write(String.format("typedef void* %s;\n", getExternalTypeName(usedClass)));
+            for (CodeGenClass usedCodeGenClass : generatorInfo.getUsedCodeGenClasses()) {
+                if (!getApiClasses().contains(usedCodeGenClass) && !isString(usedCodeGenClass.getType())) {
+                    writer.write(String.format("typedef void* %s;\n", usedCodeGenClass.getTargetComponentTypeName()));
                 }
             }
             writer.write("\n");
 
+            writer.write("int beam_init_vm();\n");
+
             /////////////////////////////////////////////////////////////////////////////////////
             // Generate function declarations
             //
-            for (ApiClass apiClass : getApiClasses()) {
+            for (CodeGenClass codeGenClass : getApiClasses()) {
                 writer.write("\n");
-                writer.printf("/* Functions for class %s */\n", getExternalTypeName(apiClass));
+                writer.printf("/* Functions for class %s */\n", codeGenClass.getTargetComponentTypeName());
                 writer.write("\n");
-                for (ApiMethod apiMethod : apiClass.getApiMethods()) {
-                    generateFunctionDeclaration(writer, apiMethod);
+                for (CodeGenCallable callable : codeGenClass.getCallableList()) {
+                    writer.printf("" +
+                                          "/**\n" +
+                                          " * %s\n" +
+                                          " */\n", callable.getMemberDoc().commentText());
+                    generateFunctionDeclaration(writer, callable);
                 }
             }
         } finally {
@@ -125,8 +196,8 @@ class Generator extends Doclet {
             writer.printf("#include \"%s\"\n", BEAM_CAPI_NAME + ".h");
             writer.printf("#include \"jni.h\"\n");
             writer.printf("\n");
-            for (ApiClass apiClass : getApiClasses()) {
-                String classVarName = getExternalClassVarName(apiClass);
+            for (CodeGenClass codeGenClass : getApiClasses()) {
+                String classVarName = getTargetClassVarName(codeGenClass.getType());
                 writer.write(String.format("static jclass %s;\n", classVarName));
             }
             writer.write("\n");
@@ -138,7 +209,7 @@ class Generator extends Doclet {
             writer.write("char* beam_allocate_string(jstring str)\n" +
                                  "{\n" +
                                  "    int len = (*jenv)->GetStringUTFLength(jenv, str);\n" +
-                                 "    char* chars = (*jenv)->GetStringUTFChars(jenv, str, 0);\n" +
+                                 "    const char* chars = (*jenv)->GetStringUTFChars(jenv, str, 0);\n" +
                                  "    char* result = (char*) malloc((len + 1) * sizeof (char));\n" +
                                  "    if (result != NULL) strcpy(result, chars);\n" +
                                  "    (*jenv)->ReleaseStringUTFChars(jenv, str, chars);\n" +
@@ -155,10 +226,10 @@ class Generator extends Doclet {
             writer.printf("    if (beam_init_vm() != 0) return 1;\n");
 
             int errCode = 1000;
-            for (ApiClass apiClass : getApiClasses()) {
-                String classVarName = getExternalClassVarName(apiClass);
+            for (CodeGenClass codeGenClass : getApiClasses()) {
+                String classVarName = getTargetClassVarName(codeGenClass.getType());
                 writer.write(String.format("    %s = (*jenv)->FindClass(jenv, \"%s\");\n",
-                                           classVarName, apiClass.getResourceName()));
+                                           classVarName, codeGenClass.getResourceName()));
                 writer.write(String.format("    if (%s == NULL) return %d;\n",
                                            classVarName, errCode));
                 writer.write("\n");
@@ -170,9 +241,9 @@ class Generator extends Doclet {
             /////////////////////////////////////////////////////////////////////////////////////
             // Generate function code
             //
-            for (ApiClass apiClass : getApiClasses()) {
-                for (ApiMethod apiMethod : apiClass.getApiMethods()) {
-                    generateFunctionDefinition(apiMethod, writer);
+            for (CodeGenClass codeGenClass : getApiClasses()) {
+                for (CodeGenCallable callable : codeGenClass.getCallableList()) {
+                    generateFunctionDefinition(callable, writer);
                 }
             }
         } finally {
@@ -180,147 +251,71 @@ class Generator extends Doclet {
         }
     }
 
-    void generateFunctionDeclaration(PrintWriter writer, ApiMethod apiMethod) {
-        generateFunctionSignature(apiMethod, writer);
-        writer.write(";\n");
+    void generateFunctionDeclaration(PrintWriter writer, CodeGenCallable callable) {
+        writer.printf("%s;\n", callable.generateFunctionSignature(this));
     }
 
-    private void generateFunctionDefinition(ApiMethod apiMethod, PrintWriter writer) throws IOException {
-
-        final boolean returnsVoidValue = isVoid(apiMethod.getMethodDoc().returnType());
-        final boolean returnsStringValue = isString(apiMethod.getMethodDoc().returnType());
-        final boolean returnsPrimitive = apiMethod.getMethodDoc().returnType().isPrimitive();
-        final boolean methodIsStatic = apiMethod.getMethodDoc().isStatic();
-        final String externalClassVarName = getExternalClassVarName(apiMethod.getApiClass());
-
-        generateFunctionSignature(apiMethod, writer);
-
-        writer.printf("\n{\n");
-
-        // declare local variables: converted strings, the return value and the (static) method object to be called.
-        //
-        for (Parameter parameter : apiMethod.getMethodDoc().parameters()) {
-            if (isString(parameter.type())) {
-                writer.printf("    jstring %s = NULL;\n", getWrappedParameterName(parameter));
-            }
+    private void generateFunctionDefinition(CodeGenCallable callable, PrintWriter writer) throws IOException {
+        writer.printf("%s\n", callable.generateFunctionSignature(this));
+        writer.print("{\n");
+        writeLocalMethodVarDecl(writer);
+        for (CodeGenParameter codeGenParameter : callable.getParameters()) {
+            writeCode(writer, codeGenParameter.generateLocalVarDecl(this));
         }
-        if (!returnsVoidValue) {
-            String s = getExternalTypeName(apiMethod.getMethodDoc().returnType(), false);
-            writer.printf("    %s _result = (%s) 0;\n", s, s);
-            if (returnsStringValue) {
-                writer.printf("    jstring resultString = NULL;\n");
-            }
+        writeCode(writer, callable.generateLocalVarDecl(this));
+        writeInitVmCode(writer, callable);
+        writeInitMethodCode(writer, callable);
+        for (CodeGenParameter codeGenParameter : callable.getParameters()) {
+            writeCode(writer, codeGenParameter.generatePreCallCode(this));
         }
-        writer.printf("    static jmethodID method = NULL;\n");
+        writeCode(writer, callable.generateCallCode(this));
+        for (CodeGenParameter codeGenParameter : callable.getParameters()) {
+            writeCode(writer, codeGenParameter.generatePostCallCode(this));
+        }
+        writeCode(writer, callable.generateReturnCode(this));
+        writer.print("}\n");
+        writer.print("\n");
+    }
+
+    private void writeInitVmCode(PrintWriter writer, CodeGenCallable callable) {
         writer.printf("\n");
-
-        // make sure beam_init_vm() has been called
-        //
-        if (returnsVoidValue) {
+        if (isVoid(callable.getReturnType())) {
             writer.printf("    if (beam_init_vm() != 0) return;\n");
         } else {
             writer.printf("    if (beam_init_vm() != 0) return _result;\n");
         }
         writer.printf("\n");
+    }
 
-        // make sure 'method' variable is set
-        //
-        writer.printf("    if (method == NULL) {\n");
-        writer.printf("        method = (*jenv)->%s(jenv, %s, \"%s\", \"%s\");\n",
-                      methodIsStatic ? "GetStaticMethodID" : "GetMethodID",
-                      externalClassVarName,
-                      apiMethod.getJavaName(),
-                      apiMethod.getJavaSignature());
-        if (returnsVoidValue) {
-            writer.printf("        if (method == NULL) return;\n");
+    private void writeLocalMethodVarDecl(PrintWriter writer) {
+        writer.printf("    static jmethodID %s = NULL;\n", METHOD_VAR_NAME);
+    }
+
+    private void writeInitMethodCode(PrintWriter writer, CodeGenCallable callable) {
+        writer.printf("\n");
+        writer.printf("    if (%s == NULL) {\n", METHOD_VAR_NAME);
+        writer.printf("        %s = (*jenv)->%s(jenv, %s, \"%s\", \"%s\");\n",
+                      METHOD_VAR_NAME,
+                      callable.getMemberDoc().isStatic() ? "GetStaticMethodID" : "GetMethodID",
+                      callable.getTargetEnclosingClassVarName(),
+                      callable.getJavaName(),
+                      callable.getJavaSignature());
+        if (isVoid(callable.getReturnType())) {
+            writer.printf("        if (%s == NULL) return;\n", METHOD_VAR_NAME);
         } else {
-            writer.printf("        if (method == NULL) return _result;\n");
+            writer.printf("        if (%s == NULL) return _result;\n", METHOD_VAR_NAME);
         }
         writer.printf("    }\n");
         writer.printf("\n");
-
-        // convert 'const char*' C string parameters to Java strings
-        //
-        for (Parameter parameter : apiMethod.getMethodDoc().parameters()) {
-            if (isString(parameter.type())) {
-                writer.printf("    %s = (*jenv)->NewStringUTF(jenv, %s);\n",
-                              getWrappedParameterName(parameter), parameter.name());
-            }
-        }
-
-        // construct list of method call arguments
-        //
-        StringBuilder argList = new StringBuilder();
-        if (!methodIsStatic) {
-            argList.append(", _self");
-        }
-        for (Parameter parameter : apiMethod.getMethodDoc().parameters()) {
-            argList.append(", ");
-            argList.append(getWrappedParameterName(parameter));
-        }
-
-        // generate actual method call
-        //
-        if (returnsVoidValue) {
-            writer.printf("    (*jenv)->%s(jenv, %s, method%s);\n",
-                          methodIsStatic ? "CallStaticVoidMethod" : "CallVoidMethod",
-                          externalClassVarName,
-                          argList);
-        } else {
-            String typeName;
-            if (returnsPrimitive) {
-                String s = apiMethod.getMethodDoc().returnType().typeName();
-                typeName = Character.toUpperCase(s.charAt(0)) + s.substring(1);
-            } else {
-                typeName = "Object";
-            }
-            writer.printf("    %s = (*jenv)->%s(jenv, %s, method%s);\n",
-                          returnsStringValue ? "resultString" : "_result",
-                          String.format(methodIsStatic ? "CallStatic%sMethod" : "Call%sMethod", typeName),
-                          externalClassVarName,
-                          argList);
-
-            if (returnsStringValue) {
-                // Strings are returned as newly allocated pointers to heap space!
-                writer.printf("    _result = beam_allocate_string(resultString);\n");
-            } else if (!returnsPrimitive) {
-                // Increase global ref counter of returned object, so that JVM's GC doesn't throw it away while it
-                // is used externally outside of the JVM.
-                writer.printf("    _result = _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;\n");
-            }
-        }
-
-        // generate function end
-        //
-        if (!returnsVoidValue) {
-            writer.printf("    return _result;\n");
-        }
-        writer.printf("}\n");
-        writer.printf("\n");
     }
 
-    private void generateFunctionSignature(ApiMethod apiMethod, PrintWriter writer) {
-        StringBuilder parameterList = new StringBuilder();
-
-        if (!apiMethod.getMethodDoc().isStatic()) {
-            parameterList.append(getExternalClassName(apiMethod));
-            parameterList.append(" _self");
+    private void writeCode(PrintWriter writer, String code1) {
+        String[] callCode = generateLines(code1);
+        for (String line : callCode) {
+            writer.printf("    %s\n", line);
         }
-        Parameter[] parameters = apiMethod.getMethodDoc().parameters();
-        for (Parameter parameter : parameters) {
-            if (parameterList.length() > 0) {
-                parameterList.append(", ");
-            }
-            parameterList.append(getExternalTypeName(parameter.type(), true));
-            parameterList.append(" ");
-            parameterList.append(parameter.name());
-        }
-
-        writer.printf("%s %s(%s)",
-                      getExternalTypeName(apiMethod.getMethodDoc().returnType(), false),
-                      getExternalFunctionName(apiMethod),
-                      parameterList);
     }
+
 
     private void generateFileInfo(PrintWriter writer) {
         writer.write(String.format("/*\n" +
@@ -333,18 +328,18 @@ class Generator extends Doclet {
     private void printStats() {
         int numClasses = 0;
         int numMethods = 0;
-        for (ApiClass apiClass : getApiClasses()) {
+        for (CodeGenClass codeGenClass : getApiClasses()) {
             numClasses++;
-            numMethods += apiClass.getApiMethods().size();
+            numMethods += codeGenClass.getCallableList().size();
         }
         System.out.printf("#Classes: %d, #Methods: %d\n", numClasses, numMethods);
     }
 
-    static String getWrappedParameterName(Parameter parameter) {
-        if (isString(parameter.type())) {
-            return parameter.name() + "String";
+    String[] generateLines(String code) {
+        if (code == null || code.length() == 0) {
+            return new String[0];
         }
-        return parameter.name();
+        return code.split("\n");
     }
 
     static boolean isVoid(Type type) {
@@ -355,27 +350,8 @@ class Generator extends Doclet {
         return type.qualifiedTypeName().equals("java.lang.String");
     }
 
-    String getExternalFunctionName(ApiMethod apiMethod) {
-        return generatorInfo.getExternalFunctionName(apiMethod);
-    }
-
-    static String getExternalClassVarName(ApiClass apiClass) {
-        return getExternalTypeName(apiClass) + "_class";
-    }
-
-    static String getExternalTypeName(ApiClass apiClass) {
-        return getExternalTypeName(apiClass.getType(), true);
-    }
-
-    static String getExternalClassName(ApiMethod apiMethod) {
-        return getExternalTypeName(apiMethod.getApiClass());
-    }
-
-    static String getExternalBaseName(ApiMethod apiMethod) {
-        return getExternalClassName(apiMethod) + "_" + apiMethod.getJavaName();
-    }
-
-    static String getExternalTypeName(Type type, boolean isParam) {
+    // todo - code duplication in CodeGenParameter
+    static String getTargetComponentTypeName(Type type, boolean isParam) {
         if (type.isPrimitive()) {
             final String typeName = type.typeName();
             if (typeName.equals("long")) {
@@ -391,4 +367,6 @@ class Generator extends Doclet {
             }
         }
     }
+
+
 }

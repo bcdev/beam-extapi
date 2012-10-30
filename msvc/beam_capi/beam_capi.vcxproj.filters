@@ -15,17 +15,17 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\beam_capi.c">
+    <ClCompile Include="..\..\src\main\c\gen\beam_capi.c">
       <Filter>Quelldateien</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\beam_capi.def">
+    <None Include="..\..\src\main\c\gen\beam_capi.def">
       <Filter>Quelldateien</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\beam_capi.h">
+    <ClInclude Include="..\..\src\main\c\gen\beam_capi.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
   </ItemGroup>

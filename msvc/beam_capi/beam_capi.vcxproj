@@ -10,6 +10,15 @@
       <Platform>Win32</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\src\main\c\gen\beam_capi.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\src\main\c\gen\beam_capi.def" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\src\main\c\gen\beam_capi.h" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{4526AE26-BB1F-43C9-BF24-62C147B6C963}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
@@ -74,15 +83,6 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClCompile Include="..\..\beam_capi.c" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\..\beam_capi.def" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\..\beam_capi.h" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
