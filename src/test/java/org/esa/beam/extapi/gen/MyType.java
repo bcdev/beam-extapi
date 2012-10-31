@@ -18,7 +18,7 @@ class MyType implements Type {
     @Override
     public String typeName() {
         int i = baseClass.getName().lastIndexOf('.');
-        return i > 0 ? baseClass.getName().substring(i + 1) : baseClass.getName();
+        return (i > 0 ? baseClass.getName().substring(i + 1) : baseClass.getName()).replace('$', '.');
     }
 
     @Override

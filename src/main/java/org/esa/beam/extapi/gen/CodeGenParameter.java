@@ -3,6 +3,9 @@ package org.esa.beam.extapi.gen;
 import com.sun.javadoc.Parameter;
 import com.sun.javadoc.Type;
 
+import static org.esa.beam.extapi.gen.TemplateEval.eval;
+import static org.esa.beam.extapi.gen.TemplateEval.kv;
+
 /**
  * @author Norman Fomferra
  */
@@ -59,6 +62,48 @@ abstract class CodeGenParameter {
         }
     }
 
+    static class PrimitiveArray extends CodeGenParameter {
+        private final boolean readOnly;
+
+        PrimitiveArray(Parameter parameter, boolean readOnly) {
+            super(parameter);
+            this.readOnly = readOnly;
+        }
+
+        @Override
+        public String generateParamListDecl(CodeGenContext context) {
+            return eval("${c}${t}* ${p}Elems, size_t ${p}Length",
+                        kv("c", readOnly ? "const " : ""),
+                        kv("t", getType().simpleTypeName()),
+                        kv("p", parameter.name()));
+        }
+
+        @Override
+        public String generateLocalVarDecl(CodeGenContext context) {
+            return eval("jarray ${p}Array = NULL;\nvoid* ${p}ArrayAddr = NULL;",
+                        kv("p", parameter.name()));
+        }
+
+        @Override
+        public String generatePreCallCode(CodeGenContext context) {
+            return eval("${p}Array = (*jenv)->NewBooleanArray(jenv, ${p}Length);\n" +
+                                "${p}ArrayAddr = (*env)->GetPrimitiveArrayCritical(jenv, ${p}Array, 0);\n" +
+                                "memcpy(${p}ArrayAddr, ${p}Elems, ${p}Length);",
+                        kv("p", parameter.name()));
+        }
+
+        @Override
+        public String generateCallArgExpr(CodeGenContext context) {
+            return eval("${p}Array", kv("p", parameter.name()));
+        }
+
+        @Override
+        public String generatePostCallCode(CodeGenContext context) {
+            return eval("(*env)->ReleasePrimitiveArrayCritical(jenv, ${p}Array, ${p}ArrayAddr, 0);",
+                        kv("p", parameter.name()));
+        }
+    }
+
     static class StringScalar extends CodeGenParameter {
         StringScalar(Parameter parameter) {
             super(parameter);
@@ -71,18 +116,18 @@ abstract class CodeGenParameter {
 
         @Override
         public String generateLocalVarDecl(CodeGenContext context) {
-            return String.format("jstring %sStr = NULL;", getName());
+            return String.format("jstring %sString = NULL;", getName());
         }
 
         @Override
         public String generatePreCallCode(CodeGenContext context) {
-            return String.format("%sStr = (*jenv)->NewStringUTF(jenv, %s);",
+            return String.format("%sString = (*jenv)->NewStringUTF(jenv, %s);",
                                  getName(), getName());
         }
 
         @Override
         public String generateCallArgExpr(CodeGenContext context) {
-            return String.format("%sStr", getName());
+            return String.format("%sString", getName());
         }
     }
 

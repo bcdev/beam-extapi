@@ -17,7 +17,7 @@ C-Code Generation Considerations
 * How to treat (primitive, string & object) arrays?
 * How to treat object collections lists, sets, maps?
 * How to treat generics?
-* How to treat Java SE classes: File, Date, etc?
+* How to treat Java SE classes: File, Date, Point, etc?
 * How to treat and catch / throw Exceptions?
 * Need to find out which Java SE classes are used in parameter lists, but neither cannot retrieved nor instanciated.
 
