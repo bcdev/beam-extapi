@@ -60,9 +60,12 @@ EXPORTS
 	Band_acceptVisitor
 	Band_toString
 	Band_removeFromFile
+	Band_createDefaultImageInfo
 	Band_dispose
 	ColorPaletteDef_newColorPaletteDef1
 	ColorPaletteDef_newColorPaletteDef2
+	ColorPaletteDef_newColorPaletteDef3
+	ColorPaletteDef_newColorPaletteDef4
 	ColorPaletteDef_isDiscrete
 	ColorPaletteDef_setDiscrete
 	ColorPaletteDef_getNumColors
@@ -81,6 +84,7 @@ EXPORTS
 	ColorPaletteDef_getCenterColor
 	ColorPaletteDef_removePointAt
 	ColorPaletteDef_addPoint
+	ColorPaletteDef_setPoints
 	ColorPaletteDef_getIterator
 	ColorPaletteDef_clone
 	ColorPaletteDef_createDeepCopy
@@ -122,6 +126,7 @@ EXPORTS
 	GeoPos_getLon
 	GeoPos_setLocation
 	GeoPos_isValid
+	GeoPos_areValid
 	GeoPos_setInvalid
 	GeoPos_equals
 	GeoPos_hashCode
@@ -157,6 +162,7 @@ EXPORTS
 	ImageInfo_clone
 	ImageInfo_createDeepCopy
 	ImageInfo_dispose
+	ImageInfo_setColors
 	ImageInfo_setColorPaletteDef
 	ImageInfo_getHistogramMatching2
 	IndexCoding_newIndexCoding
@@ -336,6 +342,15 @@ EXPORTS
 	ProductData_createInstance2
 	ProductData_createInstance3
 	ProductData_createInstance4
+	ProductData_createUnsignedInstance1
+	ProductData_createInstance5
+	ProductData_createUnsignedInstance2
+	ProductData_createInstance6
+	ProductData_createUnsignedInstance3
+	ProductData_createInstance7
+	ProductData_createInstance8
+	ProductData_createInstance9
+	ProductData_createInstance10
 	ProductData_getType1
 	ProductData_getElemSize1
 	ProductData_getElemSize2
@@ -496,6 +511,28 @@ EXPORTS
 	RasterDataNode_setPixelInt
 	RasterDataNode_setPixelFloat
 	RasterDataNode_setPixelDouble
+	RasterDataNode_getPixels1
+	RasterDataNode_getPixels2
+	RasterDataNode_getPixels3
+	RasterDataNode_getPixels4
+	RasterDataNode_getPixels5
+	RasterDataNode_getPixels6
+	RasterDataNode_setPixels1
+	RasterDataNode_setPixels2
+	RasterDataNode_setPixels3
+	RasterDataNode_readPixels1
+	RasterDataNode_readPixels2
+	RasterDataNode_readPixels3
+	RasterDataNode_readPixels4
+	RasterDataNode_readPixels5
+	RasterDataNode_readPixels6
+	RasterDataNode_writePixels1
+	RasterDataNode_writePixels2
+	RasterDataNode_writePixels3
+	RasterDataNode_writePixels4
+	RasterDataNode_writePixels5
+	RasterDataNode_writePixels6
+	RasterDataNode_readValidMask
 	RasterDataNode_readRasterDataFully1
 	RasterDataNode_readRasterDataFully2
 	RasterDataNode_readRasterData1
@@ -516,9 +553,14 @@ EXPORTS
 	RasterDataNode_setImageInfo
 	RasterDataNode_fireImageInfoChanged
 	RasterDataNode_getImageInfo2
+	RasterDataNode_getImageInfo3
+	RasterDataNode_createDefaultImageInfo1
+	RasterDataNode_createDefaultImageInfo2
 	RasterDataNode_getOverlayMaskGroup
 	RasterDataNode_createColorIndexedImage
 	RasterDataNode_createRgbImage
+	RasterDataNode_quantizeRasterData1
+	RasterDataNode_quantizeRasterData2
 	RasterDataNode_createPixelValidator
 	RasterDataNode_scale
 	RasterDataNode_scaleInverse
@@ -543,7 +585,11 @@ EXPORTS
 	SampleCoding_getSampleCount
 	SampleCoding_getSampleName
 	SampleCoding_getSampleValue
-	TiePointGrid_getDiscontinuity
+	TiePointGrid_newTiePointGrid1
+	TiePointGrid_newTiePointGrid2
+	TiePointGrid_newTiePointGrid3
+	TiePointGrid_getDiscontinuity1
+	TiePointGrid_getDiscontinuity2
 	TiePointGrid_setDiscontinuity
 	TiePointGrid_isFloatingPointType
 	TiePointGrid_getGeophysicalDataType
@@ -554,6 +600,7 @@ EXPORTS
 	TiePointGrid_getOffsetY
 	TiePointGrid_getSubSamplingX
 	TiePointGrid_getSubSamplingY
+	TiePointGrid_getTiePoints
 	TiePointGrid_getPixelInt
 	TiePointGrid_dispose
 	TiePointGrid_getPixelFloat1
@@ -562,6 +609,18 @@ EXPORTS
 	TiePointGrid_setPixelInt
 	TiePointGrid_setPixelFloat
 	TiePointGrid_setPixelDouble
+	TiePointGrid_getPixels1
+	TiePointGrid_getPixels2
+	TiePointGrid_getPixels3
+	TiePointGrid_setPixels1
+	TiePointGrid_setPixels2
+	TiePointGrid_setPixels3
+	TiePointGrid_readPixels1
+	TiePointGrid_readPixels2
+	TiePointGrid_readPixels3
+	TiePointGrid_writePixels1
+	TiePointGrid_writePixels2
+	TiePointGrid_writePixels3
 	TiePointGrid_readRasterData
 	TiePointGrid_readRasterDataFully
 	TiePointGrid_writeRasterData
@@ -576,6 +635,9 @@ EXPORTS
 	VectorDataNode_getPlacemarkDescriptor
 	VectorDataNode_getPlacemarkGroup
 	VectorDataNode_setModified
+	VectorDataNode_fireFeaturesAdded
+	VectorDataNode_fireFeaturesRemoved
+	VectorDataNode_fireFeaturesChanged
 	VectorDataNode_getFeatureType
 	VectorDataNode_getFeatureCollection
 	VectorDataNode_getEnvelope
@@ -594,6 +656,8 @@ EXPORTS
 	GPF_createProduct4
 	GPF_createProduct5
 	GPF_createProduct6
+	GPF_createProduct7
+	GPF_createProduct8
 	GPF_createProductNS
 	GPF_createOperator
 	GPF_getOperatorSpiRegistry
@@ -606,6 +670,7 @@ EXPORTS
 	Operator_computeTileStack
 	Operator_dispose
 	Operator_getId
+	Operator_setSourceProducts
 	Operator_getSourceProduct1
 	Operator_setSourceProduct1
 	Operator_getSourceProduct2
@@ -652,10 +717,21 @@ EXPORTS
 	Tile_getHeight
 	Tile_getDataBufferIndex
 	Tile_getDataBuffer
+	Tile_getDataBufferByte
+	Tile_getDataBufferShort
+	Tile_getDataBufferInt
+	Tile_getDataBufferFloat
+	Tile_getDataBufferDouble
 	Tile_getScanlineOffset
 	Tile_getScanlineStride
 	Tile_getRawSamples
 	Tile_setRawSamples
+	Tile_getSamplesInt
+	Tile_getSamplesFloat
+	Tile_getSamplesDouble
+	Tile_setSamples1
+	Tile_setSamples2
+	Tile_setSamples3
 	Tile_isSampleValid
 	Tile_getSampleBoolean
 	Tile_setSample1
@@ -673,6 +749,8 @@ EXPORTS
 	Tile_Pos_hashCode
 	Tile_Pos_toString
 	ProductUtils_newProductUtils
+	ProductUtils_createImageInfo
+	ProductUtils_createRgbImage
 	ProductUtils_createColorIndexedImage
 	ProductUtils_createSuitableMapInfo1
 	ProductUtils_createSuitableMapInfo2
@@ -696,8 +774,13 @@ EXPORTS
 	ProductUtils_createDensityPlotImage
 	ProductUtils_overlayMasks
 	ProductUtils_getCenterGeoPos
+	ProductUtils_normalizeGeoPolygon
+	ProductUtils_normalizeGeoPolygon_old
+	ProductUtils_denormalizeGeoPolygon
 	ProductUtils_denormalizeGeoPos
 	ProductUtils_denormalizeGeoPos_old
+	ProductUtils_getRotationDirection
+	ProductUtils_getAngleSum
 	ProductUtils_convertToPixelPath
 	ProductUtils_convertToGeoPath
 	ProductUtils_copyMetadata1
@@ -709,6 +792,7 @@ EXPORTS
 	ProductUtils_addElementToHistory
 	ProductUtils_removeInvalidExpressions
 	ProductUtils_findSuitableQuicklookBandName
+	ProductUtils_computeMinMaxY
 	ProductUtils_copyBandsForGeomTransform1
 	ProductUtils_copyBandsForGeomTransform2
 	ProductUtils_getScanLineTime

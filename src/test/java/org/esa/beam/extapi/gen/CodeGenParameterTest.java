@@ -17,11 +17,11 @@ import static org.junit.Assert.assertEquals;
  */
 public class CodeGenParameterTest {
 
-    private MyCodeGenContext context;
+    private MyGeneratorContext context;
 
     @Before
     public void setUp() throws Exception {
-        context = new MyCodeGenContext();
+        context = new MyGeneratorContext();
     }
 
     @Test
@@ -43,10 +43,10 @@ public class CodeGenParameterTest {
                            "jarray dataArray = NULL;\n" +
                                    "void* dataArrayAddr = NULL;",
                            "dataArray = (*jenv)->NewBooleanArray(jenv, dataLength);\n" +
-                                   "dataArrayAddr = (*env)->GetPrimitiveArrayCritical(jenv, dataArray, 0);\n" +
+                                   "dataArrayAddr = (*jenv)->GetPrimitiveArrayCritical(jenv, dataArray, 0);\n" +
                                    "memcpy(dataArrayAddr, dataElems, dataLength);",
                            "dataArray",
-                           "(*env)->ReleasePrimitiveArrayCritical(jenv, dataArray, dataArrayAddr, 0);");
+                           "(*jenv)->ReleasePrimitiveArrayCritical(jenv, dataArray, dataArrayAddr, 0);");
     }
 
     @Test
@@ -64,12 +64,28 @@ public class CodeGenParameterTest {
     }
 
     @Test
+    public void test_CodeGenParameter_ObjectArray() {
+        testObjectArray("bands", Band[].class,
+                        "const Band* bandsElems, size_t bandsLength",
+                        "jarray bandsArray = NULL;",
+                        "bandsArray = (*jenv)->NewObjectArray(jenv, bandsLength, classBand, NULL);\n" +
+                                "{\n" +
+                                "    size_t i;\n" +
+                                "    for (i = 0; i < bandsLength; i++) {\n" +
+                                "        (*jenv)->SetObjectArrayElement(jenv, bandsArray, i, bandsElems[i]);\n" +
+                                "    }\n" +
+                                "}",
+                        "bandsArray",
+                        null);
+    }
+
+    @Test
     public void test_CodeGenParameter_StringScalar() {
         final CodeGenParameter.StringScalar stringScalar = new CodeGenParameter.StringScalar(new MyParameter("name", String.class));
         assertEquals("const char* name", stringScalar.generateParamListDecl(context));
         assertEquals("jstring nameString = NULL;", stringScalar.generateLocalVarDecl(context));
         assertEquals("nameString = (*jenv)->NewStringUTF(jenv, name);", stringScalar.generatePreCallCode(context));
-        assertEquals("nameString", stringScalar.generateCallArgExpr(context));
+        assertEquals("nameString", stringScalar.generateCallCode(context));
     }
 
     @Test
@@ -78,7 +94,7 @@ public class CodeGenParameterTest {
         assertEquals("const char** namesElems, int namesLength", stringArray.generateParamListDecl(context));
         assertEquals("jobjectArray namesArray = NULL;", stringArray.generateLocalVarDecl(context));
         assertEquals("namesArray = beam_new_jstring_array(namesElems, namesLength);", stringArray.generatePreCallCode(context));
-        assertEquals("namesArray", stringArray.generateCallArgExpr(context));
+        assertEquals("namesArray", stringArray.generateCallCode(context));
     }
 
     private void testPrimitiveScalar(String name, Class<?> type, String paramListDecl, String callArgExpr) {
@@ -98,6 +114,19 @@ public class CodeGenParameterTest {
                        callArgExpr,
                        postCallCode);
     }
+    private void testObjectArray(String name, Class<?> type,
+                                    String paramListDecl,
+                                    String localVarDecl,
+                                    String preCallCode,
+                                    String callArgExpr,
+                                    String postCallCode) {
+        testGenerators(new CodeGenParameter.ObjectArray(new MyParameter(name, type), true),
+                       paramListDecl,
+                       localVarDecl,
+                       preCallCode,
+                       callArgExpr,
+                       postCallCode);
+    }
 
     private void testObjectScalar(String name, Class<?> type, String paramListDecl, String callArgExpr) {
         testGenerators(new CodeGenParameter.ObjectScalar(new MyParameter(name, type)), paramListDecl, null, null, callArgExpr, null);
@@ -111,8 +140,8 @@ public class CodeGenParameterTest {
                                 String postCallCode) {
         assertEquals(paramListDecl, parameter.generateParamListDecl(context));
         assertEquals(localVarDecl, parameter.generateLocalVarDecl(context));
-        assertEquals(callArgExpr, parameter.generateCallArgExpr(context));
         assertEquals(preCallCode, parameter.generatePreCallCode(context));
+        assertEquals(callArgExpr, parameter.generateCallCode(context));
         assertEquals(postCallCode, parameter.generatePostCallCode(context));
     }
 

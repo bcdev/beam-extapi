@@ -3,8 +3,8 @@ package org.esa.beam.extapi.gen;
 /**
  * @author Norman Fomferra
  */
-class CodeGenException extends Exception {
-    public CodeGenException(String message) {
+class GeneratorException extends Exception {
+    public GeneratorException(String message) {
         super(message);
     }
 }

@@ -3,6 +3,6 @@ package org.esa.beam.extapi.gen;
 /**
  * @author Norman Fomferra
  */
-interface CodeGenContext {
+interface GeneratorContext {
     String getTargetFunctionName(CodeGenCallable callable);
 }

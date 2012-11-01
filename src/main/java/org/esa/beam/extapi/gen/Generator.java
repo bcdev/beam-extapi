@@ -31,7 +31,7 @@ import java.util.List;
 /**
  * @author Norman Fomferra
  */
-class Generator implements CodeGenContext {
+class Generator implements GeneratorContext {
 
     public static final String BEAM_CAPI_SRCDIR = "src/main/c/gen";
     public static final String BEAM_CAPI_NAME = "beam_capi";
@@ -101,7 +101,7 @@ class Generator implements CodeGenContext {
     }
 
     static String getTargetClassVarName(Type type) {
-        return String.format(CLASS_VAR_NAME_PATTERN, getTargetTypeName(type));
+        return String.format(CLASS_VAR_NAME_PATTERN, getTargetClassName(type));
     }
 
     @Override
@@ -109,8 +109,8 @@ class Generator implements CodeGenContext {
         return generatorInfo.getExternalFunctionName(callable);
     }
 
-    public List<CodeGenClass> getApiClasses() {
-        return generatorInfo.getCodeGenClasses();
+    public List<ApiClass> getApiClasses() {
+        return generatorInfo.getApiClasses();
     }
 
     public void run() throws Exception {
@@ -129,8 +129,8 @@ class Generator implements CodeGenContext {
                                   "\tbeam_create_jvm\n" +
                                   "\tbeam_create_jvm_with_defaults\n" +
                                   "\tbeam_destroy_jvm\n");
-            for (CodeGenClass codeGenClass : getApiClasses()) {
-                for (CodeGenCallable callable : codeGenClass.getCallableList()) {
+            for (ApiClass apiClass : getApiClasses()) {
+                for (CodeGenCallable callable : apiClass.getCallableList()) {
                     writer.printf("\t%s\n", getTargetFunctionName(callable));
                 }
             }
@@ -146,8 +146,8 @@ class Generator implements CodeGenContext {
 
             writer.write("\n");
             writer.write("/* Wrapped API classes */\n");
-            for (CodeGenClass codeGenClass : getApiClasses()) {
-                writer.write(String.format("typedef void* %s;\n", codeGenClass.getTargetComponentTypeName()));
+            for (ApiClass apiClass : getApiClasses()) {
+                writer.write(String.format("typedef void* %s;\n", apiClass.getTargetComponentTypeName()));
             }
             writer.write("\n");
 
@@ -159,9 +159,9 @@ class Generator implements CodeGenContext {
 
             writer.write("\n");
             writer.write("/* Non-API classes used in the API */\n");
-            for (CodeGenClass usedCodeGenClass : generatorInfo.getUsedCodeGenClasses()) {
-                if (!getApiClasses().contains(usedCodeGenClass) && !isString(usedCodeGenClass.getType())) {
-                    writer.write(String.format("typedef void* %s;\n", usedCodeGenClass.getTargetComponentTypeName()));
+            for (ApiClass usedApiClass : generatorInfo.getUsedApiClasses()) {
+                if (!getApiClasses().contains(usedApiClass) && !isString(usedApiClass.getType())) {
+                    writer.write(String.format("typedef void* %s;\n", usedApiClass.getTargetComponentTypeName()));
                 }
             }
             writer.write("\n");
@@ -171,11 +171,11 @@ class Generator implements CodeGenContext {
             /////////////////////////////////////////////////////////////////////////////////////
             // Generate function declarations
             //
-            for (CodeGenClass codeGenClass : getApiClasses()) {
+            for (ApiClass apiClass : getApiClasses()) {
                 writer.write("\n");
-                writer.printf("/* Functions for class %s */\n", codeGenClass.getTargetComponentTypeName());
+                writer.printf("/* Functions for class %s */\n", apiClass.getTargetComponentTypeName());
                 writer.write("\n");
-                for (CodeGenCallable callable : codeGenClass.getCallableList()) {
+                for (CodeGenCallable callable : apiClass.getCallableList()) {
                     writer.printf("" +
                                           "/**\n" +
                                           " * %s\n" +
@@ -197,11 +197,17 @@ class Generator implements CodeGenContext {
             writer.printf("#include \"%s\"\n", BEAM_CAPI_NAME + ".h");
             writer.printf("#include \"jni.h\"\n");
             writer.printf("\n");
+            writer.printf("/* Java API classes. */\n");
+            for (ApiClass apiClass : getApiClasses()) {
+                writer.write(String.format("static jclass %s;\n",
+                                           getTargetClassVarName(apiClass.getType())));
+            }
+            writer.printf("/* Other Java classes used in the API. */\n");
             writer.write(String.format("static jclass %s;\n",
                                        String.format(CLASS_VAR_NAME_PATTERN, "String")));
-            for (CodeGenClass codeGenClass : getApiClasses()) {
+            for (ApiClass usedApiClass : generatorInfo.getUsedApiClasses()) {
                 writer.write(String.format("static jclass %s;\n",
-                                           getTargetClassVarName(codeGenClass.getType())));
+                                           getTargetClassVarName(usedApiClass.getType())));
             }
             writer.write("\n");
 
@@ -212,7 +218,11 @@ class Generator implements CodeGenContext {
             writer.write("int beam_init_vm();\n");
             writer.write("int beam_init_api();\n");
             writer.write("char* beam_alloc_string(jstring str);\n");
-            writer.write("char** beam_alloc_string_array(jarray str_array, size_t* str_array_length);\n");
+            writer.write("char** beam_alloc_string_array(jarray array, size_t* array_length);\n");
+            writer.write("boolean* beam_alloc_boolean_array(jarray array, size_t* array_length);\n");
+            writer.write("int* beam_alloc_int_array(jarray array, size_t* array_length);\n");
+            writer.write("double* beam_alloc_double_array(jarray array, size_t* array_length);\n");
+
             writer.write("jobjectArray beam_new_jstring_array(const char** str_array_data, size_t str_array_length);\n");
             writer.write("\n");
 
@@ -230,10 +240,10 @@ class Generator implements CodeGenContext {
                           errCode);
 
             errCode++;
-            for (CodeGenClass codeGenClass : getApiClasses()) {
+            for (ApiClass apiClass : getApiClasses()) {
                 writeClassDef(writer,
-                              getTargetClassVarName(codeGenClass.getType()),
-                              codeGenClass.getResourceName(),
+                              getTargetClassVarName(apiClass.getType()),
+                              apiClass.getResourceName(),
                               errCode);
                 errCode++;
             }
@@ -243,8 +253,8 @@ class Generator implements CodeGenContext {
             /////////////////////////////////////////////////////////////////////////////////////
             // Generate function code
             //
-            for (CodeGenClass codeGenClass : getApiClasses()) {
-                for (CodeGenCallable callable : codeGenClass.getCallableList()) {
+            for (ApiClass apiClass : getApiClasses()) {
+                for (CodeGenCallable callable : apiClass.getCallableList()) {
                     generateFunctionDefinition(callable, writer);
                 }
             }
@@ -278,7 +288,9 @@ class Generator implements CodeGenContext {
         for (CodeGenParameter codeGenParameter : callable.getParameters()) {
             writeCode(writer, codeGenParameter.generatePreCallCode(this));
         }
+        writeCode(writer, callable.generatePreCallCode(this));
         writeCode(writer, callable.generateCallCode(this));
+        writeCode(writer, callable.generatePostCallCode(this));
         for (CodeGenParameter codeGenParameter : callable.getParameters()) {
             writeCode(writer, codeGenParameter.generatePostCallCode(this));
         }
@@ -338,9 +350,9 @@ class Generator implements CodeGenContext {
     private void printStats() {
         int numClasses = 0;
         int numMethods = 0;
-        for (CodeGenClass codeGenClass : getApiClasses()) {
+        for (ApiClass apiClass : getApiClasses()) {
             numClasses++;
-            numMethods += codeGenClass.getCallableList().size();
+            numMethods += apiClass.getCallableList().size();
         }
         System.out.printf("#Classes: %d, #Methods: %d\n", numClasses, numMethods);
     }
@@ -360,8 +372,16 @@ class Generator implements CodeGenContext {
         return type.qualifiedTypeName().equals("java.lang.String");
     }
 
+    static boolean isPrimitiveArray(Type type) {
+        return type.dimension().equals("[]") && type.isPrimitive();
+    }
+
     static boolean isStringArray(Type type) {
         return type.dimension().equals("[]") && isString(type);
+    }
+
+    static boolean isObjectArray(Type type) {
+        return type.dimension().equals("[]") && !type.isPrimitive();
     }
 
     // todo - code duplication in CodeGenParameter
@@ -377,9 +397,13 @@ class Generator implements CodeGenContext {
             if (isString(type)) {
                 return isParam ? "const char*" : "char*";
             } else {
-                return type.typeName().replace('.', '_');
+                return getTargetClassName(type);
             }
         }
+    }
+
+    static String getTargetClassName(Type type) {
+        return type.typeName().replace('.', '_');
     }
 
 

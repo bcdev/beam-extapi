@@ -9,13 +9,13 @@ import java.util.List;
 /**
  * @author Norman Fomferra
  */
-class CodeGenClass implements Comparable<CodeGenClass> {
+class ApiClass implements Comparable<ApiClass> {
     private final String javaName;
     private final String resourceName;
     private final List<CodeGenCallable> apiMethods;
     private final Type type;
 
-    public CodeGenClass(Type type) throws ClassNotFoundException {
+    public ApiClass(Type type) {
         this.type = type;
         this.javaName = type.qualifiedTypeName();
         this.resourceName = type.qualifiedTypeName().replace(".", "/");
@@ -51,13 +51,13 @@ class CodeGenClass implements Comparable<CodeGenClass> {
     }
 
     @Override
-    public int compareTo(CodeGenClass other) {
+    public int compareTo(ApiClass other) {
         return javaName.compareTo(other.javaName);
     }
 
     @Override
     public boolean equals(Object o) {
-        return this == o || !(o == null || getClass() != o.getClass()) && javaName.equals(((CodeGenClass) o).javaName);
+        return this == o || !(o == null || getClass() != o.getClass()) && javaName.equals(((ApiClass) o).javaName);
     }
 
     @Override
