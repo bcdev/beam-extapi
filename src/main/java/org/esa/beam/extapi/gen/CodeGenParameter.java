@@ -76,7 +76,7 @@ abstract class CodeGenParameter implements CodeGen {
 
         @Override
         public String generateParamListDecl(GeneratorContext context) {
-            return eval("${c}${t}* ${p}Elems, size_t ${p}Length",
+            return eval("${c}${t}* ${p}Elems, int ${p}Length",
                         kv("c", readOnly ? "const " : ""),
                         kv("t", getType().simpleTypeName()),
                         kv("p", parameter.name()));
@@ -193,7 +193,7 @@ abstract class CodeGenParameter implements CodeGen {
 
         @Override
         public String generateParamListDecl(GeneratorContext context) {
-            return eval("${m}${t}* ${p}Elems, size_t ${p}Length",
+            return eval("${m}${t}* ${p}Elems, int ${p}Length",
                         kv("m", readOnly ? "const " : ""),
                         kv("t", Generator.getTargetClassName(getType())),
                         kv("p", getName()));

@@ -21,10 +21,13 @@ import com.sun.javadoc.MethodDoc;
 import com.sun.javadoc.Parameter;
 import com.sun.javadoc.Type;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.io.Writer;
 import java.util.Date;
 import java.util.List;
 
@@ -145,16 +148,14 @@ class Generator implements GeneratorContext {
             generateFileInfo(writer);
 
             writer.write("\n");
+            writeResource(writer, "Generator-stubs.h");
+            writer.write("\n");
+
+            writer.write("\n");
             writer.write("/* Wrapped API classes */\n");
             for (ApiClass apiClass : getApiClasses()) {
                 writer.write(String.format("typedef void* %s;\n", apiClass.getTargetComponentTypeName()));
             }
-            writer.write("\n");
-
-            writer.write("\n");
-            writer.write("typedef char byte;\n");
-            writer.write("typedef unsigned char boolean;\n");
-            writer.write("typedef long long dlong;\n");
             writer.write("\n");
 
             writer.write("\n");
@@ -165,8 +166,6 @@ class Generator implements GeneratorContext {
                 }
             }
             writer.write("\n");
-
-            writer.write("int beam_init_vm();\n");
 
             /////////////////////////////////////////////////////////////////////////////////////
             // Generate function declarations
@@ -196,7 +195,11 @@ class Generator implements GeneratorContext {
             writer.printf("#include <string.h>\n");
             writer.printf("#include \"%s\"\n", BEAM_CAPI_NAME + ".h");
             writer.printf("#include \"jni.h\"\n");
+
             writer.printf("\n");
+            writeResource(writer, "Generator-stubs-1.c");
+            writer.printf("\n");
+
             writer.printf("/* Java API classes. */\n");
             for (ApiClass apiClass : getApiClasses()) {
                 writer.write(String.format("static jclass %s;\n",
@@ -211,35 +214,23 @@ class Generator implements GeneratorContext {
             }
             writer.write("\n");
 
-            writer.write("static JavaVM* jvm = NULL;\n");
-            writer.write("static JNIEnv* jenv = NULL;\n");
-
-            writer.write("\n");
-            writer.write("int beam_init_vm();\n");
-            writer.write("int beam_init_api();\n");
-            writer.write("\n");
-            writer.write("char* beam_alloc_string(jstring str);\n");
-            writer.write("char** beam_alloc_string_array(jarray array, size_t* array_length);\n");
-            writer.write("void** beam_alloc_object_array(jarray array, size_t* array_length);\n");
-            writer.write("boolean* beam_alloc_boolean_array(jarray array, size_t* array_length);\n");
-            writer.write("char* beam_alloc_char_array(jarray array, size_t* array_length);\n");
-            writer.write("byte* beam_alloc_byte_array(jarray array, size_t* array_length);\n");
-            writer.write("short* beam_alloc_short_array(jarray array, size_t* array_length);\n");
-            writer.write("int* beam_alloc_int_array(jarray array, size_t* array_length);\n");
-            writer.write("long* beam_alloc_long_array(jarray array, size_t* array_length);\n");
-            writer.write("float* beam_alloc_float_array(jarray array, size_t* array_length);\n");
-            writer.write("double* beam_alloc_double_array(jarray array, size_t* array_length);\n");
-            writer.write("\n");
-            writer.write("jobjectArray beam_new_jstring_array(const char** str_array_data, size_t str_array_length);\n");
-            writer.write("jobjectArray beam_new_jobject_array(const Object* obj_array_data, size_t obj_array_length, jclass comp_class);\n");
-            writer.write("\n");
+            writer.printf("\n");
+            writeResource(writer, "Generator-stubs-2.c");
+            writer.printf("\n");
 
             /////////////////////////////////////////////////////////////////////////////////////
             // beam_init_api()
             //
-            writer.write("int beam_init_api()\n{\n");
-
-            writer.printf("    if (beam_init_vm() != 0) return 1;\n\n");
+            writer.write("int beam_init_api()\n");
+            writer.write("{\n");
+            writer.printf("" +
+                                  "    if (api_init != 0) {\n" +
+                                  "        return 0;\n" +
+                                  "    }\n");
+            writer.printf("" +
+                                  "    if (!beam_is_jvm_created() && !beam_create_jvm_with_defaults()) {\n" +
+                                  "        return 1;\n" +
+                                  "    }\n");
 
             int errCode = 1000;
             writeClassDef(writer,
@@ -255,6 +246,7 @@ class Generator implements GeneratorContext {
                               errCode);
                 errCode++;
             }
+            writer.write("    api_init = 1;\n");
             writer.write("    return 0;\n");
             writer.write("}\n\n");
 
@@ -269,6 +261,20 @@ class Generator implements GeneratorContext {
         } finally {
             writer.close();
         }
+    }
+
+    private String writeResource(Writer writer, String resourceName) throws IOException {
+        final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(resourceName)));
+        try {
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                writer.write(line);
+                writer.write("\n");
+            }
+        } finally {
+            bufferedReader.close();
+        }
+        return null;
     }
 
     private void writeClassDef(PrintWriter writer, String classVarName, String classResourceName, int errCode) {
@@ -310,9 +316,9 @@ class Generator implements GeneratorContext {
     private void writeInitVmCode(PrintWriter writer, CodeGenCallable callable) {
         writer.printf("\n");
         if (isVoid(callable.getReturnType())) {
-            writer.printf("    if (beam_init_vm() != 0) return;\n");
+            writer.printf("    if (beam_init_api() != 0) return;\n");
         } else {
-            writer.printf("    if (beam_init_vm() != 0) return _result;\n");
+            writer.printf("    if (beam_init_api() != 0) return _result;\n");
         }
         writer.printf("\n");
     }

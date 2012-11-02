@@ -22,6 +22,8 @@ import com.sun.javadoc.LanguageVersion;
 import com.sun.javadoc.RootDoc;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
@@ -30,11 +32,15 @@ import java.util.Set;
  */
 public class GeneratorDoclet extends Doclet {
 
-    public static final String SOURCE_PATH = "" +
+    public interface Handler {
+        boolean start(RootDoc root);
+    }
+
+    public static final String DEFAULT_SOURCE_PATH = "" +
             "../beam/beam/beam-core/src/main/java;" +
             "../beam/beam/beam-gpf/src/main/java";
 
-    public static final String[] PACKAGES = {
+    public static final String[] DEFAULT_PACKAGES = {
             "org.esa.beam.framework.datamodel",
             "org.esa.beam.framework.dataio",
             "org.esa.beam.framework.gpf",
@@ -42,25 +48,39 @@ public class GeneratorDoclet extends Doclet {
     };
 
     public static void main(String[] args) {
-        Javadoc.run(GeneratorDoclet.class.getName(), SOURCE_PATH, PACKAGES);
+        run(new DefaultHandler(), DEFAULT_SOURCE_PATH, DEFAULT_PACKAGES);
+    }
+
+    private final static Map<Thread, Handler> HANDLER_MAP = new HashMap<Thread, Handler>();
+
+    public static void run(final Handler handler, final String sourcePath, final String... packages) {
+        final JavadocRunnable runnable = new JavadocRunnable(sourcePath, packages);
+        final Thread thread;
+        synchronized (HANDLER_MAP) {
+            if (HANDLER_MAP.isEmpty()) {
+                thread = Thread.currentThread();
+            } else {
+                thread = new Thread(runnable);
+            }
+            HANDLER_MAP.put(Thread.currentThread(), handler);
+        }
+        if (Thread.currentThread() != thread) {
+            thread.start();
+        } else {
+            runnable.run();
+        }
     }
 
     @SuppressWarnings("UnusedDeclaration")
     public static boolean start(RootDoc root) {
-        try {
-            final Properties properties = new Properties();
-            properties.load(GeneratorDoclet.class.getResourceAsStream("Generator-classes.txt"));
-            Set<String> wrappedClassNames = properties.stringPropertyNames();
-            GeneratorInfo generatorInfo = GeneratorInfo.create(root, wrappedClassNames);
-            new Generator(generatorInfo).run();
-            return true;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return false;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
+        final Thread thread = Thread.currentThread();
+        final Handler handler = HANDLER_MAP.get(thread);
+        if (handler == null) {
+            throw new IllegalStateException("no handler for thread " + thread);
         }
+        final boolean start = handler.start(root);
+        HANDLER_MAP.remove(thread);
+        return start;
     }
 
     @SuppressWarnings("UnusedDeclaration")
@@ -79,4 +99,38 @@ public class GeneratorDoclet extends Doclet {
         return LanguageVersion.JAVA_1_5;
     }
 
- }
+    private static class JavadocRunnable implements Runnable {
+        private final String sourcePath;
+        private final String[] packages;
+
+        public JavadocRunnable(String sourcePath, String... packages) {
+            this.sourcePath = sourcePath;
+            this.packages = packages;
+        }
+
+        @Override
+        public void run() {
+            Javadoc.run(GeneratorDoclet.class.getName(), sourcePath, packages);
+        }
+    }
+
+    private static class DefaultHandler implements Handler {
+        @Override
+        public boolean start(RootDoc root) {
+            try {
+                final Properties properties = new Properties();
+                properties.load(GeneratorDoclet.class.getResourceAsStream("Generator-classes.txt"));
+                Set<String> wrappedClassNames = properties.stringPropertyNames();
+                GeneratorInfo generatorInfo = GeneratorInfo.create(root, wrappedClassNames);
+                new Generator(generatorInfo).run();
+                return true;
+            } catch (IOException e) {
+                e.printStackTrace();
+                return false;
+            } catch (Exception e) {
+                e.printStackTrace();
+                return false;
+            }
+        }
+    }
+}

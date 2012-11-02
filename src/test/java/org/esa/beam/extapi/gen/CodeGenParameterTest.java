@@ -39,7 +39,7 @@ public class CodeGenParameterTest {
     @Test
     public void test_CodeGenParameter_PrimitiveArray() {
         testPrimitiveArray("data", boolean[].class,
-                           "const boolean* dataElems, size_t dataLength",
+                           "const boolean* dataElems, int dataLength",
                            "jarray dataArray = NULL;\n" +
                                    "void* dataArrayAddr = NULL;",
                            "dataArray = (*jenv)->NewBooleanArray(jenv, dataLength);\n" +
@@ -66,7 +66,7 @@ public class CodeGenParameterTest {
     @Test
     public void test_CodeGenParameter_ObjectArray() {
         testObjectArray("bands", Band[].class,
-                        "const Band* bandsElems, size_t bandsLength",
+                        "const Band* bandsElems, int bandsLength",
                         "jarray bandsArray = NULL;",
                         "bandsArray = beam_new_jobject_array(bandsElems, bandsLength, classBand);",
                         "bandsArray",

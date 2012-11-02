@@ -393,7 +393,7 @@ abstract class CodeGenCallable implements Comparable<CodeGenCallable>, CodeGen {
 
         @Override
           public String generateParamListDecl(GeneratorContext context) {
-              return "size_t* resultArrayLength";
+              return "int* resultArrayLength";
           }
 
           @Override
@@ -425,7 +425,7 @@ abstract class CodeGenCallable implements Comparable<CodeGenCallable>, CodeGen {
 
         @Override
         public String generateParamListDecl(GeneratorContext context) {
-            return "size_t* resultArrayLength";
+            return "int* resultArrayLength";
         }
 
         @Override
