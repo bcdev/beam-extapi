@@ -30,18 +30,19 @@ import java.util.Set;
  */
 public class GeneratorDoclet extends Doclet {
 
-    public static void main(String[] args) {
+    public static final String SOURCE_PATH = "" +
+            "../beam/beam/beam-core/src/main/java;" +
+            "../beam/beam/beam-gpf/src/main/java";
 
-        com.sun.tools.javadoc.Main.main(new String[]{
-                "-doclet", GeneratorDoclet.class.getName(),
-                "-sourcepath", "" +
-                "../beam/beam/beam-core/src/main/java;" +
-                "../beam/beam/beam-gpf/src/main/java",
-                "org.esa.beam.framework.datamodel",
-                "org.esa.beam.framework.dataio",
-                "org.esa.beam.framework.gpf",
-                "org.esa.beam.util",
-        });
+    public static final String[] PACKAGES = {
+            "org.esa.beam.framework.datamodel",
+            "org.esa.beam.framework.dataio",
+            "org.esa.beam.framework.gpf",
+            "org.esa.beam.util"
+    };
+
+    public static void main(String[] args) {
+        Javadoc.run(GeneratorDoclet.class.getName(), SOURCE_PATH, PACKAGES);
     }
 
     @SuppressWarnings("UnusedDeclaration")
@@ -70,11 +71,6 @@ public class GeneratorDoclet extends Doclet {
     @SuppressWarnings("UnusedDeclaration")
     public static boolean validOptions(String[][] options,
                                        DocErrorReporter docErrorReporter) {
-        for (int i = 0; i < options.length; i++) {
-            for (int j = 0; j < options[i].length; j++) {
-                docErrorReporter.printWarning("options[" + i + "][" + j + "] = " + options[i][j]);
-            }
-        }
         return true;
     }
 
