@@ -68,13 +68,7 @@ public class CodeGenParameterTest {
         testObjectArray("bands", Band[].class,
                         "const Band* bandsElems, size_t bandsLength",
                         "jarray bandsArray = NULL;",
-                        "bandsArray = (*jenv)->NewObjectArray(jenv, bandsLength, classBand, NULL);\n" +
-                                "{\n" +
-                                "    size_t i;\n" +
-                                "    for (i = 0; i < bandsLength; i++) {\n" +
-                                "        (*jenv)->SetObjectArrayElement(jenv, bandsArray, i, bandsElems[i]);\n" +
-                                "    }\n" +
-                                "}",
+                        "bandsArray = beam_new_jobject_array(bandsElems, bandsLength, classBand);",
                         "bandsArray",
                         null);
     }

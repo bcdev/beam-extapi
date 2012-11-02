@@ -418,9 +418,8 @@ abstract class CodeGenCallable implements Comparable<CodeGenCallable>, CodeGen {
     }
 
 
-
-    static class StringArrayMethod extends ObjectMethod {
-        StringArrayMethod(ApiClass apiClass, CodeGenParameter[] codeGenParameters, MethodDoc methodDoc) {
+    static class ObjectArrayMethod extends ObjectMethod {
+        ObjectArrayMethod(ApiClass apiClass, CodeGenParameter[] codeGenParameters, MethodDoc methodDoc) {
             super(apiClass, codeGenParameters, methodDoc);
         }
 
@@ -438,13 +437,27 @@ abstract class CodeGenCallable implements Comparable<CodeGenCallable>, CodeGen {
         @Override
         public String generateCallCode(GeneratorContext context) {
             return String.format("_resultArray = %s\n" +
-                                         "%s = beam_alloc_string_array(_resultArray, resultArrayLength);",
+                                         "%s = beam_alloc_object_array(_resultArray, resultArrayLength);",
                                  generateJniCall(context), RESULT_VAR_NAME);
         }
 
         @Override
         public String generateReturnCode(GeneratorContext context) {
             return String.format("return %s;", RESULT_VAR_NAME);
+        }
+    }
+
+    static class StringArrayMethod extends ObjectArrayMethod {
+
+        StringArrayMethod(ApiClass apiClass, CodeGenParameter[] codeGenParameters, MethodDoc methodDoc) {
+            super(apiClass, codeGenParameters, methodDoc);
+        }
+
+        @Override
+        public String generateCallCode(GeneratorContext context) {
+            return String.format("_resultArray = %s\n" +
+                                         "%s = beam_alloc_string_array(_resultArray, resultArrayLength);",
+                                 generateJniCall(context), RESULT_VAR_NAME);
         }
     }
 }

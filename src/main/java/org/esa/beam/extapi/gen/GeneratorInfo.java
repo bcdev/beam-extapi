@@ -118,10 +118,12 @@ class GeneratorInfo {
             } else {
                 apiMethod = new CodeGenCallable.ObjectMethod(apiClass, parameters, methodDoc);
             }
-        } else if (isStringArray(returnType)) {
-            apiMethod = new CodeGenCallable.StringArrayMethod(apiClass, parameters, methodDoc);
         } else if (isPrimitiveArray(returnType)) {
             apiMethod = new CodeGenCallable.PrimitiveArrayMethod(apiClass, parameters, methodDoc);
+        } else if (isStringArray(returnType)) {
+            apiMethod = new CodeGenCallable.StringArrayMethod(apiClass, parameters, methodDoc);
+        } else if (isObjectArray(returnType)) {
+            apiMethod = new CodeGenCallable.ObjectArrayMethod(apiClass, parameters, methodDoc);
         } else {
             throw new GeneratorException(String.format("member %s#%s(): can't deal with return type %s%s (not implemented yet)",
                                                      apiClass.getJavaName(),
@@ -130,6 +132,41 @@ class GeneratorInfo {
                                                      returnType.dimension()));
         }
         return apiMethod;
+    }
+
+    public static CodeGenParameter[] createParameterCodeGens(ApiClass apiClass, ExecutableMemberDoc memberDoc) throws GeneratorException {
+        Parameter[] parameters = memberDoc.parameters();
+        CodeGenParameter[] codeGenParameters = new CodeGenParameter[parameters.length];
+        for (int i = 0; i < codeGenParameters.length; i++) {
+            Parameter parameter = parameters[i];
+            CodeGenParameter codeGenParameter;
+            Type parameterType = parameter.type();
+            boolean scalar = parameterType.dimension().equals("");
+            if (scalar) {
+                if (parameterType.isPrimitive()) {
+                    codeGenParameter = new CodeGenParameter.PrimitiveScalar(parameter);
+                } else if (parameterType.qualifiedTypeName().equals("java.lang.String")) {
+                    codeGenParameter = new CodeGenParameter.StringScalar(parameter);
+                } else {
+                    codeGenParameter = new CodeGenParameter.ObjectScalar(parameter);
+                }
+            } else if (isPrimitiveArray(parameterType)) {
+                codeGenParameter = new CodeGenParameter.PrimitiveArray(parameter, true);
+            } else if (isStringArray(parameterType)) {
+                codeGenParameter = new CodeGenParameter.StringArray(parameter);
+            } else if (isObjectArray(parameterType)) {
+                codeGenParameter = new CodeGenParameter.ObjectArray(parameter, true);
+            } else {
+                throw new GeneratorException(String.format("member %s#%s(): can't deal with parameter %s of type %s%s (not implemented yet)",
+                                                           apiClass.getJavaName(),
+                                                           memberDoc.name(),
+                                                           parameter.name(),
+                                                           parameterType.typeName(),
+                                                           parameterType.dimension()));
+            }
+            codeGenParameters[i] = codeGenParameter;
+        }
+        return codeGenParameters;
     }
 
     private static void collect(ApiClass apiClass, CodeGenCallable apiMethod, HashSet<ApiClass> usedApiClasses, Map<String, List<CodeGenCallable>> sameExternalFunctionNames) throws ClassNotFoundException, NoSuchMethodException {
@@ -159,41 +196,6 @@ class GeneratorInfo {
                 usedApiClasses.add(new ApiClass(type));
             }
         }
-    }
-
-    public static CodeGenParameter[] createParameterCodeGens(ApiClass apiClass, ExecutableMemberDoc memberDoc) throws GeneratorException {
-        Parameter[] parameters = memberDoc.parameters();
-        CodeGenParameter[] codeGenParameters = new CodeGenParameter[parameters.length];
-        for (int i = 0; i < codeGenParameters.length; i++) {
-            Parameter parameter = parameters[i];
-            CodeGenParameter codeGenParameter;
-            Type parameterType = parameter.type();
-            boolean scalar = parameterType.dimension().equals("");
-            if (scalar) {
-                if (parameterType.isPrimitive()) {
-                    codeGenParameter = new CodeGenParameter.PrimitiveScalar(parameter);
-                } else if (parameterType.qualifiedTypeName().equals("java.lang.String")) {
-                    codeGenParameter = new CodeGenParameter.StringScalar(parameter);
-                } else {
-                    codeGenParameter = new CodeGenParameter.ObjectScalar(parameter);
-                }
-            } else if (isPrimitiveArray(parameterType)) {
-                codeGenParameter = new CodeGenParameter.PrimitiveArray(parameter, true);
-            } else if (isStringArray(parameterType)) {
-                codeGenParameter = new CodeGenParameter.StringArray(parameter);
-            } else if (isObjectArray(parameterType)) {
-                codeGenParameter = new CodeGenParameter.ObjectArray(parameter, true);
-            } else {
-                throw new GeneratorException(String.format("member %s#%s(): can't deal with parameter %s of type %s%s (not implemented yet)",
-                                                         apiClass.getJavaName(),
-                                                         memberDoc.name(),
-                                                         parameter.name(),
-                                                         parameterType.typeName(),
-                                                         parameterType.dimension()));
-            }
-            codeGenParameters[i] = codeGenParameter;
-        }
-        return codeGenParameters;
     }
 
 }

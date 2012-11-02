@@ -142,24 +142,26 @@ abstract class CodeGenParameter implements CodeGen {
 
         @Override
         public String generateParamListDecl(GeneratorContext context) {
-            return String.format("const char** %sElems, int %sLength",
-                                 getName(), getName());
+            return eval("const char** ${p}Elems, int ${p}Length",
+                        kv("p", getName()));
         }
 
         @Override
         public String generateLocalVarDecl(GeneratorContext context) {
-            return String.format("jobjectArray %sArray = NULL;", getName());
+            return eval("jobjectArray ${p}Array = NULL;",
+                        kv("p", getName()));
         }
 
         @Override
         public String generatePreCallCode(GeneratorContext context) {
-            return String.format("%sArray = beam_new_jstring_array(%sElems, %sLength);",
-                                 getName(), getName(), getName());
+            return eval("${p}Array = beam_new_jstring_array(${p}Elems, ${p}Length);",
+                        kv("p", getName()));
         }
 
         @Override
         public String generateCallCode(GeneratorContext context) {
-            return String.format("%sArray", getName());
+            return eval("${p}Array",
+                        kv("p", getName()));
         }
 
     }
@@ -191,34 +193,29 @@ abstract class CodeGenParameter implements CodeGen {
 
         @Override
         public String generateParamListDecl(GeneratorContext context) {
-            return eval("${c}${t}* ${p}Elems, size_t ${p}Length",
-                        kv("c", readOnly ? "const " : ""),
+            return eval("${m}${t}* ${p}Elems, size_t ${p}Length",
+                        kv("m", readOnly ? "const " : ""),
                         kv("t", Generator.getTargetClassName(getType())),
-                        kv("p", parameter.name()));
+                        kv("p", getName()));
         }
 
         @Override
         public String generateLocalVarDecl(GeneratorContext context) {
             return eval("jarray ${p}Array = NULL;",
-                        kv("p", parameter.name()));
+                        kv("p", getName()));
         }
 
         @Override
         public String generatePreCallCode(GeneratorContext context) {
-            return eval("${p}Array = (*jenv)->NewObjectArray(jenv, ${p}Length, ${c}, NULL);\n" +
-                                "{\n" +
-                                "    size_t i;\n" +
-                                "    for (i = 0; i < ${p}Length; i++) {\n" +
-                                "        (*jenv)->SetObjectArrayElement(jenv, ${p}Array, i, ${p}Elems[i]);\n" +
-                                "    }\n" +
-                                "}",
-                        kv("p", parameter.name()) ,
+            return eval("${p}Array = beam_new_jobject_array(${p}Elems, ${p}Length, ${c});",
+                        kv("p", getName()),
                         kv("c", Generator.getTargetClassVarName(getType())));
         }
 
         @Override
         public String generateCallCode(GeneratorContext context) {
-            return eval("${p}Array", kv("p", parameter.name()));
+            return eval("${p}Array",
+                        kv("p", getName()));
         }
 
         @Override

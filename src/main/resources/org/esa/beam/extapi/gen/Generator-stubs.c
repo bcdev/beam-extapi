@@ -63,5 +63,20 @@ jobjectArray beam_new_jstring_array(const char** str_array_data, size_t str_arra
 		(*jenv)->SetObjectArrayElement(jenv, str_array, i, str);
 	}
 
-	return (*jenv)->NewGlobalRef(jenv, str_array);
+	// todo: check if we must return (*jenv)->NewGlobalRef(jenv, str_array);
+	return str_array;
+}
+
+jobjectArray beam_new_jobject_array(jclass comp_class, const void** obj_array_data, size_t obj_array_length)
+{
+    jobjectArray obj_array;
+	jsize i;
+
+    obj_array = (*jenv)->NewObjectArray(jenv, bandsLength, comp_class, NULL);
+    for (i = 0; i < bandsLength; i++) {
+        (*jenv)->SetObjectArrayElement(jenv, obj_array, i, obj_array_data[i]);
+    }
+
+ 	// todo: check if we must return (*jenv)->NewGlobalRef(jenv, obj_array);
+    return obj_array;
 }

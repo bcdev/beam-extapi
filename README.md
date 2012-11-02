@@ -14,13 +14,17 @@ C-Code Generation Considerations
 * Take care of String if used as parameter (--> const char*) or return value (by reference: char*, int max_size). (done first option)
 * Don't forget to increase global reference count when returning objects from Java VM.  (done)
 * If we start from a limited number of API classes, we need to remove methods that have arguments for which no factory exists at all.
+* Need to find out which Java SE classes are used in parameter lists, but neither cannot retrieved nor instanciated.
+* How to treat method (array) parameters that
+** are input, output or both (e.g. new parameter annotations: @In, @Out, @InOut, or simply @Const or @ReadOnly)
+** are used as return values (see Band.getPixels() methods, e.g. new annotation @Return, or @Reuse or @ReturnedIfNotNull )
+* How to treat (array) parameters that are will used as return values (see Band.getPixels() methods)
 * How to treat (primitive, string & object) arrays?
 * How to treat object collections lists, sets, maps?
 * How to treat generics?
 * How to treat Java SE classes: File, Date, Point, etc?
 * How to treat and catch / throw Exceptions?
-* Need to find out which Java SE classes are used in parameter lists, but neither cannot retrieved nor instanciated.
-
+* Care: Check ALWAYS for possible null return values (many JNI functions may return null)
 
 Design Considerations
 ---------------------

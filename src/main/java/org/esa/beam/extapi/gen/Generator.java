@@ -217,13 +217,21 @@ class Generator implements GeneratorContext {
             writer.write("\n");
             writer.write("int beam_init_vm();\n");
             writer.write("int beam_init_api();\n");
+            writer.write("\n");
             writer.write("char* beam_alloc_string(jstring str);\n");
             writer.write("char** beam_alloc_string_array(jarray array, size_t* array_length);\n");
+            writer.write("void** beam_alloc_object_array(jarray array, size_t* array_length);\n");
             writer.write("boolean* beam_alloc_boolean_array(jarray array, size_t* array_length);\n");
+            writer.write("char* beam_alloc_char_array(jarray array, size_t* array_length);\n");
+            writer.write("byte* beam_alloc_byte_array(jarray array, size_t* array_length);\n");
+            writer.write("short* beam_alloc_short_array(jarray array, size_t* array_length);\n");
             writer.write("int* beam_alloc_int_array(jarray array, size_t* array_length);\n");
+            writer.write("long* beam_alloc_long_array(jarray array, size_t* array_length);\n");
+            writer.write("float* beam_alloc_float_array(jarray array, size_t* array_length);\n");
             writer.write("double* beam_alloc_double_array(jarray array, size_t* array_length);\n");
-
+            writer.write("\n");
             writer.write("jobjectArray beam_new_jstring_array(const char** str_array_data, size_t str_array_length);\n");
+            writer.write("jobjectArray beam_new_jobject_array(const Object* obj_array_data, size_t obj_array_length, jclass comp_class);\n");
             writer.write("\n");
 
             /////////////////////////////////////////////////////////////////////////////////////

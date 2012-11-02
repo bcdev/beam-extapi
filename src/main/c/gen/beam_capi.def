@@ -84,6 +84,7 @@ EXPORTS
 	ColorPaletteDef_getCenterColor
 	ColorPaletteDef_removePointAt
 	ColorPaletteDef_addPoint
+	ColorPaletteDef_getPoints
 	ColorPaletteDef_setPoints
 	ColorPaletteDef_getIterator
 	ColorPaletteDef_clone
@@ -91,6 +92,8 @@ EXPORTS
 	ColorPaletteDef_loadColorPaletteDef
 	ColorPaletteDef_storeColorPaletteDef
 	ColorPaletteDef_dispose
+	ColorPaletteDef_getColors
+	ColorPaletteDef_createColorPalette
 	ColorPaletteDef_computeColor
 	ColorPaletteDef_Point_newColorPaletteDef_Point1
 	ColorPaletteDef_Point_newColorPaletteDef_Point2
@@ -156,6 +159,7 @@ EXPORTS
 	ImageInfo_setHistogramMatching
 	ImageInfo_isLogScaled
 	ImageInfo_setLogScaled
+	ImageInfo_getColors
 	ImageInfo_getColorComponentCount
 	ImageInfo_createIndexColorModel
 	ImageInfo_createComponentColorModel
@@ -187,6 +191,7 @@ EXPORTS
 	MetadataElement_getNumElements
 	MetadataElement_getElementAt
 	MetadataElement_getElementNames
+	MetadataElement_getElements
 	MetadataElement_getElement
 	MetadataElement_containsElement
 	MetadataElement_getElementIndex
@@ -195,6 +200,7 @@ EXPORTS
 	MetadataElement_getNumAttributes
 	MetadataElement_getAttributeAt
 	MetadataElement_getAttributeNames
+	MetadataElement_getAttributes
 	MetadataElement_getAttribute
 	MetadataElement_containsAttribute
 	MetadataElement_getAttributeIndex
@@ -283,6 +289,7 @@ EXPORTS
 	Product_getNumTiePointGrids
 	Product_getTiePointGridAt
 	Product_getTiePointGridNames
+	Product_getTiePointGrids
 	Product_getTiePointGrid
 	Product_containsTiePointGrid
 	Product_addBand1
@@ -293,6 +300,7 @@ EXPORTS
 	Product_getNumBands
 	Product_getBandAt
 	Product_getBandNames
+	Product_getBands
 	Product_getBand
 	Product_getBandIndex
 	Product_containsBand
@@ -311,6 +319,7 @@ EXPORTS
 	Product_acceptVisitor
 	Product_addProductNodeListener
 	Product_removeProductNodeListener
+	Product_getProductNodeListeners
 	Product_getRefNo
 	Product_setRefNo
 	Product_resetRefNo
@@ -327,6 +336,7 @@ EXPORTS
 	Product_getQuicklookBandName
 	Product_setQuicklookBandName
 	Product_createPixelInfoString
+	Product_getRemovedChildNodes
 	Product_canBeOrthorectified
 	Product_getPreferredTileSize
 	Product_setPreferredTileSize1
@@ -409,6 +419,7 @@ EXPORTS
 	ProductManager_getProduct1
 	ProductManager_getProductDisplayNames
 	ProductManager_getProductNames
+	ProductManager_getProducts
 	ProductManager_getProductByDisplayName
 	ProductManager_getProductByRefNo
 	ProductManager_getProduct2
@@ -427,6 +438,8 @@ EXPORTS
 	ProductNodeGroup_get1
 	ProductNodeGroup_getNodeDisplayNames
 	ProductNodeGroup_getNodeNames
+	ProductNodeGroup_toArray1
+	ProductNodeGroup_toArray2
 	ProductNodeGroup_indexOf1
 	ProductNodeGroup_indexOf2
 	ProductNodeGroup_getByDisplayName
@@ -670,6 +683,7 @@ EXPORTS
 	Operator_computeTileStack
 	Operator_dispose
 	Operator_getId
+	Operator_getSourceProducts
 	Operator_setSourceProducts
 	Operator_getSourceProduct1
 	Operator_setSourceProduct1
@@ -755,6 +769,22 @@ EXPORTS
 	ProductUtils_createSuitableMapInfo1
 	ProductUtils_createSuitableMapInfo2
 	ProductUtils_getOutputRasterSize
+	ProductUtils_createMapEnvelope1
+	ProductUtils_createMapEnvelope2
+	ProductUtils_getMinMax
+	ProductUtils_createMapBoundary
+	ProductUtils_createGeoBoundary1
+	ProductUtils_createGeoBoundary2
+	ProductUtils_createGeoBoundary3
+	ProductUtils_createGeoBoundary4
+	ProductUtils_createGeoBoundaryPaths1
+	ProductUtils_createGeoBoundaryPaths2
+	ProductUtils_createGeoBoundaryPaths3
+	ProductUtils_createPixelBoundary1
+	ProductUtils_createPixelBoundary2
+	ProductUtils_createPixelBoundary3
+	ProductUtils_createRectBoundary1
+	ProductUtils_createRectBoundary2
 	ProductUtils_copyFlagCodings
 	ProductUtils_copyFlagCoding
 	ProductUtils_copyIndexCoding
@@ -792,6 +822,7 @@ EXPORTS
 	ProductUtils_addElementToHistory
 	ProductUtils_removeInvalidExpressions
 	ProductUtils_findSuitableQuicklookBandName
+	ProductUtils_computeSourcePixelCoordinates
 	ProductUtils_computeMinMaxY
 	ProductUtils_copyBandsForGeomTransform1
 	ProductUtils_copyBandsForGeomTransform2
