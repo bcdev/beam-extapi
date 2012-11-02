@@ -10,6 +10,8 @@ import static org.esa.beam.extapi.gen.Generator.isString;
 import static org.esa.beam.extapi.gen.Generator.isStringArray;
 import static org.esa.beam.extapi.gen.Generator.isVoid;
 
+// Urgent todo: add methods from base classes which are API but not defined in current API class
+
 /**
  * @author Norman Fomferra
  */
@@ -56,7 +58,7 @@ class GeneratorInfo {
                 for (ConstructorDoc constructorDoc : constructors) {
                     if (isApiElement(constructorDoc)) {
                         try {
-                            CodeGenParameter[] parameters = createParameterCodeGens(apiClass, constructorDoc);
+                            CodeGenParameter[] parameters = createCodeGenParameters(apiClass, constructorDoc);
                             CodeGenCallable apiMethod = new CodeGenCallable.Constructor(apiClass, constructorDoc, parameters);
                             collect(apiClass, apiMethod, usedApiClasses, sameTargetFunctionNames);
                         } catch (GeneratorException e) {
@@ -71,8 +73,8 @@ class GeneratorInfo {
                 for (MethodDoc methodDoc : methodDocs) {
                     if (isApiElement(methodDoc)) {
                         try {
-                            CodeGenParameter[] parameters = createParameterCodeGens(apiClass, methodDoc);
-                            CodeGenCallable apiMethod = createMethodCallable(apiClass, methodDoc, parameters);
+                            CodeGenParameter[] parameters = createCodeGenParameters(apiClass, methodDoc);
+                            CodeGenCallable apiMethod = createCodeGenCallable(apiClass, methodDoc, parameters);
                             collect(apiClass, apiMethod, usedApiClasses, sameTargetFunctionNames);
                         } catch (GeneratorException e) {
                             System.out.printf("Skipping method: %s\n", e.getMessage());
@@ -105,7 +107,7 @@ class GeneratorInfo {
         return new GeneratorInfo(apiClasses, usedApiClasses, targetFunctionNames);
     }
 
-    private static CodeGenCallable createMethodCallable(ApiClass apiClass, MethodDoc methodDoc, CodeGenParameter[] parameters) throws GeneratorException {
+    private static CodeGenCallable createCodeGenCallable(ApiClass apiClass, MethodDoc methodDoc, CodeGenParameter[] parameters) throws GeneratorException {
         CodeGenCallable apiMethod;
         Type returnType = methodDoc.returnType();
         if (returnType.dimension().isEmpty()) {
@@ -134,7 +136,7 @@ class GeneratorInfo {
         return apiMethod;
     }
 
-    public static CodeGenParameter[] createParameterCodeGens(ApiClass apiClass, ExecutableMemberDoc memberDoc) throws GeneratorException {
+    public static CodeGenParameter[] createCodeGenParameters(ApiClass apiClass, ExecutableMemberDoc memberDoc) throws GeneratorException {
         Parameter[] parameters = memberDoc.parameters();
         CodeGenParameter[] codeGenParameters = new CodeGenParameter[parameters.length];
         for (int i = 0; i < codeGenParameters.length; i++) {

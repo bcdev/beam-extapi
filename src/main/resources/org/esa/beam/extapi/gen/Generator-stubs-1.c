@@ -19,9 +19,5 @@ dlong* beam_alloc_long_array(jarray array, int* array_length);
 float* beam_alloc_float_array(jarray array, int* array_length);
 double* beam_alloc_double_array(jarray array, int* array_length);
 
-/* Java VM functions that must be used if this module is used in stand-alone mode (= not loaded as shared library by a Java VM) */
-jboolean beam_is_jvm_created();
-jboolean beam_create_jvm(const char* option_strings[], int option_count) ;
-jboolean beam_create_jvm_with_defaults();
-jboolean beam_destroy_jvm();
+
 

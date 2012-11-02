@@ -13,7 +13,7 @@ jobjectArray beam_new_jstring_array(const char** array_elems, int array_length)
     return array;
 }
 
-jobjectArray beam_new_jobject_array(const Object* array_elems, int array_length, jclass comp_class)
+jobjectArray beam_new_jobject_array(const jobject* array_elems, int array_length, jclass comp_class)
 {
     jobjectArray array;
     int i;
@@ -26,6 +26,16 @@ jobjectArray beam_new_jobject_array(const Object* array_elems, int array_length,
      // todo: check if we must return (*jenv)->NewGlobalRef(jenv, obj_array);
     return array;
 }
+
+void beam_release_jobject(jobject* object)
+{
+	if (*object != NULL) {
+		(*jenv)->DeleteGlobalRef(jenv, *object);
+		*object = NULL;
+	}
+}
+
+
 
 void* beam_alloc_primitive_array(jarray array, size_t array_elem_size,  int* array_length)
 {
@@ -146,7 +156,7 @@ char** beam_alloc_string_array(jarray array, int* array_length)
     return array_elems;
 }
 
-void beam_free_string_array(char** array_elems, int array_length)
+void beam_release_string_array(char** array_elems, int array_length)
 {
     int i;
     for (i = 0; i < array_length; i++) {

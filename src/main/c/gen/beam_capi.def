@@ -52,16 +52,32 @@ EXPORTS
 	Band_setSpectralBandwidth
 	Band_getSolarFlux
 	Band_setSolarFlux
-	Band_readRasterData
-	Band_readRasterDataFully
-	Band_writeRasterData
-	Band_writeRasterDataFully
-	Band_getRawStorageSize
-	Band_acceptVisitor
-	Band_toString
-	Band_removeFromFile
-	Band_createDefaultImageInfo
-	Band_dispose
+	Band_readRasterData2
+	Band_readRasterDataFully2
+	Band_writeRasterData2
+	Band_writeRasterDataFully2
+	Band_getRawStorageSize4
+	Band_acceptVisitor4
+	Band_toString2
+	Band_removeFromFile2
+	Band_createDefaultImageInfo2
+	Band_dispose4
+	Band_getRawStorageSize4
+	Band_dispose4
+	Band_readRasterDataFully2
+	Band_readRasterData2
+	Band_writeRasterDataFully2
+	Band_writeRasterData2
+	Band_acceptVisitor4
+	Band_createDefaultImageInfo2
+	Band_acceptVisitor4
+	Band_getRawStorageSize4
+	Band_dispose4
+	Band_toString2
+	Band_dispose4
+	Band_getRawStorageSize4
+	Band_acceptVisitor4
+	Band_removeFromFile2
 	ColorPaletteDef_newColorPaletteDef1
 	ColorPaletteDef_newColorPaletteDef2
 	ColorPaletteDef_newColorPaletteDef3
@@ -111,7 +127,9 @@ EXPORTS
 	FlagCoding_getFlagNames
 	FlagCoding_addFlag
 	FlagCoding_getFlagMask
-	FlagCoding_acceptVisitor
+	FlagCoding_acceptVisitor3
+	FlagCoding_acceptVisitor3
+	FlagCoding_acceptVisitor3
 	GeoCoding_isCrossingMeridianAt180
 	GeoCoding_canGetPixelPos
 	GeoCoding_canGetGeoPos
@@ -174,14 +192,18 @@ EXPORTS
 	IndexCoding_getIndexNames
 	IndexCoding_addIndex
 	IndexCoding_getIndexValue
-	IndexCoding_acceptVisitor
+	IndexCoding_acceptVisitor3
+	IndexCoding_acceptVisitor3
+	IndexCoding_acceptVisitor3
 	MetadataAttribute_newMetadataAttribute1
 	MetadataAttribute_newMetadataAttribute2
 	MetadataAttribute_newMetadataAttribute3
 	MetadataAttribute_getParentElement
 	MetadataAttribute_equals
-	MetadataAttribute_acceptVisitor
+	MetadataAttribute_acceptVisitor3
 	MetadataAttribute_createDeepClone
+	MetadataAttribute_acceptVisitor3
+	MetadataAttribute_acceptVisitor3
 	MetadataElement_newMetadataElement
 	MetadataElement_getElementGroup
 	MetadataElement_getParentElement
@@ -216,11 +238,15 @@ EXPORTS
 	MetadataElement_getAttributeString1
 	MetadataElement_getAttributeString2
 	MetadataElement_setAttributeString
-	MetadataElement_setModified
-	MetadataElement_acceptVisitor
-	MetadataElement_getRawStorageSize
+	MetadataElement_setModified2
+	MetadataElement_acceptVisitor2
+	MetadataElement_getRawStorageSize2
 	MetadataElement_createDeepClone
-	MetadataElement_dispose
+	MetadataElement_dispose2
+	MetadataElement_setModified2
+	MetadataElement_dispose2
+	MetadataElement_getRawStorageSize2
+	MetadataElement_acceptVisitor2
 	PixelPos_newPixelPos1
 	PixelPos_newPixelPos2
 	PixelPos_isValid
@@ -237,8 +263,8 @@ EXPORTS
 	Placemark_getText
 	Placemark_setStyleCss
 	Placemark_getStyleCss
-	Placemark_getRawStorageSize
-	Placemark_acceptVisitor
+	Placemark_getRawStorageSize2
+	Placemark_acceptVisitor2
 	Placemark_getPixelPos
 	Placemark_setPixelPos
 	Placemark_getGeoPos
@@ -248,12 +274,19 @@ EXPORTS
 	Placemark_createGcpFeatureType
 	Placemark_createGeometryFeatureType
 	Placemark_createPointFeatureType
+	Placemark_getRawStorageSize2
+	Placemark_acceptVisitor2
 	PlacemarkGroup_getVectorDataNode
 	PlacemarkGroup_getPlacemark
 	PlacemarkGroup_add1
 	PlacemarkGroup_add2
-	PlacemarkGroup_remove
-	PlacemarkGroup_dispose
+	PlacemarkGroup_remove1
+	PlacemarkGroup_dispose3
+	PlacemarkGroup_add3
+	PlacemarkGroup_add4
+	PlacemarkGroup_remove2
+	PlacemarkGroup_dispose3
+	PlacemarkGroup_dispose3
 	Product_newProduct1
 	Product_newProduct2
 	Product_getFileLocation
@@ -261,14 +294,14 @@ EXPORTS
 	Product_getProductType
 	Product_setProductType
 	Product_setProductReader
-	Product_getProductReader
+	Product_getProductReader2
 	Product_setProductWriter
-	Product_getProductWriter
+	Product_getProductWriter2
 	Product_writeHeader
 	Product_closeProductReader
 	Product_closeProductWriter
 	Product_closeIO
-	Product_dispose
+	Product_dispose2
 	Product_getPointingFactory
 	Product_setPointingFactory
 	Product_setGeoCoding
@@ -316,7 +349,7 @@ EXPORTS
 	Product_getPinGroup
 	Product_isCompatibleProduct
 	Product_parseExpression
-	Product_acceptVisitor
+	Product_acceptVisitor2
 	Product_addProductNodeListener
 	Product_removeProductNodeListener
 	Product_getProductNodeListeners
@@ -331,8 +364,8 @@ EXPORTS
 	Product_createSubset
 	Product_createProjectedProduct
 	Product_createFlippedProduct
-	Product_setModified
-	Product_getRawStorageSize
+	Product_setModified2
+	Product_getRawStorageSize2
 	Product_getQuicklookBandName
 	Product_setQuicklookBandName
 	Product_createPixelInfoString
@@ -348,6 +381,12 @@ EXPORTS
 	Product_addMask1
 	Product_addMask2
 	Product_addMask3
+	Product_setModified2
+	Product_dispose2
+	Product_getProductReader2
+	Product_getProductWriter2
+	Product_getRawStorageSize2
+	Product_acceptVisitor2
 	ProductData_createInstance1
 	ProductData_createInstance2
 	ProductData_createInstance3
@@ -452,11 +491,16 @@ EXPORTS
 	ProductNodeGroup_removeAll
 	ProductNodeGroup_clearRemovedList
 	ProductNodeGroup_getRemovedNodes
-	ProductNodeGroup_getRawStorageSize
-	ProductNodeGroup_setModified
-	ProductNodeGroup_acceptVisitor
-	ProductNodeGroup_dispose
-	ProductNodeGroup_updateExpression
+	ProductNodeGroup_getRawStorageSize2
+	ProductNodeGroup_setModified2
+	ProductNodeGroup_acceptVisitor2
+	ProductNodeGroup_dispose2
+	ProductNodeGroup_updateExpression2
+	ProductNodeGroup_setModified2
+	ProductNodeGroup_dispose2
+	ProductNodeGroup_getRawStorageSize2
+	ProductNodeGroup_updateExpression2
+	ProductNodeGroup_acceptVisitor2
 	RGBChannelDef_newRGBChannelDef1
 	RGBChannelDef_newRGBChannelDef2
 	RGBChannelDef_getSourceName
@@ -476,12 +520,12 @@ EXPORTS
 	RasterDataNode_getSceneRasterHeight
 	RasterDataNode_getRasterWidth
 	RasterDataNode_getRasterHeight
-	RasterDataNode_setModified
+	RasterDataNode_setModified2
 	RasterDataNode_getGeoCoding
 	RasterDataNode_setGeoCoding
 	RasterDataNode_getPointing
 	RasterDataNode_canBeOrthorectified
-	RasterDataNode_isFloatingPointType
+	RasterDataNode_isFloatingPointType2
 	RasterDataNode_getGeophysicalDataType
 	RasterDataNode_getScalingFactor
 	RasterDataNode_setScalingFactor
@@ -504,7 +548,7 @@ EXPORTS
 	RasterDataNode_isValidMaskUsed
 	RasterDataNode_resetValidMask
 	RasterDataNode_getValidMaskExpression
-	RasterDataNode_updateExpression
+	RasterDataNode_updateExpression2
 	RasterDataNode_getSceneRasterData
 	RasterDataNode_hasRasterData
 	RasterDataNode_getRasterData
@@ -512,7 +556,7 @@ EXPORTS
 	RasterDataNode_loadRasterData1
 	RasterDataNode_loadRasterData2
 	RasterDataNode_unloadRasterData
-	RasterDataNode_dispose
+	RasterDataNode_dispose3
 	RasterDataNode_isPixelValid1
 	RasterDataNode_getSampleInt
 	RasterDataNode_getSampleFloat
@@ -561,7 +605,7 @@ EXPORTS
 	RasterDataNode_checkCompatibleRasterData
 	RasterDataNode_hasIntPixels
 	RasterDataNode_createTransectProfileData
-	RasterDataNode_acceptVisitor
+	RasterDataNode_acceptVisitor3
 	RasterDataNode_getImageInfo1
 	RasterDataNode_setImageInfo
 	RasterDataNode_fireImageInfoChanged
@@ -591,78 +635,125 @@ EXPORTS
 	RasterDataNode_getStx2
 	RasterDataNode_setStx
 	RasterDataNode_getValidShape
+	RasterDataNode_isFloatingPointType2
+	RasterDataNode_acceptVisitor3
+	RasterDataNode_dispose3
+	RasterDataNode_setModified2
+	RasterDataNode_dispose3
+	RasterDataNode_updateExpression2
+	RasterDataNode_acceptVisitor3
 	SampleCoding_newSampleCoding
-	SampleCoding_addElement
-	SampleCoding_addAttribute
+	SampleCoding_addElement2
+	SampleCoding_addAttribute2
 	SampleCoding_addSample
 	SampleCoding_getSampleCount
 	SampleCoding_getSampleName
 	SampleCoding_getSampleValue
+	SampleCoding_addElement2
+	SampleCoding_addAttribute2
 	TiePointGrid_newTiePointGrid1
 	TiePointGrid_newTiePointGrid2
 	TiePointGrid_newTiePointGrid3
 	TiePointGrid_getDiscontinuity1
 	TiePointGrid_getDiscontinuity2
 	TiePointGrid_setDiscontinuity
-	TiePointGrid_isFloatingPointType
-	TiePointGrid_getGeophysicalDataType
-	TiePointGrid_getSceneRasterData
-	TiePointGrid_getSceneRasterWidth
-	TiePointGrid_getSceneRasterHeight
+	TiePointGrid_isFloatingPointType3
+	TiePointGrid_getGeophysicalDataType2
+	TiePointGrid_getSceneRasterData2
+	TiePointGrid_getSceneRasterWidth2
+	TiePointGrid_getSceneRasterHeight2
 	TiePointGrid_getOffsetX
 	TiePointGrid_getOffsetY
 	TiePointGrid_getSubSamplingX
 	TiePointGrid_getSubSamplingY
 	TiePointGrid_getTiePoints
-	TiePointGrid_getPixelInt
-	TiePointGrid_dispose
-	TiePointGrid_getPixelFloat1
+	TiePointGrid_getPixelInt2
+	TiePointGrid_dispose4
+	TiePointGrid_getPixelFloat3
 	TiePointGrid_getPixelFloat2
-	TiePointGrid_getPixelDouble
-	TiePointGrid_setPixelInt
-	TiePointGrid_setPixelFloat
-	TiePointGrid_setPixelDouble
-	TiePointGrid_getPixels1
-	TiePointGrid_getPixels2
-	TiePointGrid_getPixels3
-	TiePointGrid_setPixels1
-	TiePointGrid_setPixels2
-	TiePointGrid_setPixels3
-	TiePointGrid_readPixels1
-	TiePointGrid_readPixels2
-	TiePointGrid_readPixels3
-	TiePointGrid_writePixels1
-	TiePointGrid_writePixels2
-	TiePointGrid_writePixels3
-	TiePointGrid_readRasterData
-	TiePointGrid_readRasterDataFully
-	TiePointGrid_writeRasterData
-	TiePointGrid_writeRasterDataFully
-	TiePointGrid_acceptVisitor
+	TiePointGrid_getPixelDouble2
+	TiePointGrid_setPixelInt2
+	TiePointGrid_setPixelFloat2
+	TiePointGrid_setPixelDouble2
+	TiePointGrid_getPixels4
+	TiePointGrid_getPixels5
+	TiePointGrid_getPixels6
+	TiePointGrid_setPixels4
+	TiePointGrid_setPixels5
+	TiePointGrid_setPixels6
+	TiePointGrid_readPixels4
+	TiePointGrid_readPixels5
+	TiePointGrid_readPixels6
+	TiePointGrid_writePixels4
+	TiePointGrid_writePixels5
+	TiePointGrid_writePixels6
+	TiePointGrid_readRasterData2
+	TiePointGrid_readRasterDataFully2
+	TiePointGrid_writeRasterData2
+	TiePointGrid_writeRasterDataFully2
+	TiePointGrid_acceptVisitor4
 	TiePointGrid_cloneTiePointGrid
 	TiePointGrid_createZenithFromElevationAngleTiePointGrid
 	TiePointGrid_createSubset
+	TiePointGrid_getSceneRasterWidth2
+	TiePointGrid_getSceneRasterHeight2
+	TiePointGrid_isFloatingPointType3
+	TiePointGrid_getGeophysicalDataType2
+	TiePointGrid_getSceneRasterData2
+	TiePointGrid_dispose4
+	TiePointGrid_getPixelInt2
+	TiePointGrid_getPixelFloat3
+	TiePointGrid_getPixelDouble2
+	TiePointGrid_setPixelInt2
+	TiePointGrid_setPixelFloat2
+	TiePointGrid_setPixelDouble2
+	TiePointGrid_getPixels4
+	TiePointGrid_getPixels5
+	TiePointGrid_getPixels6
+	TiePointGrid_setPixels4
+	TiePointGrid_setPixels5
+	TiePointGrid_setPixels6
+	TiePointGrid_readPixels4
+	TiePointGrid_readPixels5
+	TiePointGrid_readPixels6
+	TiePointGrid_writePixels4
+	TiePointGrid_writePixels5
+	TiePointGrid_writePixels6
+	TiePointGrid_readRasterDataFully2
+	TiePointGrid_readRasterData2
+	TiePointGrid_writeRasterDataFully2
+	TiePointGrid_writeRasterData2
+	TiePointGrid_acceptVisitor4
+	TiePointGrid_isFloatingPointType3
+	TiePointGrid_acceptVisitor4
+	TiePointGrid_dispose4
+	TiePointGrid_dispose4
+	TiePointGrid_acceptVisitor4
 	VectorDataNode_newVectorDataNode1
 	VectorDataNode_newVectorDataNode2
 	VectorDataNode_newVectorDataNode3
 	VectorDataNode_getPlacemarkDescriptor
 	VectorDataNode_getPlacemarkGroup
-	VectorDataNode_setModified
+	VectorDataNode_setModified2
 	VectorDataNode_fireFeaturesAdded
 	VectorDataNode_fireFeaturesRemoved
 	VectorDataNode_fireFeaturesChanged
 	VectorDataNode_getFeatureType
 	VectorDataNode_getFeatureCollection
 	VectorDataNode_getEnvelope
-	VectorDataNode_getRawStorageSize
+	VectorDataNode_getRawStorageSize2
 	VectorDataNode_getDefaultStyleCss
 	VectorDataNode_setDefaultStyleCss
 	VectorDataNode_getStyleCss
 	VectorDataNode_setStyleCss
-	VectorDataNode_acceptVisitor
-	VectorDataNode_dispose
+	VectorDataNode_acceptVisitor2
+	VectorDataNode_dispose2
 	VectorDataNode_isPermanent
 	VectorDataNode_setPermanent
+	VectorDataNode_setModified2
+	VectorDataNode_dispose2
+	VectorDataNode_getRawStorageSize2
+	VectorDataNode_acceptVisitor2
 	GPF_createProduct1
 	GPF_createProduct2
 	GPF_createProduct3
