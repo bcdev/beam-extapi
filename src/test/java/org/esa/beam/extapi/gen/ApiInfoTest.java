@@ -33,25 +33,15 @@ public class ApiInfoTest {
 
         List<ApiMethod> apiMethods = apiInfo.getMethodsOf(apiClass1);
         assertNotNull(apiMethods);
-        assertEquals(6, apiMethods.size());
+        assertEquals(7, apiMethods.size());
 
-        ApiMethod apiMethod0 = getApiMethod(apiMethods, "<init>", "()V");
-        assertNotNull(apiMethod0);
-
-        ApiMethod apiMethod1 = getApiMethod(apiMethods, "getPixel", "(II)F");
-        assertNotNull(apiMethod1);
-
-        ApiMethod apiMethod2 = getApiMethod(apiMethods, "getPixels", "([FI)[F");
-        assertNotNull(apiMethod2);
-
-        ApiMethod apiMethod3 = getApiMethod(apiMethods, "getName", "()Ljava/lang/String;");
-        assertNotNull(apiMethod3);
-
-        ApiMethod apiMethod4 = getApiMethod(apiMethods, "getTimestamp", "()Ljava/util/Date;");
-        assertNotNull(apiMethod4);
-
-        ApiMethod apiMethod5 = getApiMethod(apiMethods, "getFiles", "(Ljava/lang/String;)[Ljava/io/File;");
-        assertNotNull(apiMethod5);
+        testMethod(apiMethods, "<init>", "()V");
+        testMethod(apiMethods, "getPixel", "(II)F");
+        testMethod(apiMethods, "getPixel", "(III)F");
+        testMethod(apiMethods, "getPixels", "([FI)[F");
+        testMethod(apiMethods, "getName", "()Ljava/lang/String;");
+        testMethod(apiMethods, "getTimestamp", "()Ljava/util/Date;");
+        testMethod(apiMethods, "getFiles", "(Ljava/lang/String;)[Ljava/io/File;");
 
         Set<ApiClass> allClasses = apiInfo.getAllClasses();
         assertEquals(4, allClasses.size());
@@ -65,6 +55,11 @@ public class ApiInfoTest {
         assertNotNull(getApiClass(usedNonApiClasses, String.class.getName()));
         assertNotNull(getApiClass(usedNonApiClasses, Date.class.getName()));
         assertNotNull(getApiClass(usedNonApiClasses, File.class.getName()));
+    }
+
+    private void testMethod(List<ApiMethod> apiMethods, String javaName, String javaSignature) {
+        ApiMethod apiMethod0 = getApiMethod(apiMethods, javaName, javaSignature);
+        assertNotNull(apiMethod0);
     }
 
 

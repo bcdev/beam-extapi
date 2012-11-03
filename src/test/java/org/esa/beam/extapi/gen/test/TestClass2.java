@@ -11,6 +11,10 @@ public class TestClass2 extends TestClass1 {
         return 0;
     }
 
+    public float getPixel(int x, int y, int b) {
+        return 0;
+    }
+
     public float[] getPixels(float[] pixels, int size) {
         return null;
     }

@@ -36,6 +36,7 @@ public class DocFactory {
         when(classDoc.qualifiedTypeName()).thenReturn(clazz.getName());
         when(classDoc.simpleTypeName()).thenReturn(clazz.getSimpleName());
         when(classDoc.typeName()).thenReturn(typeName);
+        when(classDoc.dimension()).thenReturn("");
         when(classDoc.isPrimitive()).thenReturn(clazz.isPrimitive());
         when(classDoc.isInterface()).thenReturn(clazz.isInterface());
         when(classDoc.isPublic()).thenReturn(Modifier.isPublic(clazz.getModifiers()));
