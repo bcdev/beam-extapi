@@ -26,7 +26,7 @@ public class CodeGenFactoryTest {
     @BeforeClass
     public static void setUp() throws Exception {
         RootDoc rootDoc = DocFactory.createRootDoc(TEST_CLASS_2);
-        apiInfo = ApiInfo.create(rootDoc, new ApiInfo.DefaultFilter(TEST_CLASS_2.getName()));
+        apiInfo = ApiInfo.create(rootDoc, TEST_CLASS_2.getName());
     }
 
     @Test

@@ -22,7 +22,7 @@ public class ApiInfoTest {
         RootDoc rootDoc = DocFactory.createRootDoc(TestClass2.class);
 
         String testClass2Name = TestClass2.class.getName();
-        ApiInfo apiInfo = ApiInfo.create(rootDoc, new ApiInfo.DefaultFilter(testClass2Name));
+        ApiInfo apiInfo = ApiInfo.create(rootDoc, testClass2Name);
         assertNotNull(apiInfo);
 
         Set<ApiClass> apiClasses = apiInfo.getApiClasses();
@@ -55,6 +55,12 @@ public class ApiInfoTest {
         assertNotNull(getApiClass(usedNonApiClasses, String.class.getName()));
         assertNotNull(getApiClass(usedNonApiClasses, Date.class.getName()));
         assertNotNull(getApiClass(usedNonApiClasses, File.class.getName()));
+
+        List<ApiMethod> methodsUsingString = apiInfo.getMethodsUsing(getApiClass(usedNonApiClasses, String.class.getName()));
+        assertNotNull(methodsUsingString);
+        assertEquals(2, methodsUsingString.size());
+        testMethod(methodsUsingString, "getName", "()Ljava/lang/String;");
+        testMethod(methodsUsingString, "getFiles", "(Ljava/lang/String;)[Ljava/io/File;");
     }
 
     private void testMethod(List<ApiMethod> apiMethods, String javaName, String javaSignature) {
