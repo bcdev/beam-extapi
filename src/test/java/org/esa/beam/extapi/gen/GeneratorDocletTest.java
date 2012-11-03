@@ -7,7 +7,7 @@ import org.junit.Test;
 import java.util.HashSet;
 import java.util.Set;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 /**
  * @author Norman Fomferra
@@ -26,9 +26,9 @@ public class GeneratorDocletTest {
                 return true;
             }
         };
-        GeneratorDoclet.run(handler, "src/test/java", "org.esa.beam.extapi.gen");
-        assertTrue(classNames.contains("org.esa.beam.extapi.gen.TemplateEvalTest"));
-        assertTrue(classNames.contains("org.esa.beam.extapi.gen.CodeGenParameterTest"));
-        assertTrue(classNames.contains("org.esa.beam.extapi.gen.CodeGenCallableTest"));
+        GeneratorDoclet.run(handler, "src/test/java", "org.esa.beam.extapi.gen.test");
+        assertEquals(2, classNames.size());
+        assertTrue(classNames.contains("org.esa.beam.extapi.gen.test.TestClass1"));
+        assertTrue(classNames.contains("org.esa.beam.extapi.gen.test.TestClass2"));
     }
 }

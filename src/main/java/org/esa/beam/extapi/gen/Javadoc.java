@@ -1,6 +1,7 @@
 package org.esa.beam.extapi.gen;
 
 /**
+ * Calls the {@code javadoc} tool.
  * @author Norman Fomferra
  */
 public class Javadoc {
@@ -13,6 +14,6 @@ public class Javadoc {
         javadocArgs[2] = "-sourcepath";
         javadocArgs[3] = sourcePath;
         System.arraycopy(packages, 0, javadocArgs, off, packages.length);
-        com.sun.tools.javadoc.Main.main(javadocArgs);
+        com.sun.tools.javadoc.Main.execute(javadocArgs);
     }
 }

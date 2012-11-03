@@ -1,8 +1,11 @@
-package org.esa.beam.extapi.gen;
+package org.esa.beam.extapi.gen.test;
+
+import org.junit.Ignore;
 
 /**
  * @author Norman Fomferra
  */
+@Ignore
 public class TestClass2 extends TestClass1 {
     public float getPixel(int x, int y) {
         return 0;

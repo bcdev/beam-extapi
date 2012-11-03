@@ -1,4 +1,6 @@
-package org.esa.beam.extapi.gen;
+package org.esa.beam.extapi.gen.test;
+
+import org.junit.Ignore;
 
 import java.io.File;
 import java.util.Date;
@@ -6,6 +8,8 @@ import java.util.Date;
 /**
  * @author Norman Fomferra
  */
+
+@Ignore
 public class TestClass1 {
     public String getName() {
         return null;

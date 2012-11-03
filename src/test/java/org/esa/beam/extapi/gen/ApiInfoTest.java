@@ -1,6 +1,7 @@
 package org.esa.beam.extapi.gen;
 
 import com.sun.javadoc.RootDoc;
+import org.esa.beam.extapi.gen.test.TestClass2;
 import org.junit.Test;
 
 import java.io.File;
