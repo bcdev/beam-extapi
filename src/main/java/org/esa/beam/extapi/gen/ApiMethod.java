@@ -82,4 +82,9 @@ final class ApiMethod implements Comparable<ApiMethod> {
         result = 31 * result + javaSignature.hashCode();
         return result;
     }
+
+    @Override
+    public String toString() {
+        return javaName + javaSignature;
+    }
 }

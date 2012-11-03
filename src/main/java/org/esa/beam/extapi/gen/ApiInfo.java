@@ -13,11 +13,11 @@ class ApiInfo {
     private final Map<ApiClass, List<ApiMethod>> allClasses;
     private final Set<ApiClass> usedNonApiClasses;
 
-    private ApiInfo(Map<ApiClass, List<ApiMethod>> allClasses,
-                    Map<ApiClass, List<ApiMethod>> apiClasses,
+    private ApiInfo(Map<ApiClass, List<ApiMethod>> apiClasses,
+                    Map<ApiClass, List<ApiMethod>> allClasses,
                     Set<ApiClass> usedNonApiClasses) {
-        this.allClasses = allClasses;
         this.apiClasses = apiClasses;
+        this.allClasses = allClasses;
         this.usedNonApiClasses = usedNonApiClasses;
     }
 
@@ -43,21 +43,23 @@ class ApiInfo {
         return list != null ? Collections.unmodifiableList(list) : null;
     }
 
+    public static ApiInfo create(RootDoc rootDoc, String... includedClassNames) {
+        return create(rootDoc, new DefaultFilter(includedClassNames));
+    }
+
     public static ApiInfo create(RootDoc rootDoc, Filter filter) {
-        Map<ApiClass, List<ApiMethod>> apiClasses = parseRootDoc(rootDoc, filter);
+        Map<ApiClass, List<ApiMethod>> apiClasses = getApiClasses(rootDoc, filter);
         Map<ApiClass, List<ApiMethod>> allClasses = getAllClasses(apiClasses);
         Set<ApiClass> usedNonApiClasses = getUsedNonApiClasses(apiClasses, allClasses);
         return new ApiInfo(apiClasses, allClasses, usedNonApiClasses);
     }
 
-    private static Map<ApiClass, List<ApiMethod>> parseRootDoc(RootDoc rootDoc, Filter filter) {
+    private static Map<ApiClass, List<ApiMethod>> getApiClasses(RootDoc rootDoc, Filter filter) {
 
-        Map<ApiClass, List<ApiMethod>> callables = new HashMap<ApiClass, List<ApiMethod>>(1000);
+        Map<ApiClass, List<ApiMethod>> apiClasses = new HashMap<ApiClass, List<ApiMethod>>(1000);
 
         for (ClassDoc classDoc : rootDoc.classes()) {
-
             if (filter.accept(classDoc)) {
-
                 ApiClass apiClass = new ApiClass(classDoc);
                 ArrayList<ApiMethod> apiMethods = new ArrayList<ApiMethod>();
 
@@ -70,23 +72,30 @@ class ApiInfo {
                     }
                 }
 
-                for (MethodDoc methodDoc : classDoc.methods()) {
-                    if (filter.accept(methodDoc)) {
-                        ApiMethod apiMethod = new ApiMethod(apiClass, methodDoc);
-                        apiMethods.add(apiMethod);
-                    } else {
-                        System.out.printf("Filtered out: method %s#%s()\n", classDoc.qualifiedTypeName(), methodDoc.name());
+                ClassDoc classDoc0 = classDoc;
+                do {
+                    for (MethodDoc methodDoc : classDoc0.methods()) {
+                        if (filter.accept(methodDoc)) {
+                            ApiMethod apiMethod = new ApiMethod(apiClass, methodDoc);
+                            apiMethods.add(apiMethod);
+                        } else {
+                            System.out.printf("Filtered out: method %s#%s()\n", classDoc.qualifiedTypeName(), methodDoc.name());
+                        }
                     }
-                }
+                    classDoc0 = classDoc0.superclass();
+                } while (classDoc0 != null && !isObjectClass(classDoc0));
 
-                callables.put(apiClass, apiMethods);
-
+                apiClasses.put(apiClass, apiMethods);
             } else {
                 System.out.printf("Filtered out: class %s\n", classDoc.qualifiedTypeName());
             }
         }
 
-        return callables;
+        return apiClasses;
+    }
+
+    private static boolean isObjectClass(ClassDoc classDoc0) {
+        return classDoc0.qualifiedTypeName().equalsIgnoreCase("java.lang.Object");
     }
 
     private static Map<ApiClass, List<ApiMethod>> getAllClasses(Map<ApiClass, List<ApiMethod>> apiClasses) {
@@ -147,7 +156,7 @@ class ApiInfo {
 
         @Override
         public boolean accept(ClassDoc classDoc) {
-            return classDoc.isPublic() && includedClassNames.contains(classDoc.qualifiedTypeName());
+            return classDoc.isPublic() && (includedClassNames.isEmpty() || includedClassNames.contains(classDoc.qualifiedTypeName()));
         }
 
         @Override
