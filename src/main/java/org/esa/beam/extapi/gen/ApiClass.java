@@ -12,11 +12,11 @@ import java.util.List;
  *
  * @author Norman Fomferra
  */
-class ApiClass implements Comparable<ApiClass> {
+final class ApiClass implements Comparable<ApiClass> {
+    private final Type type;
     private final String javaName;
     private final String resourceName;
     private final List<CodeGenCallable> apiMethods;
-    private final Type type;
 
     public ApiClass(Type type) {
         this.type = type;
@@ -35,11 +35,6 @@ class ApiClass implements Comparable<ApiClass> {
 
     public String getResourceName() {
         return resourceName;
-    }
-
-    // fix: move to Generator
-    public String getTargetTypeName() {
-        return Generator.getTargetTypeName(getType());
     }
 
     // fix: move to Generator
@@ -64,7 +59,9 @@ class ApiClass implements Comparable<ApiClass> {
 
     @Override
     public boolean equals(Object o) {
-        return this == o || !(o == null || getClass() != o.getClass()) && javaName.equals(((ApiClass) o).javaName);
+        return this == o ||
+                !(o == null || getClass() != o.getClass())
+                        && javaName.equals(((ApiClass) o).javaName);
     }
 
     @Override

@@ -5,9 +5,12 @@ import com.sun.javadoc.*;
 import java.util.*;
 
 /**
+ * Collection of API classes and their methods.
+ * Immutable object.
+ *
  * @author Norman Fomferra
  */
-class ApiInfo {
+final class ApiInfo {
 
     private final Map<ApiClass, List<ApiMethod>> apiClasses;
     private final Map<ApiClass, List<ApiMethod>> allClasses;
