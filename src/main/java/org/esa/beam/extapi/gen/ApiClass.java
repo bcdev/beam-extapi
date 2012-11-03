@@ -7,6 +7,9 @@ import java.util.Collections;
 import java.util.List;
 
 /**
+ * Represents a Java class of the API.
+ * Immutable object.
+ *
  * @author Norman Fomferra
  */
 class ApiClass implements Comparable<ApiClass> {
@@ -34,18 +37,22 @@ class ApiClass implements Comparable<ApiClass> {
         return resourceName;
     }
 
+    // fix: move to Generator
     public String getTargetTypeName() {
         return Generator.getTargetTypeName(getType());
     }
 
+    // fix: move to Generator
     public String getTargetComponentTypeName() {
         return Generator.getTargetComponentTypeName(getType(), true);
     }
 
+    // fix: remove
     public void addCallable(CodeGenCallable apiMethod) {
         apiMethods.add(apiMethod);
     }
 
+    // fix: remove
     public List<CodeGenCallable> getCallableList() {
         return Collections.unmodifiableList(apiMethods);
     }
@@ -67,6 +74,6 @@ class ApiClass implements Comparable<ApiClass> {
 
     @Override
     public String toString() {
-        return "CodeGenClass[javaName=" + javaName + "]";
+        return javaName;
     }
 }
