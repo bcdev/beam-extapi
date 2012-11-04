@@ -12,7 +12,7 @@ import static org.mockito.Mockito.when;
 /**
  * @author Norman Fomferra
  */
-public class DocFactory {
+public class DocMock {
 
     public static RootDoc createRootDoc(Class<?>... classes) {
         ClassDoc[] classDocs = new  ClassDoc[classes.length];

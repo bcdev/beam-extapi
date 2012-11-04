@@ -2,7 +2,6 @@ package org.esa.beam.extapi.gen;
 
 import com.sun.javadoc.RootDoc;
 import org.esa.beam.extapi.gen.test.TestClass2;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -25,7 +24,7 @@ public class CodeGenFactoryTest {
 
     @BeforeClass
     public static void setUp() throws Exception {
-        RootDoc rootDoc = DocFactory.createRootDoc(TEST_CLASS_2);
+        RootDoc rootDoc = DocMock.createRootDoc(TEST_CLASS_2);
         apiInfo = ApiInfo.create(rootDoc, TEST_CLASS_2.getName());
     }
 
@@ -39,7 +38,6 @@ public class CodeGenFactoryTest {
         CodeGenCallable callable = CodeGenFactory.createCodeGenCallable(apiMethod);
         assertNotNull(callable);
         assertSame(apiMethod.getEnclosingClass(), callable.getEnclosingClass());
-        assertEquals("TestClass2_getPixel", callable.getFunctionBaseName());
         CodeGenParameter[] parameters = callable.getParameters();
         assertEquals(2, parameters.length);
         assertEquals("int", parameters[0].getType().typeName());

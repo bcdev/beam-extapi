@@ -120,9 +120,10 @@ public class GeneratorDoclet extends Doclet {
             try {
                 final Properties properties = new Properties();
                 properties.load(GeneratorDoclet.class.getResourceAsStream("Generator-classes.txt"));
-                Set<String> wrappedClassNames = properties.stringPropertyNames();
-                GeneratorInfo generatorInfo = GeneratorInfo.create(root, wrappedClassNames);
-                new Generator(generatorInfo).run();
+                Set<String> stringSet = properties.stringPropertyNames();
+                String[] strings = stringSet.toArray(new String[stringSet.size()]);
+                ApiInfo apiInfo = ApiInfo.create(root, strings);
+                new Generator(apiInfo).run();
                 return true;
             } catch (IOException e) {
                 e.printStackTrace();

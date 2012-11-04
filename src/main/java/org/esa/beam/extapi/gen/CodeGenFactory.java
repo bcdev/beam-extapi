@@ -14,27 +14,26 @@ class CodeGenFactory {
         CodeGenParameter[] parameters = createCodeGenParameters(apiMethod);
         CodeGenCallable callable;
         if (apiMethod.getMemberDoc() instanceof ConstructorDoc) {
-            ConstructorDoc constructorDoc = (ConstructorDoc) apiMethod.getMemberDoc();
-            callable = new CodeGenCallable.Constructor(apiClass, constructorDoc, parameters);
+            callable = new CodeGenCallable.Constructor(apiMethod, parameters);
         } else {
             MethodDoc methodDoc = (MethodDoc) apiMethod.getMemberDoc();
             Type returnType = apiMethod.getReturnType();
             if (returnType.dimension().isEmpty()) {
                 if (isVoid(returnType)) {
-                    callable = new CodeGenCallable.VoidMethod(apiClass, parameters, methodDoc);
+                    callable = new CodeGenCallable.VoidMethod(apiMethod, parameters);
                 } else if (isString(returnType)) {
-                    callable = new CodeGenCallable.StringMethod(apiClass, parameters, methodDoc);
+                    callable = new CodeGenCallable.StringMethod(apiMethod, parameters);
                 } else if (returnType.isPrimitive()) {
-                    callable = new CodeGenCallable.PrimitiveMethod(apiClass, parameters, methodDoc);
+                    callable = new CodeGenCallable.PrimitiveMethod(apiMethod, parameters);
                 } else {
-                    callable = new CodeGenCallable.ObjectMethod(apiClass, parameters, methodDoc);
+                    callable = new CodeGenCallable.ObjectMethod(apiMethod, parameters);
                 }
             } else if (isPrimitiveArray(returnType)) {
-                callable = new CodeGenCallable.PrimitiveArrayMethod(apiClass, parameters, methodDoc);
+                callable = new CodeGenCallable.PrimitiveArrayMethod(apiMethod, parameters);
             } else if (isStringArray(returnType)) {
-                callable = new CodeGenCallable.StringArrayMethod(apiClass, parameters, methodDoc);
+                callable = new CodeGenCallable.StringArrayMethod(apiMethod, parameters);
             } else if (isObjectArray(returnType)) {
-                callable = new CodeGenCallable.ObjectArrayMethod(apiClass, parameters, methodDoc);
+                callable = new CodeGenCallable.ObjectArrayMethod(apiMethod, parameters);
             } else {
                 throw new GeneratorException(String.format("member %s#%s(): can't deal with return type %s%s (not implemented yet)",
                                                            apiClass.getJavaName(),

@@ -16,20 +16,10 @@
 
 package org.esa.beam.extapi.gen;
 
-import com.sun.javadoc.ExecutableMemberDoc;
-import com.sun.javadoc.MethodDoc;
-import com.sun.javadoc.Parameter;
 import com.sun.javadoc.Type;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.io.Writer;
-import java.util.Date;
-import java.util.List;
+import java.io.*;
+import java.util.*;
 
 /**
  * @author Norman Fomferra
@@ -44,76 +34,45 @@ class Generator implements GeneratorContext {
     public static final String RESULT_VAR_NAME = "_result";
     public static final String CLASS_VAR_NAME_PATTERN = "class%s";
 
-    final private GeneratorInfo generatorInfo;
+    private final ApiInfo apiInfo;
+    private final Map<ApiMethod, String> functionNames;
+    private final Map<ApiClass, List<CodeGenCallable>> functionGenerators;
 
-    public Generator(GeneratorInfo generatorInfo) {
-        this.generatorInfo = generatorInfo;
+    Generator(ApiInfo apiInfo) {
+        this.apiInfo = apiInfo;
+        this.functionNames = createFunctionNames(apiInfo);
+        this.functionGenerators = createFunctionGenerators(apiInfo);
     }
 
-    static String getTargetTypeName(Type type) {
+    public Set<ApiClass> getApiClasses() {
+        return apiInfo.getApiClasses();
+    }
+
+    @Override
+    public String getFunctionName(CodeGenCallable callable) {
+        return functionNames.get(callable.getApiMethod());
+    }
+
+    public List<CodeGenCallable> getFunctionGenerators(ApiClass apiClass) {
+        return functionGenerators.get(apiClass);
+    }
+
+    static String getCTypeName(Type type) {
         String name = getTargetComponentTypeName(type, false);
         return name + type.dimension().replace("[]", "*");
     }
 
-    static String getTypeSignature(ExecutableMemberDoc memberDoc) {
-        StringBuilder sb = new StringBuilder();
-        sb.append('(');
-        for (Parameter parameter : memberDoc.parameters()) {
-            sb.append(getTypeSignature(parameter.type()));
-        }
-        sb.append(')');
-        if (memberDoc instanceof MethodDoc) {
-            sb.append(getTypeSignature(((MethodDoc) memberDoc).returnType()));
-        } else {
-            sb.append('V');
-        }
-        return sb.toString();
-    }
-
-    private static String getTypeSignature(Type type) {
-        String comp;
-        if (type.isPrimitive()) {
-            if ("boolean".equals(type.typeName())) {
-                comp = "Z";
-            } else if ("byte".equals(type.typeName())) {
-                comp = "B";
-            } else if ("char".equals(type.typeName())) {
-                comp = "Constructor";
-            } else if ("short".equals(type.typeName())) {
-                comp = "S";
-            } else if ("int".equals(type.typeName())) {
-                comp = "I";
-            } else if ("long".equals(type.typeName())) {
-                comp = "J";
-            } else if ("float".equals(type.typeName())) {
-                comp = "F";
-            } else if ("double".equals(type.typeName())) {
-                comp = "D";
-            } else if ("void".equals(type.typeName())) {
-                comp = "V";
-            } else {
-                throw new IllegalStateException();
-            }
-        } else {
-            comp = "L" + type.qualifiedTypeName().replace('.', '/') + ";";
-        }
-        if (!type.dimension().isEmpty()) {
-            return type.dimension().replace("]", "") + comp;
-        }
-        return comp;
-    }
-
-    static String getTargetClassVarName(Type type) {
+    static String getCClassVarName(Type type) {
         return String.format(CLASS_VAR_NAME_PATTERN, getTargetClassName(type));
     }
 
-    @Override
-    public String getTargetFunctionName(CodeGenCallable callable) {
-        return generatorInfo.getExternalFunctionName(callable);
-    }
-
-    public List<ApiClass> getApiClasses() {
-        return generatorInfo.getApiClasses();
+    public static String getFunctionBaseName(ApiMethod apiMethod) {
+        String targetTypeName = getCTypeName(apiMethod.getEnclosingClass().getType());
+        if (apiMethod.getMemberDoc().isConstructor()) {
+            return String.format("%s_new%s", targetTypeName, targetTypeName);
+        } else {
+            return String.format("%s_%s", targetTypeName, apiMethod.getJavaName());
+        }
     }
 
     public void run() throws Exception {
@@ -133,8 +92,8 @@ class Generator implements GeneratorContext {
                                   "\tbeam_create_jvm_with_defaults\n" +
                                   "\tbeam_destroy_jvm\n");
             for (ApiClass apiClass : getApiClasses()) {
-                for (CodeGenCallable callable : apiClass.getCallableList()) {
-                    writer.printf("\t%s\n", getTargetFunctionName(callable));
+                for (CodeGenCallable callable : getFunctionGenerators(apiClass)) {
+                    writer.printf("\t%s\n", getFunctionName(callable));
                 }
             }
         } finally {
@@ -154,15 +113,15 @@ class Generator implements GeneratorContext {
             writer.write("\n");
             writer.write("/* Wrapped API classes */\n");
             for (ApiClass apiClass : getApiClasses()) {
-                writer.write(String.format("typedef void* %s;\n", apiClass.getTargetComponentTypeName()));
+                writer.write(String.format("typedef void* %s;\n", getTargetComponentTypeName(apiClass.getType(), true)));
             }
             writer.write("\n");
 
             writer.write("\n");
             writer.write("/* Non-API classes used in the API */\n");
-            for (ApiClass usedApiClass : generatorInfo.getUsedApiClasses()) {
+            for (ApiClass usedApiClass : apiInfo.getUsedNonApiClasses()) {
                 if (!getApiClasses().contains(usedApiClass) && !isString(usedApiClass.getType())) {
-                    writer.write(String.format("typedef void* %s;\n", usedApiClass.getTargetComponentTypeName()));
+                    writer.write(String.format("typedef void* %s;\n", getTargetComponentTypeName(usedApiClass.getType(), true)));
                 }
             }
             writer.write("\n");
@@ -172,9 +131,9 @@ class Generator implements GeneratorContext {
             //
             for (ApiClass apiClass : getApiClasses()) {
                 writer.write("\n");
-                writer.printf("/* Functions for class %s */\n", apiClass.getTargetComponentTypeName());
+                writer.printf("/* Functions for class %s */\n", getTargetComponentTypeName(apiClass.getType(), true));
                 writer.write("\n");
-                for (CodeGenCallable callable : apiClass.getCallableList()) {
+                for (CodeGenCallable callable : getFunctionGenerators(apiClass)) {
                     writer.printf("" +
                                           "/**\n" +
                                           " * %s\n" +
@@ -203,14 +162,14 @@ class Generator implements GeneratorContext {
             writer.printf("/* Java API classes. */\n");
             for (ApiClass apiClass : getApiClasses()) {
                 writer.write(String.format("static jclass %s;\n",
-                                           getTargetClassVarName(apiClass.getType())));
+                                           getCClassVarName(apiClass.getType())));
             }
             writer.printf("/* Other Java classes used in the API. */\n");
             writer.write(String.format("static jclass %s;\n",
                                        String.format(CLASS_VAR_NAME_PATTERN, "String")));
-            for (ApiClass usedApiClass : generatorInfo.getUsedApiClasses()) {
+            for (ApiClass usedApiClass : apiInfo.getUsedNonApiClasses()) {
                 writer.write(String.format("static jclass %s;\n",
-                                           getTargetClassVarName(usedApiClass.getType())));
+                                           getCClassVarName(usedApiClass.getType())));
             }
             writer.write("\n");
 
@@ -241,7 +200,7 @@ class Generator implements GeneratorContext {
             errCode++;
             for (ApiClass apiClass : getApiClasses()) {
                 writeClassDef(writer,
-                              getTargetClassVarName(apiClass.getType()),
+                              getCClassVarName(apiClass.getType()),
                               apiClass.getResourceName(),
                               errCode);
                 errCode++;
@@ -254,7 +213,7 @@ class Generator implements GeneratorContext {
             // Generate function code
             //
             for (ApiClass apiClass : getApiClasses()) {
-                for (CodeGenCallable callable : apiClass.getCallableList()) {
+                for (CodeGenCallable callable : getFunctionGenerators(apiClass)) {
                     generateFunctionDefinition(callable, writer);
                 }
             }
@@ -334,8 +293,8 @@ class Generator implements GeneratorContext {
                       METHOD_VAR_NAME,
                       callable.getMemberDoc().isStatic() ? "GetStaticMethodID" : "GetMethodID",
                       callable.getTargetEnclosingClassVarName(),
-                      callable.getJavaName(),
-                      callable.getJavaSignature());
+                      callable.getApiMethod().getJavaName(),
+                      callable.getApiMethod().getJavaSignature());
         if (isVoid(callable.getReturnType())) {
             writer.printf("        if (%s == NULL) return;\n", METHOD_VAR_NAME);
         } else {
@@ -366,7 +325,7 @@ class Generator implements GeneratorContext {
         int numMethods = 0;
         for (ApiClass apiClass : getApiClasses()) {
             numClasses++;
-            numMethods += apiClass.getCallableList().size();
+            numMethods += getFunctionGenerators(apiClass).size();
         }
         System.out.printf("#Classes: %d, #Methods: %d\n", numClasses, numMethods);
     }
@@ -420,5 +379,64 @@ class Generator implements GeneratorContext {
         return type.typeName().replace('.', '_');
     }
 
+
+    private static Map<ApiMethod, String> createFunctionNames(ApiInfo apiInfo) {
+        Map<String, List<ApiMethod>> sameTargetFunctionNames = collectApiMethodsWithSameFunctionName(apiInfo);
+        return createFunctionNames(apiInfo, sameTargetFunctionNames);
+    }
+
+    private static Map<ApiMethod, String> createFunctionNames(ApiInfo apiInfo, Map<String, List<ApiMethod>> sameTargetFunctionNames) {
+        Set<ApiClass> apiClasses = apiInfo.getApiClasses();
+        Map<ApiMethod, String> targetFunctionNames = new HashMap<ApiMethod, String>(apiClasses.size() * 100);
+        for (ApiClass apiClass : apiClasses) {
+            for (ApiMethod apiMethod : apiInfo.getMethodsOf(apiClass)) {
+                String functionBaseName = getFunctionBaseName(apiMethod);
+                List<ApiMethod> apiMethods = sameTargetFunctionNames.get(functionBaseName);
+                if (apiMethods.size() > 1) {
+                    for (int i = 0; i < apiMethods.size(); i++) {
+                        targetFunctionNames.put(apiMethods.get(i), getFunctionBaseName(apiMethods.get(i)) + (i + 1));
+                    }
+                } else {
+                    targetFunctionNames.put(apiMethods.get(0), getFunctionBaseName(apiMethods.get(0)));
+                }
+            }
+        }
+        return targetFunctionNames;
+    }
+
+    private static Map<String, List<ApiMethod>> collectApiMethodsWithSameFunctionName(ApiInfo apiInfo) {
+        Map<String, List<ApiMethod>> sameTargetFunctionNames = new HashMap<String, List<ApiMethod>>(1000);
+        for (ApiClass apiClass : apiInfo.getApiClasses()) {
+            for (ApiMethod apiMethod : apiInfo.getMethodsOf(apiClass)) {
+                String functionBaseName = getFunctionBaseName(apiMethod);
+                List<ApiMethod> apiMethods = sameTargetFunctionNames.get(functionBaseName);
+                if (apiMethods == null) {
+                    apiMethods = new ArrayList<ApiMethod>(4);
+                    sameTargetFunctionNames.put(functionBaseName, apiMethods);
+                }
+                apiMethods.add(apiMethod);
+            }
+        }
+        return sameTargetFunctionNames;
+    }
+
+    private Map<ApiClass, List<CodeGenCallable>> createFunctionGenerators(ApiInfo apiInfo) {
+        Map<ApiClass, List<CodeGenCallable>> map = new HashMap<ApiClass, List<CodeGenCallable>>();
+        Set<ApiClass> apiClasses = apiInfo.getApiClasses();
+        for (ApiClass apiClass : apiClasses) {
+            List<ApiMethod> apiMethods = apiInfo.getMethodsOf(apiClass);
+            List<CodeGenCallable> functionGenerators = new ArrayList<CodeGenCallable>();
+            for (ApiMethod apiMethod : apiMethods) {
+                try {
+                    CodeGenCallable functionGenerator = CodeGenFactory.createCodeGenCallable(apiMethod);
+                    functionGenerators.add(functionGenerator);
+                } catch (GeneratorException e) {
+                    System.out.printf("error: %s\n", e.getMessage());
+                }
+            }
+            map.put(apiClass, functionGenerators);
+        }
+        return map;
+    }
 
 }

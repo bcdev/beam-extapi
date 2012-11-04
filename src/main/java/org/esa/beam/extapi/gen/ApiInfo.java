@@ -80,7 +80,9 @@ final class ApiInfo {
                     for (MethodDoc methodDoc : classDoc0.methods()) {
                         if (filter.accept(methodDoc)) {
                             ApiMethod apiMethod = new ApiMethod(apiClass, methodDoc);
-                            apiMethods.add(apiMethod);
+                            if (classDoc0 == classDoc || !apiMethods.contains(apiMethod)) {
+                                apiMethods.add(apiMethod);
+                            }
                         } else {
                             System.out.printf("Filtered out: method %s#%s()\n", classDoc.qualifiedTypeName(), methodDoc.name());
                         }
@@ -148,10 +150,6 @@ final class ApiInfo {
 
     public static class DefaultFilter implements Filter {
         final Set<String> includedClassNames;
-
-        public DefaultFilter(Set<String> includedClassNames) {
-            this.includedClassNames = includedClassNames;
-        }
 
         public DefaultFilter(String... includedClassNames) {
             this.includedClassNames = new HashSet<String>(Arrays.asList(includedClassNames));

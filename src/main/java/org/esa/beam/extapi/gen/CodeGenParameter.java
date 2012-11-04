@@ -209,7 +209,7 @@ abstract class CodeGenParameter implements CodeGen {
         public String generatePreCallCode(GeneratorContext context) {
             return eval("${p}Array = beam_new_jobject_array(${p}Elems, ${p}Length, ${c});",
                         kv("p", getName()),
-                        kv("c", Generator.getTargetClassVarName(getType())));
+                        kv("c", Generator.getCClassVarName(getType())));
         }
 
         @Override

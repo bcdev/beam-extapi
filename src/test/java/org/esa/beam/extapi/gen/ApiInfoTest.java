@@ -19,7 +19,7 @@ public class ApiInfoTest {
 
     @Test
     public void testApiInfo() {
-        RootDoc rootDoc = DocFactory.createRootDoc(TestClass2.class);
+        RootDoc rootDoc = DocMock.createRootDoc(TestClass2.class);
 
         String testClass2Name = TestClass2.class.getName();
         ApiInfo apiInfo = ApiInfo.create(rootDoc, testClass2Name);

@@ -2,6 +2,7 @@ package org.esa.beam.extapi.gen;
 
 import com.sun.javadoc.ExecutableMemberDoc;
 import com.sun.javadoc.MethodDoc;
+import com.sun.javadoc.Parameter;
 import com.sun.javadoc.Type;
 
 /**
@@ -23,7 +24,7 @@ final class ApiMethod implements Comparable<ApiMethod> {
         this.memberDoc = memberDoc;
         this.returnType = memberDoc.isConstructor() ? enclosingClass.getType() : ((MethodDoc) memberDoc).returnType();
         this.javaName = memberDoc.isConstructor() ? "<init>" : memberDoc.name();
-        this.javaSignature = Generator.getTypeSignature(memberDoc);
+        this.javaSignature = getTypeSignature(memberDoc);
     }
 
     public ApiClass getEnclosingClass() {
@@ -44,10 +45,6 @@ final class ApiMethod implements Comparable<ApiMethod> {
 
     public Type getReturnType() {
         return returnType;
-    }
-
-    public boolean isInstanceMethod() {
-        return !getMemberDoc().isStatic() && !getMemberDoc().isConstructor();
     }
 
     @Override
@@ -86,5 +83,53 @@ final class ApiMethod implements Comparable<ApiMethod> {
     @Override
     public String toString() {
         return javaName + javaSignature;
+    }
+
+    private static String getTypeSignature(ExecutableMemberDoc memberDoc) {
+        StringBuilder sb = new StringBuilder();
+        sb.append('(');
+        for (Parameter parameter : memberDoc.parameters()) {
+            sb.append(getTypeSignature(parameter.type()));
+        }
+        sb.append(')');
+        if (memberDoc instanceof MethodDoc) {
+            sb.append(getTypeSignature(((MethodDoc) memberDoc).returnType()));
+        } else {
+            sb.append('V');
+        }
+        return sb.toString();
+    }
+
+    private static String getTypeSignature(Type type) {
+        String comp;
+        if (type.isPrimitive()) {
+            if ("boolean".equals(type.typeName())) {
+                comp = "Z";
+            } else if ("byte".equals(type.typeName())) {
+                comp = "B";
+            } else if ("char".equals(type.typeName())) {
+                comp = "Constructor";
+            } else if ("short".equals(type.typeName())) {
+                comp = "S";
+            } else if ("int".equals(type.typeName())) {
+                comp = "I";
+            } else if ("long".equals(type.typeName())) {
+                comp = "J";
+            } else if ("float".equals(type.typeName())) {
+                comp = "F";
+            } else if ("double".equals(type.typeName())) {
+                comp = "D";
+            } else if ("void".equals(type.typeName())) {
+                comp = "V";
+            } else {
+                throw new IllegalStateException();
+            }
+        } else {
+            comp = "L" + type.qualifiedTypeName().replace('.', '/') + ";";
+        }
+        if (!type.dimension().isEmpty()) {
+            return type.dimension().replace("]", "") + comp;
+        }
+        return comp;
     }
 }

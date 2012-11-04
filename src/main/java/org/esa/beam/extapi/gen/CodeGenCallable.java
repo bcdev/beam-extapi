@@ -1,8 +1,6 @@
 package org.esa.beam.extapi.gen;
 
-import com.sun.javadoc.ConstructorDoc;
 import com.sun.javadoc.ExecutableMemberDoc;
-import com.sun.javadoc.MethodDoc;
 import com.sun.javadoc.Type;
 
 import static org.esa.beam.extapi.gen.Generator.*;
@@ -12,59 +10,49 @@ import static org.esa.beam.extapi.gen.Generator.*;
  */
 abstract class CodeGenCallable implements Comparable<CodeGenCallable>, CodeGen {
 
-    protected final ApiClass enclosingClass;
+    protected final ApiMethod apiMethod;
     protected final CodeGenParameter[] parameters;
-    protected final String javaName;
-    protected final String javaSignature;
 
-    protected CodeGenCallable(ApiClass enclosingClass, ExecutableMemberDoc memberDoc, CodeGenParameter[] parameters) {
-        this.enclosingClass = enclosingClass;
+    protected CodeGenCallable(ApiMethod apiMethod, CodeGenParameter[] parameters) {
+        this.apiMethod = apiMethod;
         this.parameters = parameters;
-        javaName = memberDoc.isConstructor() ? "<init>" : memberDoc.name();
-        javaSignature = Generator.getTypeSignature(memberDoc);
+    }
+
+    public ApiMethod getApiMethod() {
+        return apiMethod;
     }
 
     public ApiClass getEnclosingClass() {
-        return enclosingClass;
+        return getApiMethod().getEnclosingClass();
     }
 
-    public String getTargetEnclosingClassVarName() {
-        return Generator.getTargetClassVarName(getEnclosingClass().getType());
+    public ExecutableMemberDoc getMemberDoc() {
+        return getApiMethod().getMemberDoc();
+    }
+
+    public Type getReturnType() {
+        return getApiMethod().getReturnType();
     }
 
     public CodeGenParameter[] getParameters() {
         return parameters;
     }
 
-    public String getJavaName() {
-        return javaName;
+    public String getTargetEnclosingClassVarName() {
+        return Generator.getCClassVarName(getEnclosingClass().getType());
     }
-
-    public String getJavaSignature() {
-        return javaSignature;
-    }
-
-    public abstract ExecutableMemberDoc getMemberDoc();
-
-    public abstract Type getReturnType();
 
     protected String getTargetEnclosingTypeName() {
-        return Generator.getTargetTypeName(getEnclosingClass().getType());
+        return Generator.getCTypeName(getEnclosingClass().getType());
     }
 
     protected String getTargetReturnTypeName() {
-        return Generator.getTargetTypeName(getReturnType());
-    }
-
-    public String getFunctionBaseName() {
-        String targetTypeName = getTargetEnclosingTypeName();
-        return String.format("%s_%s",
-                             targetTypeName, getMemberDoc().name());
+        return Generator.getCTypeName(getReturnType());
     }
 
     public String generateFunctionSignature(GeneratorContext context) {
         String returnTypeName = getTargetReturnTypeName();
-        String functionName = context.getTargetFunctionName(this);
+        String functionName = context.getFunctionName(this);
         String parameterList = generateParameterList(context);
         if (parameterList.isEmpty()) {
             return String.format("%s %s()",
@@ -172,54 +160,26 @@ abstract class CodeGenCallable implements Comparable<CodeGenCallable>, CodeGen {
 
     @Override
     public int compareTo(CodeGenCallable o) {
-        int n = enclosingClass.compareTo(o.enclosingClass);
-        if (n != 0) {
-            return n;
-        }
-        n = javaName.compareTo(o.javaName);
-        if (n != 0) {
-            return n;
-        }
-        return javaSignature.compareTo(o.javaSignature);
+        return getApiMethod().compareTo(o.getApiMethod());
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof CodeGenCallable)) return false;
-
-        CodeGenCallable apiMethod = (CodeGenCallable) o;
-
-        return enclosingClass.equals(apiMethod.enclosingClass)
-                && javaName.equals(apiMethod.javaName)
-                && javaSignature.equals(apiMethod.javaSignature);
+        CodeGenCallable callable = (CodeGenCallable) o;
+        return getApiMethod().equals(callable.getApiMethod());
     }
 
     @Override
     public int hashCode() {
-        int result = enclosingClass.hashCode();
-        result = 31 * result + javaName.hashCode();
-        result = 31 * result + javaSignature.hashCode();
-        return result;
+        return getApiMethod().hashCode();
     }
 
     static class VoidMethod extends CodeGenCallable {
 
-        private final MethodDoc methodDoc;
-
-        VoidMethod(ApiClass apiClass, CodeGenParameter[] codeGenParameters, MethodDoc methodDoc) {
-            super(apiClass, methodDoc, codeGenParameters);
-            this.methodDoc = methodDoc;
-        }
-
-        @Override
-        public ExecutableMemberDoc getMemberDoc() {
-            return methodDoc;
-        }
-
-        @Override
-        public Type getReturnType() {
-            return methodDoc.returnType();
+        VoidMethod(ApiMethod apiMethod, CodeGenParameter[] codeGenParameters) {
+            super(apiMethod, codeGenParameters);
         }
 
         @Override
@@ -243,11 +203,9 @@ abstract class CodeGenCallable implements Comparable<CodeGenCallable>, CodeGen {
         }
     }
 
-
     static abstract class ReturnValueCallable extends CodeGenCallable {
-
-        ReturnValueCallable(ApiClass apiClass, ExecutableMemberDoc memberDoc, CodeGenParameter[] codeGenParameters) {
-            super(apiClass, memberDoc, codeGenParameters);
+        ReturnValueCallable(ApiMethod apiMethod, CodeGenParameter[] codeGenParameters) {
+            super(apiMethod, codeGenParameters);
         }
 
         @Override
@@ -269,34 +227,14 @@ abstract class CodeGenCallable implements Comparable<CodeGenCallable>, CodeGen {
 
 
     static class Constructor extends ReturnValueCallable {
-        protected final ConstructorDoc constructorDoc;
 
-        Constructor(ApiClass apiClass, ConstructorDoc constructorDoc, CodeGenParameter[] codeGenParameters) {
-            super(apiClass, constructorDoc, codeGenParameters);
-            this.constructorDoc = constructorDoc;
-        }
-
-        @Override
-        public ConstructorDoc getMemberDoc() {
-            return constructorDoc;
-        }
-
-        @Override
-        public Type getReturnType() {
-            return constructorDoc.containingClass();
+        Constructor(ApiMethod apiMethod, CodeGenParameter[] codeGenParameters) {
+            super(apiMethod, codeGenParameters);
         }
 
         @Override
         protected String generateCallTypeName(GeneratorContext context) {
             return "Object";
-        }
-
-        @Override
-        public String getFunctionBaseName() {
-            String targetTypeName = getTargetEnclosingTypeName();
-            return String.format("%s_new%s",
-                                 targetTypeName,
-                                 targetTypeName);
         }
 
         @Override
@@ -307,21 +245,9 @@ abstract class CodeGenCallable implements Comparable<CodeGenCallable>, CodeGen {
     }
 
     static abstract class ValueMethod extends ReturnValueCallable {
-        protected final MethodDoc methodDoc;
 
-        protected ValueMethod(ApiClass apiClass, CodeGenParameter[] codeGenParameters, MethodDoc methodDoc) {
-            super(apiClass, methodDoc, codeGenParameters);
-            this.methodDoc = methodDoc;
-        }
-
-        @Override
-        public MethodDoc getMemberDoc() {
-            return methodDoc;
-        }
-
-        @Override
-        public Type getReturnType() {
-            return methodDoc.returnType();
+        ValueMethod(ApiMethod apiMethod, CodeGenParameter[] codeGenParameters) {
+            super(apiMethod, codeGenParameters);
         }
 
         @Override
@@ -333,8 +259,8 @@ abstract class CodeGenCallable implements Comparable<CodeGenCallable>, CodeGen {
 
 
     static class PrimitiveMethod extends ValueMethod {
-        PrimitiveMethod(ApiClass apiClass, CodeGenParameter[] codeGenParameters, MethodDoc methodDoc) {
-            super(apiClass, codeGenParameters, methodDoc);
+        PrimitiveMethod(ApiMethod apiMethod, CodeGenParameter[] codeGenParameters) {
+            super(apiMethod, codeGenParameters);
         }
 
         @Override
@@ -346,8 +272,8 @@ abstract class CodeGenCallable implements Comparable<CodeGenCallable>, CodeGen {
     }
 
     static class ObjectMethod extends ValueMethod {
-        ObjectMethod(ApiClass apiClass, CodeGenParameter[] codeGenParameters, MethodDoc methodDoc) {
-            super(apiClass, codeGenParameters, methodDoc);
+        ObjectMethod(ApiMethod apiMethod, CodeGenParameter[] codeGenParameters) {
+            super(apiMethod, codeGenParameters);
         }
 
         @Override
@@ -363,8 +289,8 @@ abstract class CodeGenCallable implements Comparable<CodeGenCallable>, CodeGen {
     }
 
     static class StringMethod extends ObjectMethod {
-        StringMethod(ApiClass apiClass, CodeGenParameter[] codeGenParameters, MethodDoc methodDoc) {
-            super(apiClass, codeGenParameters, methodDoc);
+        StringMethod(ApiMethod apiMethod, CodeGenParameter[] codeGenParameters) {
+            super(apiMethod, codeGenParameters);
         }
 
         @Override
@@ -387,40 +313,40 @@ abstract class CodeGenCallable implements Comparable<CodeGenCallable>, CodeGen {
     }
 
     static class PrimitiveArrayMethod extends ObjectMethod {
-        PrimitiveArrayMethod(ApiClass apiClass, CodeGenParameter[] codeGenParameters, MethodDoc methodDoc) {
-            super(apiClass, codeGenParameters, methodDoc);
+        PrimitiveArrayMethod(ApiMethod apiMethod, CodeGenParameter[] codeGenParameters) {
+            super(apiMethod, codeGenParameters);
         }
 
         @Override
-          public String generateParamListDecl(GeneratorContext context) {
-              return "int* resultArrayLength";
-          }
+        public String generateParamListDecl(GeneratorContext context) {
+            return "int* resultArrayLength";
+        }
 
-          @Override
-          public String generateLocalVarDecl(GeneratorContext context) {
-              return super.generateLocalVarDecl(context) + "\n" +
-                      "jarray _resultArray = NULL;";
-          }
+        @Override
+        public String generateLocalVarDecl(GeneratorContext context) {
+            return super.generateLocalVarDecl(context) + "\n" +
+                    "jarray _resultArray = NULL;";
+        }
 
-          @Override
-          public String generateCallCode(GeneratorContext context) {
-              return String.format("_resultArray = %s\n" +
-                                           "%s = beam_alloc_%s_array(_resultArray, resultArrayLength);",
-                                   generateJniCall(context),
-                                   RESULT_VAR_NAME,
-                                   Generator.getTargetComponentTypeName(getReturnType(), false));
-          }
+        @Override
+        public String generateCallCode(GeneratorContext context) {
+            return String.format("_resultArray = %s\n" +
+                                         "%s = beam_alloc_%s_array(_resultArray, resultArrayLength);",
+                                 generateJniCall(context),
+                                 RESULT_VAR_NAME,
+                                 Generator.getTargetComponentTypeName(getReturnType(), false));
+        }
 
-          @Override
-          public String generateReturnCode(GeneratorContext context) {
-              return String.format("return %s;", RESULT_VAR_NAME);
-          }
+        @Override
+        public String generateReturnCode(GeneratorContext context) {
+            return String.format("return %s;", RESULT_VAR_NAME);
+        }
     }
 
 
     static class ObjectArrayMethod extends ObjectMethod {
-        ObjectArrayMethod(ApiClass apiClass, CodeGenParameter[] codeGenParameters, MethodDoc methodDoc) {
-            super(apiClass, codeGenParameters, methodDoc);
+        ObjectArrayMethod(ApiMethod apiMethod, CodeGenParameter[] codeGenParameters) {
+            super(apiMethod, codeGenParameters);
         }
 
         @Override
@@ -449,8 +375,8 @@ abstract class CodeGenCallable implements Comparable<CodeGenCallable>, CodeGen {
 
     static class StringArrayMethod extends ObjectArrayMethod {
 
-        StringArrayMethod(ApiClass apiClass, CodeGenParameter[] codeGenParameters, MethodDoc methodDoc) {
-            super(apiClass, codeGenParameters, methodDoc);
+        StringArrayMethod(ApiMethod apiMethod, CodeGenParameter[] codeGenParameters) {
+            super(apiMethod, codeGenParameters);
         }
 
         @Override
