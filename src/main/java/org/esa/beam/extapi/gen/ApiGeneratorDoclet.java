@@ -20,6 +20,7 @@ import com.sun.javadoc.DocErrorReporter;
 import com.sun.javadoc.Doclet;
 import com.sun.javadoc.LanguageVersion;
 import com.sun.javadoc.RootDoc;
+import org.esa.beam.extapi.gen.c.ModuleGenerator;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -30,7 +31,7 @@ import java.util.Set;
 /**
  * @author Norman Fomferra
  */
-public class GeneratorDoclet extends Doclet {
+public class ApiGeneratorDoclet extends Doclet {
 
     public interface Handler {
         boolean start(RootDoc root);
@@ -110,7 +111,7 @@ public class GeneratorDoclet extends Doclet {
 
         @Override
         public void run() {
-            Javadoc.run(GeneratorDoclet.class.getName(), sourcePath, packages);
+            Javadoc.run(ApiGeneratorDoclet.class.getName(), sourcePath, packages);
         }
     }
 
@@ -119,11 +120,11 @@ public class GeneratorDoclet extends Doclet {
         public boolean start(RootDoc root) {
             try {
                 final Properties properties = new Properties();
-                properties.load(GeneratorDoclet.class.getResourceAsStream("Generator-classes.txt"));
+                properties.load(ApiGeneratorDoclet.class.getResourceAsStream("ApiGeneratorDoclet-classes.txt"));
                 Set<String> stringSet = properties.stringPropertyNames();
                 String[] strings = stringSet.toArray(new String[stringSet.size()]);
                 ApiInfo apiInfo = ApiInfo.create(root, strings);
-                new Generator(apiInfo).run();
+                new ModuleGenerator(apiInfo).run();
                 return true;
             } catch (IOException e) {
                 e.printStackTrace();

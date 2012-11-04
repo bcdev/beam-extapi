@@ -11,7 +11,7 @@ import com.sun.javadoc.Type;
  *
  * @author Norman Fomferra
  */
-final class ApiMethod implements Comparable<ApiMethod> {
+public final class ApiMethod implements Comparable<ApiMethod> {
 
     private final ApiClass enclosingClass;
     private final ExecutableMemberDoc memberDoc;

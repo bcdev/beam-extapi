@@ -1,4 +1,4 @@
-package org.esa.beam.extapi.gen;
+package org.esa.beam.extapi.gen.c;
 
 import com.sun.javadoc.Parameter;
 import com.sun.javadoc.Type;
@@ -9,10 +9,10 @@ import static org.esa.beam.extapi.gen.TemplateEval.kv;
 /**
  * @author Norman Fomferra
  */
-abstract class CodeGenParameter implements CodeGen {
+public abstract class ParameterGenerator implements CodeGenerator {
     protected final Parameter parameter;
 
-    protected CodeGenParameter(Parameter parameter) {
+    protected ParameterGenerator(Parameter parameter) {
         this.parameter = parameter;
     }
 
@@ -44,7 +44,7 @@ abstract class CodeGenParameter implements CodeGen {
         return null;
     }
 
-    static class PrimitiveScalar extends CodeGenParameter {
+    static class PrimitiveScalar extends ParameterGenerator {
         PrimitiveScalar(Parameter parameter) {
             super(parameter);
         }
@@ -66,7 +66,7 @@ abstract class CodeGenParameter implements CodeGen {
         }
     }
 
-    static class PrimitiveArray extends CodeGenParameter {
+    static class PrimitiveArray extends ParameterGenerator {
         private final boolean readOnly;
 
         PrimitiveArray(Parameter parameter, boolean readOnly) {
@@ -108,7 +108,7 @@ abstract class CodeGenParameter implements CodeGen {
         }
     }
 
-    static class StringScalar extends CodeGenParameter {
+    static class StringScalar extends ParameterGenerator {
         StringScalar(Parameter parameter) {
             super(parameter);
         }
@@ -135,7 +135,7 @@ abstract class CodeGenParameter implements CodeGen {
         }
     }
 
-    static class StringArray extends CodeGenParameter {
+    static class StringArray extends ParameterGenerator {
         StringArray(Parameter parameter) {
             super(parameter);
         }
@@ -166,14 +166,14 @@ abstract class CodeGenParameter implements CodeGen {
 
     }
 
-    static class ObjectScalar extends CodeGenParameter {
+    static class ObjectScalar extends ParameterGenerator {
         ObjectScalar(Parameter parameter) {
             super(parameter);
         }
 
         @Override
         public String generateParamListDecl(GeneratorContext context) {
-            String typeName = Generator.getTargetClassName(getType());
+            String typeName = ModuleGenerator.getTargetClassName(getType());
             return String.format("%s %s", typeName, getName());
         }
 
@@ -183,7 +183,7 @@ abstract class CodeGenParameter implements CodeGen {
         }
     }
 
-    static class ObjectArray extends CodeGenParameter {
+    static class ObjectArray extends ParameterGenerator {
         private final boolean readOnly;
 
         ObjectArray(Parameter parameter, boolean readOnly) {
@@ -195,7 +195,7 @@ abstract class CodeGenParameter implements CodeGen {
         public String generateParamListDecl(GeneratorContext context) {
             return eval("${m}${t}* ${p}Elems, int ${p}Length",
                         kv("m", readOnly ? "const " : ""),
-                        kv("t", Generator.getTargetClassName(getType())),
+                        kv("t", ModuleGenerator.getTargetClassName(getType())),
                         kv("p", getName()));
         }
 
@@ -209,7 +209,7 @@ abstract class CodeGenParameter implements CodeGen {
         public String generatePreCallCode(GeneratorContext context) {
             return eval("${p}Array = beam_new_jobject_array(${p}Elems, ${p}Length, ${c});",
                         kv("p", getName()),
-                        kv("c", Generator.getCClassVarName(getType())));
+                        kv("c", ModuleGenerator.getCClassVarName(getType())));
         }
 
         @Override

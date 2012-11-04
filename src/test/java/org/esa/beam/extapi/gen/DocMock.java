@@ -122,8 +122,128 @@ public class DocMock {
     private static Parameter[] getParameters(Class<?>[] parameterTypes) {
         Parameter[] parameters = new Parameter[parameterTypes.length];
         for (int j = 0; j < parameters.length; j++) {
-            parameters[j] = new MyParameter("p" + (j + 1), parameterTypes[j]);
+            parameters[j] = createParameter("p" + (j + 1), parameterTypes[j]);
         }
         return parameters;
+    }
+
+    public static Parameter createParameter(String name, Class<?> type) {
+        return new MyParameter(name, type);
+    }
+
+    private static class MyParameter implements Parameter {
+        String name;
+        Type type;
+
+        public MyParameter(String name, Class type) {
+            this.name = name;
+            this.type = new MyType(type);
+        }
+
+        @Override
+        public Type type() {
+            return type;
+        }
+
+        @Override
+        public String name() {
+            return name;
+        }
+
+        @Override
+        public String typeName() {
+            return type.typeName();
+        }
+
+        @Override
+        public AnnotationDesc[] annotations() {
+            return new AnnotationDesc[0];
+        }
+
+    }
+
+    private static class MyType implements Type {
+
+        final Class baseClass;
+        final int dimCount;
+
+        public MyType(Class c) {
+            this.baseClass = getBaseClass(c);
+            this.dimCount = getDimCount(c);
+        }
+
+        @Override
+        public String typeName() {
+            int i = baseClass.getName().lastIndexOf('.');
+            return (i > 0 ? baseClass.getName().substring(i + 1) : baseClass.getName()).replace('$', '.');
+        }
+
+        @Override
+        public String qualifiedTypeName() {
+            return baseClass.getName();
+        }
+
+        @Override
+        public String simpleTypeName() {
+            return baseClass.getSimpleName();
+        }
+
+        @Override
+        public String dimension() {
+            String s = "";
+            for (int i = 0; i < dimCount; i++) {
+                s += "[]";
+            }
+            return s;
+        }
+
+        @Override
+        public boolean isPrimitive() {
+            return baseClass.isPrimitive();
+        }
+
+        @Override
+        public ClassDoc asClassDoc() {
+            return null;
+        }
+
+        @Override
+        public ParameterizedType asParameterizedType() {
+            return null;
+        }
+
+        @Override
+        public TypeVariable asTypeVariable() {
+            return null;
+        }
+
+        @Override
+        public WildcardType asWildcardType() {
+            return null;
+        }
+
+        @Override
+        public AnnotationTypeDoc asAnnotationTypeDoc() {
+            return null;
+        }
+
+        static Class getBaseClass(Class c) {
+            Class ct = c;
+            while (ct.getComponentType() != null) {
+                ct = ct.getComponentType();
+            }
+            return ct;
+        }
+
+        static int getDimCount(Class c) {
+            Class ct = c;
+            int n = 0;
+            while (ct.getComponentType() != null) {
+                ct = ct.getComponentType();
+                n++;
+            }
+            return n;
+        }
+
     }
 }

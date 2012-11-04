@@ -1,6 +1,7 @@
-package org.esa.beam.extapi.gen;
+package org.esa.beam.extapi.gen.c;
 
 import com.sun.javadoc.RootDoc;
+import org.esa.beam.extapi.gen.*;
 import org.esa.beam.extapi.gen.test.TestClass2;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -17,7 +18,7 @@ import static org.junit.Assert.assertSame;
 /**
  * @author Norman Fomferra
  */
-public class CodeGenFactoryTest {
+public class GeneratorFactoryTest {
 
     public static final Class<TestClass2> TEST_CLASS_2 = TestClass2.class;
     private static ApiInfo apiInfo;
@@ -35,15 +36,15 @@ public class CodeGenFactoryTest {
 
         ApiMethod apiMethod = getApiMethod(methods, "getPixel", "(II)F");
 
-        CodeGenCallable callable = CodeGenFactory.createCodeGenCallable(apiMethod);
+        FunctionGenerator callable = GeneratorFactory.createCodeGenCallable(apiMethod);
         assertNotNull(callable);
         assertSame(apiMethod.getEnclosingClass(), callable.getEnclosingClass());
-        CodeGenParameter[] parameters = callable.getParameters();
-        assertEquals(2, parameters.length);
-        assertEquals("int", parameters[0].getType().typeName());
-        assertEquals("p1", parameters[0].getName());
-        assertEquals("int", parameters[1].getType().typeName());
-        assertEquals("p2", parameters[1].getName());
+        ParameterGenerator[] parameterGenerators = callable.getParameterGenerators();
+        assertEquals(2, parameterGenerators.length);
+        assertEquals("int", parameterGenerators[0].getType().typeName());
+        assertEquals("p1", parameterGenerators[0].getName());
+        assertEquals("int", parameterGenerators[1].getType().typeName());
+        assertEquals("p2", parameterGenerators[1].getName());
     }
 
     private ApiClass getTestClass2() {

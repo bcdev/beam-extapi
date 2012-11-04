@@ -10,7 +10,7 @@ import java.util.*;
  *
  * @author Norman Fomferra
  */
-final class ApiInfo {
+public final class ApiInfo {
 
     private final Map<ApiClass, List<ApiMethod>> apiClasses;
     private final Map<ApiClass, List<ApiMethod>> allClasses;

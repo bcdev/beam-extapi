@@ -12,12 +12,12 @@ import static org.junit.Assert.*;
 /**
  * @author Norman Fomferra
  */
-public class GeneratorDocletTest {
+public class ApiGeneratorDocletTest {
 
     @Test
     public void test_CodeGenCallable_PrimitiveMethod() {
         final Set<String> classNames = new HashSet<String>();
-        final GeneratorDoclet.Handler handler = new GeneratorDoclet.Handler() {
+        final ApiGeneratorDoclet.Handler handler = new ApiGeneratorDoclet.Handler() {
             @Override
             public boolean start(RootDoc root) {
                 for (ClassDoc c : root.classes()) {
@@ -26,7 +26,7 @@ public class GeneratorDocletTest {
                 return true;
             }
         };
-        GeneratorDoclet.run(handler, "src/test/java", "org.esa.beam.extapi.gen.test");
+        ApiGeneratorDoclet.run(handler, "src/test/java", "org.esa.beam.extapi.gen.test");
         assertEquals(2, classNames.size());
         assertTrue(classNames.contains("org.esa.beam.extapi.gen.test.TestClass1"));
         assertTrue(classNames.contains("org.esa.beam.extapi.gen.test.TestClass2"));

@@ -8,7 +8,7 @@ import com.sun.javadoc.Type;
  *
  * @author Norman Fomferra
  */
-final class ApiClass implements Comparable<ApiClass> {
+public final class ApiClass implements Comparable<ApiClass> {
     private final Type type;
     private final String javaName;
     private final String resourceName;

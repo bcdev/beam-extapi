@@ -14,9 +14,10 @@
  * with this program; if not, see http://www.gnu.org/licenses/
  */
 
-package org.esa.beam.extapi.gen;
+package org.esa.beam.extapi.gen.c;
 
 import com.sun.javadoc.Type;
+import org.esa.beam.extapi.gen.*;
 
 import java.io.*;
 import java.util.*;
@@ -24,7 +25,7 @@ import java.util.*;
 /**
  * @author Norman Fomferra
  */
-class Generator implements GeneratorContext {
+public  class ModuleGenerator implements GeneratorContext {
 
     public static final String BEAM_CAPI_SRCDIR = "src/main/c/gen";
     public static final String BEAM_CAPI_NAME = "beam_capi";
@@ -36,9 +37,9 @@ class Generator implements GeneratorContext {
 
     private final ApiInfo apiInfo;
     private final Map<ApiMethod, String> functionNames;
-    private final Map<ApiClass, List<CodeGenCallable>> functionGenerators;
+    private final Map<ApiClass, List<FunctionGenerator>> functionGenerators;
 
-    Generator(ApiInfo apiInfo) {
+    public ModuleGenerator(ApiInfo apiInfo) {
         this.apiInfo = apiInfo;
         this.functionNames = createFunctionNames(apiInfo);
         this.functionGenerators = createFunctionGenerators(apiInfo);
@@ -49,11 +50,11 @@ class Generator implements GeneratorContext {
     }
 
     @Override
-    public String getFunctionName(CodeGenCallable callable) {
+    public String getFunctionName(FunctionGenerator callable) {
         return functionNames.get(callable.getApiMethod());
     }
 
-    public List<CodeGenCallable> getFunctionGenerators(ApiClass apiClass) {
+    public List<FunctionGenerator> getFunctionGenerators(ApiClass apiClass) {
         return functionGenerators.get(apiClass);
     }
 
@@ -92,7 +93,7 @@ class Generator implements GeneratorContext {
                                   "\tbeam_create_jvm_with_defaults\n" +
                                   "\tbeam_destroy_jvm\n");
             for (ApiClass apiClass : getApiClasses()) {
-                for (CodeGenCallable callable : getFunctionGenerators(apiClass)) {
+                for (FunctionGenerator callable : getFunctionGenerators(apiClass)) {
                     writer.printf("\t%s\n", getFunctionName(callable));
                 }
             }
@@ -107,7 +108,7 @@ class Generator implements GeneratorContext {
             generateFileInfo(writer);
 
             writer.write("\n");
-            writeResource(writer, "Generator-stubs.h");
+            writeResource(writer, "ModuleGenerator-stubs.h");
             writer.write("\n");
 
             writer.write("\n");
@@ -133,11 +134,11 @@ class Generator implements GeneratorContext {
                 writer.write("\n");
                 writer.printf("/* Functions for class %s */\n", getTargetComponentTypeName(apiClass.getType(), true));
                 writer.write("\n");
-                for (CodeGenCallable callable : getFunctionGenerators(apiClass)) {
+                for (FunctionGenerator callable : getFunctionGenerators(apiClass)) {
                     writer.printf("" +
                                           "/**\n" +
                                           " * %s\n" +
-                                          " */\n", callable.getMemberDoc().commentText());
+                                          " */\n", callable.getMemberDoc().getRawCommentText());
                     generateFunctionDeclaration(writer, callable);
                 }
             }
@@ -156,7 +157,7 @@ class Generator implements GeneratorContext {
             writer.printf("#include \"jni.h\"\n");
 
             writer.printf("\n");
-            writeResource(writer, "Generator-stubs-1.c");
+            writeResource(writer, "ModuleGenerator-stubs-1.c");
             writer.printf("\n");
 
             writer.printf("/* Java API classes. */\n");
@@ -174,7 +175,7 @@ class Generator implements GeneratorContext {
             writer.write("\n");
 
             writer.printf("\n");
-            writeResource(writer, "Generator-stubs-2.c");
+            writeResource(writer, "ModuleGenerator-stubs-2.c");
             writer.printf("\n");
 
             /////////////////////////////////////////////////////////////////////////////////////
@@ -213,7 +214,7 @@ class Generator implements GeneratorContext {
             // Generate function code
             //
             for (ApiClass apiClass : getApiClasses()) {
-                for (CodeGenCallable callable : getFunctionGenerators(apiClass)) {
+                for (FunctionGenerator callable : getFunctionGenerators(apiClass)) {
                     generateFunctionDefinition(callable, writer);
                 }
             }
@@ -244,35 +245,35 @@ class Generator implements GeneratorContext {
         writer.write("\n");
     }
 
-    void generateFunctionDeclaration(PrintWriter writer, CodeGenCallable callable) {
+    void generateFunctionDeclaration(PrintWriter writer, FunctionGenerator callable) {
         writer.printf("%s;\n", callable.generateFunctionSignature(this));
     }
 
-    private void generateFunctionDefinition(CodeGenCallable callable, PrintWriter writer) throws IOException {
+    private void generateFunctionDefinition(FunctionGenerator callable, PrintWriter writer) throws IOException {
         writer.printf("%s\n", callable.generateFunctionSignature(this));
         writer.print("{\n");
         writeLocalMethodVarDecl(writer);
-        for (CodeGenParameter codeGenParameter : callable.getParameters()) {
-            writeCode(writer, codeGenParameter.generateLocalVarDecl(this));
+        for (ParameterGenerator parameterGenerator : callable.getParameterGenerators()) {
+            writeCode(writer, parameterGenerator.generateLocalVarDecl(this));
         }
         writeCode(writer, callable.generateLocalVarDecl(this));
         writeInitVmCode(writer, callable);
         writeInitMethodCode(writer, callable);
-        for (CodeGenParameter codeGenParameter : callable.getParameters()) {
-            writeCode(writer, codeGenParameter.generatePreCallCode(this));
+        for (ParameterGenerator parameterGenerator : callable.getParameterGenerators()) {
+            writeCode(writer, parameterGenerator.generatePreCallCode(this));
         }
         writeCode(writer, callable.generatePreCallCode(this));
         writeCode(writer, callable.generateCallCode(this));
         writeCode(writer, callable.generatePostCallCode(this));
-        for (CodeGenParameter codeGenParameter : callable.getParameters()) {
-            writeCode(writer, codeGenParameter.generatePostCallCode(this));
+        for (ParameterGenerator parameterGenerator : callable.getParameterGenerators()) {
+            writeCode(writer, parameterGenerator.generatePostCallCode(this));
         }
         writeCode(writer, callable.generateReturnCode(this));
         writer.print("}\n");
         writer.print("\n");
     }
 
-    private void writeInitVmCode(PrintWriter writer, CodeGenCallable callable) {
+    private void writeInitVmCode(PrintWriter writer, FunctionGenerator callable) {
         writer.printf("\n");
         if (isVoid(callable.getReturnType())) {
             writer.printf("    if (beam_init_api() != 0) return;\n");
@@ -286,7 +287,7 @@ class Generator implements GeneratorContext {
         writer.printf("    static jmethodID %s = NULL;\n", METHOD_VAR_NAME);
     }
 
-    private void writeInitMethodCode(PrintWriter writer, CodeGenCallable callable) {
+    private void writeInitMethodCode(PrintWriter writer, FunctionGenerator callable) {
         writer.printf("\n");
         writer.printf("    if (%s == NULL) {\n", METHOD_VAR_NAME);
         writer.printf("        %s = (*jenv)->%s(jenv, %s, \"%s\", \"%s\");\n",
@@ -315,7 +316,7 @@ class Generator implements GeneratorContext {
         writer.write(String.format("/*\n" +
                                            " * DO NOT EDIT THIS FILE, IT IS MACHINE-GENERATED\n" +
                                            " * File created at %s using %s\n" +
-                                           " */\n", new Date(), GeneratorDoclet.class.getName()));
+                                           " */\n", new Date(), ApiGeneratorDoclet.class.getName()));
         writer.write("\n");
     }
 
@@ -357,7 +358,7 @@ class Generator implements GeneratorContext {
         return type.dimension().equals("[]") && !type.isPrimitive();
     }
 
-    // todo - code duplication in CodeGenParameter
+    // todo - code duplication in ParameterGenerator
     static String getTargetComponentTypeName(Type type, boolean isParam) {
         if (type.isPrimitive()) {
             final String typeName = type.typeName();
@@ -420,15 +421,15 @@ class Generator implements GeneratorContext {
         return sameTargetFunctionNames;
     }
 
-    private Map<ApiClass, List<CodeGenCallable>> createFunctionGenerators(ApiInfo apiInfo) {
-        Map<ApiClass, List<CodeGenCallable>> map = new HashMap<ApiClass, List<CodeGenCallable>>();
+    private Map<ApiClass, List<FunctionGenerator>> createFunctionGenerators(ApiInfo apiInfo) {
+        Map<ApiClass, List<FunctionGenerator>> map = new HashMap<ApiClass, List<FunctionGenerator>>();
         Set<ApiClass> apiClasses = apiInfo.getApiClasses();
         for (ApiClass apiClass : apiClasses) {
             List<ApiMethod> apiMethods = apiInfo.getMethodsOf(apiClass);
-            List<CodeGenCallable> functionGenerators = new ArrayList<CodeGenCallable>();
+            List<FunctionGenerator> functionGenerators = new ArrayList<FunctionGenerator>();
             for (ApiMethod apiMethod : apiMethods) {
                 try {
-                    CodeGenCallable functionGenerator = CodeGenFactory.createCodeGenCallable(apiMethod);
+                    FunctionGenerator functionGenerator = GeneratorFactory.createCodeGenCallable(apiMethod);
                     functionGenerators.add(functionGenerator);
                 } catch (GeneratorException e) {
                     System.out.printf("error: %s\n", e.getMessage());

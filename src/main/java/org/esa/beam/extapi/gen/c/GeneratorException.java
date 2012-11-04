@@ -1,9 +1,9 @@
-package org.esa.beam.extapi.gen;
+package org.esa.beam.extapi.gen.c;
 
 /**
  * @author Norman Fomferra
  */
-class GeneratorException extends Exception {
+public class GeneratorException extends Exception {
     public GeneratorException(String message) {
         super(message);
     }
