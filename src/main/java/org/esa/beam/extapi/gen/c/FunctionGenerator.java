@@ -5,6 +5,9 @@ import com.sun.javadoc.Type;
 import org.esa.beam.extapi.gen.ApiClass;
 import org.esa.beam.extapi.gen.ApiMethod;
 
+import static org.esa.beam.extapi.gen.c.ModuleGenerator.METHOD_VAR_NAME;
+import static org.esa.beam.extapi.gen.c.ModuleGenerator.SELF_VAR_NAME;
+
 /**
  * @author Norman Fomferra
  */
@@ -87,29 +90,35 @@ public abstract class FunctionGenerator implements CodeGenerator {
     public abstract String generateReturnCode(GeneratorContext context);
 
     protected String generateJniCall(GeneratorContext context) {
-        String argumentList = generateArgumentList(context);
-        String classVarName = getTargetEnclosingClassVarName();
-        String functionName = generateJniCallFunctionName(context);
-        String memberVarName = ModuleGenerator.METHOD_VAR_NAME;
-        if (argumentList.isEmpty()) {
-            return String.format("(*jenv)->%s(jenv, %s, %s);",
-                                 functionName, classVarName, memberVarName);
 
-        } else {
-            return String.format("(*jenv)->%s(jenv, %s, %s, %s);",
-                                 functionName, classVarName, memberVarName, argumentList);
+        final String functionName;
+        final StringBuilder argumentList = new StringBuilder();
 
-        }
-    }
-
-    protected String generateJniCallFunctionName(GeneratorContext context) {
         if (getMemberDoc().isConstructor()) {
-            return "NewObject";
+            functionName = "NewObject";
+            argumentList.append(getTargetEnclosingClassVarName());
+            argumentList.append(", ");
+            argumentList.append(METHOD_VAR_NAME);
         } else if (getMemberDoc().isStatic()) {
-            return String.format("CallStatic%sMethod", generateCallTypeName(context));
+            functionName = String.format("CallStatic%sMethod", generateCallTypeName(context));
+            argumentList.append(getTargetEnclosingClassVarName());
+            argumentList.append(", ");
+            argumentList.append(METHOD_VAR_NAME);
         } else {
-            return String.format("Call%sMethod", generateCallTypeName(context));
+            functionName = String.format("Call%sMethod", generateCallTypeName(context));
+            argumentList.append(SELF_VAR_NAME);
+            argumentList.append(", ");
+            argumentList.append(METHOD_VAR_NAME);
         }
+
+        for (ParameterGenerator parameterGenerator : parameterGenerators) {
+            if (argumentList.length() > 0) {
+                argumentList.append(", ");
+            }
+            argumentList.append(parameterGenerator.generateCallCode(context));
+        }
+
+        return String.format("(*jenv)->%s(jenv, %s);", functionName, argumentList);
     }
 
     protected String generateParameterList(GeneratorContext context) {
@@ -117,7 +126,7 @@ public abstract class FunctionGenerator implements CodeGenerator {
         if (isInstanceMethod()) {
             parameterList.append(String.format("%s %s",
                                                getTargetEnclosingTypeName(),
-                                               ModuleGenerator.SELF_VAR_NAME));
+                                               SELF_VAR_NAME));
         }
         for (ParameterGenerator parameterGenerator : parameterGenerators) {
             String decl = parameterGenerator.generateParamListDecl(context);
@@ -136,20 +145,6 @@ public abstract class FunctionGenerator implements CodeGenerator {
             parameterList.append(decl);
         }
         return parameterList.toString();
-    }
-
-    protected String generateArgumentList(GeneratorContext context) {
-        StringBuilder argumentList = new StringBuilder();
-        if (isInstanceMethod()) {
-            argumentList.append(ModuleGenerator.SELF_VAR_NAME);
-        }
-        for (ParameterGenerator parameterGenerator : parameterGenerators) {
-            if (argumentList.length() > 0) {
-                argumentList.append(", ");
-            }
-            argumentList.append(parameterGenerator.generateCallCode(context));
-        }
-        return argumentList.toString();
     }
 
     private boolean isInstanceMethod() {

@@ -14,9 +14,17 @@ public final class ApiClass implements Comparable<ApiClass> {
     private final String resourceName;
 
     public ApiClass(Type type) {
+        if (type.isPrimitive()) {
+            throw new IllegalArgumentException("type");
+        }
+
         this.type = type;
-        this.javaName = type.qualifiedTypeName();
-        this.resourceName = type.qualifiedTypeName().replace(".", "/");
+
+        final String s1 = type.typeName();
+        final String s2 = type.qualifiedTypeName();
+        int pos = s2.indexOf(s1);
+        this.javaName = s2.substring(0, pos) + s1.replace('.', '$');
+        this.resourceName = s2.substring(0, pos).replace('.', '/') + s1.replace('.', '$');
     }
 
     public Type getType() {

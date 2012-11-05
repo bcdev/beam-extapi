@@ -94,7 +94,7 @@ public class DocMock {
         MethodDoc methodDoc = mock(MethodDoc.class);
         when(methodDoc.containingClass()).thenReturn(classDoc);
         when(methodDoc.name()).thenReturn(method.getName());
-        when(methodDoc.returnType()).thenReturn(new MyType(method.getReturnType()));
+        when(methodDoc.returnType()).thenReturn(createType(method.getReturnType()));
         when(methodDoc.parameters()).thenReturn(getParameters(method));
         when(methodDoc.tags()).thenReturn(new Tag[0]);
         when(methodDoc.isConstructor()).thenReturn(false);
@@ -137,7 +137,7 @@ public class DocMock {
 
         public MyParameter(String name, Class type) {
             this.name = name;
-            this.type = new MyType(type);
+            this.type = createType(type);
         }
 
         @Override
@@ -162,6 +162,10 @@ public class DocMock {
 
     }
 
+    public static Type createType(Class type) {
+        return new MyType(type);
+    }
+
     private static class MyType implements Type {
 
         final Class baseClass;
@@ -172,6 +176,7 @@ public class DocMock {
             this.dimCount = getDimCount(c);
         }
 
+
         @Override
         public String typeName() {
             int i = baseClass.getName().lastIndexOf('.');
@@ -180,12 +185,17 @@ public class DocMock {
 
         @Override
         public String qualifiedTypeName() {
-            return baseClass.getName();
+            return packageName() + "." + typeName();
         }
 
         @Override
         public String simpleTypeName() {
             return baseClass.getSimpleName();
+        }
+
+        public String packageName() {
+            int i = baseClass.getName().lastIndexOf('.');
+            return (i > 0) ? baseClass.getName().substring(0, i) : "";
         }
 
         @Override

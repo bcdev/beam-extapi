@@ -480,10 +480,6 @@ EXPORTS
 	ImageInfo_setColors
 	ImageInfo_setColorPaletteDef
 	ImageInfo_getHistogramMatching2
-	Tile_Pos_newTile_Pos
-	Tile_Pos_equals
-	Tile_Pos_hashCode
-	Tile_Pos_toString
 	ProductManager_newProductManager
 	ProductManager_getProductCount
 	ProductManager_getProduct1
@@ -507,6 +503,10 @@ EXPORTS
 	OperatorSpiRegistry_addOperatorSpi
 	OperatorSpiRegistry_removeOperatorSpi
 	OperatorSpiRegistry_setAlias
+	Tile_Pos_newTile_Pos
+	Tile_Pos_equals
+	Tile_Pos_hashCode
+	Tile_Pos_toString
 	ImageGeometry_newImageGeometry
 	ImageGeometry_getImage2MapTransform
 	ImageGeometry_getImageRect
@@ -684,6 +684,17 @@ EXPORTS
 	Band_fireProductNodeChanged1
 	Band_fireProductNodeChanged2
 	Band_getExtension
+	ColorPaletteDef_Point_newColorPaletteDef_Point1
+	ColorPaletteDef_Point_newColorPaletteDef_Point2
+	ColorPaletteDef_Point_newColorPaletteDef_Point3
+	ColorPaletteDef_Point_getSample
+	ColorPaletteDef_Point_setSample
+	ColorPaletteDef_Point_getColor
+	ColorPaletteDef_Point_setColor
+	ColorPaletteDef_Point_getLabel
+	ColorPaletteDef_Point_setLabel
+	ColorPaletteDef_Point_clone
+	ColorPaletteDef_Point_createClone
 	PlacemarkGroup_getVectorDataNode
 	PlacemarkGroup_getPlacemark
 	PlacemarkGroup_add1
@@ -731,17 +742,6 @@ EXPORTS
 	PlacemarkGroup_fireProductNodeChanged2
 	PlacemarkGroup_removeFromFile
 	PlacemarkGroup_getExtension
-	ColorPaletteDef_Point_newColorPaletteDef_Point1
-	ColorPaletteDef_Point_newColorPaletteDef_Point2
-	ColorPaletteDef_Point_newColorPaletteDef_Point3
-	ColorPaletteDef_Point_getSample
-	ColorPaletteDef_Point_setSample
-	ColorPaletteDef_Point_getColor
-	ColorPaletteDef_Point_setColor
-	ColorPaletteDef_Point_getLabel
-	ColorPaletteDef_Point_setLabel
-	ColorPaletteDef_Point_clone
-	ColorPaletteDef_Point_createClone
 	TiePointGrid_newTiePointGrid1
 	TiePointGrid_newTiePointGrid2
 	TiePointGrid_newTiePointGrid3

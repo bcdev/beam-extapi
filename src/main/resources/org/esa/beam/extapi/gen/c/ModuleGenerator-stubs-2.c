@@ -249,7 +249,7 @@ jboolean beam_destroy_jvm()
  *       by scanning the denoted directory.
  */
 
-#define BEAM_HOME "C:\\Program Files\\beam-4.10.3\\" 
+#define BEAM_HOME "C:\\Program Files (x86)\\beam-4.10.3\\"
 #define OS_PATH_SEP ";"
 #define OS_FILE_SEP "\\"
 #define BEAM_LJAR(F) BEAM_HOME ## "lib" ## OS_FILE_SEP ## F ## OS_PATH_SEP

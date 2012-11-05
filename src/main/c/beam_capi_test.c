@@ -1,6 +1,12 @@
 
 #include <stdio.h>
+#include <stdlib.h>
 #include "gen/beam_capi.h"
+
+
+#define CONFIRM(S)  {printf("%s, Press enter!", S);getc(stdin);}
+#define PRESS_ENTER()  {printf("Press enter!");getc(stdin);}
+
 
 int main(int argc, char** argv)
 {
@@ -10,19 +16,24 @@ int main(int argc, char** argv)
 	char** band_names;
 	int num_bands;
 
+	printf("PATH: %s\n", getenv("PATH"));
+
 	if (argc <= 1) {
-		fprintf(stderr, "usage: beam_capi_test <product-file>");
+		fprintf(stderr, "usage: beam_capi_test <product-file>\n");
+		PRESS_ENTER();
 		return 1;
 	}
 
 	product_path = argv[1];
 
 	if (!beam_create_jvm_with_defaults()) {
+		CONFIRM("error 2");
 		return 2;
 	}
 
-	product = ProductIO_readProduct2(argv[1]);
+	product = ProductIO_readProduct2(product_path);
 	if (product == NULL) {
+		CONFIRM("error 3");
 		return 3;
 	}
 
@@ -42,9 +53,11 @@ int main(int argc, char** argv)
 	}
 
 	if (!beam_destroy_jvm()) {
+		CONFIRM("error 4");
 		return 4;
 	}
 
+	CONFIRM("success");
 	return 0;
 }
 
