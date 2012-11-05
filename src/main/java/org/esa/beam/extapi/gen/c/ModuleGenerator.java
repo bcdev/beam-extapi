@@ -91,7 +91,8 @@ public  class ModuleGenerator implements GeneratorContext {
                                   "\tbeam_is_jvm_created\n" +
                                   "\tbeam_create_jvm\n" +
                                   "\tbeam_create_jvm_with_defaults\n" +
-                                  "\tbeam_destroy_jvm\n");
+                                  "\tbeam_destroy_jvm\n" +
+                                  "\tString_newString\n");
             for (ApiClass apiClass : getApiClasses()) {
                 for (FunctionGenerator callable : getFunctionGenerators(apiClass)) {
                     writer.printf("\t%s\n", getFunctionName(callable));
@@ -108,7 +109,7 @@ public  class ModuleGenerator implements GeneratorContext {
             generateFileInfo(writer);
 
             writer.write("\n");
-            writeResource(writer, "ModuleGenerator-stubs.h");
+            writeResource(writer, "ModuleGenerator-stubs-1.h");
             writer.write("\n");
 
             writer.write("\n");
@@ -120,11 +121,16 @@ public  class ModuleGenerator implements GeneratorContext {
 
             writer.write("\n");
             writer.write("/* Non-API classes used in the API */\n");
+            writer.write("typedef void* String;\n");
             for (ApiClass usedApiClass : apiInfo.getUsedNonApiClasses()) {
-                if (!getApiClasses().contains(usedApiClass) && !isString(usedApiClass.getType())) {
+                if (!isString(usedApiClass.getType())) {
                     writer.write(String.format("typedef void* %s;\n", getTargetComponentTypeName(usedApiClass.getType(), true)));
                 }
             }
+            writer.write("\n");
+
+            writer.write("\n");
+            writeResource(writer, "ModuleGenerator-stubs-2.h");
             writer.write("\n");
 
             /////////////////////////////////////////////////////////////////////////////////////
@@ -288,7 +294,6 @@ public  class ModuleGenerator implements GeneratorContext {
     }
 
     private void writeInitMethodCode(PrintWriter writer, FunctionGenerator callable) {
-        writer.printf("\n");
         writer.printf("    if (%s == NULL) {\n", METHOD_VAR_NAME);
         writer.printf("        %s = (*jenv)->%s(jenv, %s, \"%s\", \"%s\");\n",
                       METHOD_VAR_NAME,

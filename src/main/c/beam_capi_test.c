@@ -14,7 +14,7 @@ int main(int argc, char** argv)
 	const char* product_path;
 	char* product_name;
 	char** band_names;
-	int num_bands;
+	int num_bands, width, height;
 
 	printf("PATH: %s\n", getenv("PATH"));
 
@@ -39,6 +39,8 @@ int main(int argc, char** argv)
 
 	product_name = Product_getName(product);
     band_names = Product_getBandNames(product, &num_bands);
+    width = Product_getSceneRasterWidth(product);
+    height = Product_getSceneRasterHeight(product);
 
 	{
 		int i;
@@ -51,6 +53,40 @@ int main(int argc, char** argv)
 			printf("band_names[%d] = %s\n", i, band_names[i]);
 		}
 	}
+
+	{
+	    Band r6 = Product_getBand(product, "radiance_6");
+	    Band r7 = Product_getBand(product, "radiance_7");
+	    Product ndviProduct = Product_newProduct1("NDVI", "NDVI", width, height);
+	    Band ndviBand = Product_addBand2(ndviProduct, "ndvi", 30);
+	    ProductWriter writer = ProductIO_getProductWriter("BEAM-DIMAP");
+
+	    float* r6Buf = (float*) malloc(width * sizeof (float));
+	    float* r7Buf = (float*) malloc(width * sizeof (float));
+	    float* ndviBuf = (float*) malloc(width * sizeof (float));
+	    int x, y;
+
+	    Product_setProductWriter(ndviProduct, writer);
+	    Product_writeHeader(ndviProduct, String_newString("ndvi.dim"));
+
+		for (y = 0; y < height; y++) {
+	        Band_readPixels5(r6, 0, y, width, 1, r6Buf, width, NULL);
+	        Band_readPixels5(r7, 0, y, width, 1, r7Buf, width, NULL);
+    	    for (x = 0; x < width; x++) {
+
+            }
+	        Band_writePixels5(ndviBand, 0, y, width, 1, ndviBuf, width);
+	    }
+
+        free(r6Buf);
+        free(r7Buf);
+        free(ndviBuf);
+
+	    Product_closeIO(ndviProduct);
+	}
+
+	Product_closeIO(product);
+
 
 	if (!beam_destroy_jvm()) {
 		CONFIRM("error 4");

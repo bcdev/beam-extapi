@@ -1,0 +1,8 @@
+LIBRARY "beam_capi"
+
+EXPORTS
+	beam_is_jvm_created
+	beam_create_jvm
+	beam_create_jvm_with_defaults
+	beam_destroy_jvm
+	String_newString

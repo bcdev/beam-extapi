@@ -1,3 +1,10 @@
+
+String String_newString(const char* chars)
+{
+    jstring str = (*jenv)->NewStringUTF(jenv, chars);
+    return (*jenv)->NewGlobalRef(jenv, str);
+}
+
 jobjectArray beam_new_jstring_array(const char** array_elems, int array_length)
 {
     jobjectArray array;
