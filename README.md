@@ -20,6 +20,8 @@ C-Code Generation Considerations
 ** are used as return values (see Band.getPixels() methods, e.g. new annotation @Return, or @Reuse or @ReturnedIfNotNull )
 * How to treat (array) parameters that are will used as return values (see Band.getPixels() methods)
 * How to deal with object parameters in which a C string is passed (generator doesn't know, that a string object needs to be created)
+   --> String_newString()
+* How to translate constants defined in Java classes?
 * How to treat (primitive, string & object) arrays?
 * How to treat object collections lists, sets, maps?
 * How to treat generics?
