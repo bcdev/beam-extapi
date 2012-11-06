@@ -24,7 +24,7 @@ public final class ApiMethod implements Comparable<ApiMethod> {
         this.memberDoc = memberDoc;
         this.returnType = memberDoc.isConstructor() ? enclosingClass.getType() : ((MethodDoc) memberDoc).returnType();
         this.javaName = memberDoc.isConstructor() ? "<init>" : memberDoc.name();
-        this.javaSignature = getTypeSignature(memberDoc);
+        this.javaSignature = getJavaSignature(memberDoc);
     }
 
     public ApiClass getEnclosingClass() {
@@ -82,25 +82,25 @@ public final class ApiMethod implements Comparable<ApiMethod> {
 
     @Override
     public String toString() {
-        return javaName + javaSignature;
+        return getEnclosingClass() + "#" + getJavaName() + ":" + getJavaSignature();
     }
 
-    private static String getTypeSignature(ExecutableMemberDoc memberDoc) {
+    static String getJavaSignature(ExecutableMemberDoc memberDoc) {
         StringBuilder sb = new StringBuilder();
         sb.append('(');
         for (Parameter parameter : memberDoc.parameters()) {
-            sb.append(getTypeSignature(parameter.type()));
+            sb.append(getJavaSignature(parameter.type()));
         }
         sb.append(')');
         if (memberDoc instanceof MethodDoc) {
-            sb.append(getTypeSignature(((MethodDoc) memberDoc).returnType()));
+            sb.append(getJavaSignature(((MethodDoc) memberDoc).returnType()));
         } else {
             sb.append('V');
         }
         return sb.toString();
     }
 
-    private static String getTypeSignature(Type type) {
+    static String getJavaSignature(Type type) {
         String comp;
         if (type.isPrimitive()) {
             if ("boolean".equals(type.typeName())) {

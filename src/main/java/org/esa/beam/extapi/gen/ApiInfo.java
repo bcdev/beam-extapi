@@ -12,12 +12,12 @@ import java.util.*;
  */
 public final class ApiInfo {
 
-    private final Map<ApiClass, List<ApiMethod>> apiClasses;
-    private final Map<ApiClass, List<ApiMethod>> allClasses;
+    private final Map<ApiClass, ApiMembers> apiClasses;
+    private final Map<ApiClass, ApiMembers> allClasses;
     private final Set<ApiClass> usedNonApiClasses;
 
-    private ApiInfo(Map<ApiClass, List<ApiMethod>> apiClasses,
-                    Map<ApiClass, List<ApiMethod>> allClasses,
+    private ApiInfo(Map<ApiClass, ApiMembers> apiClasses,
+                    Map<ApiClass, ApiMembers> allClasses,
                     Set<ApiClass> usedNonApiClasses) {
         this.apiClasses = apiClasses;
         this.allClasses = allClasses;
@@ -36,14 +36,24 @@ public final class ApiInfo {
         return Collections.unmodifiableSet(usedNonApiClasses);
     }
 
+    public List<ApiConstant> getConstantsOf(ApiClass apiClass) {
+        ApiMembers members = apiClasses.get(apiClass);
+        return Collections.unmodifiableList(members != null ? members.apiConstants : new ArrayList<ApiConstant>(0));
+    }
+
     public List<ApiMethod> getMethodsOf(ApiClass apiClass) {
-        List<ApiMethod> list = apiClasses.get(apiClass);
-        return list != null ? Collections.unmodifiableList(list) : null;
+        ApiMembers members = apiClasses.get(apiClass);
+        return Collections.unmodifiableList(members != null ? members.apiMethods : new ArrayList<ApiMethod>(0));
+    }
+
+    public List<ApiConstant> getConstantsUsing(ApiClass apiClass) {
+        ApiMembers members = allClasses.get(apiClass);
+        return Collections.unmodifiableList(members != null ? members.apiConstants : new ArrayList<ApiConstant>(0));
     }
 
     public List<ApiMethod> getMethodsUsing(ApiClass apiClass) {
-        List<ApiMethod> list = allClasses.get(apiClass);
-        return list != null ? Collections.unmodifiableList(list) : null;
+        ApiMembers members = allClasses.get(apiClass);
+        return Collections.unmodifiableList(members != null ? members.apiMethods : new ArrayList<ApiMethod>(0));
     }
 
     public static ApiInfo create(RootDoc rootDoc, String... includedClassNames) {
@@ -51,19 +61,20 @@ public final class ApiInfo {
     }
 
     public static ApiInfo create(RootDoc rootDoc, Filter filter) {
-        Map<ApiClass, List<ApiMethod>> apiClasses = getApiClasses(rootDoc, filter);
-        Map<ApiClass, List<ApiMethod>> allClasses = getAllClasses(apiClasses);
+        Map<ApiClass, ApiMembers> apiClasses = getApiMembers(rootDoc, filter);
+        Map<ApiClass, ApiMembers> allClasses = getAllClasses(apiClasses);
         Set<ApiClass> usedNonApiClasses = getUsedNonApiClasses(apiClasses, allClasses);
         return new ApiInfo(apiClasses, allClasses, usedNonApiClasses);
     }
 
-    private static Map<ApiClass, List<ApiMethod>> getApiClasses(RootDoc rootDoc, Filter filter) {
+    private static Map<ApiClass, ApiMembers> getApiMembers(RootDoc rootDoc, Filter filter) {
 
-        Map<ApiClass, List<ApiMethod>> apiClasses = new HashMap<ApiClass, List<ApiMethod>>(1000);
+        Map<ApiClass, ApiMembers> apiClasses = new HashMap<ApiClass, ApiMembers>(1000);
 
         for (ClassDoc classDoc : rootDoc.classes()) {
             if (filter.accept(classDoc)) {
                 ApiClass apiClass = new ApiClass(classDoc);
+                ArrayList<ApiConstant> apiConstants = new ArrayList<ApiConstant>();
                 ArrayList<ApiMethod> apiMethods = new ArrayList<ApiMethod>();
 
                 for (ConstructorDoc constructorDoc : classDoc.constructors()) {
@@ -77,6 +88,12 @@ public final class ApiInfo {
 
                 ClassDoc classDoc0 = classDoc;
                 do {
+                    for (FieldDoc fieldDoc : classDoc0.fields()) {
+                        if (fieldDoc.isPublic() && fieldDoc.isStatic() && fieldDoc.isFinal()) {
+                            apiConstants.add(new ApiConstant(apiClass, fieldDoc));
+                        }
+                    }
+
                     for (MethodDoc methodDoc : classDoc0.methods()) {
                         if (filter.accept(methodDoc)) {
                             ApiMethod apiMethod = new ApiMethod(apiClass, methodDoc);
@@ -90,7 +107,7 @@ public final class ApiInfo {
                     classDoc0 = classDoc0.superclass();
                 } while (classDoc0 != null && !isObjectClass(classDoc0));
 
-                apiClasses.put(apiClass, apiMethods);
+                apiClasses.put(apiClass, new ApiMembers(apiConstants, apiMethods));
             } else {
                 System.out.printf("Filtered out: class %s\n", classDoc.qualifiedTypeName());
             }
@@ -99,14 +116,18 @@ public final class ApiInfo {
         return apiClasses;
     }
 
-    private static boolean isObjectClass(ClassDoc classDoc0) {
-        return classDoc0.qualifiedTypeName().equalsIgnoreCase("java.lang.Object");
+    private static boolean isObjectClass(Type type) {
+        return type.qualifiedTypeName().equalsIgnoreCase("java.lang.Object");
     }
 
-    private static Map<ApiClass, List<ApiMethod>> getAllClasses(Map<ApiClass, List<ApiMethod>> apiClasses) {
-        Map<ApiClass, List<ApiMethod>> usedClasses = new HashMap<ApiClass, List<ApiMethod>>();
-        for (Map.Entry<ApiClass, List<ApiMethod>> entry : apiClasses.entrySet()) {
-            for (ApiMethod apiMethod : entry.getValue()) {
+    private static Map<ApiClass, ApiMembers> getAllClasses(Map<ApiClass, ApiMembers> apiClasses) {
+        Map<ApiClass, ApiMembers> usedClasses = new HashMap<ApiClass, ApiMembers>();
+        for (Map.Entry<ApiClass, ApiMembers> entry : apiClasses.entrySet()) {
+            ApiMembers apiMembers = entry.getValue();
+            for (ApiConstant apiConstant : apiMembers.apiConstants) {
+                collectAllClasses(apiConstant.getType(), apiConstant, usedClasses);
+            }
+            for (ApiMethod apiMethod : apiMembers.apiMethods) {
                 collectAllClasses(apiMethod.getReturnType(), apiMethod, usedClasses);
                 for (Parameter parameter : apiMethod.getMemberDoc().parameters()) {
                     collectAllClasses(parameter.type(), apiMethod, usedClasses);
@@ -116,20 +137,32 @@ public final class ApiInfo {
         return usedClasses;
     }
 
-    private static void collectAllClasses(Type type, ApiMethod apiMethod, Map<ApiClass, List<ApiMethod>> allClasses) {
+    private static void collectAllClasses(Type type, ApiConstant apiConstant, Map<ApiClass, ApiMembers> allClasses) {
         if (!type.isPrimitive()) {
-            ApiClass usedClass = new ApiClass(type);
-            List<ApiMethod> referencingMethods = allClasses.get(usedClass);
-            if (referencingMethods == null) {
-                referencingMethods = new ArrayList<ApiMethod>();
-                allClasses.put(usedClass, referencingMethods);
-            }
-            referencingMethods.add(apiMethod);
+            ApiMembers referencingMembers = getApiMembers(allClasses, type);
+            referencingMembers.apiConstants.add(apiConstant);
         }
     }
 
-    private static Set<ApiClass> getUsedNonApiClasses(Map<ApiClass, List<ApiMethod>> apiClasses,
-                                                      Map<ApiClass, List<ApiMethod>> allClasses) {
+    private static void collectAllClasses(Type type, ApiMethod apiMethod, Map<ApiClass, ApiMembers> allClasses) {
+        if (!type.isPrimitive()) {
+            ApiMembers referencingMembers = getApiMembers(allClasses, type);
+            referencingMembers.apiMethods.add(apiMethod);
+        }
+    }
+
+    private static ApiMembers getApiMembers(Map<ApiClass, ApiMembers> allClasses, Type type) {
+        ApiClass usedClass = new ApiClass(type);
+        ApiMembers referencingMembers = allClasses.get(usedClass);
+        if (referencingMembers == null) {
+            referencingMembers = new ApiMembers();
+            allClasses.put(usedClass, referencingMembers);
+        }
+        return referencingMembers;
+    }
+
+    private static Set<ApiClass> getUsedNonApiClasses(Map<ApiClass, ApiMembers> apiClasses,
+                                                      Map<ApiClass, ApiMembers> allClasses) {
         HashSet<ApiClass> usedClasses = new HashSet<ApiClass>();
         for (ApiClass apiClass : allClasses.keySet()) {
             if (!apiClasses.containsKey(apiClass)) {
@@ -168,6 +201,21 @@ public final class ApiInfo {
         @Override
         public boolean accept(MethodDoc methodDoc) {
             return methodDoc.isPublic() && methodDoc.tags("deprecated").length == 0;
+        }
+    }
+
+    private final static class ApiMembers {
+        private final List<ApiConstant> apiConstants;
+        private final List<ApiMethod> apiMethods;
+
+        private ApiMembers() {
+            this.apiConstants = new ArrayList<ApiConstant>();
+            this.apiMethods = new ArrayList<ApiMethod>();
+        }
+
+        private ApiMembers(List<ApiConstant> apiConstants, List<ApiMethod> apiMethods) {
+            this.apiConstants = apiConstants;
+            this.apiMethods = apiMethods;
         }
     }
 

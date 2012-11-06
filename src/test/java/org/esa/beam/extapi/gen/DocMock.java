@@ -3,6 +3,7 @@ package org.esa.beam.extapi.gen;
 import com.sun.javadoc.*;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
@@ -62,6 +63,16 @@ public class DocMock {
         when(classDoc.methods(true)).thenReturn(methodDocs);
         when(classDoc.methods(false)).thenReturn(methodDocs);
 
+
+        Field[] fields = clazz.getDeclaredFields();
+        FieldDoc[] fieldDocs = new  FieldDoc[fields.length];
+        for (int i = 0; i < fields.length; i++) {
+            fieldDocs[i] = createFieldDoc(classDoc, fields[i]);
+        }
+        when(classDoc.fields()).thenReturn(fieldDocs);
+        when(classDoc.fields(true)).thenReturn(fieldDocs);
+        when(classDoc.fields(false)).thenReturn(fieldDocs);
+
         Class<?> superclass = clazz.getSuperclass();
         if (superclass != null) {
             ClassDoc classDoc1 = createClassDoc(superclass);
@@ -84,9 +95,9 @@ public class DocMock {
         when(constructorDoc.isPublic()).thenReturn(Modifier.isPublic(method.getModifiers()));
         when(constructorDoc.isPrivate()).thenReturn(Modifier.isPrivate(method.getModifiers()));
         when(constructorDoc.isProtected()).thenReturn(Modifier.isProtected(method.getModifiers()));
-        when(constructorDoc.isNative()).thenReturn(Modifier.isNative(method.getModifiers()));
         when(constructorDoc.isFinal()).thenReturn(Modifier.isFinal(method.getModifiers()));
         when(constructorDoc.isStatic()).thenReturn(Modifier.isStatic(method.getModifiers()));
+        when(constructorDoc.isNative()).thenReturn(Modifier.isNative(method.getModifiers()));
         return constructorDoc;
     }
 
@@ -102,11 +113,27 @@ public class DocMock {
         when(methodDoc.isPublic()).thenReturn(Modifier.isPublic(method.getModifiers()));
         when(methodDoc.isPrivate()).thenReturn(Modifier.isPrivate(method.getModifiers()));
         when(methodDoc.isProtected()).thenReturn(Modifier.isProtected(method.getModifiers()));
-        when(methodDoc.isAbstract()).thenReturn(Modifier.isAbstract(method.getModifiers()));
-        when(methodDoc.isNative()).thenReturn(Modifier.isNative(method.getModifiers()));
         when(methodDoc.isFinal()).thenReturn(Modifier.isFinal(method.getModifiers()));
         when(methodDoc.isStatic()).thenReturn(Modifier.isStatic(method.getModifiers()));
+        when(methodDoc.isNative()).thenReturn(Modifier.isNative(method.getModifiers()));
+        when(methodDoc.isAbstract()).thenReturn(Modifier.isAbstract(method.getModifiers()));
         return methodDoc;
+    }
+
+    public static FieldDoc createFieldDoc(ClassDoc classDoc, Field field) {
+        FieldDoc fieldDoc = mock(FieldDoc.class);
+        when(fieldDoc.containingClass()).thenReturn(classDoc);
+        when(fieldDoc.name()).thenReturn(field.getName());
+        when(fieldDoc.type()).thenReturn(createType(field.getType()));
+        when(fieldDoc.tags()).thenReturn(new Tag[0]);
+        when(fieldDoc.isConstructor()).thenReturn(false);
+        when(fieldDoc.tags("deprecated")).thenReturn(new Tag[0]);
+        when(fieldDoc.isPublic()).thenReturn(Modifier.isPublic(field.getModifiers()));
+        when(fieldDoc.isPrivate()).thenReturn(Modifier.isPrivate(field.getModifiers()));
+        when(fieldDoc.isProtected()).thenReturn(Modifier.isProtected(field.getModifiers()));
+        when(fieldDoc.isFinal()).thenReturn(Modifier.isFinal(field.getModifiers()));
+        when(fieldDoc.isStatic()).thenReturn(Modifier.isStatic(field.getModifiers()));
+        return fieldDoc;
     }
 
     private static Parameter[] getParameters(Constructor method) {

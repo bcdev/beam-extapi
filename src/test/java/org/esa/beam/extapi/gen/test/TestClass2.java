@@ -9,6 +9,9 @@ import java.util.Date;
  */
 @Ignore
 public class TestClass2 extends TestClass1 {
+    public static final Date NOW = new Date();
+    private static final Date DAY_ONE = new Date(0);
+
     public float getPixel(int x, int y) {
         return 0;
     }

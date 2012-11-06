@@ -43,6 +43,12 @@ public class ApiInfoTest {
         testMethod(apiMethods, "getTimestamp", "()Ljava/util/Date;");
         testMethod(apiMethods, "getFiles", "(Ljava/lang/String;)[Ljava/io/File;");
 
+        List<ApiConstant> apiConstants = apiInfo.getConstantsOf(apiClass1);
+        assertEquals(3, apiConstants.size());
+        testConstant(apiConstants, "INT16", "I");
+        testConstant(apiConstants, "FLOAT32", "I");
+        testConstant(apiConstants, "NOW", "Ljava/util/Date;");
+
         Set<ApiClass> allClasses = apiInfo.getAllClasses();
         assertEquals(4, allClasses.size());
         assertNotNull(getApiClass(allClasses, testClass2Name));
@@ -63,15 +69,30 @@ public class ApiInfoTest {
         testMethod(methodsUsingString, "getFiles", "(Ljava/lang/String;)[Ljava/io/File;");
     }
 
+    private void testConstant(List<ApiConstant> apiMethods, String javaName, String javaSignature) {
+        ApiConstant apiConstant = getApiConstant(apiMethods, javaName, javaSignature);
+        assertNotNull("Not found: " + javaName, apiConstant);
+    }
+
     private void testMethod(List<ApiMethod> apiMethods, String javaName, String javaSignature) {
-        ApiMethod apiMethod0 = getApiMethod(apiMethods, javaName, javaSignature);
-        assertNotNull(apiMethod0);
+        ApiMethod apiMethod = getApiMethod(apiMethods, javaName, javaSignature);
+        assertNotNull("Not found: " + javaName + javaSignature, apiMethod);
     }
 
 
     public static ApiClass getApiClass(Set<ApiClass> set, String javaName) {
         for (ApiClass elem : set) {
             if (javaName.equals(elem.getJavaName())) {
+                return elem;
+            }
+        }
+        return null;
+    }
+
+    public static ApiConstant getApiConstant(List<ApiConstant> list, String javaName, String javaSignature) {
+        for (ApiConstant elem : list) {
+            if (javaName.equals(elem.getJavaName())
+                    && javaSignature.equals(elem.getJavaSignature())) {
                 return elem;
             }
         }

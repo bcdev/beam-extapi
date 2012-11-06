@@ -11,6 +11,9 @@ import java.util.Date;
 
 @Ignore
 public class TestClass1 {
+    public static final int INT16 = 3;
+    public static final int FLOAT32 = 4;
+
     public String getName() {
         return null;
     }
