@@ -15,13 +15,20 @@ C-Code Generation Considerations
 * Don't forget to increase global reference count when returning objects from Java VM.  (done)
 * If we start from a limited number of API classes, we need to remove methods that have arguments for which no factory exists at all.
 * Need to find out which Java SE classes are used in parameter lists, but neither cannot retrieved nor instanciated.
+  --> ApiInfo already known about this (ApiInfo.getUsedNonApiClasses()) , but not handled yet
 * How to treat method (array) parameters that
-** are input, output or both (e.g. new parameter annotations: @In, @Out, @InOut, or simply @Const or @ReadOnly)
-** are used as return values (see Band.getPixels() methods, e.g. new annotation @Return, or @Reuse or @ReturnedIfNotNull )
-* How to treat (array) parameters that are will used as return values (see Band.getPixels() methods)
+** are input, output or both  (see Band.read/writePixels() methods)
+  --> e.g. new parameter annotations: @In, @Out, @InOut, or simply @Const or @ReadOnly
+      or may need to define special translation rules for these methods that have this issue
+** are used as method return values (see Band.readPixels() methods)
+  --> e.g. new annotation @Return, or @Reuse or @ReturnedIfNotNull
 * How to deal with object parameters in which a C string is passed (generator doesn't know, that a string object needs to be created)
    --> String_newString()
 * How to translate constants defined in Java classes?
+   --> constants are already collected (--> ApiInfo)
+* How to deal with same function names originating from overloaded Java methods   (see Band.readPixels() methods)
+   --> currently numbering these (this is not a good solution, should take signature difference into account!)
+* How to treat generics?
 * How to treat (primitive, string & object) arrays?
 * How to treat object collections lists, sets, maps?
 * How to treat generics?
