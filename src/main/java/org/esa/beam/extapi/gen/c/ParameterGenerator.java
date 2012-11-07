@@ -5,6 +5,7 @@ import com.sun.javadoc.Type;
 
 import static org.esa.beam.extapi.gen.TemplateEval.eval;
 import static org.esa.beam.extapi.gen.TemplateEval.kv;
+import static org.esa.beam.extapi.gen.c.ModuleGenerator.getComponentCTypeName;
 
 /**
  * @author Norman Fomferra
@@ -51,12 +52,7 @@ public abstract class ParameterGenerator implements CodeGenerator {
 
         @Override
         public String generateParamListDecl(GeneratorContext context) {
-            final String typeName;
-            if (parameter.typeName().equals("long")) {
-                typeName = "dlong";
-            } else {
-                typeName = parameter.typeName();
-            }
+            String typeName = getComponentCTypeName(getType());
             return String.format("%s %s", typeName, getName());
         }
 
@@ -177,7 +173,7 @@ public abstract class ParameterGenerator implements CodeGenerator {
 
         @Override
         public String generateParamListDecl(GeneratorContext context) {
-            String typeName = ModuleGenerator.getTargetClassName(getType());
+            String typeName = ModuleGenerator.getComponentCClassName(getType());
             return String.format("%s %s", typeName, getName());
         }
 
@@ -199,7 +195,7 @@ public abstract class ParameterGenerator implements CodeGenerator {
         public String generateParamListDecl(GeneratorContext context) {
             return eval("${m}${t}* ${p}Elems, int ${p}Length",
                         kv("m", readOnly ? "const " : ""),
-                        kv("t", ModuleGenerator.getTargetClassName(getType())),
+                        kv("t", ModuleGenerator.getComponentCClassName(getType())),
                         kv("p", getName()));
         }
 
@@ -213,7 +209,7 @@ public abstract class ParameterGenerator implements CodeGenerator {
         public String generatePreCallCode(GeneratorContext context) {
             return eval("${p}Array = beam_new_jobject_array(${p}Elems, ${p}Length, ${c});",
                         kv("p", getName()),
-                        kv("c", ModuleGenerator.getCClassVarName(getType())));
+                        kv("c", ModuleGenerator.getComponentCClassVarName(getType())));
         }
 
         @Override

@@ -82,7 +82,7 @@ public final class ApiMethod implements Comparable<ApiMethod> {
 
     @Override
     public String toString() {
-        return getEnclosingClass() + "#" + getJavaName() + ":" + getJavaSignature();
+        return getEnclosingClass() + "#" + getJavaName() + getJavaSignature();
     }
 
     static String getJavaSignature(ExecutableMemberDoc memberDoc) {

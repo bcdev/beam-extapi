@@ -5,8 +5,7 @@ import com.sun.javadoc.Type;
 import org.esa.beam.extapi.gen.ApiClass;
 import org.esa.beam.extapi.gen.ApiMethod;
 
-import static org.esa.beam.extapi.gen.c.ModuleGenerator.METHOD_VAR_NAME;
-import static org.esa.beam.extapi.gen.c.ModuleGenerator.SELF_VAR_NAME;
+import static org.esa.beam.extapi.gen.c.ModuleGenerator.*;
 
 /**
  * @author Norman Fomferra
@@ -41,20 +40,8 @@ public abstract class FunctionGenerator implements CodeGenerator {
         return parameterGenerators;
     }
 
-    public String getTargetEnclosingClassVarName() {
-        return ModuleGenerator.getCClassVarName(getEnclosingClass().getType());
-    }
-
-    protected String getTargetEnclosingTypeName() {
-        return ModuleGenerator.getCTypeName(getEnclosingClass().getType());
-    }
-
-    protected String getTargetReturnTypeName() {
-        return ModuleGenerator.getCTypeName(getReturnType());
-    }
-
     public String generateFunctionSignature(GeneratorContext context) {
-        String returnTypeName = getTargetReturnTypeName();
+        String returnTypeName = getCTypeName(getReturnType());
         String functionName = context.getFunctionName(this);
         String parameterList = generateParameterList(context);
         if (parameterList.isEmpty()) {
@@ -96,12 +83,12 @@ public abstract class FunctionGenerator implements CodeGenerator {
 
         if (getMemberDoc().isConstructor()) {
             functionName = "NewObject";
-            argumentList.append(getTargetEnclosingClassVarName());
+            argumentList.append(ModuleGenerator.getComponentCClassVarName(getEnclosingClass().getType()));
             argumentList.append(", ");
             argumentList.append(METHOD_VAR_NAME);
         } else if (getMemberDoc().isStatic()) {
             functionName = String.format("CallStatic%sMethod", generateCallTypeName(context));
-            argumentList.append(getTargetEnclosingClassVarName());
+            argumentList.append(ModuleGenerator.getComponentCClassVarName(getEnclosingClass().getType()));
             argumentList.append(", ");
             argumentList.append(METHOD_VAR_NAME);
         } else {
@@ -125,7 +112,7 @@ public abstract class FunctionGenerator implements CodeGenerator {
         StringBuilder parameterList = new StringBuilder();
         if (isInstanceMethod()) {
             parameterList.append(String.format("%s %s",
-                                               getTargetEnclosingTypeName(),
+                                               getCTypeName(getEnclosingClass().getType()),
                                                SELF_VAR_NAME));
         }
         for (ParameterGenerator parameterGenerator : parameterGenerators) {
@@ -187,7 +174,7 @@ public abstract class FunctionGenerator implements CodeGenerator {
 
         @Override
         public String generateLocalVarDecl(GeneratorContext context) {
-            String targetTypeName = getTargetReturnTypeName();
+            String targetTypeName = getCTypeName(getReturnType());
             return String.format("%s %s = (%s) 0;", targetTypeName, ModuleGenerator.RESULT_VAR_NAME, targetTypeName);
         }
 
@@ -229,7 +216,7 @@ public abstract class FunctionGenerator implements CodeGenerator {
 
         @Override
         public String generateLocalVarDecl(GeneratorContext context) {
-            String targetTypeName = getTargetReturnTypeName();
+            String targetTypeName = getCTypeName(getReturnType());
             return String.format("%s %s = (%s) 0;", targetTypeName, ModuleGenerator.RESULT_VAR_NAME, targetTypeName);
         }
     }
@@ -311,7 +298,7 @@ public abstract class FunctionGenerator implements CodeGenerator {
                                          "%s = beam_alloc_%s_array(_resultArray, resultArrayLength);",
                                  generateJniCall(context),
                                  ModuleGenerator.RESULT_VAR_NAME,
-                                 ModuleGenerator.getTargetComponentTypeName(getReturnType(), false));
+                                 getComponentCTypeName(getReturnType()));
         }
 
         @Override

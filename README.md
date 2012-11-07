@@ -28,6 +28,13 @@ C-Code Generation Considerations
    --> constants are already collected (--> ApiInfo)
 * How to deal with same function names originating from overloaded Java methods   (see Band.readPixels() methods)
    --> currently numbering these (this is not a good solution, should take signature difference into account!)
+* How to treat String parameters?
+  --> Now: String s -> const char* s
+* How to treat String return values?
+  --> Now: A char* is returned, clients must free it
+      Alternative: return String object and offer
+         int beam_strlen(String s);
+         void beam_strcpy(String s, char* buf, int max_len);
 * How to treat generics?
 * How to treat (primitive, string & object) arrays?
 * How to treat object collections lists, sets, maps?

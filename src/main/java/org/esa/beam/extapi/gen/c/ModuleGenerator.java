@@ -59,16 +59,36 @@ public  class ModuleGenerator implements GeneratorContext {
     }
 
     static String getCTypeName(Type type) {
-        String name = getTargetComponentTypeName(type, false);
+        String name = getComponentCTypeName(type);
         return name + type.dimension().replace("[]", "*");
     }
 
-    static String getCClassVarName(Type type) {
-        return String.format(CLASS_VAR_NAME_PATTERN, getTargetClassName(type));
+    static String getComponentCClassName(Type type) {
+        return type.typeName().replace('.', '_');
+    }
+
+    static String getComponentCClassVarName(Type type) {
+        return String.format(CLASS_VAR_NAME_PATTERN, getComponentCClassName(type));
+    }
+
+    static String getComponentCTypeName(Type type) {
+        if (type.isPrimitive()) {
+            if (type.typeName().equals("long")) {
+                return "dlong";
+            } else {
+                return type.typeName();
+            }
+        } else {
+            if (isString(type)) {
+                return "char*";
+            } else {
+                return type.typeName().replace('.', '_');
+            }
+        }
     }
 
     public static String getFunctionBaseName(ApiMethod apiMethod) {
-        String targetTypeName = getCTypeName(apiMethod.getEnclosingClass().getType());
+        String targetTypeName = getComponentCClassName(apiMethod.getEnclosingClass().getType());
         if (apiMethod.getMemberDoc().isConstructor()) {
             return String.format("%s_new%s", targetTypeName, targetTypeName);
         } else {
@@ -115,7 +135,7 @@ public  class ModuleGenerator implements GeneratorContext {
             writer.write("\n");
             writer.write("/* Wrapped API classes */\n");
             for (ApiClass apiClass : getApiClasses()) {
-                writer.write(String.format("typedef void* %s;\n", getTargetComponentTypeName(apiClass.getType(), true)));
+                writer.write(String.format("typedef void* %s;\n", getComponentCClassName(apiClass.getType())));
             }
             writer.write("\n");
 
@@ -124,7 +144,7 @@ public  class ModuleGenerator implements GeneratorContext {
             writer.write("typedef void* String;\n");
             for (ApiClass usedApiClass : apiInfo.getUsedNonApiClasses()) {
                 if (!isString(usedApiClass.getType())) {
-                    writer.write(String.format("typedef void* %s;\n", getTargetComponentTypeName(usedApiClass.getType(), true)));
+                    writer.write(String.format("typedef void* %s;\n", getComponentCClassName(usedApiClass.getType())));
                 }
             }
             writer.write("\n");
@@ -138,7 +158,7 @@ public  class ModuleGenerator implements GeneratorContext {
             //
             for (ApiClass apiClass : getApiClasses()) {
                 writer.write("\n");
-                writer.printf("/* Functions for class %s */\n", getTargetComponentTypeName(apiClass.getType(), true));
+                writer.printf("/* Functions for class %s */\n", getComponentCClassName(apiClass.getType()));
                 writer.write("\n");
                 for (FunctionGenerator callable : getFunctionGenerators(apiClass)) {
                     writer.printf("" +
@@ -169,14 +189,14 @@ public  class ModuleGenerator implements GeneratorContext {
             writer.printf("/* Java API classes. */\n");
             for (ApiClass apiClass : getApiClasses()) {
                 writer.write(String.format("static jclass %s;\n",
-                                           getCClassVarName(apiClass.getType())));
+                                           getComponentCClassVarName(apiClass.getType())));
             }
             writer.printf("/* Other Java classes used in the API. */\n");
             writer.write(String.format("static jclass %s;\n",
                                        String.format(CLASS_VAR_NAME_PATTERN, "String")));
             for (ApiClass usedApiClass : apiInfo.getUsedNonApiClasses()) {
                 writer.write(String.format("static jclass %s;\n",
-                                           getCClassVarName(usedApiClass.getType())));
+                                           getComponentCClassVarName(usedApiClass.getType())));
             }
             writer.write("\n");
 
@@ -207,7 +227,7 @@ public  class ModuleGenerator implements GeneratorContext {
             errCode++;
             for (ApiClass apiClass : getApiClasses()) {
                 writeClassDef(writer,
-                              getCClassVarName(apiClass.getType()),
+                              getComponentCClassVarName(apiClass.getType()),
                               apiClass.getResourceName(),
                               errCode);
                 errCode++;
@@ -298,7 +318,7 @@ public  class ModuleGenerator implements GeneratorContext {
         writer.printf("        %s = (*jenv)->%s(jenv, %s, \"%s\", \"%s\");\n",
                       METHOD_VAR_NAME,
                       callable.getMemberDoc().isStatic() ? "GetStaticMethodID" : "GetMethodID",
-                      callable.getTargetEnclosingClassVarName(),
+                      getComponentCClassVarName(callable.getEnclosingClass().getType()),
                       callable.getApiMethod().getJavaName(),
                       callable.getApiMethod().getJavaSignature());
         if (isVoid(callable.getReturnType())) {
@@ -317,6 +337,7 @@ public  class ModuleGenerator implements GeneratorContext {
         }
     }
 
+
     private void generateFileInfo(PrintWriter writer) {
         writer.write(String.format("/*\n" +
                                            " * DO NOT EDIT THIS FILE, IT IS MACHINE-GENERATED\n" +
@@ -324,7 +345,6 @@ public  class ModuleGenerator implements GeneratorContext {
                                            " */\n", new Date(), ApiGeneratorDoclet.class.getName()));
         writer.write("\n");
     }
-
 
     private void printStats() {
         int numClasses = 0;
@@ -361,28 +381,6 @@ public  class ModuleGenerator implements GeneratorContext {
 
     static boolean isObjectArray(Type type) {
         return type.dimension().equals("[]") && !type.isPrimitive();
-    }
-
-    // todo - code duplication in ParameterGenerator
-    static String getTargetComponentTypeName(Type type, boolean isParam) {
-        if (type.isPrimitive()) {
-            final String typeName = type.typeName();
-            if (typeName.equals("long")) {
-                return "dlong";
-            } else {
-                return typeName;
-            }
-        } else {
-            if (isString(type)) {
-                return isParam ? "const char*" : "char*";
-            } else {
-                return getTargetClassName(type);
-            }
-        }
-    }
-
-    static String getTargetClassName(Type type) {
-        return type.typeName().replace('.', '_');
     }
 
 

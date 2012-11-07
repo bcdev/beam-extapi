@@ -172,6 +172,15 @@ public final class ApiInfo {
         return usedClasses;
     }
 
+    public static enum ParameterModifier {
+        IN,
+        OUT,
+        RETURN
+    }
+
+    public interface ExtraInfo {
+        ParameterModifier getParameterModifier(ApiMethod apiMethod, int parameterIndex);
+    }
 
     public interface Filter {
         boolean accept(ClassDoc classDoc);
