@@ -90,9 +90,13 @@ public abstract class ParameterGenerator implements CodeGenerator {
 
         @Override
         public String generatePreCallCode(GeneratorContext context) {
-            return eval("${p}Array = (*jenv)->NewBooleanArray(jenv, ${p}Length);\n" +
+            String typeName = getType().simpleTypeName();
+            typeName = Character.toUpperCase(typeName.charAt(0)) + typeName.substring(1);
+
+            return eval("${p}Array = (*jenv)->New${t}Array(jenv, ${p}Length);\n" +
                                 "${p}ArrayAddr = (*jenv)->GetPrimitiveArrayCritical(jenv, ${p}Array, 0);\n" +
                                 "memcpy(${p}ArrayAddr, ${p}Elems, ${p}Length);",
+                        kv("t", typeName),
                         kv("p", parameter.name()));
         }
 
