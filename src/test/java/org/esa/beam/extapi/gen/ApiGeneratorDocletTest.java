@@ -15,7 +15,7 @@ import static org.junit.Assert.*;
 public class ApiGeneratorDocletTest {
 
     @Test
-    public void test_CodeGenCallable_PrimitiveMethod() {
+    public void testThatAllPublicClassesAreFound() {
         final Set<String> classNames = new HashSet<String>();
         final ApiGeneratorDoclet.Handler handler = new ApiGeneratorDoclet.Handler() {
             @Override
@@ -27,8 +27,9 @@ public class ApiGeneratorDocletTest {
             }
         };
         ApiGeneratorDoclet.run(handler, "src/test/java", "org.esa.beam.extapi.gen.test");
-        assertEquals(2, classNames.size());
+        assertEquals(3, classNames.size());
         assertTrue(classNames.contains("org.esa.beam.extapi.gen.test.TestClass1"));
         assertTrue(classNames.contains("org.esa.beam.extapi.gen.test.TestClass2"));
+        assertTrue(classNames.contains("org.esa.beam.extapi.gen.test.TestClass3"));
     }
 }
