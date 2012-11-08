@@ -16,10 +16,7 @@
 
 package org.esa.beam.extapi.gen;
 
-import com.sun.javadoc.DocErrorReporter;
-import com.sun.javadoc.Doclet;
-import com.sun.javadoc.LanguageVersion;
-import com.sun.javadoc.RootDoc;
+import com.sun.javadoc.*;
 import org.esa.beam.extapi.gen.c.ModuleGenerator;
 
 import java.io.IOException;
@@ -119,11 +116,8 @@ public class ApiGeneratorDoclet extends Doclet {
         @Override
         public boolean start(RootDoc root) {
             try {
-                final Properties properties = new Properties();
-                properties.load(ApiGeneratorDoclet.class.getResourceAsStream("ApiGeneratorDoclet-classes.txt"));
-                Set<String> stringSet = properties.stringPropertyNames();
-                String[] strings = stringSet.toArray(new String[stringSet.size()]);
-                ApiInfo apiInfo = ApiInfo.create(root, strings);
+                String[] classNames = getIncludedClassNames();
+                ApiInfo apiInfo = ApiInfo.create(root, classNames);
                 new ModuleGenerator(apiInfo).run();
                 return true;
             } catch (IOException e) {
@@ -135,4 +129,12 @@ public class ApiGeneratorDoclet extends Doclet {
             }
         }
     }
+
+    private static String[] getIncludedClassNames() throws IOException {
+        final Properties properties = new Properties();
+        properties.load(ApiGeneratorDoclet.class.getResourceAsStream("ApiGeneratorDoclet-classes.txt"));
+        Set<String> stringSet = properties.stringPropertyNames();
+        return stringSet.toArray(new String[stringSet.size()]);
+    }
+
 }

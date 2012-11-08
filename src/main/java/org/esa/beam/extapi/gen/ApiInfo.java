@@ -56,8 +56,23 @@ public final class ApiInfo {
         return Collections.unmodifiableList(members != null ? members.apiMethods : new ArrayList<ApiMethod>(0));
     }
 
-    public static ApiInfo create(RootDoc rootDoc, String... includedClassNames) {
-        return create(rootDoc, new DefaultFilter(includedClassNames));
+    /*
+    public ApiParameter[] getParametersOf(ApiMethod apiMethod) {
+        Parameter[] parameters = apiMethod.getMemberDoc().parameters();
+        ApiParameter[] apiParameters = new ApiParameter[parameters.length];
+        for (int i = 0; i < parameters.length; i++) {
+            ApiParameter.Modifier modifier = extraInfo.getParameterModifier(apiMethod, parameters[i], i);
+            apiParameters[i] = new ApiParameter(parameters[i], modifier);
+        }
+        return apiParameters;
+    }
+    */
+
+    public static ApiInfo create(RootDoc rootDoc, String ... classNames) {
+        Map<ApiClass, ApiMembers> apiClasses = getApiMembers(rootDoc, new DefaultFilter(classNames));
+        Map<ApiClass, ApiMembers> allClasses = getAllClasses(apiClasses);
+        Set<ApiClass> usedNonApiClasses = getUsedNonApiClasses(apiClasses, allClasses);
+        return new ApiInfo(apiClasses, allClasses, usedNonApiClasses);
     }
 
     public static ApiInfo create(RootDoc rootDoc, Filter filter) {
@@ -170,16 +185,6 @@ public final class ApiInfo {
             }
         }
         return usedClasses;
-    }
-
-    public static enum ParameterModifier {
-        IN,
-        OUT,
-        RETURN
-    }
-
-    public interface ExtraInfo {
-        ParameterModifier getParameterModifier(ApiMethod apiMethod, int parameterIndex);
     }
 
     public interface Filter {
