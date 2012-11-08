@@ -416,12 +416,18 @@ public class ModuleGenerator implements GeneratorContext {
                 for (ApiMethod apiMethod : apiMethods) {
                     final ApiClass enclosingClass = apiMethod.getEnclosingClass();
                     boolean classChange =  !enclosingClass.equals(lastEnclosingClass);
+                    lastEnclosingClass = enclosingClass;
 
-                    System.out.printf("Warning: class %s: function renamed: <method name=\"%s\" sig=\"%s\" renameTo=\"%s...\"/>\n",
-                                      enclosingClass.getJavaName(),
-                                      apiMethod.getJavaName(),
+                    if (classChange) {
+                        System.out.printf("</class>\n");
+                        System.out.printf("<class name=\"%s\">\n", enclosingClass.getJavaName());
+                    }
+
+                    System.out.printf("    <method name=\"%s\" sig=\"%s\" renameTo=\"%s...\"/>\n",
+                                      apiMethod.getJavaName().equals("<init>") ? "&lt;init&gt;" : apiMethod.getJavaName(),
                                       apiMethod.getJavaSignature(),
-                                      apiMethod.getJavaName());
+                                      apiMethod.getJavaName().equals("<init>") ? "new" : apiMethod.getJavaName());
+
                 }
             }
         }

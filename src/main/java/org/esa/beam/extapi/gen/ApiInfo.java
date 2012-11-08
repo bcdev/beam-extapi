@@ -107,8 +107,8 @@ public final class ApiInfo {
                 ArrayList<ApiMethod> apiMethods = new ArrayList<ApiMethod>();
 
                 for (ConstructorDoc constructorDoc : classDoc.constructors()) {
-                    if (accept(constructorDoc)) {
-                        ApiMethod apiMethod = new ApiMethod(apiClass, constructorDoc);
+                    ApiMethod apiMethod = new ApiMethod(apiClass, constructorDoc);
+                    if (isApiMethod(config, apiMethod)) {
                         apiMethods.add(apiMethod);
                     } else {
                         System.out.printf("Filtered out: constructor %s#%s()\n", classDoc.qualifiedTypeName(), constructorDoc.name());
@@ -124,8 +124,8 @@ public final class ApiInfo {
                     }
 
                     for (MethodDoc methodDoc : classDoc0.methods()) {
-                        if (accept(methodDoc)) {
-                            ApiMethod apiMethod = new ApiMethod(apiClass, methodDoc);
+                        ApiMethod apiMethod = new ApiMethod(apiClass, methodDoc);
+                        if (isApiMethod(config, apiMethod)) {
                             if (classDoc0 == classDoc || !apiMethods.contains(apiMethod)) {
                                 apiMethods.add(apiMethod);
                             }
@@ -143,6 +143,14 @@ public final class ApiInfo {
         }
 
         return apiClasses;
+    }
+
+    private static boolean isApiMethod(ApiGeneratorConfig config, ApiMethod apiMethod) {
+        return apiMethod.getMemberDoc().isPublic()
+                && apiMethod.getMemberDoc().tags("deprecated").length == 0
+                && config.isApiMethod(apiMethod.getEnclosingClass().getJavaName(),
+                                      apiMethod.getJavaName(),
+                                      apiMethod.getJavaSignature());
     }
 
     private static boolean isObjectClass(Type type) {
@@ -199,10 +207,6 @@ public final class ApiInfo {
             }
         }
         return usedClasses;
-    }
-
-    public static boolean accept(ProgramElementDoc programElementDoc) {
-        return programElementDoc.isPublic() && programElementDoc.tags("deprecated").length == 0;
     }
 
     private final static class ApiMembers {

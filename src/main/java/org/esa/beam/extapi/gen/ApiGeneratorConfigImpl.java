@@ -76,13 +76,15 @@ public class ApiGeneratorConfigImpl implements ApiGeneratorConfig {
             if (sig == null) {
                 throw new IllegalArgumentException("missing attribute 'config/class/method/sig'");
             }
+            final String ignoreValue = methodChild.getAttributeValue("ignore");
+            boolean ignore = ignoreValue != null && Boolean.parseBoolean(ignoreValue);
             final String renameTo = methodChild.getAttributeValue("renameTo");
-            mConfigs[i] = new MConfig(name, sig, renameTo, uuu(methodChild));
+            mConfigs[i] = new MConfig(name, sig, ignore, renameTo, parseModifiers(methodChild));
         }
         return mConfigs;
     }
 
-    private static ApiParameter.Modifier[] uuu(Element methodChild) {
+    private static ApiParameter.Modifier[] parseModifiers(Element methodChild) {
         final String modsValue = methodChild.getAttributeValue("mods");
         ApiParameter.Modifier[] mods = null;
         if (modsValue != null) {
@@ -105,6 +107,16 @@ public class ApiGeneratorConfigImpl implements ApiGeneratorConfig {
     @Override
     public boolean isApiClass(String className) {
         return mConfigs.get(className) != null;
+    }
+
+    @Override
+    public boolean isApiMethod(String className, String methodName, String methodSignature) {
+        Map<String, MConfig> mm = mConfigs.get(className);
+        if (mm == null) {
+            throw new IllegalArgumentException(className);
+        }
+        final MConfig mConfig = mm.get(methodName + methodSignature);
+        return mConfig == null || !mConfig.ignore;
     }
 
     @Override
@@ -143,12 +155,14 @@ public class ApiGeneratorConfigImpl implements ApiGeneratorConfig {
     public static class MConfig {
         private final String name;
         private final String sig;
+        private final boolean ignore;
         private final String renameTo;
         private final ApiParameter.Modifier[] mods;
 
-        public MConfig(String name, String sig, String renameTo, ApiParameter.Modifier[] mods) {
+        public MConfig(String name, String sig,  boolean ignore, String renameTo, ApiParameter.Modifier[] mods) {
             this.name = name;
             this.sig = sig;
+            this.ignore = ignore;
             this.renameTo = renameTo;
             this.mods = mods;
         }

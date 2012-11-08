@@ -1,19 +1,92 @@
 <config>
-    ///////////////////////////////////////////
-
 
     <class name="org.esa.beam.framework.dataio.ProductIO"/>
     <class name="org.esa.beam.framework.dataio.ProductReader"/>
     <class name="org.esa.beam.framework.dataio.ProductWriter"/>
-    <class name="org.esa.beam.framework.datamodel.AngularDirection"/>
+    <class name="org.esa.beam.framework.datamodel.AngularDirection">
+        <method name="&lt;init&gt;" sig="()V" renameTo="newAngularDirection"/>
+        <method name="&lt;init&gt;" sig="(DD)V" renameTo="newAngularDirectionAZ"/>
+    </class>
     <class name="org.esa.beam.framework.datamodel.Band">
-        <method name="readPixels" sig="(IIII[I)[I" mods="iiiir" renameTo="readPixelsInt"/>
-        <method name="readPixels" sig="(IIII[F)[F" mods="iiiir" renameTo="readPixelsFloat"/>
+        <method name="createCompatibleRasterData" sig="()Lorg/esa/beam/framework/datamodel/ProductData;"
+                renameTo="createCompatibleRasterData"/>
+        <method name="createCompatibleRasterData" sig="(II)Lorg/esa/beam/framework/datamodel/ProductData;"
+                renameTo="createCompatibleRasterDataForRect"/>
+        <method name="createDefaultImageInfo"
+                sig="([DLcom/bc/ceres/core/ProgressMonitor;)Lorg/esa/beam/framework/datamodel/ImageInfo;"
+                ignore="true"/>
+        <method name="createDefaultImageInfo"
+                sig="([DLorg/esa/beam/util/math/Histogram;)Lorg/esa/beam/framework/datamodel/ImageInfo;"
+                renameTo="createDefaultImageInfo"/>
+        <method name="fireProductNodeChanged" sig="(Ljava/lang/String;)V" ignore="true"/>
+        <method name="fireProductNodeChanged" sig="(Ljava/lang/String;Ljava/lang/Object;Ljava/lang/Object;)V"
+                ignore="true"/>
+        <method name="getImageInfo" sig="()Lorg/esa/beam/framework/datamodel/ImageInfo;" renameTo="getImageInfo"/>
+        <method name="getImageInfo"
+                sig="(Lcom/bc/ceres/core/ProgressMonitor;)Lorg/esa/beam/framework/datamodel/ImageInfo;" ignore="true"/>
+        <method name="getImageInfo"
+                sig="([DLcom/bc/ceres/core/ProgressMonitor;)Lorg/esa/beam/framework/datamodel/ImageInfo;"
+                ignore="true"/>
+        <method name="getPixels" sig="(IIII[D)[D" renameTo="getPixelsDouble"/>
+        <method name="getPixels" sig="(IIII[F)[F" renameTo="getPixelsFloat"/>
+        <method name="getPixels" sig="(IIII[I)[I" renameTo="getPixelsInt"/>
+        <method name="getPixels" sig="(IIII[DLcom/bc/ceres/core/ProgressMonitor;)[D" ignore="true"/>
+        <method name="getPixels" sig="(IIII[FLcom/bc/ceres/core/ProgressMonitor;)[F" renameTo="getPixels..."
+                ignore="true"/>
+        <method name="getPixels" sig="(IIII[ILcom/bc/ceres/core/ProgressMonitor;)[I" renameTo="getPixels..."
+                ignore="true"/>
+        <method name="getRawStorageSize" sig="()J" ignore="true"/>
+        <method name="getRawStorageSize" sig="(Lorg/esa/beam/framework/dataio/ProductSubsetDef;)J" ignore="true"/>
+        <method name="getStx" sig="()Lorg/esa/beam/framework/datamodel/Stx;" renameTo="getStx"/>
+        <method name="getStx" sig="(ZLcom/bc/ceres/core/ProgressMonitor;)Lorg/esa/beam/framework/datamodel/Stx;"
+                ignore="true"/>
+        <method name="isPixelValid" sig="(I)Z" ignore="true"/>
+        <method name="isPixelValid" sig="(II)Z" ignore="false"/>
+        <method name="isPixelValid" sig="(IILjavax/media/jai/ROI;)Z" ignore="true"/>
+        <method name="loadRasterData" sig="()V" ignore="false"/>
+        <method name="loadRasterData" sig="(Lcom/bc/ceres/core/ProgressMonitor;)V" ignore="true"/>
+        <method name="quantizeRasterData" sig="(DDDLcom/bc/ceres/core/ProgressMonitor;)[B" ignore="true"/>
+        <method name="quantizeRasterData" sig="(DDD[BIILcom/bc/ceres/core/ProgressMonitor;)V" ignore="true"/>
+        <method name="readPixels" sig="(IIII[I)[I" renameTo="readPixelsInt" mods="iiiir"/>
+        <method name="readPixels" sig="(IIII[F)[F" renameTo="readPixelsFloat" mods="iiiir"/>
+        <method name="readPixels" sig="(IIII[D)[D" renameTo="readPixelsDouble" mods="iiiir"/>
+        <method name="readPixels" sig="(IIII[ILcom/bc/ceres/core/ProgressMonitor;)[I" ignore="true"/>
+        <method name="readPixels" sig="(IIII[FLcom/bc/ceres/core/ProgressMonitor;)[F" ignore="true"/>
+        <method name="readPixels" sig="(IIII[DLcom/bc/ceres/core/ProgressMonitor;)[D" ignore="true"/>
+        <method name="readRasterData" sig="(IIIILorg/esa/beam/framework/datamodel/ProductData;)V"
+                renameTo="readRasterData..."/>
+        <method name="readRasterData"
+                sig="(IIIILorg/esa/beam/framework/datamodel/ProductData;Lcom/bc/ceres/core/ProgressMonitor;)V"
+                ignore="true"/>
+        <method name="readRasterDataFully" sig="()V" ignore="false"/>
+        <method name="readRasterDataFully" sig="(Lcom/bc/ceres/core/ProgressMonitor;)V" ignore="true"/>
+        <method name="setPixels" sig="(IIII[I)V" renameTo="setPixelsInt"/>
+        <method name="setPixels" sig="(IIII[F)V" renameTo="setPixelsFloat"/>
+        <method name="setPixels" sig="(IIII[D)V" renameTo="setPixelsDouble"/>
+        <method name="setSourceImage" sig="(Lcom/bc/ceres/glevel/MultiLevelImage;)V" ignore="true"/>
+        <method name="setSourceImage" sig="(Ljava/awt/image/RenderedImage;)V" ignore="true"/>
         <method name="writePixels" sig="(IIII[I)V" renameTo="writePixelsInt"/>
         <method name="writePixels" sig="(IIII[F)V" renameTo="writePixelsFloat"/>
+        <method name="writePixels" sig="(IIII[D)V" renameTo="writePixelsDouble"/>
+        <method name="writePixels" sig="(IIII[ILcom/bc/ceres/core/ProgressMonitor;)V" ignore="true"/>
+        <method name="writePixels" sig="(IIII[FLcom/bc/ceres/core/ProgressMonitor;)V" ignore="true"/>
+        <method name="writePixels" sig="(IIII[DLcom/bc/ceres/core/ProgressMonitor;)V" ignore="true"/>
+        <method name="writeRasterData" sig="(IIIILorg/esa/beam/framework/datamodel/ProductData;)V"
+                renameTo="writeRasterData"/>
+        <method name="writeRasterData"
+                sig="(IIIILorg/esa/beam/framework/datamodel/ProductData;Lcom/bc/ceres/core/ProgressMonitor;)V"
+                ignore="true"/>
+        <method name="writeRasterDataFully" sig="()V" renameTo="writeRasterDataFully"/>
+        <method name="writeRasterDataFully" sig="(Lcom/bc/ceres/core/ProgressMonitor;)V" ignore="true"/>
     </class>
-    <class name="org.esa.beam.framework.datamodel.ColorPaletteDef"/>
-    <class name="org.esa.beam.framework.datamodel.ColorPaletteDef.Point"/>
+    <class name="org.esa.beam.framework.datamodel.ColorPaletteDef">
+        <method name="&lt;init&gt;" sig="(DD)V" renameTo="newColorPaletteDefFromRange"/>
+        <method name="&lt;init&gt;" sig="([Lorg/esa/beam/framework/datamodel/ColorPaletteDef/Point;I)V"
+                renameTo="newColorPaletteDefFromPoints"/>
+        <method name="&lt;init&gt;" sig="(DDD)V" ignore="true"/>
+        <method name="&lt;init&gt;" sig="([Lorg/esa/beam/framework/datamodel/ColorPaletteDef/Point;)V" ignore="true"/>
+    </class>
+    <class name="org.esa.beam.framework.datamodel.ColorPaletteDef$Point"/>
     <class name="org.esa.beam.framework.datamodel.FlagCoding"/>
     <class name="org.esa.beam.framework.datamodel.GeoCoding"/>
     <class name="org.esa.beam.framework.datamodel.GeoPos"/>
@@ -25,19 +98,49 @@
     <class name="org.esa.beam.framework.datamodel.PixelPos"/>
     <class name="org.esa.beam.framework.datamodel.Placemark"/>
     <class name="org.esa.beam.framework.datamodel.PlacemarkGroup"/>
-    <class name="org.esa.beam.framework.datamodel.Product"/>
+    <class name="org.esa.beam.framework.datamodel.Product">
+        <method name="&lt;init&gt;" sig="(Ljava/lang/String;Ljava/lang/String;II)V" renameTo="newProduct"/>
+        <method name="&lt;init&gt;"
+                sig="(Ljava/lang/String;Ljava/lang/String;IILorg/esa/beam/framework/dataio/ProductReader;)V"
+                ignore="true"/>
+        <method name="addBand" sig="(Ljava/lang/String;I)Lorg/esa/beam/framework/datamodel/Band;"
+                renameTo="addEmptyBand"/>
+        <method name="addBand" sig="(Ljava/lang/String;Ljava/lang/String;)Lorg/esa/beam/framework/datamodel/Band;"
+                renameTo="addComputedBand"/>
+        <method name="addBand" sig="(Ljava/lang/String;Ljava/lang/String;I)Lorg/esa/beam/framework/datamodel/Band;"
+                ignore="true"/>
+        <method name="addBand" sig="(Lorg/esa/beam/framework/datamodel/Band;)V" renameTo="addBand"/>
+        <method name="addMask"
+                sig="(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/awt/Color;D)Lorg/esa/beam/framework/datamodel/Mask;"
+                renameTo="addComputedMask"/>
+        <method name="addMask"
+                sig="(Ljava/lang/String;Lorg/esa/beam/framework/datamodel/Mask/ImageType;)Lorg/esa/beam/framework/datamodel/Mask;"
+                ignore="true"/>
+        <method name="addMask"
+                sig="(Ljava/lang/String;Lorg/esa/beam/framework/datamodel/VectorDataNode;Ljava/lang/String;Ljava/awt/Color;D)Lorg/esa/beam/framework/datamodel/Mask;"
+                ignore="true"/>
+        <method name="containsPixel" sig="(FF)Z" renameTo="containsPixel"/>
+        <method name="containsPixel" sig="(Lorg/esa/beam/framework/datamodel/PixelPos;)Z" ignore="true"/>
+        <method name="fireProductNodeChanged" sig="(Ljava/lang/String;)V" ignore="true"/>
+        <method name="fireProductNodeChanged" sig="(Ljava/lang/String;Ljava/lang/Object;Ljava/lang/Object;)V"
+                ignore="true"/>
+        <method name="getRawStorageSize" sig="()J" ignore="true"/>
+        <method name="getRawStorageSize" sig="(Lorg/esa/beam/framework/dataio/ProductSubsetDef;)J" ignore="true"/>
+        <method name="isCompatibleBandArithmeticExpression" sig="(Ljava/lang/String;)Z" ignore="true"/>
+        <method name="isCompatibleBandArithmeticExpression" sig="(Ljava/lang/String;Lcom/bc/jexp/Parser;)Z"
+                ignore="true"/>
+        <method name="setAutoGrouping" sig="(Ljava/lang/String;)V" ignore="false"/>
+        <method name="setAutoGrouping" sig="(Lorg/esa/beam/framework/datamodel/Product/AutoGrouping;)V" ignore="true"/>
+        <method name="setPreferredTileSize" sig="(II)V" ignore="false"/>
+        <method name="setPreferredTileSize" sig="(Ljava/awt/Dimension;)V" ignore="true"/>
+    </class>
     <class name="org.esa.beam.framework.datamodel.ProductData"/>
     <class name="org.esa.beam.framework.datamodel.ProductManager"/>
     <class name="org.esa.beam.framework.datamodel.ProductNodeGroup"/>
-    <class name="org.esa.beam.framework.datamodel.RGBChannelDef"/>
+    <class name="org.esa.beam.framework.datamodel.RGBChannelDef">
+        <method name="&lt;init&gt;" sig="()V" renameTo="newRGBChannelDef"/>
+        <method name="&lt;init&gt;" sig="([Ljava/lang/String;)V" ignore="true"/>
+    </class>
     <class name="org.esa.beam.framework.datamodel.TiePointGrid"/>
-    <class name="org.esa.beam.framework.datamodel.VectorDataNode"/>
-    <class name="org.esa.beam.framework.gpf.GPF"/>
-    <class name="org.esa.beam.framework.gpf.Operator"/>
-    <class name="org.esa.beam.framework.gpf.OperatorException"/>
-    <class name="org.esa.beam.framework.gpf.OperatorSpi"/>
-    <class name="org.esa.beam.framework.gpf.OperatorSpiRegistry"/>
-    <class name="org.esa.beam.framework.gpf.Tile"/>
-    <class name="org.esa.beam.framework.gpf.Tile.Pos"/>
     <class name="org.esa.beam.util.ProductUtils"/>
 </config>

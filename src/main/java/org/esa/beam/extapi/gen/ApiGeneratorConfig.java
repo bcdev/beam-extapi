@@ -5,6 +5,7 @@ package org.esa.beam.extapi.gen;
  */
 public interface ApiGeneratorConfig {
     boolean isApiClass(String className);
+    boolean isApiMethod(String className, String methodName, String methodSignature);
     ApiParameter.Modifier[] getParameterModifiers(String className, String methodName, String methodSignature);
     String getMethodCName(String className, String methodName, String methodSignature);
 }

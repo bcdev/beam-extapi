@@ -16,22 +16,6 @@ EXPORTS
 	GeoCoding_getMapCRS
 	GeoCoding_getGeoCRS
 	GeoCoding_getImageToMapTransform
-	OperatorException_newOperatorException1
-	OperatorException_newOperatorException2
-	OperatorException_newOperatorException3
-	OperatorException_getMessage
-	OperatorException_getLocalizedMessage
-	OperatorException_getCause
-	OperatorException_initCause
-	OperatorException_toString
-	OperatorException_printStackTrace1
-	OperatorException_printStackTrace2
-	OperatorException_printStackTrace3
-	OperatorException_fillInStackTrace
-	OperatorException_getStackTrace
-	OperatorException_setStackTrace
-	OperatorException_addSuppressed
-	OperatorException_getSuppressed
 	ProductWriter_getWriterPlugIn
 	ProductWriter_getOutput
 	ProductWriter_writeProductNodes
@@ -43,20 +27,6 @@ EXPORTS
 	ProductWriter_setIncrementalMode
 	ProductWriter_deleteOutput
 	ProductWriter_removeBand
-	GPF_createProduct1
-	GPF_createProduct2
-	GPF_createProduct5
-	GPF_createProduct6
-	GPF_createProduct7
-	GPF_createProduct8
-	GPF_createProduct3
-	GPF_createProduct4
-	GPF_createProductNS
-	GPF_createOperator
-	GPF_getOperatorSpiRegistry
-	GPF_setOperatorSpiRegistry
-	GPF_getDefaultInstance
-	GPF_setDefaultInstance
 	IndexCoding_newIndexCoding
 	IndexCoding_getIndex
 	IndexCoding_getIndexNames
@@ -255,8 +225,7 @@ EXPORTS
 	MetadataElement_fireProductNodeChanged2
 	MetadataElement_removeFromFile
 	MetadataElement_getExtension
-	Product_newProduct1
-	Product_newProduct2
+	Product_newProduct
 	Product_getFileLocation
 	Product_setFileLocation
 	Product_getProductType
@@ -293,10 +262,9 @@ EXPORTS
 	Product_getTiePointGrids
 	Product_getTiePointGrid
 	Product_containsTiePointGrid
-	Product_addBand4
-	Product_addBand1
-	Product_addBand2
-	Product_addBand3
+	Product_addBand
+	Product_addEmptyBand
+	Product_addComputedBand
 	Product_removeBand
 	Product_getNumBands
 	Product_getBandAt
@@ -311,8 +279,7 @@ EXPORTS
 	Product_getVectorDataGroup
 	Product_getFlagCodingGroup
 	Product_getIndexCodingGroup
-	Product_containsPixel1
-	Product_containsPixel2
+	Product_containsPixel
 	Product_getGcpGroup
 	Product_getPinGroup
 	Product_isCompatibleProduct
@@ -325,30 +292,23 @@ EXPORTS
 	Product_setRefNo
 	Product_resetRefNo
 	Product_getProductManager
-	Product_isCompatibleBandArithmeticExpression1
-	Product_isCompatibleBandArithmeticExpression2
 	Product_createBandArithmeticParser
 	Product_createBandArithmeticDefaultNamespace
 	Product_createSubset
 	Product_createProjectedProduct
 	Product_createFlippedProduct
 	Product_setModified
-	Product_getRawStorageSize2
 	Product_getQuicklookBandName
 	Product_setQuicklookBandName
 	Product_createPixelInfoString
 	Product_getRemovedChildNodes
 	Product_canBeOrthorectified
 	Product_getPreferredTileSize
-	Product_setPreferredTileSize1
-	Product_setPreferredTileSize2
+	Product_setPreferredTileSize
 	Product_getAllFlagNames
 	Product_getAutoGrouping
-	Product_setAutoGrouping2
-	Product_setAutoGrouping1
-	Product_addMask2
-	Product_addMask1
-	Product_addMask3
+	Product_setAutoGrouping
+	Product_addComputedMask
 	Product_getOwner
 	Product_getName
 	Product_setName
@@ -360,16 +320,11 @@ EXPORTS
 	Product_getProduct
 	Product_getDisplayName
 	Product_getProductRefString
-	Product_getRawStorageSize1
 	Product_updateExpression
-	Product_fireProductNodeChanged1
-	Product_fireProductNodeChanged2
 	Product_removeFromFile
 	Product_getExtension
-	ColorPaletteDef_newColorPaletteDef1
-	ColorPaletteDef_newColorPaletteDef2
-	ColorPaletteDef_newColorPaletteDef3
-	ColorPaletteDef_newColorPaletteDef4
+	ColorPaletteDef_newColorPaletteDefFromRange
+	ColorPaletteDef_newColorPaletteDefFromPoints
 	ColorPaletteDef_isDiscrete
 	ColorPaletteDef_setDiscrete
 	ColorPaletteDef_getNumColors
@@ -436,16 +391,6 @@ EXPORTS
 	ProductManager_removeAllProducts
 	ProductManager_addListener
 	ProductManager_removeListener
-	OperatorSpiRegistry_loadOperatorSpis
-	OperatorSpiRegistry_getServiceRegistry
-	OperatorSpiRegistry_getOperatorSpi
-	OperatorSpiRegistry_addOperatorSpi
-	OperatorSpiRegistry_removeOperatorSpi
-	OperatorSpiRegistry_setAlias
-	Tile_Pos_newTile_Pos
-	Tile_Pos_equals
-	Tile_Pos_hashCode
-	Tile_Pos_toString
 	ImageGeometry_newImageGeometry
 	ImageGeometry_getImage2MapTransform
 	ImageGeometry_getImageRect
@@ -470,15 +415,9 @@ EXPORTS
 	Band_setSpectralBandwidth
 	Band_getSolarFlux
 	Band_setSolarFlux
-	Band_readRasterData2
-	Band_readRasterDataFully2
-	Band_writeRasterData2
-	Band_writeRasterDataFully2
-	Band_getRawStorageSize2
 	Band_acceptVisitor
 	Band_toString
 	Band_removeFromFile
-	Band_createDefaultImageInfo1
 	Band_dispose
 	Band_getSceneRasterData
 	Band_getPixelInt
@@ -487,20 +426,10 @@ EXPORTS
 	Band_setPixelInt
 	Band_setPixelFloat
 	Band_setPixelDouble
-	Band_readPixels4
-	Band_readPixels3
-	Band_readPixels2
-	Band_writePixels4
-	Band_writePixels3
-	Band_writePixels2
-	Band_getPixels6
-	Band_getPixels4
-	Band_getPixels2
-	Band_setPixels3
-	Band_setPixels2
-	Band_setPixels1
+	Band_setPixelsInt
+	Band_setPixelsFloat
+	Band_setPixelsDouble
 	Band_ensureRasterData
-	Band_loadRasterData2
 	Band_unloadRasterData
 	Band_getViewModeId
 	Band_getSceneRasterWidth
@@ -539,59 +468,50 @@ EXPORTS
 	Band_hasRasterData
 	Band_getRasterData
 	Band_setRasterData
-	Band_loadRasterData1
-	Band_isPixelValid2
+	Band_loadRasterData
+	Band_isPixelValid
 	Band_getSampleInt
 	Band_getSampleFloat
-	Band_isPixelValid1
-	Band_isPixelValid3
-	Band_getPixels5
-	Band_getPixels3
-	Band_getPixels1
+	Band_getPixelsInt
+	Band_getPixelsFloat
+	Band_getPixelsDouble
 	Band_readPixelsInt
 	Band_readPixelsFloat
-	Band_readPixels1
+	Band_readPixelsDouble
 	Band_writePixelsInt
 	Band_writePixelsFloat
-	Band_writePixels1
+	Band_writePixelsDouble
 	Band_readValidMask
-	Band_readRasterDataFully1
-	Band_readRasterData1
-	Band_writeRasterDataFully1
-	Band_writeRasterData1
-	Band_createCompatibleRasterData1
+	Band_readRasterDataFully
+	Band_readRasterData...
+	Band_writeRasterDataFully
+	Band_writeRasterData
+	Band_createCompatibleRasterData
 	Band_createCompatibleSceneRasterData
-	Band_createCompatibleRasterData2
+	Band_createCompatibleRasterDataForRect
 	Band_isCompatibleRasterData
 	Band_checkCompatibleRasterData
 	Band_hasIntPixels
 	Band_createTransectProfileData
-	Band_getImageInfo1
+	Band_getImageInfo
 	Band_setImageInfo
 	Band_fireImageInfoChanged
-	Band_getImageInfo2
-	Band_getImageInfo3
-	Band_createDefaultImageInfo2
+	Band_createDefaultImageInfo
 	Band_getOverlayMaskGroup
 	Band_createColorIndexedImage
 	Band_createRgbImage
-	Band_quantizeRasterData1
-	Band_quantizeRasterData2
 	Band_createPixelValidator
 	Band_scale
 	Band_scaleInverse
 	Band_getPixelString
 	Band_isSourceImageSet
 	Band_getSourceImage
-	Band_setSourceImage2
-	Band_setSourceImage1
 	Band_isGeophysicalImageSet
 	Band_getGeophysicalImage
 	Band_isValidMaskImageSet
 	Band_getValidMaskImage
 	Band_isStxSet
-	Band_getStx1
-	Band_getStx2
+	Band_getStx
 	Band_setStx
 	Band_getValidShape
 	Band_getDataType
@@ -619,21 +539,7 @@ EXPORTS
 	Band_getProductWriter
 	Band_getDisplayName
 	Band_getProductRefString
-	Band_getRawStorageSize1
-	Band_fireProductNodeChanged1
-	Band_fireProductNodeChanged2
 	Band_getExtension
-	ColorPaletteDef_Point_newColorPaletteDef_Point1
-	ColorPaletteDef_Point_newColorPaletteDef_Point2
-	ColorPaletteDef_Point_newColorPaletteDef_Point3
-	ColorPaletteDef_Point_getSample
-	ColorPaletteDef_Point_setSample
-	ColorPaletteDef_Point_getColor
-	ColorPaletteDef_Point_setColor
-	ColorPaletteDef_Point_getLabel
-	ColorPaletteDef_Point_setLabel
-	ColorPaletteDef_Point_clone
-	ColorPaletteDef_Point_createClone
 	PlacemarkGroup_getVectorDataNode
 	PlacemarkGroup_getPlacemark
 	PlacemarkGroup_add4
@@ -847,54 +753,8 @@ EXPORTS
 	TiePointGrid_fireProductNodeChanged2
 	TiePointGrid_removeFromFile
 	TiePointGrid_getExtension
-	VectorDataNode_newVectorDataNode3
-	VectorDataNode_newVectorDataNode1
-	VectorDataNode_newVectorDataNode2
-	VectorDataNode_getPlacemarkDescriptor
-	VectorDataNode_getPlacemarkGroup
-	VectorDataNode_setModified
-	VectorDataNode_fireFeaturesAdded
-	VectorDataNode_fireFeaturesRemoved
-	VectorDataNode_fireFeaturesChanged
-	VectorDataNode_getFeatureType
-	VectorDataNode_getFeatureCollection
-	VectorDataNode_getEnvelope
-	VectorDataNode_getRawStorageSize2
-	VectorDataNode_getDefaultStyleCss
-	VectorDataNode_setDefaultStyleCss
-	VectorDataNode_getStyleCss
-	VectorDataNode_setStyleCss
-	VectorDataNode_acceptVisitor
-	VectorDataNode_dispose
-	VectorDataNode_isPermanent
-	VectorDataNode_setPermanent
-	VectorDataNode_getOwner
-	VectorDataNode_getName
-	VectorDataNode_setName
-	VectorDataNode_getDescription
-	VectorDataNode_setDescription
-	VectorDataNode_isModified
-	VectorDataNode_toString
-	VectorDataNode_isValidNodeName
-	VectorDataNode_getProduct
-	VectorDataNode_getProductReader
-	VectorDataNode_getProductWriter
-	VectorDataNode_getDisplayName
-	VectorDataNode_getProductRefString
-	VectorDataNode_getRawStorageSize1
-	VectorDataNode_updateExpression
-	VectorDataNode_fireProductNodeChanged1
-	VectorDataNode_fireProductNodeChanged2
-	VectorDataNode_removeFromFile
-	VectorDataNode_getExtension
-	OperatorSpi_createOperator1
-	OperatorSpi_createOperator2
-	OperatorSpi_createOperator3
-	OperatorSpi_getOperatorClass
-	OperatorSpi_getOperatorAlias1
-	OperatorSpi_getOperatorAlias2
-	AngularDirection_newAngularDirection1
-	AngularDirection_newAngularDirection2
+	AngularDirection_newAngularDirection
+	AngularDirection_newAngularDirectionAZ
 	AngularDirection_equals
 	AngularDirection_toString
 	FlagCoding_newFlagCoding
@@ -969,8 +829,7 @@ EXPORTS
 	ProductReader_readProductNodes
 	ProductReader_readBandRasterData
 	ProductReader_close
-	RGBChannelDef_newRGBChannelDef1
-	RGBChannelDef_newRGBChannelDef2
+	RGBChannelDef_newRGBChannelDef
 	RGBChannelDef_getSourceName
 	RGBChannelDef_setSourceName
 	RGBChannelDef_getSourceNames
@@ -984,48 +843,6 @@ EXPORTS
 	RGBChannelDef_getMaxDisplaySample
 	RGBChannelDef_setMaxDisplaySample
 	RGBChannelDef_clone
-	Tile_getRasterDataNode
-	Tile_isTarget
-	Tile_toGeoPhysical2
-	Tile_toGeoPhysical1
-	Tile_toRaw2
-	Tile_toRaw1
-	Tile_getRectangle
-	Tile_getMinX
-	Tile_getMaxX
-	Tile_getMinY
-	Tile_getMaxY
-	Tile_getWidth
-	Tile_getHeight
-	Tile_getDataBufferIndex
-	Tile_getDataBuffer
-	Tile_getDataBufferByte
-	Tile_getDataBufferShort
-	Tile_getDataBufferInt
-	Tile_getDataBufferFloat
-	Tile_getDataBufferDouble
-	Tile_getScanlineOffset
-	Tile_getScanlineStride
-	Tile_getRawSamples
-	Tile_setRawSamples
-	Tile_getSamplesInt
-	Tile_getSamplesFloat
-	Tile_getSamplesDouble
-	Tile_setSamples3
-	Tile_setSamples2
-	Tile_setSamples1
-	Tile_isSampleValid
-	Tile_getSampleBoolean
-	Tile_setSample5
-	Tile_getSampleInt
-	Tile_setSample3
-	Tile_getSampleFloat
-	Tile_setSample2
-	Tile_getSampleDouble
-	Tile_setSample1
-	Tile_getSampleBit
-	Tile_setSample4
-	Tile_iterator
 	ProductData_createInstance1
 	ProductData_createInstance2
 	ProductData_createInstance3
@@ -1154,30 +971,6 @@ EXPORTS
 	ProductNodeGroup_fireProductNodeChanged2
 	ProductNodeGroup_removeFromFile
 	ProductNodeGroup_getExtension
-	Operator_initialize
-	Operator_update
-	Operator_computeTile
-	Operator_computeTileStack
-	Operator_dispose
-	Operator_getId
-	Operator_getSourceProducts
-	Operator_setSourceProducts
-	Operator_getSourceProduct1
-	Operator_setSourceProduct2
-	Operator_getSourceProduct2
-	Operator_setSourceProduct1
-	Operator_getSourceProductId
-	Operator_getTargetProduct
-	Operator_getTargetProperty
-	Operator_getParameter
-	Operator_setParameter
-	Operator_getSourceTile1
-	Operator_getSourceTile2
-	Operator_getLogger
-	Operator_stopTileComputationObservation
-	Operator_setLogger
-	Operator_getSpi
-	Operator_setSpi
 	ProductUtils_newProductUtils
 	ProductUtils_createImageInfo
 	ProductUtils_createRgbImage
