@@ -1,42 +1,43 @@
 <config>
-    <classes>
-        <class name="org.esa.beam.framework.dataio.ProductIO"/>
-        <class name="org.esa.beam.framework.dataio.ProductReader"/>
-        <class name="org.esa.beam.framework.dataio.ProductWriter"/>
-        <class name="org.esa.beam.framework.datamodel.AngularDirection"/>
-        <class name="org.esa.beam.framework.datamodel.Band">
-            <method name="readPixels" sig="(IIII[I)[I" mod="iiiir" renameTo="readPixelsInt"/>
-            <method name="readPixels" sig="(IIII[F)[F" mod="iiiir" renameTo="readPixelsFloat"/>
-            <method name="writePixels" sig="(IIII[I)V" renameTo="writePixelsInt"/>
-            <method name="writePixels" sig="(IIII[F)V" renameTo="writePixelsFloat"/>
-        </class>
-        <class name="org.esa.beam.framework.datamodel.ColorPaletteDef"/>
-        <class name="org.esa.beam.framework.datamodel.ColorPaletteDef.Point"/>
-        <class name="org.esa.beam.framework.datamodel.FlagCoding"/>
-        <class name="org.esa.beam.framework.datamodel.GeoCoding"/>
-        <class name="org.esa.beam.framework.datamodel.GeoPos"/>
-        <class name="org.esa.beam.framework.datamodel.ImageGeometry"/>
-        <class name="org.esa.beam.framework.datamodel.ImageInfo"/>
-        <class name="org.esa.beam.framework.datamodel.IndexCoding"/>
-        <class name="org.esa.beam.framework.datamodel.MetadataAttribute"/>
-        <class name="org.esa.beam.framework.datamodel.MetadataElement"/>
-        <class name="org.esa.beam.framework.datamodel.PixelPos"/>
-        <class name="org.esa.beam.framework.datamodel.Placemark"/>
-        <class name="org.esa.beam.framework.datamodel.PlacemarkGroup"/>
-        <class name="org.esa.beam.framework.datamodel.Product"/>
-        <class name="org.esa.beam.framework.datamodel.ProductData"/>
-        <class name="org.esa.beam.framework.datamodel.ProductManager"/>
-        <class name="org.esa.beam.framework.datamodel.ProductNodeGroup"/>
-        <class name="org.esa.beam.framework.datamodel.RGBChannelDef"/>
-        <class name="org.esa.beam.framework.datamodel.TiePointGrid"/>
-        <class name="org.esa.beam.framework.datamodel.VectorDataNode"/>
-        <class name="org.esa.beam.framework.gpf.GPF"/>
-        <class name="org.esa.beam.framework.gpf.Operator"/>
-        <class name="org.esa.beam.framework.gpf.OperatorException"/>
-        <class name="org.esa.beam.framework.gpf.OperatorSpi"/>
-        <class name="org.esa.beam.framework.gpf.OperatorSpiRegistry"/>
-        <class name="org.esa.beam.framework.gpf.Tile"/>
-        <class name="org.esa.beam.framework.gpf.Tile.Pos"/>
-        <class name="org.esa.beam.util.ProductUtils"/>
-    </classes>
+    ///////////////////////////////////////////
+
+
+    <class name="org.esa.beam.framework.dataio.ProductIO"/>
+    <class name="org.esa.beam.framework.dataio.ProductReader"/>
+    <class name="org.esa.beam.framework.dataio.ProductWriter"/>
+    <class name="org.esa.beam.framework.datamodel.AngularDirection"/>
+    <class name="org.esa.beam.framework.datamodel.Band">
+        <method name="readPixels" sig="(IIII[I)[I" mods="iiiir" renameTo="readPixelsInt"/>
+        <method name="readPixels" sig="(IIII[F)[F" mods="iiiir" renameTo="readPixelsFloat"/>
+        <method name="writePixels" sig="(IIII[I)V" renameTo="writePixelsInt"/>
+        <method name="writePixels" sig="(IIII[F)V" renameTo="writePixelsFloat"/>
+    </class>
+    <class name="org.esa.beam.framework.datamodel.ColorPaletteDef"/>
+    <class name="org.esa.beam.framework.datamodel.ColorPaletteDef.Point"/>
+    <class name="org.esa.beam.framework.datamodel.FlagCoding"/>
+    <class name="org.esa.beam.framework.datamodel.GeoCoding"/>
+    <class name="org.esa.beam.framework.datamodel.GeoPos"/>
+    <class name="org.esa.beam.framework.datamodel.ImageGeometry"/>
+    <class name="org.esa.beam.framework.datamodel.ImageInfo"/>
+    <class name="org.esa.beam.framework.datamodel.IndexCoding"/>
+    <class name="org.esa.beam.framework.datamodel.MetadataAttribute"/>
+    <class name="org.esa.beam.framework.datamodel.MetadataElement"/>
+    <class name="org.esa.beam.framework.datamodel.PixelPos"/>
+    <class name="org.esa.beam.framework.datamodel.Placemark"/>
+    <class name="org.esa.beam.framework.datamodel.PlacemarkGroup"/>
+    <class name="org.esa.beam.framework.datamodel.Product"/>
+    <class name="org.esa.beam.framework.datamodel.ProductData"/>
+    <class name="org.esa.beam.framework.datamodel.ProductManager"/>
+    <class name="org.esa.beam.framework.datamodel.ProductNodeGroup"/>
+    <class name="org.esa.beam.framework.datamodel.RGBChannelDef"/>
+    <class name="org.esa.beam.framework.datamodel.TiePointGrid"/>
+    <class name="org.esa.beam.framework.datamodel.VectorDataNode"/>
+    <class name="org.esa.beam.framework.gpf.GPF"/>
+    <class name="org.esa.beam.framework.gpf.Operator"/>
+    <class name="org.esa.beam.framework.gpf.OperatorException"/>
+    <class name="org.esa.beam.framework.gpf.OperatorSpi"/>
+    <class name="org.esa.beam.framework.gpf.OperatorSpiRegistry"/>
+    <class name="org.esa.beam.framework.gpf.Tile"/>
+    <class name="org.esa.beam.framework.gpf.Tile.Pos"/>
+    <class name="org.esa.beam.util.ProductUtils"/>
 </config>

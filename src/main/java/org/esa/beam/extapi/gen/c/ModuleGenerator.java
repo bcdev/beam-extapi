@@ -17,15 +17,31 @@
 package org.esa.beam.extapi.gen.c;
 
 import com.sun.javadoc.Type;
-import org.esa.beam.extapi.gen.*;
+import org.esa.beam.extapi.gen.ApiClass;
+import org.esa.beam.extapi.gen.ApiGeneratorDoclet;
+import org.esa.beam.extapi.gen.ApiInfo;
+import org.esa.beam.extapi.gen.ApiMethod;
 
-import java.io.*;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.io.Writer;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * @author Norman Fomferra
  */
-public  class ModuleGenerator implements GeneratorContext {
+public class ModuleGenerator implements GeneratorContext {
 
     public static final String BEAM_CAPI_SRCDIR = "src/main/c/gen";
     public static final String BEAM_CAPI_NAME = "beam_capi";
@@ -50,8 +66,8 @@ public  class ModuleGenerator implements GeneratorContext {
     }
 
     @Override
-    public String getFunctionName(FunctionGenerator callable) {
-        return functionNames.get(callable.getApiMethod());
+    public String getFunctionName(FunctionGenerator generator) {
+        return functionNames.get(generator.getApiMethod());
     }
 
     public List<FunctionGenerator> getFunctionGenerators(ApiClass apiClass) {
@@ -87,13 +103,15 @@ public  class ModuleGenerator implements GeneratorContext {
         }
     }
 
-    public static String getFunctionBaseName(ApiMethod apiMethod) {
+    public static String getFunctionBaseName(ApiInfo apiInfo, ApiMethod apiMethod) {
         String targetTypeName = getComponentCClassName(apiMethod.getEnclosingClass().getType());
-        if (apiMethod.getMemberDoc().isConstructor()) {
-            return String.format("%s_new%s", targetTypeName, targetTypeName);
-        } else {
-            return String.format("%s_%s", targetTypeName, apiMethod.getJavaName());
+        String methodCName = apiInfo.getConfig().getMethodCName(apiMethod.getEnclosingClass().getType().qualifiedTypeName(),
+                                                                apiMethod.getJavaName(),
+                                                                apiMethod.getJavaSignature());
+        if (methodCName.equals("<init>")) {
+            methodCName = String.format("new%s", targetTypeName);
         }
+        return String.format("%s_%s", targetTypeName, methodCName);
     }
 
     public void run() throws Exception {
@@ -114,8 +132,8 @@ public  class ModuleGenerator implements GeneratorContext {
                                   "\tbeam_destroy_jvm\n" +
                                   "\tString_newString\n");
             for (ApiClass apiClass : getApiClasses()) {
-                for (FunctionGenerator callable : getFunctionGenerators(apiClass)) {
-                    writer.printf("\t%s\n", getFunctionName(callable));
+                for (FunctionGenerator generator : getFunctionGenerators(apiClass)) {
+                    writer.printf("\t%s\n", getFunctionName(generator));
                 }
             }
         } finally {
@@ -160,12 +178,12 @@ public  class ModuleGenerator implements GeneratorContext {
                 writer.write("\n");
                 writer.printf("/* Functions for class %s */\n", getComponentCClassName(apiClass.getType()));
                 writer.write("\n");
-                for (FunctionGenerator callable : getFunctionGenerators(apiClass)) {
+                for (FunctionGenerator generator : getFunctionGenerators(apiClass)) {
                     writer.printf("" +
                                           "/**\n" +
                                           " * %s\n" +
-                                          " */\n", callable.getMemberDoc().getRawCommentText());
-                    generateFunctionDeclaration(writer, callable);
+                                          " */\n", generator.getMemberDoc().getRawCommentText());
+                    generateFunctionDeclaration(writer, generator);
                 }
             }
         } finally {
@@ -240,8 +258,8 @@ public  class ModuleGenerator implements GeneratorContext {
             // Generate function code
             //
             for (ApiClass apiClass : getApiClasses()) {
-                for (FunctionGenerator callable : getFunctionGenerators(apiClass)) {
-                    generateFunctionDefinition(callable, writer);
+                for (FunctionGenerator generator : getFunctionGenerators(apiClass)) {
+                    generateFunctionDefinition(generator, writer);
                 }
             }
         } finally {
@@ -271,37 +289,37 @@ public  class ModuleGenerator implements GeneratorContext {
         writer.write("\n");
     }
 
-    void generateFunctionDeclaration(PrintWriter writer, FunctionGenerator callable) {
-        writer.printf("%s;\n", callable.generateFunctionSignature(this));
+    void generateFunctionDeclaration(PrintWriter writer, FunctionGenerator generator) {
+        writer.printf("%s;\n", generator.generateFunctionSignature(this));
     }
 
-    private void generateFunctionDefinition(FunctionGenerator callable, PrintWriter writer) throws IOException {
-        writer.printf("%s\n", callable.generateFunctionSignature(this));
+    private void generateFunctionDefinition(FunctionGenerator generator, PrintWriter writer) throws IOException {
+        writer.printf("%s\n", generator.generateFunctionSignature(this));
         writer.print("{\n");
         writeLocalMethodVarDecl(writer);
-        for (ParameterGenerator parameterGenerator : callable.getParameterGenerators()) {
+        for (ParameterGenerator parameterGenerator : generator.getParameterGenerators()) {
             writeCode(writer, parameterGenerator.generateLocalVarDecl(this));
         }
-        writeCode(writer, callable.generateLocalVarDecl(this));
-        writeInitVmCode(writer, callable);
-        writeInitMethodCode(writer, callable);
-        for (ParameterGenerator parameterGenerator : callable.getParameterGenerators()) {
+        writeCode(writer, generator.generateLocalVarDecl(this));
+        writeInitVmCode(writer, generator);
+        writeInitMethodCode(writer, generator);
+        for (ParameterGenerator parameterGenerator : generator.getParameterGenerators()) {
             writeCode(writer, parameterGenerator.generatePreCallCode(this));
         }
-        writeCode(writer, callable.generatePreCallCode(this));
-        writeCode(writer, callable.generateCallCode(this));
-        writeCode(writer, callable.generatePostCallCode(this));
-        for (ParameterGenerator parameterGenerator : callable.getParameterGenerators()) {
+        writeCode(writer, generator.generatePreCallCode(this));
+        writeCode(writer, generator.generateCallCode(this));
+        writeCode(writer, generator.generatePostCallCode(this));
+        for (ParameterGenerator parameterGenerator : generator.getParameterGenerators()) {
             writeCode(writer, parameterGenerator.generatePostCallCode(this));
         }
-        writeCode(writer, callable.generateReturnCode(this));
+        writeCode(writer, generator.generateReturnCode(this));
         writer.print("}\n");
         writer.print("\n");
     }
 
-    private void writeInitVmCode(PrintWriter writer, FunctionGenerator callable) {
+    private void writeInitVmCode(PrintWriter writer, FunctionGenerator generator) {
         writer.printf("\n");
-        if (isVoid(callable.getReturnType())) {
+        if (isVoid(generator.getReturnType())) {
             writer.printf("    if (beam_init_api() != 0) return;\n");
         } else {
             writer.printf("    if (beam_init_api() != 0) return _result;\n");
@@ -313,15 +331,15 @@ public  class ModuleGenerator implements GeneratorContext {
         writer.printf("    static jmethodID %s = NULL;\n", METHOD_VAR_NAME);
     }
 
-    private void writeInitMethodCode(PrintWriter writer, FunctionGenerator callable) {
+    private void writeInitMethodCode(PrintWriter writer, FunctionGenerator generator) {
         writer.printf("    if (%s == NULL) {\n", METHOD_VAR_NAME);
         writer.printf("        %s = (*jenv)->%s(jenv, %s, \"%s\", \"%s\");\n",
                       METHOD_VAR_NAME,
-                      callable.getMemberDoc().isStatic() ? "GetStaticMethodID" : "GetMethodID",
-                      getComponentCClassVarName(callable.getEnclosingClass().getType()),
-                      callable.getApiMethod().getJavaName(),
-                      callable.getApiMethod().getJavaSignature());
-        if (isVoid(callable.getReturnType())) {
+                      generator.getMemberDoc().isStatic() ? "GetStaticMethodID" : "GetMethodID",
+                      getComponentCClassVarName(generator.getEnclosingClass().getType()),
+                      generator.getApiMethod().getJavaName(),
+                      generator.getApiMethod().getJavaSignature());
+        if (isVoid(generator.getReturnType())) {
             writer.printf("        if (%s == NULL) return;\n", METHOD_VAR_NAME);
         } else {
             writer.printf("        if (%s == NULL) return _result;\n", METHOD_VAR_NAME);
@@ -385,37 +403,64 @@ public  class ModuleGenerator implements GeneratorContext {
 
 
     private static Map<ApiMethod, String> createFunctionNames(ApiInfo apiInfo) {
-        Map<String, List<ApiMethod>> sameTargetFunctionNames = collectApiMethodsWithSameFunctionName(apiInfo);
+        Map<String, Set<ApiMethod>> sameTargetFunctionNames = collectApiMethodsWithSameFunctionName(apiInfo);
+
+        ///////////////////////////////////////////
+        final Set<String> keySet = sameTargetFunctionNames.keySet();
+        final String[] keys = keySet.toArray(new String[keySet.size()]);
+        Arrays.sort(keys);
+        ApiClass lastEnclosingClass = null;
+        for (String key : keys) {
+            final Set<ApiMethod> apiMethods = sameTargetFunctionNames.get(key);
+            if (apiMethods.size() > 1) {
+                for (ApiMethod apiMethod : apiMethods) {
+                    final ApiClass enclosingClass = apiMethod.getEnclosingClass();
+                    boolean classChange =  !enclosingClass.equals(lastEnclosingClass);
+
+                    System.out.printf("Warning: class %s: function renamed: <method name=\"%s\" sig=\"%s\" renameTo=\"%s...\"/>\n",
+                                      enclosingClass.getJavaName(),
+                                      apiMethod.getJavaName(),
+                                      apiMethod.getJavaSignature(),
+                                      apiMethod.getJavaName());
+                }
+            }
+        }
+        ///////////////////////////////////////////
+
         return createFunctionNames(apiInfo, sameTargetFunctionNames);
     }
 
-    private static Map<ApiMethod, String> createFunctionNames(ApiInfo apiInfo, Map<String, List<ApiMethod>> sameTargetFunctionNames) {
+    private static Map<ApiMethod, String> createFunctionNames(ApiInfo apiInfo, Map<String, Set<ApiMethod>> sameTargetFunctionNames) {
         Set<ApiClass> apiClasses = apiInfo.getApiClasses();
         Map<ApiMethod, String> targetFunctionNames = new HashMap<ApiMethod, String>(apiClasses.size() * 100);
         for (ApiClass apiClass : apiClasses) {
             for (ApiMethod apiMethod : apiInfo.getMethodsOf(apiClass)) {
-                String functionBaseName = getFunctionBaseName(apiMethod);
-                List<ApiMethod> apiMethods = sameTargetFunctionNames.get(functionBaseName);
+                String functionBaseName = getFunctionBaseName(apiInfo, apiMethod);
+                Set<ApiMethod> apiMethods = sameTargetFunctionNames.get(functionBaseName);
                 if (apiMethods.size() > 1) {
-                    for (int i = 0; i < apiMethods.size(); i++) {
-                        targetFunctionNames.put(apiMethods.get(i), getFunctionBaseName(apiMethods.get(i)) + (i + 1));
+                    int index = 1;
+                    for (ApiMethod m : apiMethods) {
+                        final String renameTo = getFunctionBaseName(apiInfo, m) + index;
+                        targetFunctionNames.put(m, renameTo);
+                        index++;
                     }
-                } else {
-                    targetFunctionNames.put(apiMethods.get(0), getFunctionBaseName(apiMethods.get(0)));
+                } else if (apiMethods.size() == 1) {
+                    final ApiMethod m = apiMethods.iterator().next();
+                    targetFunctionNames.put(m, getFunctionBaseName(apiInfo, m));
                 }
             }
         }
         return targetFunctionNames;
     }
 
-    private static Map<String, List<ApiMethod>> collectApiMethodsWithSameFunctionName(ApiInfo apiInfo) {
-        Map<String, List<ApiMethod>> sameTargetFunctionNames = new HashMap<String, List<ApiMethod>>(1000);
+    private static Map<String, Set<ApiMethod>> collectApiMethodsWithSameFunctionName(ApiInfo apiInfo) {
+        Map<String, Set<ApiMethod>> sameTargetFunctionNames = new HashMap<String, Set<ApiMethod>>(1000);
         for (ApiClass apiClass : apiInfo.getApiClasses()) {
             for (ApiMethod apiMethod : apiInfo.getMethodsOf(apiClass)) {
-                String functionBaseName = getFunctionBaseName(apiMethod);
-                List<ApiMethod> apiMethods = sameTargetFunctionNames.get(functionBaseName);
+                String functionBaseName = getFunctionBaseName(apiInfo, apiMethod);
+                Set<ApiMethod> apiMethods = sameTargetFunctionNames.get(functionBaseName);
                 if (apiMethods == null) {
-                    apiMethods = new ArrayList<ApiMethod>(4);
+                    apiMethods = new TreeSet<ApiMethod>();
                     sameTargetFunctionNames.put(functionBaseName, apiMethods);
                 }
                 apiMethods.add(apiMethod);
@@ -432,7 +477,7 @@ public  class ModuleGenerator implements GeneratorContext {
             List<FunctionGenerator> functionGenerators = new ArrayList<FunctionGenerator>();
             for (ApiMethod apiMethod : apiMethods) {
                 try {
-                    FunctionGenerator functionGenerator = GeneratorFactory.createCodeGenCallable(apiMethod);
+                    FunctionGenerator functionGenerator = GeneratorFactory.createFunctionGenerator(apiMethod);
                     functionGenerators.add(functionGenerator);
                 } catch (GeneratorException e) {
                     System.out.printf("error: %s\n", e.getMessage());

@@ -16,14 +16,15 @@
 
 package org.esa.beam.extapi.gen;
 
-import com.sun.javadoc.*;
+import com.sun.javadoc.DocErrorReporter;
+import com.sun.javadoc.Doclet;
+import com.sun.javadoc.LanguageVersion;
+import com.sun.javadoc.RootDoc;
 import org.esa.beam.extapi.gen.c.ModuleGenerator;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
 
 /**
  * @author Norman Fomferra
@@ -34,10 +35,12 @@ public class ApiGeneratorDoclet extends Doclet {
         boolean start(RootDoc root);
     }
 
+    // todo move to config
     public static final String DEFAULT_SOURCE_PATH = "" +
             "../beam/beam/beam-core/src/main/java;" +
             "../beam/beam/beam-gpf/src/main/java";
 
+    // todo move to config
     public static final String[] DEFAULT_PACKAGES = {
             "org.esa.beam.framework.datamodel",
             "org.esa.beam.framework.dataio",
@@ -49,6 +52,9 @@ public class ApiGeneratorDoclet extends Doclet {
         run(new DefaultHandler(), DEFAULT_SOURCE_PATH, DEFAULT_PACKAGES);
     }
 
+    /**
+     * This field is required to allow for multi-threaded javadoc invocations which is required for junit.
+     */
     private final static Map<Thread, Handler> HANDLER_MAP = new HashMap<Thread, Handler>();
 
     public static void run(final Handler handler, final String sourcePath, final String... packages) {
@@ -69,6 +75,12 @@ public class ApiGeneratorDoclet extends Doclet {
         }
     }
 
+    /**
+     * Javadoc entry point.
+     *
+     * @param root The document root.
+     * @return true on success
+     */
     @SuppressWarnings("UnusedDeclaration")
     public static boolean start(RootDoc root) {
         final Thread thread = Thread.currentThread();
@@ -116,8 +128,8 @@ public class ApiGeneratorDoclet extends Doclet {
         @Override
         public boolean start(RootDoc root) {
             try {
-                String[] classNames = getIncludedClassNames();
-                ApiInfo apiInfo = ApiInfo.create(root, classNames);
+                final ApiGeneratorConfig config = ApiGeneratorConfigImpl.load();
+                ApiInfo apiInfo = ApiInfo.create(config, root);
                 new ModuleGenerator(apiInfo).run();
                 return true;
             } catch (IOException e) {
@@ -129,12 +141,4 @@ public class ApiGeneratorDoclet extends Doclet {
             }
         }
     }
-
-    private static String[] getIncludedClassNames() throws IOException {
-        final Properties properties = new Properties();
-        properties.load(ApiGeneratorDoclet.class.getResourceAsStream("ApiGeneratorDoclet-classes.txt"));
-        Set<String> stringSet = properties.stringPropertyNames();
-        return stringSet.toArray(new String[stringSet.size()]);
-    }
-
 }

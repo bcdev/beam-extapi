@@ -34,6 +34,7 @@ public class DocMock {
         String typeName = (pos > 0 ? clazz.getName().substring(pos + 1) : clazz.getName()).replace('$', '.');
 
         ClassDoc classDoc = mock(ClassDoc.class);
+        when(classDoc.qualifiedName()).thenReturn(clazz.getName());
         when(classDoc.qualifiedTypeName()).thenReturn(clazz.getName());
         when(classDoc.simpleTypeName()).thenReturn(clazz.getSimpleName());
         when(classDoc.typeName()).thenReturn(typeName);

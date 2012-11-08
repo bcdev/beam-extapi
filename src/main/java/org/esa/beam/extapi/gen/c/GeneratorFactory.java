@@ -9,31 +9,31 @@ import org.esa.beam.extapi.gen.ApiMethod;
  */
 public class GeneratorFactory {
 
-    public static FunctionGenerator createCodeGenCallable(ApiMethod apiMethod) throws GeneratorException {
+    public static FunctionGenerator createFunctionGenerator(ApiMethod apiMethod) throws GeneratorException {
         ApiClass apiClass = apiMethod.getEnclosingClass();
-        ParameterGenerator[] parameterGenerators = createCodeGenParameters(apiMethod);
-        FunctionGenerator callable;
+        ParameterGenerator[] parameterGenerators = createParameterGenerators(apiMethod);
+        FunctionGenerator functionGenerator;
         if (apiMethod.getMemberDoc() instanceof ConstructorDoc) {
-            callable = new FunctionGenerator.Constructor(apiMethod, parameterGenerators);
+            functionGenerator = new FunctionGenerator.Constructor(apiMethod, parameterGenerators);
         } else {
             MethodDoc methodDoc = (MethodDoc) apiMethod.getMemberDoc();
             Type returnType = apiMethod.getReturnType();
             if (returnType.dimension().isEmpty()) {
                 if (ModuleGenerator.isVoid(returnType)) {
-                    callable = new FunctionGenerator.VoidMethod(apiMethod, parameterGenerators);
+                    functionGenerator = new FunctionGenerator.VoidMethod(apiMethod, parameterGenerators);
                 } else if (ModuleGenerator.isString(returnType)) {
-                    callable = new FunctionGenerator.StringMethod(apiMethod, parameterGenerators);
+                    functionGenerator = new FunctionGenerator.StringMethod(apiMethod, parameterGenerators);
                 } else if (returnType.isPrimitive()) {
-                    callable = new FunctionGenerator.PrimitiveMethod(apiMethod, parameterGenerators);
+                    functionGenerator = new FunctionGenerator.PrimitiveMethod(apiMethod, parameterGenerators);
                 } else {
-                    callable = new FunctionGenerator.ObjectMethod(apiMethod, parameterGenerators);
+                    functionGenerator = new FunctionGenerator.ObjectMethod(apiMethod, parameterGenerators);
                 }
             } else if (ModuleGenerator.isPrimitiveArray(returnType)) {
-                callable = new FunctionGenerator.PrimitiveArrayMethod(apiMethod, parameterGenerators);
+                functionGenerator = new FunctionGenerator.PrimitiveArrayMethod(apiMethod, parameterGenerators);
             } else if (ModuleGenerator.isStringArray(returnType)) {
-                callable = new FunctionGenerator.StringArrayMethod(apiMethod, parameterGenerators);
+                functionGenerator = new FunctionGenerator.StringArrayMethod(apiMethod, parameterGenerators);
             } else if (ModuleGenerator.isObjectArray(returnType)) {
-                callable = new FunctionGenerator.ObjectArrayMethod(apiMethod, parameterGenerators);
+                functionGenerator = new FunctionGenerator.ObjectArrayMethod(apiMethod, parameterGenerators);
             } else {
                 throw new GeneratorException(String.format("member %s#%s(): can't deal with return type %s%s (not implemented yet)",
                                                            apiClass.getJavaName(),
@@ -42,10 +42,10 @@ public class GeneratorFactory {
                                                            returnType.dimension()));
             }
         }
-        return callable;
+        return functionGenerator;
     }
 
-    public static ParameterGenerator[] createCodeGenParameters(ApiMethod apiMethod) throws GeneratorException {
+    public static ParameterGenerator[] createParameterGenerators(ApiMethod apiMethod) throws GeneratorException {
         ExecutableMemberDoc memberDoc = apiMethod.getMemberDoc();
         Parameter[] parameters = memberDoc.parameters();
         ParameterGenerator[] parameterGenerators = new ParameterGenerator[parameters.length];

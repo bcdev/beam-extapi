@@ -1,2 +1,0 @@
-org.esa.beam.framework.datamodel.Band#readPixels(IIII[S)[S --> iiiir
-org.esa.beam.framework.datamodel.Band#writePixels(IIII[S)V --> iiiio

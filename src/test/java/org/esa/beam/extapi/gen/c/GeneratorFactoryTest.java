@@ -14,6 +14,8 @@ import static org.esa.beam.extapi.gen.ApiInfoTest.getApiMethod;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
  * @author Norman Fomferra
@@ -25,8 +27,10 @@ public class GeneratorFactoryTest {
 
     @BeforeClass
     public static void setUp() throws Exception {
+        ApiGeneratorConfig config = mock(ApiGeneratorConfig.class);
+        when(config.isApiClass(TEST_CLASS_2.getName())).thenReturn(true);
         RootDoc rootDoc = DocMock.createRootDoc(TEST_CLASS_2);
-        apiInfo = ApiInfo.create(rootDoc, TEST_CLASS_2.getName());
+        apiInfo = ApiInfo.create(config, rootDoc);
     }
 
     @Test
@@ -36,10 +40,10 @@ public class GeneratorFactoryTest {
 
         ApiMethod apiMethod = getApiMethod(methods, "getPixel", "(II)F");
 
-        FunctionGenerator callable = GeneratorFactory.createCodeGenCallable(apiMethod);
-        assertNotNull(callable);
-        assertSame(apiMethod.getEnclosingClass(), callable.getEnclosingClass());
-        ParameterGenerator[] parameterGenerators = callable.getParameterGenerators();
+        FunctionGenerator functionGenerator = GeneratorFactory.createFunctionGenerator(apiMethod);
+        assertNotNull(functionGenerator);
+        assertSame(apiMethod.getEnclosingClass(), functionGenerator.getEnclosingClass());
+        ParameterGenerator[] parameterGenerators = functionGenerator.getParameterGenerators();
         assertEquals(2, parameterGenerators.length);
         assertEquals("int", parameterGenerators[0].getType().typeName());
         assertEquals("p1", parameterGenerators[0].getName());

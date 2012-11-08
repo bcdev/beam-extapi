@@ -1,8 +1,21 @@
 package org.esa.beam.extapi.gen;
 
-import com.sun.javadoc.*;
+import com.sun.javadoc.ClassDoc;
+import com.sun.javadoc.ConstructorDoc;
+import com.sun.javadoc.FieldDoc;
+import com.sun.javadoc.MethodDoc;
+import com.sun.javadoc.Parameter;
+import com.sun.javadoc.ProgramElementDoc;
+import com.sun.javadoc.RootDoc;
+import com.sun.javadoc.Type;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Collection of API classes and their methods.
@@ -11,17 +24,23 @@ import java.util.*;
  * @author Norman Fomferra
  */
 public final class ApiInfo {
-
+    private final ApiGeneratorConfig config;
     private final Map<ApiClass, ApiMembers> apiClasses;
     private final Map<ApiClass, ApiMembers> allClasses;
     private final Set<ApiClass> usedNonApiClasses;
 
-    private ApiInfo(Map<ApiClass, ApiMembers> apiClasses,
+    private ApiInfo(ApiGeneratorConfig config,
+                    Map<ApiClass, ApiMembers> apiClasses,
                     Map<ApiClass, ApiMembers> allClasses,
                     Set<ApiClass> usedNonApiClasses) {
+        this.config = config;
         this.apiClasses = apiClasses;
         this.allClasses = allClasses;
         this.usedNonApiClasses = usedNonApiClasses;
+    }
+
+    public ApiGeneratorConfig getConfig() {
+        return config;
     }
 
     public Set<ApiClass> getApiClasses() {
@@ -68,32 +87,27 @@ public final class ApiInfo {
     }
     */
 
-    public static ApiInfo create(RootDoc rootDoc, String ... classNames) {
-        Map<ApiClass, ApiMembers> apiClasses = getApiMembers(rootDoc, new DefaultFilter(classNames));
+    public static ApiInfo create(ApiGeneratorConfig config, RootDoc rootDoc) {
+        Map<ApiClass, ApiMembers> apiClasses = getApiMembers(rootDoc, config);
         Map<ApiClass, ApiMembers> allClasses = getAllClasses(apiClasses);
         Set<ApiClass> usedNonApiClasses = getUsedNonApiClasses(apiClasses, allClasses);
-        return new ApiInfo(apiClasses, allClasses, usedNonApiClasses);
+        return new ApiInfo(config, apiClasses, allClasses, usedNonApiClasses);
     }
 
-    public static ApiInfo create(RootDoc rootDoc, Filter filter) {
-        Map<ApiClass, ApiMembers> apiClasses = getApiMembers(rootDoc, filter);
-        Map<ApiClass, ApiMembers> allClasses = getAllClasses(apiClasses);
-        Set<ApiClass> usedNonApiClasses = getUsedNonApiClasses(apiClasses, allClasses);
-        return new ApiInfo(apiClasses, allClasses, usedNonApiClasses);
-    }
-
-    private static Map<ApiClass, ApiMembers> getApiMembers(RootDoc rootDoc, Filter filter) {
+    private static Map<ApiClass, ApiMembers> getApiMembers(RootDoc rootDoc, ApiGeneratorConfig config) {
 
         Map<ApiClass, ApiMembers> apiClasses = new HashMap<ApiClass, ApiMembers>(1000);
 
         for (ClassDoc classDoc : rootDoc.classes()) {
-            if (filter.accept(classDoc)) {
+            final boolean isPublic = classDoc.isPublic();
+            final boolean isApiClass = config.isApiClass(classDoc.qualifiedName());
+            if (isPublic && isApiClass) {
                 ApiClass apiClass = new ApiClass(classDoc);
                 ArrayList<ApiConstant> apiConstants = new ArrayList<ApiConstant>();
                 ArrayList<ApiMethod> apiMethods = new ArrayList<ApiMethod>();
 
                 for (ConstructorDoc constructorDoc : classDoc.constructors()) {
-                    if (filter.accept(constructorDoc)) {
+                    if (accept(constructorDoc)) {
                         ApiMethod apiMethod = new ApiMethod(apiClass, constructorDoc);
                         apiMethods.add(apiMethod);
                     } else {
@@ -110,7 +124,7 @@ public final class ApiInfo {
                     }
 
                     for (MethodDoc methodDoc : classDoc0.methods()) {
-                        if (filter.accept(methodDoc)) {
+                        if (accept(methodDoc)) {
                             ApiMethod apiMethod = new ApiMethod(apiClass, methodDoc);
                             if (classDoc0 == classDoc || !apiMethods.contains(apiMethod)) {
                                 apiMethods.add(apiMethod);
@@ -187,35 +201,8 @@ public final class ApiInfo {
         return usedClasses;
     }
 
-    public interface Filter {
-        boolean accept(ClassDoc classDoc);
-
-        boolean accept(ConstructorDoc constructorDoc);
-
-        boolean accept(MethodDoc methodDoc);
-    }
-
-    public static class DefaultFilter implements Filter {
-        final Set<String> includedClassNames;
-
-        public DefaultFilter(String... includedClassNames) {
-            this.includedClassNames = new HashSet<String>(Arrays.asList(includedClassNames));
-        }
-
-        @Override
-        public boolean accept(ClassDoc classDoc) {
-            return classDoc.isPublic() && (includedClassNames.isEmpty() || includedClassNames.contains(classDoc.qualifiedTypeName()));
-        }
-
-        @Override
-        public boolean accept(ConstructorDoc constructorDoc) {
-            return constructorDoc.isPublic() && constructorDoc.tags("deprecated").length == 0;
-        }
-
-        @Override
-        public boolean accept(MethodDoc methodDoc) {
-            return methodDoc.isPublic() && methodDoc.tags("deprecated").length == 0;
-        }
+    public static boolean accept(ProgramElementDoc programElementDoc) {
+        return programElementDoc.isPublic() && programElementDoc.tags("deprecated").length == 0;
     }
 
     private final static class ApiMembers {

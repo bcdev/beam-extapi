@@ -11,6 +11,8 @@ import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
  * @author Norman Fomferra
@@ -19,10 +21,13 @@ public class ApiInfoTest {
 
     @Test
     public void testApiInfo() {
+        final ApiGeneratorConfig config = mock(ApiGeneratorConfig.class);
+        when(config.isApiClass(TestClass2.class.getName())).thenReturn(true);
+
         RootDoc rootDoc = DocMock.createRootDoc(TestClass2.class);
 
         String testClass2Name = TestClass2.class.getName();
-        ApiInfo apiInfo = ApiInfo.create(rootDoc, testClass2Name);
+        ApiInfo apiInfo = ApiInfo.create(config, rootDoc);
         assertNotNull(apiInfo);
 
         Set<ApiClass> apiClasses = apiInfo.getApiClasses();
