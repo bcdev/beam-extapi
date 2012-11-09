@@ -11,6 +11,7 @@ import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -21,8 +22,7 @@ public class ApiInfoTest {
 
     @Test
     public void testApiInfo() {
-        final ApiGeneratorConfig config = mock(ApiGeneratorConfig.class);
-        when(config.isApiClass(TestClass2.class.getName())).thenReturn(true);
+        final ApiGeneratorConfig config = new ApiGeneratorConfigMock(TestClass2.class);
 
         RootDoc rootDoc = DocMock.createRootDoc(TestClass2.class);
 
@@ -113,4 +113,5 @@ public class ApiInfoTest {
         }
         return null;
     }
+
 }

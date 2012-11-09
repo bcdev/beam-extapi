@@ -1,6 +1,7 @@
 package org.esa.beam.extapi.gen;
 
 import com.sun.javadoc.Parameter;
+import com.sun.javadoc.Type;
 
 /**
  * @author Norman Fomferra
@@ -20,8 +21,16 @@ public class ApiParameter {
         this.modifier = modifier;
     }
 
+    public Parameter getParameterDoc() {
+        return parameter;
+    }
+
     public String getJavaName() {
         return parameter.name();
+    }
+
+    public Type getType() {
+        return parameter.type();
     }
 
     public String getJavaSignature() {

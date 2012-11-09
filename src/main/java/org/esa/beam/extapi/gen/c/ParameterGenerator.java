@@ -1,7 +1,7 @@
 package org.esa.beam.extapi.gen.c;
 
-import com.sun.javadoc.Parameter;
 import com.sun.javadoc.Type;
+import org.esa.beam.extapi.gen.ApiParameter;
 
 import static org.esa.beam.extapi.gen.TemplateEval.eval;
 import static org.esa.beam.extapi.gen.TemplateEval.kv;
@@ -11,18 +11,18 @@ import static org.esa.beam.extapi.gen.c.ModuleGenerator.getComponentCTypeName;
  * @author Norman Fomferra
  */
 public abstract class ParameterGenerator implements CodeGenerator {
-    protected final Parameter parameter;
+    protected final ApiParameter parameter;
 
-    protected ParameterGenerator(Parameter parameter) {
+    protected ParameterGenerator(ApiParameter parameter) {
         this.parameter = parameter;
     }
 
     public String getName() {
-        return parameter.name();
+        return parameter.getJavaName();
     }
 
     public Type getType() {
-        return parameter.type();
+        return parameter.getParameterDoc().type();
     }
 
     @Override
@@ -46,7 +46,7 @@ public abstract class ParameterGenerator implements CodeGenerator {
     }
 
     static class PrimitiveScalar extends ParameterGenerator {
-        PrimitiveScalar(Parameter parameter) {
+        PrimitiveScalar(ApiParameter parameter) {
             super(parameter);
         }
 
@@ -63,25 +63,23 @@ public abstract class ParameterGenerator implements CodeGenerator {
     }
 
     static class PrimitiveArray extends ParameterGenerator {
-        private final boolean readOnly;
 
-        PrimitiveArray(Parameter parameter, boolean readOnly) {
+        PrimitiveArray(ApiParameter parameter) {
             super(parameter);
-            this.readOnly = readOnly;
         }
 
         @Override
         public String generateParamListDecl(GeneratorContext context) {
             return eval("${c}${t}* ${p}Elems, int ${p}Length",
-                        kv("c", readOnly ? "const " : ""),
+                        kv("c", parameter.getModifier() == ApiParameter.Modifier.IN ? "const " : ""),
                         kv("t", getType().simpleTypeName()),
-                        kv("p", parameter.name()));
+                        kv("p", parameter.getJavaName()));
         }
 
         @Override
         public String generateLocalVarDecl(GeneratorContext context) {
             return eval("jarray ${p}Array = NULL;\nvoid* ${p}ArrayAddr = NULL;",
-                        kv("p", parameter.name()));
+                        kv("p", parameter.getJavaName()));
         }
 
         @Override
@@ -93,23 +91,23 @@ public abstract class ParameterGenerator implements CodeGenerator {
                                 "${p}ArrayAddr = (*jenv)->GetPrimitiveArrayCritical(jenv, ${p}Array, 0);\n" +
                                 "memcpy(${p}ArrayAddr, ${p}Elems, ${p}Length);",
                         kv("t", typeName),
-                        kv("p", parameter.name()));
+                        kv("p", parameter.getJavaName()));
         }
 
         @Override
         public String generateCallCode(GeneratorContext context) {
-            return eval("${p}Array", kv("p", parameter.name()));
+            return eval("${p}Array", kv("p", parameter.getJavaName()));
         }
 
         @Override
         public String generatePostCallCode(GeneratorContext context) {
             return eval("(*jenv)->ReleasePrimitiveArrayCritical(jenv, ${p}Array, ${p}ArrayAddr, 0);",
-                        kv("p", parameter.name()));
+                        kv("p", parameter.getJavaName()));
         }
     }
 
     static class StringScalar extends ParameterGenerator {
-        StringScalar(Parameter parameter) {
+        StringScalar(ApiParameter parameter) {
             super(parameter);
         }
 
@@ -136,7 +134,7 @@ public abstract class ParameterGenerator implements CodeGenerator {
     }
 
     static class StringArray extends ParameterGenerator {
-        StringArray(Parameter parameter) {
+        StringArray(ApiParameter parameter) {
             super(parameter);
         }
 
@@ -167,7 +165,7 @@ public abstract class ParameterGenerator implements CodeGenerator {
     }
 
     static class ObjectScalar extends ParameterGenerator {
-        ObjectScalar(Parameter parameter) {
+        ObjectScalar(ApiParameter parameter) {
             super(parameter);
         }
 
@@ -184,17 +182,15 @@ public abstract class ParameterGenerator implements CodeGenerator {
     }
 
     static class ObjectArray extends ParameterGenerator {
-        private final boolean readOnly;
 
-        ObjectArray(Parameter parameter, boolean readOnly) {
+        ObjectArray(ApiParameter parameter) {
             super(parameter);
-            this.readOnly = readOnly;
         }
 
         @Override
         public String generateParamListDecl(GeneratorContext context) {
             return eval("${m}${t}* ${p}Elems, int ${p}Length",
-                        kv("m", readOnly ? "const " : ""),
+                        kv("m", parameter.getModifier() == ApiParameter.Modifier.IN ? "const " : ""),
                         kv("t", ModuleGenerator.getComponentCClassName(getType())),
                         kv("p", getName()));
         }

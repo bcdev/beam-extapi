@@ -27,20 +27,23 @@ public class GeneratorFactoryTest {
 
     @BeforeClass
     public static void setUp() throws Exception {
-        ApiGeneratorConfig config = mock(ApiGeneratorConfig.class);
-        when(config.isApiClass(TEST_CLASS_2.getName())).thenReturn(true);
+        ApiGeneratorConfig config = new ApiGeneratorConfigMock(TEST_CLASS_2);
         RootDoc rootDoc = DocMock.createRootDoc(TEST_CLASS_2);
         apiInfo = ApiInfo.create(config, rootDoc);
     }
 
     @Test
     public void testIt() throws GeneratorException {
+        GeneratorFactory factory = new GeneratorFactory(apiInfo);
+
+
         ApiClass apiClass2 = getTestClass2();
         List<ApiMethod> methods = apiInfo.getMethodsOf(apiClass2);
 
         ApiMethod apiMethod = getApiMethod(methods, "getPixel", "(II)F");
+        assertNotNull(apiMethod);
 
-        FunctionGenerator functionGenerator = GeneratorFactory.createFunctionGenerator(apiMethod);
+        FunctionGenerator functionGenerator = factory.createFunctionGenerator(apiMethod);
         assertNotNull(functionGenerator);
         assertSame(apiMethod.getEnclosingClass(), functionGenerator.getEnclosingClass());
         ParameterGenerator[] parameterGenerators = functionGenerator.getParameterGenerators();

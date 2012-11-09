@@ -1,5 +1,6 @@
 package org.esa.beam.extapi.gen.c;
 
+import org.esa.beam.extapi.gen.ApiParameter;
 import org.esa.beam.extapi.gen.DocMock;
 import org.esa.beam.framework.datamodel.Band;
 import org.esa.beam.framework.datamodel.Product;
@@ -76,7 +77,7 @@ public class ParameterGeneratorTest {
 
     @Test
     public void test_CodeGenParameter_StringScalar() {
-        final ParameterGenerator.StringScalar stringScalar = new ParameterGenerator.StringScalar(DocMock.createParameter("name", String.class));
+        final ParameterGenerator.StringScalar stringScalar = new ParameterGenerator.StringScalar(createParam("name", String.class, ApiParameter.Modifier.IN));
         assertEquals("const char* name", stringScalar.generateParamListDecl(context));
         assertEquals("jstring nameString = NULL;", stringScalar.generateLocalVarDecl(context));
         assertEquals("nameString = (*jenv)->NewStringUTF(jenv, name);", stringScalar.generatePreCallCode(context));
@@ -87,7 +88,7 @@ public class ParameterGeneratorTest {
     public void test_CodeGenParameter_StringArray() {
         String name = "names";
         Class<?> type = String[].class;
-        final ParameterGenerator.StringArray stringArray = new ParameterGenerator.StringArray(DocMock.createParameter(name, type));
+        final ParameterGenerator.StringArray stringArray = new ParameterGenerator.StringArray(createParam(name, type, ApiParameter.Modifier.IN));
         assertEquals("const char** namesElems, int namesLength", stringArray.generateParamListDecl(context));
         assertEquals("jobjectArray namesArray = NULL;", stringArray.generateLocalVarDecl(context));
         assertEquals("namesArray = beam_new_jstring_array(namesElems, namesLength);", stringArray.generatePreCallCode(context));
@@ -95,7 +96,7 @@ public class ParameterGeneratorTest {
     }
 
     private void testPrimitiveScalar(String name, Class<?> type, String paramListDecl, String callArgExpr) {
-        testGenerators(new ParameterGenerator.PrimitiveScalar(DocMock.createParameter(name, type)), paramListDecl, null, null, callArgExpr, null);
+        testGenerators(new ParameterGenerator.PrimitiveScalar(createParam(name, type, ApiParameter.Modifier.IN)), paramListDecl, null, null, callArgExpr, null);
     }
 
     private void testPrimitiveArray(String name, Class<?> type,
@@ -104,20 +105,21 @@ public class ParameterGeneratorTest {
                                     String preCallCode,
                                     String callArgExpr,
                                     String postCallCode) {
-        testGenerators(new ParameterGenerator.PrimitiveArray(DocMock.createParameter(name, type), true),
+        testGenerators(new ParameterGenerator.PrimitiveArray(createParam(name, type, ApiParameter.Modifier.IN)),
                        paramListDecl,
                        localVarDecl,
                        preCallCode,
                        callArgExpr,
                        postCallCode);
     }
+
     private void testObjectArray(String name, Class<?> type,
-                                    String paramListDecl,
-                                    String localVarDecl,
-                                    String preCallCode,
-                                    String callArgExpr,
-                                    String postCallCode) {
-        testGenerators(new ParameterGenerator.ObjectArray(DocMock.createParameter(name, type), true),
+                                 String paramListDecl,
+                                 String localVarDecl,
+                                 String preCallCode,
+                                 String callArgExpr,
+                                 String postCallCode) {
+        testGenerators(new ParameterGenerator.ObjectArray(createParam(name, type, ApiParameter.Modifier.IN)),
                        paramListDecl,
                        localVarDecl,
                        preCallCode,
@@ -126,7 +128,8 @@ public class ParameterGeneratorTest {
     }
 
     private void testObjectScalar(String name, Class<?> type, String paramListDecl, String callArgExpr) {
-        testGenerators(new ParameterGenerator.ObjectScalar(DocMock.createParameter(name, type)), paramListDecl, null, null, callArgExpr, null);
+        testGenerators(new ParameterGenerator.ObjectScalar(createParam(name, type, ApiParameter.Modifier.IN)),
+                       paramListDecl, null, null, callArgExpr, null);
     }
 
     private void testGenerators(ParameterGenerator parameterGenerator,
@@ -140,6 +143,10 @@ public class ParameterGeneratorTest {
         assertEquals(preCallCode, parameterGenerator.generatePreCallCode(context));
         assertEquals(callArgExpr, parameterGenerator.generateCallCode(context));
         assertEquals(postCallCode, parameterGenerator.generatePostCallCode(context));
+    }
+
+    private ApiParameter createParam(String name, Class<?> type, ApiParameter.Modifier modifier) {
+        return new ApiParameter(DocMock.createParameter(name, type), modifier);
     }
 
 }

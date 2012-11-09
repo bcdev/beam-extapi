@@ -1,21 +1,8 @@
 package org.esa.beam.extapi.gen;
 
-import com.sun.javadoc.ClassDoc;
-import com.sun.javadoc.ConstructorDoc;
-import com.sun.javadoc.FieldDoc;
-import com.sun.javadoc.MethodDoc;
-import com.sun.javadoc.Parameter;
-import com.sun.javadoc.ProgramElementDoc;
-import com.sun.javadoc.RootDoc;
-import com.sun.javadoc.Type;
+import com.sun.javadoc.*;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Collection of API classes and their methods.
@@ -75,17 +62,29 @@ public final class ApiInfo {
         return Collections.unmodifiableList(members != null ? members.apiMethods : new ArrayList<ApiMethod>(0));
     }
 
-    /*
-    public ApiParameter[] getParametersOf(ApiMethod apiMethod) {
+    public ApiParameter[] getParametersFor(ApiMethod apiMethod) {
         Parameter[] parameters = apiMethod.getMemberDoc().parameters();
         ApiParameter[] apiParameters = new ApiParameter[parameters.length];
-        for (int i = 0; i < parameters.length; i++) {
-            ApiParameter.Modifier modifier = extraInfo.getParameterModifier(apiMethod, parameters[i], i);
-            apiParameters[i] = new ApiParameter(parameters[i], modifier);
+        ApiParameter.Modifier[] parameterModifiers = getConfig().getParameterModifiers(apiMethod.getEnclosingClass().getJavaName(),
+                                                                                       apiMethod.getJavaName(),
+                                                                                       apiMethod.getJavaSignature());
+
+        if (parameterModifiers != null) {
+            if (parameters.length != parameterModifiers.length) {
+                throw new IllegalStateException("parameters.length != parameterModifiers.length");
+            }
+            for (int i = 0; i < parameters.length; i++) {
+                apiParameters[i] = new ApiParameter(parameters[i], parameterModifiers[i]);
+            }
+            return apiParameters;
+        } else {
+            for (int i = 0; i < parameters.length; i++) {
+                apiParameters[i] = new ApiParameter(parameters[i], ApiParameter.Modifier.IN);
+            }
+            return apiParameters;
         }
-        return apiParameters;
     }
-    */
+
 
     public static ApiInfo create(ApiGeneratorConfig config, RootDoc rootDoc) {
         Map<ApiClass, ApiMembers> apiClasses = getApiMembers(rootDoc, config);

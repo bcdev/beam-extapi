@@ -2,14 +2,22 @@ package org.esa.beam.extapi.gen.c;
 
 import com.sun.javadoc.*;
 import org.esa.beam.extapi.gen.ApiClass;
+import org.esa.beam.extapi.gen.ApiInfo;
 import org.esa.beam.extapi.gen.ApiMethod;
+import org.esa.beam.extapi.gen.ApiParameter;
 
 /**
  * @author Norman Fomferra
  */
 public class GeneratorFactory {
 
-    public static FunctionGenerator createFunctionGenerator(ApiMethod apiMethod) throws GeneratorException {
+    private final ApiInfo apiInfo;
+
+    public GeneratorFactory(ApiInfo apiInfo) {
+        this.apiInfo = apiInfo;
+    }
+
+    public FunctionGenerator createFunctionGenerator(ApiMethod apiMethod) throws GeneratorException {
         ApiClass apiClass = apiMethod.getEnclosingClass();
         ParameterGenerator[] parameterGenerators = createParameterGenerators(apiMethod);
         FunctionGenerator functionGenerator;
@@ -45,15 +53,16 @@ public class GeneratorFactory {
         return functionGenerator;
     }
 
-    public static ParameterGenerator[] createParameterGenerators(ApiMethod apiMethod) throws GeneratorException {
+    public ParameterGenerator[] createParameterGenerators(ApiMethod apiMethod) throws GeneratorException {
         ExecutableMemberDoc memberDoc = apiMethod.getMemberDoc();
-        Parameter[] parameters = memberDoc.parameters();
+        ApiParameter[] parameters = apiInfo.getParametersFor(apiMethod);
         ParameterGenerator[] parameterGenerators = new ParameterGenerator[parameters.length];
         for (int i = 0; i < parameterGenerators.length; i++) {
-            Parameter parameter = parameters[i];
+            ApiParameter parameter = parameters[i];
             ParameterGenerator parameterGenerator;
-            Type parameterType = parameter.type();
+            Type parameterType = parameter.getType();
             boolean scalar = parameterType.dimension().equals("");
+
             if (scalar) {
                 if (parameterType.isPrimitive()) {
                     parameterGenerator = new ParameterGenerator.PrimitiveScalar(parameter);
@@ -63,16 +72,16 @@ public class GeneratorFactory {
                     parameterGenerator = new ParameterGenerator.ObjectScalar(parameter);
                 }
             } else if (ModuleGenerator.isPrimitiveArray(parameterType)) {
-                parameterGenerator = new ParameterGenerator.PrimitiveArray(parameter, true);
+                parameterGenerator = new ParameterGenerator.PrimitiveArray(parameter);
             } else if (ModuleGenerator.isStringArray(parameterType)) {
                 parameterGenerator = new ParameterGenerator.StringArray(parameter);
             } else if (ModuleGenerator.isObjectArray(parameterType)) {
-                parameterGenerator = new ParameterGenerator.ObjectArray(parameter, true);
+                parameterGenerator = new ParameterGenerator.ObjectArray(parameter);
             } else {
                 throw new GeneratorException(String.format("member %s#%s(): can't deal with parameter %s of type %s%s (not implemented yet)",
                                                            apiMethod.getEnclosingClass().getJavaName(),
                                                            memberDoc.name(),
-                                                           parameter.name(),
+                                                           parameter.getJavaName(),
                                                            parameterType.typeName(),
                                                            parameterType.dimension()));
             }

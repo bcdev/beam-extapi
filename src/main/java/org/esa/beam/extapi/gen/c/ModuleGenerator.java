@@ -476,6 +476,7 @@ public class ModuleGenerator implements GeneratorContext {
     }
 
     private Map<ApiClass, List<FunctionGenerator>> createFunctionGenerators(ApiInfo apiInfo) {
+        GeneratorFactory factory = new GeneratorFactory(apiInfo);
         Map<ApiClass, List<FunctionGenerator>> map = new HashMap<ApiClass, List<FunctionGenerator>>();
         Set<ApiClass> apiClasses = apiInfo.getApiClasses();
         for (ApiClass apiClass : apiClasses) {
@@ -483,7 +484,7 @@ public class ModuleGenerator implements GeneratorContext {
             List<FunctionGenerator> functionGenerators = new ArrayList<FunctionGenerator>();
             for (ApiMethod apiMethod : apiMethods) {
                 try {
-                    FunctionGenerator functionGenerator = GeneratorFactory.createFunctionGenerator(apiMethod);
+                    FunctionGenerator functionGenerator = factory.createFunctionGenerator(apiMethod);
                     functionGenerators.add(functionGenerator);
                 } catch (GeneratorException e) {
                     System.out.printf("error: %s\n", e.getMessage());
