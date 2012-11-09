@@ -1,11 +1,43 @@
 <config>
 
-    <class name="org.esa.beam.framework.dataio.ProductIO"/>
+    <!--
+        By default, all public methods of a class will be translated.
+        Particular methods are listed here in order to
+          o  explicitely exclude them (e.g. ignore="true")
+          o  add modifiers (i=input, o=output, r=return) to method parameters (e.g. mods="iiiir")
+          o  rename a method (renameTo="newAngularDirection")
+          o  to expose all methods which have overloaded names
+    -->
+    <class name="org.esa.beam.framework.dataio.ProductIO">
+
+        <method name="readProduct"
+                sig="(Ljava/io/File;)Lorg/esa/beam/framework/datamodel/Product;"
+                ignore="true"/>
+        <method name="readProduct"
+                sig="(Ljava/io/File;[Ljava/lang/String;)Lorg/esa/beam/framework/datamodel/Product;"
+                ignore="true"/>
+        <method name="readProduct"
+                sig="(Ljava/lang/String;)Lorg/esa/beam/framework/datamodel/Product;"
+                ignore="false"/>
+
+        <method name="writeProduct"
+                sig="(Lorg/esa/beam/framework/datamodel/Product;Ljava/io/File;Ljava/lang/String;Z)V"
+                ignore="true"/>
+        <method name="writeProduct"
+                sig="(Lorg/esa/beam/framework/datamodel/Product;Ljava/io/File;Ljava/lang/String;ZLcom/bc/ceres/core/ProgressMonitor;)V"
+                ignore="true"/>
+        <method name="writeProduct"
+                sig="(Lorg/esa/beam/framework/datamodel/Product;Ljava/lang/String;Ljava/lang/String;)V"
+                ignore="false"/>
+        <method name="writeProduct"
+                sig="(Lorg/esa/beam/framework/datamodel/Product;Ljava/lang/String;Ljava/lang/String;Lcom/bc/ceres/core/ProgressMonitor;)V"
+                ignore="true"/>
+    </class>
     <class name="org.esa.beam.framework.dataio.ProductReader"/>
     <class name="org.esa.beam.framework.dataio.ProductWriter"/>
     <class name="org.esa.beam.framework.datamodel.AngularDirection">
-        <method name="&lt;init&gt;" sig="()V" renameTo="newAngularDirection"/>
-        <method name="&lt;init&gt;" sig="(DD)V" renameTo="newAngularDirectionAZ"/>
+        <method name="&lt;init&gt;" sig="()V" ignore="true"/>
+        <method name="&lt;init&gt;" sig="(DD)V" renameTo="newAngularDirection"/>
     </class>
     <class name="org.esa.beam.framework.datamodel.Band">
         <method name="createCompatibleRasterData" sig="()Lorg/esa/beam/framework/datamodel/ProductData;"
@@ -31,9 +63,9 @@
         <method name="getPixels" sig="(IIII[F)[F" renameTo="getPixelsFloat"/>
         <method name="getPixels" sig="(IIII[I)[I" renameTo="getPixelsInt"/>
         <method name="getPixels" sig="(IIII[DLcom/bc/ceres/core/ProgressMonitor;)[D" ignore="true"/>
-        <method name="getPixels" sig="(IIII[FLcom/bc/ceres/core/ProgressMonitor;)[F" renameTo="getPixels..."
+        <method name="getPixels" sig="(IIII[FLcom/bc/ceres/core/ProgressMonitor;)[F"
                 ignore="true"/>
-        <method name="getPixels" sig="(IIII[ILcom/bc/ceres/core/ProgressMonitor;)[I" renameTo="getPixels..."
+        <method name="getPixels" sig="(IIII[ILcom/bc/ceres/core/ProgressMonitor;)[I"
                 ignore="true"/>
         <method name="getRawStorageSize" sig="()J" ignore="true"/>
         <method name="getRawStorageSize" sig="(Lorg/esa/beam/framework/dataio/ProductSubsetDef;)J" ignore="true"/>
@@ -54,7 +86,7 @@
         <method name="readPixels" sig="(IIII[FLcom/bc/ceres/core/ProgressMonitor;)[F" ignore="true"/>
         <method name="readPixels" sig="(IIII[DLcom/bc/ceres/core/ProgressMonitor;)[D" ignore="true"/>
         <method name="readRasterData" sig="(IIIILorg/esa/beam/framework/datamodel/ProductData;)V"
-                renameTo="readRasterData..."/>
+                ignore="false"/>
         <method name="readRasterData"
                 sig="(IIIILorg/esa/beam/framework/datamodel/ProductData;Lcom/bc/ceres/core/ProgressMonitor;)V"
                 ignore="true"/>
@@ -87,16 +119,104 @@
         <method name="&lt;init&gt;" sig="([Lorg/esa/beam/framework/datamodel/ColorPaletteDef/Point;)V" ignore="true"/>
     </class>
     <class name="org.esa.beam.framework.datamodel.ColorPaletteDef$Point"/>
-    <class name="org.esa.beam.framework.datamodel.FlagCoding"/>
+    <class name="org.esa.beam.framework.datamodel.FlagCoding">
+        <method name="fireProductNodeChanged" sig="(Ljava/lang/String;)V" ignore="true"/>
+        <method name="fireProductNodeChanged" sig="(Ljava/lang/String;Ljava/lang/Object;Ljava/lang/Object;)V"
+                ignore="true"/>
+        <method name="getAttributeDouble" sig="(Ljava/lang/String;)D" ignore="true"/>
+        <method name="getAttributeDouble" sig="(Ljava/lang/String;D)D" ignore="false"/>
+        <method name="getAttributeInt" sig="(Ljava/lang/String;)I" ignore="true"/>
+        <method name="getAttributeInt" sig="(Ljava/lang/String;I)I" ignore="false"/>
+        <method name="getAttributeString" sig="(Ljava/lang/String;)Ljava/lang/String;" ignore="true"/>
+        <method name="getAttributeString" sig="(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;"
+                ignore="false"/>
+        <method name="getAttributeUTC" sig="(Ljava/lang/String;)Lorg/esa/beam/framework/datamodel/ProductData/UTC;"
+                ignore="true"/>
+        <method name="getAttributeUTC"
+                sig="(Ljava/lang/String;Lorg/esa/beam/framework/datamodel/ProductData/UTC;)Lorg/esa/beam/framework/datamodel/ProductData/UTC;"
+                ignore="false"/>
+        <method name="getRawStorageSize" sig="()J" ignore="true"/>
+        <method name="getRawStorageSize" sig="(Lorg/esa/beam/framework/dataio/ProductSubsetDef;)J" ignore="true"/>
+    </class>
     <class name="org.esa.beam.framework.datamodel.GeoCoding"/>
-    <class name="org.esa.beam.framework.datamodel.GeoPos"/>
+    <class name="org.esa.beam.framework.datamodel.GeoPos">
+        <method name="&lt;init&gt;" sig="()V" ignore="true"/>
+        <method name="&lt;init&gt;" sig="(FF)V" renameTo="newGeoPos"/>
+        <method name="&lt;init&gt;" sig="(Lorg/esa/beam/framework/datamodel/GeoPos;)V" ignore="true"/>
+        <method name="getLatString" sig="()Ljava/lang/String;"/>
+        <method name="getLatString" sig="(F)Ljava/lang/String;" ignore="true"/>
+        <method name="getLonString" sig="()Ljava/lang/String;"/>
+        <method name="getLonString" sig="(F)Ljava/lang/String;" ignore="true"/>
+    </class>
     <class name="org.esa.beam.framework.datamodel.ImageGeometry"/>
-    <class name="org.esa.beam.framework.datamodel.ImageInfo"/>
-    <class name="org.esa.beam.framework.datamodel.IndexCoding"/>
-    <class name="org.esa.beam.framework.datamodel.MetadataAttribute"/>
-    <class name="org.esa.beam.framework.datamodel.MetadataElement"/>
+    <class name="org.esa.beam.framework.datamodel.ImageInfo">
+        <method name="&lt;init&gt;" sig="(Lorg/esa/beam/framework/datamodel/ColorPaletteDef;)V"
+                renameTo="newImageInfoPalette"/>
+        <method name="&lt;init&gt;" sig="(Lorg/esa/beam/framework/datamodel/RGBChannelDef;)V"
+                renameTo="newImageInfoRGB"/>
+        <method name="getHistogramMatching" sig="()Lorg/esa/beam/framework/datamodel/ImageInfo/HistogramMatching;"
+                ignore="true"/>
+        <method name="getHistogramMatching"
+                sig="(Ljava/lang/String;)Lorg/esa/beam/framework/datamodel/ImageInfo/HistogramMatching;"
+                renameTo="getHistogramMatching"/>
+    </class>
+    <class name="org.esa.beam.framework.datamodel.IndexCoding">
+        <method name="fireProductNodeChanged" sig="(Ljava/lang/String;)V" ignore="true"/>
+        <method name="fireProductNodeChanged" sig="(Ljava/lang/String;Ljava/lang/Object;Ljava/lang/Object;)V"
+                ignore="true"/>
+        <method name="getAttributeDouble" sig="(Ljava/lang/String;)D" ignore="true"/>
+        <method name="getAttributeDouble" sig="(Ljava/lang/String;D)D" ignore="false"/>
+        <method name="getAttributeInt" sig="(Ljava/lang/String;)I" ignore="true"/>
+        <method name="getAttributeInt" sig="(Ljava/lang/String;I)I" ignore="false"/>
+        <method name="getAttributeString" sig="(Ljava/lang/String;)Ljava/lang/String;" ignore="true"/>
+        <method name="getAttributeString" sig="(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;"
+                ignore="false"/>
+        <method name="getAttributeUTC" sig="(Ljava/lang/String;)Lorg/esa/beam/framework/datamodel/ProductData/UTC;"
+                ignore="true"/>
+        <method name="getAttributeUTC"
+                sig="(Ljava/lang/String;Lorg/esa/beam/framework/datamodel/ProductData/UTC;)Lorg/esa/beam/framework/datamodel/ProductData/UTC;"
+                ignore="false"/>
+        <method name="getRawStorageSize" sig="()J" ignore="true"/>
+        <method name="getRawStorageSize" sig="(Lorg/esa/beam/framework/dataio/ProductSubsetDef;)J" ignore="true"/>
+    </class>
+    <class name="org.esa.beam.framework.datamodel.MetadataAttribute">
+        <method name="&lt;init&gt;" sig="(Ljava/lang/String;I)V" ignore="true"/>
+        <method name="&lt;init&gt;" sig="(Ljava/lang/String;II)V" ignore="true"/>
+        <method name="&lt;init&gt;" sig="(Ljava/lang/String;Lorg/esa/beam/framework/datamodel/ProductData;Z)V"
+                renameTo="newMetadataAttribute"/>
+        <method name="fireProductNodeChanged" sig="(Ljava/lang/String;)V" ignore="true"/>
+        <method name="fireProductNodeChanged" sig="(Ljava/lang/String;Ljava/lang/Object;Ljava/lang/Object;)V"
+                ignore="true"/>
+        <method name="getRawStorageSize" sig="()J" ignore="true"/>
+        <method name="getRawStorageSize" sig="(Lorg/esa/beam/framework/dataio/ProductSubsetDef;)J" ignore="true"/>
+    </class>
+    <class name="org.esa.beam.framework.datamodel.MetadataElement">
+        <method name="fireProductNodeChanged" sig="(Ljava/lang/String;)V" ignore="true"/>
+        <method name="fireProductNodeChanged" sig="(Ljava/lang/String;Ljava/lang/Object;Ljava/lang/Object;)V"
+                ignore="true"/>
+        <method name="getAttributeDouble" sig="(Ljava/lang/String;)D" ignore="true"/>
+        <method name="getAttributeDouble" sig="(Ljava/lang/String;D)D" ignore="false"/>
+        <method name="getAttributeInt" sig="(Ljava/lang/String;)I" ignore="true"/>
+        <method name="getAttributeInt" sig="(Ljava/lang/String;I)I" ignore="false"/>
+        <method name="getAttributeString" sig="(Ljava/lang/String;)Ljava/lang/String;" ignore="true"/>
+        <method name="getAttributeString" sig="(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;"
+                ignore="false"/>
+        <method name="getAttributeUTC" sig="(Ljava/lang/String;)Lorg/esa/beam/framework/datamodel/ProductData/UTC;"
+                ignore="true"/>
+        <method name="getAttributeUTC"
+                sig="(Ljava/lang/String;Lorg/esa/beam/framework/datamodel/ProductData/UTC;)Lorg/esa/beam/framework/datamodel/ProductData/UTC;"
+                ignore="false"/>
+        <method name="getRawStorageSize" sig="()J" ignore="true"/>
+        <method name="getRawStorageSize" sig="(Lorg/esa/beam/framework/dataio/ProductSubsetDef;)J" ignore="true"/>
+    </class>
     <class name="org.esa.beam.framework.datamodel.PixelPos"/>
-    <class name="org.esa.beam.framework.datamodel.Placemark"/>
+    <class name="org.esa.beam.framework.datamodel.Placemark">
+        <method name="fireProductNodeChanged" sig="(Ljava/lang/String;)V" ignore="true"/>
+        <method name="fireProductNodeChanged" sig="(Ljava/lang/String;Ljava/lang/Object;Ljava/lang/Object;)V"
+                ignore="true"/>
+        <method name="getRawStorageSize" sig="()J" ignore="true"/>
+        <method name="getRawStorageSize" sig="(Lorg/esa/beam/framework/dataio/ProductSubsetDef;)J" ignore="true"/>
+    </class>
     <class name="org.esa.beam.framework.datamodel.PlacemarkGroup"/>
     <class name="org.esa.beam.framework.datamodel.Product">
         <method name="&lt;init&gt;" sig="(Ljava/lang/String;Ljava/lang/String;II)V" renameTo="newProduct"/>
@@ -104,7 +224,7 @@
                 sig="(Ljava/lang/String;Ljava/lang/String;IILorg/esa/beam/framework/dataio/ProductReader;)V"
                 ignore="true"/>
         <method name="addBand" sig="(Ljava/lang/String;I)Lorg/esa/beam/framework/datamodel/Band;"
-                renameTo="addEmptyBand"/>
+                renameTo="addNewBand"/>
         <method name="addBand" sig="(Ljava/lang/String;Ljava/lang/String;)Lorg/esa/beam/framework/datamodel/Band;"
                 renameTo="addComputedBand"/>
         <method name="addBand" sig="(Ljava/lang/String;Ljava/lang/String;I)Lorg/esa/beam/framework/datamodel/Band;"
@@ -135,7 +255,11 @@
         <method name="setPreferredTileSize" sig="(Ljava/awt/Dimension;)V" ignore="true"/>
     </class>
     <class name="org.esa.beam.framework.datamodel.ProductData"/>
-    <class name="org.esa.beam.framework.datamodel.ProductManager"/>
+    <class name="org.esa.beam.framework.datamodel.ProductManager">
+        <method name="getProduct" sig="(I)Lorg/esa/beam/framework/datamodel/Product;"/>
+        <method name="getProduct" sig="(Ljava/lang/String;)Lorg/esa/beam/framework/datamodel/Product;"
+                renameTo="getProductByName"/>
+    </class>
     <class name="org.esa.beam.framework.datamodel.ProductNodeGroup"/>
     <class name="org.esa.beam.framework.datamodel.RGBChannelDef">
         <method name="&lt;init&gt;" sig="()V" renameTo="newRGBChannelDef"/>
