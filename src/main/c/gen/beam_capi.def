@@ -58,20 +58,15 @@ EXPORTS
 	IndexCoding_getAttribute
 	IndexCoding_containsAttribute
 	IndexCoding_getAttributeIndex
-	IndexCoding_getAttributeDouble2
-	IndexCoding_getAttributeDouble1
-	IndexCoding_getAttributeUTC2
-	IndexCoding_getAttributeUTC1
-	IndexCoding_getAttributeInt2
-	IndexCoding_getAttributeInt1
+	IndexCoding_getAttributeDouble
+	IndexCoding_getAttributeUTC
+	IndexCoding_getAttributeInt
 	IndexCoding_setAttributeInt
 	IndexCoding_setAttributeDouble
 	IndexCoding_setAttributeUTC
-	IndexCoding_getAttributeString1
-	IndexCoding_getAttributeString2
+	IndexCoding_getAttributeString
 	IndexCoding_setAttributeString
 	IndexCoding_setModified
-	IndexCoding_getRawStorageSize2
 	IndexCoding_createDeepClone
 	IndexCoding_dispose
 	IndexCoding_getOwner
@@ -87,10 +82,7 @@ EXPORTS
 	IndexCoding_getProductWriter
 	IndexCoding_getDisplayName
 	IndexCoding_getProductRefString
-	IndexCoding_getRawStorageSize1
 	IndexCoding_updateExpression
-	IndexCoding_fireProductNodeChanged1
-	IndexCoding_fireProductNodeChanged2
 	IndexCoding_removeFromFile
 	IndexCoding_getExtension
 	PixelPos_newPixelPos1
@@ -115,14 +107,9 @@ EXPORTS
 	ProductIO_getProductReader
 	ProductIO_getProductWriterExtensions
 	ProductIO_getProductWriter
-	ProductIO_readProduct2
-	ProductIO_readProduct3
-	ProductIO_readProduct1
+	ProductIO_readProduct
 	ProductIO_getProductReaderForInput
-	ProductIO_writeProduct3
-	ProductIO_writeProduct4
-	ProductIO_writeProduct1
-	ProductIO_writeProduct2
+	ProductIO_writeProduct
 	Placemark_newPlacemark
 	Placemark_createPointPlacemark
 	Placemark_getDescriptor
@@ -135,7 +122,6 @@ EXPORTS
 	Placemark_getText
 	Placemark_setStyleCss
 	Placemark_getStyleCss
-	Placemark_getRawStorageSize2
 	Placemark_acceptVisitor
 	Placemark_getPixelPos
 	Placemark_setPixelPos
@@ -161,10 +147,7 @@ EXPORTS
 	Placemark_getProductWriter
 	Placemark_getDisplayName
 	Placemark_getProductRefString
-	Placemark_getRawStorageSize1
 	Placemark_updateExpression
-	Placemark_fireProductNodeChanged1
-	Placemark_fireProductNodeChanged2
 	Placemark_removeFromFile
 	Placemark_getExtension
 	MetadataElement_newMetadataElement
@@ -189,21 +172,16 @@ EXPORTS
 	MetadataElement_getAttribute
 	MetadataElement_containsAttribute
 	MetadataElement_getAttributeIndex
-	MetadataElement_getAttributeDouble2
-	MetadataElement_getAttributeDouble1
-	MetadataElement_getAttributeUTC2
-	MetadataElement_getAttributeUTC1
-	MetadataElement_getAttributeInt2
-	MetadataElement_getAttributeInt1
+	MetadataElement_getAttributeDouble
+	MetadataElement_getAttributeUTC
+	MetadataElement_getAttributeInt
 	MetadataElement_setAttributeInt
 	MetadataElement_setAttributeDouble
 	MetadataElement_setAttributeUTC
-	MetadataElement_getAttributeString1
-	MetadataElement_getAttributeString2
+	MetadataElement_getAttributeString
 	MetadataElement_setAttributeString
 	MetadataElement_setModified
 	MetadataElement_acceptVisitor
-	MetadataElement_getRawStorageSize2
 	MetadataElement_createDeepClone
 	MetadataElement_dispose
 	MetadataElement_getOwner
@@ -219,10 +197,7 @@ EXPORTS
 	MetadataElement_getProductWriter
 	MetadataElement_getDisplayName
 	MetadataElement_getProductRefString
-	MetadataElement_getRawStorageSize1
 	MetadataElement_updateExpression
-	MetadataElement_fireProductNodeChanged1
-	MetadataElement_fireProductNodeChanged2
 	MetadataElement_removeFromFile
 	MetadataElement_getExtension
 	Product_newProduct
@@ -263,7 +238,7 @@ EXPORTS
 	Product_getTiePointGrid
 	Product_containsTiePointGrid
 	Product_addBand
-	Product_addEmptyBand
+	Product_addNewBand
 	Product_addComputedBand
 	Product_removeBand
 	Product_getNumBands
@@ -354,13 +329,12 @@ EXPORTS
 	ColorPaletteDef_getColors
 	ColorPaletteDef_createColorPalette
 	ColorPaletteDef_computeColor
-	ImageInfo_newImageInfo1
-	ImageInfo_newImageInfo2
+	ImageInfo_newImageInfoPalette
+	ImageInfo_newImageInfoRGB
 	ImageInfo_getColorPaletteDef
 	ImageInfo_getRgbChannelDef
 	ImageInfo_getNoDataColor
 	ImageInfo_setNoDataColor
-	ImageInfo_getHistogramMatching1
 	ImageInfo_setHistogramMatching
 	ImageInfo_isLogScaled
 	ImageInfo_setLogScaled
@@ -373,16 +347,16 @@ EXPORTS
 	ImageInfo_dispose
 	ImageInfo_setColors
 	ImageInfo_setColorPaletteDef
-	ImageInfo_getHistogramMatching2
+	ImageInfo_getHistogramMatching
 	ProductManager_newProductManager
 	ProductManager_getProductCount
-	ProductManager_getProduct1
+	ProductManager_getProduct
 	ProductManager_getProductDisplayNames
 	ProductManager_getProductNames
 	ProductManager_getProducts
 	ProductManager_getProductByDisplayName
 	ProductManager_getProductByRefNo
-	ProductManager_getProduct2
+	ProductManager_getProductByName
 	ProductManager_getProductIndex
 	ProductManager_containsProduct
 	ProductManager_contains
@@ -483,7 +457,7 @@ EXPORTS
 	Band_writePixelsDouble
 	Band_readValidMask
 	Band_readRasterDataFully
-	Band_readRasterData...
+	Band_readRasterData
 	Band_writeRasterDataFully
 	Band_writeRasterData
 	Band_createCompatibleRasterData
@@ -754,7 +728,6 @@ EXPORTS
 	TiePointGrid_removeFromFile
 	TiePointGrid_getExtension
 	AngularDirection_newAngularDirection
-	AngularDirection_newAngularDirectionAZ
 	AngularDirection_equals
 	AngularDirection_toString
 	FlagCoding_newFlagCoding
@@ -788,20 +761,15 @@ EXPORTS
 	FlagCoding_getAttribute
 	FlagCoding_containsAttribute
 	FlagCoding_getAttributeIndex
-	FlagCoding_getAttributeDouble2
-	FlagCoding_getAttributeDouble1
-	FlagCoding_getAttributeUTC2
-	FlagCoding_getAttributeUTC1
-	FlagCoding_getAttributeInt2
-	FlagCoding_getAttributeInt1
+	FlagCoding_getAttributeDouble
+	FlagCoding_getAttributeUTC
+	FlagCoding_getAttributeInt
 	FlagCoding_setAttributeInt
 	FlagCoding_setAttributeDouble
 	FlagCoding_setAttributeUTC
-	FlagCoding_getAttributeString1
-	FlagCoding_getAttributeString2
+	FlagCoding_getAttributeString
 	FlagCoding_setAttributeString
 	FlagCoding_setModified
-	FlagCoding_getRawStorageSize2
 	FlagCoding_createDeepClone
 	FlagCoding_dispose
 	FlagCoding_getOwner
@@ -817,10 +785,7 @@ EXPORTS
 	FlagCoding_getProductWriter
 	FlagCoding_getDisplayName
 	FlagCoding_getProductRefString
-	FlagCoding_getRawStorageSize1
 	FlagCoding_updateExpression
-	FlagCoding_fireProductNodeChanged1
-	FlagCoding_fireProductNodeChanged2
 	FlagCoding_removeFromFile
 	FlagCoding_getExtension
 	ProductReader_getReaderPlugIn
@@ -909,9 +874,7 @@ EXPORTS
 	ProductData_equals
 	ProductData_equalElems
 	ProductData_dispose
-	GeoPos_newGeoPos1
-	GeoPos_newGeoPos3
-	GeoPos_newGeoPos2
+	GeoPos_newGeoPos
 	GeoPos_getLat
 	GeoPos_getLon
 	GeoPos_setLocation
@@ -923,10 +886,8 @@ EXPORTS
 	GeoPos_toString
 	GeoPos_normalize
 	GeoPos_normalizeLon
-	GeoPos_getLatString1
-	GeoPos_getLonString1
-	GeoPos_getLatString2
-	GeoPos_getLonString2
+	GeoPos_getLatString
+	GeoPos_getLonString
 	ProductNodeGroup_newProductNodeGroup1
 	ProductNodeGroup_newProductNodeGroup2
 	ProductNodeGroup_isTakingOverNodeOwnership
@@ -1038,9 +999,7 @@ EXPORTS
 	ProductUtils_getScanLineTime
 	ProductUtils_getGeophysicalSampleDouble
 	ProductUtils_getGeophysicalSampleLong
-	MetadataAttribute_newMetadataAttribute1
-	MetadataAttribute_newMetadataAttribute2
-	MetadataAttribute_newMetadataAttribute3
+	MetadataAttribute_newMetadataAttribute
 	MetadataAttribute_getParentElement
 	MetadataAttribute_equals
 	MetadataAttribute_acceptVisitor
@@ -1058,7 +1017,6 @@ EXPORTS
 	MetadataAttribute_setUnit
 	MetadataAttribute_getUnit
 	MetadataAttribute_fireProductNodeDataChanged
-	MetadataAttribute_getRawStorageSize2
 	MetadataAttribute_dispose
 	MetadataAttribute_createCompatibleProductData
 	MetadataAttribute_getOwner
@@ -1075,9 +1033,6 @@ EXPORTS
 	MetadataAttribute_getProductWriter
 	MetadataAttribute_getDisplayName
 	MetadataAttribute_getProductRefString
-	MetadataAttribute_getRawStorageSize1
 	MetadataAttribute_updateExpression
-	MetadataAttribute_fireProductNodeChanged1
-	MetadataAttribute_fireProductNodeChanged2
 	MetadataAttribute_removeFromFile
 	MetadataAttribute_getExtension
