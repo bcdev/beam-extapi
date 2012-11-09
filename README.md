@@ -38,9 +38,12 @@ C-Code Generation Considerations
 * How to treat generics?
 * How to treat (primitive, string & object) arrays?
 * How to treat object collections lists, sets, maps?
+* How to treat enums? (e.g. HistogramMatching)
+* How to treat public fields? (e.g. GeoPos)
 * How to treat generics?
 * How to treat Java SE classes: File, Date, Point, etc?
 * How to treat and catch / throw Exceptions?
+* How to make sure that JNI global refs are decreased/freed?
 * How to deal with multi-threaded C/Python programs (specifically, what about 'env' pointer in JNI, it is a per-thread environment)
 * Care: Check ALWAYS for possible null return values (many JNI functions may return null)
 
