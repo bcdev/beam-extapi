@@ -14,11 +14,9 @@ import java.util.Map;
  * @author Norman Fomferra
  */
 public class ApiGeneratorConfigImpl implements ApiGeneratorConfig {
-    private final CConfig[] cConfigs;
     private final Map<String, Map<String, MConfig>> mConfigs;
 
     ApiGeneratorConfigImpl(CConfig[] cConfigs) {
-        this.cConfigs = cConfigs;
         this.mConfigs = createMConfigMap(cConfigs);
     }
 
