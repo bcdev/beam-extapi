@@ -86,12 +86,17 @@ public abstract class ParameterGenerator implements CodeGenerator {
         public String generatePreCallCode(GeneratorContext context) {
             String typeName = getType().simpleTypeName();
             typeName = Character.toUpperCase(typeName.charAt(0)) + typeName.substring(1);
-
-            return eval("${p}Array = (*jenv)->New${t}Array(jenv, ${p}Length);\n" +
+            if (parameter.getModifier() == ApiParameter.Modifier.IN) {
+                return eval("${p}Array = (*jenv)->New${t}Array(jenv, ${p}Length);\n" +
                                 "${p}ArrayAddr = (*jenv)->GetPrimitiveArrayCritical(jenv, ${p}Array, 0);\n" +
                                 "memcpy(${p}ArrayAddr, ${p}Elems, ${p}Length);",
                         kv("t", typeName),
                         kv("p", parameter.getJavaName()));
+            } else {
+                return eval("${p}Array = (*jenv)->New${t}Array(jenv, ${p}Length);",
+                            kv("t", typeName),
+                            kv("p", parameter.getJavaName()));
+            }
         }
 
         @Override
@@ -101,8 +106,15 @@ public abstract class ParameterGenerator implements CodeGenerator {
 
         @Override
         public String generatePostCallCode(GeneratorContext context) {
-            return eval("(*jenv)->ReleasePrimitiveArrayCritical(jenv, ${p}Array, ${p}ArrayAddr, 0);",
-                        kv("p", parameter.getJavaName()));
+            if (parameter.getModifier() == ApiParameter.Modifier.IN) {
+                return eval("(*jenv)->ReleasePrimitiveArrayCritical(jenv, ${p}Array, ${p}ArrayAddr, 0);",
+                            kv("p", parameter.getJavaName()));
+            } else {
+                return eval("${p}ArrayAddr = (*jenv)->GetPrimitiveArrayCritical(jenv, ${p}Array, 0);\n" +
+                                    "memcpy(${p}Elems, ${p}ArrayAddr, ${p}Length);\n" +
+                                    "(*jenv)->ReleasePrimitiveArrayCritical(jenv, ${p}Array, ${p}ArrayAddr, 0);",
+                            kv("p", parameter.getJavaName()));
+            }
         }
     }
 

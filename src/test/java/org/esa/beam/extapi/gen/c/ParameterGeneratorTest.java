@@ -12,6 +12,7 @@ import java.awt.geom.Point2D;
 import java.io.File;
 import java.util.Map;
 
+import static org.esa.beam.extapi.gen.ApiParameter.Modifier;
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -28,19 +29,19 @@ public class ParameterGeneratorTest {
 
     @Test
     public void test_CodeGenParameter_PrimitiveScalar() {
-        testPrimitiveScalar("x", Boolean.TYPE, "boolean x", "x");
-        testPrimitiveScalar("x", Byte.TYPE, "byte x", "x");
-        testPrimitiveScalar("x", Character.TYPE, "char x", "x");
-        testPrimitiveScalar("x", Short.TYPE, "short x", "x");
-        testPrimitiveScalar("x", Integer.TYPE, "int x", "x");
-        testPrimitiveScalar("x", Long.TYPE, "dlong x", "x");
-        testPrimitiveScalar("x", Float.TYPE, "float x", "x");
-        testPrimitiveScalar("x", Double.TYPE, "double x", "x");
+        testPrimitiveScalar("x", Boolean.TYPE, Modifier.IN, "boolean x", "x");
+        testPrimitiveScalar("x", Byte.TYPE, Modifier.IN, "byte x", "x");
+        testPrimitiveScalar("x", Character.TYPE, Modifier.IN, "char x", "x");
+        testPrimitiveScalar("x", Short.TYPE, Modifier.IN, "short x", "x");
+        testPrimitiveScalar("x", Integer.TYPE, Modifier.IN, "int x", "x");
+        testPrimitiveScalar("x", Long.TYPE, Modifier.IN, "dlong x", "x");
+        testPrimitiveScalar("x", Float.TYPE, Modifier.IN, "float x", "x");
+        testPrimitiveScalar("x", Double.TYPE, Modifier.IN, "double x", "x");
     }
 
     @Test
-    public void test_CodeGenParameter_PrimitiveArray() {
-        testPrimitiveArray("data", boolean[].class,
+    public void test_CodeGenParameter_PrimitiveArray_IN() {
+        testPrimitiveArray("data", boolean[].class, Modifier.IN,
                            "const boolean* dataElems, int dataLength",
                            "jarray dataArray = NULL;\n" +
                                    "void* dataArrayAddr = NULL;",
@@ -49,6 +50,32 @@ public class ParameterGeneratorTest {
                                    "memcpy(dataArrayAddr, dataElems, dataLength);",
                            "dataArray",
                            "(*jenv)->ReleasePrimitiveArrayCritical(jenv, dataArray, dataArrayAddr, 0);");
+    }
+
+    @Test
+    public void test_CodeGenParameter_PrimitiveArray_OUT() {
+        testPrimitiveArray("data", int[].class, Modifier.OUT,
+                           "int* dataElems, int dataLength",
+                           "jarray dataArray = NULL;\n" +
+                                   "void* dataArrayAddr = NULL;",
+                           "dataArray = (*jenv)->NewIntArray(jenv, dataLength);",
+                           "dataArray",
+                           "dataArrayAddr = (*jenv)->GetPrimitiveArrayCritical(jenv, dataArray, 0);\n" +
+                                   "memcpy(dataElems, dataArrayAddr, dataLength);\n" +
+                                   "(*jenv)->ReleasePrimitiveArrayCritical(jenv, dataArray, dataArrayAddr, 0);");
+    }
+
+    @Test
+    public void test_CodeGenParameter_PrimitiveArray_RETURN() {
+        testPrimitiveArray("data", float[].class, Modifier.RETURN,
+                           "float* dataElems, int dataLength",
+                           "jarray dataArray = NULL;\n" +
+                                   "void* dataArrayAddr = NULL;",
+                           "dataArray = (*jenv)->NewFloatArray(jenv, dataLength);",
+                           "dataArray",
+                           "dataArrayAddr = (*jenv)->GetPrimitiveArrayCritical(jenv, dataArray, 0);\n" +
+                                   "memcpy(dataElems, dataArrayAddr, dataLength);\n" +
+                                   "(*jenv)->ReleasePrimitiveArrayCritical(jenv, dataArray, dataArrayAddr, 0);");
     }
 
     @Test
@@ -77,7 +104,7 @@ public class ParameterGeneratorTest {
 
     @Test
     public void test_CodeGenParameter_StringScalar() {
-        final ParameterGenerator.StringScalar stringScalar = new ParameterGenerator.StringScalar(createParam("name", String.class, ApiParameter.Modifier.IN));
+        final ParameterGenerator.StringScalar stringScalar = new ParameterGenerator.StringScalar(createParam("name", String.class, Modifier.IN));
         assertEquals("const char* name", stringScalar.generateParamListDecl(context));
         assertEquals("jstring nameString = NULL;", stringScalar.generateLocalVarDecl(context));
         assertEquals("nameString = (*jenv)->NewStringUTF(jenv, name);", stringScalar.generatePreCallCode(context));
@@ -88,24 +115,24 @@ public class ParameterGeneratorTest {
     public void test_CodeGenParameter_StringArray() {
         String name = "names";
         Class<?> type = String[].class;
-        final ParameterGenerator.StringArray stringArray = new ParameterGenerator.StringArray(createParam(name, type, ApiParameter.Modifier.IN));
+        final ParameterGenerator.StringArray stringArray = new ParameterGenerator.StringArray(createParam(name, type, Modifier.IN));
         assertEquals("const char** namesElems, int namesLength", stringArray.generateParamListDecl(context));
         assertEquals("jobjectArray namesArray = NULL;", stringArray.generateLocalVarDecl(context));
         assertEquals("namesArray = beam_new_jstring_array(namesElems, namesLength);", stringArray.generatePreCallCode(context));
         assertEquals("namesArray", stringArray.generateCallCode(context));
     }
 
-    private void testPrimitiveScalar(String name, Class<?> type, String paramListDecl, String callArgExpr) {
-        testGenerators(new ParameterGenerator.PrimitiveScalar(createParam(name, type, ApiParameter.Modifier.IN)), paramListDecl, null, null, callArgExpr, null);
+    private void testPrimitiveScalar(String name, Class<?> type, Modifier modifier, String paramListDecl, String callArgExpr) {
+        testGenerators(new ParameterGenerator.PrimitiveScalar(createParam(name, type, modifier)),
+                       paramListDecl,
+                       null,
+                       null,
+                       callArgExpr,
+                       null);
     }
 
-    private void testPrimitiveArray(String name, Class<?> type,
-                                    String paramListDecl,
-                                    String localVarDecl,
-                                    String preCallCode,
-                                    String callArgExpr,
-                                    String postCallCode) {
-        testGenerators(new ParameterGenerator.PrimitiveArray(createParam(name, type, ApiParameter.Modifier.IN)),
+    private void testPrimitiveArray(String name, Class<?> type, Modifier modifier, String paramListDecl, String localVarDecl, String preCallCode, String callArgExpr, String postCallCode) {
+        testGenerators(new ParameterGenerator.PrimitiveArray(createParam(name, type, modifier)),
                        paramListDecl,
                        localVarDecl,
                        preCallCode,
@@ -119,7 +146,7 @@ public class ParameterGeneratorTest {
                                  String preCallCode,
                                  String callArgExpr,
                                  String postCallCode) {
-        testGenerators(new ParameterGenerator.ObjectArray(createParam(name, type, ApiParameter.Modifier.IN)),
+        testGenerators(new ParameterGenerator.ObjectArray(createParam(name, type, Modifier.IN)),
                        paramListDecl,
                        localVarDecl,
                        preCallCode,
@@ -128,7 +155,7 @@ public class ParameterGeneratorTest {
     }
 
     private void testObjectScalar(String name, Class<?> type, String paramListDecl, String callArgExpr) {
-        testGenerators(new ParameterGenerator.ObjectScalar(createParam(name, type, ApiParameter.Modifier.IN)),
+        testGenerators(new ParameterGenerator.ObjectScalar(createParam(name, type, Modifier.IN)),
                        paramListDecl, null, null, callArgExpr, null);
     }
 
@@ -145,7 +172,7 @@ public class ParameterGeneratorTest {
         assertEquals(postCallCode, parameterGenerator.generatePostCallCode(context));
     }
 
-    private ApiParameter createParam(String name, Class<?> type, ApiParameter.Modifier modifier) {
+    private ApiParameter createParam(String name, Class<?> type, Modifier modifier) {
         return new ApiParameter(DocMock.createParameter(name, type), modifier);
     }
 
