@@ -4,6 +4,7 @@ import com.sun.javadoc.ExecutableMemberDoc;
 import com.sun.javadoc.Type;
 import org.esa.beam.extapi.gen.ApiClass;
 import org.esa.beam.extapi.gen.ApiMethod;
+import org.esa.beam.extapi.gen.ApiParameter;
 
 import static org.esa.beam.extapi.gen.TemplateEval.eval;
 import static org.esa.beam.extapi.gen.TemplateEval.kv;
@@ -44,7 +45,7 @@ public abstract class FunctionGenerator implements CodeGenerator {
 
     public String generateFunctionSignature(GeneratorContext context) {
         String returnTypeName = getCTypeName(getReturnType());
-        String functionName = context.getFunctionName(this);
+        String functionName = context.getFunctionNameFor(getApiMethod());
         String parameterList = generateParameterList(context);
         if (parameterList.isEmpty()) {
             return String.format("%s %s()",
@@ -78,6 +79,15 @@ public abstract class FunctionGenerator implements CodeGenerator {
 
     public abstract String generateReturnCode(GeneratorContext context);
 
+    protected boolean hasReturnParameter(GeneratorContext context) {
+        for (ApiParameter parameter : context.getParametersFor(getApiMethod())) {
+            if (parameter.getModifier() == ApiParameter.Modifier.RETURN) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     protected String generateJniCall(GeneratorContext context) {
 
         final String functionName;
@@ -107,7 +117,7 @@ public abstract class FunctionGenerator implements CodeGenerator {
             argumentList.append(parameterGenerator.generateCallCode(context));
         }
 
-        return String.format("(*jenv)->%s(jenv, %s);", functionName, argumentList);
+        return String.format("(*jenv)->%s(jenv, %s)", functionName, argumentList);
     }
 
     protected String generateParameterList(GeneratorContext context) {
@@ -160,7 +170,7 @@ public abstract class FunctionGenerator implements CodeGenerator {
 
         @Override
         public String generateCallCode(GeneratorContext context) {
-            return generateJniCall(context);
+            return String.format("%s;", generateJniCall(context));
         }
 
         @Override
@@ -182,7 +192,7 @@ public abstract class FunctionGenerator implements CodeGenerator {
 
         @Override
         public String generateCallCode(GeneratorContext context) {
-            return String.format("%s = %s", ModuleGenerator.RESULT_VAR_NAME, generateJniCall(context));
+            return String.format("%s = %s;", ModuleGenerator.RESULT_VAR_NAME, generateJniCall(context));
         }
 
         @Override
@@ -267,7 +277,7 @@ public abstract class FunctionGenerator implements CodeGenerator {
 
         @Override
         public String generateCallCode(GeneratorContext context) {
-            return String.format("_resultString = %s\n" +
+            return String.format("_resultString = %s;\n" +
                                          "%s = beam_alloc_string(_resultString);",
                                  generateJniCall(context), ModuleGenerator.RESULT_VAR_NAME);
         }
@@ -297,11 +307,18 @@ public abstract class FunctionGenerator implements CodeGenerator {
 
         @Override
         public String generateCallCode(GeneratorContext context) {
-            return eval("${r}Array = ${c}\n" +
-                                "${r} = ${f}(${r}Array, resultArrayLength);",
-                        kv("r", ModuleGenerator.RESULT_VAR_NAME),
-                        kv("c", generateJniCall(context)),
-                        kv("f", getAllocFunctionName()));
+            if (hasReturnParameter(context)) {
+                // NOTE: ParameterGenerator.<T>Array will generate code which sets ${r} = ...
+                return eval("${r}Array = ${c};",
+                            kv("r", ModuleGenerator.RESULT_VAR_NAME),
+                            kv("c", generateJniCall(context)));
+            }   else {
+                return eval("${r}Array = ${c};\n" +
+                                    "${r} = ${f}(${r}Array, resultArrayLength);",
+                            kv("r", ModuleGenerator.RESULT_VAR_NAME),
+                            kv("c", generateJniCall(context)),
+                            kv("f", getAllocFunctionName()));
+            }
         }
 
         @Override

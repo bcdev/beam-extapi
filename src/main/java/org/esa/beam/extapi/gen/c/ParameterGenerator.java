@@ -164,9 +164,12 @@ public abstract class ParameterGenerator implements CodeGenerator {
                             kv("p", getName()),
                             kv("t", getType().simpleTypeName()));
             } else {
-                return eval("beam_copy_from_jarray(${p}Array, ${p}Elems, ${p}Length, sizeof (${t}));\n" +
-                                    "if (${r}Array == ${p}Array) {\n" +
+                return eval("" +
+                                    "if (${p}Elems != NULL && (*jenv)->IsSameObject(jenv, ${p}Array, ${r}Array)) {\n" +
+                                    "    beam_copy_from_jarray(_resultArray, ${p}Elems, ${p}Length, sizeof (${t}));\n" +
                                     "    ${r} = ${p}Elems;\n" +
+                                    "} else {\n" +
+                                    "    ${r} = beam_alloc_${t}_array(${r}Array, resultArrayLength);\n" +
                                     "}",
                             kv("r", ModuleGenerator.RESULT_VAR_NAME),
                             kv("p", getName()),

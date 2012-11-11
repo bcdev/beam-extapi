@@ -17,10 +17,7 @@
 package org.esa.beam.extapi.gen.c;
 
 import com.sun.javadoc.Type;
-import org.esa.beam.extapi.gen.ApiClass;
-import org.esa.beam.extapi.gen.ApiGeneratorDoclet;
-import org.esa.beam.extapi.gen.ApiInfo;
-import org.esa.beam.extapi.gen.ApiMethod;
+import org.esa.beam.extapi.gen.*;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -66,8 +63,13 @@ public class ModuleGenerator implements GeneratorContext {
     }
 
     @Override
-    public String getFunctionName(FunctionGenerator generator) {
-        return functionNames.get(generator.getApiMethod());
+    public String getFunctionNameFor(ApiMethod apiMethod) {
+        return functionNames.get(apiMethod);
+    }
+
+    @Override
+    public ApiParameter[] getParametersFor(ApiMethod apiMethod) {
+        return apiInfo.getParametersFor(apiMethod);
     }
 
     public List<FunctionGenerator> getFunctionGenerators(ApiClass apiClass) {
@@ -133,7 +135,7 @@ public class ModuleGenerator implements GeneratorContext {
                                   "\tString_newString\n");
             for (ApiClass apiClass : getApiClasses()) {
                 for (FunctionGenerator generator : getFunctionGenerators(apiClass)) {
-                    writer.printf("\t%s\n", getFunctionName(generator));
+                    writer.printf("\t%s\n", getFunctionNameFor(generator.getApiMethod()));
                 }
             }
         } finally {

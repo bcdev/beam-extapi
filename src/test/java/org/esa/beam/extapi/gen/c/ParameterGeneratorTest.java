@@ -85,9 +85,11 @@ public class ParameterGeneratorTest {
                            "jarray dataArray = NULL;",
                            "dataArray = (*jenv)->NewFloatArray(jenv, dataLength);",
                            "dataArray",
-                           "beam_copy_from_jarray(dataArray, dataElems, dataLength, sizeof (float));\n" +
-                                   "if (_resultArray == dataArray) {\n" +
+                           "if (dataElems != NULL && (*jenv)->IsSameObject(jenv, dataArray, _resultArray)) {\n" +
+                                   "    beam_copy_from_jarray(_resultArray, dataElems, dataLength, sizeof (float));\n" +
                                    "    _result = dataElems;\n" +
+                                   "} else {\n" +
+                                   "    _result = beam_alloc_float_array(_resultArray, resultArrayLength);\n" +
                                    "}");
     }
 
