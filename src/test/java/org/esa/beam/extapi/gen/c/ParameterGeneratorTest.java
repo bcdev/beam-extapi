@@ -40,45 +40,6 @@ public class ParameterGeneratorTest {
     }
 
     @Test
-    public void test_CodeGenParameter_PrimitiveArray_IN() {
-        testPrimitiveArray("data", boolean[].class, Modifier.IN,
-                           "const boolean* dataElems, int dataLength",
-                           "jarray dataArray = NULL;\n" +
-                                   "void* dataArrayAddr = NULL;",
-                           "dataArray = (*jenv)->NewBooleanArray(jenv, dataLength);\n" +
-                                   "dataArrayAddr = (*jenv)->GetPrimitiveArrayCritical(jenv, dataArray, 0);\n" +
-                                   "memcpy(dataArrayAddr, dataElems, dataLength);",
-                           "dataArray",
-                           "(*jenv)->ReleasePrimitiveArrayCritical(jenv, dataArray, dataArrayAddr, 0);");
-    }
-
-    @Test
-    public void test_CodeGenParameter_PrimitiveArray_OUT() {
-        testPrimitiveArray("data", int[].class, Modifier.OUT,
-                           "int* dataElems, int dataLength",
-                           "jarray dataArray = NULL;\n" +
-                                   "void* dataArrayAddr = NULL;",
-                           "dataArray = (*jenv)->NewIntArray(jenv, dataLength);",
-                           "dataArray",
-                           "dataArrayAddr = (*jenv)->GetPrimitiveArrayCritical(jenv, dataArray, 0);\n" +
-                                   "memcpy(dataElems, dataArrayAddr, dataLength);\n" +
-                                   "(*jenv)->ReleasePrimitiveArrayCritical(jenv, dataArray, dataArrayAddr, 0);");
-    }
-
-    @Test
-    public void test_CodeGenParameter_PrimitiveArray_RETURN() {
-        testPrimitiveArray("data", float[].class, Modifier.RETURN,
-                           "float* dataElems, int dataLength",
-                           "jarray dataArray = NULL;\n" +
-                                   "void* dataArrayAddr = NULL;",
-                           "dataArray = (*jenv)->NewFloatArray(jenv, dataLength);",
-                           "dataArray",
-                           "dataArrayAddr = (*jenv)->GetPrimitiveArrayCritical(jenv, dataArray, 0);\n" +
-                                   "memcpy(dataElems, dataArrayAddr, dataLength);\n" +
-                                   "(*jenv)->ReleasePrimitiveArrayCritical(jenv, dataArray, dataArrayAddr, 0);");
-    }
-
-    @Test
     public void test_CodeGenParameter_ObjectScalar_API() {
         testObjectScalar("product", Product.class, "Product product", "product");
         testObjectScalar("band", Band.class, "Band band", "band");
@@ -93,9 +54,61 @@ public class ParameterGeneratorTest {
     }
 
     @Test
+    public void test_CodeGenParameter_StringScalar() {
+        testGenerators(new ParameterGenerator.StringScalar(createParam("name", String.class, Modifier.IN)),
+                       "const char* name",
+                       "jstring nameString = NULL;",
+                       "nameString = (*jenv)->NewStringUTF(jenv, name);",
+                       "nameString",
+                       null);
+    }
+
+    @Test
+    public void test_CodeGenParameter_PrimitiveArray() {
+        testPrimitiveArray("data", boolean[].class, Modifier.IN,
+                           "const boolean* dataElems, int dataLength",
+                           "jarray dataArray = NULL;",
+                           "dataArray = (*jenv)->NewBooleanArray(jenv, dataLength);\n" +
+                                   "beam_copy_to_jarray(dataArray, dataElems, dataLength, sizeof (boolean));",
+                           "dataArray",
+                           null);
+
+        testPrimitiveArray("data", int[].class, Modifier.OUT,
+                           "int* dataElems, int dataLength",
+                           "jarray dataArray = NULL;",
+                           "dataArray = (*jenv)->NewIntArray(jenv, dataLength);",
+                           "dataArray",
+                           "beam_copy_from_jarray(dataArray, dataElems, dataLength, sizeof (int));");
+
+        testPrimitiveArray("data", float[].class, Modifier.RETURN,
+                           "float* dataElems, int dataLength",
+                           "jarray dataArray = NULL;",
+                           "dataArray = (*jenv)->NewFloatArray(jenv, dataLength);",
+                           "dataArray",
+                           "beam_copy_from_jarray(dataArray, dataElems, dataLength, sizeof (float));\n" +
+                                   "if (_resultArray == dataArray) {\n" +
+                                   "    _result = dataElems;\n" +
+                                   "}");
+    }
+
+    @Test
     public void test_CodeGenParameter_ObjectArray() {
-        testObjectArray("bands", Band[].class,
-                        "const Band* bandsElems, int bandsLength",
+        testObjectArray("bands", Band[].class, Modifier.IN,
+                        "const Band bandsElems, int bandsLength",
+                        "jarray bandsArray = NULL;",
+                        "bandsArray = beam_new_jobject_array(bandsElems, bandsLength, classBand);",
+                        "bandsArray",
+                        null);
+
+        testObjectArray("bands", Band[].class, Modifier.OUT,
+                        "Band bandsElems, int bandsLength",
+                        "jarray bandsArray = NULL;",
+                        "bandsArray = beam_new_jobject_array(bandsElems, bandsLength, classBand);",
+                        "bandsArray",
+                        null);
+
+        testObjectArray("bands", Band[].class, Modifier.RETURN,
+                        "Band bandsElems, int bandsLength",
                         "jarray bandsArray = NULL;",
                         "bandsArray = beam_new_jobject_array(bandsElems, bandsLength, classBand);",
                         "bandsArray",
@@ -103,23 +116,27 @@ public class ParameterGeneratorTest {
     }
 
     @Test
-    public void test_CodeGenParameter_StringScalar() {
-        final ParameterGenerator.StringScalar stringScalar = new ParameterGenerator.StringScalar(createParam("name", String.class, Modifier.IN));
-        assertEquals("const char* name", stringScalar.generateParamListDecl(context));
-        assertEquals("jstring nameString = NULL;", stringScalar.generateLocalVarDecl(context));
-        assertEquals("nameString = (*jenv)->NewStringUTF(jenv, name);", stringScalar.generatePreCallCode(context));
-        assertEquals("nameString", stringScalar.generateCallCode(context));
-    }
-
-    @Test
     public void test_CodeGenParameter_StringArray() {
-        String name = "names";
-        Class<?> type = String[].class;
-        final ParameterGenerator.StringArray stringArray = new ParameterGenerator.StringArray(createParam(name, type, Modifier.IN));
-        assertEquals("const char** namesElems, int namesLength", stringArray.generateParamListDecl(context));
-        assertEquals("jobjectArray namesArray = NULL;", stringArray.generateLocalVarDecl(context));
-        assertEquals("namesArray = beam_new_jstring_array(namesElems, namesLength);", stringArray.generatePreCallCode(context));
-        assertEquals("namesArray", stringArray.generateCallCode(context));
+        testStringArray("names", String[].class, Modifier.IN,
+                        "const char** namesElems, int namesLength",
+                        "jobjectArray namesArray = NULL;",
+                        "namesArray = beam_new_jstring_array(namesElems, namesLength);",
+                        "namesArray",
+                        null);
+
+        testStringArray("names", String[].class, Modifier.OUT,
+                        "char** namesElems, int namesLength",
+                        "jobjectArray namesArray = NULL;",
+                        "namesArray = beam_new_jstring_array(namesElems, namesLength);",
+                        "namesArray",
+                        null);
+
+        testStringArray("names", String[].class, Modifier.RETURN,
+                        "char** namesElems, int namesLength",
+                        "jobjectArray namesArray = NULL;",
+                        "namesArray = beam_new_jstring_array(namesElems, namesLength);",
+                        "namesArray",
+                        null);
     }
 
     private void testPrimitiveScalar(String name, Class<?> type, Modifier modifier, String paramListDecl, String callArgExpr) {
@@ -140,13 +157,27 @@ public class ParameterGeneratorTest {
                        postCallCode);
     }
 
-    private void testObjectArray(String name, Class<?> type,
+    private void testStringArray(String name, Class<?> type, Modifier modifier,
                                  String paramListDecl,
                                  String localVarDecl,
                                  String preCallCode,
                                  String callArgExpr,
                                  String postCallCode) {
-        testGenerators(new ParameterGenerator.ObjectArray(createParam(name, type, Modifier.IN)),
+        testGenerators(new ParameterGenerator.StringArray(createParam(name, type, modifier)),
+                       paramListDecl,
+                       localVarDecl,
+                       preCallCode,
+                       callArgExpr,
+                       postCallCode);
+    }
+
+    private void testObjectArray(String name, Class<?> type, Modifier modifier,
+                                 String paramListDecl,
+                                 String localVarDecl,
+                                 String preCallCode,
+                                 String callArgExpr,
+                                 String postCallCode) {
+        testGenerators(new ParameterGenerator.ObjectArray(createParam(name, type, modifier)),
                        paramListDecl,
                        localVarDecl,
                        preCallCode,

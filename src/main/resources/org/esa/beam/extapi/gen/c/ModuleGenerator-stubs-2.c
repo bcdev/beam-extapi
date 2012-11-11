@@ -42,64 +42,73 @@ void beam_release_jobject(jobject* object)
 	}
 }
 
-
-
-void* beam_alloc_primitive_array(jarray array, size_t array_elem_size,  int* array_length)
+void beam_copy_from_jarray(jarray array, void* elems, int array_length, size_t elem_size)
 {
-    void* array_elems;
-    void* array_addr;
+    void* addr = (*jenv)->GetPrimitiveArrayCritical(jenv, array, NULL);
+    memcpy(elems, addr, elem_size * array_length);
+    (*jenv)->ReleasePrimitiveArrayCritical(jenv, array, addr, 0);
+}
+
+void beam_copy_to_jarray(jarray array, const void* elems, int array_length, size_t elem_size)
+{
+    void* addr = (*jenv)->GetPrimitiveArrayCritical(jenv, array, NULL);
+    memcpy(addr, elems, elem_size * array_length);
+    (*jenv)->ReleasePrimitiveArrayCritical(jenv, array, addr, 0);
+}
+
+void* beam_alloc_primitive_array(jarray array, int* array_length, size_t elem_size)
+{
+    void* elems;
     int n;
 
     n = (*jenv)->GetArrayLength(jenv, array);
-    array_addr = (*jenv)->GetPrimitiveArrayCritical(jenv, array, NULL);
-    array_elems = (boolean*) malloc(n * array_elem_size);
-    memcpy(array_elems, array_addr, n * array_elem_size);
-    (*jenv)->ReleasePrimitiveArrayCritical(jenv, array, array_addr, 0);
+    elems = (boolean*) malloc(n * elem_size);
+    beam_copy_from_jarray(array, elems, elem_size, n);
     if (array_length != NULL) {
         *array_length = n;
     }
 
-    return array_elems;
+    return elems;
 }
 
 boolean* beam_alloc_boolean_array(jarray array, int* array_length)
 {
-    return (boolean*) beam_alloc_primitive_array(array, sizeof (boolean), array_length);
+    return (boolean*) beam_alloc_primitive_array(array, array_length, sizeof (boolean));
 }
 
 char* beam_alloc_char_array(jarray array, int* array_length)
 {
-    return (char*) beam_alloc_primitive_array(array, sizeof (char), array_length);
+    return (char*) beam_alloc_primitive_array(array, array_length, sizeof (char));
 }
 
 byte* beam_alloc_byte_array(jarray array, int* array_length)
 {
-    return (byte*) beam_alloc_primitive_array(array, sizeof (byte), array_length);
+    return (byte*) beam_alloc_primitive_array(array, array_length, sizeof (byte));
 }
 
 short* beam_alloc_short_array(jarray array, int* array_length)
 {
-    return (short*) beam_alloc_primitive_array(array, sizeof (short), array_length);
+    return (short*) beam_alloc_primitive_array(array, array_length, sizeof (short));
 }
 
 int* beam_alloc_int_array(jarray array, int* array_length)
 {
-    return (int*) beam_alloc_primitive_array(array, sizeof (int), array_length);
+    return (int*) beam_alloc_primitive_array(array, array_length, sizeof (int));
 }
 
 dlong* beam_alloc_long_array(jarray array, int* array_length)
 {
-    return (dlong*) beam_alloc_primitive_array(array, sizeof (dlong), array_length);
+    return (dlong*) beam_alloc_primitive_array(array, array_length, sizeof (dlong));
 }
 
 float* beam_alloc_float_array(jarray array, int* array_length)
 {
-    return (float*) beam_alloc_primitive_array(array, sizeof (float), array_length);
+    return (float*) beam_alloc_primitive_array(array, array_length, sizeof (float));
 }
 
 double* beam_alloc_double_array(jarray array, int* array_length)
 {
-    return (double*) beam_alloc_primitive_array(array, sizeof (double), array_length);
+    return (double*) beam_alloc_primitive_array(array, array_length, sizeof (double));
 }
 
 Object* beam_alloc_object_array(jarray array, int* array_length)

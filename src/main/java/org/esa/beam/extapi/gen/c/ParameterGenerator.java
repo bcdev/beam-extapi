@@ -62,61 +62,28 @@ public abstract class ParameterGenerator implements CodeGenerator {
         }
     }
 
-    static class PrimitiveArray extends ParameterGenerator {
+    private static String firstCharToUpperCase(String typeName) {
+        typeName = Character.toUpperCase(typeName.charAt(0)) + typeName.substring(1);
+        return typeName;
+    }
 
-        PrimitiveArray(ApiParameter parameter) {
+    static class ObjectScalar extends ParameterGenerator {
+        ObjectScalar(ApiParameter parameter) {
             super(parameter);
         }
 
         @Override
         public String generateParamListDecl(GeneratorContext context) {
-            return eval("${c}${t}* ${p}Elems, int ${p}Length",
-                        kv("c", parameter.getModifier() == ApiParameter.Modifier.IN ? "const " : ""),
-                        kv("t", getType().simpleTypeName()),
-                        kv("p", parameter.getJavaName()));
-        }
-
-        @Override
-        public String generateLocalVarDecl(GeneratorContext context) {
-            return eval("jarray ${p}Array = NULL;\nvoid* ${p}ArrayAddr = NULL;",
-                        kv("p", parameter.getJavaName()));
-        }
-
-        @Override
-        public String generatePreCallCode(GeneratorContext context) {
-            String typeName = getType().simpleTypeName();
-            typeName = Character.toUpperCase(typeName.charAt(0)) + typeName.substring(1);
-            if (parameter.getModifier() == ApiParameter.Modifier.IN) {
-                return eval("${p}Array = (*jenv)->New${t}Array(jenv, ${p}Length);\n" +
-                                "${p}ArrayAddr = (*jenv)->GetPrimitiveArrayCritical(jenv, ${p}Array, 0);\n" +
-                                "memcpy(${p}ArrayAddr, ${p}Elems, ${p}Length);",
-                        kv("t", typeName),
-                        kv("p", parameter.getJavaName()));
-            } else {
-                return eval("${p}Array = (*jenv)->New${t}Array(jenv, ${p}Length);",
-                            kv("t", typeName),
-                            kv("p", parameter.getJavaName()));
-            }
+            String typeName = ModuleGenerator.getComponentCClassName(getType());
+            return String.format("%s %s", typeName, getName());
         }
 
         @Override
         public String generateCallCode(GeneratorContext context) {
-            return eval("${p}Array", kv("p", parameter.getJavaName()));
-        }
-
-        @Override
-        public String generatePostCallCode(GeneratorContext context) {
-            if (parameter.getModifier() == ApiParameter.Modifier.IN) {
-                return eval("(*jenv)->ReleasePrimitiveArrayCritical(jenv, ${p}Array, ${p}ArrayAddr, 0);",
-                            kv("p", parameter.getJavaName()));
-            } else {
-                return eval("${p}ArrayAddr = (*jenv)->GetPrimitiveArrayCritical(jenv, ${p}Array, 0);\n" +
-                                    "memcpy(${p}Elems, ${p}ArrayAddr, ${p}Length);\n" +
-                                    "(*jenv)->ReleasePrimitiveArrayCritical(jenv, ${p}Array, ${p}ArrayAddr, 0);",
-                            kv("p", parameter.getJavaName()));
-            }
+            return getName();
         }
     }
+
 
     static class StringScalar extends ParameterGenerator {
         StringScalar(ApiParameter parameter) {
@@ -145,53 +112,69 @@ public abstract class ParameterGenerator implements CodeGenerator {
         }
     }
 
-    static class StringArray extends ParameterGenerator {
-        StringArray(ApiParameter parameter) {
+     static class PrimitiveArray extends ParameterGenerator {
+
+        PrimitiveArray(ApiParameter parameter) {
             super(parameter);
         }
 
         @Override
         public String generateParamListDecl(GeneratorContext context) {
-            return eval("const char** ${p}Elems, int ${p}Length",
+            return eval("${c}${t}* ${p}Elems, int ${p}Length",
+                        kv("c", parameter.getModifier() == ApiParameter.Modifier.IN ? "const " : ""),
+                        kv("t", getType().simpleTypeName()),
                         kv("p", getName()));
         }
 
         @Override
         public String generateLocalVarDecl(GeneratorContext context) {
-            return eval("jobjectArray ${p}Array = NULL;",
+            return eval("jarray ${p}Array = NULL;",
                         kv("p", getName()));
         }
 
         @Override
         public String generatePreCallCode(GeneratorContext context) {
-            return eval("${p}Array = beam_new_jstring_array(${p}Elems, ${p}Length);",
-                        kv("p", getName()));
+            String typeName = getType().simpleTypeName();
+            String typeNameUC = firstCharToUpperCase(typeName);
+            if (parameter.getModifier() == ApiParameter.Modifier.IN) {
+                return eval("${p}Array = (*jenv)->New${tuc}Array(jenv, ${p}Length);\n" +
+                                    "beam_copy_to_jarray(${p}Array, ${p}Elems, ${p}Length, sizeof (${t}));",
+                            kv("t", typeName),
+                            kv("tuc", typeNameUC),
+                            kv("p", getName()));
+            } else {
+                return eval("${p}Array = (*jenv)->New${tuc}Array(jenv, ${p}Length);",
+                            kv("tuc", typeNameUC),
+                            kv("p", getName()));
+            }
         }
 
         @Override
         public String generateCallCode(GeneratorContext context) {
-            return eval("${p}Array",
-                        kv("p", getName()));
-        }
-
-    }
-
-    static class ObjectScalar extends ParameterGenerator {
-        ObjectScalar(ApiParameter parameter) {
-            super(parameter);
+            return eval("${p}Array", kv("p", getName()));
         }
 
         @Override
-        public String generateParamListDecl(GeneratorContext context) {
-            String typeName = ModuleGenerator.getComponentCClassName(getType());
-            return String.format("%s %s", typeName, getName());
-        }
-
-        @Override
-        public String generateCallCode(GeneratorContext context) {
-            return getName();
+        public String generatePostCallCode(GeneratorContext context) {
+            if (parameter.getModifier() == ApiParameter.Modifier.IN) {
+                return null;
+            } else if (parameter.getModifier() == ApiParameter.Modifier.OUT) {
+                return eval("beam_copy_from_jarray(${p}Array, ${p}Elems, ${p}Length, sizeof (${t}));" +
+                                    "",
+                            kv("p", getName()),
+                            kv("t", getType().simpleTypeName()));
+            } else {
+                return eval("beam_copy_from_jarray(${p}Array, ${p}Elems, ${p}Length, sizeof (${t}));\n" +
+                                    "if (${r}Array == ${p}Array) {\n" +
+                                    "    ${r} = ${p}Elems;\n" +
+                                    "}",
+                            kv("r", ModuleGenerator.RESULT_VAR_NAME),
+                            kv("p", getName()),
+                            kv("t", getType().simpleTypeName()));
+            }
         }
     }
+
 
     static class ObjectArray extends ParameterGenerator {
 
@@ -201,7 +184,7 @@ public abstract class ParameterGenerator implements CodeGenerator {
 
         @Override
         public String generateParamListDecl(GeneratorContext context) {
-            return eval("${m}${t}* ${p}Elems, int ${p}Length",
+            return eval("${m}${t} ${p}Elems, int ${p}Length",
                         kv("m", parameter.getModifier() == ApiParameter.Modifier.IN ? "const " : ""),
                         kv("t", ModuleGenerator.getComponentCClassName(getType())),
                         kv("p", getName()));
@@ -232,5 +215,37 @@ public abstract class ParameterGenerator implements CodeGenerator {
         }
     }
 
+
+    static class StringArray extends ParameterGenerator {
+        StringArray(ApiParameter parameter) {
+            super(parameter);
+        }
+
+        @Override
+        public String generateParamListDecl(GeneratorContext context) {
+            return eval("${m}char** ${p}Elems, int ${p}Length",
+                        kv("m", parameter.getModifier() == ApiParameter.Modifier.IN ? "const " : ""),
+                        kv("p", getName()));
+        }
+
+        @Override
+        public String generateLocalVarDecl(GeneratorContext context) {
+            return eval("jobjectArray ${p}Array = NULL;",
+                        kv("p", getName()));
+        }
+
+        @Override
+        public String generatePreCallCode(GeneratorContext context) {
+            return eval("${p}Array = beam_new_jstring_array(${p}Elems, ${p}Length);",
+                        kv("p", getName()));
+        }
+
+        @Override
+        public String generateCallCode(GeneratorContext context) {
+            return eval("${p}Array",
+                        kv("p", getName()));
+        }
+
+    }
 
 }

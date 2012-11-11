@@ -5,6 +5,8 @@ import com.sun.javadoc.Type;
 import org.esa.beam.extapi.gen.ApiClass;
 import org.esa.beam.extapi.gen.ApiMethod;
 
+import static org.esa.beam.extapi.gen.TemplateEval.eval;
+import static org.esa.beam.extapi.gen.TemplateEval.kv;
 import static org.esa.beam.extapi.gen.c.ModuleGenerator.*;
 
 /**
@@ -276,78 +278,74 @@ public abstract class FunctionGenerator implements CodeGenerator {
         }
     }
 
-    static class PrimitiveArrayMethod extends ObjectMethod {
+    static abstract class ArrayMethod extends ObjectMethod {
+        ArrayMethod(ApiMethod apiMethod, ParameterGenerator[] parameterGenerators) {
+            super(apiMethod, parameterGenerators);
+        }
+
+        @Override
+        public String generateParamListDecl(GeneratorContext context) {
+            return "int* resultArrayLength";
+        }
+
+        @Override
+        public String generateLocalVarDecl(GeneratorContext context) {
+            return super.generateLocalVarDecl(context)
+                    + eval("\njarray ${r}Array = NULL;",
+                           kv("r", ModuleGenerator.RESULT_VAR_NAME));
+        }
+
+        @Override
+        public String generateCallCode(GeneratorContext context) {
+            return eval("${r}Array = ${c}\n" +
+                                "${r} = ${f}(${r}Array, resultArrayLength);",
+                        kv("r", ModuleGenerator.RESULT_VAR_NAME),
+                        kv("c", generateJniCall(context)),
+                        kv("f", getAllocFunctionName()));
+        }
+
+        @Override
+        public String generateReturnCode(GeneratorContext context) {
+            return eval("return ${r};",
+                        kv("r", ModuleGenerator.RESULT_VAR_NAME));
+        }
+
+        protected abstract String getAllocFunctionName();
+    }
+
+    static class PrimitiveArrayMethod extends ArrayMethod {
         PrimitiveArrayMethod(ApiMethod apiMethod, ParameterGenerator[] parameterGenerators) {
             super(apiMethod, parameterGenerators);
         }
 
         @Override
-        public String generateParamListDecl(GeneratorContext context) {
-            return "int* resultArrayLength";
-        }
-
-        @Override
-        public String generateLocalVarDecl(GeneratorContext context) {
-            return super.generateLocalVarDecl(context) + "\n" +
-                    "jarray _resultArray = NULL;";
-        }
-
-        @Override
-        public String generateCallCode(GeneratorContext context) {
-            return String.format("_resultArray = %s\n" +
-                                         "%s = beam_alloc_%s_array(_resultArray, resultArrayLength);",
-                                 generateJniCall(context),
-                                 ModuleGenerator.RESULT_VAR_NAME,
+        protected String getAllocFunctionName() {
+            return String.format("beam_alloc_%s_array",
                                  getComponentCTypeName(getReturnType()));
-        }
-
-        @Override
-        public String generateReturnCode(GeneratorContext context) {
-            return String.format("return %s;", ModuleGenerator.RESULT_VAR_NAME);
         }
     }
 
 
-    static class ObjectArrayMethod extends ObjectMethod {
+    static class ObjectArrayMethod extends ArrayMethod {
         ObjectArrayMethod(ApiMethod apiMethod, ParameterGenerator[] parameterGenerators) {
             super(apiMethod, parameterGenerators);
         }
 
         @Override
-        public String generateParamListDecl(GeneratorContext context) {
-            return "int* resultArrayLength";
-        }
-
-        @Override
-        public String generateLocalVarDecl(GeneratorContext context) {
-            return super.generateLocalVarDecl(context) + "\n" +
-                    "jobjectArray _resultArray = NULL;";
-        }
-
-        @Override
-        public String generateCallCode(GeneratorContext context) {
-            return String.format("_resultArray = %s\n" +
-                                         "%s = beam_alloc_object_array(_resultArray, resultArrayLength);",
-                                 generateJniCall(context), ModuleGenerator.RESULT_VAR_NAME);
-        }
-
-        @Override
-        public String generateReturnCode(GeneratorContext context) {
-            return String.format("return %s;", ModuleGenerator.RESULT_VAR_NAME);
+        protected String getAllocFunctionName() {
+            return "beam_alloc_object_array";
         }
     }
 
-    static class StringArrayMethod extends ObjectArrayMethod {
+    static class StringArrayMethod extends ArrayMethod {
 
         StringArrayMethod(ApiMethod apiMethod, ParameterGenerator[] parameterGenerators) {
             super(apiMethod, parameterGenerators);
         }
 
         @Override
-        public String generateCallCode(GeneratorContext context) {
-            return String.format("_resultArray = %s\n" +
-                                         "%s = beam_alloc_string_array(_resultArray, resultArrayLength);",
-                                 generateJniCall(context), ModuleGenerator.RESULT_VAR_NAME);
+        protected String getAllocFunctionName() {
+            return "beam_alloc_string_array";
         }
     }
 }
