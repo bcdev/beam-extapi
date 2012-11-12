@@ -170,6 +170,11 @@ public class ModuleGenerator implements GeneratorContext {
             writer.write("\n");
 
             writer.write("\n");
+            for (ApiClass apiClass : getApiClasses()) {
+            }
+            writer.write("\n");
+
+            writer.write("\n");
             writeResource(writer, "ModuleGenerator-stubs-2.h");
             writer.write("\n");
 
@@ -177,14 +182,22 @@ public class ModuleGenerator implements GeneratorContext {
             // Generate function declarations
             //
             for (ApiClass apiClass : getApiClasses()) {
+                List<ApiConstant> constants = apiInfo.getConstantsOf(apiClass);
+                if (!constants.isEmpty()) {
+                    writer.write("\n");
+                    writer.printf("/* Constants of %s */\n", getComponentCClassName(apiClass.getType()));
+                    for (ApiConstant constant : constants) {
+                        writer.write(String.format("extern const %s %s_%s;\n",
+                                                   getCTypeName(constant.getType()),
+                                                   getComponentCClassName(apiClass.getType()),
+                                                   constant.getJavaName()));
+                    }
+                }
                 writer.write("\n");
                 writer.printf("/* Functions for class %s */\n", getComponentCClassName(apiClass.getType()));
                 writer.write("\n");
                 for (FunctionGenerator generator : getFunctionGenerators(apiClass)) {
-                    writer.printf("" +
-                                          "/**\n" +
-                                          " * %s\n" +
-                                          " */\n", generator.getMemberDoc().getRawCommentText());
+                    //writer.printf("/**\n %s\n */\n", generator.getMemberDoc().getRawCommentText());
                     generateFunctionDeclaration(writer, generator);
                 }
             }
@@ -211,12 +224,31 @@ public class ModuleGenerator implements GeneratorContext {
                 writer.write(String.format("static jclass %s;\n",
                                            getComponentCClassVarName(apiClass.getType())));
             }
+            writer.printf("\n");
+
+            writer.printf("\n");
             writer.printf("/* Other Java classes used in the API. */\n");
             writer.write(String.format("static jclass %s;\n",
                                        String.format(CLASS_VAR_NAME_PATTERN, "String")));
             for (ApiClass usedApiClass : apiInfo.getUsedNonApiClasses()) {
                 writer.write(String.format("static jclass %s;\n",
                                            getComponentCClassVarName(usedApiClass.getType())));
+            }
+            writer.write("\n");
+
+            writer.write("\n");
+            for (ApiClass apiClass : getApiClasses()) {
+                List<ApiConstant> constants = apiInfo.getConstantsOf(apiClass);
+                if (!constants.isEmpty()) {
+                    writer.printf("/* Constants of %s */\n", getComponentCClassName(apiClass.getType()));
+                    for (ApiConstant constant : constants) {
+                        writer.write(String.format("static const %s %s_%s = %s;\n",
+                                                   getCTypeName(constant.getType()),
+                                                   getComponentCClassName(apiClass.getType()),
+                                                   constant.getJavaName(),
+                                                   getConstantCValue(constant)));
+                    }
+                }
             }
             writer.write("\n");
 
@@ -267,6 +299,11 @@ public class ModuleGenerator implements GeneratorContext {
         } finally {
             writer.close();
         }
+    }
+
+    private String getConstantCValue(ApiConstant constant) {
+        String expr = constant.getFieldDoc().constantValueExpression();
+        return expr != null ? expr : "NULL";
     }
 
     private String writeResource(Writer writer, String resourceName) throws IOException {

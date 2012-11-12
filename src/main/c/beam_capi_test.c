@@ -66,6 +66,8 @@ int main(int argc, char** argv)
 	    float* ndviBuf = (float*) malloc(width * sizeof (float));
 	    int x, y;
 
+		ProductUtils_copyGeoCoding(product, ndviProduct);
+
 	    Product_setProductWriter(ndviProduct, writer);
 	    Product_writeHeader(ndviProduct, String_newString("ndvi.dim"));
 
@@ -73,7 +75,7 @@ int main(int argc, char** argv)
 	        Band_readPixelsFloat(r6, 0, y, width, 1, r6Buf, width, NULL);
 	        Band_readPixelsFloat(r7, 0, y, width, 1, r7Buf, width, NULL);
     	    for (x = 0; x < width; x++) {
-// todo
+				ndviBuf[x] = 0.5F * (r6Buf[x] + r7Buf[x]);
             }
 	        Band_writePixelsFloat(ndviBand, 0, y, width, 1, ndviBuf, width);
 	    }

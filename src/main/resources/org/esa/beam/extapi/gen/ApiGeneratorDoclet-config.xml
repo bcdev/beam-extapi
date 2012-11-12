@@ -138,7 +138,14 @@
         <method name="getRawStorageSize" sig="()J" ignore="true"/>
         <method name="getRawStorageSize" sig="(Lorg/esa/beam/framework/dataio/ProductSubsetDef;)J" ignore="true"/>
     </class>
-    <class name="org.esa.beam.framework.datamodel.GeoCoding"/>
+    <class name="org.esa.beam.framework.datamodel.GeoCoding">
+        <method name="getPixelPos"
+                sig="(Lorg/esa/beam/framework/datamodel/GeoPos;Lorg/esa/beam/framework/datamodel/PixelPos;)Lorg/esa/beam/framework/datamodel/PixelPos;"
+                mods="ir"/>
+        <method name="getGeoPos"
+                sig="(Lorg/esa/beam/framework/datamodel/PixelPos;Lorg/esa/beam/framework/datamodel/GeoPos;)Lorg/esa/beam/framework/datamodel/GeoPos;"
+                mods="ir"/>
+    </class>
     <class name="org.esa.beam.framework.datamodel.GeoPos">
         <method name="&lt;init&gt;" sig="()V" ignore="true"/>
         <method name="&lt;init&gt;" sig="(FF)V" renameTo="newGeoPos"/>
