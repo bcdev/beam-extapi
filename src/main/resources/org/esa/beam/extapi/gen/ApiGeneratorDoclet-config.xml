@@ -110,6 +110,7 @@
                 ignore="true"/>
         <method name="writeRasterDataFully" sig="()V" renameTo="writeRasterDataFully"/>
         <method name="writeRasterDataFully" sig="(Lcom/bc/ceres/core/ProgressMonitor;)V" ignore="true"/>
+        <method name="getExtension" sig="(Ljava/lang/Class;)LE;" ignore="true"/>
     </class>
     <class name="org.esa.beam.framework.datamodel.ColorPaletteDef">
         <method name="&lt;init&gt;" sig="(DD)V" renameTo="newColorPaletteDefFromRange"/>
@@ -137,6 +138,7 @@
                 ignore="false"/>
         <method name="getRawStorageSize" sig="()J" ignore="true"/>
         <method name="getRawStorageSize" sig="(Lorg/esa/beam/framework/dataio/ProductSubsetDef;)J" ignore="true"/>
+        <method name="getExtension" sig="(Ljava/lang/Class;)LE;" ignore="true"/>
     </class>
     <class name="org.esa.beam.framework.datamodel.GeoCoding">
         <method name="getPixelPos"
@@ -185,6 +187,7 @@
                 ignore="false"/>
         <method name="getRawStorageSize" sig="()J" ignore="true"/>
         <method name="getRawStorageSize" sig="(Lorg/esa/beam/framework/dataio/ProductSubsetDef;)J" ignore="true"/>
+        <method name="getExtension" sig="(Ljava/lang/Class;)LE;" ignore="true"/>
     </class>
     <class name="org.esa.beam.framework.datamodel.MetadataAttribute">
         <method name="&lt;init&gt;" sig="(Ljava/lang/String;I)V" ignore="true"/>
@@ -196,6 +199,7 @@
                 ignore="true"/>
         <method name="getRawStorageSize" sig="()J" ignore="true"/>
         <method name="getRawStorageSize" sig="(Lorg/esa/beam/framework/dataio/ProductSubsetDef;)J" ignore="true"/>
+        <method name="getExtension" sig="(Ljava/lang/Class;)LE;" ignore="true"/>
     </class>
     <class name="org.esa.beam.framework.datamodel.MetadataElement">
         <method name="fireProductNodeChanged" sig="(Ljava/lang/String;)V" ignore="true"/>
@@ -215,6 +219,7 @@
                 ignore="false"/>
         <method name="getRawStorageSize" sig="()J" ignore="true"/>
         <method name="getRawStorageSize" sig="(Lorg/esa/beam/framework/dataio/ProductSubsetDef;)J" ignore="true"/>
+        <method name="getExtension" sig="(Ljava/lang/Class;)LE;" ignore="true"/>
     </class>
     <class name="org.esa.beam.framework.datamodel.PixelPos"/>
     <class name="org.esa.beam.framework.datamodel.Placemark">
@@ -223,8 +228,11 @@
                 ignore="true"/>
         <method name="getRawStorageSize" sig="()J" ignore="true"/>
         <method name="getRawStorageSize" sig="(Lorg/esa/beam/framework/dataio/ProductSubsetDef;)J" ignore="true"/>
+        <method name="getExtension" sig="(Ljava/lang/Class;)LE;" ignore="true"/>
     </class>
-    <class name="org.esa.beam.framework.datamodel.PlacemarkGroup"/>
+    <class name="org.esa.beam.framework.datamodel.PlacemarkGroup">
+        <method name="getExtension" sig="(Ljava/lang/Class;)LE;" ignore="true"/>
+    </class>
     <class name="org.esa.beam.framework.datamodel.Product">
         <method name="&lt;init&gt;" sig="(Ljava/lang/String;Ljava/lang/String;II)V" renameTo="newProduct"/>
         <method name="&lt;init&gt;"
@@ -260,6 +268,7 @@
         <method name="setAutoGrouping" sig="(Lorg/esa/beam/framework/datamodel/Product/AutoGrouping;)V" ignore="true"/>
         <method name="setPreferredTileSize" sig="(II)V" ignore="false"/>
         <method name="setPreferredTileSize" sig="(Ljava/awt/Dimension;)V" ignore="true"/>
+        <method name="getExtension" sig="(Ljava/lang/Class;)LE;" ignore="true"/>
     </class>
     <class name="org.esa.beam.framework.datamodel.ProductData"/>
     <class name="org.esa.beam.framework.datamodel.ProductManager">
@@ -267,11 +276,15 @@
         <method name="getProduct" sig="(Ljava/lang/String;)Lorg/esa/beam/framework/datamodel/Product;"
                 renameTo="getProductByName"/>
     </class>
-    <class name="org.esa.beam.framework.datamodel.ProductNodeGroup"/>
+    <class name="org.esa.beam.framework.datamodel.ProductNodeGroup">
+        <method name="getExtension" sig="(Ljava/lang/Class;)LE;" ignore="true"/>
+    </class>
     <class name="org.esa.beam.framework.datamodel.RGBChannelDef">
         <method name="&lt;init&gt;" sig="()V" renameTo="newRGBChannelDef"/>
         <method name="&lt;init&gt;" sig="([Ljava/lang/String;)V" ignore="true"/>
     </class>
-    <class name="org.esa.beam.framework.datamodel.TiePointGrid"/>
+    <class name="org.esa.beam.framework.datamodel.TiePointGrid">
+        <method name="getExtension" sig="(Ljava/lang/Class;)LE;" ignore="true"/>
+    </class>
     <class name="org.esa.beam.util.ProductUtils"/>
 </config>

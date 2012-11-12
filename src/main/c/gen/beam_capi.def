@@ -84,7 +84,6 @@ EXPORTS
 	IndexCoding_getProductRefString
 	IndexCoding_updateExpression
 	IndexCoding_removeFromFile
-	IndexCoding_getExtension
 	PixelPos_newPixelPos1
 	PixelPos_newPixelPos2
 	PixelPos_isValid
@@ -149,7 +148,6 @@ EXPORTS
 	Placemark_getProductRefString
 	Placemark_updateExpression
 	Placemark_removeFromFile
-	Placemark_getExtension
 	MetadataElement_newMetadataElement
 	MetadataElement_getElementGroup
 	MetadataElement_getParentElement
@@ -199,7 +197,6 @@ EXPORTS
 	MetadataElement_getProductRefString
 	MetadataElement_updateExpression
 	MetadataElement_removeFromFile
-	MetadataElement_getExtension
 	Product_newProduct
 	Product_getFileLocation
 	Product_setFileLocation
@@ -297,7 +294,6 @@ EXPORTS
 	Product_getProductRefString
 	Product_updateExpression
 	Product_removeFromFile
-	Product_getExtension
 	ColorPaletteDef_newColorPaletteDefFromRange
 	ColorPaletteDef_newColorPaletteDefFromPoints
 	ColorPaletteDef_isDiscrete
@@ -513,7 +509,6 @@ EXPORTS
 	Band_getProductWriter
 	Band_getDisplayName
 	Band_getProductRefString
-	Band_getExtension
 	PlacemarkGroup_getVectorDataNode
 	PlacemarkGroup_getPlacemark
 	PlacemarkGroup_add4
@@ -560,7 +555,6 @@ EXPORTS
 	PlacemarkGroup_fireProductNodeChanged1
 	PlacemarkGroup_fireProductNodeChanged2
 	PlacemarkGroup_removeFromFile
-	PlacemarkGroup_getExtension
 	TiePointGrid_newTiePointGrid1
 	TiePointGrid_newTiePointGrid2
 	TiePointGrid_newTiePointGrid3
@@ -726,7 +720,6 @@ EXPORTS
 	TiePointGrid_fireProductNodeChanged1
 	TiePointGrid_fireProductNodeChanged2
 	TiePointGrid_removeFromFile
-	TiePointGrid_getExtension
 	AngularDirection_newAngularDirection
 	AngularDirection_equals
 	AngularDirection_toString
@@ -787,7 +780,6 @@ EXPORTS
 	FlagCoding_getProductRefString
 	FlagCoding_updateExpression
 	FlagCoding_removeFromFile
-	FlagCoding_getExtension
 	ProductReader_getReaderPlugIn
 	ProductReader_getInput
 	ProductReader_getSubsetDef
@@ -931,7 +923,6 @@ EXPORTS
 	ProductNodeGroup_fireProductNodeChanged1
 	ProductNodeGroup_fireProductNodeChanged2
 	ProductNodeGroup_removeFromFile
-	ProductNodeGroup_getExtension
 	ProductUtils_newProductUtils
 	ProductUtils_createImageInfo
 	ProductUtils_createRgbImage
@@ -1035,4 +1026,3 @@ EXPORTS
 	MetadataAttribute_getProductRefString
 	MetadataAttribute_updateExpression
 	MetadataAttribute_removeFromFile
-	MetadataAttribute_getExtension
