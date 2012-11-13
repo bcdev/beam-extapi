@@ -16,6 +16,7 @@
 
 package org.esa.beam.extapi.gen.c;
 
+import com.sun.javadoc.FieldDoc;
 import com.sun.javadoc.Type;
 import org.esa.beam.extapi.gen.*;
 
@@ -231,6 +232,15 @@ public class ModuleGenerator implements GeneratorContext {
             writer.write(String.format("static jclass %s;\n",
                                        String.format(CLASS_VAR_NAME_PATTERN, "String")));
             for (ApiClass usedApiClass : apiInfo.getUsedNonApiClasses()) {
+                if (usedApiClass.getType().asClassDoc().isEnum())  {
+                    System.out.println("Warning: unhandled enum detected: enum " + usedApiClass);
+                    System.out.printf("enum %s {\n", usedApiClass.getType().simpleTypeName());
+                    final FieldDoc[] fieldDocs = usedApiClass.getType().asClassDoc().enumConstants();
+                    for (FieldDoc fieldDoc : fieldDocs) {
+                        System.out.printf("    %s,\n", fieldDoc.name());
+                    }
+                    System.out.printf("}\n");
+                }
                 writer.write(String.format("static jclass %s;\n",
                                            getComponentCClassVarName(usedApiClass.getType())));
             }

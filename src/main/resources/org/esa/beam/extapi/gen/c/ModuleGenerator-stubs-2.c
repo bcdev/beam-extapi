@@ -189,7 +189,8 @@ JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *vm, void *reserved)
 {
     fprintf(stdout, "beam_capi: JNI_OnLoad() called\n");
     jvm = vm;
-    return JNI_VERSION_1_4;
+    (*jvm)->GetEnv(vm, &jenv, JNI_VERSION_1_6);
+    return JNI_VERSION_1_6;
 }
 
 JNIEXPORT void JNICALL JNI_OnUnload(JavaVM *vm, void *reserved)
