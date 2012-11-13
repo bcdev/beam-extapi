@@ -287,4 +287,7 @@
         <method name="getExtension" sig="(Ljava/lang/Class;)LE;" ignore="true"/>
     </class>
     <class name="org.esa.beam.util.ProductUtils"/>
+
+    <!--<class name="java.awt.Rectangle" ignore="true" renameTo="Rect" />-->
+
 </config>

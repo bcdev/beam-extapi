@@ -62,6 +62,13 @@ C-Code Generation Considerations
 * Care: Check ALWAYS for possible null return values (many JNI functions may return null)
   --> Not addressed so far. Must throw Java exceptions.
 
+To-do List
+----------
+
+* Use BEAM_HOME env and auto-configure JVM parameters (use Util_listDir)
+* Separate C modules: beam_capi --> beam_capi_gen (generated code) + beam_capi_util (constant code)
+
+
 Design Considerations
 ---------------------
 

@@ -5,6 +5,8 @@ EXPORTS
 	beam_create_jvm
 	beam_create_jvm_with_defaults
 	beam_destroy_jvm
+	Util_appendString
+	Util_listDir
 	String_newString
 	GeoCoding_isCrossingMeridianAt180
 	GeoCoding_canGetPixelPos

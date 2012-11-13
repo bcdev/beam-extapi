@@ -11,12 +11,14 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\src\main\c\beam_util.c" />
     <ClCompile Include="..\..\src\main\c\gen\beam_capi.c" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\src\main\c\gen\beam_capi.def" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\src\main\c\beam_util.h" />
     <ClInclude Include="..\..\src\main\c\gen\beam_capi.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

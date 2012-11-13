@@ -18,7 +18,12 @@ package org.esa.beam.extapi.gen.c;
 
 import com.sun.javadoc.FieldDoc;
 import com.sun.javadoc.Type;
-import org.esa.beam.extapi.gen.*;
+import org.esa.beam.extapi.gen.ApiClass;
+import org.esa.beam.extapi.gen.ApiConstant;
+import org.esa.beam.extapi.gen.ApiGeneratorDoclet;
+import org.esa.beam.extapi.gen.ApiInfo;
+import org.esa.beam.extapi.gen.ApiMethod;
+import org.esa.beam.extapi.gen.ApiParameter;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -133,6 +138,8 @@ public class ModuleGenerator implements GeneratorContext {
                                   "\tbeam_create_jvm\n" +
                                   "\tbeam_create_jvm_with_defaults\n" +
                                   "\tbeam_destroy_jvm\n" +
+                                  "\tUtil_appendString" +
+                                  "\tUtil_listDir" +
                                   "\tString_newString\n");
             for (ApiClass apiClass : getApiClasses()) {
                 for (FunctionGenerator generator : getFunctionGenerators(apiClass)) {
@@ -232,7 +239,7 @@ public class ModuleGenerator implements GeneratorContext {
             writer.write(String.format("static jclass %s;\n",
                                        String.format(CLASS_VAR_NAME_PATTERN, "String")));
             for (ApiClass usedApiClass : apiInfo.getUsedNonApiClasses()) {
-                if (usedApiClass.getType().asClassDoc().isEnum())  {
+                if (usedApiClass.getType().asClassDoc().isEnum()) {
                     System.out.println("Warning: unhandled enum detected: enum " + usedApiClass);
                     System.out.printf("enum %s {\n", usedApiClass.getType().simpleTypeName());
                     final FieldDoc[] fieldDocs = usedApiClass.getType().asClassDoc().enumConstants();
@@ -464,7 +471,7 @@ public class ModuleGenerator implements GeneratorContext {
             if (apiMethods.size() > 1) {
                 for (ApiMethod apiMethod : apiMethods) {
                     final ApiClass enclosingClass = apiMethod.getEnclosingClass();
-                    boolean classChange =  !enclosingClass.equals(lastEnclosingClass);
+                    boolean classChange = !enclosingClass.equals(lastEnclosingClass);
                     lastEnclosingClass = enclosingClass;
 
                     if (classChange) {
