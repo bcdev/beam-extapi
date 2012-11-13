@@ -1,3 +1,5 @@
+#include "../beam_util.h"
+
 static JavaVM* jvm = NULL;
 static JNIEnv* jenv = NULL;
 static int api_init = 0;

@@ -65,7 +65,7 @@ C-Code Generation Considerations
 To-do List
 ----------
 
-* Use BEAM_HOME env and auto-configure JVM parameters (use Util_listDir)
+* Done: Use BEAM_HOME env and auto-configure JVM parameters (use Util_listDir)
 * Separate C modules: beam_capi --> beam_capi_gen (generated code) + beam_capi_util (constant code)
 
 

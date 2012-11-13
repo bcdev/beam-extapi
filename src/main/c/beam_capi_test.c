@@ -9,11 +9,6 @@
 #define CONFIRM(S)  {printf("%s, Press enter!", S);getc(stdin);}
 #define PRESS_ENTER()  {printf("Press enter!");getc(stdin);}
 
-void handleDirEntry(const char* parent_dir, const char* file_name, int is_dir)
-{
-	printf("dir=%s, f=%s, d=%d\n", parent_dir, file_name, is_dir);
-}
-
 
 int main(int argc, char** argv)
 {
@@ -24,8 +19,6 @@ int main(int argc, char** argv)
 	int num_bands, width, height;
 
 	printf("PATH: %s\n", getenv("PATH"));
-
-	Util_listDir(getenv("BEAM_HOME"), handleDirEntry);
 
 	if (argc <= 1) {
 		fprintf(stderr, "usage: beam_capi_test <product-file>\n");

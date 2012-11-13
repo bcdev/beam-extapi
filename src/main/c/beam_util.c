@@ -39,7 +39,7 @@ int Util_appendString(char** result, const char* s)
     }                
 }
 
-void Util_listDir(const char* parent_dir, Util_handleDirEntry handler)
+void Util_listDir(const char* parent_dir, Util_handleDirEntry handler, void* user_data)
 {
 #ifdef WIN32
     HANDLE dir;
@@ -64,7 +64,7 @@ void Util_listDir(const char* parent_dir, Util_handleDirEntry handler)
 			n = wcslen(file_data.cFileName);
             wcstombs(file_name,  file_data.cFileName, n);
 			file_name[n] = 0;
-            handler(parent_dir, file_name, (file_data.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) != 0);        
+            handler(parent_dir, file_name, (file_data.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) != 0, user_data);        
         } while (FindNextFile(dir, &file_data));
         FindClose(dir);
     }
@@ -78,10 +78,11 @@ void Util_listDir(const char* parent_dir, Util_handleDirEntry handler)
     dir = opendir(parent_dir);
     if (dir != NULL) {
         while ((ent = readdir(dir)) != NULL) {
-            handler(parent_dir, ent->d_name, (st.st_mode & S_IFDIR) != 0);    
+            handler(parent_dir, ent->d_name, (st.st_mode & S_IFDIR) != 0, user_data);    
         }
     }
 
     closedir(dir);
 #endif
 }
+

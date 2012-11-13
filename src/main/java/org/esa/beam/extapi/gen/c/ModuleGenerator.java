@@ -138,8 +138,8 @@ public class ModuleGenerator implements GeneratorContext {
                                   "\tbeam_create_jvm\n" +
                                   "\tbeam_create_jvm_with_defaults\n" +
                                   "\tbeam_destroy_jvm\n" +
-                                  "\tUtil_appendString" +
-                                  "\tUtil_listDir" +
+                                  "\tUtil_appendString\n" +
+                                  "\tUtil_listDir\n" +
                                   "\tString_newString\n");
             for (ApiClass apiClass : getApiClasses()) {
                 for (FunctionGenerator generator : getFunctionGenerators(apiClass)) {
