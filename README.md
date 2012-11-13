@@ -27,7 +27,8 @@ C-Code Generation Considerations
 * How to translate constants defined in Java classes?
    --> constants are already collected (--> ApiInfo)
 * How to deal with same function names originating from overloaded Java methods   (see Band.readPixels() methods)
-   --> currently numbering these (this is not a good solution, should take signature difference into account!)
+   --> renaming / ignoring overloads looked up from configuration file
+       if not in configuration file, numbering these
 * How to treat String parameters?
   --> Now: String s -> const char* s
 * How to treat String return values?
@@ -36,16 +37,30 @@ C-Code Generation Considerations
          int beam_strlen(String s);
          void beam_strcpy(String s, char* buf, int max_len);
 * How to treat generics?
-* How to treat (primitive, string & object) arrays?
+  --> Nothing done so far, maybe <T> --> <Object> and <T extends C> --> C
+* How to treat (primitive, string & object) arrays parameters?
+  --> IN:   float[] a --> const float* aElems, int aLength
+  --> OUT:  float[] a --> float* aElems, int aLength
+* How to treat (primitive, string & object) return values?
+  -->  float[] m() --> float* m(int* resultArrayLength)
 * How to treat object collections lists, sets, maps?
+  --> Not addressed so far
 * How to treat enums? (e.g. HistogramMatching)
+  --> Not addressed so far
 * How to treat public fields? (e.g. GeoPos)
-* How to treat generics?
+  --> Not addressed so far
 * How to treat Java SE classes: File, Date, Point, etc?
-* How to treat and catch / throw Exceptions?
+  --> Not addressed so far
 * How to make sure that JNI global refs are decreased/freed?
+  --> Not addressed so far
+* Must treat thrown exceptions!
+  --> Not addressed so far
+* Must throw OutOfMemoryError if malloc fails!
+  --> Not addressed so far
 * How to deal with multi-threaded C/Python programs (specifically, what about 'env' pointer in JNI, it is a per-thread environment)
+  --> Not addressed so far
 * Care: Check ALWAYS for possible null return values (many JNI functions may return null)
+  --> Not addressed so far. Must throw Java exceptions.
 
 Design Considerations
 ---------------------
