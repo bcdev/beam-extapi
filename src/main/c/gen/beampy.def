@@ -1,4 +1,4 @@
-LIBRARY "beampy"
+LIBRARY "beampy.pyd"
 
 EXPORTS
 	PyInit_beampy

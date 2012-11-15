@@ -4,7 +4,7 @@ set PYTHON32_HOME=C:\Python32
 mkdir target\win32\
 del /S /Q target\win32\
 
-#rem Building BEAM/C API
+rem Building BEAM/C API
 
 cl ^
 src\main\c\beam_util.c ^
@@ -38,11 +38,9 @@ src\main\c\gen\beam_capi.def ^
 /ERRORREPORT:QUEUE ^
 
 
-#rem Building BEAM/Python API
+rem Building BEAM/Python API
 
 cl ^
-src\main\c\beam_util.c ^
-src\main\c\gen\beam_capi.c ^
 src\main\c\gen\beampy.c ^
 src\main\c\gen\beampy.def ^
 /I"%JDK32_HOME%\include\win32" ^
@@ -66,7 +64,8 @@ src\main\c\gen\beampy.def ^
 /NOLOGO ^
 /LIBPATH:"%JDK32_HOME%\lib" ^
 /LIBPATH:"%PYTHON32_HOME%\libs" ^
-/DLL "jvm.lib" "python32.lib" ^
+/LIBPATH:"target\win32" ^
+/DLL "jvm.lib" "python32.lib" "beam_capi.lib" ^
 /SUBSYSTEM:WINDOWS ^
 /TLBID:1 ^
 /DYNAMICBASE ^
