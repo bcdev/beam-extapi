@@ -1,0 +1,1 @@
+static PyObject* BeamPy_Error;

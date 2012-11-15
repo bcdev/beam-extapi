@@ -24,6 +24,7 @@ import org.esa.beam.extapi.gen.ApiGeneratorDoclet;
 import org.esa.beam.extapi.gen.ApiInfo;
 import org.esa.beam.extapi.gen.ApiMethod;
 import org.esa.beam.extapi.gen.ApiParameter;
+import org.esa.beam.extapi.gen.TemplateEval;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -44,7 +45,7 @@ import java.util.TreeSet;
 /**
  * @author Norman Fomferra
  */
-public class ModuleGenerator implements GeneratorContext {
+public class CModuleGenerator implements GeneratorContext {
 
     public static final String BEAM_CAPI_SRCDIR = "src/main/c/gen";
     public static final String BEAM_CAPI_NAME = "beam_capi";
@@ -58,10 +59,14 @@ public class ModuleGenerator implements GeneratorContext {
     private final Map<ApiMethod, String> functionNames;
     private final Map<ApiClass, List<FunctionGenerator>> functionGenerators;
 
-    public ModuleGenerator(ApiInfo apiInfo) {
+    public CModuleGenerator(ApiInfo apiInfo) {
         this.apiInfo = apiInfo;
         this.functionNames = createFunctionNames(apiInfo);
         this.functionGenerators = createFunctionGenerators(apiInfo);
+    }
+
+    public ApiInfo getApiInfo() {
+        return apiInfo;
     }
 
     public Set<ApiClass> getApiClasses() {
@@ -82,40 +87,19 @@ public class ModuleGenerator implements GeneratorContext {
         return functionGenerators.get(apiClass);
     }
 
-    static String getCTypeName(Type type) {
-        String name = getComponentCTypeName(type);
-        return name + type.dimension().replace("[]", "*");
-    }
-
-    static String getComponentCClassName(Type type) {
+    public static String getComponentCClassName(Type type) {
         return type.typeName().replace('.', '_');
     }
 
-    static String getComponentCClassVarName(Type type) {
+    public static String getComponentCClassVarName(Type type) {
         return String.format(CLASS_VAR_NAME_PATTERN, getComponentCClassName(type));
-    }
-
-    static String getComponentCTypeName(Type type) {
-        if (type.isPrimitive()) {
-            if (type.typeName().equals("long")) {
-                return "dlong";
-            } else {
-                return type.typeName();
-            }
-        } else {
-            if (isString(type)) {
-                return "char*";
-            } else {
-                return type.typeName().replace('.', '_');
-            }
-        }
     }
 
     public static String getFunctionBaseName(ApiInfo apiInfo, ApiMethod apiMethod) {
         String targetTypeName = getComponentCClassName(apiMethod.getEnclosingClass().getType());
-        String methodCName = apiInfo.getConfig().getMethodCName(apiMethod.getEnclosingClass().getType().qualifiedTypeName(),
-                                                                apiMethod.getJavaName(),
-                                                                apiMethod.getJavaSignature());
+        String methodCName = apiInfo.getConfig().getFunctionName(apiMethod.getEnclosingClass().getType().qualifiedTypeName(),
+                                                                 apiMethod.getJavaName(),
+                                                                 apiMethod.getJavaSignature());
         if (methodCName.equals("<init>")) {
             methodCName = String.format("new%s", targetTypeName);
         }
@@ -132,15 +116,7 @@ public class ModuleGenerator implements GeneratorContext {
     private void writeWinDef() throws IOException {
         PrintWriter writer = new PrintWriter(new FileWriter(new File(BEAM_CAPI_SRCDIR, BEAM_CAPI_NAME + ".def")));
         try {
-            writer.printf("LIBRARY \"%s\"\n\n", BEAM_CAPI_NAME);
-            writer.printf("EXPORTS\n" +
-                                  "\tbeam_is_jvm_created\n" +
-                                  "\tbeam_create_jvm\n" +
-                                  "\tbeam_create_jvm_with_defaults\n" +
-                                  "\tbeam_destroy_jvm\n" +
-                                  "\tUtil_appendString\n" +
-                                  "\tUtil_listDir\n" +
-                                  "\tString_newString\n");
+            writeResource(writer, "CModuleGenerator-stubs.def");
             for (ApiClass apiClass : getApiClasses()) {
                 for (FunctionGenerator generator : getFunctionGenerators(apiClass)) {
                     writer.printf("\t%s\n", getFunctionNameFor(generator.getApiMethod()));
@@ -157,7 +133,7 @@ public class ModuleGenerator implements GeneratorContext {
             generateFileInfo(writer);
 
             writer.write("\n");
-            writeResource(writer, "ModuleGenerator-stubs-1.h");
+            writeResource(writer, "CModuleGenerator-stubs-1.h");
             writer.write("\n");
 
             writer.write("\n");
@@ -171,19 +147,14 @@ public class ModuleGenerator implements GeneratorContext {
             writer.write("/* Non-API classes used in the API */\n");
             writer.write("typedef void* String;\n");
             for (ApiClass usedApiClass : apiInfo.getUsedNonApiClasses()) {
-                if (!isString(usedApiClass.getType())) {
+                if (!TypeHelpers.isString(usedApiClass.getType())) {
                     writer.write(String.format("typedef void* %s;\n", getComponentCClassName(usedApiClass.getType())));
                 }
             }
             writer.write("\n");
 
             writer.write("\n");
-            for (ApiClass apiClass : getApiClasses()) {
-            }
-            writer.write("\n");
-
-            writer.write("\n");
-            writeResource(writer, "ModuleGenerator-stubs-2.h");
+            writeResource(writer, "CModuleGenerator-stubs-2.h");
             writer.write("\n");
 
             /////////////////////////////////////////////////////////////////////////////////////
@@ -196,7 +167,7 @@ public class ModuleGenerator implements GeneratorContext {
                     writer.printf("/* Constants of %s */\n", getComponentCClassName(apiClass.getType()));
                     for (ApiConstant constant : constants) {
                         writer.write(String.format("extern const %s %s_%s;\n",
-                                                   getCTypeName(constant.getType()),
+                                                   TypeHelpers.getCTypeName(constant.getType()),
                                                    getComponentCClassName(apiClass.getType()),
                                                    constant.getJavaName()));
                     }
@@ -224,7 +195,7 @@ public class ModuleGenerator implements GeneratorContext {
             writer.printf("#include \"jni.h\"\n");
 
             writer.printf("\n");
-            writeResource(writer, "ModuleGenerator-stubs-1.c");
+            writeResource(writer, "CModuleGenerator-stubs-1.c");
             writer.printf("\n");
 
             writer.printf("/* Java API classes. */\n");
@@ -260,7 +231,7 @@ public class ModuleGenerator implements GeneratorContext {
                     writer.printf("/* Constants of %s */\n", getComponentCClassName(apiClass.getType()));
                     for (ApiConstant constant : constants) {
                         writer.write(String.format("static const %s %s_%s = %s;\n",
-                                                   getCTypeName(constant.getType()),
+                                                   TypeHelpers.getCTypeName(constant.getType()),
                                                    getComponentCClassName(apiClass.getType()),
                                                    constant.getJavaName(),
                                                    getConstantCValue(constant)));
@@ -270,7 +241,7 @@ public class ModuleGenerator implements GeneratorContext {
             writer.write("\n");
 
             writer.printf("\n");
-            writeResource(writer, "ModuleGenerator-stubs-2.c");
+            writeResource(writer, "CModuleGenerator-stubs-2.c");
             writer.printf("\n");
 
             /////////////////////////////////////////////////////////////////////////////////////
@@ -323,18 +294,13 @@ public class ModuleGenerator implements GeneratorContext {
         return expr != null ? expr : "NULL";
     }
 
-    private String writeResource(Writer writer, String resourceName) throws IOException {
+    private void writeResource(Writer writer, String resourceName) throws IOException {
         final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(resourceName)));
         try {
-            String line;
-            while ((line = bufferedReader.readLine()) != null) {
-                writer.write(line);
-                writer.write("\n");
-            }
+            TemplateEval.create().add("libName", BEAM_CAPI_NAME).eval(bufferedReader, writer);
         } finally {
             bufferedReader.close();
         }
-        return null;
     }
 
     private void writeClassDef(PrintWriter writer, String classVarName, String classResourceName, int errCode) {
@@ -375,7 +341,7 @@ public class ModuleGenerator implements GeneratorContext {
 
     private void writeInitVmCode(PrintWriter writer, FunctionGenerator generator) {
         writer.printf("\n");
-        if (isVoid(generator.getReturnType())) {
+        if (TypeHelpers.isVoid(generator.getReturnType())) {
             writer.printf("    if (beam_init_api() != 0) return;\n");
         } else {
             writer.printf("    if (beam_init_api() != 0) return _result;\n");
@@ -395,7 +361,7 @@ public class ModuleGenerator implements GeneratorContext {
                       getComponentCClassVarName(generator.getEnclosingClass().getType()),
                       generator.getApiMethod().getJavaName(),
                       generator.getApiMethod().getJavaSignature());
-        if (isVoid(generator.getReturnType())) {
+        if (TypeHelpers.isVoid(generator.getReturnType())) {
             writer.printf("        if (%s == NULL) return;\n", METHOD_VAR_NAME);
         } else {
             writer.printf("        if (%s == NULL) return _result;\n", METHOD_VAR_NAME);
@@ -435,26 +401,6 @@ public class ModuleGenerator implements GeneratorContext {
             return new String[0];
         }
         return code.split("\n");
-    }
-
-    static boolean isVoid(Type type) {
-        return type.qualifiedTypeName().equals("void");
-    }
-
-    static boolean isString(Type type) {
-        return type.qualifiedTypeName().equals("java.lang.String");
-    }
-
-    static boolean isPrimitiveArray(Type type) {
-        return type.dimension().equals("[]") && type.isPrimitive();
-    }
-
-    static boolean isStringArray(Type type) {
-        return type.dimension().equals("[]") && isString(type);
-    }
-
-    static boolean isObjectArray(Type type) {
-        return type.dimension().equals("[]") && !type.isPrimitive();
     }
 
 

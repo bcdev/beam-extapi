@@ -95,3 +95,11 @@ Shall C API functions return string buffers that users have to release later?
 Shall the API allow for modification of single structures elements that are passed as arguments by-reference?
 
 
+Frequently seen problems
+========================
+
+Windows VC++ using "Release" configuration:
+Fehler	11	error LNK1104: Datei "python32_d.lib" kann nicht geöffnet werden.	C:\Users\Norman\JavaProjects\beam-extapi\msvc\beampy\LINK	beampy
+
+--> No solution; Google does not help. Must use Release configuration
+

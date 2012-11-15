@@ -8,6 +8,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "beam_capi_test", "..\beam_c
 		{4526AE26-BB1F-43C9-BF24-62C147B6C963} = {4526AE26-BB1F-43C9-BF24-62C147B6C963}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "beampy", "..\beampy\beampy.vcxproj", "{4ECF09FB-5160-4C7E-A162-10332EA32F18}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -22,6 +24,10 @@ Global
 		{68AF1DAC-6AEF-451F-A1C8-044AF1E0B57B}.Debug|Win32.Build.0 = Debug|Win32
 		{68AF1DAC-6AEF-451F-A1C8-044AF1E0B57B}.Release|Win32.ActiveCfg = Release|Win32
 		{68AF1DAC-6AEF-451F-A1C8-044AF1E0B57B}.Release|Win32.Build.0 = Release|Win32
+		{4ECF09FB-5160-4C7E-A162-10332EA32F18}.Debug|Win32.ActiveCfg = Debug|Win32
+		{4ECF09FB-5160-4C7E-A162-10332EA32F18}.Debug|Win32.Build.0 = Debug|Win32
+		{4ECF09FB-5160-4C7E-A162-10332EA32F18}.Release|Win32.ActiveCfg = Release|Win32
+		{4ECF09FB-5160-4C7E-A162-10332EA32F18}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

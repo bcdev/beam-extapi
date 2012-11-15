@@ -1,0 +1,4 @@
+LIBRARY "${libName}"
+
+EXPORTS
+	PyInit_${libName}

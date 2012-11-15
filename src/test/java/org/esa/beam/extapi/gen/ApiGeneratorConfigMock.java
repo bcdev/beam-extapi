@@ -28,7 +28,7 @@ public class ApiGeneratorConfigMock implements ApiGeneratorConfig {
     }
 
     @Override
-    public String getMethodCName(String className, String methodName, String methodSignature) {
+    public String getFunctionName(String className, String methodName, String methodSignature) {
         return methodName;
     }
 }

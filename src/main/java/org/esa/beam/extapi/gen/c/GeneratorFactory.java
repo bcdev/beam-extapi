@@ -27,20 +27,20 @@ public class GeneratorFactory {
             MethodDoc methodDoc = (MethodDoc) apiMethod.getMemberDoc();
             Type returnType = apiMethod.getReturnType();
             if (returnType.dimension().isEmpty()) {
-                if (ModuleGenerator.isVoid(returnType)) {
+                if (TypeHelpers.isVoid(returnType)) {
                     functionGenerator = new FunctionGenerator.VoidMethod(apiMethod, parameterGenerators);
-                } else if (ModuleGenerator.isString(returnType)) {
+                } else if (TypeHelpers.isString(returnType)) {
                     functionGenerator = new FunctionGenerator.StringMethod(apiMethod, parameterGenerators);
                 } else if (returnType.isPrimitive()) {
                     functionGenerator = new FunctionGenerator.PrimitiveMethod(apiMethod, parameterGenerators);
                 } else {
                     functionGenerator = new FunctionGenerator.ObjectMethod(apiMethod, parameterGenerators);
                 }
-            } else if (ModuleGenerator.isPrimitiveArray(returnType)) {
+            } else if (TypeHelpers.isPrimitiveArray(returnType)) {
                 functionGenerator = new FunctionGenerator.PrimitiveArrayMethod(apiMethod, parameterGenerators);
-            } else if (ModuleGenerator.isStringArray(returnType)) {
+            } else if (TypeHelpers.isStringArray(returnType)) {
                 functionGenerator = new FunctionGenerator.StringArrayMethod(apiMethod, parameterGenerators);
-            } else if (ModuleGenerator.isObjectArray(returnType)) {
+            } else if (TypeHelpers.isObjectArray(returnType)) {
                 functionGenerator = new FunctionGenerator.ObjectArrayMethod(apiMethod, parameterGenerators);
             } else {
                 throw new GeneratorException(String.format("member %s#%s(): can't deal with return type %s%s (not implemented yet)",
@@ -71,11 +71,11 @@ public class GeneratorFactory {
                 } else {
                     parameterGenerator = new ParameterGenerator.ObjectScalar(parameter);
                 }
-            } else if (ModuleGenerator.isPrimitiveArray(parameterType)) {
+            } else if (TypeHelpers.isPrimitiveArray(parameterType)) {
                 parameterGenerator = new ParameterGenerator.PrimitiveArray(parameter);
-            } else if (ModuleGenerator.isStringArray(parameterType)) {
+            } else if (TypeHelpers.isStringArray(parameterType)) {
                 parameterGenerator = new ParameterGenerator.StringArray(parameter);
-            } else if (ModuleGenerator.isObjectArray(parameterType)) {
+            } else if (TypeHelpers.isObjectArray(parameterType)) {
                 parameterGenerator = new ParameterGenerator.ObjectArray(parameter);
             } else {
                 throw new GeneratorException(String.format("member %s#%s(): can't deal with parameter %s of type %s%s (not implemented yet)",

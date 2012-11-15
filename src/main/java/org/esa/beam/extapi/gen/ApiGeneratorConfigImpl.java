@@ -127,7 +127,7 @@ public class ApiGeneratorConfigImpl implements ApiGeneratorConfig {
     }
 
     @Override
-    public String getMethodCName(String className, String methodName, String methodSignature) {
+    public String getFunctionName(String className, String methodName, String methodSignature) {
         final MConfig mConfig = mConfigs.get(className).get(methodName + methodSignature);
         if (mConfig == null) {
             return methodName;

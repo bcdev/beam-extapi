@@ -5,7 +5,7 @@ import org.esa.beam.extapi.gen.ApiParameter;
 
 import static org.esa.beam.extapi.gen.TemplateEval.eval;
 import static org.esa.beam.extapi.gen.TemplateEval.kv;
-import static org.esa.beam.extapi.gen.c.ModuleGenerator.getComponentCTypeName;
+import static org.esa.beam.extapi.gen.c.TypeHelpers.getComponentCTypeName;
 
 /**
  * @author Norman Fomferra
@@ -74,7 +74,7 @@ public abstract class ParameterGenerator implements CodeGenerator {
 
         @Override
         public String generateParamListDecl(GeneratorContext context) {
-            String typeName = ModuleGenerator.getComponentCClassName(getType());
+            String typeName = CModuleGenerator.getComponentCClassName(getType());
             return String.format("%s %s", typeName, getName());
         }
 
@@ -171,7 +171,7 @@ public abstract class ParameterGenerator implements CodeGenerator {
                                     "} else {\n" +
                                     "    ${r} = beam_alloc_${t}_array(${r}Array, resultArrayLength);\n" +
                                     "}",
-                            kv("r", ModuleGenerator.RESULT_VAR_NAME),
+                            kv("r", CModuleGenerator.RESULT_VAR_NAME),
                             kv("p", getName()),
                             kv("t", getType().simpleTypeName()));
             }
@@ -189,7 +189,7 @@ public abstract class ParameterGenerator implements CodeGenerator {
         public String generateParamListDecl(GeneratorContext context) {
             return eval("${m}${t} ${p}Elems, int ${p}Length",
                         kv("m", parameter.getModifier() == ApiParameter.Modifier.IN ? "const " : ""),
-                        kv("t", ModuleGenerator.getComponentCClassName(getType())),
+                        kv("t", CModuleGenerator.getComponentCClassName(getType())),
                         kv("p", getName()));
         }
 
@@ -203,7 +203,7 @@ public abstract class ParameterGenerator implements CodeGenerator {
         public String generatePreCallCode(GeneratorContext context) {
             return eval("${p}Array = beam_new_jobject_array(${p}Elems, ${p}Length, ${c});",
                         kv("p", getName()),
-                        kv("c", ModuleGenerator.getComponentCClassVarName(getType())));
+                        kv("c", CModuleGenerator.getComponentCClassVarName(getType())));
         }
 
         @Override

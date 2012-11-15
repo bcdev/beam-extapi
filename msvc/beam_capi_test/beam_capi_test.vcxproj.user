@@ -4,4 +4,8 @@
     <LocalDebuggerCommandArguments>C:\EOData\MERIS\binning\MER_RR__1PPBCM20110806_094205_000001463105_00180_49332_0013.N1</LocalDebuggerCommandArguments>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LocalDebuggerCommandArguments>C:\EOData\MERIS\binning\MER_RR__1PPBCM20110806_094205_000001463105_00180_49332_0013.N1</LocalDebuggerCommandArguments>
+    <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+  </PropertyGroup>
 </Project>

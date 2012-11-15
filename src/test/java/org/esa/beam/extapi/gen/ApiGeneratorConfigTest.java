@@ -38,9 +38,9 @@ public class ApiGeneratorConfigTest {
 
     @Test
     public void testGetMethodCName() {
-        assertEquals("getName", config.getMethodCName("org.esa.beam.framework.datamodel.Band", "getName", "()Ljava/lang/String;"));
-        assertEquals("writePixelsInt", config.getMethodCName("org.esa.beam.framework.datamodel.Band", "writePixels", "(IIII[I)V"));
-        assertEquals("readPixelsFloat", config.getMethodCName("org.esa.beam.framework.datamodel.Band", "readPixels", "(IIII[F)[F"));
+        assertEquals("getName", config.getFunctionName("org.esa.beam.framework.datamodel.Band", "getName", "()Ljava/lang/String;"));
+        assertEquals("writePixelsInt", config.getFunctionName("org.esa.beam.framework.datamodel.Band", "writePixels", "(IIII[I)V"));
+        assertEquals("readPixelsFloat", config.getFunctionName("org.esa.beam.framework.datamodel.Band", "readPixels", "(IIII[F)[F"));
     }
 
 }

@@ -8,7 +8,7 @@ import org.esa.beam.extapi.gen.ApiParameter;
 
 import static org.esa.beam.extapi.gen.TemplateEval.eval;
 import static org.esa.beam.extapi.gen.TemplateEval.kv;
-import static org.esa.beam.extapi.gen.c.ModuleGenerator.*;
+import static org.esa.beam.extapi.gen.c.CModuleGenerator.*;
 
 /**
  * @author Norman Fomferra
@@ -39,13 +39,17 @@ public abstract class FunctionGenerator implements CodeGenerator {
         return getApiMethod().getReturnType();
     }
 
+    public String getFunctionName(GeneratorContext context) {
+        return context.getFunctionNameFor(getApiMethod());
+    }
+
     public ParameterGenerator[] getParameterGenerators() {
         return parameterGenerators;
     }
 
     public String generateFunctionSignature(GeneratorContext context) {
-        String returnTypeName = getCTypeName(getReturnType());
-        String functionName = context.getFunctionNameFor(getApiMethod());
+        String returnTypeName = TypeHelpers.getCTypeName(getReturnType());
+        String functionName = getFunctionName(context);
         String parameterList = generateParameterList(context);
         if (parameterList.isEmpty()) {
             return String.format("%s %s()",
@@ -95,12 +99,12 @@ public abstract class FunctionGenerator implements CodeGenerator {
 
         if (getMemberDoc().isConstructor()) {
             functionName = "NewObject";
-            argumentList.append(ModuleGenerator.getComponentCClassVarName(getEnclosingClass().getType()));
+            argumentList.append(CModuleGenerator.getComponentCClassVarName(getEnclosingClass().getType()));
             argumentList.append(", ");
             argumentList.append(METHOD_VAR_NAME);
         } else if (getMemberDoc().isStatic()) {
             functionName = String.format("CallStatic%sMethod", generateCallTypeName(context));
-            argumentList.append(ModuleGenerator.getComponentCClassVarName(getEnclosingClass().getType()));
+            argumentList.append(CModuleGenerator.getComponentCClassVarName(getEnclosingClass().getType()));
             argumentList.append(", ");
             argumentList.append(METHOD_VAR_NAME);
         } else {
@@ -124,7 +128,7 @@ public abstract class FunctionGenerator implements CodeGenerator {
         StringBuilder parameterList = new StringBuilder();
         if (isInstanceMethod()) {
             parameterList.append(String.format("%s %s",
-                                               getCTypeName(getEnclosingClass().getType()),
+                                               TypeHelpers.getCTypeName(getEnclosingClass().getType()),
                                                SELF_VAR_NAME));
         }
         for (ParameterGenerator parameterGenerator : parameterGenerators) {
@@ -186,18 +190,18 @@ public abstract class FunctionGenerator implements CodeGenerator {
 
         @Override
         public String generateLocalVarDecl(GeneratorContext context) {
-            String targetTypeName = getCTypeName(getReturnType());
-            return String.format("%s %s = (%s) 0;", targetTypeName, ModuleGenerator.RESULT_VAR_NAME, targetTypeName);
+            String targetTypeName = TypeHelpers.getCTypeName(getReturnType());
+            return String.format("%s %s = (%s) 0;", targetTypeName, CModuleGenerator.RESULT_VAR_NAME, targetTypeName);
         }
 
         @Override
         public String generateCallCode(GeneratorContext context) {
-            return String.format("%s = %s;", ModuleGenerator.RESULT_VAR_NAME, generateJniCall(context));
+            return String.format("%s = %s;", CModuleGenerator.RESULT_VAR_NAME, generateJniCall(context));
         }
 
         @Override
         public String generateReturnCode(GeneratorContext context) {
-            return String.format("return %s;", ModuleGenerator.RESULT_VAR_NAME);
+            return String.format("return %s;", CModuleGenerator.RESULT_VAR_NAME);
         }
     }
 
@@ -216,7 +220,7 @@ public abstract class FunctionGenerator implements CodeGenerator {
         @Override
         public String generateReturnCode(GeneratorContext context) {
             return String.format("return %s != NULL ? (*jenv)->NewGlobalRef(jenv, %s) : NULL;",
-                                 ModuleGenerator.RESULT_VAR_NAME, ModuleGenerator.RESULT_VAR_NAME);
+                                 CModuleGenerator.RESULT_VAR_NAME, CModuleGenerator.RESULT_VAR_NAME);
         }
     }
 
@@ -228,8 +232,8 @@ public abstract class FunctionGenerator implements CodeGenerator {
 
         @Override
         public String generateLocalVarDecl(GeneratorContext context) {
-            String targetTypeName = getCTypeName(getReturnType());
-            return String.format("%s %s = (%s) 0;", targetTypeName, ModuleGenerator.RESULT_VAR_NAME, targetTypeName);
+            String targetTypeName = TypeHelpers.getCTypeName(getReturnType());
+            return String.format("%s %s = (%s) 0;", targetTypeName, CModuleGenerator.RESULT_VAR_NAME, targetTypeName);
         }
     }
 
@@ -260,7 +264,7 @@ public abstract class FunctionGenerator implements CodeGenerator {
         @Override
         public String generateReturnCode(GeneratorContext context) {
             return String.format("return %s != NULL ? (*jenv)->NewGlobalRef(jenv, %s) : NULL;",
-                                 ModuleGenerator.RESULT_VAR_NAME, ModuleGenerator.RESULT_VAR_NAME);
+                                 CModuleGenerator.RESULT_VAR_NAME, CModuleGenerator.RESULT_VAR_NAME);
         }
     }
 
@@ -279,12 +283,12 @@ public abstract class FunctionGenerator implements CodeGenerator {
         public String generateCallCode(GeneratorContext context) {
             return String.format("_resultString = %s;\n" +
                                          "%s = beam_alloc_string(_resultString);",
-                                 generateJniCall(context), ModuleGenerator.RESULT_VAR_NAME);
+                                 generateJniCall(context), CModuleGenerator.RESULT_VAR_NAME);
         }
 
         @Override
         public String generateReturnCode(GeneratorContext context) {
-            return String.format("return %s;", ModuleGenerator.RESULT_VAR_NAME);
+            return String.format("return %s;", CModuleGenerator.RESULT_VAR_NAME);
         }
     }
 
@@ -302,7 +306,7 @@ public abstract class FunctionGenerator implements CodeGenerator {
         public String generateLocalVarDecl(GeneratorContext context) {
             return super.generateLocalVarDecl(context)
                     + eval("\njarray ${r}Array = NULL;",
-                           kv("r", ModuleGenerator.RESULT_VAR_NAME));
+                           kv("r", CModuleGenerator.RESULT_VAR_NAME));
         }
 
         @Override
@@ -310,12 +314,12 @@ public abstract class FunctionGenerator implements CodeGenerator {
             if (hasReturnParameter(context)) {
                 // NOTE: ParameterGenerator.<T>Array will generate code which sets ${r} = ...
                 return eval("${r}Array = ${c};",
-                            kv("r", ModuleGenerator.RESULT_VAR_NAME),
+                            kv("r", CModuleGenerator.RESULT_VAR_NAME),
                             kv("c", generateJniCall(context)));
             }   else {
                 return eval("${r}Array = ${c};\n" +
                                     "${r} = ${f}(${r}Array, resultArrayLength);",
-                            kv("r", ModuleGenerator.RESULT_VAR_NAME),
+                            kv("r", CModuleGenerator.RESULT_VAR_NAME),
                             kv("c", generateJniCall(context)),
                             kv("f", getAllocFunctionName()));
             }
@@ -324,7 +328,7 @@ public abstract class FunctionGenerator implements CodeGenerator {
         @Override
         public String generateReturnCode(GeneratorContext context) {
             return eval("return ${r};",
-                        kv("r", ModuleGenerator.RESULT_VAR_NAME));
+                        kv("r", CModuleGenerator.RESULT_VAR_NAME));
         }
 
         protected abstract String getAllocFunctionName();
@@ -338,7 +342,7 @@ public abstract class FunctionGenerator implements CodeGenerator {
         @Override
         protected String getAllocFunctionName() {
             return String.format("beam_alloc_%s_array",
-                                 getComponentCTypeName(getReturnType()));
+                                 TypeHelpers.getComponentCTypeName(getReturnType()));
         }
     }
 
