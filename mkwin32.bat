@@ -1,13 +1,18 @@
 set JDK32_HOME=C:\Program Files (x86)\Java\jdk1.7.0
 
+mkdir target\win32\
+del /S /Q target\win32\
+
 cl ^
-src/main/c/beam_util.c ^
-src/main/c/gen/beam_capi.c ^
+src\main\c\beam_util.c ^
+src\main\c\gen\beam_capi.c ^
+src\main\c\gen\beam_capi.def ^
+/Fetarget\win32\ ^
 /I"%JDK32_HOME%\include\win32" ^
 /I"%JDK32_HOME%\include" ^
-/Gm- /EHsc /GS /Gy /Gd ^
+/Gm- /GS /Gy /Gd ^
 /Zi /Zc:wchar_t /Zc:forScope ^
-/fp:precise /analyze- /errorReport:queue ^
+/EHsc /fp:precise /analyze- ^
 /nologo /W3 /WX- /GL ^
 /D "WIN32" ^
 /D "NDEBUG" ^
@@ -17,13 +22,12 @@ src/main/c/gen/beam_capi.c ^
 /D "_WINDLL" ^
 /D "_UNICODE" ^
 /D "UNICODE" ^
+/D "_CRT_SECURE_NO_WARNINGS" ^
 /link ^
-/DLL ^
-/OUT:"beam_capi.dll" ^
-/DEF:"src\main\c\gen\beam_capi.def" ^
+/OUT:"target\win32\beam_capi.dll" ^
 /NOLOGO ^
 /LIBPATH:"%JDK32_HOME%\lib" ^
-"jvm.lib" ^
+/DLL "jvm.lib" ^
 /SUBSYSTEM:WINDOWS ^
 /TLBID:1 ^
 /DYNAMICBASE ^
