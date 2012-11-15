@@ -3,9 +3,15 @@ beam-extapi
 
 Links
 -----
+beam-extapi code repository  
 
-* http://docs.oracle.com/javase/7/docs/technotes/guides/jni/
-* http://docs.oracle.com/javase/1.4.2/docs/guide/jni/spec/functions.html
+* Project on Github: https://github.com/bcdev/beam-extapi
+* Java Native Interface (JNI) website:  http://docs.oracle.com/javase/7/docs/technotes/guides/jni/
+* JNI data types:	http://docs.oracle.com/javase/7/docs/technotes/guides/jni/spec/types.html
+* JNI function reference: http://docs.oracle.com/javase/7/docs/technotes/guides/jni/spec/functions.html
+* Python/C API reference:	http://docs.python.org/py3k/c-api/index.html
+* Python/C API tutorial:	http://docs.python.org/py3k/extending/index.html
+* Python/C argument parsing:  http://docs.python.org/py3k/c-api/arg.html
 
 
 C-Code Generation Considerations
