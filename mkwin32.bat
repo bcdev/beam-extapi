@@ -1,3 +1,5 @@
+@echo off
+
 set JDK32_HOME=C:\Program Files (x86)\Java\jdk1.7.0
 set PYTHON32_HOME=C:\Python32
 
@@ -10,6 +12,8 @@ cl ^
 src\main\c\beam_util.c ^
 src\main\c\gen\beam_capi.c ^
 src\main\c\gen\beam_capi.def ^
+/Fotarget\win32\ ^
+/Fdtarget\win32\ ^
 /I"%JDK32_HOME%\include\win32" ^
 /I"%JDK32_HOME%\include" ^
 /Gm- /GS /Gy /Gd ^
@@ -35,7 +39,6 @@ src\main\c\gen\beam_capi.def ^
 /DYNAMICBASE ^
 /NXCOMPAT  ^
 /MACHINE:X86 ^
-/ERRORREPORT:QUEUE ^
 
 
 rem Building BEAM/Python API
@@ -43,6 +46,8 @@ rem Building BEAM/Python API
 cl ^
 src\main\c\gen\beampy.c ^
 src\main\c\gen\beampy.def ^
+/Fotarget\win32\ ^
+/Fdtarget\win32\ ^
 /I"%JDK32_HOME%\include\win32" ^
 /I"%JDK32_HOME%\include" ^
 /I"%PYTHON32_HOME%\include" ^
@@ -71,4 +76,3 @@ src\main\c\gen\beampy.def ^
 /DYNAMICBASE ^
 /NXCOMPAT  ^
 /MACHINE:X86 ^
-/ERRORREPORT:QUEUE ^
