@@ -1,28 +1,34 @@
 package org.esa.beam.extapi.gen.c;
 
-import com.sun.javadoc.*;
+import com.sun.javadoc.ConstructorDoc;
+import com.sun.javadoc.ExecutableMemberDoc;
+import com.sun.javadoc.MethodDoc;
+import com.sun.javadoc.Type;
 import org.esa.beam.extapi.gen.ApiClass;
 import org.esa.beam.extapi.gen.ApiInfo;
 import org.esa.beam.extapi.gen.ApiMethod;
 import org.esa.beam.extapi.gen.ApiParameter;
 import org.esa.beam.extapi.gen.FunctionGenerator;
+import org.esa.beam.extapi.gen.FunctionGeneratorFactory;
 import org.esa.beam.extapi.gen.GeneratorException;
+import org.esa.beam.extapi.gen.ParameterGenerator;
 import org.esa.beam.extapi.gen.TypeHelpers;
 
 /**
  * @author Norman Fomferra
  */
-public class CGeneratorFactory {
+public class CFunctionGeneratorFactory implements FunctionGeneratorFactory {
 
     private final ApiInfo apiInfo;
 
-    public CGeneratorFactory(ApiInfo apiInfo) {
+    public CFunctionGeneratorFactory(ApiInfo apiInfo) {
         this.apiInfo = apiInfo;
     }
 
+    @Override
     public FunctionGenerator createFunctionGenerator(ApiMethod apiMethod) throws GeneratorException {
         ApiClass apiClass = apiMethod.getEnclosingClass();
-        CParameterGenerator[] parameterGenerators = createParameterGenerators(apiMethod);
+        ParameterGenerator[] parameterGenerators = createParameterGenerators(apiMethod);
         FunctionGenerator functionGenerator;
         if (apiMethod.getMemberDoc() instanceof ConstructorDoc) {
             functionGenerator = new CFunctionGenerator.Constructor(apiMethod, parameterGenerators);
@@ -56,7 +62,8 @@ public class CGeneratorFactory {
         return functionGenerator;
     }
 
-    public CParameterGenerator[] createParameterGenerators(ApiMethod apiMethod) throws GeneratorException {
+    @Override
+    public ParameterGenerator[] createParameterGenerators(ApiMethod apiMethod) throws GeneratorException {
         ExecutableMemberDoc memberDoc = apiMethod.getMemberDoc();
         ApiParameter[] parameters = apiInfo.getParametersFor(apiMethod);
         CParameterGenerator[] parameterGenerators = new CParameterGenerator[parameters.length];

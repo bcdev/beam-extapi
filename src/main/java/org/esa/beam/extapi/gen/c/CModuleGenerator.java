@@ -23,7 +23,6 @@ import org.esa.beam.extapi.gen.ApiConstant;
 import org.esa.beam.extapi.gen.ApiInfo;
 import org.esa.beam.extapi.gen.ApiMethod;
 import org.esa.beam.extapi.gen.FunctionGenerator;
-import org.esa.beam.extapi.gen.GeneratorException;
 import org.esa.beam.extapi.gen.ModuleGenerator;
 import org.esa.beam.extapi.gen.TypeHelpers;
 
@@ -31,7 +30,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -53,22 +51,16 @@ public class CModuleGenerator extends ModuleGenerator {
     public static final String CLASS_VAR_NAME_PATTERN = "class%s";
 
     private final Map<ApiMethod, String> functionNames;
-    private final Map<ApiClass, List<FunctionGenerator>> functionGenerators;
 
     public CModuleGenerator(ApiInfo apiInfo) {
-        super(apiInfo);
+        super(apiInfo, new CFunctionGeneratorFactory(apiInfo));
         this.functionNames = createFunctionNames(apiInfo);
-        this.functionGenerators = createFunctionGenerators(apiInfo);
         getTemplateEval().add("libName", BEAM_CAPI_NAME);
     }
 
     @Override
     public String getFunctionNameFor(ApiMethod apiMethod) {
         return functionNames.get(apiMethod);
-    }
-
-    public List<FunctionGenerator> getFunctionGenerators(ApiClass apiClass) {
-        return functionGenerators.get(apiClass);
     }
 
     public static String getComponentCClassName(Type type) {
@@ -409,26 +401,6 @@ public class CModuleGenerator extends ModuleGenerator {
             }
         }
         return sameTargetFunctionNames;
-    }
-
-    private Map<ApiClass, List<FunctionGenerator>> createFunctionGenerators(ApiInfo apiInfo) {
-        CGeneratorFactory factory = new CGeneratorFactory(apiInfo);
-        Map<ApiClass, List<FunctionGenerator>> map = new HashMap<ApiClass, List<FunctionGenerator>>();
-        Set<ApiClass> apiClasses = apiInfo.getApiClasses();
-        for (ApiClass apiClass : apiClasses) {
-            List<ApiMethod> apiMethods = apiInfo.getMethodsOf(apiClass);
-            List<FunctionGenerator> functionGenerators = new ArrayList<FunctionGenerator>();
-            for (ApiMethod apiMethod : apiMethods) {
-                try {
-                    FunctionGenerator functionGenerator = factory.createFunctionGenerator(apiMethod);
-                    functionGenerators.add(functionGenerator);
-                } catch (GeneratorException e) {
-                    System.out.printf("error: %s\n", e.getMessage());
-                }
-            }
-            map.put(apiClass, functionGenerators);
-        }
-        return map;
     }
 
 }

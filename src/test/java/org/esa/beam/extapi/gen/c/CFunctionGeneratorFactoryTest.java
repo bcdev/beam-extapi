@@ -9,6 +9,7 @@ import org.esa.beam.extapi.gen.ApiMethod;
 import org.esa.beam.extapi.gen.DocMock;
 import org.esa.beam.extapi.gen.FunctionGenerator;
 import org.esa.beam.extapi.gen.GeneratorException;
+import org.esa.beam.extapi.gen.ParameterGenerator;
 import org.esa.beam.extapi.gen.test.TestClass2;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -25,7 +26,7 @@ import static org.junit.Assert.assertSame;
 /**
  * @author Norman Fomferra
  */
-public class CGeneratorFactoryTest {
+public class CFunctionGeneratorFactoryTest {
 
     public static final Class<TestClass2> TEST_CLASS_2 = TestClass2.class;
     private static ApiInfo apiInfo;
@@ -39,7 +40,7 @@ public class CGeneratorFactoryTest {
 
     @Test
     public void testIt() throws GeneratorException {
-        CGeneratorFactory factory = new CGeneratorFactory(apiInfo);
+        CFunctionGeneratorFactory factory = new CFunctionGeneratorFactory(apiInfo);
 
 
         ApiClass apiClass2 = getTestClass2();
@@ -51,7 +52,7 @@ public class CGeneratorFactoryTest {
         FunctionGenerator functionGenerator = factory.createFunctionGenerator(apiMethod);
         assertNotNull(functionGenerator);
         assertSame(apiMethod.getEnclosingClass(), functionGenerator.getApiMethod().getEnclosingClass());
-        CParameterGenerator[] parameterGenerators = functionGenerator.getParameterGenerators();
+        ParameterGenerator[] parameterGenerators = functionGenerator.getParameterGenerators();
         assertEquals(2, parameterGenerators.length);
         assertEquals("int", parameterGenerators[0].getType().typeName());
         assertEquals("p1", parameterGenerators[0].getName());

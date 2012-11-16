@@ -38,12 +38,19 @@ public class PyCModuleGenerator extends ModuleGenerator {
     public static final String BEAM_PYAPI_NAME = "beampy";
     public static final String BEAM_PYAPI_VARNAMEPREFIX = "BeamPy";
 
+    public static final String OBJ_VAR_NAME = "_obj";
+    public static final String RESULT_VAR_NAME = "_result";
+
     private final CModuleGenerator cModuleGenerator;
 
     public PyCModuleGenerator(CModuleGenerator cModuleGenerator) {
-        super(cModuleGenerator.getApiInfo());
+        super(cModuleGenerator.getApiInfo(), new PyCFunctionGeneratorFactory(cModuleGenerator.getApiInfo()));
         this.cModuleGenerator = cModuleGenerator;
         getTemplateEval().add("libName", BEAM_PYAPI_NAME);
+    }
+
+    CModuleGenerator getCModuleGenerator() {
+        return cModuleGenerator;
     }
 
     @Override
@@ -97,9 +104,8 @@ public class PyCModuleGenerator extends ModuleGenerator {
 
             writer.printf("\n");
             for (ApiClass apiClass : getApiClasses()) {
-                for (FunctionGenerator generator : cModuleGenerator.getFunctionGenerators(apiClass)) {
-                    writer.printf("PyObject* BeamPy%s(PyObject* self, PyObject* args);\n",
-                                  generator.getFunctionName(cModuleGenerator));
+                for (FunctionGenerator generator : getFunctionGenerators(apiClass)) {
+                    writer.printf("%s;\n", generator.generateFunctionSignature(this));
                 }
             }
             writer.printf("\n");
@@ -108,11 +114,11 @@ public class PyCModuleGenerator extends ModuleGenerator {
             writer.printf("static PyMethodDef BeamPy_Methods[] = {\n");
 
             for (ApiClass apiClass : getApiClasses()) {
-                for (FunctionGenerator generator : cModuleGenerator.getFunctionGenerators(apiClass)) {
-                    writer.printf("    {\"%s\", BeamPy%s, METH_VARARGS, \"TODO: gen doc for function %s\"},\n",
+                for (FunctionGenerator generator : getFunctionGenerators(apiClass)) {
+                    writer.printf("    {\"%s\", %s, METH_VARARGS, \"TODO: gen doc for function %s\"},\n",
                                   generator.getFunctionName(cModuleGenerator),
-                                  generator.getFunctionName(cModuleGenerator),
-                                  generator.getFunctionName(cModuleGenerator));
+                                  generator.getFunctionName(this),
+                                  generator.getFunctionName(this));
                 }
             }
             writer.printf("    {NULL, NULL, 0, NULL}  /* Sentinel */\n");
@@ -124,17 +130,19 @@ public class PyCModuleGenerator extends ModuleGenerator {
             writer.printf("\n");
 
             for (ApiClass apiClass : getApiClasses()) {
-                for (FunctionGenerator generator : cModuleGenerator.getFunctionGenerators(apiClass)) {
-                    writer.printf("\n");
-                    writer.printf("PyObject* BeamPy%s(PyObject* self, PyObject* args)\n",
-                                  generator.getFunctionName(cModuleGenerator));
-                    writer.printf("{\n");
-                    writer.printf("    /* TODO: gen implementation code code */\n");
-                    writer.printf("    fprintf(stderr, \"error: BEAM function 'BeamPy%s' not implemented yet.\\n\");\n",
-                                  generator.getFunctionName(cModuleGenerator));
-                    writer.printf("    Py_INCREF(Py_None);\n");
-                    writer.printf("    return Py_None;\n");
-                    writer.printf("}\n");
+                for (FunctionGenerator generator : getFunctionGenerators(apiClass)) {
+                    generateFunctionDefinition(generator, writer);
+//                                writer.printf("\n");
+//                                writer.printf("PyObject* BeamPy%s(PyObject* self, PyObject* args)\n",
+//                                              generator.getFunctionName(cModuleGenerator));
+//                                writer.printf("{\n");
+//                                writer.printf("    /* TODO: gen implementation code code */\n");
+//                                writer.printf("    fprintf(stderr, \"error: BEAM function 'BeamPy%s' not implemented yet.\\n\");\n",
+//                                              generator.getFunctionName(cModuleGenerator));
+//                                writer.printf("    Py_INCREF(Py_None);\n");
+//                                writer.printf("    return Py_None;\n");
+//                                writer.printf("}\n");
+
                 }
             }
 

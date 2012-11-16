@@ -1,4 +1,4 @@
-package org.esa.beam.extapi.gen.c;
+package org.esa.beam.extapi.gen.py;
 
 import com.sun.javadoc.ExecutableMemberDoc;
 import com.sun.javadoc.Type;
@@ -7,23 +7,22 @@ import org.esa.beam.extapi.gen.ApiMethod;
 import org.esa.beam.extapi.gen.ApiParameter;
 import org.esa.beam.extapi.gen.FunctionGenerator;
 import org.esa.beam.extapi.gen.GeneratorContext;
-import org.esa.beam.extapi.gen.ParameterGenerator;
 import org.esa.beam.extapi.gen.TypeHelpers;
+import org.esa.beam.extapi.gen.c.CModuleGenerator;
 
 import static org.esa.beam.extapi.gen.TemplateEval.eval;
 import static org.esa.beam.extapi.gen.TemplateEval.kv;
-import static org.esa.beam.extapi.gen.c.CModuleGenerator.METHOD_VAR_NAME;
-import static org.esa.beam.extapi.gen.c.CModuleGenerator.SELF_VAR_NAME;
+import static org.esa.beam.extapi.gen.py.PyCModuleGenerator.RESULT_VAR_NAME;
 
 /**
  * @author Norman Fomferra
  */
-public abstract class CFunctionGenerator implements FunctionGenerator {
+public abstract class PyCFunctionGenerator implements FunctionGenerator {
 
     protected final ApiMethod apiMethod;
-    protected final ParameterGenerator[] parameterGenerators;
+    protected final PyCParameterGenerator[] parameterGenerators;
 
-    protected CFunctionGenerator(ApiMethod apiMethod, ParameterGenerator[] parameterGenerators) {
+    protected PyCFunctionGenerator(ApiMethod apiMethod, PyCParameterGenerator[] parameterGenerators) {
         this.apiMethod = apiMethod;
         this.parameterGenerators = parameterGenerators;
     }
@@ -51,22 +50,32 @@ public abstract class CFunctionGenerator implements FunctionGenerator {
     }
 
     @Override
-    public ParameterGenerator[] getParameterGenerators() {
+    public PyCParameterGenerator[] getParameterGenerators() {
         return parameterGenerators;
     }
 
     @Override
     public String generateFunctionSignature(GeneratorContext context) {
-        String returnTypeName = TypeHelpers.getCTypeName(getReturnType());
-        String functionName = getFunctionName(context);
-        String parameterList = generateParameterList(context);
-        if (parameterList.isEmpty()) {
-            return String.format("%s %s()",
-                                 returnTypeName, functionName);
-        } else {
-            return String.format("%s %s(%s)",
-                                 returnTypeName, functionName, parameterList);
+        return String.format("PyObject* %s(PyObject* self, PyObject* args)",
+                             context.getFunctionNameFor(getApiMethod()));
+    }
+
+    @Override
+    public String generateLocalVarDecl(GeneratorContext context) {
+        StringBuilder parameterList = new StringBuilder();
+        if (isInstanceMethod()) {
+                    parameterList.append(String.format("%s %s;\n",
+                                                       TypeHelpers.getCTypeName(getEnclosingClass().getType()),
+                                                       PyCModuleGenerator.OBJ_VAR_NAME));
+                }
+        for (PyCParameterGenerator parameterGenerator : parameterGenerators) {
+            String decl = parameterGenerator.generateLocalVarDecl(context);
+            if (decl != null) {
+                parameterList.append(decl);
+                parameterList.append("\n");
+            }
         }
+        return parameterList.toString();
     }
 
     @Override
@@ -93,36 +102,22 @@ public abstract class CFunctionGenerator implements FunctionGenerator {
         return false;
     }
 
-    protected String generateJniCall(GeneratorContext context) {
+    protected String generateCApiCall(GeneratorContext context) {
 
-        final String functionName;
+        final PyCModuleGenerator pyCModuleGenerator = (PyCModuleGenerator) context;
+        final CModuleGenerator cModuleGenerator = pyCModuleGenerator.getCModuleGenerator();
+
+        final String functionName = cModuleGenerator.getFunctionNameFor(apiMethod);
+
         final StringBuilder argumentList = new StringBuilder();
-
-        if (getMemberDoc().isConstructor()) {
-            functionName = "NewObject";
-            argumentList.append(CModuleGenerator.getComponentCClassVarName(getEnclosingClass().getType()));
-            argumentList.append(", ");
-            argumentList.append(METHOD_VAR_NAME);
-        } else if (getMemberDoc().isStatic()) {
-            functionName = String.format("CallStatic%sMethod", generateCallTypeName(context));
-            argumentList.append(CModuleGenerator.getComponentCClassVarName(getEnclosingClass().getType()));
-            argumentList.append(", ");
-            argumentList.append(METHOD_VAR_NAME);
-        } else {
-            functionName = String.format("Call%sMethod", generateCallTypeName(context));
-            argumentList.append(SELF_VAR_NAME);
-            argumentList.append(", ");
-            argumentList.append(METHOD_VAR_NAME);
-        }
-
-        for (ParameterGenerator parameterGenerator : parameterGenerators) {
+        for (PyCParameterGenerator parameterGenerator : parameterGenerators) {
             if (argumentList.length() > 0) {
                 argumentList.append(", ");
             }
             argumentList.append(parameterGenerator.generateCallCode(context));
         }
 
-        return String.format("(*jenv)->%s(jenv, %s)", functionName, argumentList);
+        return String.format("// %s(%s)", functionName, argumentList);
     }
 
     protected String generateParameterList(GeneratorContext context) {
@@ -130,9 +125,9 @@ public abstract class CFunctionGenerator implements FunctionGenerator {
         if (isInstanceMethod()) {
             parameterList.append(String.format("%s %s",
                                                TypeHelpers.getCTypeName(getEnclosingClass().getType()),
-                                               SELF_VAR_NAME));
+                                               PyCModuleGenerator.OBJ_VAR_NAME));
         }
-        for (ParameterGenerator parameterGenerator : parameterGenerators) {
+        for (PyCParameterGenerator parameterGenerator : parameterGenerators) {
             String decl = parameterGenerator.generateParamListDecl(context);
             if (decl != null) {
                 if (parameterList.length() > 0) {
@@ -155,122 +150,88 @@ public abstract class CFunctionGenerator implements FunctionGenerator {
         return !getMemberDoc().isStatic() && !getMemberDoc().isConstructor();
     }
 
-    protected abstract String generateCallTypeName(GeneratorContext context);
+    static class VoidMethod extends PyCFunctionGenerator {
 
-    static class VoidMethod extends CFunctionGenerator {
-
-        VoidMethod(ApiMethod apiMethod, ParameterGenerator[] parameterGenerators) {
+        VoidMethod(ApiMethod apiMethod, PyCParameterGenerator[] parameterGenerators) {
             super(apiMethod, parameterGenerators);
         }
 
         @Override
-        protected String generateCallTypeName(GeneratorContext context) {
-            return "Void";
-        }
-
-        @Override
-        public String generateLocalVarDecl(GeneratorContext context) {
-            return null;
-        }
-
-        @Override
         public String generateCallCode(GeneratorContext context) {
-            return String.format("%s;", generateJniCall(context));
+            return String.format("%s;", generateCApiCall(context));
         }
 
         @Override
         public String generateReturnCode(GeneratorContext context) {
-            return null;
+            return "return Py_BuildValue(\"\");";
         }
     }
 
-    static abstract class ReturnValueCallable extends CFunctionGenerator {
-        ReturnValueCallable(ApiMethod apiMethod, ParameterGenerator[] parameterGenerators) {
+    static abstract class ReturnValueCallable extends PyCFunctionGenerator {
+        ReturnValueCallable(ApiMethod apiMethod, PyCParameterGenerator[] parameterGenerators) {
             super(apiMethod, parameterGenerators);
         }
 
         @Override
         public String generateLocalVarDecl(GeneratorContext context) {
+            final String lvd = super.generateLocalVarDecl(context);
             String targetTypeName = TypeHelpers.getCTypeName(getReturnType());
-            return String.format("%s %s = (%s) 0;", targetTypeName, CModuleGenerator.RESULT_VAR_NAME, targetTypeName);
+            return String.format("%s\n%s %s = (%s) 0;", lvd, targetTypeName, RESULT_VAR_NAME, targetTypeName);
         }
 
         @Override
         public String generateCallCode(GeneratorContext context) {
-            return String.format("%s = %s;", CModuleGenerator.RESULT_VAR_NAME, generateJniCall(context));
+            return String.format("%s = %s;", RESULT_VAR_NAME, generateCApiCall(context));
         }
 
         @Override
         public String generateReturnCode(GeneratorContext context) {
-            return String.format("return %s;", CModuleGenerator.RESULT_VAR_NAME);
+            return String.format("return %s;", RESULT_VAR_NAME);
         }
     }
 
 
     static class Constructor extends ReturnValueCallable {
 
-        Constructor(ApiMethod apiMethod, ParameterGenerator[] parameterGenerators) {
+        Constructor(ApiMethod apiMethod, PyCParameterGenerator[] parameterGenerators) {
             super(apiMethod, parameterGenerators);
-        }
-
-        @Override
-        protected String generateCallTypeName(GeneratorContext context) {
-            return "Object";
-        }
-
-        @Override
-        public String generateReturnCode(GeneratorContext context) {
-            return String.format("return %s != NULL ? (*jenv)->NewGlobalRef(jenv, %s) : NULL;",
-                                 CModuleGenerator.RESULT_VAR_NAME, CModuleGenerator.RESULT_VAR_NAME);
         }
     }
 
     static abstract class ValueMethod extends ReturnValueCallable {
 
-        ValueMethod(ApiMethod apiMethod, ParameterGenerator[] parameterGenerators) {
+        ValueMethod(ApiMethod apiMethod, PyCParameterGenerator[] parameterGenerators) {
             super(apiMethod, parameterGenerators);
         }
 
         @Override
         public String generateLocalVarDecl(GeneratorContext context) {
             String targetTypeName = TypeHelpers.getCTypeName(getReturnType());
-            return String.format("%s %s = (%s) 0;", targetTypeName, CModuleGenerator.RESULT_VAR_NAME, targetTypeName);
+            return String.format("%s %s = (%s) 0;", targetTypeName, RESULT_VAR_NAME, targetTypeName);
         }
     }
 
 
     static class PrimitiveMethod extends ValueMethod {
-        PrimitiveMethod(ApiMethod apiMethod, ParameterGenerator[] parameterGenerators) {
+        PrimitiveMethod(ApiMethod apiMethod, PyCParameterGenerator[] parameterGenerators) {
             super(apiMethod, parameterGenerators);
         }
-
-        @Override
-        protected String generateCallTypeName(GeneratorContext context) {
-            String typeName = getReturnType().typeName();
-            return Character.toUpperCase(typeName.charAt(0)) + typeName.substring(1);
-        }
-
     }
 
     static class ObjectMethod extends ValueMethod {
-        ObjectMethod(ApiMethod apiMethod, ParameterGenerator[] parameterGenerators) {
+        ObjectMethod(ApiMethod apiMethod, PyCParameterGenerator[] parameterGenerators) {
             super(apiMethod, parameterGenerators);
-        }
-
-        @Override
-        protected String generateCallTypeName(GeneratorContext context) {
-            return "Object";
         }
 
         @Override
         public String generateReturnCode(GeneratorContext context) {
             return String.format("return %s != NULL ? (*jenv)->NewGlobalRef(jenv, %s) : NULL;",
-                                 CModuleGenerator.RESULT_VAR_NAME, CModuleGenerator.RESULT_VAR_NAME);
+                                 RESULT_VAR_NAME, RESULT_VAR_NAME);
         }
     }
 
     static class StringMethod extends ObjectMethod {
-        StringMethod(ApiMethod apiMethod, ParameterGenerator[] parameterGenerators) {
+        StringMethod(ApiMethod apiMethod, PyCParameterGenerator[] parameterGenerators) {
             super(apiMethod, parameterGenerators);
         }
 
@@ -284,17 +245,17 @@ public abstract class CFunctionGenerator implements FunctionGenerator {
         public String generateCallCode(GeneratorContext context) {
             return String.format("_resultString = %s;\n" +
                                          "%s = beam_alloc_string(_resultString);",
-                                 generateJniCall(context), CModuleGenerator.RESULT_VAR_NAME);
+                                 generateCApiCall(context), RESULT_VAR_NAME);
         }
 
         @Override
         public String generateReturnCode(GeneratorContext context) {
-            return String.format("return %s;", CModuleGenerator.RESULT_VAR_NAME);
+            return String.format("return %s;", RESULT_VAR_NAME);
         }
     }
 
     static abstract class ArrayMethod extends ObjectMethod {
-        ArrayMethod(ApiMethod apiMethod, ParameterGenerator[] parameterGenerators) {
+        ArrayMethod(ApiMethod apiMethod, PyCParameterGenerator[] parameterGenerators) {
             super(apiMethod, parameterGenerators);
         }
 
@@ -307,7 +268,7 @@ public abstract class CFunctionGenerator implements FunctionGenerator {
         public String generateLocalVarDecl(GeneratorContext context) {
             return super.generateLocalVarDecl(context)
                     + eval("\njarray ${r}Array = NULL;",
-                           kv("r", CModuleGenerator.RESULT_VAR_NAME));
+                           kv("r", RESULT_VAR_NAME));
         }
 
         @Override
@@ -315,13 +276,13 @@ public abstract class CFunctionGenerator implements FunctionGenerator {
             if (hasReturnParameter(context)) {
                 // NOTE: ParameterGenerator.<T>Array will generate code which sets ${r} = ...
                 return eval("${r}Array = ${c};",
-                            kv("r", CModuleGenerator.RESULT_VAR_NAME),
-                            kv("c", generateJniCall(context)));
-            }   else {
+                            kv("r", RESULT_VAR_NAME),
+                            kv("c", generateCApiCall(context)));
+            } else {
                 return eval("${r}Array = ${c};\n" +
                                     "${r} = ${f}(${r}Array, resultArrayLength);",
-                            kv("r", CModuleGenerator.RESULT_VAR_NAME),
-                            kv("c", generateJniCall(context)),
+                            kv("r", RESULT_VAR_NAME),
+                            kv("c", generateCApiCall(context)),
                             kv("f", getAllocFunctionName()));
             }
         }
@@ -329,14 +290,14 @@ public abstract class CFunctionGenerator implements FunctionGenerator {
         @Override
         public String generateReturnCode(GeneratorContext context) {
             return eval("return ${r};",
-                        kv("r", CModuleGenerator.RESULT_VAR_NAME));
+                        kv("r", RESULT_VAR_NAME));
         }
 
         protected abstract String getAllocFunctionName();
     }
 
     static class PrimitiveArrayMethod extends ArrayMethod {
-        PrimitiveArrayMethod(ApiMethod apiMethod, ParameterGenerator[] parameterGenerators) {
+        PrimitiveArrayMethod(ApiMethod apiMethod, PyCParameterGenerator[] parameterGenerators) {
             super(apiMethod, parameterGenerators);
         }
 
@@ -349,7 +310,7 @@ public abstract class CFunctionGenerator implements FunctionGenerator {
 
 
     static class ObjectArrayMethod extends ArrayMethod {
-        ObjectArrayMethod(ApiMethod apiMethod, ParameterGenerator[] parameterGenerators) {
+        ObjectArrayMethod(ApiMethod apiMethod, PyCParameterGenerator[] parameterGenerators) {
             super(apiMethod, parameterGenerators);
         }
 
@@ -361,7 +322,7 @@ public abstract class CFunctionGenerator implements FunctionGenerator {
 
     static class StringArrayMethod extends ArrayMethod {
 
-        StringArrayMethod(ApiMethod apiMethod, ParameterGenerator[] parameterGenerators) {
+        StringArrayMethod(ApiMethod apiMethod, PyCParameterGenerator[] parameterGenerators) {
             super(apiMethod, parameterGenerators);
         }
 

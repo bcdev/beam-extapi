@@ -21,7 +21,11 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.Writer;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -30,10 +34,12 @@ import java.util.Set;
 public abstract class ModuleGenerator implements GeneratorContext {
 
     private final ApiInfo apiInfo;
+    private final Map<ApiClass, List<FunctionGenerator>> functionGenerators;
     private final TemplateEval templateEval;
 
-    protected ModuleGenerator(ApiInfo apiInfo) {
+    protected ModuleGenerator(ApiInfo apiInfo, FunctionGeneratorFactory factory) {
         this.apiInfo = apiInfo;
+        functionGenerators = createFunctionGenerators(apiInfo, factory);
         templateEval = TemplateEval.create();
     }
 
@@ -47,6 +53,10 @@ public abstract class ModuleGenerator implements GeneratorContext {
 
     public TemplateEval getTemplateEval() {
         return templateEval;
+    }
+
+    public List<FunctionGenerator> getFunctionGenerators(ApiClass apiClass) {
+        return functionGenerators.get(apiClass);
     }
 
     @Override
@@ -127,4 +137,25 @@ public abstract class ModuleGenerator implements GeneratorContext {
         }
         return code.split("\n");
     }
+
+    private static Map<ApiClass, List<FunctionGenerator>> createFunctionGenerators(ApiInfo apiInfo, FunctionGeneratorFactory factory) {
+        Map<ApiClass, List<FunctionGenerator>> map = new HashMap<ApiClass, List<FunctionGenerator>>();
+        Set<ApiClass> apiClasses = apiInfo.getApiClasses();
+        for (ApiClass apiClass : apiClasses) {
+            List<ApiMethod> apiMethods = apiInfo.getMethodsOf(apiClass);
+            List<FunctionGenerator> functionGenerators = new ArrayList<FunctionGenerator>();
+            for (ApiMethod apiMethod : apiMethods) {
+                try {
+                    FunctionGenerator functionGenerator = factory.createFunctionGenerator(apiMethod);
+                    functionGenerators.add(functionGenerator);
+                } catch (GeneratorException e) {
+                    System.out.printf("error: %s\n", e.getMessage());
+                }
+            }
+            map.put(apiClass, functionGenerators);
+        }
+        return map;
+    }
+
+
 }
