@@ -5,6 +5,9 @@ import com.sun.javadoc.Type;
 import org.esa.beam.extapi.gen.ApiClass;
 import org.esa.beam.extapi.gen.ApiMethod;
 import org.esa.beam.extapi.gen.ApiParameter;
+import org.esa.beam.extapi.gen.FunctionGenerator;
+import org.esa.beam.extapi.gen.GeneratorContext;
+import org.esa.beam.extapi.gen.TypeHelpers;
 
 import static org.esa.beam.extapi.gen.TemplateEval.eval;
 import static org.esa.beam.extapi.gen.TemplateEval.kv;
@@ -13,16 +16,17 @@ import static org.esa.beam.extapi.gen.c.CModuleGenerator.*;
 /**
  * @author Norman Fomferra
  */
-public abstract class FunctionGenerator implements CodeGenerator {
+public abstract class CFunctionGenerator implements FunctionGenerator {
 
     protected final ApiMethod apiMethod;
-    protected final ParameterGenerator[] parameterGenerators;
+    protected final CParameterGenerator[] parameterGenerators;
 
-    protected FunctionGenerator(ApiMethod apiMethod, ParameterGenerator[] parameterGenerators) {
+    protected CFunctionGenerator(ApiMethod apiMethod, CParameterGenerator[] parameterGenerators) {
         this.apiMethod = apiMethod;
         this.parameterGenerators = parameterGenerators;
     }
 
+    @Override
     public ApiMethod getApiMethod() {
         return apiMethod;
     }
@@ -39,14 +43,17 @@ public abstract class FunctionGenerator implements CodeGenerator {
         return getApiMethod().getReturnType();
     }
 
+    @Override
     public String getFunctionName(GeneratorContext context) {
         return context.getFunctionNameFor(getApiMethod());
     }
 
-    public ParameterGenerator[] getParameterGenerators() {
+    @Override
+    public CParameterGenerator[] getParameterGenerators() {
         return parameterGenerators;
     }
 
+    @Override
     public String generateFunctionSignature(GeneratorContext context) {
         String returnTypeName = TypeHelpers.getCTypeName(getReturnType());
         String functionName = getFunctionName(context);
@@ -66,22 +73,14 @@ public abstract class FunctionGenerator implements CodeGenerator {
     }
 
     @Override
-    public abstract String generateLocalVarDecl(GeneratorContext context);
-
-    @Override
     public String generatePreCallCode(GeneratorContext context) {
         return null;
     }
 
     @Override
-    public abstract String generateCallCode(GeneratorContext context);
-
-    @Override
     public String generatePostCallCode(GeneratorContext context) {
         return null;
     }
-
-    public abstract String generateReturnCode(GeneratorContext context);
 
     protected boolean hasReturnParameter(GeneratorContext context) {
         for (ApiParameter parameter : context.getParametersFor(getApiMethod())) {
@@ -114,7 +113,7 @@ public abstract class FunctionGenerator implements CodeGenerator {
             argumentList.append(METHOD_VAR_NAME);
         }
 
-        for (ParameterGenerator parameterGenerator : parameterGenerators) {
+        for (CParameterGenerator parameterGenerator : parameterGenerators) {
             if (argumentList.length() > 0) {
                 argumentList.append(", ");
             }
@@ -131,7 +130,7 @@ public abstract class FunctionGenerator implements CodeGenerator {
                                                TypeHelpers.getCTypeName(getEnclosingClass().getType()),
                                                SELF_VAR_NAME));
         }
-        for (ParameterGenerator parameterGenerator : parameterGenerators) {
+        for (CParameterGenerator parameterGenerator : parameterGenerators) {
             String decl = parameterGenerator.generateParamListDecl(context);
             if (decl != null) {
                 if (parameterList.length() > 0) {
@@ -156,9 +155,9 @@ public abstract class FunctionGenerator implements CodeGenerator {
 
     protected abstract String generateCallTypeName(GeneratorContext context);
 
-    static class VoidMethod extends FunctionGenerator {
+    static class VoidMethod extends CFunctionGenerator {
 
-        VoidMethod(ApiMethod apiMethod, ParameterGenerator[] parameterGenerators) {
+        VoidMethod(ApiMethod apiMethod, CParameterGenerator[] parameterGenerators) {
             super(apiMethod, parameterGenerators);
         }
 
@@ -183,8 +182,8 @@ public abstract class FunctionGenerator implements CodeGenerator {
         }
     }
 
-    static abstract class ReturnValueCallable extends FunctionGenerator {
-        ReturnValueCallable(ApiMethod apiMethod, ParameterGenerator[] parameterGenerators) {
+    static abstract class ReturnValueCallable extends CFunctionGenerator {
+        ReturnValueCallable(ApiMethod apiMethod, CParameterGenerator[] parameterGenerators) {
             super(apiMethod, parameterGenerators);
         }
 
@@ -208,7 +207,7 @@ public abstract class FunctionGenerator implements CodeGenerator {
 
     static class Constructor extends ReturnValueCallable {
 
-        Constructor(ApiMethod apiMethod, ParameterGenerator[] parameterGenerators) {
+        Constructor(ApiMethod apiMethod, CParameterGenerator[] parameterGenerators) {
             super(apiMethod, parameterGenerators);
         }
 
@@ -226,7 +225,7 @@ public abstract class FunctionGenerator implements CodeGenerator {
 
     static abstract class ValueMethod extends ReturnValueCallable {
 
-        ValueMethod(ApiMethod apiMethod, ParameterGenerator[] parameterGenerators) {
+        ValueMethod(ApiMethod apiMethod, CParameterGenerator[] parameterGenerators) {
             super(apiMethod, parameterGenerators);
         }
 
@@ -239,7 +238,7 @@ public abstract class FunctionGenerator implements CodeGenerator {
 
 
     static class PrimitiveMethod extends ValueMethod {
-        PrimitiveMethod(ApiMethod apiMethod, ParameterGenerator[] parameterGenerators) {
+        PrimitiveMethod(ApiMethod apiMethod, CParameterGenerator[] parameterGenerators) {
             super(apiMethod, parameterGenerators);
         }
 
@@ -252,7 +251,7 @@ public abstract class FunctionGenerator implements CodeGenerator {
     }
 
     static class ObjectMethod extends ValueMethod {
-        ObjectMethod(ApiMethod apiMethod, ParameterGenerator[] parameterGenerators) {
+        ObjectMethod(ApiMethod apiMethod, CParameterGenerator[] parameterGenerators) {
             super(apiMethod, parameterGenerators);
         }
 
@@ -269,7 +268,7 @@ public abstract class FunctionGenerator implements CodeGenerator {
     }
 
     static class StringMethod extends ObjectMethod {
-        StringMethod(ApiMethod apiMethod, ParameterGenerator[] parameterGenerators) {
+        StringMethod(ApiMethod apiMethod, CParameterGenerator[] parameterGenerators) {
             super(apiMethod, parameterGenerators);
         }
 
@@ -293,7 +292,7 @@ public abstract class FunctionGenerator implements CodeGenerator {
     }
 
     static abstract class ArrayMethod extends ObjectMethod {
-        ArrayMethod(ApiMethod apiMethod, ParameterGenerator[] parameterGenerators) {
+        ArrayMethod(ApiMethod apiMethod, CParameterGenerator[] parameterGenerators) {
             super(apiMethod, parameterGenerators);
         }
 
@@ -335,7 +334,7 @@ public abstract class FunctionGenerator implements CodeGenerator {
     }
 
     static class PrimitiveArrayMethod extends ArrayMethod {
-        PrimitiveArrayMethod(ApiMethod apiMethod, ParameterGenerator[] parameterGenerators) {
+        PrimitiveArrayMethod(ApiMethod apiMethod, CParameterGenerator[] parameterGenerators) {
             super(apiMethod, parameterGenerators);
         }
 
@@ -348,7 +347,7 @@ public abstract class FunctionGenerator implements CodeGenerator {
 
 
     static class ObjectArrayMethod extends ArrayMethod {
-        ObjectArrayMethod(ApiMethod apiMethod, ParameterGenerator[] parameterGenerators) {
+        ObjectArrayMethod(ApiMethod apiMethod, CParameterGenerator[] parameterGenerators) {
             super(apiMethod, parameterGenerators);
         }
 
@@ -360,7 +359,7 @@ public abstract class FunctionGenerator implements CodeGenerator {
 
     static class StringArrayMethod extends ArrayMethod {
 
-        StringArrayMethod(ApiMethod apiMethod, ParameterGenerator[] parameterGenerators) {
+        StringArrayMethod(ApiMethod apiMethod, CParameterGenerator[] parameterGenerators) {
             super(apiMethod, parameterGenerators);
         }
 

@@ -5,43 +5,46 @@ import org.esa.beam.extapi.gen.ApiClass;
 import org.esa.beam.extapi.gen.ApiInfo;
 import org.esa.beam.extapi.gen.ApiMethod;
 import org.esa.beam.extapi.gen.ApiParameter;
+import org.esa.beam.extapi.gen.FunctionGenerator;
+import org.esa.beam.extapi.gen.GeneratorException;
+import org.esa.beam.extapi.gen.TypeHelpers;
 
 /**
  * @author Norman Fomferra
  */
-public class GeneratorFactory {
+public class CGeneratorFactory {
 
     private final ApiInfo apiInfo;
 
-    public GeneratorFactory(ApiInfo apiInfo) {
+    public CGeneratorFactory(ApiInfo apiInfo) {
         this.apiInfo = apiInfo;
     }
 
     public FunctionGenerator createFunctionGenerator(ApiMethod apiMethod) throws GeneratorException {
         ApiClass apiClass = apiMethod.getEnclosingClass();
-        ParameterGenerator[] parameterGenerators = createParameterGenerators(apiMethod);
+        CParameterGenerator[] parameterGenerators = createParameterGenerators(apiMethod);
         FunctionGenerator functionGenerator;
         if (apiMethod.getMemberDoc() instanceof ConstructorDoc) {
-            functionGenerator = new FunctionGenerator.Constructor(apiMethod, parameterGenerators);
+            functionGenerator = new CFunctionGenerator.Constructor(apiMethod, parameterGenerators);
         } else {
             MethodDoc methodDoc = (MethodDoc) apiMethod.getMemberDoc();
             Type returnType = apiMethod.getReturnType();
             if (returnType.dimension().isEmpty()) {
                 if (TypeHelpers.isVoid(returnType)) {
-                    functionGenerator = new FunctionGenerator.VoidMethod(apiMethod, parameterGenerators);
+                    functionGenerator = new CFunctionGenerator.VoidMethod(apiMethod, parameterGenerators);
                 } else if (TypeHelpers.isString(returnType)) {
-                    functionGenerator = new FunctionGenerator.StringMethod(apiMethod, parameterGenerators);
+                    functionGenerator = new CFunctionGenerator.StringMethod(apiMethod, parameterGenerators);
                 } else if (returnType.isPrimitive()) {
-                    functionGenerator = new FunctionGenerator.PrimitiveMethod(apiMethod, parameterGenerators);
+                    functionGenerator = new CFunctionGenerator.PrimitiveMethod(apiMethod, parameterGenerators);
                 } else {
-                    functionGenerator = new FunctionGenerator.ObjectMethod(apiMethod, parameterGenerators);
+                    functionGenerator = new CFunctionGenerator.ObjectMethod(apiMethod, parameterGenerators);
                 }
             } else if (TypeHelpers.isPrimitiveArray(returnType)) {
-                functionGenerator = new FunctionGenerator.PrimitiveArrayMethod(apiMethod, parameterGenerators);
+                functionGenerator = new CFunctionGenerator.PrimitiveArrayMethod(apiMethod, parameterGenerators);
             } else if (TypeHelpers.isStringArray(returnType)) {
-                functionGenerator = new FunctionGenerator.StringArrayMethod(apiMethod, parameterGenerators);
+                functionGenerator = new CFunctionGenerator.StringArrayMethod(apiMethod, parameterGenerators);
             } else if (TypeHelpers.isObjectArray(returnType)) {
-                functionGenerator = new FunctionGenerator.ObjectArrayMethod(apiMethod, parameterGenerators);
+                functionGenerator = new CFunctionGenerator.ObjectArrayMethod(apiMethod, parameterGenerators);
             } else {
                 throw new GeneratorException(String.format("member %s#%s(): can't deal with return type %s%s (not implemented yet)",
                                                            apiClass.getJavaName(),
@@ -53,30 +56,30 @@ public class GeneratorFactory {
         return functionGenerator;
     }
 
-    public ParameterGenerator[] createParameterGenerators(ApiMethod apiMethod) throws GeneratorException {
+    public CParameterGenerator[] createParameterGenerators(ApiMethod apiMethod) throws GeneratorException {
         ExecutableMemberDoc memberDoc = apiMethod.getMemberDoc();
         ApiParameter[] parameters = apiInfo.getParametersFor(apiMethod);
-        ParameterGenerator[] parameterGenerators = new ParameterGenerator[parameters.length];
+        CParameterGenerator[] parameterGenerators = new CParameterGenerator[parameters.length];
         for (int i = 0; i < parameterGenerators.length; i++) {
             ApiParameter parameter = parameters[i];
-            ParameterGenerator parameterGenerator;
+            CParameterGenerator parameterGenerator;
             Type parameterType = parameter.getType();
             boolean scalar = parameterType.dimension().equals("");
 
             if (scalar) {
                 if (parameterType.isPrimitive()) {
-                    parameterGenerator = new ParameterGenerator.PrimitiveScalar(parameter);
+                    parameterGenerator = new CParameterGenerator.PrimitiveScalar(parameter);
                 } else if (parameterType.qualifiedTypeName().equals("java.lang.String")) {
-                    parameterGenerator = new ParameterGenerator.StringScalar(parameter);
+                    parameterGenerator = new CParameterGenerator.StringScalar(parameter);
                 } else {
-                    parameterGenerator = new ParameterGenerator.ObjectScalar(parameter);
+                    parameterGenerator = new CParameterGenerator.ObjectScalar(parameter);
                 }
             } else if (TypeHelpers.isPrimitiveArray(parameterType)) {
-                parameterGenerator = new ParameterGenerator.PrimitiveArray(parameter);
+                parameterGenerator = new CParameterGenerator.PrimitiveArray(parameter);
             } else if (TypeHelpers.isStringArray(parameterType)) {
-                parameterGenerator = new ParameterGenerator.StringArray(parameter);
+                parameterGenerator = new CParameterGenerator.StringArray(parameter);
             } else if (TypeHelpers.isObjectArray(parameterType)) {
-                parameterGenerator = new ParameterGenerator.ObjectArray(parameter);
+                parameterGenerator = new CParameterGenerator.ObjectArray(parameter);
             } else {
                 throw new GeneratorException(String.format("member %s#%s(): can't deal with parameter %s of type %s%s (not implemented yet)",
                                                            apiMethod.getEnclosingClass().getJavaName(),

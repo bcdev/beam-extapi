@@ -18,63 +18,51 @@ package org.esa.beam.extapi.gen.py;
 
 import org.esa.beam.extapi.gen.ApiClass;
 import org.esa.beam.extapi.gen.ApiConstant;
-import org.esa.beam.extapi.gen.ApiGeneratorDoclet;
-import org.esa.beam.extapi.gen.ApiInfo;
-import org.esa.beam.extapi.gen.TemplateEval;
+import org.esa.beam.extapi.gen.ApiMethod;
+import org.esa.beam.extapi.gen.FunctionGenerator;
+import org.esa.beam.extapi.gen.ModuleGenerator;
 import org.esa.beam.extapi.gen.c.CModuleGenerator;
-import org.esa.beam.extapi.gen.c.FunctionGenerator;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.io.Writer;
-import java.util.Date;
 import java.util.List;
-import java.util.Set;
-
-import static org.esa.beam.extapi.gen.TemplateEval.kv;
 
 /**
  * @author Norman Fomferra
  */
-public class PyModuleGenerator {
+public class PyCModuleGenerator extends ModuleGenerator {
 
     public static final String BEAM_PYAPI_SRCDIR = "src/main/c/gen";
     public static final String BEAM_PYAPI_NAME = "beampy";
+    public static final String BEAM_PYAPI_VARNAMEPREFIX = "BeamPy";
 
-    private final ApiInfo apiInfo;
     private final CModuleGenerator cModuleGenerator;
-    private TemplateEval templateEval;
 
-    public PyModuleGenerator(CModuleGenerator cModuleGenerator) {
-        apiInfo = cModuleGenerator.getApiInfo();
+    public PyCModuleGenerator(CModuleGenerator cModuleGenerator) {
+        super(cModuleGenerator.getApiInfo());
         this.cModuleGenerator = cModuleGenerator;
-        templateEval = TemplateEval.create(kv("libName", BEAM_PYAPI_NAME));
+        getTemplateEval().add("libName", BEAM_PYAPI_NAME);
     }
 
-    public Set<ApiClass> getApiClasses() {
-        return apiInfo.getApiClasses();
+    @Override
+    public String getFunctionNameFor(ApiMethod apiMethod) {
+        return BEAM_PYAPI_VARNAMEPREFIX + cModuleGenerator.getFunctionNameFor(apiMethod);
     }
 
-    public void run() throws Exception {
-        writeWinDef();
-        writeHeader();
-        writeSource();
-    }
-
-    private void writeWinDef() throws IOException {
+    @Override
+    protected void writeWinDef() throws IOException {
         PrintWriter writer = new PrintWriter(new FileWriter(new File(BEAM_PYAPI_SRCDIR, BEAM_PYAPI_NAME + ".def")));
         try {
-            writeResource(writer, "PyModuleGenerator-stubs.def");
+            writeResource(writer, "PyCModuleGenerator-stubs.def");
         } finally {
             writer.close();
         }
     }
 
-    private void writeHeader() throws IOException {
+    @Override
+    protected void writeHeader() throws IOException {
         PrintWriter writer = new PrintWriter(new FileWriter(new File(BEAM_PYAPI_SRCDIR, BEAM_PYAPI_NAME + ".h")));
         try {
             generateFileInfo(writer);
@@ -83,7 +71,8 @@ public class PyModuleGenerator {
         }
     }
 
-    private void writeSource() throws IOException {
+    @Override
+    protected void writeSource() throws IOException {
         PrintWriter writer = new PrintWriter(new FileWriter(new File(BEAM_PYAPI_SRCDIR, BEAM_PYAPI_NAME + ".c")));
         try {
             generateFileInfo(writer);
@@ -92,12 +81,12 @@ public class PyModuleGenerator {
             writer.printf("#include \"python.h\"\n");
 
             writer.printf("\n");
-            writeResource(writer, "PyModuleGenerator-stubs-1.c");
+            writeResource(writer, "PyCModuleGenerator-stubs-1.c");
             writer.printf("\n");
 
             writer.write("\n");
             for (ApiClass apiClass : getApiClasses()) {
-                List<ApiConstant> constants = apiInfo.getConstantsOf(apiClass);
+                List<ApiConstant> constants = getApiInfo().getConstantsOf(apiClass);
                 if (!constants.isEmpty()) {
                     for (ApiConstant constant : constants) {
                         // todo
@@ -131,7 +120,7 @@ public class PyModuleGenerator {
             writer.printf("\n");
 
             writer.printf("\n");
-            writeResource(writer, "PyModuleGenerator-stubs-2.c");
+            writeResource(writer, "PyCModuleGenerator-stubs-2.c");
             writer.printf("\n");
 
             for (ApiClass apiClass : getApiClasses()) {
@@ -154,22 +143,11 @@ public class PyModuleGenerator {
         }
     }
 
-    private void writeResource(Writer writer, String resourceName) throws IOException {
-        final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(resourceName)));
-        try {
-            templateEval.eval(bufferedReader, writer);
-        } finally {
-            bufferedReader.close();
-        }
+    @Override
+    protected void writeLocalMethodVarDecl(PrintWriter writer) throws IOException {
     }
 
-    private void generateFileInfo(PrintWriter writer) {
-        writer.write(String.format("/*\n" +
-                                           " * DO NOT EDIT THIS FILE, IT IS MACHINE-GENERATED\n" +
-                                           " * File created at %s using %s\n" +
-                                           " */\n", new Date(), ApiGeneratorDoclet.class.getName()));
-        writer.write("\n");
+    @Override
+    protected void writeInitCode(PrintWriter writer, FunctionGenerator functionGenerator) throws IOException {
     }
-
-
 }

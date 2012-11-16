@@ -21,7 +21,7 @@ import com.sun.javadoc.Doclet;
 import com.sun.javadoc.LanguageVersion;
 import com.sun.javadoc.RootDoc;
 import org.esa.beam.extapi.gen.c.CModuleGenerator;
-import org.esa.beam.extapi.gen.py.PyModuleGenerator;
+import org.esa.beam.extapi.gen.py.PyCModuleGenerator;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -132,9 +132,9 @@ public class ApiGeneratorDoclet extends Doclet {
                 final ApiGeneratorConfig config = ApiGeneratorConfigImpl.load();
                 ApiInfo apiInfo = ApiInfo.create(config, root);
                 final CModuleGenerator cModuleGenerator = new CModuleGenerator(apiInfo);
-                final PyModuleGenerator pyModuleGenerator = new PyModuleGenerator(cModuleGenerator);
+                final PyCModuleGenerator pyCModuleGenerator = new PyCModuleGenerator(cModuleGenerator);
                 cModuleGenerator.run();
-                pyModuleGenerator.run();
+                pyCModuleGenerator.run();
                 return true;
             } catch (IOException e) {
                 e.printStackTrace();

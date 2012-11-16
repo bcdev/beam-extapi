@@ -1,8 +1,9 @@
-package org.esa.beam.extapi.gen.c;
+package org.esa.beam.extapi.gen;
 
 import com.sun.javadoc.Parameter;
 import org.esa.beam.extapi.gen.ApiMethod;
 import org.esa.beam.extapi.gen.ApiParameter;
+import org.esa.beam.extapi.gen.GeneratorContext;
 
 /**
 * @author Norman Fomferra

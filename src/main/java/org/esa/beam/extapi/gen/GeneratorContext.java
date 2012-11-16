@@ -1,4 +1,4 @@
-package org.esa.beam.extapi.gen.c;
+package org.esa.beam.extapi.gen;
 
 import org.esa.beam.extapi.gen.ApiMethod;
 import org.esa.beam.extapi.gen.ApiParameter;

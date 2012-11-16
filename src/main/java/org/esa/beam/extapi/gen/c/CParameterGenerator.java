@@ -2,31 +2,32 @@ package org.esa.beam.extapi.gen.c;
 
 import com.sun.javadoc.Type;
 import org.esa.beam.extapi.gen.ApiParameter;
+import org.esa.beam.extapi.gen.GeneratorContext;
+import org.esa.beam.extapi.gen.ParameterGenerator;
 
 import static org.esa.beam.extapi.gen.TemplateEval.eval;
 import static org.esa.beam.extapi.gen.TemplateEval.kv;
-import static org.esa.beam.extapi.gen.c.TypeHelpers.getComponentCTypeName;
+import static org.esa.beam.extapi.gen.TypeHelpers.getComponentCTypeName;
 
 /**
  * @author Norman Fomferra
  */
-public abstract class ParameterGenerator implements CodeGenerator {
+public abstract class CParameterGenerator implements ParameterGenerator {
     protected final ApiParameter parameter;
 
-    protected ParameterGenerator(ApiParameter parameter) {
+    protected CParameterGenerator(ApiParameter parameter) {
         this.parameter = parameter;
     }
 
+    @Override
     public String getName() {
         return parameter.getJavaName();
     }
 
+    @Override
     public Type getType() {
         return parameter.getParameterDoc().type();
     }
-
-    @Override
-    public abstract String generateParamListDecl(GeneratorContext context);
 
     @Override
     public String generateLocalVarDecl(GeneratorContext context) {
@@ -38,14 +39,12 @@ public abstract class ParameterGenerator implements CodeGenerator {
         return null;
     }
 
-    public abstract String generateCallCode(GeneratorContext context);
-
     @Override
     public String generatePostCallCode(GeneratorContext context) {
         return null;
     }
 
-    static class PrimitiveScalar extends ParameterGenerator {
+    static class PrimitiveScalar extends CParameterGenerator {
         PrimitiveScalar(ApiParameter parameter) {
             super(parameter);
         }
@@ -67,7 +66,7 @@ public abstract class ParameterGenerator implements CodeGenerator {
         return typeName;
     }
 
-    static class ObjectScalar extends ParameterGenerator {
+    static class ObjectScalar extends CParameterGenerator {
         ObjectScalar(ApiParameter parameter) {
             super(parameter);
         }
@@ -85,7 +84,7 @@ public abstract class ParameterGenerator implements CodeGenerator {
     }
 
 
-    static class StringScalar extends ParameterGenerator {
+    static class StringScalar extends CParameterGenerator {
         StringScalar(ApiParameter parameter) {
             super(parameter);
         }
@@ -112,7 +111,7 @@ public abstract class ParameterGenerator implements CodeGenerator {
         }
     }
 
-     static class PrimitiveArray extends ParameterGenerator {
+     static class PrimitiveArray extends CParameterGenerator {
 
         PrimitiveArray(ApiParameter parameter) {
             super(parameter);
@@ -179,7 +178,7 @@ public abstract class ParameterGenerator implements CodeGenerator {
     }
 
 
-    static class ObjectArray extends ParameterGenerator {
+    static class ObjectArray extends CParameterGenerator {
 
         ObjectArray(ApiParameter parameter) {
             super(parameter);
@@ -219,7 +218,7 @@ public abstract class ParameterGenerator implements CodeGenerator {
     }
 
 
-    static class StringArray extends ParameterGenerator {
+    static class StringArray extends CParameterGenerator {
         StringArray(ApiParameter parameter) {
             super(parameter);
         }

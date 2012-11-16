@@ -1,7 +1,14 @@
 package org.esa.beam.extapi.gen.c;
 
 import com.sun.javadoc.RootDoc;
-import org.esa.beam.extapi.gen.*;
+import org.esa.beam.extapi.gen.ApiClass;
+import org.esa.beam.extapi.gen.ApiGeneratorConfig;
+import org.esa.beam.extapi.gen.ApiGeneratorConfigMock;
+import org.esa.beam.extapi.gen.ApiInfo;
+import org.esa.beam.extapi.gen.ApiMethod;
+import org.esa.beam.extapi.gen.DocMock;
+import org.esa.beam.extapi.gen.FunctionGenerator;
+import org.esa.beam.extapi.gen.GeneratorException;
 import org.esa.beam.extapi.gen.test.TestClass2;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -14,13 +21,11 @@ import static org.esa.beam.extapi.gen.ApiInfoTest.getApiMethod;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 /**
  * @author Norman Fomferra
  */
-public class GeneratorFactoryTest {
+public class CGeneratorFactoryTest {
 
     public static final Class<TestClass2> TEST_CLASS_2 = TestClass2.class;
     private static ApiInfo apiInfo;
@@ -34,7 +39,7 @@ public class GeneratorFactoryTest {
 
     @Test
     public void testIt() throws GeneratorException {
-        GeneratorFactory factory = new GeneratorFactory(apiInfo);
+        CGeneratorFactory factory = new CGeneratorFactory(apiInfo);
 
 
         ApiClass apiClass2 = getTestClass2();
@@ -45,8 +50,8 @@ public class GeneratorFactoryTest {
 
         FunctionGenerator functionGenerator = factory.createFunctionGenerator(apiMethod);
         assertNotNull(functionGenerator);
-        assertSame(apiMethod.getEnclosingClass(), functionGenerator.getEnclosingClass());
-        ParameterGenerator[] parameterGenerators = functionGenerator.getParameterGenerators();
+        assertSame(apiMethod.getEnclosingClass(), functionGenerator.getApiMethod().getEnclosingClass());
+        CParameterGenerator[] parameterGenerators = functionGenerator.getParameterGenerators();
         assertEquals(2, parameterGenerators.length);
         assertEquals("int", parameterGenerators[0].getType().typeName());
         assertEquals("p1", parameterGenerators[0].getName());

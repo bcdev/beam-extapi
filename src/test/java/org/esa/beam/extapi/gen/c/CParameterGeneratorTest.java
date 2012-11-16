@@ -2,6 +2,8 @@ package org.esa.beam.extapi.gen.c;
 
 import org.esa.beam.extapi.gen.ApiParameter;
 import org.esa.beam.extapi.gen.DocMock;
+import org.esa.beam.extapi.gen.MyGeneratorContext;
+import org.esa.beam.extapi.gen.ParameterGenerator;
 import org.esa.beam.framework.datamodel.Band;
 import org.esa.beam.framework.datamodel.Product;
 import org.esa.beam.framework.datamodel.ProductData;
@@ -18,7 +20,7 @@ import static org.junit.Assert.assertEquals;
 /**
  * @author Norman Fomferra
  */
-public class ParameterGeneratorTest {
+public class CParameterGeneratorTest {
 
     private MyGeneratorContext context;
 
@@ -55,7 +57,7 @@ public class ParameterGeneratorTest {
 
     @Test
     public void test_CodeGenParameter_StringScalar() {
-        testGenerators(new ParameterGenerator.StringScalar(createParam("name", String.class, Modifier.IN)),
+        testGenerators(new CParameterGenerator.StringScalar(createParam("name", String.class, Modifier.IN)),
                        "const char* name",
                        "jstring nameString = NULL;",
                        "nameString = (*jenv)->NewStringUTF(jenv, name);",
@@ -142,7 +144,7 @@ public class ParameterGeneratorTest {
     }
 
     private void testPrimitiveScalar(String name, Class<?> type, Modifier modifier, String paramListDecl, String callArgExpr) {
-        testGenerators(new ParameterGenerator.PrimitiveScalar(createParam(name, type, modifier)),
+        testGenerators(new CParameterGenerator.PrimitiveScalar(createParam(name, type, modifier)),
                        paramListDecl,
                        null,
                        null,
@@ -151,7 +153,7 @@ public class ParameterGeneratorTest {
     }
 
     private void testPrimitiveArray(String name, Class<?> type, Modifier modifier, String paramListDecl, String localVarDecl, String preCallCode, String callArgExpr, String postCallCode) {
-        testGenerators(new ParameterGenerator.PrimitiveArray(createParam(name, type, modifier)),
+        testGenerators(new CParameterGenerator.PrimitiveArray(createParam(name, type, modifier)),
                        paramListDecl,
                        localVarDecl,
                        preCallCode,
@@ -165,7 +167,7 @@ public class ParameterGeneratorTest {
                                  String preCallCode,
                                  String callArgExpr,
                                  String postCallCode) {
-        testGenerators(new ParameterGenerator.StringArray(createParam(name, type, modifier)),
+        testGenerators(new CParameterGenerator.StringArray(createParam(name, type, modifier)),
                        paramListDecl,
                        localVarDecl,
                        preCallCode,
@@ -179,7 +181,7 @@ public class ParameterGeneratorTest {
                                  String preCallCode,
                                  String callArgExpr,
                                  String postCallCode) {
-        testGenerators(new ParameterGenerator.ObjectArray(createParam(name, type, modifier)),
+        testGenerators(new CParameterGenerator.ObjectArray(createParam(name, type, modifier)),
                        paramListDecl,
                        localVarDecl,
                        preCallCode,
@@ -188,7 +190,7 @@ public class ParameterGeneratorTest {
     }
 
     private void testObjectScalar(String name, Class<?> type, String paramListDecl, String callArgExpr) {
-        testGenerators(new ParameterGenerator.ObjectScalar(createParam(name, type, Modifier.IN)),
+        testGenerators(new CParameterGenerator.ObjectScalar(createParam(name, type, Modifier.IN)),
                        paramListDecl, null, null, callArgExpr, null);
     }
 

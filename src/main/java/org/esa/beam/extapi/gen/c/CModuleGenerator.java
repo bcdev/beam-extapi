@@ -20,22 +20,19 @@ import com.sun.javadoc.FieldDoc;
 import com.sun.javadoc.Type;
 import org.esa.beam.extapi.gen.ApiClass;
 import org.esa.beam.extapi.gen.ApiConstant;
-import org.esa.beam.extapi.gen.ApiGeneratorDoclet;
 import org.esa.beam.extapi.gen.ApiInfo;
 import org.esa.beam.extapi.gen.ApiMethod;
-import org.esa.beam.extapi.gen.ApiParameter;
-import org.esa.beam.extapi.gen.TemplateEval;
+import org.esa.beam.extapi.gen.FunctionGenerator;
+import org.esa.beam.extapi.gen.GeneratorException;
+import org.esa.beam.extapi.gen.ModuleGenerator;
+import org.esa.beam.extapi.gen.TypeHelpers;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -45,7 +42,7 @@ import java.util.TreeSet;
 /**
  * @author Norman Fomferra
  */
-public class CModuleGenerator implements GeneratorContext {
+public class CModuleGenerator extends ModuleGenerator {
 
     public static final String BEAM_CAPI_SRCDIR = "src/main/c/gen";
     public static final String BEAM_CAPI_NAME = "beam_capi";
@@ -55,32 +52,19 @@ public class CModuleGenerator implements GeneratorContext {
     public static final String RESULT_VAR_NAME = "_result";
     public static final String CLASS_VAR_NAME_PATTERN = "class%s";
 
-    private final ApiInfo apiInfo;
     private final Map<ApiMethod, String> functionNames;
     private final Map<ApiClass, List<FunctionGenerator>> functionGenerators;
 
     public CModuleGenerator(ApiInfo apiInfo) {
-        this.apiInfo = apiInfo;
+        super(apiInfo);
         this.functionNames = createFunctionNames(apiInfo);
         this.functionGenerators = createFunctionGenerators(apiInfo);
-    }
-
-    public ApiInfo getApiInfo() {
-        return apiInfo;
-    }
-
-    public Set<ApiClass> getApiClasses() {
-        return apiInfo.getApiClasses();
+        getTemplateEval().add("libName", BEAM_CAPI_NAME);
     }
 
     @Override
     public String getFunctionNameFor(ApiMethod apiMethod) {
         return functionNames.get(apiMethod);
-    }
-
-    @Override
-    public ApiParameter[] getParametersFor(ApiMethod apiMethod) {
-        return apiInfo.getParametersFor(apiMethod);
     }
 
     public List<FunctionGenerator> getFunctionGenerators(ApiClass apiClass) {
@@ -106,14 +90,14 @@ public class CModuleGenerator implements GeneratorContext {
         return String.format("%s_%s", targetTypeName, methodCName);
     }
 
-    public void run() throws Exception {
-        writeWinDef();
-        writeHeader();
-        writeSource();
+    @Override
+    public void run() throws IOException {
+        super.run();
         printStats();
     }
 
-    private void writeWinDef() throws IOException {
+    @Override
+    protected  void writeWinDef() throws IOException {
         PrintWriter writer = new PrintWriter(new FileWriter(new File(BEAM_CAPI_SRCDIR, BEAM_CAPI_NAME + ".def")));
         try {
             writeResource(writer, "CModuleGenerator-stubs.def");
@@ -127,7 +111,8 @@ public class CModuleGenerator implements GeneratorContext {
         }
     }
 
-    private void writeHeader() throws IOException {
+    @Override
+    protected void writeHeader() throws IOException {
         PrintWriter writer = new PrintWriter(new FileWriter(new File(BEAM_CAPI_SRCDIR, BEAM_CAPI_NAME + ".h")));
         try {
             generateFileInfo(writer);
@@ -146,7 +131,7 @@ public class CModuleGenerator implements GeneratorContext {
             writer.write("\n");
             writer.write("/* Non-API classes used in the API */\n");
             writer.write("typedef void* String;\n");
-            for (ApiClass usedApiClass : apiInfo.getUsedNonApiClasses()) {
+            for (ApiClass usedApiClass : getApiInfo().getUsedNonApiClasses()) {
                 if (!TypeHelpers.isString(usedApiClass.getType())) {
                     writer.write(String.format("typedef void* %s;\n", getComponentCClassName(usedApiClass.getType())));
                 }
@@ -161,7 +146,7 @@ public class CModuleGenerator implements GeneratorContext {
             // Generate function declarations
             //
             for (ApiClass apiClass : getApiClasses()) {
-                List<ApiConstant> constants = apiInfo.getConstantsOf(apiClass);
+                List<ApiConstant> constants = getApiInfo().getConstantsOf(apiClass);
                 if (!constants.isEmpty()) {
                     writer.write("\n");
                     writer.printf("/* Constants of %s */\n", getComponentCClassName(apiClass.getType()));
@@ -185,7 +170,8 @@ public class CModuleGenerator implements GeneratorContext {
         }
     }
 
-    private void writeSource() throws IOException {
+    @Override
+    protected void writeSource() throws IOException {
         PrintWriter writer = new PrintWriter(new FileWriter(new File(BEAM_CAPI_SRCDIR, BEAM_CAPI_NAME + ".c")));
         try {
             generateFileInfo(writer);
@@ -209,7 +195,7 @@ public class CModuleGenerator implements GeneratorContext {
             writer.printf("/* Other Java classes used in the API. */\n");
             writer.write(String.format("static jclass %s;\n",
                                        String.format(CLASS_VAR_NAME_PATTERN, "String")));
-            for (ApiClass usedApiClass : apiInfo.getUsedNonApiClasses()) {
+            for (ApiClass usedApiClass : getApiInfo().getUsedNonApiClasses()) {
                 if (usedApiClass.getType().asClassDoc().isEnum()) {
                     System.out.println("Warning: unhandled enum detected: enum " + usedApiClass);
                     System.out.printf("enum %s {\n", usedApiClass.getType().simpleTypeName());
@@ -226,7 +212,7 @@ public class CModuleGenerator implements GeneratorContext {
 
             writer.write("\n");
             for (ApiClass apiClass : getApiClasses()) {
-                List<ApiConstant> constants = apiInfo.getConstantsOf(apiClass);
+                List<ApiConstant> constants = getApiInfo().getConstantsOf(apiClass);
                 if (!constants.isEmpty()) {
                     writer.printf("/* Constants of %s */\n", getComponentCClassName(apiClass.getType()));
                     for (ApiConstant constant : constants) {
@@ -294,15 +280,6 @@ public class CModuleGenerator implements GeneratorContext {
         return expr != null ? expr : "NULL";
     }
 
-    private void writeResource(Writer writer, String resourceName) throws IOException {
-        final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(resourceName)));
-        try {
-            TemplateEval.create().add("libName", BEAM_CAPI_NAME).eval(bufferedReader, writer);
-        } finally {
-            bufferedReader.close();
-        }
-    }
-
     private void writeClassDef(PrintWriter writer, String classVarName, String classResourceName, int errCode) {
         writer.write(String.format("    %s = (*jenv)->FindClass(jenv, \"%s\");\n",
                                    classVarName, classResourceName));
@@ -311,37 +288,15 @@ public class CModuleGenerator implements GeneratorContext {
         writer.write("\n");
     }
 
-    void generateFunctionDeclaration(PrintWriter writer, FunctionGenerator generator) {
-        writer.printf("%s;\n", generator.generateFunctionSignature(this));
-    }
-
-    private void generateFunctionDefinition(FunctionGenerator generator, PrintWriter writer) throws IOException {
-        writer.printf("%s\n", generator.generateFunctionSignature(this));
-        writer.print("{\n");
-        writeLocalMethodVarDecl(writer);
-        for (ParameterGenerator parameterGenerator : generator.getParameterGenerators()) {
-            writeCode(writer, parameterGenerator.generateLocalVarDecl(this));
-        }
-        writeCode(writer, generator.generateLocalVarDecl(this));
-        writeInitVmCode(writer, generator);
-        writeInitMethodCode(writer, generator);
-        for (ParameterGenerator parameterGenerator : generator.getParameterGenerators()) {
-            writeCode(writer, parameterGenerator.generatePreCallCode(this));
-        }
-        writeCode(writer, generator.generatePreCallCode(this));
-        writeCode(writer, generator.generateCallCode(this));
-        writeCode(writer, generator.generatePostCallCode(this));
-        for (ParameterGenerator parameterGenerator : generator.getParameterGenerators()) {
-            writeCode(writer, parameterGenerator.generatePostCallCode(this));
-        }
-        writeCode(writer, generator.generateReturnCode(this));
-        writer.print("}\n");
-        writer.print("\n");
+    @Override
+    protected void writeInitCode(PrintWriter writer, FunctionGenerator functionGenerator) throws IOException {
+        writeInitVmCode(writer, functionGenerator);
+        writeInitMethodCode(writer, functionGenerator);
     }
 
     private void writeInitVmCode(PrintWriter writer, FunctionGenerator generator) {
         writer.printf("\n");
-        if (TypeHelpers.isVoid(generator.getReturnType())) {
+        if (TypeHelpers.isVoid(generator.getApiMethod().getReturnType())) {
             writer.printf("    if (beam_init_api() != 0) return;\n");
         } else {
             writer.printf("    if (beam_init_api() != 0) return _result;\n");
@@ -349,41 +304,28 @@ public class CModuleGenerator implements GeneratorContext {
         writer.printf("\n");
     }
 
-    private void writeLocalMethodVarDecl(PrintWriter writer) {
+    @Override
+    protected void writeLocalMethodVarDecl(PrintWriter writer) {
         writer.printf("    static jmethodID %s = NULL;\n", METHOD_VAR_NAME);
     }
 
-    private void writeInitMethodCode(PrintWriter writer, FunctionGenerator generator) {
+    private void writeInitMethodCode(PrintWriter writer, FunctionGenerator functionGenerator) {
+        final ApiMethod apiMethod = functionGenerator.getApiMethod();
+
         writer.printf("    if (%s == NULL) {\n", METHOD_VAR_NAME);
         writer.printf("        %s = (*jenv)->%s(jenv, %s, \"%s\", \"%s\");\n",
                       METHOD_VAR_NAME,
-                      generator.getMemberDoc().isStatic() ? "GetStaticMethodID" : "GetMethodID",
-                      getComponentCClassVarName(generator.getEnclosingClass().getType()),
-                      generator.getApiMethod().getJavaName(),
-                      generator.getApiMethod().getJavaSignature());
-        if (TypeHelpers.isVoid(generator.getReturnType())) {
+                      apiMethod.getMemberDoc().isStatic() ? "GetStaticMethodID" : "GetMethodID",
+                      getComponentCClassVarName(apiMethod.getEnclosingClass().getType()),
+                      apiMethod.getJavaName(),
+                      apiMethod.getJavaSignature());
+        if (TypeHelpers.isVoid(apiMethod.getReturnType())) {
             writer.printf("        if (%s == NULL) return;\n", METHOD_VAR_NAME);
         } else {
             writer.printf("        if (%s == NULL) return _result;\n", METHOD_VAR_NAME);
         }
         writer.printf("    }\n");
         writer.printf("\n");
-    }
-
-    private void writeCode(PrintWriter writer, String code1) {
-        String[] callCode = generateLines(code1);
-        for (String line : callCode) {
-            writer.printf("    %s\n", line);
-        }
-    }
-
-
-    private void generateFileInfo(PrintWriter writer) {
-        writer.write(String.format("/*\n" +
-                                           " * DO NOT EDIT THIS FILE, IT IS MACHINE-GENERATED\n" +
-                                           " * File created at %s using %s\n" +
-                                           " */\n", new Date(), ApiGeneratorDoclet.class.getName()));
-        writer.write("\n");
     }
 
     private void printStats() {
@@ -395,14 +337,6 @@ public class CModuleGenerator implements GeneratorContext {
         }
         System.out.printf("#Classes: %d, #Methods: %d\n", numClasses, numMethods);
     }
-
-    String[] generateLines(String code) {
-        if (code == null || code.length() == 0) {
-            return new String[0];
-        }
-        return code.split("\n");
-    }
-
 
     private static Map<ApiMethod, String> createFunctionNames(ApiInfo apiInfo) {
         Map<String, Set<ApiMethod>> sameTargetFunctionNames = collectApiMethodsWithSameFunctionName(apiInfo);
@@ -478,7 +412,7 @@ public class CModuleGenerator implements GeneratorContext {
     }
 
     private Map<ApiClass, List<FunctionGenerator>> createFunctionGenerators(ApiInfo apiInfo) {
-        GeneratorFactory factory = new GeneratorFactory(apiInfo);
+        CGeneratorFactory factory = new CGeneratorFactory(apiInfo);
         Map<ApiClass, List<FunctionGenerator>> map = new HashMap<ApiClass, List<FunctionGenerator>>();
         Set<ApiClass> apiClasses = apiInfo.getApiClasses();
         for (ApiClass apiClass : apiClasses) {

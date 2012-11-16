@@ -1,4 +1,4 @@
-package org.esa.beam.extapi.gen.c;
+package org.esa.beam.extapi.gen;
 
 /**
  * @author Norman Fomferra
