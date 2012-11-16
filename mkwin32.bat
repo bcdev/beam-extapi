@@ -1,7 +1,14 @@
 @echo off
 
-set JDK32_HOME=C:\Program Files (x86)\Java\jdk1.7.0
-set PYTHON32_HOME=C:\Python32
+rem set MSVC_HOME=C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC
+rem set PYTHON32_HOME=C:\Python32
+rem set JDK32_HOME=C:\Program Files (x86)\Java\jdk1.7.0_07
+
+if "%MSVC_HOME%"=="" goto no_msvc
+if "%JDK32_HOME%"=="" goto no_jdk
+if "%PYTHON32_HOME%"=="" goto no_python
+
+call "%MSVC_HOME%\vcvarsall.bat"
 
 mkdir target\win32\
 del /S /Q target\win32\
@@ -38,7 +45,7 @@ src\main\c\gen\beam_capi.def ^
 /TLBID:1 ^
 /DYNAMICBASE ^
 /NXCOMPAT  ^
-/MACHINE:X86 ^
+/MACHINE:X86
 
 
 rem Building BEAM/Python API
@@ -75,4 +82,24 @@ src\main\c\gen\beampy.def ^
 /TLBID:1 ^
 /DYNAMICBASE ^
 /NXCOMPAT  ^
-/MACHINE:X86 ^
+/MACHINE:X86
+
+goto ok
+
+:no_jdk
+echo "Please specify JDK32_HOME (path to your Java 32-bit JDK)"
+goto error
+
+:no_python
+echo "Please specify PYTHON32_HOME (path to your Python 32-bit SDK)"
+goto error
+
+:no_msvs
+echo "Please specify MSVC_HOME (path to your Microsoft Visual C++ 10 SDK)"
+
+:ok
+echo "OK!"
+exit /B 0
+
+:error
+exit /B 1
