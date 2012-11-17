@@ -30,7 +30,7 @@ public class PyCFunctionGeneratorFactory implements FunctionGeneratorFactory {
         PyCParameterGenerator[] parameterGenerators = createParameterGenerators(apiMethod);
         FunctionGenerator functionGenerator;
         if (apiMethod.getMemberDoc() instanceof ConstructorDoc) {
-            functionGenerator = new PyCFunctionGenerator.Constructor(apiMethod, parameterGenerators);
+            functionGenerator = new PyCFunctionGenerator.ObjectMethod(apiMethod, parameterGenerators);
         } else {
             MethodDoc methodDoc = (MethodDoc) apiMethod.getMemberDoc();
             Type returnType = apiMethod.getReturnType();

@@ -46,4 +46,9 @@ public class TypeHelpers {
     public static boolean isObjectArray(Type type) {
         return type.dimension().equals("[]") && !type.isPrimitive();
     }
+
+    public static String firstCharToUpperCase(String typeName) {
+        typeName = Character.toUpperCase(typeName.charAt(0)) + typeName.substring(1);
+        return typeName;
+    }
 }

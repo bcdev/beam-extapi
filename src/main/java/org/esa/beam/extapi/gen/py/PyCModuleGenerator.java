@@ -38,8 +38,8 @@ public class PyCModuleGenerator extends ModuleGenerator {
     public static final String BEAM_PYAPI_NAME = "beampy";
     public static final String BEAM_PYAPI_VARNAMEPREFIX = "BeamPy";
 
-    public static final String OBJ_VAR_NAME = "_obj";
-    public static final String RESULT_VAR_NAME = "_result";
+    public static final String THIS_VAR_NAME = "thisObj";
+    public static final String RESULT_VAR_NAME = "result";
 
     private final CModuleGenerator cModuleGenerator;
 

@@ -32,6 +32,17 @@ public abstract class PyCParameterGenerator implements ParameterGenerator {
 
     @Override
     public String generateLocalVarDecl(GeneratorContext context) {
+        String typeName = getComponentCTypeName(getType());
+        return String.format("%s %s;", typeName, getName());
+    }
+
+    @Override
+    public String generateCallCode(GeneratorContext context) {
+        return getName();
+    }
+
+    @Override
+    public String generateParamListDecl(GeneratorContext context) {
         return null;
     }
 
@@ -50,21 +61,6 @@ public abstract class PyCParameterGenerator implements ParameterGenerator {
             super(parameter);
         }
 
-        @Override
-        public String generateParamListDecl(GeneratorContext context) {
-            String typeName = getComponentCTypeName(getType());
-            return String.format("%s %s", typeName, getName());
-        }
-
-        @Override
-        public String generateCallCode(GeneratorContext context) {
-            return getName();
-        }
-    }
-
-    private static String firstCharToUpperCase(String typeName) {
-        typeName = Character.toUpperCase(typeName.charAt(0)) + typeName.substring(1);
-        return typeName;
     }
 
     static class ObjectScalar extends PyCParameterGenerator {
@@ -73,17 +69,15 @@ public abstract class PyCParameterGenerator implements ParameterGenerator {
         }
 
         @Override
-        public String generateParamListDecl(GeneratorContext context) {
-            String typeName = CModuleGenerator.getComponentCClassName(getType());
-            return String.format("%s %s", typeName, getName());
+        public String generateLocalVarDecl(GeneratorContext context) {
+            return PyCFunctionGenerator.generateObjectTypeDecl(getName());
         }
 
         @Override
         public String generateCallCode(GeneratorContext context) {
-            return getName();
+            return String.format("(%s) %s", CModuleGenerator.getComponentCClassName(getType()), getName());
         }
     }
-
 
     static class StringScalar extends PyCParameterGenerator {
         StringScalar(ApiParameter parameter) {
@@ -91,24 +85,8 @@ public abstract class PyCParameterGenerator implements ParameterGenerator {
         }
 
         @Override
-        public String generateParamListDecl(GeneratorContext context) {
-            return String.format("const char* %s", getName());
-        }
-
-        @Override
         public String generateLocalVarDecl(GeneratorContext context) {
-            return String.format("jstring %sString = NULL;", getName());
-        }
-
-        @Override
-        public String generatePreCallCode(GeneratorContext context) {
-            return String.format("%sString = (*jenv)->NewStringUTF(jenv, %s);",
-                                 getName(), getName());
-        }
-
-        @Override
-        public String generateCallCode(GeneratorContext context) {
-            return String.format("%sString", getName());
+            return String.format("const char* %s;", getName());
         }
     }
 
@@ -119,23 +97,19 @@ public abstract class PyCParameterGenerator implements ParameterGenerator {
         }
 
         @Override
-        public String generateParamListDecl(GeneratorContext context) {
-            return eval("${c}${t}* ${p}Elems, int ${p}Length",
+        public String generateLocalVarDecl(GeneratorContext context) {
+            return eval("${c}${t}* ${p}Elems;\n" +
+                                "int ${p}Length;",
                         kv("c", parameter.getModifier() == ApiParameter.Modifier.IN ? "const " : ""),
                         kv("t", getType().simpleTypeName()),
                         kv("p", getName()));
         }
 
         @Override
-        public String generateLocalVarDecl(GeneratorContext context) {
-            return eval("jarray ${p}Array = NULL;",
-                        kv("p", getName()));
-        }
-
-        @Override
         public String generatePreCallCode(GeneratorContext context) {
+            /*
             String typeName = getType().simpleTypeName();
-            String typeNameUC = firstCharToUpperCase(typeName);
+            String typeNameUC = TypeHelpers.firstCharToUpperCase(typeName);
             if (parameter.getModifier() == ApiParameter.Modifier.IN) {
                 return eval("${p}Array = (*jenv)->New${tuc}Array(jenv, ${p}Length);\n" +
                                     "beam_copy_to_jarray(${p}Array, ${p}Elems, ${p}Length, sizeof (${t}));",
@@ -147,15 +121,19 @@ public abstract class PyCParameterGenerator implements ParameterGenerator {
                             kv("tuc", typeNameUC),
                             kv("p", getName()));
             }
+            */
+            return null;
         }
 
         @Override
         public String generateCallCode(GeneratorContext context) {
-            return eval("${p}Array", kv("p", getName()));
+            return eval("&${p}Elems, &${p}Length",
+                        kv("p", getName()));
         }
 
         @Override
         public String generatePostCallCode(GeneratorContext context) {
+            /*
             if (parameter.getModifier() == ApiParameter.Modifier.IN) {
                 return null;
             } else if (parameter.getModifier() == ApiParameter.Modifier.OUT) {
@@ -175,6 +153,8 @@ public abstract class PyCParameterGenerator implements ParameterGenerator {
                             kv("p", getName()),
                             kv("t", getType().simpleTypeName()));
             }
+            */
+            return null;
         }
     }
 
@@ -186,35 +166,28 @@ public abstract class PyCParameterGenerator implements ParameterGenerator {
         }
 
         @Override
-        public String generateParamListDecl(GeneratorContext context) {
-            return eval("${m}${t} ${p}Elems, int ${p}Length",
+        public String generateLocalVarDecl(GeneratorContext context) {
+            return eval("${m}${t} ${p}Elems;\n" +
+                                "int ${p}Length;",
                         kv("m", parameter.getModifier() == ApiParameter.Modifier.IN ? "const " : ""),
                         kv("t", CModuleGenerator.getComponentCClassName(getType())),
                         kv("p", getName()));
         }
 
         @Override
-        public String generateLocalVarDecl(GeneratorContext context) {
-            return eval("jarray ${p}Array = NULL;",
-                        kv("p", getName()));
-        }
-
-        @Override
         public String generatePreCallCode(GeneratorContext context) {
+            /*
             return eval("${p}Array = beam_new_jobject_array(${p}Elems, ${p}Length, ${c});",
                         kv("p", getName()),
                         kv("c", CModuleGenerator.getComponentCClassVarName(getType())));
+                        */
+            return null;
         }
 
         @Override
         public String generateCallCode(GeneratorContext context) {
-            return eval("${p}Array",
+            return eval("&${p}Elems, &${p}Length",
                         kv("p", getName()));
-        }
-
-        @Override
-        public String generatePostCallCode(GeneratorContext context) {
-            return null;
         }
     }
 
@@ -225,30 +198,27 @@ public abstract class PyCParameterGenerator implements ParameterGenerator {
         }
 
         @Override
-        public String generateParamListDecl(GeneratorContext context) {
-            return eval("${m}char** ${p}Elems, int ${p}Length",
+        public String generateLocalVarDecl(GeneratorContext context) {
+            return eval("${m}char** ${p}Elems;\n" +
+                                "int ${p}Length;",
                         kv("m", parameter.getModifier() == ApiParameter.Modifier.IN ? "const " : ""),
                         kv("p", getName()));
         }
 
         @Override
-        public String generateLocalVarDecl(GeneratorContext context) {
-            return eval("jobjectArray ${p}Array = NULL;",
-                        kv("p", getName()));
-        }
-
-        @Override
         public String generatePreCallCode(GeneratorContext context) {
+            /*
             return eval("${p}Array = beam_new_jstring_array(${p}Elems, ${p}Length);",
                         kv("p", getName()));
+                        */
+            return null;
         }
 
         @Override
         public String generateCallCode(GeneratorContext context) {
-            return eval("${p}Array",
+            return eval("&${p}Elems, &${p}Length",
                         kv("p", getName()));
         }
-
     }
 
 }
