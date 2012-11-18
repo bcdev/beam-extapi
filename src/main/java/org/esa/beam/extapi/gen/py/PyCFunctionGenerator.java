@@ -321,10 +321,18 @@ public abstract class PyCFunctionGenerator implements FunctionGenerator {
         PrimitiveArrayMethod(ApiMethod apiMethod, PyCParameterGenerator[] parameterGenerators) {
             super(apiMethod, parameterGenerators);
         }
+
         @Override
         public String generateLocalVarDecl0(GeneratorContext context) {
             return String.format("int %sLength;\n" +
-                                         "%s* %s;",RESULT_VAR_NAME, TypeHelpers.getComponentCTypeName(getReturnType()), RESULT_VAR_NAME);
+                                         "%s* %s;", RESULT_VAR_NAME, TypeHelpers.getComponentCTypeName(getReturnType()), RESULT_VAR_NAME);
+        }
+
+        @Override
+        public String generateCallCode(GeneratorContext context) {
+            return eval("${res} = ${call};",
+                        kv("res", RESULT_VAR_NAME),
+                        kv("call", generateCApiCall(context)));
         }
     }
 
@@ -332,10 +340,12 @@ public abstract class PyCFunctionGenerator implements FunctionGenerator {
         ObjectArrayMethod(ApiMethod apiMethod, PyCParameterGenerator[] parameterGenerators) {
             super(apiMethod, parameterGenerators);
         }
+
         @Override
         public String generateLocalVarDecl0(GeneratorContext context) {
-            return String.format("int %sLength;\n" +
-                                         "%s %s;", RESULT_VAR_NAME,TypeHelpers.getComponentCTypeName(getReturnType()), RESULT_VAR_NAME);
+            return eval("int ${res}Length;\n" +
+                                "unsigned PY_LONG_LONG ${res};",
+                        kv("res", RESULT_VAR_NAME));
         }
     }
 
@@ -343,10 +353,11 @@ public abstract class PyCFunctionGenerator implements FunctionGenerator {
         StringArrayMethod(ApiMethod apiMethod, PyCParameterGenerator[] parameterGenerators) {
             super(apiMethod, parameterGenerators);
         }
+
         @Override
         public String generateLocalVarDecl0(GeneratorContext context) {
-            return String.format("int %sLength;\n" +
-                                         "char** %s;", RESULT_VAR_NAME, RESULT_VAR_NAME);
+            return eval("int ${res}Length;\n" +
+                                "char** ${res};", kv("res", RESULT_VAR_NAME));
         }
 
         @Override

@@ -127,7 +127,7 @@ public abstract class PyCParameterGenerator implements ParameterGenerator {
 
         @Override
         public String generateCallCode(GeneratorContext context) {
-            return eval("&${p}Elems, &${p}Length",
+            return eval("${p}Elems, ${p}Length",
                         kv("p", getName()));
         }
 
@@ -186,7 +186,7 @@ public abstract class PyCParameterGenerator implements ParameterGenerator {
 
         @Override
         public String generateCallCode(GeneratorContext context) {
-            return eval("&${p}Elems, &${p}Length",
+            return eval("${p}Elems, ${p}Length",
                         kv("p", getName()));
         }
     }
@@ -216,7 +216,7 @@ public abstract class PyCParameterGenerator implements ParameterGenerator {
 
         @Override
         public String generateCallCode(GeneratorContext context) {
-            return eval("&${p}Elems, &${p}Length",
+            return eval("${p}Elems, ${p}Length",
                         kv("p", getName()));
         }
     }
