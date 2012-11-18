@@ -56,11 +56,43 @@ public abstract class PyCParameterGenerator implements ParameterGenerator {
         return null;
     }
 
+    public abstract String generateParseFormat(GeneratorContext context);
+
+    public abstract String generateParseArgs(GeneratorContext context);
+
     static class PrimitiveScalar extends PyCParameterGenerator {
         PrimitiveScalar(ApiParameter parameter) {
             super(parameter);
         }
 
+        @Override
+        public String generateParseFormat(GeneratorContext context) {
+            String s = getType().typeName();
+            if (s.equals("boolean")) {
+                return "p";
+            } else if (s.equals("char")) {
+                return "C";
+            } else if (s.equals("byte")) {
+                return "b";
+            } else if (s.equals("short")) {
+                return "h";
+            } else if (s.equals("int")) {
+                return "i";
+            } else if (s.equals("long")) {
+                return "L";
+            } else if (s.equals("float")) {
+                return "f";
+            } else if (s.equals("double")) {
+                return "d";
+            } else {
+                throw new IllegalArgumentException("can't deal with type '" + s + "'");
+            }
+        }
+
+        @Override
+        public String generateParseArgs(GeneratorContext context) {
+            return "&" + getName();
+        }
     }
 
     static class ObjectScalar extends PyCParameterGenerator {
@@ -77,6 +109,16 @@ public abstract class PyCParameterGenerator implements ParameterGenerator {
         public String generateCallCode(GeneratorContext context) {
             return String.format("(%s) %s", CModuleGenerator.getComponentCClassName(getType()), getName());
         }
+
+        @Override
+        public String generateParseFormat(GeneratorContext context) {
+            return "(sK)";
+        }
+
+        @Override
+        public String generateParseArgs(GeneratorContext context) {
+            return String.format("&%sTypeId, &%s", getName(), getName());
+        }
     }
 
     static class StringScalar extends PyCParameterGenerator {
@@ -88,9 +130,19 @@ public abstract class PyCParameterGenerator implements ParameterGenerator {
         public String generateLocalVarDecl(GeneratorContext context) {
             return String.format("const char* %s;", getName());
         }
+
+        @Override
+        public String generateParseFormat(GeneratorContext context) {
+            return "s";
+        }
+
+        @Override
+        public String generateParseArgs(GeneratorContext context) {
+            return "&" + getName();
+        }
     }
 
-     static class PrimitiveArray extends PyCParameterGenerator {
+    static class PrimitiveArray extends PyCParameterGenerator {
 
         PrimitiveArray(ApiParameter parameter) {
             super(parameter);
@@ -98,15 +150,18 @@ public abstract class PyCParameterGenerator implements ParameterGenerator {
 
         @Override
         public String generateLocalVarDecl(GeneratorContext context) {
-            return eval("${c}${t}* ${p}Elems;\n" +
-                                "int ${p}Length;",
-                        kv("c", parameter.getModifier() == ApiParameter.Modifier.IN ? "const " : ""),
-                        kv("t", getType().simpleTypeName()),
+            return eval("${t}* ${p}Elems;\n" +
+                                "int ${p}Length;\n" +
+                                "PyObject* ${p}Seq;",
+                        kv("t", getComponentCTypeName(getType())),
                         kv("p", getName()));
         }
 
         @Override
         public String generatePreCallCode(GeneratorContext context) {
+            return eval("${p}Elems = beam_new_${t}_array_from_pyseq(${p}Seq, &${p}Length);",
+                        kv("p", getName()),
+                        kv("t", getComponentCTypeName(getType())));
             /*
             String typeName = getType().simpleTypeName();
             String typeNameUC = TypeHelpers.firstCharToUpperCase(typeName);
@@ -122,7 +177,6 @@ public abstract class PyCParameterGenerator implements ParameterGenerator {
                             kv("p", getName()));
             }
             */
-            return null;
         }
 
         @Override
@@ -156,6 +210,16 @@ public abstract class PyCParameterGenerator implements ParameterGenerator {
             */
             return null;
         }
+
+        @Override
+        public String generateParseArgs(GeneratorContext context) {
+            return eval("&${p}Seq", kv("p", getName()));
+        }
+
+        @Override
+        public String generateParseFormat(GeneratorContext context) {
+            return "O";
+        }
     }
 
 
@@ -167,27 +231,34 @@ public abstract class PyCParameterGenerator implements ParameterGenerator {
 
         @Override
         public String generateLocalVarDecl(GeneratorContext context) {
-            return eval("${m}${t} ${p}Elems;\n" +
-                                "int ${p}Length;",
-                        kv("m", parameter.getModifier() == ApiParameter.Modifier.IN ? "const " : ""),
+            return eval("${t} ${p}Elems;\n" +
+                                "int ${p}Length;\n" +
+                                "PyObject* ${p}Seq;",
                         kv("t", CModuleGenerator.getComponentCClassName(getType())),
                         kv("p", getName()));
         }
 
         @Override
         public String generatePreCallCode(GeneratorContext context) {
-            /*
-            return eval("${p}Array = beam_new_jobject_array(${p}Elems, ${p}Length, ${c});",
+            return eval("${p}Elems = beam_new_jobject_array_from_pyseq(${p}Seq, &${p}Length);",
                         kv("p", getName()),
                         kv("c", CModuleGenerator.getComponentCClassVarName(getType())));
-                        */
-            return null;
         }
 
         @Override
         public String generateCallCode(GeneratorContext context) {
             return eval("${p}Elems, ${p}Length",
                         kv("p", getName()));
+        }
+
+        @Override
+        public String generateParseArgs(GeneratorContext context) {
+            return eval("&${p}Seq", kv("p", getName()));
+        }
+
+        @Override
+        public String generateParseFormat(GeneratorContext context) {
+            return "O";
         }
     }
 
@@ -199,19 +270,17 @@ public abstract class PyCParameterGenerator implements ParameterGenerator {
 
         @Override
         public String generateLocalVarDecl(GeneratorContext context) {
-            return eval("${m}char** ${p}Elems;\n" +
-                                "int ${p}Length;",
-                        kv("m", parameter.getModifier() == ApiParameter.Modifier.IN ? "const " : ""),
+            return eval("char** ${p}Elems;\n" +
+                                "int ${p}Length;\n" +
+                                "PyObject* ${p}Seq;",
                         kv("p", getName()));
         }
 
         @Override
         public String generatePreCallCode(GeneratorContext context) {
-            /*
-            return eval("${p}Array = beam_new_jstring_array(${p}Elems, ${p}Length);",
-                        kv("p", getName()));
-                        */
-            return null;
+            return eval("${p}Elems = beam_new_string_array_from_pyseq(${p}Seq, &${p}Length);",
+                        kv("p", getName()),
+                        kv("c", CModuleGenerator.getComponentCClassVarName(getType())));
         }
 
         @Override
@@ -219,6 +288,15 @@ public abstract class PyCParameterGenerator implements ParameterGenerator {
             return eval("${p}Elems, ${p}Length",
                         kv("p", getName()));
         }
-    }
 
+        @Override
+        public String generateParseArgs(GeneratorContext context) {
+            return eval("&${p}Seq", kv("p", getName()));
+        }
+
+        @Override
+        public String generateParseFormat(GeneratorContext context) {
+            return "O";
+        }
+    }
 }

@@ -75,6 +75,11 @@ public abstract class CFunctionGenerator implements FunctionGenerator {
     }
 
     @Override
+    public String generateInitCode(GeneratorContext context) {
+        return null;
+    }
+
+    @Override
     public String generatePreCallCode(GeneratorContext context) {
         return null;
     }

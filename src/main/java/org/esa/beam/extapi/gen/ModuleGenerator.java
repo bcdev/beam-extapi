@@ -88,6 +88,7 @@ public abstract class ModuleGenerator implements GeneratorContext {
             writeCode(writer, parameterGenerator.generateLocalVarDecl(this));
         }
         writeCode(writer, functionGenerator.generateLocalVarDecl(this));
+        writeCode(writer, functionGenerator.generateInitCode(this));
         writeInitCode(writer, functionGenerator);
         for (ParameterGenerator parameterGenerator : functionGenerator.getParameterGenerators()) {
             writeCode(writer, parameterGenerator.generatePreCallCode(this));

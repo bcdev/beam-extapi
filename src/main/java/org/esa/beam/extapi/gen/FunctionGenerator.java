@@ -10,6 +10,8 @@ public interface FunctionGenerator extends CodeGenerator {
 
     String getFunctionName(GeneratorContext context);
 
+    String generateInitCode(GeneratorContext context);
+
     String generateFunctionSignature(GeneratorContext context);
 
     String generateReturnCode(GeneratorContext context);

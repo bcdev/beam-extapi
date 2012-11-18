@@ -8,6 +8,7 @@ import org.esa.beam.extapi.gen.c.CModuleGenerator;
 import static org.esa.beam.extapi.gen.TemplateEval.eval;
 import static org.esa.beam.extapi.gen.TemplateEval.kv;
 import static org.esa.beam.extapi.gen.py.PyCModuleGenerator.RESULT_VAR_NAME;
+import static org.esa.beam.extapi.gen.py.PyCModuleGenerator.THIS_VAR_NAME;
 
 /**
  * @author Norman Fomferra
@@ -16,10 +17,13 @@ public abstract class PyCFunctionGenerator implements FunctionGenerator {
 
     protected final ApiMethod apiMethod;
     protected final PyCParameterGenerator[] parameterGenerators;
+    protected final TemplateEval templateEval;
 
     protected PyCFunctionGenerator(ApiMethod apiMethod, PyCParameterGenerator[] parameterGenerators) {
         this.apiMethod = apiMethod;
         this.parameterGenerators = parameterGenerators;
+        templateEval = TemplateEval.create(kv("res", RESULT_VAR_NAME),
+                                           kv("this", THIS_VAR_NAME));
     }
 
     @Override
@@ -73,6 +77,10 @@ public abstract class PyCFunctionGenerator implements FunctionGenerator {
 
     protected abstract String generateLocalVarDecl0(GeneratorContext context);
 
+    String format(String pattern, TemplateEval.KV... pairs) {
+        return templateEval.add(pairs).eval(pattern);
+    }
+
     static String generateObjectTypeDecl(String varName) {
         return eval("const char* ${var}TypeId;\n" +
                             "unsigned PY_LONG_LONG ${var};",
@@ -81,6 +89,38 @@ public abstract class PyCFunctionGenerator implements FunctionGenerator {
 
     @Override
     public String generateParamListDecl(GeneratorContext context) {
+        return null;
+    }
+
+    @Override
+    public String generateInitCode(GeneratorContext context) {
+        StringBuilder formatString = new StringBuilder();
+        StringBuilder argumentsStrings = new StringBuilder();
+        if (isInstanceMethod()) {
+            formatString.append("(sK)");
+            argumentsStrings.append(format("&${this}TypeId, &${this}"));
+        }
+        for (PyCParameterGenerator pyCParameterGenerator : getParameterGenerators()) {
+            String format = pyCParameterGenerator.generateParseFormat(context);
+            if (format != null) {
+                formatString.append(format);
+            }
+            String args = pyCParameterGenerator.generateParseArgs(context);
+            if (args != null) {
+                if (argumentsStrings.length() > 0) {
+                    argumentsStrings.append(", ");
+                }
+                argumentsStrings.append(args);
+            }
+        }
+        if (argumentsStrings.length() > 0) {
+            return String.format("if (!PyArg_ParseTuple(args, \"%s:%s\", %s)) {\n" +
+                                         "    return NULL;\n" +
+                                         "}",
+                                 formatString,
+                                 getCApiFunctionName(context),
+                                 argumentsStrings);
+        }
         return null;
     }
 
@@ -268,7 +308,7 @@ public abstract class PyCFunctionGenerator implements FunctionGenerator {
         @Override
         public String generateCallCode(GeneratorContext context) {
             return eval("${res}Str = ${call};\n" +
-                                "${res} = Py_BuildValue(\"s\", ${res}Str);\n" +
+                                "${res} = PyUnicode_FromString(${res}Str);\n" +
                                 "free(${res}Str);",
                         kv("res", RESULT_VAR_NAME),
                         kv("call", generateCApiCall(context)));

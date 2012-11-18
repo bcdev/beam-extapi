@@ -121,7 +121,7 @@ public abstract class CParameterGenerator implements ParameterGenerator {
         public String generateParamListDecl(GeneratorContext context) {
             return eval("${c}${t}* ${p}Elems, int ${p}Length",
                         kv("c", parameter.getModifier() == ApiParameter.Modifier.IN ? "const " : ""),
-                        kv("t", getType().simpleTypeName()),
+                        kv("t", getComponentCTypeName(getType())),
                         kv("p", getName()));
         }
 
