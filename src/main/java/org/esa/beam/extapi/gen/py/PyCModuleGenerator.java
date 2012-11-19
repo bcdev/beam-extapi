@@ -29,6 +29,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
 
+import static org.esa.beam.extapi.gen.TemplateEval.kv;
+
 /**
  * @author Norman Fomferra
  */
@@ -150,6 +152,19 @@ public class PyCModuleGenerator extends ModuleGenerator {
 
                 }
             }
+
+            writer.printf("\n");
+            writeResource(writer, "PyCModuleGenerator-stubs-3.c", kv("typeName", "boolean"), kv("ctype", "boolean"), kv("itemFactoryCall", "PyBool_FromLong(elems[i])"));
+            writeResource(writer, "PyCModuleGenerator-stubs-3.c", kv("typeName", "char"), kv("ctype", "char"), kv("itemFactoryCall", "PyUnicode_FromFormat(\"%c\", elems[i])"));
+            writeResource(writer, "PyCModuleGenerator-stubs-3.c", kv("typeName", "byte"), kv("ctype", "byte"), kv("itemFactoryCall", "PyLong_FromLong(elems[i])"));
+            writeResource(writer, "PyCModuleGenerator-stubs-3.c", kv("typeName", "short"), kv("ctype", "short"), kv("itemFactoryCall", "PyLong_FromLong(elems[i])"));
+            writeResource(writer, "PyCModuleGenerator-stubs-3.c", kv("typeName", "int"), kv("ctype", "int"), kv("itemFactoryCall", "PyLong_FromLong(elems[i])"));
+            writeResource(writer, "PyCModuleGenerator-stubs-3.c", kv("typeName", "long"), kv("ctype", "dlong"), kv("itemFactoryCall", "PyLong_FromLongLong(elems[i])"));
+            writeResource(writer, "PyCModuleGenerator-stubs-3.c", kv("typeName", "float"), kv("ctype", "float"), kv("itemFactoryCall", "PyFloat_FromDouble(elems[i])"));
+            writeResource(writer, "PyCModuleGenerator-stubs-3.c", kv("typeName", "double"), kv("ctype", "double"), kv("itemFactoryCall", "PyFloat_FromDouble(elems[i])"));
+            writeResource(writer, "PyCModuleGenerator-stubs-3.c", kv("typeName", "string"), kv("ctype", "char*"), kv("itemFactoryCall", "PyUnicode_FromString(elems[i])"));
+            writeResource(writer, "PyCModuleGenerator-stubs-3.c", kv("typeName", "jobject"), kv("ctype", "void*"), kv("itemFactoryCall", "PyLong_FromVoidPtr(elems[i])"));
+            writer.printf("\n");
 
         } finally {
             writer.close();

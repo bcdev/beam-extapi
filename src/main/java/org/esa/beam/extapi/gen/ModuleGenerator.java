@@ -28,6 +28,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import static org.esa.beam.extapi.gen.TemplateEval.KV;
+
 /**
  * @author Norman Fomferra
  */
@@ -55,7 +57,7 @@ public abstract class ModuleGenerator implements GeneratorContext {
         return templateEval;
     }
 
-    public String format(String pattern, TemplateEval.KV ... pairs) {
+    public String format(String pattern, KV ... pairs) {
         return templateEval.add(pairs).eval(pattern);
     }
 
@@ -142,10 +144,10 @@ public abstract class ModuleGenerator implements GeneratorContext {
         }
     }
 
-    protected void writeResource(Writer writer, String resourceName) throws IOException {
+    protected void writeResource(Writer writer, String resourceName, KV ... pairs) throws IOException {
         final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(resourceName)));
         try {
-            templateEval.eval(bufferedReader, writer);
+            templateEval.add(pairs).eval(bufferedReader, writer);
         } finally {
             bufferedReader.close();
         }

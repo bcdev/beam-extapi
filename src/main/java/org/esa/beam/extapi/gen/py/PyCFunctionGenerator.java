@@ -249,21 +249,21 @@ public abstract class PyCFunctionGenerator implements FunctionGenerator {
 
             String s = getReturnType().typeName();
             if (s.equals("boolean")) {
-                return String.format("return PyBool_FromLong(%s);", RESULT_VAR_NAME);
+                return format("return PyBool_FromLong(${res});");
             } else if (s.equals("char")) {
-                return String.format("return PyUnicode_FromFormat(\"%%c\", %s);", RESULT_VAR_NAME);
+                return format("return PyUnicode_FromFormat(\"%c\", ${res});");
             } else if (s.equals("byte")) {
-                return String.format("return PyLong_FromLong(%s);", RESULT_VAR_NAME);
+                return format("return PyLong_FromLong(${res});");
             } else if (s.equals("short")) {
-                return String.format("return PyLong_FromLong(%s);", RESULT_VAR_NAME);
+                return format("return PyLong_FromLong(${res});");
             } else if (s.equals("int")) {
-                return String.format("return PyLong_FromLong(%s);", RESULT_VAR_NAME);
+                return format("return PyLong_FromLong(${res});");
             } else if (s.equals("long")) {
-                return String.format("return PyLong_FromLongLong(%s);", RESULT_VAR_NAME);
+                return format("return PyLong_FromLongLong(${res});");
             } else if (s.equals("float")) {
-                return String.format("return PyFloat_FromDouble(%s);", RESULT_VAR_NAME);
+                return format("return PyFloat_FromDouble(${res});");
             } else if (s.equals("double")) {
-                return String.format("return PyFloat_FromDouble(%s);", RESULT_VAR_NAME);
+                return format("return PyFloat_FromDouble(${res});");
             } else {
                 throw new IllegalArgumentException("can't deal with type '" + s + "'");
             }
