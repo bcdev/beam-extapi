@@ -21,16 +21,17 @@ BEAM Python API
 
 ### How to run:
 
-* Start Python, then type
+Start Python, then type
 
-    >>> import beampy
-    >>> dir(beampy)
-    >>> help(beampy)
-    >>>
-    >>> p = ProductIO_readProduct('testdata/MER_RR__1PPBCM20110809_093213_000001383105_00223_49375_0022.N1')
-    >>> n = Product_getBandNames(p)
-    >>> b13 = Product_getBand(p, 'radiance_13')
-    >>> w13 = Band_getSpectralWavelength(b13)
+    \>\>\> import beampy
+    \>\>\> dir(beampy)
+    \>\>\> help(beampy)
+    \>\>\> 
+    \>\>\>  p = ProductIO_readProduct('testdata/MER_RR__1PPBCM20110809_093213_000001383105_00223_49375_0022.N1')
+    \>\>\>  n = Product_getBandNames(p)
+    \>\>\>  b13 = Product_getBand(p, 'radiance_13')
+    \>\>\>  w13 = Band_getSpectralWavelength(b13)
+    \>\>\>  Product_dispose(p)
 
 
 
