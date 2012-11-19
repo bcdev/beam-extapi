@@ -13,7 +13,7 @@ import org.esa.beam.extapi.gen.TypeHelpers;
 import static org.esa.beam.extapi.gen.TemplateEval.eval;
 import static org.esa.beam.extapi.gen.TemplateEval.kv;
 import static org.esa.beam.extapi.gen.c.CModuleGenerator.METHOD_VAR_NAME;
-import static org.esa.beam.extapi.gen.c.CModuleGenerator.SELF_VAR_NAME;
+import static org.esa.beam.extapi.gen.c.CModuleGenerator.THIS_VAR_NAME;
 
 /**
  * @author Norman Fomferra
@@ -115,7 +115,7 @@ public abstract class CFunctionGenerator implements FunctionGenerator {
             argumentList.append(METHOD_VAR_NAME);
         } else {
             functionName = String.format("Call%sMethod", generateCallTypeName(context));
-            argumentList.append(SELF_VAR_NAME);
+            argumentList.append(THIS_VAR_NAME);
             argumentList.append(", ");
             argumentList.append(METHOD_VAR_NAME);
         }
@@ -135,7 +135,7 @@ public abstract class CFunctionGenerator implements FunctionGenerator {
         if (isInstanceMethod()) {
             parameterList.append(String.format("%s %s",
                                                TypeHelpers.getCTypeName(getEnclosingClass().getType()),
-                                               SELF_VAR_NAME));
+                                               THIS_VAR_NAME));
         }
         for (ParameterGenerator parameterGenerator : parameterGenerators) {
             String decl = parameterGenerator.generateParamListDecl(context);

@@ -45,7 +45,7 @@ public class CModuleGenerator extends ModuleGenerator {
     public static final String BEAM_CAPI_SRCDIR = "src/main/c/gen";
     public static final String BEAM_CAPI_NAME = "beam_capi";
 
-    public static final String SELF_VAR_NAME = "_self";
+    public static final String THIS_VAR_NAME = "_this";
     public static final String METHOD_VAR_NAME = "_method";
     public static final String RESULT_VAR_NAME = "_result";
     public static final String CLASS_VAR_NAME_PATTERN = "class%s";
