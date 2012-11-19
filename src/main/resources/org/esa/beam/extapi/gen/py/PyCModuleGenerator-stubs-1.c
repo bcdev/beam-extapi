@@ -9,7 +9,7 @@ dlong* beam_new_dlong_array_from_pyseq(PyObject* seq, int* length);
 float* beam_new_float_array_from_pyseq(PyObject* seq, int* length);
 double* beam_new_double_array_from_pyseq(PyObject* seq, int* length);
 char** beam_new_string_array_from_pyseq(PyObject* seq, int* length);
-void** beam_new_jobject_array_from_pyseq(PyObject* seq, int* length);
+void** beam_new_jobject_array_from_pyseq(const char* type, PyObject* seq, int* length);
 
 PyObject* beam_new_pyseq_from_boolean_array(const boolean* elems, int length);
 PyObject* beam_new_pyseq_from_char_array(const char* elems, int length);

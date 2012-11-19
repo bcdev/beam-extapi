@@ -2,7 +2,13 @@ package org.esa.beam.extapi.gen.py;
 
 import com.sun.javadoc.ExecutableMemberDoc;
 import com.sun.javadoc.Type;
-import org.esa.beam.extapi.gen.*;
+import org.esa.beam.extapi.gen.ApiClass;
+import org.esa.beam.extapi.gen.ApiMethod;
+import org.esa.beam.extapi.gen.ApiParameter;
+import org.esa.beam.extapi.gen.FunctionGenerator;
+import org.esa.beam.extapi.gen.GeneratorContext;
+import org.esa.beam.extapi.gen.TemplateEval;
+import org.esa.beam.extapi.gen.TypeHelpers;
 import org.esa.beam.extapi.gen.c.CModuleGenerator;
 
 import static org.esa.beam.extapi.gen.TemplateEval.eval;
@@ -83,7 +89,7 @@ public abstract class PyCFunctionGenerator implements FunctionGenerator {
     }
 
     static String generateObjectTypeDecl(String varName) {
-        return eval("const char* ${var}TypeId;\n" +
+        return eval("const char* ${var}Type;\n" +
                             "unsigned PY_LONG_LONG ${var};",
                     kv("var", varName));
     }
@@ -99,7 +105,7 @@ public abstract class PyCFunctionGenerator implements FunctionGenerator {
         StringBuilder argumentsStrings = new StringBuilder();
         if (isInstanceMethod()) {
             formatString.append("(sK)");
-            argumentsStrings.append(format("&${this}TypeId, &${this}"));
+            argumentsStrings.append(format("&${this}Type, &${this}"));
         }
         for (PyCParameterGenerator pyCParameterGenerator : getParameterGenerators()) {
             String format = pyCParameterGenerator.generateParseFormat(context);
@@ -277,18 +283,22 @@ public abstract class PyCFunctionGenerator implements FunctionGenerator {
 
         @Override
         public String generateLocalVarDecl0(GeneratorContext context) {
-            return format("unsigned PY_LONG_LONG ${res};");
+            return format("void* ${res};");
         }
 
         @Override
         public String generateCallCode(GeneratorContext context) {
-            return format("${res} = (unsigned PY_LONG_LONG) ${call};",
+            return format("${res} = ${call};",
                           kv("call", generateCApiCall(context)));
         }
 
         @Override
         public String generateReturnCode(GeneratorContext context) {
-            return format("return ${res} != 0 ? Py_BuildValue(\"(sK)\", \"${type}\", ${res}) : Py_BuildValue(\"\");",
+            return format("if (${res} != NULL) {\n" +
+                                  "    return Py_BuildValue(\"(sK)\", \"${type}\", (unsigned PY_LONG_LONG) ${res});\n" +
+                                  "} else {\n" +
+                                  "    return Py_BuildValue(\"\");\n" +
+                                  "}",
                           kv("type", TypeHelpers.getCTypeName(getReturnType())));
         }
     }
@@ -300,27 +310,39 @@ public abstract class PyCFunctionGenerator implements FunctionGenerator {
 
         @Override
         public String generateLocalVarDecl0(GeneratorContext context) {
-            return format("char* ${res}Str;\n" +
-                                  "PyObject* ${res};");
+            return format("char* ${res};\n" +
+                                  "PyObject* ${res}Str;");
         }
 
         @Override
         public String generateCallCode(GeneratorContext context) {
-            return format("${res}Str = ${call};\n" +
-                                  "${res} = PyUnicode_FromString(${res}Str);\n" +
-                                  "free(${res}Str);",
+            return format("${res} = ${call};",
                           kv("call", generateCApiCall(context)));
         }
 
         @Override
         public String generateReturnCode(GeneratorContext context) {
-            return format("return ${res};");
+            return format("if (${res} != NULL) {\n" +
+                                  "    ${res}Str = PyUnicode_FromString(${res});\n" +
+                                  "    free(${res});\n" +
+                                  "    return ${res}Str;\n" +
+                                  "} else {\n" +
+                                  "    return Py_BuildValue(\"\");\n" +
+                                  "}\n");
         }
     }
 
     static abstract class ArrayMethod extends ObjectMethod {
         ArrayMethod(ApiMethod apiMethod, PyCParameterGenerator[] parameterGenerators) {
             super(apiMethod, parameterGenerators);
+        }
+
+        @Override
+        public String generateLocalVarDecl0(GeneratorContext context) {
+            return format("${t}* ${res};\n" +
+                                  "int ${res}Length;\n" +
+                                  "PyObject* ${res}Seq;",
+                          kv("t", getComponentCTypeName(getReturnType())));
         }
 
         @Override
@@ -345,13 +367,8 @@ public abstract class PyCFunctionGenerator implements FunctionGenerator {
             }
             */
 
-            return format("${res}Elems = ${call};",
+            return format("${res} = ${call};",
                           kv("call", generateCApiCall(context)));
-        }
-
-        @Override
-        public String generateReturnCode(GeneratorContext context) {
-            return format("return ${res}Seq;");
         }
     }
 
@@ -361,17 +378,15 @@ public abstract class PyCFunctionGenerator implements FunctionGenerator {
         }
 
         @Override
-        public String generateLocalVarDecl0(GeneratorContext context) {
-            return format("int ${res}Length;\n" +
-                                  "${t}* ${res}Elems;\n" +
-                                  "PyObject* ${res}Seq;",
-                          kv("t", getComponentCTypeName(getReturnType())));
-        }
-
-        @Override
-        public String generatePostCallCode(GeneratorContext context) {
-            return format("${res}Seq = beam_new_pyseq_from_${t}_array(${res}Elems, ${res}Length);\n" +
-                                  "free(${res}Elems);");
+        public String generateReturnCode(GeneratorContext context) {
+            return format("if (${res} != NULL) {\n" +
+                                  "    ${res}Seq = beam_new_pyseq_from_${type}_array(${res}, ${res}Length);\n" +
+                                  "    free(${res});\n" +
+                                  "    return ${res}Seq;\n" +
+                                  "} else {\n" +
+                                  "    return Py_BuildValue(\"\");\n" +
+                                  "}\n",
+                          kv("type", getComponentCTypeName(getReturnType())));
         }
     }
 
@@ -381,18 +396,15 @@ public abstract class PyCFunctionGenerator implements FunctionGenerator {
         }
 
         @Override
-        public String generateLocalVarDecl0(GeneratorContext context) {
-            return format("int ${res}Length;\n" +
-                                  "void* ${res}Elems;\n" +
-                                  "PyObject* ${res}Seq;");
-        }
-
-        @Override
-        public String generatePostCallCode(GeneratorContext context) {
-            return format("${res}Seq = beam_new_pyseq_from_jobject_array(\"${type}\", ${res}Elems, ${res}Length);\n" +
-                                  "free(${res}Elems);",
+        public String generateReturnCode(GeneratorContext context) {
+            return format("if (${res} != NULL) {\n" +
+                                  "    ${res}Seq = beam_new_pyseq_from_jobject_array(\"${type}\", ${res}, ${res}Length);\n" +
+                                  "    free(${res});\n" +
+                                  "    return ${res}Seq;\n" +
+                                  "} else {\n" +
+                                  "    return Py_BuildValue(\"\");\n" +
+                                  "}\n",
                           kv("type", getComponentCTypeName(getReturnType())));
-
         }
     }
 
@@ -402,17 +414,14 @@ public abstract class PyCFunctionGenerator implements FunctionGenerator {
         }
 
         @Override
-        public String generateLocalVarDecl0(GeneratorContext context) {
-            return format("int ${res}Length;\n" +
-                                  "char** ${res}Elems;\n" +
-                                  "PyObject* ${res}Seq;");
-        }
-
-        @Override
-        public String generatePostCallCode(GeneratorContext context) {
-            return format("${res}Seq = beam_new_pyseq_from_string_array(${res}Elems, ${res}Length);\n" +
-                                  "free(${res}Elems);");
-
+        public String generateReturnCode(GeneratorContext context) {
+            return format("if (${res} != NULL) {\n" +
+                                  "    ${res}Seq = beam_new_pyseq_from_string_array(${res}, ${res}Length);\n" +
+                                  "    beam_release_string_array(${res}, ${res}Length);\n" +
+                                  "    return ${res}Seq;\n" +
+                                  "} else {\n" +
+                                  "    return Py_BuildValue(\"\");\n" +
+                                  "}\n");
         }
     }
 }

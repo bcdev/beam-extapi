@@ -117,7 +117,7 @@ public abstract class PyCParameterGenerator implements ParameterGenerator {
 
         @Override
         public String generateParseArgs(GeneratorContext context) {
-            return String.format("&%sTypeId, &%s", getName(), getName());
+            return String.format("&%sType, &%s", getName(), getName());
         }
     }
 
@@ -150,7 +150,7 @@ public abstract class PyCParameterGenerator implements ParameterGenerator {
 
         @Override
         public String generateLocalVarDecl(GeneratorContext context) {
-            return eval("${t}* ${p}Elems;\n" +
+            return eval("${t}* ${p};\n" +
                                 "int ${p}Length;\n" +
                                 "PyObject* ${p}Seq;",
                         kv("t", getComponentCTypeName(getType())),
@@ -159,7 +159,7 @@ public abstract class PyCParameterGenerator implements ParameterGenerator {
 
         @Override
         public String generatePreCallCode(GeneratorContext context) {
-            return eval("${p}Elems = beam_new_${t}_array_from_pyseq(${p}Seq, &${p}Length);",
+            return eval("${p} = beam_new_${t}_array_from_pyseq(${p}Seq, &${p}Length);",
                         kv("p", getName()),
                         kv("t", getComponentCTypeName(getType())));
             /*
@@ -181,7 +181,7 @@ public abstract class PyCParameterGenerator implements ParameterGenerator {
 
         @Override
         public String generateCallCode(GeneratorContext context) {
-            return eval("${p}Elems, ${p}Length",
+            return eval("${p}, ${p}Length",
                         kv("p", getName()));
         }
 
@@ -231,7 +231,7 @@ public abstract class PyCParameterGenerator implements ParameterGenerator {
 
         @Override
         public String generateLocalVarDecl(GeneratorContext context) {
-            return eval("${t} ${p}Elems;\n" +
+            return eval("${t} ${p};\n" +
                                 "int ${p}Length;\n" +
                                 "PyObject* ${p}Seq;",
                         kv("t", CModuleGenerator.getComponentCClassName(getType())),
@@ -240,14 +240,14 @@ public abstract class PyCParameterGenerator implements ParameterGenerator {
 
         @Override
         public String generatePreCallCode(GeneratorContext context) {
-            return eval("${p}Elems = beam_new_jobject_array_from_pyseq(${p}Seq, &${p}Length);",
+            return eval("${p} = beam_new_jobject_array_from_pyseq(\"${t}\", ${p}Seq, &${p}Length);",
                         kv("p", getName()),
-                        kv("c", CModuleGenerator.getComponentCClassVarName(getType())));
+                        kv("t", getComponentCTypeName(getType())));
         }
 
         @Override
         public String generateCallCode(GeneratorContext context) {
-            return eval("${p}Elems, ${p}Length",
+            return eval("${p}, ${p}Length",
                         kv("p", getName()));
         }
 
@@ -270,7 +270,7 @@ public abstract class PyCParameterGenerator implements ParameterGenerator {
 
         @Override
         public String generateLocalVarDecl(GeneratorContext context) {
-            return eval("char** ${p}Elems;\n" +
+            return eval("char** ${p};\n" +
                                 "int ${p}Length;\n" +
                                 "PyObject* ${p}Seq;",
                         kv("p", getName()));
@@ -278,14 +278,14 @@ public abstract class PyCParameterGenerator implements ParameterGenerator {
 
         @Override
         public String generatePreCallCode(GeneratorContext context) {
-            return eval("${p}Elems = beam_new_string_array_from_pyseq(${p}Seq, &${p}Length);",
+            return eval("${p} = beam_new_string_array_from_pyseq(${p}Seq, &${p}Length);",
                         kv("p", getName()),
                         kv("c", CModuleGenerator.getComponentCClassVarName(getType())));
         }
 
         @Override
         public String generateCallCode(GeneratorContext context) {
-            return eval("${p}Elems, ${p}Length",
+            return eval("${p}, ${p}Length",
                         kv("p", getName()));
         }
 

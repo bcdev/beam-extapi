@@ -154,21 +154,28 @@ public class PyCModuleGenerator extends ModuleGenerator {
             }
 
             writer.printf("\n");
-            writeResource(writer, "PyCModuleGenerator-stubs-3.c", kv("typeName", "boolean"), kv("ctype", "boolean"), kv("itemFactoryCall", "PyBool_FromLong(elems[i])"));
-            writeResource(writer, "PyCModuleGenerator-stubs-3.c", kv("typeName", "char"), kv("ctype", "char"), kv("itemFactoryCall", "PyUnicode_FromFormat(\"%c\", elems[i])"));
-            writeResource(writer, "PyCModuleGenerator-stubs-3.c", kv("typeName", "byte"), kv("ctype", "byte"), kv("itemFactoryCall", "PyLong_FromLong(elems[i])"));
-            writeResource(writer, "PyCModuleGenerator-stubs-3.c", kv("typeName", "short"), kv("ctype", "short"), kv("itemFactoryCall", "PyLong_FromLong(elems[i])"));
-            writeResource(writer, "PyCModuleGenerator-stubs-3.c", kv("typeName", "int"), kv("ctype", "int"), kv("itemFactoryCall", "PyLong_FromLong(elems[i])"));
-            writeResource(writer, "PyCModuleGenerator-stubs-3.c", kv("typeName", "long"), kv("ctype", "dlong"), kv("itemFactoryCall", "PyLong_FromLongLong(elems[i])"));
-            writeResource(writer, "PyCModuleGenerator-stubs-3.c", kv("typeName", "float"), kv("ctype", "float"), kv("itemFactoryCall", "PyFloat_FromDouble(elems[i])"));
-            writeResource(writer, "PyCModuleGenerator-stubs-3.c", kv("typeName", "double"), kv("ctype", "double"), kv("itemFactoryCall", "PyFloat_FromDouble(elems[i])"));
-            writeResource(writer, "PyCModuleGenerator-stubs-3.c", kv("typeName", "string"), kv("ctype", "char*"), kv("itemFactoryCall", "PyUnicode_FromString(elems[i])"));
-            writeResource(writer, "PyCModuleGenerator-stubs-3.c", kv("typeName", "jobject"), kv("ctype", "void*"), kv("itemFactoryCall", "PyLong_FromVoidPtr(elems[i])"));
+            writeArrayConverters(writer, "boolean", "boolean", "PyBool_FromLong(elems[i])", "(boolean)(PyLong_AsLong(item) != 0)");
+            writeArrayConverters(writer, "char", "char", "PyUnicode_FromFormat(\"%c\", elems[i])", "(char) PyLong_AsLong(item)");
+            writeArrayConverters(writer, "byte", "byte", "PyLong_FromLong(elems[i])", "(byte) PyLong_AsLong(item)");
+            writeArrayConverters(writer, "short", "short", "PyLong_FromLong(elems[i])", "(short) PyLong_AsLong(item)");
+            writeArrayConverters(writer, "int", "int", "PyLong_FromLong(elems[i])", "(int) PyLong_AsLong(item)");
+            writeArrayConverters(writer, "dlong", "dlong", "PyLong_FromLongLong(elems[i])", "PyLong_AsLongLong(item)");
+            writeArrayConverters(writer, "float", "float", "PyFloat_FromDouble(elems[i])", "(float) PyFloat_AsDouble(item)");
+            writeArrayConverters(writer, "double", "double", "PyFloat_FromDouble(elems[i])", "PyFloat_AsDouble(item)");
+            writeResource(writer, "PyCModuleGenerator-stubs-4.c");
             writer.printf("\n");
 
         } finally {
             writer.close();
         }
+    }
+
+    void writeArrayConverters(PrintWriter writer, String typeName, String ctype, String elemToItemCall, String itemToElemCall) throws IOException {
+        writeResource(writer, "PyCModuleGenerator-stubs-3.c",
+                      kv("typeName", typeName),
+                      kv("ctype", ctype),
+                      kv("elemToItemCall", elemToItemCall),
+                      kv("itemToElemCall", itemToElemCall));
     }
 
     @Override

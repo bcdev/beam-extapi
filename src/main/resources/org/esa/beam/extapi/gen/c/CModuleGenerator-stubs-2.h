@@ -10,3 +10,4 @@ boolean beam_create_jvm_with_defaults();
 boolean beam_destroy_jvm();
 
 String String_newString(const char* chars);
+void beam_release_string_array(char** array_elems, int array_length);

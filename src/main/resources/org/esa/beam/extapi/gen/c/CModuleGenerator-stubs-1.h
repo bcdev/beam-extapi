@@ -7,4 +7,3 @@ typedef long long dlong;
 #else
 #define BEAM_TRACE //
 #endif
-
