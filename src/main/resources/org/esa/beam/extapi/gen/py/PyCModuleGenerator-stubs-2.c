@@ -1,4 +1,3 @@
-
 /*
  * The BEAM/Python API module definition structure.
  */

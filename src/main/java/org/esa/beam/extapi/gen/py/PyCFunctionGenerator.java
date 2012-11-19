@@ -246,23 +246,24 @@ public abstract class PyCFunctionGenerator implements FunctionGenerator {
 
         @Override
         public String generateReturnCode(GeneratorContext context) {
+
             String s = getReturnType().typeName();
             if (s.equals("boolean")) {
-                return String.format("return Py_BuildValue(\"p\", (int) %s);", RESULT_VAR_NAME);
+                return String.format("return PyBool_FromLong(%s);", RESULT_VAR_NAME);
             } else if (s.equals("char")) {
-                return String.format("return Py_BuildValue(\"C\", (int) %s);", RESULT_VAR_NAME);
+                return String.format("return PyUnicode_FromFormat(\"%%c\", %s);", RESULT_VAR_NAME);
             } else if (s.equals("byte")) {
-                return String.format("return Py_BuildValue(\"b\", %s);", RESULT_VAR_NAME);
+                return String.format("return PyLong_FromLong(%s);", RESULT_VAR_NAME);
             } else if (s.equals("short")) {
-                return String.format("return Py_BuildValue(\"h\", %s);", RESULT_VAR_NAME);
+                return String.format("return PyLong_FromLong(%s);", RESULT_VAR_NAME);
             } else if (s.equals("int")) {
-                return String.format("return Py_BuildValue(\"i\", %s);", RESULT_VAR_NAME);
+                return String.format("return PyLong_FromLong(%s);", RESULT_VAR_NAME);
             } else if (s.equals("long")) {
-                return String.format("return Py_BuildValue(\"L\", (PY_LONG_LONG) %s);", RESULT_VAR_NAME);
+                return String.format("return PyLong_FromLongLong(%s);", RESULT_VAR_NAME);
             } else if (s.equals("float")) {
-                return String.format("return Py_BuildValue(\"f\", %s);", RESULT_VAR_NAME);
+                return String.format("return PyFloat_FromDouble(%s);", RESULT_VAR_NAME);
             } else if (s.equals("double")) {
-                return String.format("return Py_BuildValue(\"d\", %s);", RESULT_VAR_NAME);
+                return String.format("return PyFloat_FromDouble(%s);", RESULT_VAR_NAME);
             } else {
                 throw new IllegalArgumentException("can't deal with type '" + s + "'");
             }
