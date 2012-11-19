@@ -26,11 +26,14 @@ Start Python, then type
     >>> import beampy
     >>> dir(beampy)
     >>> help(beampy)
-    >>>  
+    >>> 
+    >>> from beampy import *
     >>> p = ProductIO_readProduct('testdata/MER_RR__1PPBCM20110809_093213_000001383105_00223_49375_0022.N1')
+    >>> p
     >>> n = Product_getBandNames(p)
+    >>> n
     >>> b13 = Product_getBand(p, 'radiance_13')
-    >>> w13 = Band_getSpectralWavelength(b13)
+    >>> Band_getSpectralWavelength(b13)
     >>> Product_dispose(p)
 
 
