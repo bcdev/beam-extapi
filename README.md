@@ -10,8 +10,8 @@ BEAM Python API
 * Install Python 3.2 32bit. Set `PYTHON32_HOME`.
 * Checkout sources from GitHub (https://github.com/bcdev/beam-extapi). Checkout directory is `%BEAM_EXTAPI%` (Windows) or `$BEAM_EXTAPI` (Unix).
 * On Windows, install Visual C++ 2010 Express (http://www.microsoft.com/visualstudio/deu/downloads#d-2010-express)
-* On Windows, execute `%BEAM_EXTAPI%/makewin32.bat`
-* On Unix, execute `$BEAM_EXTAPI/makeunix.sh`  (not available yet)
+* On Windows, execute `%BEAM_EXTAPI%/mkwin32.bat`
+* On Unix, execute `$BEAM_EXTAPI/mkunix.sh`  (not available yet)
 
 ### How to install:
 
