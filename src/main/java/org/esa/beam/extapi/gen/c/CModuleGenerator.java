@@ -56,6 +56,7 @@ public class CModuleGenerator extends ModuleGenerator {
         super(apiInfo, new CFunctionGeneratorFactory(apiInfo));
         this.functionNames = createFunctionNames(apiInfo);
         getTemplateEval().add("libName", BEAM_CAPI_NAME);
+        getTemplateEval().add("libNameUC", BEAM_CAPI_NAME.toUpperCase().replace("-", "_"));
     }
 
     @Override
@@ -89,7 +90,7 @@ public class CModuleGenerator extends ModuleGenerator {
     }
 
     @Override
-    protected  void writeWinDef() throws IOException {
+    protected void writeWinDef() throws IOException {
         PrintWriter writer = new PrintWriter(new FileWriter(new File(BEAM_CAPI_SRCDIR, BEAM_CAPI_NAME + ".def")));
         try {
             writeResource(writer, "CModuleGenerator-stubs.def");
@@ -107,58 +108,62 @@ public class CModuleGenerator extends ModuleGenerator {
     protected void writeHeader() throws IOException {
         PrintWriter writer = new PrintWriter(new FileWriter(new File(BEAM_CAPI_SRCDIR, BEAM_CAPI_NAME + ".h")));
         try {
-            generateFileInfo(writer);
-
-            writer.write("\n");
-            writeResource(writer, "CModuleGenerator-stubs-1.h");
-            writer.write("\n");
-
-            writer.write("\n");
-            writer.write("/* Wrapped API classes */\n");
-            for (ApiClass apiClass : getApiClasses()) {
-                writer.write(String.format("typedef void* %s;\n", getComponentCClassName(apiClass.getType())));
-            }
-            writer.write("\n");
-
-            writer.write("\n");
-            writer.write("/* Non-API classes used in the API */\n");
-            writer.write("typedef void* String;\n");
-            for (ApiClass usedApiClass : getApiInfo().getUsedNonApiClasses()) {
-                if (!TypeHelpers.isString(usedApiClass.getType())) {
-                    writer.write(String.format("typedef void* %s;\n", getComponentCClassName(usedApiClass.getType())));
-                }
-            }
-            writer.write("\n");
-
-            writer.write("\n");
-            writeResource(writer, "CModuleGenerator-stubs-2.h");
-            writer.write("\n");
-
-            /////////////////////////////////////////////////////////////////////////////////////
-            // Generate function declarations
-            //
-            for (ApiClass apiClass : getApiClasses()) {
-                List<ApiConstant> constants = getApiInfo().getConstantsOf(apiClass);
-                if (!constants.isEmpty()) {
-                    writer.write("\n");
-                    writer.printf("/* Constants of %s */\n", getComponentCClassName(apiClass.getType()));
-                    for (ApiConstant constant : constants) {
-                        writer.write(String.format("extern const %s %s_%s;\n",
-                                                   TypeHelpers.getCTypeName(constant.getType()),
-                                                   getComponentCClassName(apiClass.getType()),
-                                                   constant.getJavaName()));
-                    }
-                }
-                writer.write("\n");
-                writer.printf("/* Functions for class %s */\n", getComponentCClassName(apiClass.getType()));
-                writer.write("\n");
-                for (FunctionGenerator generator : getFunctionGenerators(apiClass)) {
-                    //writer.printf("/**\n %s\n */\n", generator.getMemberDoc().getRawCommentText());
-                    generateFunctionDeclaration(writer, generator);
-                }
-            }
+            writeHeader(writer);
         } finally {
             writer.close();
+        }
+    }
+
+    @Override
+    protected void writeHeaderContents(PrintWriter writer) throws IOException {
+
+        writer.write("\n");
+        writeResource(writer, "CModuleGenerator-stubs-1.h");
+        writer.write("\n");
+
+        writer.write("\n");
+        writer.write("/* Wrapped API classes */\n");
+        for (ApiClass apiClass : getApiClasses()) {
+            writer.write(String.format("typedef void* %s;\n", getComponentCClassName(apiClass.getType())));
+        }
+        writer.write("\n");
+
+        writer.write("\n");
+        writer.write("/* Non-API classes used in the API */\n");
+        writer.write("typedef void* String;\n");
+        for (ApiClass usedApiClass : getApiInfo().getUsedNonApiClasses()) {
+            if (!TypeHelpers.isString(usedApiClass.getType())) {
+                writer.write(String.format("typedef void* %s;\n", getComponentCClassName(usedApiClass.getType())));
+            }
+        }
+        writer.write("\n");
+
+        writer.write("\n");
+        writeResource(writer, "CModuleGenerator-stubs-2.h");
+        writer.write("\n");
+
+        /////////////////////////////////////////////////////////////////////////////////////
+        // Generate function declarations
+        //
+        for (ApiClass apiClass : getApiClasses()) {
+            List<ApiConstant> constants = getApiInfo().getConstantsOf(apiClass);
+            if (!constants.isEmpty()) {
+                writer.write("\n");
+                writer.printf("/* Constants of %s */\n", getComponentCClassName(apiClass.getType()));
+                for (ApiConstant constant : constants) {
+                    writer.write(String.format("extern const %s %s_%s;\n",
+                                               TypeHelpers.getCTypeName(constant.getType()),
+                                               getComponentCClassName(apiClass.getType()),
+                                               constant.getJavaName()));
+                }
+            }
+            writer.write("\n");
+            writer.printf("/* Functions for class %s */\n", getComponentCClassName(apiClass.getType()));
+            writer.write("\n");
+            for (FunctionGenerator generator : getFunctionGenerators(apiClass)) {
+                //writer.printf("/**\n %s\n */\n", generator.getMemberDoc().getRawCommentText());
+                writeFunctionDeclaration(writer, generator);
+            }
         }
     }
 
@@ -166,7 +171,7 @@ public class CModuleGenerator extends ModuleGenerator {
     protected void writeSource() throws IOException {
         PrintWriter writer = new PrintWriter(new FileWriter(new File(BEAM_CAPI_SRCDIR, BEAM_CAPI_NAME + ".c")));
         try {
-            generateFileInfo(writer);
+            writeFileInfo(writer);
             writer.printf("#include <stdlib.h>\n");
             writer.printf("#include <string.h>\n");
             writer.printf("#include \"%s\"\n", BEAM_CAPI_NAME + ".h");
@@ -259,7 +264,7 @@ public class CModuleGenerator extends ModuleGenerator {
             //
             for (ApiClass apiClass : getApiClasses()) {
                 for (FunctionGenerator generator : getFunctionGenerators(apiClass)) {
-                    generateFunctionDefinition(generator, writer);
+                    writeFunctionDefinition(generator, writer);
                 }
             }
         } finally {

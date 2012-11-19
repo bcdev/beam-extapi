@@ -47,6 +47,7 @@ public class PyCModuleGenerator extends ModuleGenerator {
         super(cModuleGenerator.getApiInfo(), new PyCFunctionGeneratorFactory(cModuleGenerator.getApiInfo()));
         this.cModuleGenerator = cModuleGenerator;
         getTemplateEval().add("libName", BEAM_PYAPI_NAME);
+        getTemplateEval().add("libNameUC", BEAM_PYAPI_NAME.toUpperCase().replace("-", "_"));
     }
 
     CModuleGenerator getCModuleGenerator() {
@@ -70,19 +71,23 @@ public class PyCModuleGenerator extends ModuleGenerator {
 
     @Override
     protected void writeHeader() throws IOException {
-        PrintWriter writer = new PrintWriter(new FileWriter(new File(BEAM_PYAPI_SRCDIR, BEAM_PYAPI_NAME + ".h")));
+        final FileWriter fileWriter = new FileWriter(new File(BEAM_PYAPI_SRCDIR, BEAM_PYAPI_NAME + ".h"));
         try {
-            generateFileInfo(writer);
+            writeHeader(fileWriter);
         } finally {
-            writer.close();
+            fileWriter.close();
         }
+    }
+
+    @Override
+    protected void writeHeaderContents(PrintWriter writer) throws IOException {
     }
 
     @Override
     protected void writeSource() throws IOException {
         PrintWriter writer = new PrintWriter(new FileWriter(new File(BEAM_PYAPI_SRCDIR, BEAM_PYAPI_NAME + ".c")));
         try {
-            generateFileInfo(writer);
+            writeFileInfo(writer);
             writer.printf("#include \"%s\"\n", BEAM_PYAPI_NAME + ".h");
             writer.printf("#include \"%s\"\n", CModuleGenerator.BEAM_CAPI_NAME + ".h");
             writer.printf("#include \"python.h\"\n");
@@ -131,7 +136,7 @@ public class PyCModuleGenerator extends ModuleGenerator {
 
             for (ApiClass apiClass : getApiClasses()) {
                 for (FunctionGenerator generator : getFunctionGenerators(apiClass)) {
-                    generateFunctionDefinition(generator, writer);
+                    writeFunctionDefinition(generator, writer);
 //                                writer.printf("\n");
 //                                writer.printf("PyObject* BeamPy%s(PyObject* self, PyObject* args)\n",
 //                                              generator.getFunctionName(cModuleGenerator));
