@@ -16,11 +16,8 @@
 
 package org.esa.beam.extapi.gen.py;
 
-import org.esa.beam.extapi.gen.ApiClass;
-import org.esa.beam.extapi.gen.ApiConstant;
-import org.esa.beam.extapi.gen.ApiMethod;
-import org.esa.beam.extapi.gen.FunctionGenerator;
-import org.esa.beam.extapi.gen.ModuleGenerator;
+import com.sun.javadoc.Type;
+import org.esa.beam.extapi.gen.*;
 import org.esa.beam.extapi.gen.c.CModuleGenerator;
 
 import java.io.File;
@@ -67,8 +64,87 @@ public class PyCModuleGenerator extends ModuleGenerator {
         writePythonSource();
     }
 
-    private void writePythonSource() {
-        // todo - implement writePythonSource
+    private void writePythonSource() throws IOException {
+        final PrintWriter writer = new PrintWriter(new FileWriter(new File(BEAM_PYAPI_SRCDIR, BEAM_PYAPI_NAME + "_obj.py")));
+        try {
+            writer.printf("from beampy import *\n");
+            writer.printf("\n");
+            for (ApiClass apiClass : getApiInfo().getAllClasses()) {
+                writer.printf("class %s:\n", getClassName(apiClass.getType()));
+                writer.printf("\n");
+                writer.printf("    def __init__(self, obj):\n");
+                writer.printf("        self.__obj = obj\n");
+                writer.printf("\n");
+                for (FunctionGenerator generator : getFunctionGenerators(apiClass)) {
+                    String instanceFName = generator.getApiMethod().getJavaName();
+                    if (instanceFName.equals("<init>")) {
+                        instanceFName = "new" + getClassName(apiClass.getType());
+                    }
+                    String staticFName = getCModuleGenerator().getFunctionNameFor(generator.getApiMethod());
+                    StringBuilder params = new StringBuilder();
+                    for (ParameterGenerator parameterGenerator : generator.getParameterGenerators()) {
+                        if (params.length() > 0) {
+                            params.append(", ");
+                        }
+                        params.append(parameterGenerator.getName());
+                    }
+                    StringBuilder args = new StringBuilder();
+                    for (ParameterGenerator parameterGenerator : generator.getParameterGenerators()) {
+                        if (args.length() > 0) {
+                            args.append(", ");
+                        }
+                        if (isObject(parameterGenerator.getType())) {
+                            args.append(parameterGenerator.getName());
+                            args.append(".__obj");
+                        } else {
+                            args.append(parameterGenerator.getName());
+                        }
+                    }
+                    if (JavadocHelpers.isVoid(generator.getApiMethod().getReturnType())) {
+                        if (JavadocHelpers.isInstance(generator.getApiMethod().getMemberDoc())) {
+                            writer.printf("    def %s(self%s):\n", instanceFName, params.length() > 0 ? ", " + params : "");
+                            writer.printf("        self.%s(self.__obj%s)\n", staticFName, args.length() > 0 ? ", " + args : "");
+                            writer.printf("        return\n");
+                        } else {
+                            writer.printf("    def %s(%s):\n", instanceFName, params);
+                            writer.printf("        %s(%s)\n", staticFName, args);
+                            writer.printf("        return\n");
+                        }
+                    } else {
+                        if (isObject(generator.getApiMethod().getReturnType())) {
+                            String className = getClassName(generator.getApiMethod().getReturnType());
+                            if (JavadocHelpers.isInstance(generator.getApiMethod().getMemberDoc())) {
+                                writer.printf("    def %s(self%s):\n", instanceFName, params.length() > 0 ? ", " + params : "");
+                                writer.printf("        return %s(self.%s(self.__obj%s))\n", className, staticFName, args.length() > 0 ? ", " + args : "");
+                            } else {
+                                writer.printf("    def %s(%s):\n", instanceFName, params);
+                                writer.printf("        return %s(%s(%s))\n", className, staticFName, args);
+                            }
+                        } else {
+                            if (JavadocHelpers.isInstance(generator.getApiMethod().getMemberDoc())) {
+                                writer.printf("    def %s(self%s):\n", instanceFName, params.length() > 0 ? ", " + params : "");
+                                writer.printf("        return self.%s(self.__obj%s)\n", staticFName, args.length() > 0 ? ", " + args : "");
+                            } else {
+                                writer.printf("    def %s(%s):\n", instanceFName, params);
+                                writer.printf("        return %s(%s)\n", staticFName, args);
+                            }
+                        }
+                    }
+                    writer.printf("\n");
+                }
+                writer.printf("\n");
+            }
+        } finally {
+            writer.close();
+        }
+    }
+
+    private String getClassName(Type type) {
+        return type.typeName().replace('.', '_');
+    }
+
+    private boolean isObject(Type type) {
+        return !type.isPrimitive() && !JavadocHelpers.isString(type);
     }
 
     @Override

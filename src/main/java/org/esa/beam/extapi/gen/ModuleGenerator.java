@@ -21,12 +21,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.Writer;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import static org.esa.beam.extapi.gen.TemplateEval.KV;
 
@@ -62,7 +57,8 @@ public abstract class ModuleGenerator implements GeneratorContext {
     }
 
     public List<FunctionGenerator> getFunctionGenerators(ApiClass apiClass) {
-        return functionGenerators.get(apiClass);
+        List<FunctionGenerator> generatorList = functionGenerators.get(apiClass);
+        return generatorList != null ? generatorList : new ArrayList<FunctionGenerator>(0);
     }
 
     @Override
