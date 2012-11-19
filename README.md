@@ -5,6 +5,7 @@ BEAM Python API
 ---------------
 
 ### How to build:
+
 * Install JDK 1.6 32-bit. Set `JDK32_HOME`.
 * Install Python 3.2 32bit. Set `PYTHON32_HOME`.
 * Checkout sources from GitHub (https://github.com/bcdev/beam-extapi). Checkout directory is `%BEAM_EXTAPI%` (Windows) or `$BEAM_EXTAPI` (Unix).
@@ -13,16 +14,23 @@ BEAM Python API
 * On Unix, execute `$BEAM_EXTAPI/makeunix.sh`  (not available yet)
 
 ### How to install:
+
 * Install BEAM 4.10.3. Set `BEAM_HOME`.
 * On Windows, copy `beampy.pyd` and `beam_capi.dll` from `%BEAM_EXTAPI%/target/win32` to `%PYTHON32_HOME%/DLLs`
 * On Unix, copy `beampy.pyd` and `beam_capi.sh` from `$BEAM_EXTAPI/target/unix32` to `$PYTHON32_HOME/DLLs` (not available yet)
 
 ### How to run:
+
 * Start Python, then type
 
     >>> import beampy
     >>> dir(beampy)
     >>> help(beampy)
+    >>>
+    >>> p = ProductIO_readProduct('testdata/MER_RR__1PPBCM20110809_093213_000001383105_00223_49375_0022.N1')
+    >>> n = Product_getBandNames(p)
+    >>> b13 = Product_getBand(p, 'radiance_13')
+    >>> w13 = Band_getSpectralWavelength(b13)
 
 
 
