@@ -11,8 +11,8 @@ import org.esa.beam.extapi.gen.ApiParameter;
 import org.esa.beam.extapi.gen.FunctionGenerator;
 import org.esa.beam.extapi.gen.FunctionGeneratorFactory;
 import org.esa.beam.extapi.gen.GeneratorException;
+import org.esa.beam.extapi.gen.JavadocHelpers;
 import org.esa.beam.extapi.gen.ParameterGenerator;
-import org.esa.beam.extapi.gen.TypeHelpers;
 
 /**
  * @author Norman Fomferra
@@ -36,20 +36,20 @@ public class CFunctionGeneratorFactory implements FunctionGeneratorFactory {
             MethodDoc methodDoc = (MethodDoc) apiMethod.getMemberDoc();
             Type returnType = apiMethod.getReturnType();
             if (returnType.dimension().isEmpty()) {
-                if (TypeHelpers.isVoid(returnType)) {
+                if (JavadocHelpers.isVoid(returnType)) {
                     functionGenerator = new CFunctionGenerator.VoidMethod(apiMethod, parameterGenerators);
-                } else if (TypeHelpers.isString(returnType)) {
+                } else if (JavadocHelpers.isString(returnType)) {
                     functionGenerator = new CFunctionGenerator.StringMethod(apiMethod, parameterGenerators);
                 } else if (returnType.isPrimitive()) {
                     functionGenerator = new CFunctionGenerator.PrimitiveMethod(apiMethod, parameterGenerators);
                 } else {
                     functionGenerator = new CFunctionGenerator.ObjectMethod(apiMethod, parameterGenerators);
                 }
-            } else if (TypeHelpers.isPrimitiveArray(returnType)) {
+            } else if (JavadocHelpers.isPrimitiveArray(returnType)) {
                 functionGenerator = new CFunctionGenerator.PrimitiveArrayMethod(apiMethod, parameterGenerators);
-            } else if (TypeHelpers.isStringArray(returnType)) {
+            } else if (JavadocHelpers.isStringArray(returnType)) {
                 functionGenerator = new CFunctionGenerator.StringArrayMethod(apiMethod, parameterGenerators);
-            } else if (TypeHelpers.isObjectArray(returnType)) {
+            } else if (JavadocHelpers.isObjectArray(returnType)) {
                 functionGenerator = new CFunctionGenerator.ObjectArrayMethod(apiMethod, parameterGenerators);
             } else {
                 throw new GeneratorException(String.format("member %s#%s(): can't deal with return type %s%s (not implemented yet)",
@@ -81,11 +81,11 @@ public class CFunctionGeneratorFactory implements FunctionGeneratorFactory {
                 } else {
                     parameterGenerator = new CParameterGenerator.ObjectScalar(parameter);
                 }
-            } else if (TypeHelpers.isPrimitiveArray(parameterType)) {
+            } else if (JavadocHelpers.isPrimitiveArray(parameterType)) {
                 parameterGenerator = new CParameterGenerator.PrimitiveArray(parameter);
-            } else if (TypeHelpers.isStringArray(parameterType)) {
+            } else if (JavadocHelpers.isStringArray(parameterType)) {
                 parameterGenerator = new CParameterGenerator.StringArray(parameter);
-            } else if (TypeHelpers.isObjectArray(parameterType)) {
+            } else if (JavadocHelpers.isObjectArray(parameterType)) {
                 parameterGenerator = new CParameterGenerator.ObjectArray(parameter);
             } else {
                 throw new GeneratorException(String.format("member %s#%s(): can't deal with parameter %s of type %s%s (not implemented yet)",

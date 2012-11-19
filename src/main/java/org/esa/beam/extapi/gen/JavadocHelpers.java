@@ -1,11 +1,26 @@
 package org.esa.beam.extapi.gen;
 
+import com.sun.javadoc.Doc;
+import com.sun.javadoc.ProgramElementDoc;
 import com.sun.javadoc.Type;
 
 /**
  * @author Norman Fomferra
  */
-public class TypeHelpers {
+public class JavadocHelpers {
+
+    public static String encodeRawDocText(Doc doc) {
+        final String text = doc.getRawCommentText();
+        if (text == null || text.isEmpty()) {
+            return "";
+        }
+        return text
+                .replace("\"", "\\\"")
+                .replace("\n", "\\n")
+                .replace("\t", "    ");
+    }
+
+
     public static String getCTypeName(Type type) {
         String name = getComponentCTypeName(type);
         return name + type.dimension().replace("[]", "*");
@@ -50,5 +65,9 @@ public class TypeHelpers {
     public static String firstCharToUpperCase(String typeName) {
         typeName = Character.toUpperCase(typeName.charAt(0)) + typeName.substring(1);
         return typeName;
+    }
+
+    public static boolean isInstance(ProgramElementDoc elementDoc) {
+        return !elementDoc.isStatic() && !elementDoc.isConstructor();
     }
 }

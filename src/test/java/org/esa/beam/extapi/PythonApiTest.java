@@ -6,7 +6,6 @@ import org.junit.Test;
 /**
  * Don't forget to set "java.library.path":
  * Windows: -Djava.library.path=.\msvc\Release
- * Unix: TODO
  *
  * @author Norman Fomferra
  */

@@ -7,8 +7,8 @@ import org.esa.beam.extapi.gen.ApiMethod;
 import org.esa.beam.extapi.gen.ApiParameter;
 import org.esa.beam.extapi.gen.FunctionGenerator;
 import org.esa.beam.extapi.gen.GeneratorContext;
+import org.esa.beam.extapi.gen.JavadocHelpers;
 import org.esa.beam.extapi.gen.ParameterGenerator;
-import org.esa.beam.extapi.gen.TypeHelpers;
 
 import static org.esa.beam.extapi.gen.TemplateEval.eval;
 import static org.esa.beam.extapi.gen.TemplateEval.kv;
@@ -57,7 +57,7 @@ public abstract class CFunctionGenerator implements FunctionGenerator {
 
     @Override
     public String generateFunctionSignature(GeneratorContext context) {
-        String returnTypeName = TypeHelpers.getCTypeName(getReturnType());
+        String returnTypeName = JavadocHelpers.getCTypeName(getReturnType());
         String functionName = getFunctionName(context);
         String parameterList = generateParameterList(context);
         if (parameterList.isEmpty()) {
@@ -134,7 +134,7 @@ public abstract class CFunctionGenerator implements FunctionGenerator {
         StringBuilder parameterList = new StringBuilder();
         if (isInstanceMethod()) {
             parameterList.append(String.format("%s %s",
-                                               TypeHelpers.getCTypeName(getEnclosingClass().getType()),
+                                               JavadocHelpers.getCTypeName(getEnclosingClass().getType()),
                                                THIS_VAR_NAME));
         }
         for (ParameterGenerator parameterGenerator : parameterGenerators) {
@@ -161,6 +161,12 @@ public abstract class CFunctionGenerator implements FunctionGenerator {
     }
 
     protected abstract String generateCallTypeName(GeneratorContext context);
+
+    @Override
+    public String generateDocText(GeneratorContext context) {
+        // todo: generate C Doxygen-style documentation
+        return JavadocHelpers.encodeRawDocText(apiMethod.getMemberDoc());
+    }
 
     static class VoidMethod extends CFunctionGenerator {
 
@@ -196,7 +202,7 @@ public abstract class CFunctionGenerator implements FunctionGenerator {
 
         @Override
         public String generateLocalVarDecl(GeneratorContext context) {
-            String targetTypeName = TypeHelpers.getCTypeName(getReturnType());
+            String targetTypeName = JavadocHelpers.getCTypeName(getReturnType());
             return String.format("%s %s = (%s) 0;", targetTypeName, CModuleGenerator.RESULT_VAR_NAME, targetTypeName);
         }
 
@@ -238,7 +244,7 @@ public abstract class CFunctionGenerator implements FunctionGenerator {
 
         @Override
         public String generateLocalVarDecl(GeneratorContext context) {
-            String targetTypeName = TypeHelpers.getCTypeName(getReturnType());
+            String targetTypeName = JavadocHelpers.getCTypeName(getReturnType());
             return String.format("%s %s = (%s) 0;", targetTypeName, CModuleGenerator.RESULT_VAR_NAME, targetTypeName);
         }
     }
@@ -322,7 +328,7 @@ public abstract class CFunctionGenerator implements FunctionGenerator {
                 return eval("${r}Array = ${c};",
                             kv("r", CModuleGenerator.RESULT_VAR_NAME),
                             kv("c", generateJniCall(context)));
-            }   else {
+            } else {
                 return eval("${r}Array = ${c};\n" +
                                     "${r} = ${f}(${r}Array, resultArrayLength);",
                             kv("r", CModuleGenerator.RESULT_VAR_NAME),
@@ -348,7 +354,7 @@ public abstract class CFunctionGenerator implements FunctionGenerator {
         @Override
         protected String getAllocFunctionName() {
             return String.format("beam_alloc_%s_array",
-                                 TypeHelpers.getComponentCTypeName(getReturnType()));
+                                 JavadocHelpers.getComponentCTypeName(getReturnType()));
         }
     }
 

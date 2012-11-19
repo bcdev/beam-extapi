@@ -62,6 +62,16 @@ public class PyCModuleGenerator extends ModuleGenerator {
     }
 
     @Override
+    public void run() throws IOException {
+        super.run();
+        writePythonSource();
+    }
+
+    private void writePythonSource() {
+        // todo - implement writePythonSource
+    }
+
+    @Override
     protected void writeWinDef() throws IOException {
         PrintWriter writer = new PrintWriter(new FileWriter(new File(BEAM_PYAPI_SRCDIR, BEAM_PYAPI_NAME + ".def")));
         try {
@@ -72,21 +82,21 @@ public class PyCModuleGenerator extends ModuleGenerator {
     }
 
     @Override
-    protected void writeHeader() throws IOException {
+    protected void writeCHeader() throws IOException {
         final FileWriter fileWriter = new FileWriter(new File(BEAM_PYAPI_SRCDIR, BEAM_PYAPI_NAME + ".h"));
         try {
-            writeHeader(fileWriter);
+            writeCHeader(fileWriter);
         } finally {
             fileWriter.close();
         }
     }
 
     @Override
-    protected void writeHeaderContents(PrintWriter writer) throws IOException {
+    protected void writeCHeaderContents(PrintWriter writer) throws IOException {
     }
 
     @Override
-    protected void writeSource() throws IOException {
+    protected void writeCSource() throws IOException {
         PrintWriter writer = new PrintWriter(new FileWriter(new File(BEAM_PYAPI_SRCDIR, BEAM_PYAPI_NAME + ".c")));
         try {
             writeFileInfo(writer);
@@ -103,7 +113,7 @@ public class PyCModuleGenerator extends ModuleGenerator {
                 List<ApiConstant> constants = getApiInfo().getConstantsOf(apiClass);
                 if (!constants.isEmpty()) {
                     for (ApiConstant constant : constants) {
-                        // todo
+                        // todo: generate Python constants
                     }
                 }
             }
@@ -122,10 +132,10 @@ public class PyCModuleGenerator extends ModuleGenerator {
 
             for (ApiClass apiClass : getApiClasses()) {
                 for (FunctionGenerator generator : getFunctionGenerators(apiClass)) {
-                    writer.printf("    {\"%s\", %s, METH_VARARGS, \"TODO: gen doc for function %s\"},\n",
+                    writer.printf("    {\"%s\", %s, METH_VARARGS, \"%s\"},\n",
                                   generator.getFunctionName(cModuleGenerator),
                                   generator.getFunctionName(this),
-                                  generator.getFunctionName(this));
+                                  generator.generateDocText(this));
                 }
             }
             writer.printf("    {NULL, NULL, 0, NULL}  /* Sentinel */\n");
@@ -139,17 +149,6 @@ public class PyCModuleGenerator extends ModuleGenerator {
             for (ApiClass apiClass : getApiClasses()) {
                 for (FunctionGenerator generator : getFunctionGenerators(apiClass)) {
                     writeFunctionDefinition(generator, writer);
-//                                writer.printf("\n");
-//                                writer.printf("PyObject* BeamPy%s(PyObject* self, PyObject* args)\n",
-//                                              generator.getFunctionName(cModuleGenerator));
-//                                writer.printf("{\n");
-//                                writer.printf("    /* TODO: gen implementation code code */\n");
-//                                writer.printf("    fprintf(stderr, \"error: BEAM function 'BeamPy%s' not implemented yet.\\n\");\n",
-//                                              generator.getFunctionName(cModuleGenerator));
-//                                writer.printf("    Py_INCREF(Py_None);\n");
-//                                writer.printf("    return Py_None;\n");
-//                                writer.printf("}\n");
-
                 }
             }
 

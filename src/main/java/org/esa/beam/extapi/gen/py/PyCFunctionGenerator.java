@@ -7,13 +7,13 @@ import org.esa.beam.extapi.gen.ApiMethod;
 import org.esa.beam.extapi.gen.ApiParameter;
 import org.esa.beam.extapi.gen.FunctionGenerator;
 import org.esa.beam.extapi.gen.GeneratorContext;
+import org.esa.beam.extapi.gen.JavadocHelpers;
 import org.esa.beam.extapi.gen.TemplateEval;
-import org.esa.beam.extapi.gen.TypeHelpers;
 import org.esa.beam.extapi.gen.c.CModuleGenerator;
 
+import static org.esa.beam.extapi.gen.JavadocHelpers.getComponentCTypeName;
 import static org.esa.beam.extapi.gen.TemplateEval.eval;
 import static org.esa.beam.extapi.gen.TemplateEval.kv;
-import static org.esa.beam.extapi.gen.TypeHelpers.getComponentCTypeName;
 import static org.esa.beam.extapi.gen.py.PyCModuleGenerator.RESULT_VAR_NAME;
 import static org.esa.beam.extapi.gen.py.PyCModuleGenerator.THIS_VAR_NAME;
 
@@ -190,7 +190,23 @@ public abstract class PyCFunctionGenerator implements FunctionGenerator {
     }
 
     private boolean isInstanceMethod() {
-        return !getMemberDoc().isStatic() && !getMemberDoc().isConstructor();
+        return JavadocHelpers.isInstance(getMemberDoc());
+    }
+
+    @Override
+    public String generateDocText(GeneratorContext context) {
+        // todo: generate Python-style documentation
+        final String text = JavadocHelpers.encodeRawDocText(apiMethod.getMemberDoc());
+        if (isInstanceMethod()) {
+            final String thisParamText = String.format("@param this The %s object.", JavadocHelpers.getComponentCTypeName(apiMethod.getEnclosingClass().getType()));
+            final int i = text.indexOf("@param");
+            if (i > 0) {
+                return String.format("%s\\n%s\\n%s", text.substring(0, i), thisParamText, text.substring(i));
+            } else {
+                return String.format("%s\\n%s", text, thisParamText);
+            }
+        }
+        return text;
     }
 
     static class VoidMethod extends PyCFunctionGenerator {
@@ -224,7 +240,7 @@ public abstract class PyCFunctionGenerator implements FunctionGenerator {
         @Override
         public String generateLocalVarDecl0(GeneratorContext context) {
             return format("${type} ${res};",
-                          kv("type", TypeHelpers.getCTypeName(getReturnType())));
+                          kv("type", JavadocHelpers.getCTypeName(getReturnType())));
         }
 
         @Override
@@ -299,7 +315,7 @@ public abstract class PyCFunctionGenerator implements FunctionGenerator {
                                   "} else {\n" +
                                   "    return Py_BuildValue(\"\");\n" +
                                   "}",
-                          kv("type", TypeHelpers.getCTypeName(getReturnType())));
+                          kv("type", JavadocHelpers.getCTypeName(getReturnType())));
         }
     }
 

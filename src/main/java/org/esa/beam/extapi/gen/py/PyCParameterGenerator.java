@@ -8,7 +8,7 @@ import org.esa.beam.extapi.gen.c.CModuleGenerator;
 
 import static org.esa.beam.extapi.gen.TemplateEval.eval;
 import static org.esa.beam.extapi.gen.TemplateEval.kv;
-import static org.esa.beam.extapi.gen.TypeHelpers.getComponentCTypeName;
+import static org.esa.beam.extapi.gen.JavadocHelpers.getComponentCTypeName;
 
 /**
  * @author Norman Fomferra

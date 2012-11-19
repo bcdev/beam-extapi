@@ -23,8 +23,8 @@ import org.esa.beam.extapi.gen.ApiConstant;
 import org.esa.beam.extapi.gen.ApiInfo;
 import org.esa.beam.extapi.gen.ApiMethod;
 import org.esa.beam.extapi.gen.FunctionGenerator;
+import org.esa.beam.extapi.gen.JavadocHelpers;
 import org.esa.beam.extapi.gen.ModuleGenerator;
-import org.esa.beam.extapi.gen.TypeHelpers;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -105,17 +105,17 @@ public class CModuleGenerator extends ModuleGenerator {
     }
 
     @Override
-    protected void writeHeader() throws IOException {
+    protected void writeCHeader() throws IOException {
         PrintWriter writer = new PrintWriter(new FileWriter(new File(BEAM_CAPI_SRCDIR, BEAM_CAPI_NAME + ".h")));
         try {
-            writeHeader(writer);
+            writeCHeader(writer);
         } finally {
             writer.close();
         }
     }
 
     @Override
-    protected void writeHeaderContents(PrintWriter writer) throws IOException {
+    protected void writeCHeaderContents(PrintWriter writer) throws IOException {
 
         writer.write("\n");
         writeResource(writer, "CModuleGenerator-stubs-1.h");
@@ -132,7 +132,7 @@ public class CModuleGenerator extends ModuleGenerator {
         writer.write("/* Non-API classes used in the API */\n");
         writer.write("typedef void* String;\n");
         for (ApiClass usedApiClass : getApiInfo().getUsedNonApiClasses()) {
-            if (!TypeHelpers.isString(usedApiClass.getType())) {
+            if (!JavadocHelpers.isString(usedApiClass.getType())) {
                 writer.write(String.format("typedef void* %s;\n", getComponentCClassName(usedApiClass.getType())));
             }
         }
@@ -152,7 +152,7 @@ public class CModuleGenerator extends ModuleGenerator {
                 writer.printf("/* Constants of %s */\n", getComponentCClassName(apiClass.getType()));
                 for (ApiConstant constant : constants) {
                     writer.write(String.format("extern const %s %s_%s;\n",
-                                               TypeHelpers.getCTypeName(constant.getType()),
+                                               JavadocHelpers.getCTypeName(constant.getType()),
                                                getComponentCClassName(apiClass.getType()),
                                                constant.getJavaName()));
                 }
@@ -168,7 +168,7 @@ public class CModuleGenerator extends ModuleGenerator {
     }
 
     @Override
-    protected void writeSource() throws IOException {
+    protected void writeCSource() throws IOException {
         PrintWriter writer = new PrintWriter(new FileWriter(new File(BEAM_CAPI_SRCDIR, BEAM_CAPI_NAME + ".c")));
         try {
             writeFileInfo(writer);
@@ -214,7 +214,7 @@ public class CModuleGenerator extends ModuleGenerator {
                     writer.printf("/* Constants of %s */\n", getComponentCClassName(apiClass.getType()));
                     for (ApiConstant constant : constants) {
                         writer.write(String.format("static const %s %s_%s = %s;\n",
-                                                   TypeHelpers.getCTypeName(constant.getType()),
+                                                   JavadocHelpers.getCTypeName(constant.getType()),
                                                    getComponentCClassName(apiClass.getType()),
                                                    constant.getJavaName(),
                                                    getConstantCValue(constant)));
@@ -293,7 +293,7 @@ public class CModuleGenerator extends ModuleGenerator {
 
     private void writeInitVmCode(PrintWriter writer, FunctionGenerator generator) {
         writer.printf("\n");
-        if (TypeHelpers.isVoid(generator.getApiMethod().getReturnType())) {
+        if (JavadocHelpers.isVoid(generator.getApiMethod().getReturnType())) {
             writer.printf("    if (beam_init_api() != 0) return;\n");
         } else {
             writer.printf("    if (beam_init_api() != 0) return _result;\n");
@@ -316,7 +316,7 @@ public class CModuleGenerator extends ModuleGenerator {
                       getComponentCClassVarName(apiMethod.getEnclosingClass().getType()),
                       apiMethod.getJavaName(),
                       apiMethod.getJavaSignature());
-        if (TypeHelpers.isVoid(apiMethod.getReturnType())) {
+        if (JavadocHelpers.isVoid(apiMethod.getReturnType())) {
             writer.printf("        if (%s == NULL) return;\n", METHOD_VAR_NAME);
         } else {
             writer.printf("        if (%s == NULL) return _result;\n", METHOD_VAR_NAME);

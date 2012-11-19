@@ -72,17 +72,17 @@ public abstract class ModuleGenerator implements GeneratorContext {
 
     public void run() throws IOException {
         writeWinDef();
-        writeHeader();
-        writeSource();
+        writeCHeader();
+        writeCSource();
     }
 
     protected abstract void writeWinDef() throws IOException;
 
-    protected abstract void writeHeader() throws IOException;
+    protected abstract void writeCHeader() throws IOException;
 
-    protected abstract void writeSource() throws IOException;
+    protected abstract void writeCSource() throws IOException;
 
-    protected void writeHeader(Writer writer) throws IOException {
+    protected void writeCHeader(Writer writer) throws IOException {
         PrintWriter pw = new PrintWriter(writer);
         writeFileInfo(pw);
         pw.write(format("#ifndef ${libNameUC}_H\n" +
@@ -93,7 +93,7 @@ public abstract class ModuleGenerator implements GeneratorContext {
                                     "#endif\n"));
 
         pw.write("\n");
-        writeHeaderContents(pw);
+        writeCHeaderContents(pw);
         pw.write("\n");
 
         pw.write(format("#ifdef __cplusplus\n" +
@@ -102,7 +102,7 @@ public abstract class ModuleGenerator implements GeneratorContext {
                                     "#endif /* !${libNameUC}_H */"));
     }
 
-    protected abstract void writeHeaderContents(PrintWriter writer) throws IOException;
+    protected abstract void writeCHeaderContents(PrintWriter writer) throws IOException;
 
 
     protected void writeFunctionDeclaration(PrintWriter writer, FunctionGenerator generator) {

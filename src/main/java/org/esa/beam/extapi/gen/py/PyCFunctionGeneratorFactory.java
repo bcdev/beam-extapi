@@ -11,7 +11,7 @@ import org.esa.beam.extapi.gen.ApiParameter;
 import org.esa.beam.extapi.gen.FunctionGenerator;
 import org.esa.beam.extapi.gen.FunctionGeneratorFactory;
 import org.esa.beam.extapi.gen.GeneratorException;
-import org.esa.beam.extapi.gen.TypeHelpers;
+import org.esa.beam.extapi.gen.JavadocHelpers;
 
 /**
  * @author Norman Fomferra
@@ -35,20 +35,20 @@ public class PyCFunctionGeneratorFactory implements FunctionGeneratorFactory {
             MethodDoc methodDoc = (MethodDoc) apiMethod.getMemberDoc();
             Type returnType = apiMethod.getReturnType();
             if (returnType.dimension().isEmpty()) {
-                if (TypeHelpers.isVoid(returnType)) {
+                if (JavadocHelpers.isVoid(returnType)) {
                     functionGenerator = new PyCFunctionGenerator.VoidMethod(apiMethod, parameterGenerators);
-                } else if (TypeHelpers.isString(returnType)) {
+                } else if (JavadocHelpers.isString(returnType)) {
                     functionGenerator = new PyCFunctionGenerator.StringMethod(apiMethod, parameterGenerators);
                 } else if (returnType.isPrimitive()) {
                     functionGenerator = new PyCFunctionGenerator.PrimitiveMethod(apiMethod, parameterGenerators);
                 } else {
                     functionGenerator = new PyCFunctionGenerator.ObjectMethod(apiMethod, parameterGenerators);
                 }
-            } else if (TypeHelpers.isPrimitiveArray(returnType)) {
+            } else if (JavadocHelpers.isPrimitiveArray(returnType)) {
                 functionGenerator = new PyCFunctionGenerator.PrimitiveArrayMethod(apiMethod, parameterGenerators);
-            } else if (TypeHelpers.isStringArray(returnType)) {
+            } else if (JavadocHelpers.isStringArray(returnType)) {
                 functionGenerator = new PyCFunctionGenerator.StringArrayMethod(apiMethod, parameterGenerators);
-            } else if (TypeHelpers.isObjectArray(returnType)) {
+            } else if (JavadocHelpers.isObjectArray(returnType)) {
                 functionGenerator = new PyCFunctionGenerator.ObjectArrayMethod(apiMethod, parameterGenerators);
             } else {
                 throw new GeneratorException(String.format("member %s#%s(): can't deal with return type %s%s (not implemented yet)",
@@ -80,11 +80,11 @@ public class PyCFunctionGeneratorFactory implements FunctionGeneratorFactory {
                 } else {
                     parameterGenerator = new PyCParameterGenerator.ObjectScalar(parameter);
                 }
-            } else if (TypeHelpers.isPrimitiveArray(parameterType)) {
+            } else if (JavadocHelpers.isPrimitiveArray(parameterType)) {
                 parameterGenerator = new PyCParameterGenerator.PrimitiveArray(parameter);
-            } else if (TypeHelpers.isStringArray(parameterType)) {
+            } else if (JavadocHelpers.isStringArray(parameterType)) {
                 parameterGenerator = new PyCParameterGenerator.StringArray(parameter);
-            } else if (TypeHelpers.isObjectArray(parameterType)) {
+            } else if (JavadocHelpers.isObjectArray(parameterType)) {
                 parameterGenerator = new PyCParameterGenerator.ObjectArray(parameter);
             } else {
                 throw new GeneratorException(String.format("member %s#%s(): can't deal with parameter %s of type %s%s (not implemented yet)",

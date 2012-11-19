@@ -15,4 +15,6 @@ public interface FunctionGenerator extends CodeGenerator {
     String generateFunctionSignature(GeneratorContext context);
 
     String generateReturnCode(GeneratorContext context);
+
+    String generateDocText(GeneratorContext context);
 }
