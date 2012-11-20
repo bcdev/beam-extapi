@@ -10,13 +10,18 @@ if /i %1 == arm       set PF=arm
 if /i %1 == x86_arm   set PF=x86_arm
 if /i %1 == x86_amd64 set PF=x86_amd64
 
-if %PF == "" goto usage
+if %PF% == "" goto usage
 
-if not %2 == "" (set J_HOME=%2) else (goto usage)
-if not %3 == "" (set PY_HOME=%3) else (goto usage)
-if not %4 == "" (set OUT=%4) else (goto usage)
+if not %2 == "" (set "J_HOME=%~2") else (goto usage)
+if not %3 == "" (set "PY_HOME=%~3") else (goto usage)
+if not %4 == "" (set "OUT=%~4") else (goto usage)
 
 if "%MSVC_HOME%"=="" goto no_msvc
+
+echo p1: %MSVC_HOME%
+echo p2: %J_HOME%
+echo p3: %PY_HOME%
+echo p4: %OUT%
 
 call "%MSVC_HOME%\vcvarsall.bat" %PF%
 
@@ -94,10 +99,15 @@ src\main\c\gen\beampy.def ^
 /NXCOMPAT  ^
 /MACHINE:%PF%
 
+copy "target\%OUT%\beam_capi.dll" "%PY_HOME%\DLLs\"
+copy "target\%OUT%\_beampy.pyd" "%PY_HOME%\DLLs\"
+copy "src\main\c\gen\beampy.py" "%PY_HOME%\Lib\"
+
+
 goto ok
 
 :no_msvc
-echo "Please specify MSVC_HOME (path to your Microsoft Visual C++ 10 SDK)"
+echo "Please specify MSVC_HOME (path to your Microsoft Visual C++ SDK)"
 
 :ok
 echo "OK!"
