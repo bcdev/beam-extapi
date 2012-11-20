@@ -38,25 +38,26 @@ public class ApiGeneratorConfigImpl implements ApiGeneratorConfig {
         return cMap;
     }
 
-    public static ApiGeneratorConfig load() throws JDOMException, IOException {
+    public static ApiGeneratorConfig load(TemplateEval.KV ... pairs) throws JDOMException, IOException {
+        final TemplateEval templateEval = TemplateEval.create(pairs);
         final SAXBuilder saxBuilder = new SAXBuilder();
         final Document document = saxBuilder.build(ApiGeneratorConfigImpl.class.getResourceAsStream("ApiGeneratorDoclet-config.xml"));
         final Element rootElement = document.getRootElement();
-        final String[] sourcePaths = getSourcePaths(rootElement);
-        final String[] packages = getPackages(rootElement);
+        final String[] sourcePaths = getSourcePaths(rootElement, templateEval);
+        final String[] packages = getPackages(rootElement, templateEval);
         CConfig[] cConfigs = getCConfigs(rootElement);
         return new ApiGeneratorConfigImpl(sourcePaths, packages, cConfigs);
     }
 
-    private static String[] getSourcePaths(Element rootElement) {
-        return parseStringArray(rootElement, "sourcePaths", "path");
+    private static String[] getSourcePaths(Element rootElement, TemplateEval templateEval) {
+        return parseStringArray(rootElement, "sourcePaths", "path", templateEval);
     }
 
-    private static String[] getPackages(Element rootElement) {
-        return parseStringArray(rootElement, "packages", "package");
+    private static String[] getPackages(Element rootElement, TemplateEval templateEval) {
+        return parseStringArray(rootElement, "packages", "package", templateEval);
     }
 
-    private static String[] parseStringArray(Element rootElement, String containerElemName, String itemElemName) {
+    private static String[] parseStringArray(Element rootElement, String containerElemName, String itemElemName, TemplateEval templateEval) {
         final Element containerElem = rootElement.getChild(containerElemName);
         if (containerElem == null) {
             throw new IllegalArgumentException(String.format("missing 'config/%s' element", containerElemName));
@@ -65,7 +66,7 @@ public class ApiGeneratorConfigImpl implements ApiGeneratorConfig {
         final String[] stringArray = new String[itemList.size()];
         for (int i = 0; i < itemList.size(); i++) {
             Element itemElem = (Element) itemList.get(i);
-            stringArray[i] = itemElem.getValue().trim();
+            stringArray[i] = templateEval.eval(itemElem.getValue().trim());
         }
         return stringArray;
     }

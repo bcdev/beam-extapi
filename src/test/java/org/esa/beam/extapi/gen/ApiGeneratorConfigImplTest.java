@@ -18,6 +18,7 @@ package org.esa.beam.extapi.gen;
 
 import org.junit.Test;
 
+import static org.esa.beam.extapi.gen.TemplateEval.*;
 import static org.junit.Assert.*;
 
 /**
@@ -28,7 +29,7 @@ public class ApiGeneratorConfigImplTest {
 
     @Test
     public void testParseSourcePaths() throws Exception {
-        final ApiGeneratorConfig config = ApiGeneratorConfigImpl.load();
+        final ApiGeneratorConfig config = ApiGeneratorConfigImpl.load(kv("beamSourceDir", "../beam"));
         String[] sourcePaths = config.getSourcePaths();
         assertArrayEquals(new String[]{
                 "../beam/beam-core/src/main/java",

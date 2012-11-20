@@ -40,7 +40,12 @@ public class ApiGeneratorDoclet extends Doclet {
     }
 
     public static void main(String[] args) throws JDOMException, IOException {
-        final DefaultHandler handler = new DefaultHandler();
+        if (args.length != 1) {
+            System.out.println("Usage:");
+            System.out.println("    ApiGeneratorDoclet <beamSourceDir>");
+            System.exit(-1);
+        }
+        final DefaultHandler handler = new DefaultHandler(args[0]);
         final String sourcePaths = StringUtils.join(handler.config.getSourcePaths(), File.pathSeparatorChar);
         run(handler, sourcePaths, handler.config.getPackages());
     }
@@ -123,9 +128,9 @@ public class ApiGeneratorDoclet extends Doclet {
 
         private final ApiGeneratorConfig config;
 
-        private DefaultHandler() {
+        private DefaultHandler(String beamSourceDir) {
             try {
-                config = ApiGeneratorConfigImpl.load();
+                config = ApiGeneratorConfigImpl.load(TemplateEval.kv("beamSourceDir", beamSourceDir));
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
