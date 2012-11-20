@@ -8,4 +8,8 @@ public interface ApiGeneratorConfig {
     boolean isApiMethod(String className, String methodName, String methodSignature);
     ApiParameter.Modifier[] getParameterModifiers(String className, String methodName, String methodSignature);
     String getFunctionName(String className, String methodName, String methodSignature);
+    String[] getSourcePaths();
+
+    String[] getPackages();
+
 }

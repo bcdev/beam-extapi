@@ -31,4 +31,14 @@ public class ApiGeneratorConfigMock implements ApiGeneratorConfig {
     public String getFunctionName(String className, String methodName, String methodSignature) {
         return methodName;
     }
+
+    @Override
+    public String[] getSourcePaths() {
+        return new String[0];
+    }
+
+    @Override
+    public String[] getPackages() {
+        return new String[0];
+    }
 }

@@ -14,9 +14,14 @@ import java.util.Map;
  * @author Norman Fomferra
  */
 public class ApiGeneratorConfigImpl implements ApiGeneratorConfig {
+
+    private final String[] sourcePaths;
+    private final String[] packages;
     private final Map<String, Map<String, MConfig>> mConfigs;
 
-    ApiGeneratorConfigImpl(CConfig[] cConfigs) {
+    public ApiGeneratorConfigImpl(String[] sourcePaths, String[] packages, CConfig[] cConfigs) {
+        this.sourcePaths = sourcePaths;
+        this.packages = packages;
         this.mConfigs = createMConfigMap(cConfigs);
     }
 
@@ -37,8 +42,32 @@ public class ApiGeneratorConfigImpl implements ApiGeneratorConfig {
         final SAXBuilder saxBuilder = new SAXBuilder();
         final Document document = saxBuilder.build(ApiGeneratorConfigImpl.class.getResourceAsStream("ApiGeneratorDoclet-config.xml"));
         final Element rootElement = document.getRootElement();
+        final String[] sourcePaths = getSourcePaths(rootElement);
+        final String[] packages = getPackages(rootElement);
         CConfig[] cConfigs = getCConfigs(rootElement);
-        return new ApiGeneratorConfigImpl(cConfigs);
+        return new ApiGeneratorConfigImpl(sourcePaths, packages, cConfigs);
+    }
+
+    private static String[] getSourcePaths(Element rootElement) {
+        return parseStringArray(rootElement, "sourcePaths", "path");
+    }
+
+    private static String[] getPackages(Element rootElement) {
+        return parseStringArray(rootElement, "packages", "package");
+    }
+
+    private static String[] parseStringArray(Element rootElement, String containerElemName, String itemElemName) {
+        final Element containerElem = rootElement.getChild(containerElemName);
+        if (containerElem == null) {
+            throw new IllegalArgumentException(String.format("missing 'config/%s' element", containerElemName));
+        }
+        final List itemList = containerElem.getChildren(itemElemName);
+        final String[] stringArray = new String[itemList.size()];
+        for (int i = 0; i < itemList.size(); i++) {
+            Element itemElem = (Element) itemList.get(i);
+            stringArray[i] = itemElem.getValue().trim();
+        }
+        return stringArray;
     }
 
     private static CConfig[] getCConfigs(Element rootElement) {
@@ -135,7 +164,18 @@ public class ApiGeneratorConfigImpl implements ApiGeneratorConfig {
         return mConfig.renameTo != null ? mConfig.renameTo : mConfig.name;
     }
 
+    @Override
+    public String[] getSourcePaths() {
+        return sourcePaths;
+    }
+
+    @Override
+    public String[] getPackages() {
+        return packages;
+    }
+
     public static class CConfig {
+
         private final String name;
         private final MConfig[] methods;
 
@@ -151,13 +191,14 @@ public class ApiGeneratorConfigImpl implements ApiGeneratorConfig {
     }
 
     public static class MConfig {
+
         private final String name;
         private final String sig;
         private final boolean ignore;
         private final String renameTo;
         private final ApiParameter.Modifier[] mods;
 
-        public MConfig(String name, String sig,  boolean ignore, String renameTo, ApiParameter.Modifier[] mods) {
+        public MConfig(String name, String sig, boolean ignore, String renameTo, ApiParameter.Modifier[] mods) {
             this.name = name;
             this.sig = sig;
             this.ignore = ignore;

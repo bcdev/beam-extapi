@@ -20,9 +20,12 @@ import com.sun.javadoc.DocErrorReporter;
 import com.sun.javadoc.Doclet;
 import com.sun.javadoc.LanguageVersion;
 import com.sun.javadoc.RootDoc;
+import org.apache.commons.lang.StringUtils;
 import org.esa.beam.extapi.gen.c.CModuleGenerator;
 import org.esa.beam.extapi.gen.py.PyCModuleGenerator;
+import org.jdom.JDOMException;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -36,21 +39,10 @@ public class ApiGeneratorDoclet extends Doclet {
         boolean start(RootDoc root);
     }
 
-    // todo move to config
-    public static final String DEFAULT_SOURCE_PATH = "" +
-            "../beam/beam/beam-core/src/main/java;" +
-            "../beam/beam/beam-gpf/src/main/java";
-
-    // todo move to config
-    public static final String[] DEFAULT_PACKAGES = {
-            "org.esa.beam.framework.datamodel",
-            "org.esa.beam.framework.dataio",
-            "org.esa.beam.framework.gpf",
-            "org.esa.beam.util"
-    };
-
-    public static void main(String[] args) {
-        run(new DefaultHandler(), DEFAULT_SOURCE_PATH, DEFAULT_PACKAGES);
+    public static void main(String[] args) throws JDOMException, IOException {
+        final DefaultHandler handler = new DefaultHandler();
+        final String sourcePaths = StringUtils.join(handler.config.getSourcePaths(), File.pathSeparatorChar);
+        run(handler, sourcePaths, handler.config.getPackages());
     }
 
     /**
@@ -58,8 +50,8 @@ public class ApiGeneratorDoclet extends Doclet {
      */
     private final static Map<Thread, Handler> HANDLER_MAP = new HashMap<Thread, Handler>();
 
-    public static void run(final Handler handler, final String sourcePath, final String... packages) {
-        final JavadocRunnable runnable = new JavadocRunnable(sourcePath, packages);
+    public static void run(final Handler handler, String sourcePaths, String... packages) {
+        final JavadocRunnable runnable = new JavadocRunnable(sourcePaths, packages);
         final Thread thread;
         synchronized (HANDLER_MAP) {
             if (HANDLER_MAP.isEmpty()) {
@@ -111,25 +103,37 @@ public class ApiGeneratorDoclet extends Doclet {
     }
 
     private static class JavadocRunnable implements Runnable {
-        private final String sourcePath;
+
+        private final String sourcePaths;
         private final String[] packages;
 
-        public JavadocRunnable(String sourcePath, String... packages) {
-            this.sourcePath = sourcePath;
+        public JavadocRunnable(String sourcePaths, String[] packages) {
+            this.sourcePaths = sourcePaths;
             this.packages = packages;
         }
 
         @Override
         public void run() {
-            Javadoc.run(ApiGeneratorDoclet.class.getName(), sourcePath, packages);
+            Javadoc.run(ApiGeneratorDoclet.class.getName(), sourcePaths, packages);
         }
+
     }
 
     private static class DefaultHandler implements Handler {
+
+        private final ApiGeneratorConfig config;
+
+        private DefaultHandler() {
+            try {
+                config = ApiGeneratorConfigImpl.load();
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
+
         @Override
         public boolean start(RootDoc root) {
             try {
-                final ApiGeneratorConfig config = ApiGeneratorConfigImpl.load();
                 ApiInfo apiInfo = ApiInfo.create(config, root);
                 final CModuleGenerator cModuleGenerator = new CModuleGenerator(apiInfo);
                 final PyCModuleGenerator pyCModuleGenerator = new PyCModuleGenerator(cModuleGenerator);

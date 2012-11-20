@@ -1,5 +1,17 @@
 <config>
 
+    <sourcePaths>
+        <path>../beam/beam-core/src/main/java</path>
+        <path>../beam/beam-gpf/src/main/java</path>
+    </sourcePaths>
+
+    <packages>
+        <package>org.esa.beam.framework.datamodel</package>
+        <package>org.esa.beam.framework.dataio</package>
+        <package>org.esa.beam.framework.gpf</package>
+        <package>org.esa.beam.util</package>
+    </packages>
+
     <!--
         By default, all public methods of a class will be translated.
         Particular methods are listed here in order to
