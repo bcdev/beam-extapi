@@ -1,98 +1,92 @@
 from _beampy import *
 
 class Shape:
-
     def __init__(self, obj):
-        self.__obj = obj
+        self._obj = obj
 
 
 class MapTransform:
-
     def __init__(self, obj):
-        self.__obj = obj
+        self._obj = obj
 
 
 class ImageGeometry:
-
     def __init__(self, obj):
-        self.__obj = obj
+        self._obj = obj
 
     def newImageGeometry(bounds, mapCrs, image2map):
-        return ImageGeometry(ImageGeometry_newImageGeometry(bounds.__obj, mapCrs.__obj, image2map.__obj))
+        return ImageGeometry(ImageGeometry_newImageGeometry(bounds._obj, mapCrs._obj, image2map._obj))
 
     def getImage2MapTransform(self):
-        return AffineTransform(self.ImageGeometry_getImage2MapTransform(self.__obj))
+        return AffineTransform(ImageGeometry_getImage2MapTransform(self._obj))
 
     def getImageRect(self):
-        return Rectangle(self.ImageGeometry_getImageRect(self.__obj))
+        return Rectangle(ImageGeometry_getImageRect(self._obj))
 
     def getMapCrs(self):
-        return CoordinateReferenceSystem(self.ImageGeometry_getMapCrs(self.__obj))
+        return CoordinateReferenceSystem(ImageGeometry_getMapCrs(self._obj))
 
     def changeYAxisDirection(self):
-        self.ImageGeometry_changeYAxisDirection(self.__obj)
+        ImageGeometry_changeYAxisDirection(self._obj)
         return
 
     def calculateEastingNorthing(sourceProduct, targetCrs, referencePixelX, referencePixelY, pixelSizeX, pixelSizeY):
-        return Point2D(ImageGeometry_calculateEastingNorthing(sourceProduct.__obj, targetCrs.__obj, referencePixelX, referencePixelY, pixelSizeX, pixelSizeY))
+        return Point2D(ImageGeometry_calculateEastingNorthing(sourceProduct._obj, targetCrs._obj, referencePixelX, referencePixelY, pixelSizeX, pixelSizeY))
 
     def calculateProductSize(sourceProduct, targetCrs, pixelSizeX, pixelSizeY):
-        return Rectangle(ImageGeometry_calculateProductSize(sourceProduct.__obj, targetCrs.__obj, pixelSizeX, pixelSizeY))
+        return Rectangle(ImageGeometry_calculateProductSize(sourceProduct._obj, targetCrs._obj, pixelSizeX, pixelSizeY))
 
     def createTargetGeometry(sourceProduct, targetCrs, pixelSizeX, pixelSizeY, width, height, orientation, easting, northing, referencePixelX, referencePixelY):
-        return ImageGeometry(ImageGeometry_createTargetGeometry(sourceProduct.__obj, targetCrs.__obj, pixelSizeX.__obj, pixelSizeY.__obj, width.__obj, height.__obj, orientation.__obj, easting.__obj, northing.__obj, referencePixelX.__obj, referencePixelY.__obj))
+        return ImageGeometry(ImageGeometry_createTargetGeometry(sourceProduct._obj, targetCrs._obj, pixelSizeX._obj, pixelSizeY._obj, width._obj, height._obj, orientation._obj, easting._obj, northing._obj, referencePixelX._obj, referencePixelY._obj))
 
     def createCollocationTargetGeometry(targetProduct, collocationProduct):
-        return ImageGeometry(ImageGeometry_createCollocationTargetGeometry(targetProduct.__obj, collocationProduct.__obj))
+        return ImageGeometry(ImageGeometry_createCollocationTargetGeometry(targetProduct._obj, collocationProduct._obj))
 
 
 class GeoCoding:
-
     def __init__(self, obj):
-        self.__obj = obj
+        self._obj = obj
 
     def isCrossingMeridianAt180(self):
-        return self.GeoCoding_isCrossingMeridianAt180(self.__obj)
+        return GeoCoding_isCrossingMeridianAt180(self._obj)
 
     def canGetPixelPos(self):
-        return self.GeoCoding_canGetPixelPos(self.__obj)
+        return GeoCoding_canGetPixelPos(self._obj)
 
     def canGetGeoPos(self):
-        return self.GeoCoding_canGetGeoPos(self.__obj)
+        return GeoCoding_canGetGeoPos(self._obj)
 
     def getPixelPos(self, geoPos, pixelPos):
-        return PixelPos(self.GeoCoding_getPixelPos(self.__obj, geoPos.__obj, pixelPos.__obj))
+        return PixelPos(GeoCoding_getPixelPos(self._obj, geoPos._obj, pixelPos._obj))
 
     def getGeoPos(self, pixelPos, geoPos):
-        return GeoPos(self.GeoCoding_getGeoPos(self.__obj, pixelPos.__obj, geoPos.__obj))
+        return GeoPos(GeoCoding_getGeoPos(self._obj, pixelPos._obj, geoPos._obj))
 
     def dispose(self):
-        self.GeoCoding_dispose(self.__obj)
+        GeoCoding_dispose(self._obj)
         return
 
     def getImageCRS(self):
-        return CoordinateReferenceSystem(self.GeoCoding_getImageCRS(self.__obj))
+        return CoordinateReferenceSystem(GeoCoding_getImageCRS(self._obj))
 
     def getMapCRS(self):
-        return CoordinateReferenceSystem(self.GeoCoding_getMapCRS(self.__obj))
+        return CoordinateReferenceSystem(GeoCoding_getMapCRS(self._obj))
 
     def getGeoCRS(self):
-        return CoordinateReferenceSystem(self.GeoCoding_getGeoCRS(self.__obj))
+        return CoordinateReferenceSystem(GeoCoding_getGeoCRS(self._obj))
 
     def getImageToMapTransform(self):
-        return MathTransform(self.GeoCoding_getImageToMapTransform(self.__obj))
+        return MathTransform(GeoCoding_getImageToMapTransform(self._obj))
 
 
 class Parser:
-
     def __init__(self, obj):
-        self.__obj = obj
+        self._obj = obj
 
 
 class ProductData:
-
     def __init__(self, obj):
-        self.__obj = obj
+        self._obj = obj
 
     def createInstance(type):
         return ProductData(ProductData_createInstance1(type))
@@ -101,7 +95,7 @@ class ProductData:
         return ProductData(ProductData_createInstance2(type, numElems))
 
     def createInstance(type, data):
-        return ProductData(ProductData_createInstance3(type, data.__obj))
+        return ProductData(ProductData_createInstance3(type, data._obj))
 
     def createInstance(elems):
         return ProductData(ProductData_createInstance5(elems))
@@ -134,13 +128,13 @@ class ProductData:
         return ProductData(ProductData_createInstance6(elems))
 
     def getType(self):
-        return self.ProductData_getType1(self.__obj)
+        return ProductData_getType1(self._obj)
 
     def getElemSize(type):
         return ProductData_getElemSize2(type)
 
     def getElemSize(self):
-        return self.ProductData_getElemSize1(self.__obj)
+        return ProductData_getElemSize1(self._obj)
 
     def getTypeString(type):
         return ProductData_getTypeString2(type)
@@ -149,19 +143,19 @@ class ProductData:
         return ProductData_getType2(type)
 
     def getTypeString(self):
-        return self.ProductData_getTypeString1(self.__obj)
+        return ProductData_getTypeString1(self._obj)
 
     def isInt(self):
-        return self.ProductData_isInt(self.__obj)
+        return ProductData_isInt(self._obj)
 
     def isIntType(type):
         return ProductData_isIntType(type)
 
     def isSigned(self):
-        return self.ProductData_isSigned(self.__obj)
+        return ProductData_isSigned(self._obj)
 
     def isUnsigned(self):
-        return self.ProductData_isUnsigned(self.__obj)
+        return ProductData_isUnsigned(self._obj)
 
     def isUIntType(type):
         return ProductData_isUIntType(type)
@@ -170,376 +164,369 @@ class ProductData:
         return ProductData_isFloatingPointType(type)
 
     def isScalar(self):
-        return self.ProductData_isScalar(self.__obj)
+        return ProductData_isScalar(self._obj)
 
     def getNumElems(self):
-        return self.ProductData_getNumElems(self.__obj)
+        return ProductData_getNumElems(self._obj)
 
     def getElemInt(self):
-        return self.ProductData_getElemInt(self.__obj)
+        return ProductData_getElemInt(self._obj)
 
     def getElemUInt(self):
-        return self.ProductData_getElemUInt(self.__obj)
+        return ProductData_getElemUInt(self._obj)
 
     def getElemFloat(self):
-        return self.ProductData_getElemFloat(self.__obj)
+        return ProductData_getElemFloat(self._obj)
 
     def getElemDouble(self):
-        return self.ProductData_getElemDouble(self.__obj)
+        return ProductData_getElemDouble(self._obj)
 
     def getElemString(self):
-        return self.ProductData_getElemString(self.__obj)
+        return ProductData_getElemString(self._obj)
 
     def getElemBoolean(self):
-        return self.ProductData_getElemBoolean(self.__obj)
+        return ProductData_getElemBoolean(self._obj)
 
     def getElemIntAt(self, index):
-        return self.ProductData_getElemIntAt(self.__obj, index)
+        return ProductData_getElemIntAt(self._obj, index)
 
     def getElemUIntAt(self, index):
-        return self.ProductData_getElemUIntAt(self.__obj, index)
+        return ProductData_getElemUIntAt(self._obj, index)
 
     def getElemFloatAt(self, index):
-        return self.ProductData_getElemFloatAt(self.__obj, index)
+        return ProductData_getElemFloatAt(self._obj, index)
 
     def getElemDoubleAt(self, index):
-        return self.ProductData_getElemDoubleAt(self.__obj, index)
+        return ProductData_getElemDoubleAt(self._obj, index)
 
     def getElemStringAt(self, index):
-        return self.ProductData_getElemStringAt(self.__obj, index)
+        return ProductData_getElemStringAt(self._obj, index)
 
     def getElemBooleanAt(self, index):
-        return self.ProductData_getElemBooleanAt(self.__obj, index)
+        return ProductData_getElemBooleanAt(self._obj, index)
 
     def setElemInt(self, value):
-        self.ProductData_setElemInt(self.__obj, value)
+        ProductData_setElemInt(self._obj, value)
         return
 
     def setElemUInt(self, value):
-        self.ProductData_setElemUInt(self.__obj, value)
+        ProductData_setElemUInt(self._obj, value)
         return
 
     def setElemFloat(self, value):
-        self.ProductData_setElemFloat(self.__obj, value)
+        ProductData_setElemFloat(self._obj, value)
         return
 
     def setElemDouble(self, value):
-        self.ProductData_setElemDouble(self.__obj, value)
+        ProductData_setElemDouble(self._obj, value)
         return
 
     def setElemString(self, value):
-        self.ProductData_setElemString(self.__obj, value)
+        ProductData_setElemString(self._obj, value)
         return
 
     def setElemBoolean(self, value):
-        self.ProductData_setElemBoolean(self.__obj, value)
+        ProductData_setElemBoolean(self._obj, value)
         return
 
     def setElemIntAt(self, index, value):
-        self.ProductData_setElemIntAt(self.__obj, index, value)
+        ProductData_setElemIntAt(self._obj, index, value)
         return
 
     def setElemUIntAt(self, index, value):
-        self.ProductData_setElemUIntAt(self.__obj, index, value)
+        ProductData_setElemUIntAt(self._obj, index, value)
         return
 
     def setElemFloatAt(self, index, value):
-        self.ProductData_setElemFloatAt(self.__obj, index, value)
+        ProductData_setElemFloatAt(self._obj, index, value)
         return
 
     def setElemDoubleAt(self, index, value):
-        self.ProductData_setElemDoubleAt(self.__obj, index, value)
+        ProductData_setElemDoubleAt(self._obj, index, value)
         return
 
     def setElemStringAt(self, index, value):
-        self.ProductData_setElemStringAt(self.__obj, index, value)
+        ProductData_setElemStringAt(self._obj, index, value)
         return
 
     def setElemBooleanAt(self, index, value):
-        self.ProductData_setElemBooleanAt(self.__obj, index, value)
+        ProductData_setElemBooleanAt(self._obj, index, value)
         return
 
     def getElems(self):
-        return Object(self.ProductData_getElems(self.__obj))
+        return Object(ProductData_getElems(self._obj))
 
     def setElems(self, data):
-        self.ProductData_setElems(self.__obj, data.__obj)
+        ProductData_setElems(self._obj, data._obj)
         return
 
     def readFrom(self, input):
-        self.ProductData_readFrom4(self.__obj, input.__obj)
+        ProductData_readFrom4(self._obj, input._obj)
         return
 
     def readFrom(self, pos, input):
-        self.ProductData_readFrom3(self.__obj, pos, input.__obj)
+        ProductData_readFrom3(self._obj, pos, input._obj)
         return
 
     def readFrom(self, startPos, numElems, input):
-        self.ProductData_readFrom1(self.__obj, startPos, numElems, input.__obj)
+        ProductData_readFrom1(self._obj, startPos, numElems, input._obj)
         return
 
     def readFrom(self, startPos, numElems, input, inputPos):
-        self.ProductData_readFrom2(self.__obj, startPos, numElems, input.__obj, inputPos)
+        ProductData_readFrom2(self._obj, startPos, numElems, input._obj, inputPos)
         return
 
     def writeTo(self, output):
-        self.ProductData_writeTo4(self.__obj, output.__obj)
+        ProductData_writeTo4(self._obj, output._obj)
         return
 
     def writeTo(self, pos, output):
-        self.ProductData_writeTo3(self.__obj, pos, output.__obj)
+        ProductData_writeTo3(self._obj, pos, output._obj)
         return
 
     def writeTo(self, startPos, numElems, output):
-        self.ProductData_writeTo1(self.__obj, startPos, numElems, output.__obj)
+        ProductData_writeTo1(self._obj, startPos, numElems, output._obj)
         return
 
     def writeTo(self, startPos, numElems, output, outputPos):
-        self.ProductData_writeTo2(self.__obj, startPos, numElems, output.__obj, outputPos)
+        ProductData_writeTo2(self._obj, startPos, numElems, output._obj, outputPos)
         return
 
     def toString(self):
-        return self.ProductData_toString(self.__obj)
+        return ProductData_toString(self._obj)
 
     def hashCode(self):
-        return self.ProductData_hashCode(self.__obj)
+        return ProductData_hashCode(self._obj)
 
     def equals(self, other):
-        return self.ProductData_equals(self.__obj, other.__obj)
+        return ProductData_equals(self._obj, other._obj)
 
     def equalElems(self, other):
-        return self.ProductData_equalElems(self.__obj, other.__obj)
+        return ProductData_equalElems(self._obj, other._obj)
 
     def dispose(self):
-        self.ProductData_dispose(self.__obj)
+        ProductData_dispose(self._obj)
         return
 
 
 class AffineTransform:
-
     def __init__(self, obj):
-        self.__obj = obj
+        self._obj = obj
 
 
 class Mask:
-
     def __init__(self, obj):
-        self.__obj = obj
+        self._obj = obj
 
 
 class Double:
-
     def __init__(self, obj):
-        self.__obj = obj
+        self._obj = obj
 
 
 class IndexCoding:
-
     def __init__(self, obj):
-        self.__obj = obj
+        self._obj = obj
 
     def newIndexCoding(name):
         return IndexCoding(IndexCoding_newIndexCoding(name))
 
     def getIndex(self, name):
-        return MetadataAttribute(self.IndexCoding_getIndex(self.__obj, name))
+        return MetadataAttribute(IndexCoding_getIndex(self._obj, name))
 
     def getIndexNames(self):
-        return self.IndexCoding_getIndexNames(self.__obj)
+        return IndexCoding_getIndexNames(self._obj)
 
     def addIndex(self, name, value, description):
-        return MetadataAttribute(self.IndexCoding_addIndex(self.__obj, name, value, description))
+        return MetadataAttribute(IndexCoding_addIndex(self._obj, name, value, description))
 
     def getIndexValue(self, name):
-        return self.IndexCoding_getIndexValue(self.__obj, name)
+        return IndexCoding_getIndexValue(self._obj, name)
 
     def acceptVisitor(self, visitor):
-        self.IndexCoding_acceptVisitor(self.__obj, visitor.__obj)
+        IndexCoding_acceptVisitor(self._obj, visitor._obj)
         return
 
     def addElement(self, element):
-        self.IndexCoding_addElement(self.__obj, element.__obj)
+        IndexCoding_addElement(self._obj, element._obj)
         return
 
     def addAttribute(self, attribute):
-        self.IndexCoding_addAttribute(self.__obj, attribute.__obj)
+        IndexCoding_addAttribute(self._obj, attribute._obj)
         return
 
     def addSample(self, name, value, description):
-        return MetadataAttribute(self.IndexCoding_addSample(self.__obj, name, value, description))
+        return MetadataAttribute(IndexCoding_addSample(self._obj, name, value, description))
 
     def getSampleCount(self):
-        return self.IndexCoding_getSampleCount(self.__obj)
+        return IndexCoding_getSampleCount(self._obj)
 
     def getSampleName(self, index):
-        return self.IndexCoding_getSampleName(self.__obj, index)
+        return IndexCoding_getSampleName(self._obj, index)
 
     def getSampleValue(self, index):
-        return self.IndexCoding_getSampleValue(self.__obj, index)
+        return IndexCoding_getSampleValue(self._obj, index)
 
     def getElementGroup(self):
-        return ProductNodeGroup(self.IndexCoding_getElementGroup(self.__obj))
+        return ProductNodeGroup(IndexCoding_getElementGroup(self._obj))
 
     def getParentElement(self):
-        return MetadataElement(self.IndexCoding_getParentElement(self.__obj))
+        return MetadataElement(IndexCoding_getParentElement(self._obj))
 
     def addElementAt(self, element, index):
-        self.IndexCoding_addElementAt(self.__obj, element.__obj, index)
+        IndexCoding_addElementAt(self._obj, element._obj, index)
         return
 
     def removeElement(self, element):
-        return self.IndexCoding_removeElement(self.__obj, element.__obj)
+        return IndexCoding_removeElement(self._obj, element._obj)
 
     def getNumElements(self):
-        return self.IndexCoding_getNumElements(self.__obj)
+        return IndexCoding_getNumElements(self._obj)
 
     def getElementAt(self, index):
-        return MetadataElement(self.IndexCoding_getElementAt(self.__obj, index))
+        return MetadataElement(IndexCoding_getElementAt(self._obj, index))
 
     def getElementNames(self):
-        return self.IndexCoding_getElementNames(self.__obj)
+        return IndexCoding_getElementNames(self._obj)
 
     def getElements(self):
-        return MetadataElement(self.IndexCoding_getElements(self.__obj))
+        return MetadataElement(IndexCoding_getElements(self._obj))
 
     def getElement(self, name):
-        return MetadataElement(self.IndexCoding_getElement(self.__obj, name))
+        return MetadataElement(IndexCoding_getElement(self._obj, name))
 
     def containsElement(self, name):
-        return self.IndexCoding_containsElement(self.__obj, name)
+        return IndexCoding_containsElement(self._obj, name)
 
     def getElementIndex(self, element):
-        return self.IndexCoding_getElementIndex(self.__obj, element.__obj)
+        return IndexCoding_getElementIndex(self._obj, element._obj)
 
     def removeAttribute(self, attribute):
-        return self.IndexCoding_removeAttribute(self.__obj, attribute.__obj)
+        return IndexCoding_removeAttribute(self._obj, attribute._obj)
 
     def getNumAttributes(self):
-        return self.IndexCoding_getNumAttributes(self.__obj)
+        return IndexCoding_getNumAttributes(self._obj)
 
     def getAttributeAt(self, index):
-        return MetadataAttribute(self.IndexCoding_getAttributeAt(self.__obj, index))
+        return MetadataAttribute(IndexCoding_getAttributeAt(self._obj, index))
 
     def getAttributeNames(self):
-        return self.IndexCoding_getAttributeNames(self.__obj)
+        return IndexCoding_getAttributeNames(self._obj)
 
     def getAttributes(self):
-        return MetadataAttribute(self.IndexCoding_getAttributes(self.__obj))
+        return MetadataAttribute(IndexCoding_getAttributes(self._obj))
 
     def getAttribute(self, name):
-        return MetadataAttribute(self.IndexCoding_getAttribute(self.__obj, name))
+        return MetadataAttribute(IndexCoding_getAttribute(self._obj, name))
 
     def containsAttribute(self, name):
-        return self.IndexCoding_containsAttribute(self.__obj, name)
+        return IndexCoding_containsAttribute(self._obj, name)
 
     def getAttributeIndex(self, attribute):
-        return self.IndexCoding_getAttributeIndex(self.__obj, attribute.__obj)
+        return IndexCoding_getAttributeIndex(self._obj, attribute._obj)
 
     def getAttributeDouble(self, name, defaultValue):
-        return self.IndexCoding_getAttributeDouble(self.__obj, name, defaultValue)
+        return IndexCoding_getAttributeDouble(self._obj, name, defaultValue)
 
     def getAttributeUTC(self, name, defaultValue):
-        return ProductData_UTC(self.IndexCoding_getAttributeUTC(self.__obj, name, defaultValue.__obj))
+        return ProductData_UTC(IndexCoding_getAttributeUTC(self._obj, name, defaultValue._obj))
 
     def getAttributeInt(self, name, defaultValue):
-        return self.IndexCoding_getAttributeInt(self.__obj, name, defaultValue)
+        return IndexCoding_getAttributeInt(self._obj, name, defaultValue)
 
     def setAttributeInt(self, name, value):
-        self.IndexCoding_setAttributeInt(self.__obj, name, value)
+        IndexCoding_setAttributeInt(self._obj, name, value)
         return
 
     def setAttributeDouble(self, name, value):
-        self.IndexCoding_setAttributeDouble(self.__obj, name, value)
+        IndexCoding_setAttributeDouble(self._obj, name, value)
         return
 
     def setAttributeUTC(self, name, value):
-        self.IndexCoding_setAttributeUTC(self.__obj, name, value.__obj)
+        IndexCoding_setAttributeUTC(self._obj, name, value._obj)
         return
 
     def getAttributeString(self, name, defaultValue):
-        return self.IndexCoding_getAttributeString(self.__obj, name, defaultValue)
+        return IndexCoding_getAttributeString(self._obj, name, defaultValue)
 
     def setAttributeString(self, name, value):
-        self.IndexCoding_setAttributeString(self.__obj, name, value)
+        IndexCoding_setAttributeString(self._obj, name, value)
         return
 
     def setModified(self, modified):
-        self.IndexCoding_setModified(self.__obj, modified)
+        IndexCoding_setModified(self._obj, modified)
         return
 
     def createDeepClone(self):
-        return MetadataElement(self.IndexCoding_createDeepClone(self.__obj))
+        return MetadataElement(IndexCoding_createDeepClone(self._obj))
 
     def dispose(self):
-        self.IndexCoding_dispose(self.__obj)
+        IndexCoding_dispose(self._obj)
         return
 
     def getOwner(self):
-        return ProductNode(self.IndexCoding_getOwner(self.__obj))
+        return ProductNode(IndexCoding_getOwner(self._obj))
 
     def getName(self):
-        return self.IndexCoding_getName(self.__obj)
+        return IndexCoding_getName(self._obj)
 
     def setName(self, name):
-        self.IndexCoding_setName(self.__obj, name)
+        IndexCoding_setName(self._obj, name)
         return
 
     def getDescription(self):
-        return self.IndexCoding_getDescription(self.__obj)
+        return IndexCoding_getDescription(self._obj)
 
     def setDescription(self, description):
-        self.IndexCoding_setDescription(self.__obj, description)
+        IndexCoding_setDescription(self._obj, description)
         return
 
     def isModified(self):
-        return self.IndexCoding_isModified(self.__obj)
+        return IndexCoding_isModified(self._obj)
 
     def toString(self):
-        return self.IndexCoding_toString(self.__obj)
+        return IndexCoding_toString(self._obj)
 
     def isValidNodeName(name):
         return IndexCoding_isValidNodeName(name)
 
     def getProduct(self):
-        return Product(self.IndexCoding_getProduct(self.__obj))
+        return Product(IndexCoding_getProduct(self._obj))
 
     def getProductReader(self):
-        return ProductReader(self.IndexCoding_getProductReader(self.__obj))
+        return ProductReader(IndexCoding_getProductReader(self._obj))
 
     def getProductWriter(self):
-        return ProductWriter(self.IndexCoding_getProductWriter(self.__obj))
+        return ProductWriter(IndexCoding_getProductWriter(self._obj))
 
     def getDisplayName(self):
-        return self.IndexCoding_getDisplayName(self.__obj)
+        return IndexCoding_getDisplayName(self._obj)
 
     def getProductRefString(self):
-        return self.IndexCoding_getProductRefString(self.__obj)
+        return IndexCoding_getProductRefString(self._obj)
 
     def updateExpression(self, oldExternalName, newExternalName):
-        self.IndexCoding_updateExpression(self.__obj, oldExternalName, newExternalName)
+        IndexCoding_updateExpression(self._obj, oldExternalName, newExternalName)
         return
 
     def removeFromFile(self, productWriter):
-        self.IndexCoding_removeFromFile(self.__obj, productWriter.__obj)
+        IndexCoding_removeFromFile(self._obj, productWriter._obj)
         return
 
 
 class Term:
-
     def __init__(self, obj):
-        self.__obj = obj
+        self._obj = obj
 
 
 class RasterDataNode:
-
     def __init__(self, obj):
-        self.__obj = obj
+        self._obj = obj
 
 
 class PixelPos:
-
     def __init__(self, obj):
-        self.__obj = obj
+        self._obj = obj
 
     def newPixelPos():
         return PixelPos(PixelPos_newPixelPos1())
@@ -548,31 +535,31 @@ class PixelPos:
         return PixelPos(PixelPos_newPixelPos2(x, y))
 
     def isValid(self):
-        return self.PixelPos_isValid(self.__obj)
+        return PixelPos_isValid(self._obj)
 
     def setInvalid(self):
-        self.PixelPos_setInvalid(self.__obj)
+        PixelPos_setInvalid(self._obj)
         return
 
     def getX(self):
-        return self.PixelPos_getX(self.__obj)
+        return PixelPos_getX(self._obj)
 
     def getY(self):
-        return self.PixelPos_getY(self.__obj)
+        return PixelPos_getY(self._obj)
 
     def setLocation(self, arg0, arg1):
-        self.PixelPos_setLocation1(self.__obj, arg0, arg1)
+        PixelPos_setLocation1(self._obj, arg0, arg1)
         return
 
     def setLocation(self, arg0, arg1):
-        self.PixelPos_setLocation2(self.__obj, arg0, arg1)
+        PixelPos_setLocation2(self._obj, arg0, arg1)
         return
 
     def toString(self):
-        return self.PixelPos_toString(self.__obj)
+        return PixelPos_toString(self._obj)
 
     def setLocation(self, arg0):
-        self.PixelPos_setLocation3(self.__obj, arg0.__obj)
+        PixelPos_setLocation3(self._obj, arg0._obj)
         return
 
     def distanceSq(arg0, arg1, arg2, arg3):
@@ -582,55 +569,50 @@ class PixelPos:
         return PixelPos_distance2(arg0, arg1, arg2, arg3)
 
     def distanceSq(self, arg0, arg1):
-        return self.PixelPos_distanceSq1(self.__obj, arg0, arg1)
+        return PixelPos_distanceSq1(self._obj, arg0, arg1)
 
     def distanceSq(self, arg0):
-        return self.PixelPos_distanceSq3(self.__obj, arg0.__obj)
+        return PixelPos_distanceSq3(self._obj, arg0._obj)
 
     def distance(self, arg0, arg1):
-        return self.PixelPos_distance1(self.__obj, arg0, arg1)
+        return PixelPos_distance1(self._obj, arg0, arg1)
 
     def distance(self, arg0):
-        return self.PixelPos_distance3(self.__obj, arg0.__obj)
+        return PixelPos_distance3(self._obj, arg0._obj)
 
     def clone(self):
-        return Object(self.PixelPos_clone(self.__obj))
+        return Object(PixelPos_clone(self._obj))
 
     def hashCode(self):
-        return self.PixelPos_hashCode(self.__obj)
+        return PixelPos_hashCode(self._obj)
 
     def equals(self, arg0):
-        return self.PixelPos_equals(self.__obj, arg0.__obj)
+        return PixelPos_equals(self._obj, arg0._obj)
 
 
 class Product_AutoGrouping:
-
     def __init__(self, obj):
-        self.__obj = obj
+        self._obj = obj
 
 
 class ImageOutputStream:
-
     def __init__(self, obj):
-        self.__obj = obj
+        self._obj = obj
 
 
 class Stx:
-
     def __init__(self, obj):
-        self.__obj = obj
+        self._obj = obj
 
 
 class Rectangle:
-
     def __init__(self, obj):
-        self.__obj = obj
+        self._obj = obj
 
 
 class ProductIO:
-
     def __init__(self, obj):
-        self.__obj = obj
+        self._obj = obj
 
     def getProductReader(formatName):
         return ProductReader(ProductIO_getProductReader(formatName))
@@ -645,650 +627,636 @@ class ProductIO:
         return Product(ProductIO_readProduct(filePath))
 
     def getProductReaderForInput(input):
-        return ProductReader(ProductIO_getProductReaderForInput(input.__obj))
+        return ProductReader(ProductIO_getProductReaderForInput(input._obj))
 
     def writeProduct(product, filePath, formatName):
-        ProductIO_writeProduct(product.__obj, filePath, formatName)
+        ProductIO_writeProduct(product._obj, filePath, formatName)
         return
 
 
 class ProductNode:
-
     def __init__(self, obj):
-        self.__obj = obj
+        self._obj = obj
 
 
 class Dimension:
-
     def __init__(self, obj):
-        self.__obj = obj
+        self._obj = obj
 
 
 class AngularDirection:
-
     def __init__(self, obj):
-        self.__obj = obj
+        self._obj = obj
 
     def newAngularDirection(azimuth, zenith):
         return AngularDirection(AngularDirection_newAngularDirection(azimuth, zenith))
 
     def equals(self, obj):
-        return self.AngularDirection_equals(self.__obj, obj.__obj)
+        return AngularDirection_equals(self._obj, obj._obj)
 
     def toString(self):
-        return self.AngularDirection_toString(self.__obj)
+        return AngularDirection_toString(self._obj)
 
 
 class SimpleFeatureType:
-
     def __init__(self, obj):
-        self.__obj = obj
+        self._obj = obj
 
 
 class SampleCoding:
-
     def __init__(self, obj):
-        self.__obj = obj
+        self._obj = obj
 
 
 class Object:
-
     def __init__(self, obj):
-        self.__obj = obj
+        self._obj = obj
 
 
 class ProductReader:
-
     def __init__(self, obj):
-        self.__obj = obj
+        self._obj = obj
 
     def getReaderPlugIn(self):
-        return ProductReaderPlugIn(self.ProductReader_getReaderPlugIn(self.__obj))
+        return ProductReaderPlugIn(ProductReader_getReaderPlugIn(self._obj))
 
     def getInput(self):
-        return Object(self.ProductReader_getInput(self.__obj))
+        return Object(ProductReader_getInput(self._obj))
 
     def getSubsetDef(self):
-        return ProductSubsetDef(self.ProductReader_getSubsetDef(self.__obj))
+        return ProductSubsetDef(ProductReader_getSubsetDef(self._obj))
 
     def readProductNodes(self, input, subsetDef):
-        return Product(self.ProductReader_readProductNodes(self.__obj, input.__obj, subsetDef.__obj))
+        return Product(ProductReader_readProductNodes(self._obj, input._obj, subsetDef._obj))
 
     def readBandRasterData(self, destBand, destOffsetX, destOffsetY, destWidth, destHeight, destBuffer, pm):
-        self.ProductReader_readBandRasterData(self.__obj, destBand.__obj, destOffsetX, destOffsetY, destWidth, destHeight, destBuffer.__obj, pm.__obj)
+        ProductReader_readBandRasterData(self._obj, destBand._obj, destOffsetX, destOffsetY, destWidth, destHeight, destBuffer._obj, pm._obj)
         return
 
     def close(self):
-        self.ProductReader_close(self.__obj)
+        ProductReader_close(self._obj)
         return
 
 
 class ProductReaderPlugIn:
-
     def __init__(self, obj):
-        self.__obj = obj
+        self._obj = obj
 
 
 class Integer:
-
     def __init__(self, obj):
-        self.__obj = obj
+        self._obj = obj
 
 
 class ProductData_UTC:
-
     def __init__(self, obj):
-        self.__obj = obj
+        self._obj = obj
 
 
 class Band:
-
     def __init__(self, obj):
-        self.__obj = obj
+        self._obj = obj
 
     def newBand(name, dataType, width, height):
         return Band(Band_newBand(name, dataType, width, height))
 
     def getFlagCoding(self):
-        return FlagCoding(self.Band_getFlagCoding(self.__obj))
+        return FlagCoding(Band_getFlagCoding(self._obj))
 
     def isFlagBand(self):
-        return self.Band_isFlagBand(self.__obj)
+        return Band_isFlagBand(self._obj)
 
     def getIndexCoding(self):
-        return IndexCoding(self.Band_getIndexCoding(self.__obj))
+        return IndexCoding(Band_getIndexCoding(self._obj))
 
     def isIndexBand(self):
-        return self.Band_isIndexBand(self.__obj)
+        return Band_isIndexBand(self._obj)
 
     def getSampleCoding(self):
-        return SampleCoding(self.Band_getSampleCoding(self.__obj))
+        return SampleCoding(Band_getSampleCoding(self._obj))
 
     def setSampleCoding(self, sampleCoding):
-        self.Band_setSampleCoding(self.__obj, sampleCoding.__obj)
+        Band_setSampleCoding(self._obj, sampleCoding._obj)
         return
 
     def getSpectralBandIndex(self):
-        return self.Band_getSpectralBandIndex(self.__obj)
+        return Band_getSpectralBandIndex(self._obj)
 
     def setSpectralBandIndex(self, spectralBandIndex):
-        self.Band_setSpectralBandIndex(self.__obj, spectralBandIndex)
+        Band_setSpectralBandIndex(self._obj, spectralBandIndex)
         return
 
     def getSpectralWavelength(self):
-        return self.Band_getSpectralWavelength(self.__obj)
+        return Band_getSpectralWavelength(self._obj)
 
     def setSpectralWavelength(self, spectralWavelength):
-        self.Band_setSpectralWavelength(self.__obj, spectralWavelength)
+        Band_setSpectralWavelength(self._obj, spectralWavelength)
         return
 
     def getSpectralBandwidth(self):
-        return self.Band_getSpectralBandwidth(self.__obj)
+        return Band_getSpectralBandwidth(self._obj)
 
     def setSpectralBandwidth(self, spectralBandwidth):
-        self.Band_setSpectralBandwidth(self.__obj, spectralBandwidth)
+        Band_setSpectralBandwidth(self._obj, spectralBandwidth)
         return
 
     def getSolarFlux(self):
-        return self.Band_getSolarFlux(self.__obj)
+        return Band_getSolarFlux(self._obj)
 
     def setSolarFlux(self, solarFlux):
-        self.Band_setSolarFlux(self.__obj, solarFlux)
+        Band_setSolarFlux(self._obj, solarFlux)
         return
 
     def acceptVisitor(self, visitor):
-        self.Band_acceptVisitor(self.__obj, visitor.__obj)
+        Band_acceptVisitor(self._obj, visitor._obj)
         return
 
     def toString(self):
-        return self.Band_toString(self.__obj)
+        return Band_toString(self._obj)
 
     def removeFromFile(self, productWriter):
-        self.Band_removeFromFile(self.__obj, productWriter.__obj)
+        Band_removeFromFile(self._obj, productWriter._obj)
         return
 
     def dispose(self):
-        self.Band_dispose(self.__obj)
+        Band_dispose(self._obj)
         return
 
     def getSceneRasterData(self):
-        return ProductData(self.Band_getSceneRasterData(self.__obj))
+        return ProductData(Band_getSceneRasterData(self._obj))
 
     def getPixelInt(self, x, y):
-        return self.Band_getPixelInt(self.__obj, x, y)
+        return Band_getPixelInt(self._obj, x, y)
 
     def getPixelFloat(self, x, y):
-        return self.Band_getPixelFloat(self.__obj, x, y)
+        return Band_getPixelFloat(self._obj, x, y)
 
     def getPixelDouble(self, x, y):
-        return self.Band_getPixelDouble(self.__obj, x, y)
+        return Band_getPixelDouble(self._obj, x, y)
 
     def setPixelInt(self, x, y, pixelValue):
-        self.Band_setPixelInt(self.__obj, x, y, pixelValue)
+        Band_setPixelInt(self._obj, x, y, pixelValue)
         return
 
     def setPixelFloat(self, x, y, pixelValue):
-        self.Band_setPixelFloat(self.__obj, x, y, pixelValue)
+        Band_setPixelFloat(self._obj, x, y, pixelValue)
         return
 
     def setPixelDouble(self, x, y, pixelValue):
-        self.Band_setPixelDouble(self.__obj, x, y, pixelValue)
+        Band_setPixelDouble(self._obj, x, y, pixelValue)
         return
 
     def setPixels(self, x, y, w, h, pixels):
-        self.Band_setPixelsInt(self.__obj, x, y, w, h, pixels)
+        Band_setPixelsInt(self._obj, x, y, w, h, pixels)
         return
 
     def setPixels(self, x, y, w, h, pixels):
-        self.Band_setPixelsFloat(self.__obj, x, y, w, h, pixels)
+        Band_setPixelsFloat(self._obj, x, y, w, h, pixels)
         return
 
     def setPixels(self, x, y, w, h, pixels):
-        self.Band_setPixelsDouble(self.__obj, x, y, w, h, pixels)
+        Band_setPixelsDouble(self._obj, x, y, w, h, pixels)
         return
 
     def ensureRasterData(self):
-        self.Band_ensureRasterData(self.__obj)
+        Band_ensureRasterData(self._obj)
         return
 
     def unloadRasterData(self):
-        self.Band_unloadRasterData(self.__obj)
+        Band_unloadRasterData(self._obj)
         return
 
     def getViewModeId(self, bandName):
-        return self.Band_getViewModeId(self.__obj, bandName)
+        return Band_getViewModeId(self._obj, bandName)
 
     def getSceneRasterWidth(self):
-        return self.Band_getSceneRasterWidth(self.__obj)
+        return Band_getSceneRasterWidth(self._obj)
 
     def getSceneRasterHeight(self):
-        return self.Band_getSceneRasterHeight(self.__obj)
+        return Band_getSceneRasterHeight(self._obj)
 
     def getRasterWidth(self):
-        return self.Band_getRasterWidth(self.__obj)
+        return Band_getRasterWidth(self._obj)
 
     def getRasterHeight(self):
-        return self.Band_getRasterHeight(self.__obj)
+        return Band_getRasterHeight(self._obj)
 
     def setModified(self, modified):
-        self.Band_setModified(self.__obj, modified)
+        Band_setModified(self._obj, modified)
         return
 
     def getGeoCoding(self):
-        return GeoCoding(self.Band_getGeoCoding(self.__obj))
+        return GeoCoding(Band_getGeoCoding(self._obj))
 
     def setGeoCoding(self, geoCoding):
-        self.Band_setGeoCoding(self.__obj, geoCoding.__obj)
+        Band_setGeoCoding(self._obj, geoCoding._obj)
         return
 
     def getPointing(self):
-        return Pointing(self.Band_getPointing(self.__obj))
+        return Pointing(Band_getPointing(self._obj))
 
     def canBeOrthorectified(self):
-        return self.Band_canBeOrthorectified(self.__obj)
+        return Band_canBeOrthorectified(self._obj)
 
     def isFloatingPointType(self):
-        return self.Band_isFloatingPointType(self.__obj)
+        return Band_isFloatingPointType(self._obj)
 
     def getGeophysicalDataType(self):
-        return self.Band_getGeophysicalDataType(self.__obj)
+        return Band_getGeophysicalDataType(self._obj)
 
     def getScalingFactor(self):
-        return self.Band_getScalingFactor(self.__obj)
+        return Band_getScalingFactor(self._obj)
 
     def setScalingFactor(self, scalingFactor):
-        self.Band_setScalingFactor(self.__obj, scalingFactor)
+        Band_setScalingFactor(self._obj, scalingFactor)
         return
 
     def getScalingOffset(self):
-        return self.Band_getScalingOffset(self.__obj)
+        return Band_getScalingOffset(self._obj)
 
     def setScalingOffset(self, scalingOffset):
-        self.Band_setScalingOffset(self.__obj, scalingOffset)
+        Band_setScalingOffset(self._obj, scalingOffset)
         return
 
     def isLog10Scaled(self):
-        return self.Band_isLog10Scaled(self.__obj)
+        return Band_isLog10Scaled(self._obj)
 
     def setLog10Scaled(self, log10Scaled):
-        self.Band_setLog10Scaled(self.__obj, log10Scaled)
+        Band_setLog10Scaled(self._obj, log10Scaled)
         return
 
     def isScalingApplied(self):
-        return self.Band_isScalingApplied(self.__obj)
+        return Band_isScalingApplied(self._obj)
 
     def isValidMaskProperty(propertyName):
         return Band_isValidMaskProperty(propertyName)
 
     def isNoDataValueSet(self):
-        return self.Band_isNoDataValueSet(self.__obj)
+        return Band_isNoDataValueSet(self._obj)
 
     def clearNoDataValue(self):
-        self.Band_clearNoDataValue(self.__obj)
+        Band_clearNoDataValue(self._obj)
         return
 
     def isNoDataValueUsed(self):
-        return self.Band_isNoDataValueUsed(self.__obj)
+        return Band_isNoDataValueUsed(self._obj)
 
     def setNoDataValueUsed(self, noDataValueUsed):
-        self.Band_setNoDataValueUsed(self.__obj, noDataValueUsed)
+        Band_setNoDataValueUsed(self._obj, noDataValueUsed)
         return
 
     def getNoDataValue(self):
-        return self.Band_getNoDataValue(self.__obj)
+        return Band_getNoDataValue(self._obj)
 
     def setNoDataValue(self, noDataValue):
-        self.Band_setNoDataValue(self.__obj, noDataValue)
+        Band_setNoDataValue(self._obj, noDataValue)
         return
 
     def getGeophysicalNoDataValue(self):
-        return self.Band_getGeophysicalNoDataValue(self.__obj)
+        return Band_getGeophysicalNoDataValue(self._obj)
 
     def setGeophysicalNoDataValue(self, noDataValue):
-        self.Band_setGeophysicalNoDataValue(self.__obj, noDataValue)
+        Band_setGeophysicalNoDataValue(self._obj, noDataValue)
         return
 
     def getValidPixelExpression(self):
-        return self.Band_getValidPixelExpression(self.__obj)
+        return Band_getValidPixelExpression(self._obj)
 
     def setValidPixelExpression(self, validPixelExpression):
-        self.Band_setValidPixelExpression(self.__obj, validPixelExpression)
+        Band_setValidPixelExpression(self._obj, validPixelExpression)
         return
 
     def isValidMaskUsed(self):
-        return self.Band_isValidMaskUsed(self.__obj)
+        return Band_isValidMaskUsed(self._obj)
 
     def resetValidMask(self):
-        self.Band_resetValidMask(self.__obj)
+        Band_resetValidMask(self._obj)
         return
 
     def getValidMaskExpression(self):
-        return self.Band_getValidMaskExpression(self.__obj)
+        return Band_getValidMaskExpression(self._obj)
 
     def updateExpression(self, oldExternalName, newExternalName):
-        self.Band_updateExpression(self.__obj, oldExternalName, newExternalName)
+        Band_updateExpression(self._obj, oldExternalName, newExternalName)
         return
 
     def hasRasterData(self):
-        return self.Band_hasRasterData(self.__obj)
+        return Band_hasRasterData(self._obj)
 
     def getRasterData(self):
-        return ProductData(self.Band_getRasterData(self.__obj))
+        return ProductData(Band_getRasterData(self._obj))
 
     def setRasterData(self, rasterData):
-        self.Band_setRasterData(self.__obj, rasterData.__obj)
+        Band_setRasterData(self._obj, rasterData._obj)
         return
 
     def loadRasterData(self):
-        self.Band_loadRasterData(self.__obj)
+        Band_loadRasterData(self._obj)
         return
 
     def isPixelValid(self, x, y):
-        return self.Band_isPixelValid(self.__obj, x, y)
+        return Band_isPixelValid(self._obj, x, y)
 
     def getSampleInt(self, x, y):
-        return self.Band_getSampleInt(self.__obj, x, y)
+        return Band_getSampleInt(self._obj, x, y)
 
     def getSampleFloat(self, x, y):
-        return self.Band_getSampleFloat(self.__obj, x, y)
+        return Band_getSampleFloat(self._obj, x, y)
 
     def getPixels(self, x, y, w, h, pixels):
-        return self.Band_getPixelsInt(self.__obj, x, y, w, h, pixels)
+        return Band_getPixelsInt(self._obj, x, y, w, h, pixels)
 
     def getPixels(self, x, y, w, h, pixels):
-        return self.Band_getPixelsFloat(self.__obj, x, y, w, h, pixels)
+        return Band_getPixelsFloat(self._obj, x, y, w, h, pixels)
 
     def getPixels(self, x, y, w, h, pixels):
-        return self.Band_getPixelsDouble(self.__obj, x, y, w, h, pixels)
+        return Band_getPixelsDouble(self._obj, x, y, w, h, pixels)
 
     def readPixels(self, x, y, w, h, pixels):
-        return self.Band_readPixelsInt(self.__obj, x, y, w, h, pixels)
+        return Band_readPixelsInt(self._obj, x, y, w, h, pixels)
 
     def readPixels(self, x, y, w, h, pixels):
-        return self.Band_readPixelsFloat(self.__obj, x, y, w, h, pixels)
+        return Band_readPixelsFloat(self._obj, x, y, w, h, pixels)
 
     def readPixels(self, x, y, w, h, pixels):
-        return self.Band_readPixelsDouble(self.__obj, x, y, w, h, pixels)
+        return Band_readPixelsDouble(self._obj, x, y, w, h, pixels)
 
     def writePixels(self, x, y, w, h, pixels):
-        self.Band_writePixelsInt(self.__obj, x, y, w, h, pixels)
+        Band_writePixelsInt(self._obj, x, y, w, h, pixels)
         return
 
     def writePixels(self, x, y, w, h, pixels):
-        self.Band_writePixelsFloat(self.__obj, x, y, w, h, pixels)
+        Band_writePixelsFloat(self._obj, x, y, w, h, pixels)
         return
 
     def writePixels(self, x, y, w, h, pixels):
-        self.Band_writePixelsDouble(self.__obj, x, y, w, h, pixels)
+        Band_writePixelsDouble(self._obj, x, y, w, h, pixels)
         return
 
     def readValidMask(self, x, y, w, h, validMask):
-        return self.Band_readValidMask(self.__obj, x, y, w, h, validMask)
+        return Band_readValidMask(self._obj, x, y, w, h, validMask)
 
     def readRasterDataFully(self):
-        self.Band_readRasterDataFully(self.__obj)
+        Band_readRasterDataFully(self._obj)
         return
 
     def readRasterData(self, offsetX, offsetY, width, height, rasterData):
-        self.Band_readRasterData(self.__obj, offsetX, offsetY, width, height, rasterData.__obj)
+        Band_readRasterData(self._obj, offsetX, offsetY, width, height, rasterData._obj)
         return
 
     def writeRasterDataFully(self):
-        self.Band_writeRasterDataFully(self.__obj)
+        Band_writeRasterDataFully(self._obj)
         return
 
     def writeRasterData(self, offsetX, offsetY, width, height, rasterData):
-        self.Band_writeRasterData(self.__obj, offsetX, offsetY, width, height, rasterData.__obj)
+        Band_writeRasterData(self._obj, offsetX, offsetY, width, height, rasterData._obj)
         return
 
     def createCompatibleRasterData(self):
-        return ProductData(self.Band_createCompatibleRasterData(self.__obj))
+        return ProductData(Band_createCompatibleRasterData(self._obj))
 
     def createCompatibleSceneRasterData(self):
-        return ProductData(self.Band_createCompatibleSceneRasterData(self.__obj))
+        return ProductData(Band_createCompatibleSceneRasterData(self._obj))
 
     def createCompatibleRasterData(self, width, height):
-        return ProductData(self.Band_createCompatibleRasterDataForRect(self.__obj, width, height))
+        return ProductData(Band_createCompatibleRasterDataForRect(self._obj, width, height))
 
     def isCompatibleRasterData(self, rasterData, w, h):
-        return self.Band_isCompatibleRasterData(self.__obj, rasterData.__obj, w, h)
+        return Band_isCompatibleRasterData(self._obj, rasterData._obj, w, h)
 
     def checkCompatibleRasterData(self, rasterData, w, h):
-        self.Band_checkCompatibleRasterData(self.__obj, rasterData.__obj, w, h)
+        Band_checkCompatibleRasterData(self._obj, rasterData._obj, w, h)
         return
 
     def hasIntPixels(self):
-        return self.Band_hasIntPixels(self.__obj)
+        return Band_hasIntPixels(self._obj)
 
     def createTransectProfileData(self, shape):
-        return TransectProfileData(self.Band_createTransectProfileData(self.__obj, shape.__obj))
+        return TransectProfileData(Band_createTransectProfileData(self._obj, shape._obj))
 
     def getImageInfo(self):
-        return ImageInfo(self.Band_getImageInfo(self.__obj))
+        return ImageInfo(Band_getImageInfo(self._obj))
 
     def setImageInfo(self, imageInfo):
-        self.Band_setImageInfo(self.__obj, imageInfo.__obj)
+        Band_setImageInfo(self._obj, imageInfo._obj)
         return
 
     def fireImageInfoChanged(self):
-        self.Band_fireImageInfoChanged(self.__obj)
+        Band_fireImageInfoChanged(self._obj)
         return
 
     def createDefaultImageInfo(self, histoSkipAreas, histogram):
-        return ImageInfo(self.Band_createDefaultImageInfo(self.__obj, histoSkipAreas, histogram.__obj))
+        return ImageInfo(Band_createDefaultImageInfo(self._obj, histoSkipAreas, histogram._obj))
 
     def getOverlayMaskGroup(self):
-        return ProductNodeGroup(self.Band_getOverlayMaskGroup(self.__obj))
+        return ProductNodeGroup(Band_getOverlayMaskGroup(self._obj))
 
     def createColorIndexedImage(self, pm):
-        return BufferedImage(self.Band_createColorIndexedImage(self.__obj, pm.__obj))
+        return BufferedImage(Band_createColorIndexedImage(self._obj, pm._obj))
 
     def createRgbImage(self, pm):
-        return BufferedImage(self.Band_createRgbImage(self.__obj, pm.__obj))
+        return BufferedImage(Band_createRgbImage(self._obj, pm._obj))
 
     def createPixelValidator(self, lineOffset, roi):
-        return IndexValidator(self.Band_createPixelValidator(self.__obj, lineOffset, roi.__obj))
+        return IndexValidator(Band_createPixelValidator(self._obj, lineOffset, roi._obj))
 
     def scale(self, v):
-        return self.Band_scale(self.__obj, v)
+        return Band_scale(self._obj, v)
 
     def scaleInverse(self, v):
-        return self.Band_scaleInverse(self.__obj, v)
+        return Band_scaleInverse(self._obj, v)
 
     def getPixelString(self, x, y):
-        return self.Band_getPixelString(self.__obj, x, y)
+        return Band_getPixelString(self._obj, x, y)
 
     def isSourceImageSet(self):
-        return self.Band_isSourceImageSet(self.__obj)
+        return Band_isSourceImageSet(self._obj)
 
     def getSourceImage(self):
-        return MultiLevelImage(self.Band_getSourceImage(self.__obj))
+        return MultiLevelImage(Band_getSourceImage(self._obj))
 
     def isGeophysicalImageSet(self):
-        return self.Band_isGeophysicalImageSet(self.__obj)
+        return Band_isGeophysicalImageSet(self._obj)
 
     def getGeophysicalImage(self):
-        return MultiLevelImage(self.Band_getGeophysicalImage(self.__obj))
+        return MultiLevelImage(Band_getGeophysicalImage(self._obj))
 
     def isValidMaskImageSet(self):
-        return self.Band_isValidMaskImageSet(self.__obj)
+        return Band_isValidMaskImageSet(self._obj)
 
     def getValidMaskImage(self):
-        return MultiLevelImage(self.Band_getValidMaskImage(self.__obj))
+        return MultiLevelImage(Band_getValidMaskImage(self._obj))
 
     def isStxSet(self):
-        return self.Band_isStxSet(self.__obj)
+        return Band_isStxSet(self._obj)
 
     def getStx(self):
-        return Stx(self.Band_getStx(self.__obj))
+        return Stx(Band_getStx(self._obj))
 
     def setStx(self, stx):
-        self.Band_setStx(self.__obj, stx.__obj)
+        Band_setStx(self._obj, stx._obj)
         return
 
     def getValidShape(self):
-        return Shape(self.Band_getValidShape(self.__obj))
+        return Shape(Band_getValidShape(self._obj))
 
     def getDataType(self):
-        return self.Band_getDataType(self.__obj)
+        return Band_getDataType(self._obj)
 
     def getNumDataElems(self):
-        return self.Band_getNumDataElems(self.__obj)
+        return Band_getNumDataElems(self._obj)
 
     def setData(self, data):
-        self.Band_setData(self.__obj, data.__obj)
+        Band_setData(self._obj, data._obj)
         return
 
     def getData(self):
-        return ProductData(self.Band_getData(self.__obj))
+        return ProductData(Band_getData(self._obj))
 
     def setDataElems(self, elems):
-        self.Band_setDataElems(self.__obj, elems.__obj)
+        Band_setDataElems(self._obj, elems._obj)
         return
 
     def getDataElems(self):
-        return Object(self.Band_getDataElems(self.__obj))
+        return Object(Band_getDataElems(self._obj))
 
     def getDataElemSize(self):
-        return self.Band_getDataElemSize(self.__obj)
+        return Band_getDataElemSize(self._obj)
 
     def setReadOnly(self, readOnly):
-        self.Band_setReadOnly(self.__obj, readOnly)
+        Band_setReadOnly(self._obj, readOnly)
         return
 
     def isReadOnly(self):
-        return self.Band_isReadOnly(self.__obj)
+        return Band_isReadOnly(self._obj)
 
     def setUnit(self, unit):
-        self.Band_setUnit(self.__obj, unit)
+        Band_setUnit(self._obj, unit)
         return
 
     def getUnit(self):
-        return self.Band_getUnit(self.__obj)
+        return Band_getUnit(self._obj)
 
     def fireProductNodeDataChanged(self):
-        self.Band_fireProductNodeDataChanged(self.__obj)
+        Band_fireProductNodeDataChanged(self._obj)
         return
 
     def createCompatibleProductData(self, numElems):
-        return ProductData(self.Band_createCompatibleProductData(self.__obj, numElems))
+        return ProductData(Band_createCompatibleProductData(self._obj, numElems))
 
     def getOwner(self):
-        return ProductNode(self.Band_getOwner(self.__obj))
+        return ProductNode(Band_getOwner(self._obj))
 
     def getName(self):
-        return self.Band_getName(self.__obj)
+        return Band_getName(self._obj)
 
     def setName(self, name):
-        self.Band_setName(self.__obj, name)
+        Band_setName(self._obj, name)
         return
 
     def getDescription(self):
-        return self.Band_getDescription(self.__obj)
+        return Band_getDescription(self._obj)
 
     def setDescription(self, description):
-        self.Band_setDescription(self.__obj, description)
+        Band_setDescription(self._obj, description)
         return
 
     def isModified(self):
-        return self.Band_isModified(self.__obj)
+        return Band_isModified(self._obj)
 
     def isValidNodeName(name):
         return Band_isValidNodeName(name)
 
     def getProduct(self):
-        return Product(self.Band_getProduct(self.__obj))
+        return Product(Band_getProduct(self._obj))
 
     def getProductReader(self):
-        return ProductReader(self.Band_getProductReader(self.__obj))
+        return ProductReader(Band_getProductReader(self._obj))
 
     def getProductWriter(self):
-        return ProductWriter(self.Band_getProductWriter(self.__obj))
+        return ProductWriter(Band_getProductWriter(self._obj))
 
     def getDisplayName(self):
-        return self.Band_getDisplayName(self.__obj)
+        return Band_getDisplayName(self._obj)
 
     def getProductRefString(self):
-        return self.Band_getProductRefString(self.__obj)
+        return Band_getProductRefString(self._obj)
 
 
 class ColorPaletteDef_Point:
-
     def __init__(self, obj):
-        self.__obj = obj
+        self._obj = obj
 
 
 class RenderedImage:
-
     def __init__(self, obj):
-        self.__obj = obj
+        self._obj = obj
 
 
 class Placemark:
-
     def __init__(self, obj):
-        self.__obj = obj
+        self._obj = obj
 
     def newPlacemark(descriptor, feature):
-        return Placemark(Placemark_newPlacemark(descriptor.__obj, feature.__obj))
+        return Placemark(Placemark_newPlacemark(descriptor._obj, feature._obj))
 
     def createPointPlacemark(descriptor, name, label, text, pixelPos, geoPos, geoCoding):
-        return Placemark(Placemark_createPointPlacemark(descriptor.__obj, name, label, text, pixelPos.__obj, geoPos.__obj, geoCoding.__obj))
+        return Placemark(Placemark_createPointPlacemark(descriptor._obj, name, label, text, pixelPos._obj, geoPos._obj, geoCoding._obj))
 
     def getDescriptor(self):
-        return PlacemarkDescriptor(self.Placemark_getDescriptor(self.__obj))
+        return PlacemarkDescriptor(Placemark_getDescriptor(self._obj))
 
     def getFeature(self):
-        return SimpleFeature(self.Placemark_getFeature(self.__obj))
+        return SimpleFeature(Placemark_getFeature(self._obj))
 
     def getAttributeValue(self, attributeName):
-        return Object(self.Placemark_getAttributeValue(self.__obj, attributeName))
+        return Object(Placemark_getAttributeValue(self._obj, attributeName))
 
     def setAttributeValue(self, attributeName, attributeValue):
-        self.Placemark_setAttributeValue(self.__obj, attributeName, attributeValue.__obj)
+        Placemark_setAttributeValue(self._obj, attributeName, attributeValue._obj)
         return
 
     def setLabel(self, label):
-        self.Placemark_setLabel(self.__obj, label)
+        Placemark_setLabel(self._obj, label)
         return
 
     def getLabel(self):
-        return self.Placemark_getLabel(self.__obj)
+        return Placemark_getLabel(self._obj)
 
     def setText(self, text):
-        self.Placemark_setText(self.__obj, text)
+        Placemark_setText(self._obj, text)
         return
 
     def getText(self):
-        return self.Placemark_getText(self.__obj)
+        return Placemark_getText(self._obj)
 
     def setStyleCss(self, styleCss):
-        self.Placemark_setStyleCss(self.__obj, styleCss)
+        Placemark_setStyleCss(self._obj, styleCss)
         return
 
     def getStyleCss(self):
-        return self.Placemark_getStyleCss(self.__obj)
+        return Placemark_getStyleCss(self._obj)
 
     def acceptVisitor(self, visitor):
-        self.Placemark_acceptVisitor(self.__obj, visitor.__obj)
+        Placemark_acceptVisitor(self._obj, visitor._obj)
         return
 
     def getPixelPos(self):
-        return PixelPos(self.Placemark_getPixelPos(self.__obj))
+        return PixelPos(Placemark_getPixelPos(self._obj))
 
     def setPixelPos(self, pixelPos):
-        self.Placemark_setPixelPos(self.__obj, pixelPos.__obj)
+        Placemark_setPixelPos(self._obj, pixelPos._obj)
         return
 
     def getGeoPos(self):
-        return GeoPos(self.Placemark_getGeoPos(self.__obj))
+        return GeoPos(Placemark_getGeoPos(self._obj))
 
     def setGeoPos(self, geoPos):
-        self.Placemark_setGeoPos(self.__obj, geoPos.__obj)
+        Placemark_setGeoPos(self._obj, geoPos._obj)
         return
 
     def updatePositions(self):
-        self.Placemark_updatePositions(self.__obj)
+        Placemark_updatePositions(self._obj)
         return
 
     def createPinFeatureType():
@@ -1304,1730 +1272,1691 @@ class Placemark:
         return SimpleFeatureType(Placemark_createPointFeatureType(name))
 
     def getOwner(self):
-        return ProductNode(self.Placemark_getOwner(self.__obj))
+        return ProductNode(Placemark_getOwner(self._obj))
 
     def getName(self):
-        return self.Placemark_getName(self.__obj)
+        return Placemark_getName(self._obj)
 
     def setName(self, name):
-        self.Placemark_setName(self.__obj, name)
+        Placemark_setName(self._obj, name)
         return
 
     def getDescription(self):
-        return self.Placemark_getDescription(self.__obj)
+        return Placemark_getDescription(self._obj)
 
     def setDescription(self, description):
-        self.Placemark_setDescription(self.__obj, description)
+        Placemark_setDescription(self._obj, description)
         return
 
     def isModified(self):
-        return self.Placemark_isModified(self.__obj)
+        return Placemark_isModified(self._obj)
 
     def setModified(self, modified):
-        self.Placemark_setModified(self.__obj, modified)
+        Placemark_setModified(self._obj, modified)
         return
 
     def toString(self):
-        return self.Placemark_toString(self.__obj)
+        return Placemark_toString(self._obj)
 
     def dispose(self):
-        self.Placemark_dispose(self.__obj)
+        Placemark_dispose(self._obj)
         return
 
     def isValidNodeName(name):
         return Placemark_isValidNodeName(name)
 
     def getProduct(self):
-        return Product(self.Placemark_getProduct(self.__obj))
+        return Product(Placemark_getProduct(self._obj))
 
     def getProductReader(self):
-        return ProductReader(self.Placemark_getProductReader(self.__obj))
+        return ProductReader(Placemark_getProductReader(self._obj))
 
     def getProductWriter(self):
-        return ProductWriter(self.Placemark_getProductWriter(self.__obj))
+        return ProductWriter(Placemark_getProductWriter(self._obj))
 
     def getDisplayName(self):
-        return self.Placemark_getDisplayName(self.__obj)
+        return Placemark_getDisplayName(self._obj)
 
     def getProductRefString(self):
-        return self.Placemark_getProductRefString(self.__obj)
+        return Placemark_getProductRefString(self._obj)
 
     def updateExpression(self, oldExternalName, newExternalName):
-        self.Placemark_updateExpression(self.__obj, oldExternalName, newExternalName)
+        Placemark_updateExpression(self._obj, oldExternalName, newExternalName)
         return
 
     def removeFromFile(self, productWriter):
-        self.Placemark_removeFromFile(self.__obj, productWriter.__obj)
+        Placemark_removeFromFile(self._obj, productWriter._obj)
         return
 
 
 class IndexValidator:
-
     def __init__(self, obj):
-        self.__obj = obj
+        self._obj = obj
 
 
 class Area:
-
     def __init__(self, obj):
-        self.__obj = obj
+        self._obj = obj
 
 
 class ComponentColorModel:
-
     def __init__(self, obj):
-        self.__obj = obj
+        self._obj = obj
 
 
 class Iterator:
-
     def __init__(self, obj):
-        self.__obj = obj
+        self._obj = obj
 
 
 class MathTransform:
-
     def __init__(self, obj):
-        self.__obj = obj
+        self._obj = obj
 
 
 class CoordinateReferenceSystem:
-
     def __init__(self, obj):
-        self.__obj = obj
+        self._obj = obj
 
 
 class ProductWriterPlugIn:
-
     def __init__(self, obj):
-        self.__obj = obj
+        self._obj = obj
 
 
 class File:
-
     def __init__(self, obj):
-        self.__obj = obj
+        self._obj = obj
 
 
 class GeoPos:
-
     def __init__(self, obj):
-        self.__obj = obj
+        self._obj = obj
 
     def newGeoPos(lat, lon):
         return GeoPos(GeoPos_newGeoPos(lat, lon))
 
     def getLat(self):
-        return self.GeoPos_getLat(self.__obj)
+        return GeoPos_getLat(self._obj)
 
     def getLon(self):
-        return self.GeoPos_getLon(self.__obj)
+        return GeoPos_getLon(self._obj)
 
     def setLocation(self, lat, lon):
-        self.GeoPos_setLocation(self.__obj, lat, lon)
+        GeoPos_setLocation(self._obj, lat, lon)
         return
 
     def isValid(self):
-        return self.GeoPos_isValid(self.__obj)
+        return GeoPos_isValid(self._obj)
 
     def areValid(a):
-        return GeoPos_areValid(a.__obj)
+        return GeoPos_areValid(a._obj)
 
     def setInvalid(self):
-        self.GeoPos_setInvalid(self.__obj)
+        GeoPos_setInvalid(self._obj)
         return
 
     def equals(self, obj):
-        return self.GeoPos_equals(self.__obj, obj.__obj)
+        return GeoPos_equals(self._obj, obj._obj)
 
     def hashCode(self):
-        return self.GeoPos_hashCode(self.__obj)
+        return GeoPos_hashCode(self._obj)
 
     def toString(self):
-        return self.GeoPos_toString(self.__obj)
+        return GeoPos_toString(self._obj)
 
     def normalize(self):
-        self.GeoPos_normalize(self.__obj)
+        GeoPos_normalize(self._obj)
         return
 
     def normalizeLon(lon):
         return GeoPos_normalizeLon(lon)
 
     def getLatString(self):
-        return self.GeoPos_getLatString(self.__obj)
+        return GeoPos_getLatString(self._obj)
 
     def getLonString(self):
-        return self.GeoPos_getLonString(self.__obj)
+        return GeoPos_getLonString(self._obj)
 
 
 class ProductNodeGroup:
-
     def __init__(self, obj):
-        self.__obj = obj
+        self._obj = obj
 
     def newProductNodeGroup(name):
         return ProductNodeGroup(ProductNodeGroup_newProductNodeGroup1(name))
 
     def newProductNodeGroup(owner, name, takingOverNodeOwnership):
-        return ProductNodeGroup(ProductNodeGroup_newProductNodeGroup2(owner.__obj, name, takingOverNodeOwnership))
+        return ProductNodeGroup(ProductNodeGroup_newProductNodeGroup2(owner._obj, name, takingOverNodeOwnership))
 
     def isTakingOverNodeOwnership(self):
-        return self.ProductNodeGroup_isTakingOverNodeOwnership(self.__obj)
+        return ProductNodeGroup_isTakingOverNodeOwnership(self._obj)
 
     def getNodeCount(self):
-        return self.ProductNodeGroup_getNodeCount(self.__obj)
+        return ProductNodeGroup_getNodeCount(self._obj)
 
     def get(self, index):
-        return T(self.ProductNodeGroup_get1(self.__obj, index))
+        return T(ProductNodeGroup_get1(self._obj, index))
 
     def getNodeDisplayNames(self):
-        return self.ProductNodeGroup_getNodeDisplayNames(self.__obj)
+        return ProductNodeGroup_getNodeDisplayNames(self._obj)
 
     def getNodeNames(self):
-        return self.ProductNodeGroup_getNodeNames(self.__obj)
+        return ProductNodeGroup_getNodeNames(self._obj)
 
     def toArray(self):
-        return ProductNode(self.ProductNodeGroup_toArray1(self.__obj))
+        return ProductNode(ProductNodeGroup_toArray1(self._obj))
 
     def toArray(self, array):
-        return T(self.ProductNodeGroup_toArray2(self.__obj, array.__obj))
+        return T(ProductNodeGroup_toArray2(self._obj, array._obj))
 
     def indexOf(self, name):
-        return self.ProductNodeGroup_indexOf2(self.__obj, name)
+        return ProductNodeGroup_indexOf2(self._obj, name)
 
     def indexOf(self, element):
-        return self.ProductNodeGroup_indexOf1(self.__obj, element.__obj)
+        return ProductNodeGroup_indexOf1(self._obj, element._obj)
 
     def getByDisplayName(self, displayName):
-        return T(self.ProductNodeGroup_getByDisplayName(self.__obj, displayName))
+        return T(ProductNodeGroup_getByDisplayName(self._obj, displayName))
 
     def get(self, name):
-        return T(self.ProductNodeGroup_get2(self.__obj, name))
+        return T(ProductNodeGroup_get2(self._obj, name))
 
     def contains(self, name):
-        return self.ProductNodeGroup_contains2(self.__obj, name)
+        return ProductNodeGroup_contains2(self._obj, name)
 
     def contains(self, node):
-        return self.ProductNodeGroup_contains1(self.__obj, node.__obj)
+        return ProductNodeGroup_contains1(self._obj, node._obj)
 
     def add(self, node):
-        return self.ProductNodeGroup_add2(self.__obj, node.__obj)
+        return ProductNodeGroup_add2(self._obj, node._obj)
 
     def add(self, index, node):
-        self.ProductNodeGroup_add1(self.__obj, index, node.__obj)
+        ProductNodeGroup_add1(self._obj, index, node._obj)
         return
 
     def remove(self, node):
-        return self.ProductNodeGroup_remove(self.__obj, node.__obj)
+        return ProductNodeGroup_remove(self._obj, node._obj)
 
     def removeAll(self):
-        self.ProductNodeGroup_removeAll(self.__obj)
+        ProductNodeGroup_removeAll(self._obj)
         return
 
     def clearRemovedList(self):
-        self.ProductNodeGroup_clearRemovedList(self.__obj)
+        ProductNodeGroup_clearRemovedList(self._obj)
         return
 
     def getRemovedNodes(self):
-        return Collection(self.ProductNodeGroup_getRemovedNodes(self.__obj))
+        return Collection(ProductNodeGroup_getRemovedNodes(self._obj))
 
     def getRawStorageSize(self, subsetDef):
-        return self.ProductNodeGroup_getRawStorageSize2(self.__obj, subsetDef.__obj)
+        return ProductNodeGroup_getRawStorageSize2(self._obj, subsetDef._obj)
 
     def setModified(self, modified):
-        self.ProductNodeGroup_setModified(self.__obj, modified)
+        ProductNodeGroup_setModified(self._obj, modified)
         return
 
     def acceptVisitor(self, visitor):
-        self.ProductNodeGroup_acceptVisitor(self.__obj, visitor.__obj)
+        ProductNodeGroup_acceptVisitor(self._obj, visitor._obj)
         return
 
     def dispose(self):
-        self.ProductNodeGroup_dispose(self.__obj)
+        ProductNodeGroup_dispose(self._obj)
         return
 
     def updateExpression(self, oldExternalName, newExternalName):
-        self.ProductNodeGroup_updateExpression(self.__obj, oldExternalName, newExternalName)
+        ProductNodeGroup_updateExpression(self._obj, oldExternalName, newExternalName)
         return
 
     def getOwner(self):
-        return ProductNode(self.ProductNodeGroup_getOwner(self.__obj))
+        return ProductNode(ProductNodeGroup_getOwner(self._obj))
 
     def getName(self):
-        return self.ProductNodeGroup_getName(self.__obj)
+        return ProductNodeGroup_getName(self._obj)
 
     def setName(self, name):
-        self.ProductNodeGroup_setName(self.__obj, name)
+        ProductNodeGroup_setName(self._obj, name)
         return
 
     def getDescription(self):
-        return self.ProductNodeGroup_getDescription(self.__obj)
+        return ProductNodeGroup_getDescription(self._obj)
 
     def setDescription(self, description):
-        self.ProductNodeGroup_setDescription(self.__obj, description)
+        ProductNodeGroup_setDescription(self._obj, description)
         return
 
     def isModified(self):
-        return self.ProductNodeGroup_isModified(self.__obj)
+        return ProductNodeGroup_isModified(self._obj)
 
     def toString(self):
-        return self.ProductNodeGroup_toString(self.__obj)
+        return ProductNodeGroup_toString(self._obj)
 
     def isValidNodeName(name):
         return ProductNodeGroup_isValidNodeName(name)
 
     def getProduct(self):
-        return Product(self.ProductNodeGroup_getProduct(self.__obj))
+        return Product(ProductNodeGroup_getProduct(self._obj))
 
     def getProductReader(self):
-        return ProductReader(self.ProductNodeGroup_getProductReader(self.__obj))
+        return ProductReader(ProductNodeGroup_getProductReader(self._obj))
 
     def getProductWriter(self):
-        return ProductWriter(self.ProductNodeGroup_getProductWriter(self.__obj))
+        return ProductWriter(ProductNodeGroup_getProductWriter(self._obj))
 
     def getDisplayName(self):
-        return self.ProductNodeGroup_getDisplayName(self.__obj)
+        return ProductNodeGroup_getDisplayName(self._obj)
 
     def getProductRefString(self):
-        return self.ProductNodeGroup_getProductRefString(self.__obj)
+        return ProductNodeGroup_getProductRefString(self._obj)
 
     def getRawStorageSize(self):
-        return self.ProductNodeGroup_getRawStorageSize1(self.__obj)
+        return ProductNodeGroup_getRawStorageSize1(self._obj)
 
     def fireProductNodeChanged(self, propertyName):
-        self.ProductNodeGroup_fireProductNodeChanged1(self.__obj, propertyName)
+        ProductNodeGroup_fireProductNodeChanged1(self._obj, propertyName)
         return
 
     def fireProductNodeChanged(self, propertyName, oldValue, newValue):
-        self.ProductNodeGroup_fireProductNodeChanged2(self.__obj, propertyName, oldValue.__obj, newValue.__obj)
+        ProductNodeGroup_fireProductNodeChanged2(self._obj, propertyName, oldValue._obj, newValue._obj)
         return
 
     def removeFromFile(self, productWriter):
-        self.ProductNodeGroup_removeFromFile(self.__obj, productWriter.__obj)
+        ProductNodeGroup_removeFromFile(self._obj, productWriter._obj)
         return
 
 
 class MapProjection:
-
     def __init__(self, obj):
-        self.__obj = obj
+        self._obj = obj
 
 
 class ProductManager:
-
     def __init__(self, obj):
-        self.__obj = obj
+        self._obj = obj
 
     def newProductManager():
         return ProductManager(ProductManager_newProductManager())
 
     def getProductCount(self):
-        return self.ProductManager_getProductCount(self.__obj)
+        return ProductManager_getProductCount(self._obj)
 
     def getProduct(self, index):
-        return Product(self.ProductManager_getProduct(self.__obj, index))
+        return Product(ProductManager_getProduct(self._obj, index))
 
     def getProductDisplayNames(self):
-        return self.ProductManager_getProductDisplayNames(self.__obj)
+        return ProductManager_getProductDisplayNames(self._obj)
 
     def getProductNames(self):
-        return self.ProductManager_getProductNames(self.__obj)
+        return ProductManager_getProductNames(self._obj)
 
     def getProducts(self):
-        return Product(self.ProductManager_getProducts(self.__obj))
+        return Product(ProductManager_getProducts(self._obj))
 
     def getProductByDisplayName(self, displayName):
-        return Product(self.ProductManager_getProductByDisplayName(self.__obj, displayName))
+        return Product(ProductManager_getProductByDisplayName(self._obj, displayName))
 
     def getProductByRefNo(self, refNo):
-        return Product(self.ProductManager_getProductByRefNo(self.__obj, refNo))
+        return Product(ProductManager_getProductByRefNo(self._obj, refNo))
 
     def getProduct(self, name):
-        return Product(self.ProductManager_getProductByName(self.__obj, name))
+        return Product(ProductManager_getProductByName(self._obj, name))
 
     def getProductIndex(self, product):
-        return self.ProductManager_getProductIndex(self.__obj, product.__obj)
+        return ProductManager_getProductIndex(self._obj, product._obj)
 
     def containsProduct(self, name):
-        return self.ProductManager_containsProduct(self.__obj, name)
+        return ProductManager_containsProduct(self._obj, name)
 
     def contains(self, product):
-        return self.ProductManager_contains(self.__obj, product.__obj)
+        return ProductManager_contains(self._obj, product._obj)
 
     def addProduct(self, product):
-        self.ProductManager_addProduct(self.__obj, product.__obj)
+        ProductManager_addProduct(self._obj, product._obj)
         return
 
     def removeProduct(self, product):
-        return self.ProductManager_removeProduct(self.__obj, product.__obj)
+        return ProductManager_removeProduct(self._obj, product._obj)
 
     def removeAllProducts(self):
-        self.ProductManager_removeAllProducts(self.__obj)
+        ProductManager_removeAllProducts(self._obj)
         return
 
     def addListener(self, listener):
-        return self.ProductManager_addListener(self.__obj, listener.__obj)
+        return ProductManager_addListener(self._obj, listener._obj)
 
     def removeListener(self, listener):
-        return self.ProductManager_removeListener(self.__obj, listener.__obj)
+        return ProductManager_removeListener(self._obj, listener._obj)
 
 
 class FlagCoding:
-
     def __init__(self, obj):
-        self.__obj = obj
+        self._obj = obj
 
     def newFlagCoding(name):
         return FlagCoding(FlagCoding_newFlagCoding(name))
 
     def getFlag(self, name):
-        return MetadataAttribute(self.FlagCoding_getFlag(self.__obj, name))
+        return MetadataAttribute(FlagCoding_getFlag(self._obj, name))
 
     def getFlagNames(self):
-        return self.FlagCoding_getFlagNames(self.__obj)
+        return FlagCoding_getFlagNames(self._obj)
 
     def addFlag(self, name, flagMask, description):
-        return MetadataAttribute(self.FlagCoding_addFlag(self.__obj, name, flagMask, description))
+        return MetadataAttribute(FlagCoding_addFlag(self._obj, name, flagMask, description))
 
     def getFlagMask(self, name):
-        return self.FlagCoding_getFlagMask(self.__obj, name)
+        return FlagCoding_getFlagMask(self._obj, name)
 
     def acceptVisitor(self, visitor):
-        self.FlagCoding_acceptVisitor(self.__obj, visitor.__obj)
+        FlagCoding_acceptVisitor(self._obj, visitor._obj)
         return
 
     def addElement(self, element):
-        self.FlagCoding_addElement(self.__obj, element.__obj)
+        FlagCoding_addElement(self._obj, element._obj)
         return
 
     def addAttribute(self, attribute):
-        self.FlagCoding_addAttribute(self.__obj, attribute.__obj)
+        FlagCoding_addAttribute(self._obj, attribute._obj)
         return
 
     def addSample(self, name, value, description):
-        return MetadataAttribute(self.FlagCoding_addSample(self.__obj, name, value, description))
+        return MetadataAttribute(FlagCoding_addSample(self._obj, name, value, description))
 
     def getSampleCount(self):
-        return self.FlagCoding_getSampleCount(self.__obj)
+        return FlagCoding_getSampleCount(self._obj)
 
     def getSampleName(self, index):
-        return self.FlagCoding_getSampleName(self.__obj, index)
+        return FlagCoding_getSampleName(self._obj, index)
 
     def getSampleValue(self, index):
-        return self.FlagCoding_getSampleValue(self.__obj, index)
+        return FlagCoding_getSampleValue(self._obj, index)
 
     def getElementGroup(self):
-        return ProductNodeGroup(self.FlagCoding_getElementGroup(self.__obj))
+        return ProductNodeGroup(FlagCoding_getElementGroup(self._obj))
 
     def getParentElement(self):
-        return MetadataElement(self.FlagCoding_getParentElement(self.__obj))
+        return MetadataElement(FlagCoding_getParentElement(self._obj))
 
     def addElementAt(self, element, index):
-        self.FlagCoding_addElementAt(self.__obj, element.__obj, index)
+        FlagCoding_addElementAt(self._obj, element._obj, index)
         return
 
     def removeElement(self, element):
-        return self.FlagCoding_removeElement(self.__obj, element.__obj)
+        return FlagCoding_removeElement(self._obj, element._obj)
 
     def getNumElements(self):
-        return self.FlagCoding_getNumElements(self.__obj)
+        return FlagCoding_getNumElements(self._obj)
 
     def getElementAt(self, index):
-        return MetadataElement(self.FlagCoding_getElementAt(self.__obj, index))
+        return MetadataElement(FlagCoding_getElementAt(self._obj, index))
 
     def getElementNames(self):
-        return self.FlagCoding_getElementNames(self.__obj)
+        return FlagCoding_getElementNames(self._obj)
 
     def getElements(self):
-        return MetadataElement(self.FlagCoding_getElements(self.__obj))
+        return MetadataElement(FlagCoding_getElements(self._obj))
 
     def getElement(self, name):
-        return MetadataElement(self.FlagCoding_getElement(self.__obj, name))
+        return MetadataElement(FlagCoding_getElement(self._obj, name))
 
     def containsElement(self, name):
-        return self.FlagCoding_containsElement(self.__obj, name)
+        return FlagCoding_containsElement(self._obj, name)
 
     def getElementIndex(self, element):
-        return self.FlagCoding_getElementIndex(self.__obj, element.__obj)
+        return FlagCoding_getElementIndex(self._obj, element._obj)
 
     def removeAttribute(self, attribute):
-        return self.FlagCoding_removeAttribute(self.__obj, attribute.__obj)
+        return FlagCoding_removeAttribute(self._obj, attribute._obj)
 
     def getNumAttributes(self):
-        return self.FlagCoding_getNumAttributes(self.__obj)
+        return FlagCoding_getNumAttributes(self._obj)
 
     def getAttributeAt(self, index):
-        return MetadataAttribute(self.FlagCoding_getAttributeAt(self.__obj, index))
+        return MetadataAttribute(FlagCoding_getAttributeAt(self._obj, index))
 
     def getAttributeNames(self):
-        return self.FlagCoding_getAttributeNames(self.__obj)
+        return FlagCoding_getAttributeNames(self._obj)
 
     def getAttributes(self):
-        return MetadataAttribute(self.FlagCoding_getAttributes(self.__obj))
+        return MetadataAttribute(FlagCoding_getAttributes(self._obj))
 
     def getAttribute(self, name):
-        return MetadataAttribute(self.FlagCoding_getAttribute(self.__obj, name))
+        return MetadataAttribute(FlagCoding_getAttribute(self._obj, name))
 
     def containsAttribute(self, name):
-        return self.FlagCoding_containsAttribute(self.__obj, name)
+        return FlagCoding_containsAttribute(self._obj, name)
 
     def getAttributeIndex(self, attribute):
-        return self.FlagCoding_getAttributeIndex(self.__obj, attribute.__obj)
+        return FlagCoding_getAttributeIndex(self._obj, attribute._obj)
 
     def getAttributeDouble(self, name, defaultValue):
-        return self.FlagCoding_getAttributeDouble(self.__obj, name, defaultValue)
+        return FlagCoding_getAttributeDouble(self._obj, name, defaultValue)
 
     def getAttributeUTC(self, name, defaultValue):
-        return ProductData_UTC(self.FlagCoding_getAttributeUTC(self.__obj, name, defaultValue.__obj))
+        return ProductData_UTC(FlagCoding_getAttributeUTC(self._obj, name, defaultValue._obj))
 
     def getAttributeInt(self, name, defaultValue):
-        return self.FlagCoding_getAttributeInt(self.__obj, name, defaultValue)
+        return FlagCoding_getAttributeInt(self._obj, name, defaultValue)
 
     def setAttributeInt(self, name, value):
-        self.FlagCoding_setAttributeInt(self.__obj, name, value)
+        FlagCoding_setAttributeInt(self._obj, name, value)
         return
 
     def setAttributeDouble(self, name, value):
-        self.FlagCoding_setAttributeDouble(self.__obj, name, value)
+        FlagCoding_setAttributeDouble(self._obj, name, value)
         return
 
     def setAttributeUTC(self, name, value):
-        self.FlagCoding_setAttributeUTC(self.__obj, name, value.__obj)
+        FlagCoding_setAttributeUTC(self._obj, name, value._obj)
         return
 
     def getAttributeString(self, name, defaultValue):
-        return self.FlagCoding_getAttributeString(self.__obj, name, defaultValue)
+        return FlagCoding_getAttributeString(self._obj, name, defaultValue)
 
     def setAttributeString(self, name, value):
-        self.FlagCoding_setAttributeString(self.__obj, name, value)
+        FlagCoding_setAttributeString(self._obj, name, value)
         return
 
     def setModified(self, modified):
-        self.FlagCoding_setModified(self.__obj, modified)
+        FlagCoding_setModified(self._obj, modified)
         return
 
     def createDeepClone(self):
-        return MetadataElement(self.FlagCoding_createDeepClone(self.__obj))
+        return MetadataElement(FlagCoding_createDeepClone(self._obj))
 
     def dispose(self):
-        self.FlagCoding_dispose(self.__obj)
+        FlagCoding_dispose(self._obj)
         return
 
     def getOwner(self):
-        return ProductNode(self.FlagCoding_getOwner(self.__obj))
+        return ProductNode(FlagCoding_getOwner(self._obj))
 
     def getName(self):
-        return self.FlagCoding_getName(self.__obj)
+        return FlagCoding_getName(self._obj)
 
     def setName(self, name):
-        self.FlagCoding_setName(self.__obj, name)
+        FlagCoding_setName(self._obj, name)
         return
 
     def getDescription(self):
-        return self.FlagCoding_getDescription(self.__obj)
+        return FlagCoding_getDescription(self._obj)
 
     def setDescription(self, description):
-        self.FlagCoding_setDescription(self.__obj, description)
+        FlagCoding_setDescription(self._obj, description)
         return
 
     def isModified(self):
-        return self.FlagCoding_isModified(self.__obj)
+        return FlagCoding_isModified(self._obj)
 
     def toString(self):
-        return self.FlagCoding_toString(self.__obj)
+        return FlagCoding_toString(self._obj)
 
     def isValidNodeName(name):
         return FlagCoding_isValidNodeName(name)
 
     def getProduct(self):
-        return Product(self.FlagCoding_getProduct(self.__obj))
+        return Product(FlagCoding_getProduct(self._obj))
 
     def getProductReader(self):
-        return ProductReader(self.FlagCoding_getProductReader(self.__obj))
+        return ProductReader(FlagCoding_getProductReader(self._obj))
 
     def getProductWriter(self):
-        return ProductWriter(self.FlagCoding_getProductWriter(self.__obj))
+        return ProductWriter(FlagCoding_getProductWriter(self._obj))
 
     def getDisplayName(self):
-        return self.FlagCoding_getDisplayName(self.__obj)
+        return FlagCoding_getDisplayName(self._obj)
 
     def getProductRefString(self):
-        return self.FlagCoding_getProductRefString(self.__obj)
+        return FlagCoding_getProductRefString(self._obj)
 
     def updateExpression(self, oldExternalName, newExternalName):
-        self.FlagCoding_updateExpression(self.__obj, oldExternalName, newExternalName)
+        FlagCoding_updateExpression(self._obj, oldExternalName, newExternalName)
         return
 
     def removeFromFile(self, productWriter):
-        self.FlagCoding_removeFromFile(self.__obj, productWriter.__obj)
+        FlagCoding_removeFromFile(self._obj, productWriter._obj)
         return
 
 
 class IndexColorModel:
-
     def __init__(self, obj):
-        self.__obj = obj
+        self._obj = obj
 
 
 class ImageInfo_HistogramMatching:
-
     def __init__(self, obj):
-        self.__obj = obj
+        self._obj = obj
 
 
 class ProductNodeListener:
-
     def __init__(self, obj):
-        self.__obj = obj
+        self._obj = obj
 
 
 class Map:
-
     def __init__(self, obj):
-        self.__obj = obj
+        self._obj = obj
 
 
 class ProductUtils:
-
     def __init__(self, obj):
-        self.__obj = obj
+        self._obj = obj
 
     def newProductUtils():
         return ProductUtils(ProductUtils_newProductUtils())
 
     def createImageInfo(rasters, assignMissingImageInfos, pm):
-        return ImageInfo(ProductUtils_createImageInfo(rasters.__obj, assignMissingImageInfos, pm.__obj))
+        return ImageInfo(ProductUtils_createImageInfo(rasters._obj, assignMissingImageInfos, pm._obj))
 
     def createRgbImage(rasters, imageInfo, pm):
-        return BufferedImage(ProductUtils_createRgbImage(rasters.__obj, imageInfo.__obj, pm.__obj))
+        return BufferedImage(ProductUtils_createRgbImage(rasters._obj, imageInfo._obj, pm._obj))
 
     def createColorIndexedImage(rasterDataNode, pm):
-        return BufferedImage(ProductUtils_createColorIndexedImage(rasterDataNode.__obj, pm.__obj))
+        return BufferedImage(ProductUtils_createColorIndexedImage(rasterDataNode._obj, pm._obj))
 
     def createSuitableMapInfo(product, rect, mapProjection):
-        return MapInfo(ProductUtils_createSuitableMapInfo1(product.__obj, rect.__obj, mapProjection.__obj))
+        return MapInfo(ProductUtils_createSuitableMapInfo1(product._obj, rect._obj, mapProjection._obj))
 
     def createSuitableMapInfo(product, mapProjection, orientation, noDataValue):
-        return MapInfo(ProductUtils_createSuitableMapInfo2(product.__obj, mapProjection.__obj, orientation, noDataValue))
+        return MapInfo(ProductUtils_createSuitableMapInfo2(product._obj, mapProjection._obj, orientation, noDataValue))
 
     def getOutputRasterSize(product, rect, mapTransform, pixelSizeX, pixelSizeY):
-        return Dimension(ProductUtils_getOutputRasterSize(product.__obj, rect.__obj, mapTransform.__obj, pixelSizeX, pixelSizeY))
+        return Dimension(ProductUtils_getOutputRasterSize(product._obj, rect._obj, mapTransform._obj, pixelSizeX, pixelSizeY))
 
     def createMapEnvelope(product, rect, mapTransform):
-        return Point2D(ProductUtils_createMapEnvelope2(product.__obj, rect.__obj, mapTransform.__obj))
+        return Point2D(ProductUtils_createMapEnvelope2(product._obj, rect._obj, mapTransform._obj))
 
     def createMapEnvelope(product, rect, step, mapTransform):
-        return Point2D(ProductUtils_createMapEnvelope1(product.__obj, rect.__obj, step, mapTransform.__obj))
+        return Point2D(ProductUtils_createMapEnvelope1(product._obj, rect._obj, step, mapTransform._obj))
 
     def getMinMax(boundary):
-        return Point2D(ProductUtils_getMinMax(boundary.__obj))
+        return Point2D(ProductUtils_getMinMax(boundary._obj))
 
     def createMapBoundary(product, rect, step, mapTransform):
-        return Point2D(ProductUtils_createMapBoundary(product.__obj, rect.__obj, step, mapTransform.__obj))
+        return Point2D(ProductUtils_createMapBoundary(product._obj, rect._obj, step, mapTransform._obj))
 
     def createGeoBoundary(product, step):
-        return GeoPos(ProductUtils_createGeoBoundary1(product.__obj, step))
+        return GeoPos(ProductUtils_createGeoBoundary1(product._obj, step))
 
     def createGeoBoundary(product, region, step):
-        return GeoPos(ProductUtils_createGeoBoundary2(product.__obj, region.__obj, step))
+        return GeoPos(ProductUtils_createGeoBoundary2(product._obj, region._obj, step))
 
     def createGeoBoundary(product, region, step, usePixelCenter):
-        return GeoPos(ProductUtils_createGeoBoundary3(product.__obj, region.__obj, step, usePixelCenter))
+        return GeoPos(ProductUtils_createGeoBoundary3(product._obj, region._obj, step, usePixelCenter))
 
     def createGeoBoundary(raster, region, step):
-        return GeoPos(ProductUtils_createGeoBoundary4(raster.__obj, region.__obj, step))
+        return GeoPos(ProductUtils_createGeoBoundary4(raster._obj, region._obj, step))
 
     def createGeoBoundaryPaths(product):
-        return GeneralPath(ProductUtils_createGeoBoundaryPaths1(product.__obj))
+        return GeneralPath(ProductUtils_createGeoBoundaryPaths1(product._obj))
 
     def createGeoBoundaryPaths(product, region, step):
-        return GeneralPath(ProductUtils_createGeoBoundaryPaths2(product.__obj, region.__obj, step))
+        return GeneralPath(ProductUtils_createGeoBoundaryPaths2(product._obj, region._obj, step))
 
     def createGeoBoundaryPaths(product, region, step, usePixelCenter):
-        return GeneralPath(ProductUtils_createGeoBoundaryPaths3(product.__obj, region.__obj, step, usePixelCenter))
+        return GeneralPath(ProductUtils_createGeoBoundaryPaths3(product._obj, region._obj, step, usePixelCenter))
 
     def createPixelBoundary(product, rect, step):
-        return PixelPos(ProductUtils_createPixelBoundary1(product.__obj, rect.__obj, step))
+        return PixelPos(ProductUtils_createPixelBoundary1(product._obj, rect._obj, step))
 
     def createPixelBoundary(product, rect, step, usePixelCenter):
-        return PixelPos(ProductUtils_createPixelBoundary2(product.__obj, rect.__obj, step, usePixelCenter))
+        return PixelPos(ProductUtils_createPixelBoundary2(product._obj, rect._obj, step, usePixelCenter))
 
     def createPixelBoundary(raster, rect, step):
-        return PixelPos(ProductUtils_createPixelBoundary3(raster.__obj, rect.__obj, step))
+        return PixelPos(ProductUtils_createPixelBoundary3(raster._obj, rect._obj, step))
 
     def createRectBoundary(rect, step):
-        return PixelPos(ProductUtils_createRectBoundary1(rect.__obj, step))
+        return PixelPos(ProductUtils_createRectBoundary1(rect._obj, step))
 
     def createRectBoundary(rect, step, usePixelCenter):
-        return PixelPos(ProductUtils_createRectBoundary2(rect.__obj, step, usePixelCenter))
+        return PixelPos(ProductUtils_createRectBoundary2(rect._obj, step, usePixelCenter))
 
     def copyFlagCodings(source, target):
-        ProductUtils_copyFlagCodings(source.__obj, target.__obj)
+        ProductUtils_copyFlagCodings(source._obj, target._obj)
         return
 
     def copyFlagCoding(sourceFlagCoding, target):
-        return FlagCoding(ProductUtils_copyFlagCoding(sourceFlagCoding.__obj, target.__obj))
+        return FlagCoding(ProductUtils_copyFlagCoding(sourceFlagCoding._obj, target._obj))
 
     def copyIndexCoding(sourceIndexCoding, target):
-        return IndexCoding(ProductUtils_copyIndexCoding(sourceIndexCoding.__obj, target.__obj))
+        return IndexCoding(ProductUtils_copyIndexCoding(sourceIndexCoding._obj, target._obj))
 
     def copyMasks(sourceProduct, targetProduct):
-        ProductUtils_copyMasks(sourceProduct.__obj, targetProduct.__obj)
+        ProductUtils_copyMasks(sourceProduct._obj, targetProduct._obj)
         return
 
     def copyOverlayMasks(sourceProduct, targetProduct):
-        ProductUtils_copyOverlayMasks(sourceProduct.__obj, targetProduct.__obj)
+        ProductUtils_copyOverlayMasks(sourceProduct._obj, targetProduct._obj)
         return
 
     def copyFlagBands(sourceProduct, targetProduct, copySourceImage):
-        ProductUtils_copyFlagBands(sourceProduct.__obj, targetProduct.__obj, copySourceImage)
+        ProductUtils_copyFlagBands(sourceProduct._obj, targetProduct._obj, copySourceImage)
         return
 
     def copyTiePointGrid(gridName, sourceProduct, targetProduct):
-        return TiePointGrid(ProductUtils_copyTiePointGrid(gridName, sourceProduct.__obj, targetProduct.__obj))
+        return TiePointGrid(ProductUtils_copyTiePointGrid(gridName, sourceProduct._obj, targetProduct._obj))
 
     def copyBand(sourceBandName, sourceProduct, targetProduct, copySourceImage):
-        return Band(ProductUtils_copyBand2(sourceBandName, sourceProduct.__obj, targetProduct.__obj, copySourceImage))
+        return Band(ProductUtils_copyBand2(sourceBandName, sourceProduct._obj, targetProduct._obj, copySourceImage))
 
     def copyBand(sourceBandName, sourceProduct, targetBandName, targetProduct, copySourceImage):
-        return Band(ProductUtils_copyBand1(sourceBandName, sourceProduct.__obj, targetBandName, targetProduct.__obj, copySourceImage))
+        return Band(ProductUtils_copyBand1(sourceBandName, sourceProduct._obj, targetBandName, targetProduct._obj, copySourceImage))
 
     def copyRasterDataNodeProperties(sourceRaster, targetRaster):
-        ProductUtils_copyRasterDataNodeProperties(sourceRaster.__obj, targetRaster.__obj)
+        ProductUtils_copyRasterDataNodeProperties(sourceRaster._obj, targetRaster._obj)
         return
 
     def copySpectralBandProperties(sourceBand, targetBand):
-        ProductUtils_copySpectralBandProperties(sourceBand.__obj, targetBand.__obj)
+        ProductUtils_copySpectralBandProperties(sourceBand._obj, targetBand._obj)
         return
 
     def copyGeoCoding(sourceProduct, targetProduct):
-        ProductUtils_copyGeoCoding(sourceProduct.__obj, targetProduct.__obj)
+        ProductUtils_copyGeoCoding(sourceProduct._obj, targetProduct._obj)
         return
 
     def copyTiePointGrids(sourceProduct, targetProduct):
-        ProductUtils_copyTiePointGrids(sourceProduct.__obj, targetProduct.__obj)
+        ProductUtils_copyTiePointGrids(sourceProduct._obj, targetProduct._obj)
         return
 
     def copyVectorData(sourceProduct, targetProduct):
-        ProductUtils_copyVectorData(sourceProduct.__obj, targetProduct.__obj)
+        ProductUtils_copyVectorData(sourceProduct._obj, targetProduct._obj)
         return
 
     def canGetPixelPos(product):
-        return ProductUtils_canGetPixelPos1(product.__obj)
+        return ProductUtils_canGetPixelPos1(product._obj)
 
     def canGetPixelPos(raster):
-        return ProductUtils_canGetPixelPos2(raster.__obj)
+        return ProductUtils_canGetPixelPos2(raster._obj)
 
     def createDensityPlotImage(raster1, sampleMin1, sampleMax1, raster2, sampleMin2, sampleMax2, roiMask, width, height, background, image, pm):
-        return BufferedImage(ProductUtils_createDensityPlotImage(raster1.__obj, sampleMin1, sampleMax1, raster2.__obj, sampleMin2, sampleMax2, roiMask.__obj, width, height, background.__obj, image.__obj, pm.__obj))
+        return BufferedImage(ProductUtils_createDensityPlotImage(raster1._obj, sampleMin1, sampleMax1, raster2._obj, sampleMin2, sampleMax2, roiMask._obj, width, height, background._obj, image._obj, pm._obj))
 
     def overlayMasks(raster, overlayBIm, pm):
-        return BufferedImage(ProductUtils_overlayMasks(raster.__obj, overlayBIm.__obj, pm.__obj))
+        return BufferedImage(ProductUtils_overlayMasks(raster._obj, overlayBIm._obj, pm._obj))
 
     def getCenterGeoPos(product):
-        return GeoPos(ProductUtils_getCenterGeoPos(product.__obj))
+        return GeoPos(ProductUtils_getCenterGeoPos(product._obj))
 
     def normalizeGeoPolygon(polygon):
-        return ProductUtils_normalizeGeoPolygon(polygon.__obj)
+        return ProductUtils_normalizeGeoPolygon(polygon._obj)
 
     def normalizeGeoPolygon_old(polygon):
-        return ProductUtils_normalizeGeoPolygon_old(polygon.__obj)
+        return ProductUtils_normalizeGeoPolygon_old(polygon._obj)
 
     def denormalizeGeoPolygon(polygon):
-        ProductUtils_denormalizeGeoPolygon(polygon.__obj)
+        ProductUtils_denormalizeGeoPolygon(polygon._obj)
         return
 
     def denormalizeGeoPos(geoPos):
-        ProductUtils_denormalizeGeoPos(geoPos.__obj)
+        ProductUtils_denormalizeGeoPos(geoPos._obj)
         return
 
     def denormalizeGeoPos_old(geoPos):
-        ProductUtils_denormalizeGeoPos_old(geoPos.__obj)
+        ProductUtils_denormalizeGeoPos_old(geoPos._obj)
         return
 
     def getRotationDirection(polygon):
-        return ProductUtils_getRotationDirection(polygon.__obj)
+        return ProductUtils_getRotationDirection(polygon._obj)
 
     def getAngleSum(polygon):
-        return ProductUtils_getAngleSum(polygon.__obj)
+        return ProductUtils_getAngleSum(polygon._obj)
 
     def convertToPixelPath(geoPath, geoCoding):
-        return GeneralPath(ProductUtils_convertToPixelPath(geoPath.__obj, geoCoding.__obj))
+        return GeneralPath(ProductUtils_convertToPixelPath(geoPath._obj, geoCoding._obj))
 
     def convertToGeoPath(shape, geoCoding):
-        return GeneralPath(ProductUtils_convertToGeoPath(shape.__obj, geoCoding.__obj))
+        return GeneralPath(ProductUtils_convertToGeoPath(shape._obj, geoCoding._obj))
 
     def copyMetadata(source, target):
-        ProductUtils_copyMetadata2(source.__obj, target.__obj)
+        ProductUtils_copyMetadata2(source._obj, target._obj)
         return
 
     def copyMetadata(source, target):
-        ProductUtils_copyMetadata1(source.__obj, target.__obj)
+        ProductUtils_copyMetadata1(source._obj, target._obj)
         return
 
     def copyPreferredTileSize(sourceProduct, targetProduct):
-        ProductUtils_copyPreferredTileSize(sourceProduct.__obj, targetProduct.__obj)
+        ProductUtils_copyPreferredTileSize(sourceProduct._obj, targetProduct._obj)
         return
 
     def createGeoTIFFMetadata(product):
-        return GeoTIFFMetadata(ProductUtils_createGeoTIFFMetadata2(product.__obj))
+        return GeoTIFFMetadata(ProductUtils_createGeoTIFFMetadata2(product._obj))
 
     def createGeoTIFFMetadata(geoCoding, width, height):
-        return GeoTIFFMetadata(ProductUtils_createGeoTIFFMetadata1(geoCoding.__obj, width, height))
+        return GeoTIFFMetadata(ProductUtils_createGeoTIFFMetadata1(geoCoding._obj, width, height))
 
     def areaToPath(negativeArea, deltaX):
-        return GeneralPath(ProductUtils_areaToPath(negativeArea.__obj, deltaX))
+        return GeneralPath(ProductUtils_areaToPath(negativeArea._obj, deltaX))
 
     def addElementToHistory(product, elem):
-        ProductUtils_addElementToHistory(product.__obj, elem.__obj)
+        ProductUtils_addElementToHistory(product._obj, elem._obj)
         return
 
     def removeInvalidExpressions(product):
-        return ProductUtils_removeInvalidExpressions(product.__obj)
+        return ProductUtils_removeInvalidExpressions(product._obj)
 
     def findSuitableQuicklookBandName(product):
-        return ProductUtils_findSuitableQuicklookBandName(product.__obj)
+        return ProductUtils_findSuitableQuicklookBandName(product._obj)
 
     def computeSourcePixelCoordinates(sourceGeoCoding, sourceWidth, sourceHeight, destGeoCoding, destArea):
-        return PixelPos(ProductUtils_computeSourcePixelCoordinates(sourceGeoCoding.__obj, sourceWidth, sourceHeight, destGeoCoding.__obj, destArea.__obj))
+        return PixelPos(ProductUtils_computeSourcePixelCoordinates(sourceGeoCoding._obj, sourceWidth, sourceHeight, destGeoCoding._obj, destArea._obj))
 
     def computeMinMaxY(pixelPositions):
-        return ProductUtils_computeMinMaxY(pixelPositions.__obj)
+        return ProductUtils_computeMinMaxY(pixelPositions._obj)
 
     def copyBandsForGeomTransform(sourceProduct, targetProduct, defaultNoDataValue, addedRasterDataNodes):
-        ProductUtils_copyBandsForGeomTransform1(sourceProduct.__obj, targetProduct.__obj, defaultNoDataValue, addedRasterDataNodes.__obj)
+        ProductUtils_copyBandsForGeomTransform1(sourceProduct._obj, targetProduct._obj, defaultNoDataValue, addedRasterDataNodes._obj)
         return
 
     def copyBandsForGeomTransform(sourceProduct, targetProduct, includeTiePointGrids, defaultNoDataValue, targetToSourceMap):
-        ProductUtils_copyBandsForGeomTransform2(sourceProduct.__obj, targetProduct.__obj, includeTiePointGrids, defaultNoDataValue, targetToSourceMap.__obj)
+        ProductUtils_copyBandsForGeomTransform2(sourceProduct._obj, targetProduct._obj, includeTiePointGrids, defaultNoDataValue, targetToSourceMap._obj)
         return
 
     def getScanLineTime(product, y):
-        return ProductData_UTC(ProductUtils_getScanLineTime(product.__obj, y))
+        return ProductData_UTC(ProductUtils_getScanLineTime(product._obj, y))
 
     def getGeophysicalSampleDouble(band, pixelX, pixelY, level):
-        return ProductUtils_getGeophysicalSampleDouble(band.__obj, pixelX, pixelY, level)
+        return ProductUtils_getGeophysicalSampleDouble(band._obj, pixelX, pixelY, level)
 
     def getGeophysicalSampleLong(band, pixelX, pixelY, level):
-        return ProductUtils_getGeophysicalSampleLong(band.__obj, pixelX, pixelY, level)
+        return ProductUtils_getGeophysicalSampleLong(band._obj, pixelX, pixelY, level)
 
 
 class MetadataElement:
-
     def __init__(self, obj):
-        self.__obj = obj
+        self._obj = obj
 
     def newMetadataElement(name):
         return MetadataElement(MetadataElement_newMetadataElement(name))
 
     def getElementGroup(self):
-        return ProductNodeGroup(self.MetadataElement_getElementGroup(self.__obj))
+        return ProductNodeGroup(MetadataElement_getElementGroup(self._obj))
 
     def getParentElement(self):
-        return MetadataElement(self.MetadataElement_getParentElement(self.__obj))
+        return MetadataElement(MetadataElement_getParentElement(self._obj))
 
     def addElement(self, element):
-        self.MetadataElement_addElement(self.__obj, element.__obj)
+        MetadataElement_addElement(self._obj, element._obj)
         return
 
     def addElementAt(self, element, index):
-        self.MetadataElement_addElementAt(self.__obj, element.__obj, index)
+        MetadataElement_addElementAt(self._obj, element._obj, index)
         return
 
     def removeElement(self, element):
-        return self.MetadataElement_removeElement(self.__obj, element.__obj)
+        return MetadataElement_removeElement(self._obj, element._obj)
 
     def getNumElements(self):
-        return self.MetadataElement_getNumElements(self.__obj)
+        return MetadataElement_getNumElements(self._obj)
 
     def getElementAt(self, index):
-        return MetadataElement(self.MetadataElement_getElementAt(self.__obj, index))
+        return MetadataElement(MetadataElement_getElementAt(self._obj, index))
 
     def getElementNames(self):
-        return self.MetadataElement_getElementNames(self.__obj)
+        return MetadataElement_getElementNames(self._obj)
 
     def getElements(self):
-        return MetadataElement(self.MetadataElement_getElements(self.__obj))
+        return MetadataElement(MetadataElement_getElements(self._obj))
 
     def getElement(self, name):
-        return MetadataElement(self.MetadataElement_getElement(self.__obj, name))
+        return MetadataElement(MetadataElement_getElement(self._obj, name))
 
     def containsElement(self, name):
-        return self.MetadataElement_containsElement(self.__obj, name)
+        return MetadataElement_containsElement(self._obj, name)
 
     def getElementIndex(self, element):
-        return self.MetadataElement_getElementIndex(self.__obj, element.__obj)
+        return MetadataElement_getElementIndex(self._obj, element._obj)
 
     def addAttribute(self, attribute):
-        self.MetadataElement_addAttribute(self.__obj, attribute.__obj)
+        MetadataElement_addAttribute(self._obj, attribute._obj)
         return
 
     def removeAttribute(self, attribute):
-        return self.MetadataElement_removeAttribute(self.__obj, attribute.__obj)
+        return MetadataElement_removeAttribute(self._obj, attribute._obj)
 
     def getNumAttributes(self):
-        return self.MetadataElement_getNumAttributes(self.__obj)
+        return MetadataElement_getNumAttributes(self._obj)
 
     def getAttributeAt(self, index):
-        return MetadataAttribute(self.MetadataElement_getAttributeAt(self.__obj, index))
+        return MetadataAttribute(MetadataElement_getAttributeAt(self._obj, index))
 
     def getAttributeNames(self):
-        return self.MetadataElement_getAttributeNames(self.__obj)
+        return MetadataElement_getAttributeNames(self._obj)
 
     def getAttributes(self):
-        return MetadataAttribute(self.MetadataElement_getAttributes(self.__obj))
+        return MetadataAttribute(MetadataElement_getAttributes(self._obj))
 
     def getAttribute(self, name):
-        return MetadataAttribute(self.MetadataElement_getAttribute(self.__obj, name))
+        return MetadataAttribute(MetadataElement_getAttribute(self._obj, name))
 
     def containsAttribute(self, name):
-        return self.MetadataElement_containsAttribute(self.__obj, name)
+        return MetadataElement_containsAttribute(self._obj, name)
 
     def getAttributeIndex(self, attribute):
-        return self.MetadataElement_getAttributeIndex(self.__obj, attribute.__obj)
+        return MetadataElement_getAttributeIndex(self._obj, attribute._obj)
 
     def getAttributeDouble(self, name, defaultValue):
-        return self.MetadataElement_getAttributeDouble(self.__obj, name, defaultValue)
+        return MetadataElement_getAttributeDouble(self._obj, name, defaultValue)
 
     def getAttributeUTC(self, name, defaultValue):
-        return ProductData_UTC(self.MetadataElement_getAttributeUTC(self.__obj, name, defaultValue.__obj))
+        return ProductData_UTC(MetadataElement_getAttributeUTC(self._obj, name, defaultValue._obj))
 
     def getAttributeInt(self, name, defaultValue):
-        return self.MetadataElement_getAttributeInt(self.__obj, name, defaultValue)
+        return MetadataElement_getAttributeInt(self._obj, name, defaultValue)
 
     def setAttributeInt(self, name, value):
-        self.MetadataElement_setAttributeInt(self.__obj, name, value)
+        MetadataElement_setAttributeInt(self._obj, name, value)
         return
 
     def setAttributeDouble(self, name, value):
-        self.MetadataElement_setAttributeDouble(self.__obj, name, value)
+        MetadataElement_setAttributeDouble(self._obj, name, value)
         return
 
     def setAttributeUTC(self, name, value):
-        self.MetadataElement_setAttributeUTC(self.__obj, name, value.__obj)
+        MetadataElement_setAttributeUTC(self._obj, name, value._obj)
         return
 
     def getAttributeString(self, name, defaultValue):
-        return self.MetadataElement_getAttributeString(self.__obj, name, defaultValue)
+        return MetadataElement_getAttributeString(self._obj, name, defaultValue)
 
     def setAttributeString(self, name, value):
-        self.MetadataElement_setAttributeString(self.__obj, name, value)
+        MetadataElement_setAttributeString(self._obj, name, value)
         return
 
     def setModified(self, modified):
-        self.MetadataElement_setModified(self.__obj, modified)
+        MetadataElement_setModified(self._obj, modified)
         return
 
     def acceptVisitor(self, visitor):
-        self.MetadataElement_acceptVisitor(self.__obj, visitor.__obj)
+        MetadataElement_acceptVisitor(self._obj, visitor._obj)
         return
 
     def createDeepClone(self):
-        return MetadataElement(self.MetadataElement_createDeepClone(self.__obj))
+        return MetadataElement(MetadataElement_createDeepClone(self._obj))
 
     def dispose(self):
-        self.MetadataElement_dispose(self.__obj)
+        MetadataElement_dispose(self._obj)
         return
 
     def getOwner(self):
-        return ProductNode(self.MetadataElement_getOwner(self.__obj))
+        return ProductNode(MetadataElement_getOwner(self._obj))
 
     def getName(self):
-        return self.MetadataElement_getName(self.__obj)
+        return MetadataElement_getName(self._obj)
 
     def setName(self, name):
-        self.MetadataElement_setName(self.__obj, name)
+        MetadataElement_setName(self._obj, name)
         return
 
     def getDescription(self):
-        return self.MetadataElement_getDescription(self.__obj)
+        return MetadataElement_getDescription(self._obj)
 
     def setDescription(self, description):
-        self.MetadataElement_setDescription(self.__obj, description)
+        MetadataElement_setDescription(self._obj, description)
         return
 
     def isModified(self):
-        return self.MetadataElement_isModified(self.__obj)
+        return MetadataElement_isModified(self._obj)
 
     def toString(self):
-        return self.MetadataElement_toString(self.__obj)
+        return MetadataElement_toString(self._obj)
 
     def isValidNodeName(name):
         return MetadataElement_isValidNodeName(name)
 
     def getProduct(self):
-        return Product(self.MetadataElement_getProduct(self.__obj))
+        return Product(MetadataElement_getProduct(self._obj))
 
     def getProductReader(self):
-        return ProductReader(self.MetadataElement_getProductReader(self.__obj))
+        return ProductReader(MetadataElement_getProductReader(self._obj))
 
     def getProductWriter(self):
-        return ProductWriter(self.MetadataElement_getProductWriter(self.__obj))
+        return ProductWriter(MetadataElement_getProductWriter(self._obj))
 
     def getDisplayName(self):
-        return self.MetadataElement_getDisplayName(self.__obj)
+        return MetadataElement_getDisplayName(self._obj)
 
     def getProductRefString(self):
-        return self.MetadataElement_getProductRefString(self.__obj)
+        return MetadataElement_getProductRefString(self._obj)
 
     def updateExpression(self, oldExternalName, newExternalName):
-        self.MetadataElement_updateExpression(self.__obj, oldExternalName, newExternalName)
+        MetadataElement_updateExpression(self._obj, oldExternalName, newExternalName)
         return
 
     def removeFromFile(self, productWriter):
-        self.MetadataElement_removeFromFile(self.__obj, productWriter.__obj)
+        MetadataElement_removeFromFile(self._obj, productWriter._obj)
         return
 
 
 class Pointing:
-
     def __init__(self, obj):
-        self.__obj = obj
+        self._obj = obj
 
 
 class Color:
-
     def __init__(self, obj):
-        self.__obj = obj
+        self._obj = obj
 
 
 class PlacemarkDescriptor:
-
     def __init__(self, obj):
-        self.__obj = obj
+        self._obj = obj
 
 
 class PointingFactory:
-
     def __init__(self, obj):
-        self.__obj = obj
+        self._obj = obj
 
 
 class TransectProfileData:
-
     def __init__(self, obj):
-        self.__obj = obj
+        self._obj = obj
 
 
 class PlacemarkGroup:
-
     def __init__(self, obj):
-        self.__obj = obj
+        self._obj = obj
 
     def getVectorDataNode(self):
-        return VectorDataNode(self.PlacemarkGroup_getVectorDataNode(self.__obj))
+        return VectorDataNode(PlacemarkGroup_getVectorDataNode(self._obj))
 
     def getPlacemark(self, feature):
-        return Placemark(self.PlacemarkGroup_getPlacemark(self.__obj, feature.__obj))
+        return Placemark(PlacemarkGroup_getPlacemark(self._obj, feature._obj))
 
     def add(self, placemark):
-        return self.PlacemarkGroup_add4(self.__obj, placemark.__obj)
+        return PlacemarkGroup_add4(self._obj, placemark._obj)
 
     def add(self, index, placemark):
-        self.PlacemarkGroup_add2(self.__obj, index, placemark.__obj)
+        PlacemarkGroup_add2(self._obj, index, placemark._obj)
         return
 
     def remove(self, placemark):
-        return self.PlacemarkGroup_remove2(self.__obj, placemark.__obj)
+        return PlacemarkGroup_remove2(self._obj, placemark._obj)
 
     def dispose(self):
-        self.PlacemarkGroup_dispose(self.__obj)
+        PlacemarkGroup_dispose(self._obj)
         return
 
     def isTakingOverNodeOwnership(self):
-        return self.PlacemarkGroup_isTakingOverNodeOwnership(self.__obj)
+        return PlacemarkGroup_isTakingOverNodeOwnership(self._obj)
 
     def getNodeCount(self):
-        return self.PlacemarkGroup_getNodeCount(self.__obj)
+        return PlacemarkGroup_getNodeCount(self._obj)
 
     def get(self, index):
-        return T(self.PlacemarkGroup_get1(self.__obj, index))
+        return T(PlacemarkGroup_get1(self._obj, index))
 
     def getNodeDisplayNames(self):
-        return self.PlacemarkGroup_getNodeDisplayNames(self.__obj)
+        return PlacemarkGroup_getNodeDisplayNames(self._obj)
 
     def getNodeNames(self):
-        return self.PlacemarkGroup_getNodeNames(self.__obj)
+        return PlacemarkGroup_getNodeNames(self._obj)
 
     def toArray(self):
-        return ProductNode(self.PlacemarkGroup_toArray1(self.__obj))
+        return ProductNode(PlacemarkGroup_toArray1(self._obj))
 
     def toArray(self, array):
-        return T(self.PlacemarkGroup_toArray2(self.__obj, array.__obj))
+        return T(PlacemarkGroup_toArray2(self._obj, array._obj))
 
     def indexOf(self, name):
-        return self.PlacemarkGroup_indexOf2(self.__obj, name)
+        return PlacemarkGroup_indexOf2(self._obj, name)
 
     def indexOf(self, element):
-        return self.PlacemarkGroup_indexOf1(self.__obj, element.__obj)
+        return PlacemarkGroup_indexOf1(self._obj, element._obj)
 
     def getByDisplayName(self, displayName):
-        return T(self.PlacemarkGroup_getByDisplayName(self.__obj, displayName))
+        return T(PlacemarkGroup_getByDisplayName(self._obj, displayName))
 
     def get(self, name):
-        return T(self.PlacemarkGroup_get2(self.__obj, name))
+        return T(PlacemarkGroup_get2(self._obj, name))
 
     def contains(self, name):
-        return self.PlacemarkGroup_contains2(self.__obj, name)
+        return PlacemarkGroup_contains2(self._obj, name)
 
     def contains(self, node):
-        return self.PlacemarkGroup_contains1(self.__obj, node.__obj)
+        return PlacemarkGroup_contains1(self._obj, node._obj)
 
     def add(self, node):
-        return self.PlacemarkGroup_add3(self.__obj, node.__obj)
+        return PlacemarkGroup_add3(self._obj, node._obj)
 
     def add(self, index, node):
-        self.PlacemarkGroup_add1(self.__obj, index, node.__obj)
+        PlacemarkGroup_add1(self._obj, index, node._obj)
         return
 
     def remove(self, node):
-        return self.PlacemarkGroup_remove1(self.__obj, node.__obj)
+        return PlacemarkGroup_remove1(self._obj, node._obj)
 
     def removeAll(self):
-        self.PlacemarkGroup_removeAll(self.__obj)
+        PlacemarkGroup_removeAll(self._obj)
         return
 
     def clearRemovedList(self):
-        self.PlacemarkGroup_clearRemovedList(self.__obj)
+        PlacemarkGroup_clearRemovedList(self._obj)
         return
 
     def getRemovedNodes(self):
-        return Collection(self.PlacemarkGroup_getRemovedNodes(self.__obj))
+        return Collection(PlacemarkGroup_getRemovedNodes(self._obj))
 
     def getRawStorageSize(self, subsetDef):
-        return self.PlacemarkGroup_getRawStorageSize2(self.__obj, subsetDef.__obj)
+        return PlacemarkGroup_getRawStorageSize2(self._obj, subsetDef._obj)
 
     def setModified(self, modified):
-        self.PlacemarkGroup_setModified(self.__obj, modified)
+        PlacemarkGroup_setModified(self._obj, modified)
         return
 
     def acceptVisitor(self, visitor):
-        self.PlacemarkGroup_acceptVisitor(self.__obj, visitor.__obj)
+        PlacemarkGroup_acceptVisitor(self._obj, visitor._obj)
         return
 
     def updateExpression(self, oldExternalName, newExternalName):
-        self.PlacemarkGroup_updateExpression(self.__obj, oldExternalName, newExternalName)
+        PlacemarkGroup_updateExpression(self._obj, oldExternalName, newExternalName)
         return
 
     def getOwner(self):
-        return ProductNode(self.PlacemarkGroup_getOwner(self.__obj))
+        return ProductNode(PlacemarkGroup_getOwner(self._obj))
 
     def getName(self):
-        return self.PlacemarkGroup_getName(self.__obj)
+        return PlacemarkGroup_getName(self._obj)
 
     def setName(self, name):
-        self.PlacemarkGroup_setName(self.__obj, name)
+        PlacemarkGroup_setName(self._obj, name)
         return
 
     def getDescription(self):
-        return self.PlacemarkGroup_getDescription(self.__obj)
+        return PlacemarkGroup_getDescription(self._obj)
 
     def setDescription(self, description):
-        self.PlacemarkGroup_setDescription(self.__obj, description)
+        PlacemarkGroup_setDescription(self._obj, description)
         return
 
     def isModified(self):
-        return self.PlacemarkGroup_isModified(self.__obj)
+        return PlacemarkGroup_isModified(self._obj)
 
     def toString(self):
-        return self.PlacemarkGroup_toString(self.__obj)
+        return PlacemarkGroup_toString(self._obj)
 
     def isValidNodeName(name):
         return PlacemarkGroup_isValidNodeName(name)
 
     def getProduct(self):
-        return Product(self.PlacemarkGroup_getProduct(self.__obj))
+        return Product(PlacemarkGroup_getProduct(self._obj))
 
     def getProductReader(self):
-        return ProductReader(self.PlacemarkGroup_getProductReader(self.__obj))
+        return ProductReader(PlacemarkGroup_getProductReader(self._obj))
 
     def getProductWriter(self):
-        return ProductWriter(self.PlacemarkGroup_getProductWriter(self.__obj))
+        return ProductWriter(PlacemarkGroup_getProductWriter(self._obj))
 
     def getDisplayName(self):
-        return self.PlacemarkGroup_getDisplayName(self.__obj)
+        return PlacemarkGroup_getDisplayName(self._obj)
 
     def getProductRefString(self):
-        return self.PlacemarkGroup_getProductRefString(self.__obj)
+        return PlacemarkGroup_getProductRefString(self._obj)
 
     def getRawStorageSize(self):
-        return self.PlacemarkGroup_getRawStorageSize1(self.__obj)
+        return PlacemarkGroup_getRawStorageSize1(self._obj)
 
     def fireProductNodeChanged(self, propertyName):
-        self.PlacemarkGroup_fireProductNodeChanged1(self.__obj, propertyName)
+        PlacemarkGroup_fireProductNodeChanged1(self._obj, propertyName)
         return
 
     def fireProductNodeChanged(self, propertyName, oldValue, newValue):
-        self.PlacemarkGroup_fireProductNodeChanged2(self.__obj, propertyName, oldValue.__obj, newValue.__obj)
+        PlacemarkGroup_fireProductNodeChanged2(self._obj, propertyName, oldValue._obj, newValue._obj)
         return
 
     def removeFromFile(self, productWriter):
-        self.PlacemarkGroup_removeFromFile(self.__obj, productWriter.__obj)
+        PlacemarkGroup_removeFromFile(self._obj, productWriter._obj)
         return
 
 
 class Product:
-
     def __init__(self, obj):
-        self.__obj = obj
+        self._obj = obj
 
     def newProduct(name, type, sceneRasterWidth, sceneRasterHeight):
         return Product(Product_newProduct(name, type, sceneRasterWidth, sceneRasterHeight))
 
     def getFileLocation(self):
-        return File(self.Product_getFileLocation(self.__obj))
+        return File(Product_getFileLocation(self._obj))
 
     def setFileLocation(self, fileLocation):
-        self.Product_setFileLocation(self.__obj, fileLocation.__obj)
+        Product_setFileLocation(self._obj, fileLocation._obj)
         return
 
     def getProductType(self):
-        return self.Product_getProductType(self.__obj)
+        return Product_getProductType(self._obj)
 
     def setProductType(self, productType):
-        self.Product_setProductType(self.__obj, productType)
+        Product_setProductType(self._obj, productType)
         return
 
     def setProductReader(self, reader):
-        self.Product_setProductReader(self.__obj, reader.__obj)
+        Product_setProductReader(self._obj, reader._obj)
         return
 
     def getProductReader(self):
-        return ProductReader(self.Product_getProductReader(self.__obj))
+        return ProductReader(Product_getProductReader(self._obj))
 
     def setProductWriter(self, writer):
-        self.Product_setProductWriter(self.__obj, writer.__obj)
+        Product_setProductWriter(self._obj, writer._obj)
         return
 
     def getProductWriter(self):
-        return ProductWriter(self.Product_getProductWriter(self.__obj))
+        return ProductWriter(Product_getProductWriter(self._obj))
 
     def writeHeader(self, output):
-        self.Product_writeHeader(self.__obj, output.__obj)
+        Product_writeHeader(self._obj, output._obj)
         return
 
     def closeProductReader(self):
-        self.Product_closeProductReader(self.__obj)
+        Product_closeProductReader(self._obj)
         return
 
     def closeProductWriter(self):
-        self.Product_closeProductWriter(self.__obj)
+        Product_closeProductWriter(self._obj)
         return
 
     def closeIO(self):
-        self.Product_closeIO(self.__obj)
+        Product_closeIO(self._obj)
         return
 
     def dispose(self):
-        self.Product_dispose(self.__obj)
+        Product_dispose(self._obj)
         return
 
     def getPointingFactory(self):
-        return PointingFactory(self.Product_getPointingFactory(self.__obj))
+        return PointingFactory(Product_getPointingFactory(self._obj))
 
     def setPointingFactory(self, pointingFactory):
-        self.Product_setPointingFactory(self.__obj, pointingFactory.__obj)
+        Product_setPointingFactory(self._obj, pointingFactory._obj)
         return
 
     def setGeoCoding(self, geoCoding):
-        self.Product_setGeoCoding(self.__obj, geoCoding.__obj)
+        Product_setGeoCoding(self._obj, geoCoding._obj)
         return
 
     def getGeoCoding(self):
-        return GeoCoding(self.Product_getGeoCoding(self.__obj))
+        return GeoCoding(Product_getGeoCoding(self._obj))
 
     def isUsingSingleGeoCoding(self):
-        return self.Product_isUsingSingleGeoCoding(self.__obj)
+        return Product_isUsingSingleGeoCoding(self._obj)
 
     def transferGeoCodingTo(self, destProduct, subsetDef):
-        return self.Product_transferGeoCodingTo(self.__obj, destProduct.__obj, subsetDef.__obj)
+        return Product_transferGeoCodingTo(self._obj, destProduct._obj, subsetDef._obj)
 
     def getSceneRasterWidth(self):
-        return self.Product_getSceneRasterWidth(self.__obj)
+        return Product_getSceneRasterWidth(self._obj)
 
     def getSceneRasterHeight(self):
-        return self.Product_getSceneRasterHeight(self.__obj)
+        return Product_getSceneRasterHeight(self._obj)
 
     def getStartTime(self):
-        return ProductData_UTC(self.Product_getStartTime(self.__obj))
+        return ProductData_UTC(Product_getStartTime(self._obj))
 
     def setStartTime(self, startTime):
-        self.Product_setStartTime(self.__obj, startTime.__obj)
+        Product_setStartTime(self._obj, startTime._obj)
         return
 
     def getEndTime(self):
-        return ProductData_UTC(self.Product_getEndTime(self.__obj))
+        return ProductData_UTC(Product_getEndTime(self._obj))
 
     def setEndTime(self, endTime):
-        self.Product_setEndTime(self.__obj, endTime.__obj)
+        Product_setEndTime(self._obj, endTime._obj)
         return
 
     def getMetadataRoot(self):
-        return MetadataElement(self.Product_getMetadataRoot(self.__obj))
+        return MetadataElement(Product_getMetadataRoot(self._obj))
 
     def getBandGroup(self):
-        return ProductNodeGroup(self.Product_getBandGroup(self.__obj))
+        return ProductNodeGroup(Product_getBandGroup(self._obj))
 
     def getTiePointGridGroup(self):
-        return ProductNodeGroup(self.Product_getTiePointGridGroup(self.__obj))
+        return ProductNodeGroup(Product_getTiePointGridGroup(self._obj))
 
     def addTiePointGrid(self, tiePointGrid):
-        self.Product_addTiePointGrid(self.__obj, tiePointGrid.__obj)
+        Product_addTiePointGrid(self._obj, tiePointGrid._obj)
         return
 
     def removeTiePointGrid(self, tiePointGrid):
-        return self.Product_removeTiePointGrid(self.__obj, tiePointGrid.__obj)
+        return Product_removeTiePointGrid(self._obj, tiePointGrid._obj)
 
     def getNumTiePointGrids(self):
-        return self.Product_getNumTiePointGrids(self.__obj)
+        return Product_getNumTiePointGrids(self._obj)
 
     def getTiePointGridAt(self, index):
-        return TiePointGrid(self.Product_getTiePointGridAt(self.__obj, index))
+        return TiePointGrid(Product_getTiePointGridAt(self._obj, index))
 
     def getTiePointGridNames(self):
-        return self.Product_getTiePointGridNames(self.__obj)
+        return Product_getTiePointGridNames(self._obj)
 
     def getTiePointGrids(self):
-        return TiePointGrid(self.Product_getTiePointGrids(self.__obj))
+        return TiePointGrid(Product_getTiePointGrids(self._obj))
 
     def getTiePointGrid(self, name):
-        return TiePointGrid(self.Product_getTiePointGrid(self.__obj, name))
+        return TiePointGrid(Product_getTiePointGrid(self._obj, name))
 
     def containsTiePointGrid(self, name):
-        return self.Product_containsTiePointGrid(self.__obj, name)
+        return Product_containsTiePointGrid(self._obj, name)
 
     def addBand(self, band):
-        self.Product_addBand(self.__obj, band.__obj)
+        Product_addBand(self._obj, band._obj)
         return
 
     def addBand(self, bandName, dataType):
-        return Band(self.Product_addNewBand(self.__obj, bandName, dataType))
+        return Band(Product_addNewBand(self._obj, bandName, dataType))
 
     def addBand(self, bandName, expression):
-        return Band(self.Product_addComputedBand(self.__obj, bandName, expression))
+        return Band(Product_addComputedBand(self._obj, bandName, expression))
 
     def removeBand(self, band):
-        return self.Product_removeBand(self.__obj, band.__obj)
+        return Product_removeBand(self._obj, band._obj)
 
     def getNumBands(self):
-        return self.Product_getNumBands(self.__obj)
+        return Product_getNumBands(self._obj)
 
     def getBandAt(self, index):
-        return Band(self.Product_getBandAt(self.__obj, index))
+        return Band(Product_getBandAt(self._obj, index))
 
     def getBandNames(self):
-        return self.Product_getBandNames(self.__obj)
+        return Product_getBandNames(self._obj)
 
     def getBands(self):
-        return Band(self.Product_getBands(self.__obj))
+        return Band(Product_getBands(self._obj))
 
     def getBand(self, name):
-        return Band(self.Product_getBand(self.__obj, name))
+        return Band(Product_getBand(self._obj, name))
 
     def getBandIndex(self, name):
-        return self.Product_getBandIndex(self.__obj, name)
+        return Product_getBandIndex(self._obj, name)
 
     def containsBand(self, name):
-        return self.Product_containsBand(self.__obj, name)
+        return Product_containsBand(self._obj, name)
 
     def containsRasterDataNode(self, name):
-        return self.Product_containsRasterDataNode(self.__obj, name)
+        return Product_containsRasterDataNode(self._obj, name)
 
     def getRasterDataNode(self, name):
-        return RasterDataNode(self.Product_getRasterDataNode(self.__obj, name))
+        return RasterDataNode(Product_getRasterDataNode(self._obj, name))
 
     def getMaskGroup(self):
-        return ProductNodeGroup(self.Product_getMaskGroup(self.__obj))
+        return ProductNodeGroup(Product_getMaskGroup(self._obj))
 
     def getVectorDataGroup(self):
-        return ProductNodeGroup(self.Product_getVectorDataGroup(self.__obj))
+        return ProductNodeGroup(Product_getVectorDataGroup(self._obj))
 
     def getFlagCodingGroup(self):
-        return ProductNodeGroup(self.Product_getFlagCodingGroup(self.__obj))
+        return ProductNodeGroup(Product_getFlagCodingGroup(self._obj))
 
     def getIndexCodingGroup(self):
-        return ProductNodeGroup(self.Product_getIndexCodingGroup(self.__obj))
+        return ProductNodeGroup(Product_getIndexCodingGroup(self._obj))
 
     def containsPixel(self, x, y):
-        return self.Product_containsPixel(self.__obj, x, y)
+        return Product_containsPixel(self._obj, x, y)
 
     def getGcpGroup(self):
-        return PlacemarkGroup(self.Product_getGcpGroup(self.__obj))
+        return PlacemarkGroup(Product_getGcpGroup(self._obj))
 
     def getPinGroup(self):
-        return PlacemarkGroup(self.Product_getPinGroup(self.__obj))
+        return PlacemarkGroup(Product_getPinGroup(self._obj))
 
     def isCompatibleProduct(self, product, eps):
-        return self.Product_isCompatibleProduct(self.__obj, product.__obj, eps)
+        return Product_isCompatibleProduct(self._obj, product._obj, eps)
 
     def parseExpression(self, expression):
-        return Term(self.Product_parseExpression(self.__obj, expression))
+        return Term(Product_parseExpression(self._obj, expression))
 
     def acceptVisitor(self, visitor):
-        self.Product_acceptVisitor(self.__obj, visitor.__obj)
+        Product_acceptVisitor(self._obj, visitor._obj)
         return
 
     def addProductNodeListener(self, listener):
-        return self.Product_addProductNodeListener(self.__obj, listener.__obj)
+        return Product_addProductNodeListener(self._obj, listener._obj)
 
     def removeProductNodeListener(self, listener):
-        self.Product_removeProductNodeListener(self.__obj, listener.__obj)
+        Product_removeProductNodeListener(self._obj, listener._obj)
         return
 
     def getProductNodeListeners(self):
-        return ProductNodeListener(self.Product_getProductNodeListeners(self.__obj))
+        return ProductNodeListener(Product_getProductNodeListeners(self._obj))
 
     def getRefNo(self):
-        return self.Product_getRefNo(self.__obj)
+        return Product_getRefNo(self._obj)
 
     def setRefNo(self, refNo):
-        self.Product_setRefNo(self.__obj, refNo)
+        Product_setRefNo(self._obj, refNo)
         return
 
     def resetRefNo(self):
-        self.Product_resetRefNo(self.__obj)
+        Product_resetRefNo(self._obj)
         return
 
     def getProductManager(self):
-        return ProductManager(self.Product_getProductManager(self.__obj))
+        return ProductManager(Product_getProductManager(self._obj))
 
     def createBandArithmeticParser(self):
-        return Parser(self.Product_createBandArithmeticParser(self.__obj))
+        return Parser(Product_createBandArithmeticParser(self._obj))
 
     def createBandArithmeticDefaultNamespace(self):
-        return WritableNamespace(self.Product_createBandArithmeticDefaultNamespace(self.__obj))
+        return WritableNamespace(Product_createBandArithmeticDefaultNamespace(self._obj))
 
     def createSubset(self, subsetDef, name, desc):
-        return Product(self.Product_createSubset(self.__obj, subsetDef.__obj, name, desc))
+        return Product(Product_createSubset(self._obj, subsetDef._obj, name, desc))
 
     def createProjectedProduct(self, mapInfo, name, desc):
-        return Product(self.Product_createProjectedProduct(self.__obj, mapInfo.__obj, name, desc))
+        return Product(Product_createProjectedProduct(self._obj, mapInfo._obj, name, desc))
 
     def createFlippedProduct(self, flipType, name, desc):
-        return Product(self.Product_createFlippedProduct(self.__obj, flipType, name, desc))
+        return Product(Product_createFlippedProduct(self._obj, flipType, name, desc))
 
     def setModified(self, modified):
-        self.Product_setModified(self.__obj, modified)
+        Product_setModified(self._obj, modified)
         return
 
     def getQuicklookBandName(self):
-        return self.Product_getQuicklookBandName(self.__obj)
+        return Product_getQuicklookBandName(self._obj)
 
     def setQuicklookBandName(self, quicklookBandName):
-        self.Product_setQuicklookBandName(self.__obj, quicklookBandName)
+        Product_setQuicklookBandName(self._obj, quicklookBandName)
         return
 
     def createPixelInfoString(self, pixelX, pixelY):
-        return self.Product_createPixelInfoString(self.__obj, pixelX, pixelY)
+        return Product_createPixelInfoString(self._obj, pixelX, pixelY)
 
     def getRemovedChildNodes(self):
-        return ProductNode(self.Product_getRemovedChildNodes(self.__obj))
+        return ProductNode(Product_getRemovedChildNodes(self._obj))
 
     def canBeOrthorectified(self):
-        return self.Product_canBeOrthorectified(self.__obj)
+        return Product_canBeOrthorectified(self._obj)
 
     def getPreferredTileSize(self):
-        return Dimension(self.Product_getPreferredTileSize(self.__obj))
+        return Dimension(Product_getPreferredTileSize(self._obj))
 
     def setPreferredTileSize(self, tileWidth, tileHeight):
-        self.Product_setPreferredTileSize(self.__obj, tileWidth, tileHeight)
+        Product_setPreferredTileSize(self._obj, tileWidth, tileHeight)
         return
 
     def getAllFlagNames(self):
-        return self.Product_getAllFlagNames(self.__obj)
+        return Product_getAllFlagNames(self._obj)
 
     def getAutoGrouping(self):
-        return Product_AutoGrouping(self.Product_getAutoGrouping(self.__obj))
+        return Product_AutoGrouping(Product_getAutoGrouping(self._obj))
 
     def setAutoGrouping(self, pattern):
-        self.Product_setAutoGrouping(self.__obj, pattern)
+        Product_setAutoGrouping(self._obj, pattern)
         return
 
     def addMask(self, maskName, expression, description, color, transparency):
-        return Mask(self.Product_addComputedMask(self.__obj, maskName, expression, description, color.__obj, transparency))
+        return Mask(Product_addComputedMask(self._obj, maskName, expression, description, color._obj, transparency))
 
     def getOwner(self):
-        return ProductNode(self.Product_getOwner(self.__obj))
+        return ProductNode(Product_getOwner(self._obj))
 
     def getName(self):
-        return self.Product_getName(self.__obj)
+        return Product_getName(self._obj)
 
     def setName(self, name):
-        self.Product_setName(self.__obj, name)
+        Product_setName(self._obj, name)
         return
 
     def getDescription(self):
-        return self.Product_getDescription(self.__obj)
+        return Product_getDescription(self._obj)
 
     def setDescription(self, description):
-        self.Product_setDescription(self.__obj, description)
+        Product_setDescription(self._obj, description)
         return
 
     def isModified(self):
-        return self.Product_isModified(self.__obj)
+        return Product_isModified(self._obj)
 
     def toString(self):
-        return self.Product_toString(self.__obj)
+        return Product_toString(self._obj)
 
     def isValidNodeName(name):
         return Product_isValidNodeName(name)
 
     def getProduct(self):
-        return Product(self.Product_getProduct(self.__obj))
+        return Product(Product_getProduct(self._obj))
 
     def getDisplayName(self):
-        return self.Product_getDisplayName(self.__obj)
+        return Product_getDisplayName(self._obj)
 
     def getProductRefString(self):
-        return self.Product_getProductRefString(self.__obj)
+        return Product_getProductRefString(self._obj)
 
     def updateExpression(self, oldExternalName, newExternalName):
-        self.Product_updateExpression(self.__obj, oldExternalName, newExternalName)
+        Product_updateExpression(self._obj, oldExternalName, newExternalName)
         return
 
     def removeFromFile(self, productWriter):
-        self.Product_removeFromFile(self.__obj, productWriter.__obj)
+        Product_removeFromFile(self._obj, productWriter._obj)
         return
 
 
 class Point2D:
-
     def __init__(self, obj):
-        self.__obj = obj
+        self._obj = obj
 
 
 class T:
-
     def __init__(self, obj):
-        self.__obj = obj
+        self._obj = obj
 
 
 class ProductVisitor:
-
     def __init__(self, obj):
-        self.__obj = obj
+        self._obj = obj
 
 
 class Scaling:
-
     def __init__(self, obj):
-        self.__obj = obj
+        self._obj = obj
 
 
 class WritableNamespace:
-
     def __init__(self, obj):
-        self.__obj = obj
+        self._obj = obj
 
 
 class MultiLevelImage:
-
     def __init__(self, obj):
-        self.__obj = obj
+        self._obj = obj
 
 
 class ROI:
-
     def __init__(self, obj):
-        self.__obj = obj
+        self._obj = obj
 
 
 class Collection:
-
     def __init__(self, obj):
-        self.__obj = obj
+        self._obj = obj
 
 
 class ProductManager_Listener:
-
     def __init__(self, obj):
-        self.__obj = obj
+        self._obj = obj
 
 
 class GeoTIFFMetadata:
-
     def __init__(self, obj):
-        self.__obj = obj
+        self._obj = obj
 
 
 class ColorPaletteDef:
-
     def __init__(self, obj):
-        self.__obj = obj
+        self._obj = obj
 
     def newColorPaletteDef(minSample, maxSample):
         return ColorPaletteDef(ColorPaletteDef_newColorPaletteDefFromRange(minSample, maxSample))
 
     def newColorPaletteDef(points, numColors):
-        return ColorPaletteDef(ColorPaletteDef_newColorPaletteDefFromPoints(points.__obj, numColors))
+        return ColorPaletteDef(ColorPaletteDef_newColorPaletteDefFromPoints(points._obj, numColors))
 
     def isDiscrete(self):
-        return self.ColorPaletteDef_isDiscrete(self.__obj)
+        return ColorPaletteDef_isDiscrete(self._obj)
 
     def setDiscrete(self, discrete):
-        self.ColorPaletteDef_setDiscrete(self.__obj, discrete)
+        ColorPaletteDef_setDiscrete(self._obj, discrete)
         return
 
     def getNumColors(self):
-        return self.ColorPaletteDef_getNumColors(self.__obj)
+        return ColorPaletteDef_getNumColors(self._obj)
 
     def setNumColors(self, numColors):
-        self.ColorPaletteDef_setNumColors(self.__obj, numColors)
+        ColorPaletteDef_setNumColors(self._obj, numColors)
         return
 
     def getNumPoints(self):
-        return self.ColorPaletteDef_getNumPoints(self.__obj)
+        return ColorPaletteDef_getNumPoints(self._obj)
 
     def setNumPoints(self, numPoints):
-        self.ColorPaletteDef_setNumPoints(self.__obj, numPoints)
+        ColorPaletteDef_setNumPoints(self._obj, numPoints)
         return
 
     def isAutoDistribute(self):
-        return self.ColorPaletteDef_isAutoDistribute(self.__obj)
+        return ColorPaletteDef_isAutoDistribute(self._obj)
 
     def setAutoDistribute(self, autoDistribute):
-        self.ColorPaletteDef_setAutoDistribute(self.__obj, autoDistribute)
+        ColorPaletteDef_setAutoDistribute(self._obj, autoDistribute)
         return
 
     def getPointAt(self, index):
-        return ColorPaletteDef_Point(self.ColorPaletteDef_getPointAt(self.__obj, index))
+        return ColorPaletteDef_Point(ColorPaletteDef_getPointAt(self._obj, index))
 
     def getFirstPoint(self):
-        return ColorPaletteDef_Point(self.ColorPaletteDef_getFirstPoint(self.__obj))
+        return ColorPaletteDef_Point(ColorPaletteDef_getFirstPoint(self._obj))
 
     def getLastPoint(self):
-        return ColorPaletteDef_Point(self.ColorPaletteDef_getLastPoint(self.__obj))
+        return ColorPaletteDef_Point(ColorPaletteDef_getLastPoint(self._obj))
 
     def getMinDisplaySample(self):
-        return self.ColorPaletteDef_getMinDisplaySample(self.__obj)
+        return ColorPaletteDef_getMinDisplaySample(self._obj)
 
     def getMaxDisplaySample(self):
-        return self.ColorPaletteDef_getMaxDisplaySample(self.__obj)
+        return ColorPaletteDef_getMaxDisplaySample(self._obj)
 
     def insertPointAfter(self, index, point):
-        self.ColorPaletteDef_insertPointAfter(self.__obj, index, point.__obj)
+        ColorPaletteDef_insertPointAfter(self._obj, index, point._obj)
         return
 
     def createPointAfter(self, index, scaling):
-        return self.ColorPaletteDef_createPointAfter(self.__obj, index, scaling.__obj)
+        return ColorPaletteDef_createPointAfter(self._obj, index, scaling._obj)
 
     def getCenterColor(c1, c2):
-        return Color(ColorPaletteDef_getCenterColor(c1.__obj, c2.__obj))
+        return Color(ColorPaletteDef_getCenterColor(c1._obj, c2._obj))
 
     def removePointAt(self, index):
-        self.ColorPaletteDef_removePointAt(self.__obj, index)
+        ColorPaletteDef_removePointAt(self._obj, index)
         return
 
     def addPoint(self, point):
-        self.ColorPaletteDef_addPoint(self.__obj, point.__obj)
+        ColorPaletteDef_addPoint(self._obj, point._obj)
         return
 
     def getPoints(self):
-        return ColorPaletteDef_Point(self.ColorPaletteDef_getPoints(self.__obj))
+        return ColorPaletteDef_Point(ColorPaletteDef_getPoints(self._obj))
 
     def setPoints(self, points):
-        self.ColorPaletteDef_setPoints(self.__obj, points.__obj)
+        ColorPaletteDef_setPoints(self._obj, points._obj)
         return
 
     def getIterator(self):
-        return Iterator(self.ColorPaletteDef_getIterator(self.__obj))
+        return Iterator(ColorPaletteDef_getIterator(self._obj))
 
     def clone(self):
-        return Object(self.ColorPaletteDef_clone(self.__obj))
+        return Object(ColorPaletteDef_clone(self._obj))
 
     def createDeepCopy(self):
-        return ColorPaletteDef(self.ColorPaletteDef_createDeepCopy(self.__obj))
+        return ColorPaletteDef(ColorPaletteDef_createDeepCopy(self._obj))
 
     def loadColorPaletteDef(file):
-        return ColorPaletteDef(ColorPaletteDef_loadColorPaletteDef(file.__obj))
+        return ColorPaletteDef(ColorPaletteDef_loadColorPaletteDef(file._obj))
 
     def storeColorPaletteDef(colorPaletteDef, file):
-        ColorPaletteDef_storeColorPaletteDef(colorPaletteDef.__obj, file.__obj)
+        ColorPaletteDef_storeColorPaletteDef(colorPaletteDef._obj, file._obj)
         return
 
     def dispose(self):
-        self.ColorPaletteDef_dispose(self.__obj)
+        ColorPaletteDef_dispose(self._obj)
         return
 
     def getColors(self):
-        return Color(self.ColorPaletteDef_getColors(self.__obj))
+        return Color(ColorPaletteDef_getColors(self._obj))
 
     def createColorPalette(self, scaling):
-        return Color(self.ColorPaletteDef_createColorPalette(self.__obj, scaling.__obj))
+        return Color(ColorPaletteDef_createColorPalette(self._obj, scaling._obj))
 
     def computeColor(self, scaling, sample):
-        return Color(self.ColorPaletteDef_computeColor(self.__obj, scaling.__obj, sample))
+        return Color(ColorPaletteDef_computeColor(self._obj, scaling._obj, sample))
 
 
 class MapInfo:
-
     def __init__(self, obj):
-        self.__obj = obj
+        self._obj = obj
 
 
 class ImageInfo:
-
     def __init__(self, obj):
-        self.__obj = obj
+        self._obj = obj
 
     def newImageInfo(colorPaletteDef):
-        return ImageInfo(ImageInfo_newImageInfoPalette(colorPaletteDef.__obj))
+        return ImageInfo(ImageInfo_newImageInfoPalette(colorPaletteDef._obj))
 
     def newImageInfo(rgbChannelDef):
-        return ImageInfo(ImageInfo_newImageInfoRGB(rgbChannelDef.__obj))
+        return ImageInfo(ImageInfo_newImageInfoRGB(rgbChannelDef._obj))
 
     def getColorPaletteDef(self):
-        return ColorPaletteDef(self.ImageInfo_getColorPaletteDef(self.__obj))
+        return ColorPaletteDef(ImageInfo_getColorPaletteDef(self._obj))
 
     def getRgbChannelDef(self):
-        return RGBChannelDef(self.ImageInfo_getRgbChannelDef(self.__obj))
+        return RGBChannelDef(ImageInfo_getRgbChannelDef(self._obj))
 
     def getNoDataColor(self):
-        return Color(self.ImageInfo_getNoDataColor(self.__obj))
+        return Color(ImageInfo_getNoDataColor(self._obj))
 
     def setNoDataColor(self, noDataColor):
-        self.ImageInfo_setNoDataColor(self.__obj, noDataColor.__obj)
+        ImageInfo_setNoDataColor(self._obj, noDataColor._obj)
         return
 
     def setHistogramMatching(self, histogramMatching):
-        self.ImageInfo_setHistogramMatching(self.__obj, histogramMatching.__obj)
+        ImageInfo_setHistogramMatching(self._obj, histogramMatching._obj)
         return
 
     def isLogScaled(self):
-        return self.ImageInfo_isLogScaled(self.__obj)
+        return ImageInfo_isLogScaled(self._obj)
 
     def setLogScaled(self, logScaled):
-        self.ImageInfo_setLogScaled(self.__obj, logScaled)
+        ImageInfo_setLogScaled(self._obj, logScaled)
         return
 
     def getColors(self):
-        return Color(self.ImageInfo_getColors(self.__obj))
+        return Color(ImageInfo_getColors(self._obj))
 
     def getColorComponentCount(self):
-        return self.ImageInfo_getColorComponentCount(self.__obj)
+        return ImageInfo_getColorComponentCount(self._obj)
 
     def createIndexColorModel(self, scaling):
-        return IndexColorModel(self.ImageInfo_createIndexColorModel(self.__obj, scaling.__obj))
+        return IndexColorModel(ImageInfo_createIndexColorModel(self._obj, scaling._obj))
 
     def createComponentColorModel(self):
-        return ComponentColorModel(self.ImageInfo_createComponentColorModel(self.__obj))
+        return ComponentColorModel(ImageInfo_createComponentColorModel(self._obj))
 
     def clone(self):
-        return Object(self.ImageInfo_clone(self.__obj))
+        return Object(ImageInfo_clone(self._obj))
 
     def createDeepCopy(self):
-        return ImageInfo(self.ImageInfo_createDeepCopy(self.__obj))
+        return ImageInfo(ImageInfo_createDeepCopy(self._obj))
 
     def dispose(self):
-        self.ImageInfo_dispose(self.__obj)
+        ImageInfo_dispose(self._obj)
         return
 
     def setColors(self, colors):
-        self.ImageInfo_setColors(self.__obj, colors.__obj)
+        ImageInfo_setColors(self._obj, colors._obj)
         return
 
     def setColorPaletteDef(self, colorPaletteDef, minSample, maxSample, autoDistribute):
-        self.ImageInfo_setColorPaletteDef(self.__obj, colorPaletteDef.__obj, minSample, maxSample, autoDistribute)
+        ImageInfo_setColorPaletteDef(self._obj, colorPaletteDef._obj, minSample, maxSample, autoDistribute)
         return
 
     def getHistogramMatching(mode):
@@ -3035,80 +2964,75 @@ class ImageInfo:
 
 
 class Histogram:
-
     def __init__(self, obj):
-        self.__obj = obj
+        self._obj = obj
 
 
 class String:
-
     def __init__(self, obj):
-        self.__obj = obj
+        self._obj = obj
 
 
 class BufferedImage:
-
     def __init__(self, obj):
-        self.__obj = obj
+        self._obj = obj
 
 
 class RGBChannelDef:
-
     def __init__(self, obj):
-        self.__obj = obj
+        self._obj = obj
 
     def newRGBChannelDef():
         return RGBChannelDef(RGBChannelDef_newRGBChannelDef())
 
     def getSourceName(self, index):
-        return self.RGBChannelDef_getSourceName(self.__obj, index)
+        return RGBChannelDef_getSourceName(self._obj, index)
 
     def setSourceName(self, index, sourceName):
-        self.RGBChannelDef_setSourceName(self.__obj, index, sourceName)
+        RGBChannelDef_setSourceName(self._obj, index, sourceName)
         return
 
     def getSourceNames(self):
-        return self.RGBChannelDef_getSourceNames(self.__obj)
+        return RGBChannelDef_getSourceNames(self._obj)
 
     def setSourceNames(self, bandNames):
-        self.RGBChannelDef_setSourceNames(self.__obj, bandNames)
+        RGBChannelDef_setSourceNames(self._obj, bandNames)
         return
 
     def isAlphaUsed(self):
-        return self.RGBChannelDef_isAlphaUsed(self.__obj)
+        return RGBChannelDef_isAlphaUsed(self._obj)
 
     def isGammaUsed(self, index):
-        return self.RGBChannelDef_isGammaUsed(self.__obj, index)
+        return RGBChannelDef_isGammaUsed(self._obj, index)
 
     def getGamma(self, index):
-        return self.RGBChannelDef_getGamma(self.__obj, index)
+        return RGBChannelDef_getGamma(self._obj, index)
 
     def setGamma(self, index, gamma):
-        self.RGBChannelDef_setGamma(self.__obj, index, gamma)
+        RGBChannelDef_setGamma(self._obj, index, gamma)
         return
 
     def getMinDisplaySample(self, index):
-        return self.RGBChannelDef_getMinDisplaySample(self.__obj, index)
+        return RGBChannelDef_getMinDisplaySample(self._obj, index)
 
     def setMinDisplaySample(self, index, min):
-        self.RGBChannelDef_setMinDisplaySample(self.__obj, index, min)
+        RGBChannelDef_setMinDisplaySample(self._obj, index, min)
         return
 
     def getMaxDisplaySample(self, index):
-        return self.RGBChannelDef_getMaxDisplaySample(self.__obj, index)
+        return RGBChannelDef_getMaxDisplaySample(self._obj, index)
 
     def setMaxDisplaySample(self, index, max):
-        self.RGBChannelDef_setMaxDisplaySample(self.__obj, index, max)
+        RGBChannelDef_setMaxDisplaySample(self._obj, index, max)
         return
 
     def clone(self):
-        return Object(self.RGBChannelDef_clone(self.__obj))
+        return Object(RGBChannelDef_clone(self._obj))
 
 
 class TiePointGrid:
-
     def __init__(self, obj):
-        self.__obj = obj
+        self._obj = obj
 
     def newTiePointGrid(name, gridWidth, gridHeight, offsetX, offsetY, subSamplingX, subSamplingY, tiePoints):
         return TiePointGrid(TiePointGrid_newTiePointGrid1(name, gridWidth, gridHeight, offsetX, offsetY, subSamplingX, subSamplingY, tiePoints))
@@ -3123,750 +3047,742 @@ class TiePointGrid:
         return TiePointGrid_getDiscontinuity2(tiePoints)
 
     def getDiscontinuity(self):
-        return self.TiePointGrid_getDiscontinuity1(self.__obj)
+        return TiePointGrid_getDiscontinuity1(self._obj)
 
     def setDiscontinuity(self, discontinuity):
-        self.TiePointGrid_setDiscontinuity(self.__obj, discontinuity)
+        TiePointGrid_setDiscontinuity(self._obj, discontinuity)
         return
 
     def isFloatingPointType(self):
-        return self.TiePointGrid_isFloatingPointType(self.__obj)
+        return TiePointGrid_isFloatingPointType(self._obj)
 
     def getGeophysicalDataType(self):
-        return self.TiePointGrid_getGeophysicalDataType(self.__obj)
+        return TiePointGrid_getGeophysicalDataType(self._obj)
 
     def getSceneRasterData(self):
-        return ProductData(self.TiePointGrid_getSceneRasterData(self.__obj))
+        return ProductData(TiePointGrid_getSceneRasterData(self._obj))
 
     def getSceneRasterWidth(self):
-        return self.TiePointGrid_getSceneRasterWidth(self.__obj)
+        return TiePointGrid_getSceneRasterWidth(self._obj)
 
     def getSceneRasterHeight(self):
-        return self.TiePointGrid_getSceneRasterHeight(self.__obj)
+        return TiePointGrid_getSceneRasterHeight(self._obj)
 
     def getOffsetX(self):
-        return self.TiePointGrid_getOffsetX(self.__obj)
+        return TiePointGrid_getOffsetX(self._obj)
 
     def getOffsetY(self):
-        return self.TiePointGrid_getOffsetY(self.__obj)
+        return TiePointGrid_getOffsetY(self._obj)
 
     def getSubSamplingX(self):
-        return self.TiePointGrid_getSubSamplingX(self.__obj)
+        return TiePointGrid_getSubSamplingX(self._obj)
 
     def getSubSamplingY(self):
-        return self.TiePointGrid_getSubSamplingY(self.__obj)
+        return TiePointGrid_getSubSamplingY(self._obj)
 
     def getTiePoints(self):
-        return self.TiePointGrid_getTiePoints(self.__obj)
+        return TiePointGrid_getTiePoints(self._obj)
 
     def getPixelInt(self, x, y):
-        return self.TiePointGrid_getPixelInt(self.__obj, x, y)
+        return TiePointGrid_getPixelInt(self._obj, x, y)
 
     def dispose(self):
-        self.TiePointGrid_dispose(self.__obj)
+        TiePointGrid_dispose(self._obj)
         return
 
     def getPixelFloat(self, x, y):
-        return self.TiePointGrid_getPixelFloat2(self.__obj, x, y)
+        return TiePointGrid_getPixelFloat2(self._obj, x, y)
 
     def getPixelFloat(self, x, y):
-        return self.TiePointGrid_getPixelFloat1(self.__obj, x, y)
+        return TiePointGrid_getPixelFloat1(self._obj, x, y)
 
     def getPixelDouble(self, x, y):
-        return self.TiePointGrid_getPixelDouble(self.__obj, x, y)
+        return TiePointGrid_getPixelDouble(self._obj, x, y)
 
     def setPixelInt(self, x, y, pixelValue):
-        self.TiePointGrid_setPixelInt(self.__obj, x, y, pixelValue)
+        TiePointGrid_setPixelInt(self._obj, x, y, pixelValue)
         return
 
     def setPixelFloat(self, x, y, pixelValue):
-        self.TiePointGrid_setPixelFloat(self.__obj, x, y, pixelValue)
+        TiePointGrid_setPixelFloat(self._obj, x, y, pixelValue)
         return
 
     def setPixelDouble(self, x, y, pixelValue):
-        self.TiePointGrid_setPixelDouble(self.__obj, x, y, pixelValue)
+        TiePointGrid_setPixelDouble(self._obj, x, y, pixelValue)
         return
 
     def getPixels(self, x, y, w, h, pixels, pm):
-        return self.TiePointGrid_getPixels6(self.__obj, x, y, w, h, pixels, pm.__obj)
+        return TiePointGrid_getPixels6(self._obj, x, y, w, h, pixels, pm._obj)
 
     def getPixels(self, x, y, w, h, pixels, pm):
-        return self.TiePointGrid_getPixels4(self.__obj, x, y, w, h, pixels, pm.__obj)
+        return TiePointGrid_getPixels4(self._obj, x, y, w, h, pixels, pm._obj)
 
     def getPixels(self, x, y, w, h, pixels, pm):
-        return self.TiePointGrid_getPixels2(self.__obj, x, y, w, h, pixels, pm.__obj)
+        return TiePointGrid_getPixels2(self._obj, x, y, w, h, pixels, pm._obj)
 
     def setPixels(self, x, y, w, h, pixels):
-        self.TiePointGrid_setPixels3(self.__obj, x, y, w, h, pixels)
-        return
-
-    def setPixels(self, x, y, w, h, pixels):
-        self.TiePointGrid_setPixels2(self.__obj, x, y, w, h, pixels)
+        TiePointGrid_setPixels3(self._obj, x, y, w, h, pixels)
         return
 
     def setPixels(self, x, y, w, h, pixels):
-        self.TiePointGrid_setPixels1(self.__obj, x, y, w, h, pixels)
+        TiePointGrid_setPixels2(self._obj, x, y, w, h, pixels)
+        return
+
+    def setPixels(self, x, y, w, h, pixels):
+        TiePointGrid_setPixels1(self._obj, x, y, w, h, pixels)
         return
 
     def readPixels(self, x, y, w, h, pixels, pm):
-        return self.TiePointGrid_readPixels6(self.__obj, x, y, w, h, pixels, pm.__obj)
+        return TiePointGrid_readPixels6(self._obj, x, y, w, h, pixels, pm._obj)
 
     def readPixels(self, x, y, w, h, pixels, pm):
-        return self.TiePointGrid_readPixels4(self.__obj, x, y, w, h, pixels, pm.__obj)
+        return TiePointGrid_readPixels4(self._obj, x, y, w, h, pixels, pm._obj)
 
     def readPixels(self, x, y, w, h, pixels, pm):
-        return self.TiePointGrid_readPixels2(self.__obj, x, y, w, h, pixels, pm.__obj)
+        return TiePointGrid_readPixels2(self._obj, x, y, w, h, pixels, pm._obj)
 
     def writePixels(self, x, y, w, h, pixels, pm):
-        self.TiePointGrid_writePixels6(self.__obj, x, y, w, h, pixels, pm.__obj)
+        TiePointGrid_writePixels6(self._obj, x, y, w, h, pixels, pm._obj)
         return
 
     def writePixels(self, x, y, w, h, pixels, pm):
-        self.TiePointGrid_writePixels4(self.__obj, x, y, w, h, pixels, pm.__obj)
+        TiePointGrid_writePixels4(self._obj, x, y, w, h, pixels, pm._obj)
         return
 
     def writePixels(self, x, y, w, h, pixels, pm):
-        self.TiePointGrid_writePixels2(self.__obj, x, y, w, h, pixels, pm.__obj)
+        TiePointGrid_writePixels2(self._obj, x, y, w, h, pixels, pm._obj)
         return
 
     def readRasterData(self, offsetX, offsetY, width, height, rasterData, pm):
-        self.TiePointGrid_readRasterData2(self.__obj, offsetX, offsetY, width, height, rasterData.__obj, pm.__obj)
+        TiePointGrid_readRasterData2(self._obj, offsetX, offsetY, width, height, rasterData._obj, pm._obj)
         return
 
     def readRasterDataFully(self, pm):
-        self.TiePointGrid_readRasterDataFully2(self.__obj, pm.__obj)
+        TiePointGrid_readRasterDataFully2(self._obj, pm._obj)
         return
 
     def writeRasterData(self, offsetX, offsetY, width, height, rasterData, pm):
-        self.TiePointGrid_writeRasterData2(self.__obj, offsetX, offsetY, width, height, rasterData.__obj, pm.__obj)
+        TiePointGrid_writeRasterData2(self._obj, offsetX, offsetY, width, height, rasterData._obj, pm._obj)
         return
 
     def writeRasterDataFully(self, pm):
-        self.TiePointGrid_writeRasterDataFully2(self.__obj, pm.__obj)
+        TiePointGrid_writeRasterDataFully2(self._obj, pm._obj)
         return
 
     def acceptVisitor(self, visitor):
-        self.TiePointGrid_acceptVisitor(self.__obj, visitor.__obj)
+        TiePointGrid_acceptVisitor(self._obj, visitor._obj)
         return
 
     def cloneTiePointGrid(self):
-        return TiePointGrid(self.TiePointGrid_cloneTiePointGrid(self.__obj))
+        return TiePointGrid(TiePointGrid_cloneTiePointGrid(self._obj))
 
     def createZenithFromElevationAngleTiePointGrid(elevationAngleGrid):
-        return TiePointGrid(TiePointGrid_createZenithFromElevationAngleTiePointGrid(elevationAngleGrid.__obj))
+        return TiePointGrid(TiePointGrid_createZenithFromElevationAngleTiePointGrid(elevationAngleGrid._obj))
 
     def createSubset(sourceTiePointGrid, subsetDef):
-        return TiePointGrid(TiePointGrid_createSubset(sourceTiePointGrid.__obj, subsetDef.__obj))
+        return TiePointGrid(TiePointGrid_createSubset(sourceTiePointGrid._obj, subsetDef._obj))
 
     def getRasterWidth(self):
-        return self.TiePointGrid_getRasterWidth(self.__obj)
+        return TiePointGrid_getRasterWidth(self._obj)
 
     def getRasterHeight(self):
-        return self.TiePointGrid_getRasterHeight(self.__obj)
+        return TiePointGrid_getRasterHeight(self._obj)
 
     def setModified(self, modified):
-        self.TiePointGrid_setModified(self.__obj, modified)
+        TiePointGrid_setModified(self._obj, modified)
         return
 
     def getGeoCoding(self):
-        return GeoCoding(self.TiePointGrid_getGeoCoding(self.__obj))
+        return GeoCoding(TiePointGrid_getGeoCoding(self._obj))
 
     def setGeoCoding(self, geoCoding):
-        self.TiePointGrid_setGeoCoding(self.__obj, geoCoding.__obj)
+        TiePointGrid_setGeoCoding(self._obj, geoCoding._obj)
         return
 
     def getPointing(self):
-        return Pointing(self.TiePointGrid_getPointing(self.__obj))
+        return Pointing(TiePointGrid_getPointing(self._obj))
 
     def canBeOrthorectified(self):
-        return self.TiePointGrid_canBeOrthorectified(self.__obj)
+        return TiePointGrid_canBeOrthorectified(self._obj)
 
     def getScalingFactor(self):
-        return self.TiePointGrid_getScalingFactor(self.__obj)
+        return TiePointGrid_getScalingFactor(self._obj)
 
     def setScalingFactor(self, scalingFactor):
-        self.TiePointGrid_setScalingFactor(self.__obj, scalingFactor)
+        TiePointGrid_setScalingFactor(self._obj, scalingFactor)
         return
 
     def getScalingOffset(self):
-        return self.TiePointGrid_getScalingOffset(self.__obj)
+        return TiePointGrid_getScalingOffset(self._obj)
 
     def setScalingOffset(self, scalingOffset):
-        self.TiePointGrid_setScalingOffset(self.__obj, scalingOffset)
+        TiePointGrid_setScalingOffset(self._obj, scalingOffset)
         return
 
     def isLog10Scaled(self):
-        return self.TiePointGrid_isLog10Scaled(self.__obj)
+        return TiePointGrid_isLog10Scaled(self._obj)
 
     def setLog10Scaled(self, log10Scaled):
-        self.TiePointGrid_setLog10Scaled(self.__obj, log10Scaled)
+        TiePointGrid_setLog10Scaled(self._obj, log10Scaled)
         return
 
     def isScalingApplied(self):
-        return self.TiePointGrid_isScalingApplied(self.__obj)
+        return TiePointGrid_isScalingApplied(self._obj)
 
     def isValidMaskProperty(propertyName):
         return TiePointGrid_isValidMaskProperty(propertyName)
 
     def isNoDataValueSet(self):
-        return self.TiePointGrid_isNoDataValueSet(self.__obj)
+        return TiePointGrid_isNoDataValueSet(self._obj)
 
     def clearNoDataValue(self):
-        self.TiePointGrid_clearNoDataValue(self.__obj)
+        TiePointGrid_clearNoDataValue(self._obj)
         return
 
     def isNoDataValueUsed(self):
-        return self.TiePointGrid_isNoDataValueUsed(self.__obj)
+        return TiePointGrid_isNoDataValueUsed(self._obj)
 
     def setNoDataValueUsed(self, noDataValueUsed):
-        self.TiePointGrid_setNoDataValueUsed(self.__obj, noDataValueUsed)
+        TiePointGrid_setNoDataValueUsed(self._obj, noDataValueUsed)
         return
 
     def getNoDataValue(self):
-        return self.TiePointGrid_getNoDataValue(self.__obj)
+        return TiePointGrid_getNoDataValue(self._obj)
 
     def setNoDataValue(self, noDataValue):
-        self.TiePointGrid_setNoDataValue(self.__obj, noDataValue)
+        TiePointGrid_setNoDataValue(self._obj, noDataValue)
         return
 
     def getGeophysicalNoDataValue(self):
-        return self.TiePointGrid_getGeophysicalNoDataValue(self.__obj)
+        return TiePointGrid_getGeophysicalNoDataValue(self._obj)
 
     def setGeophysicalNoDataValue(self, noDataValue):
-        self.TiePointGrid_setGeophysicalNoDataValue(self.__obj, noDataValue)
+        TiePointGrid_setGeophysicalNoDataValue(self._obj, noDataValue)
         return
 
     def getValidPixelExpression(self):
-        return self.TiePointGrid_getValidPixelExpression(self.__obj)
+        return TiePointGrid_getValidPixelExpression(self._obj)
 
     def setValidPixelExpression(self, validPixelExpression):
-        self.TiePointGrid_setValidPixelExpression(self.__obj, validPixelExpression)
+        TiePointGrid_setValidPixelExpression(self._obj, validPixelExpression)
         return
 
     def isValidMaskUsed(self):
-        return self.TiePointGrid_isValidMaskUsed(self.__obj)
+        return TiePointGrid_isValidMaskUsed(self._obj)
 
     def resetValidMask(self):
-        self.TiePointGrid_resetValidMask(self.__obj)
+        TiePointGrid_resetValidMask(self._obj)
         return
 
     def getValidMaskExpression(self):
-        return self.TiePointGrid_getValidMaskExpression(self.__obj)
+        return TiePointGrid_getValidMaskExpression(self._obj)
 
     def updateExpression(self, oldExternalName, newExternalName):
-        self.TiePointGrid_updateExpression(self.__obj, oldExternalName, newExternalName)
+        TiePointGrid_updateExpression(self._obj, oldExternalName, newExternalName)
         return
 
     def hasRasterData(self):
-        return self.TiePointGrid_hasRasterData(self.__obj)
+        return TiePointGrid_hasRasterData(self._obj)
 
     def getRasterData(self):
-        return ProductData(self.TiePointGrid_getRasterData(self.__obj))
+        return ProductData(TiePointGrid_getRasterData(self._obj))
 
     def setRasterData(self, rasterData):
-        self.TiePointGrid_setRasterData(self.__obj, rasterData.__obj)
+        TiePointGrid_setRasterData(self._obj, rasterData._obj)
         return
 
     def loadRasterData(self):
-        self.TiePointGrid_loadRasterData1(self.__obj)
+        TiePointGrid_loadRasterData1(self._obj)
         return
 
     def loadRasterData(self, pm):
-        self.TiePointGrid_loadRasterData2(self.__obj, pm.__obj)
+        TiePointGrid_loadRasterData2(self._obj, pm._obj)
         return
 
     def unloadRasterData(self):
-        self.TiePointGrid_unloadRasterData(self.__obj)
+        TiePointGrid_unloadRasterData(self._obj)
         return
 
     def isPixelValid(self, x, y):
-        return self.TiePointGrid_isPixelValid2(self.__obj, x, y)
+        return TiePointGrid_isPixelValid2(self._obj, x, y)
 
     def getSampleInt(self, x, y):
-        return self.TiePointGrid_getSampleInt(self.__obj, x, y)
+        return TiePointGrid_getSampleInt(self._obj, x, y)
 
     def getSampleFloat(self, x, y):
-        return self.TiePointGrid_getSampleFloat(self.__obj, x, y)
+        return TiePointGrid_getSampleFloat(self._obj, x, y)
 
     def isPixelValid(self, pixelIndex):
-        return self.TiePointGrid_isPixelValid1(self.__obj, pixelIndex)
+        return TiePointGrid_isPixelValid1(self._obj, pixelIndex)
 
     def isPixelValid(self, x, y, roi):
-        return self.TiePointGrid_isPixelValid3(self.__obj, x, y, roi.__obj)
+        return TiePointGrid_isPixelValid3(self._obj, x, y, roi._obj)
 
     def getPixels(self, x, y, w, h, pixels):
-        return self.TiePointGrid_getPixels5(self.__obj, x, y, w, h, pixels)
+        return TiePointGrid_getPixels5(self._obj, x, y, w, h, pixels)
 
     def getPixels(self, x, y, w, h, pixels):
-        return self.TiePointGrid_getPixels3(self.__obj, x, y, w, h, pixels)
+        return TiePointGrid_getPixels3(self._obj, x, y, w, h, pixels)
 
     def getPixels(self, x, y, w, h, pixels):
-        return self.TiePointGrid_getPixels1(self.__obj, x, y, w, h, pixels)
+        return TiePointGrid_getPixels1(self._obj, x, y, w, h, pixels)
 
     def readPixels(self, x, y, w, h, pixels):
-        return self.TiePointGrid_readPixels5(self.__obj, x, y, w, h, pixels)
+        return TiePointGrid_readPixels5(self._obj, x, y, w, h, pixels)
 
     def readPixels(self, x, y, w, h, pixels):
-        return self.TiePointGrid_readPixels3(self.__obj, x, y, w, h, pixels)
+        return TiePointGrid_readPixels3(self._obj, x, y, w, h, pixels)
 
     def readPixels(self, x, y, w, h, pixels):
-        return self.TiePointGrid_readPixels1(self.__obj, x, y, w, h, pixels)
+        return TiePointGrid_readPixels1(self._obj, x, y, w, h, pixels)
 
     def writePixels(self, x, y, w, h, pixels):
-        self.TiePointGrid_writePixels5(self.__obj, x, y, w, h, pixels)
+        TiePointGrid_writePixels5(self._obj, x, y, w, h, pixels)
         return
 
     def writePixels(self, x, y, w, h, pixels):
-        self.TiePointGrid_writePixels3(self.__obj, x, y, w, h, pixels)
+        TiePointGrid_writePixels3(self._obj, x, y, w, h, pixels)
         return
 
     def writePixels(self, x, y, w, h, pixels):
-        self.TiePointGrid_writePixels1(self.__obj, x, y, w, h, pixels)
+        TiePointGrid_writePixels1(self._obj, x, y, w, h, pixels)
         return
 
     def readValidMask(self, x, y, w, h, validMask):
-        return self.TiePointGrid_readValidMask(self.__obj, x, y, w, h, validMask)
+        return TiePointGrid_readValidMask(self._obj, x, y, w, h, validMask)
 
     def readRasterDataFully(self):
-        self.TiePointGrid_readRasterDataFully1(self.__obj)
+        TiePointGrid_readRasterDataFully1(self._obj)
         return
 
     def readRasterData(self, offsetX, offsetY, width, height, rasterData):
-        self.TiePointGrid_readRasterData1(self.__obj, offsetX, offsetY, width, height, rasterData.__obj)
+        TiePointGrid_readRasterData1(self._obj, offsetX, offsetY, width, height, rasterData._obj)
         return
 
     def writeRasterDataFully(self):
-        self.TiePointGrid_writeRasterDataFully1(self.__obj)
+        TiePointGrid_writeRasterDataFully1(self._obj)
         return
 
     def writeRasterData(self, offsetX, offsetY, width, height, rasterData):
-        self.TiePointGrid_writeRasterData1(self.__obj, offsetX, offsetY, width, height, rasterData.__obj)
+        TiePointGrid_writeRasterData1(self._obj, offsetX, offsetY, width, height, rasterData._obj)
         return
 
     def createCompatibleRasterData(self):
-        return ProductData(self.TiePointGrid_createCompatibleRasterData1(self.__obj))
+        return ProductData(TiePointGrid_createCompatibleRasterData1(self._obj))
 
     def createCompatibleSceneRasterData(self):
-        return ProductData(self.TiePointGrid_createCompatibleSceneRasterData(self.__obj))
+        return ProductData(TiePointGrid_createCompatibleSceneRasterData(self._obj))
 
     def createCompatibleRasterData(self, width, height):
-        return ProductData(self.TiePointGrid_createCompatibleRasterData2(self.__obj, width, height))
+        return ProductData(TiePointGrid_createCompatibleRasterData2(self._obj, width, height))
 
     def isCompatibleRasterData(self, rasterData, w, h):
-        return self.TiePointGrid_isCompatibleRasterData(self.__obj, rasterData.__obj, w, h)
+        return TiePointGrid_isCompatibleRasterData(self._obj, rasterData._obj, w, h)
 
     def checkCompatibleRasterData(self, rasterData, w, h):
-        self.TiePointGrid_checkCompatibleRasterData(self.__obj, rasterData.__obj, w, h)
+        TiePointGrid_checkCompatibleRasterData(self._obj, rasterData._obj, w, h)
         return
 
     def hasIntPixels(self):
-        return self.TiePointGrid_hasIntPixels(self.__obj)
+        return TiePointGrid_hasIntPixels(self._obj)
 
     def createTransectProfileData(self, shape):
-        return TransectProfileData(self.TiePointGrid_createTransectProfileData(self.__obj, shape.__obj))
+        return TransectProfileData(TiePointGrid_createTransectProfileData(self._obj, shape._obj))
 
     def getImageInfo(self):
-        return ImageInfo(self.TiePointGrid_getImageInfo1(self.__obj))
+        return ImageInfo(TiePointGrid_getImageInfo1(self._obj))
 
     def setImageInfo(self, imageInfo):
-        self.TiePointGrid_setImageInfo(self.__obj, imageInfo.__obj)
+        TiePointGrid_setImageInfo(self._obj, imageInfo._obj)
         return
 
     def fireImageInfoChanged(self):
-        self.TiePointGrid_fireImageInfoChanged(self.__obj)
+        TiePointGrid_fireImageInfoChanged(self._obj)
         return
 
     def getImageInfo(self, pm):
-        return ImageInfo(self.TiePointGrid_getImageInfo2(self.__obj, pm.__obj))
+        return ImageInfo(TiePointGrid_getImageInfo2(self._obj, pm._obj))
 
     def getImageInfo(self, histoSkipAreas, pm):
-        return ImageInfo(self.TiePointGrid_getImageInfo3(self.__obj, histoSkipAreas, pm.__obj))
+        return ImageInfo(TiePointGrid_getImageInfo3(self._obj, histoSkipAreas, pm._obj))
 
     def createDefaultImageInfo(self, histoSkipAreas, pm):
-        return ImageInfo(self.TiePointGrid_createDefaultImageInfo1(self.__obj, histoSkipAreas, pm.__obj))
+        return ImageInfo(TiePointGrid_createDefaultImageInfo1(self._obj, histoSkipAreas, pm._obj))
 
     def createDefaultImageInfo(self, histoSkipAreas, histogram):
-        return ImageInfo(self.TiePointGrid_createDefaultImageInfo2(self.__obj, histoSkipAreas, histogram.__obj))
+        return ImageInfo(TiePointGrid_createDefaultImageInfo2(self._obj, histoSkipAreas, histogram._obj))
 
     def getOverlayMaskGroup(self):
-        return ProductNodeGroup(self.TiePointGrid_getOverlayMaskGroup(self.__obj))
+        return ProductNodeGroup(TiePointGrid_getOverlayMaskGroup(self._obj))
 
     def createColorIndexedImage(self, pm):
-        return BufferedImage(self.TiePointGrid_createColorIndexedImage(self.__obj, pm.__obj))
+        return BufferedImage(TiePointGrid_createColorIndexedImage(self._obj, pm._obj))
 
     def createRgbImage(self, pm):
-        return BufferedImage(self.TiePointGrid_createRgbImage(self.__obj, pm.__obj))
+        return BufferedImage(TiePointGrid_createRgbImage(self._obj, pm._obj))
 
     def quantizeRasterData(self, newMin, newMax, gamma, pm):
-        return self.TiePointGrid_quantizeRasterData1(self.__obj, newMin, newMax, gamma, pm.__obj)
+        return TiePointGrid_quantizeRasterData1(self._obj, newMin, newMax, gamma, pm._obj)
 
     def quantizeRasterData(self, newMin, newMax, gamma, samples, offset, stride, pm):
-        self.TiePointGrid_quantizeRasterData2(self.__obj, newMin, newMax, gamma, samples, offset, stride, pm.__obj)
+        TiePointGrid_quantizeRasterData2(self._obj, newMin, newMax, gamma, samples, offset, stride, pm._obj)
         return
 
     def createPixelValidator(self, lineOffset, roi):
-        return IndexValidator(self.TiePointGrid_createPixelValidator(self.__obj, lineOffset, roi.__obj))
+        return IndexValidator(TiePointGrid_createPixelValidator(self._obj, lineOffset, roi._obj))
 
     def scale(self, v):
-        return self.TiePointGrid_scale(self.__obj, v)
+        return TiePointGrid_scale(self._obj, v)
 
     def scaleInverse(self, v):
-        return self.TiePointGrid_scaleInverse(self.__obj, v)
+        return TiePointGrid_scaleInverse(self._obj, v)
 
     def getPixelString(self, x, y):
-        return self.TiePointGrid_getPixelString(self.__obj, x, y)
+        return TiePointGrid_getPixelString(self._obj, x, y)
 
     def isSourceImageSet(self):
-        return self.TiePointGrid_isSourceImageSet(self.__obj)
+        return TiePointGrid_isSourceImageSet(self._obj)
 
     def getSourceImage(self):
-        return MultiLevelImage(self.TiePointGrid_getSourceImage(self.__obj))
+        return MultiLevelImage(TiePointGrid_getSourceImage(self._obj))
 
     def setSourceImage(self, sourceImage):
-        self.TiePointGrid_setSourceImage2(self.__obj, sourceImage.__obj)
+        TiePointGrid_setSourceImage2(self._obj, sourceImage._obj)
         return
 
     def setSourceImage(self, sourceImage):
-        self.TiePointGrid_setSourceImage1(self.__obj, sourceImage.__obj)
+        TiePointGrid_setSourceImage1(self._obj, sourceImage._obj)
         return
 
     def isGeophysicalImageSet(self):
-        return self.TiePointGrid_isGeophysicalImageSet(self.__obj)
+        return TiePointGrid_isGeophysicalImageSet(self._obj)
 
     def getGeophysicalImage(self):
-        return MultiLevelImage(self.TiePointGrid_getGeophysicalImage(self.__obj))
+        return MultiLevelImage(TiePointGrid_getGeophysicalImage(self._obj))
 
     def isValidMaskImageSet(self):
-        return self.TiePointGrid_isValidMaskImageSet(self.__obj)
+        return TiePointGrid_isValidMaskImageSet(self._obj)
 
     def getValidMaskImage(self):
-        return MultiLevelImage(self.TiePointGrid_getValidMaskImage(self.__obj))
+        return MultiLevelImage(TiePointGrid_getValidMaskImage(self._obj))
 
     def isStxSet(self):
-        return self.TiePointGrid_isStxSet(self.__obj)
+        return TiePointGrid_isStxSet(self._obj)
 
     def getStx(self):
-        return Stx(self.TiePointGrid_getStx1(self.__obj))
+        return Stx(TiePointGrid_getStx1(self._obj))
 
     def getStx(self, accurate, pm):
-        return Stx(self.TiePointGrid_getStx2(self.__obj, accurate, pm.__obj))
+        return Stx(TiePointGrid_getStx2(self._obj, accurate, pm._obj))
 
     def setStx(self, stx):
-        self.TiePointGrid_setStx(self.__obj, stx.__obj)
+        TiePointGrid_setStx(self._obj, stx._obj)
         return
 
     def getValidShape(self):
-        return Shape(self.TiePointGrid_getValidShape(self.__obj))
+        return Shape(TiePointGrid_getValidShape(self._obj))
 
     def getDataType(self):
-        return self.TiePointGrid_getDataType(self.__obj)
+        return TiePointGrid_getDataType(self._obj)
 
     def getNumDataElems(self):
-        return self.TiePointGrid_getNumDataElems(self.__obj)
+        return TiePointGrid_getNumDataElems(self._obj)
 
     def setData(self, data):
-        self.TiePointGrid_setData(self.__obj, data.__obj)
+        TiePointGrid_setData(self._obj, data._obj)
         return
 
     def getData(self):
-        return ProductData(self.TiePointGrid_getData(self.__obj))
+        return ProductData(TiePointGrid_getData(self._obj))
 
     def setDataElems(self, elems):
-        self.TiePointGrid_setDataElems(self.__obj, elems.__obj)
+        TiePointGrid_setDataElems(self._obj, elems._obj)
         return
 
     def getDataElems(self):
-        return Object(self.TiePointGrid_getDataElems(self.__obj))
+        return Object(TiePointGrid_getDataElems(self._obj))
 
     def getDataElemSize(self):
-        return self.TiePointGrid_getDataElemSize(self.__obj)
+        return TiePointGrid_getDataElemSize(self._obj)
 
     def setReadOnly(self, readOnly):
-        self.TiePointGrid_setReadOnly(self.__obj, readOnly)
+        TiePointGrid_setReadOnly(self._obj, readOnly)
         return
 
     def isReadOnly(self):
-        return self.TiePointGrid_isReadOnly(self.__obj)
+        return TiePointGrid_isReadOnly(self._obj)
 
     def setUnit(self, unit):
-        self.TiePointGrid_setUnit(self.__obj, unit)
+        TiePointGrid_setUnit(self._obj, unit)
         return
 
     def getUnit(self):
-        return self.TiePointGrid_getUnit(self.__obj)
+        return TiePointGrid_getUnit(self._obj)
 
     def fireProductNodeDataChanged(self):
-        self.TiePointGrid_fireProductNodeDataChanged(self.__obj)
+        TiePointGrid_fireProductNodeDataChanged(self._obj)
         return
 
     def getRawStorageSize(self, subsetDef):
-        return self.TiePointGrid_getRawStorageSize2(self.__obj, subsetDef.__obj)
+        return TiePointGrid_getRawStorageSize2(self._obj, subsetDef._obj)
 
     def createCompatibleProductData(self, numElems):
-        return ProductData(self.TiePointGrid_createCompatibleProductData(self.__obj, numElems))
+        return ProductData(TiePointGrid_createCompatibleProductData(self._obj, numElems))
 
     def getOwner(self):
-        return ProductNode(self.TiePointGrid_getOwner(self.__obj))
+        return ProductNode(TiePointGrid_getOwner(self._obj))
 
     def getName(self):
-        return self.TiePointGrid_getName(self.__obj)
+        return TiePointGrid_getName(self._obj)
 
     def setName(self, name):
-        self.TiePointGrid_setName(self.__obj, name)
+        TiePointGrid_setName(self._obj, name)
         return
 
     def getDescription(self):
-        return self.TiePointGrid_getDescription(self.__obj)
+        return TiePointGrid_getDescription(self._obj)
 
     def setDescription(self, description):
-        self.TiePointGrid_setDescription(self.__obj, description)
+        TiePointGrid_setDescription(self._obj, description)
         return
 
     def isModified(self):
-        return self.TiePointGrid_isModified(self.__obj)
+        return TiePointGrid_isModified(self._obj)
 
     def toString(self):
-        return self.TiePointGrid_toString(self.__obj)
+        return TiePointGrid_toString(self._obj)
 
     def isValidNodeName(name):
         return TiePointGrid_isValidNodeName(name)
 
     def getProduct(self):
-        return Product(self.TiePointGrid_getProduct(self.__obj))
+        return Product(TiePointGrid_getProduct(self._obj))
 
     def getProductReader(self):
-        return ProductReader(self.TiePointGrid_getProductReader(self.__obj))
+        return ProductReader(TiePointGrid_getProductReader(self._obj))
 
     def getProductWriter(self):
-        return ProductWriter(self.TiePointGrid_getProductWriter(self.__obj))
+        return ProductWriter(TiePointGrid_getProductWriter(self._obj))
 
     def getDisplayName(self):
-        return self.TiePointGrid_getDisplayName(self.__obj)
+        return TiePointGrid_getDisplayName(self._obj)
 
     def getProductRefString(self):
-        return self.TiePointGrid_getProductRefString(self.__obj)
+        return TiePointGrid_getProductRefString(self._obj)
 
     def getRawStorageSize(self):
-        return self.TiePointGrid_getRawStorageSize1(self.__obj)
+        return TiePointGrid_getRawStorageSize1(self._obj)
 
     def fireProductNodeChanged(self, propertyName):
-        self.TiePointGrid_fireProductNodeChanged1(self.__obj, propertyName)
+        TiePointGrid_fireProductNodeChanged1(self._obj, propertyName)
         return
 
     def fireProductNodeChanged(self, propertyName, oldValue, newValue):
-        self.TiePointGrid_fireProductNodeChanged2(self.__obj, propertyName, oldValue.__obj, newValue.__obj)
+        TiePointGrid_fireProductNodeChanged2(self._obj, propertyName, oldValue._obj, newValue._obj)
         return
 
     def removeFromFile(self, productWriter):
-        self.TiePointGrid_removeFromFile(self.__obj, productWriter.__obj)
+        TiePointGrid_removeFromFile(self._obj, productWriter._obj)
         return
 
 
 class SimpleFeature:
-
     def __init__(self, obj):
-        self.__obj = obj
+        self._obj = obj
 
 
 class ProductSubsetDef:
-
     def __init__(self, obj):
-        self.__obj = obj
+        self._obj = obj
 
 
 class ProductWriter:
-
     def __init__(self, obj):
-        self.__obj = obj
+        self._obj = obj
 
     def getWriterPlugIn(self):
-        return ProductWriterPlugIn(self.ProductWriter_getWriterPlugIn(self.__obj))
+        return ProductWriterPlugIn(ProductWriter_getWriterPlugIn(self._obj))
 
     def getOutput(self):
-        return Object(self.ProductWriter_getOutput(self.__obj))
+        return Object(ProductWriter_getOutput(self._obj))
 
     def writeProductNodes(self, product, output):
-        self.ProductWriter_writeProductNodes(self.__obj, product.__obj, output.__obj)
+        ProductWriter_writeProductNodes(self._obj, product._obj, output._obj)
         return
 
     def writeBandRasterData(self, sourceBand, sourceOffsetX, sourceOffsetY, sourceWidth, sourceHeight, sourceBuffer, pm):
-        self.ProductWriter_writeBandRasterData(self.__obj, sourceBand.__obj, sourceOffsetX, sourceOffsetY, sourceWidth, sourceHeight, sourceBuffer.__obj, pm.__obj)
+        ProductWriter_writeBandRasterData(self._obj, sourceBand._obj, sourceOffsetX, sourceOffsetY, sourceWidth, sourceHeight, sourceBuffer._obj, pm._obj)
         return
 
     def flush(self):
-        self.ProductWriter_flush(self.__obj)
+        ProductWriter_flush(self._obj)
         return
 
     def close(self):
-        self.ProductWriter_close(self.__obj)
+        ProductWriter_close(self._obj)
         return
 
     def shouldWrite(self, node):
-        return self.ProductWriter_shouldWrite(self.__obj, node.__obj)
+        return ProductWriter_shouldWrite(self._obj, node._obj)
 
     def isIncrementalMode(self):
-        return self.ProductWriter_isIncrementalMode(self.__obj)
+        return ProductWriter_isIncrementalMode(self._obj)
 
     def setIncrementalMode(self, enabled):
-        self.ProductWriter_setIncrementalMode(self.__obj, enabled)
+        ProductWriter_setIncrementalMode(self._obj, enabled)
         return
 
     def deleteOutput(self):
-        self.ProductWriter_deleteOutput(self.__obj)
+        ProductWriter_deleteOutput(self._obj)
         return
 
     def removeBand(self, band):
-        self.ProductWriter_removeBand(self.__obj, band.__obj)
+        ProductWriter_removeBand(self._obj, band._obj)
         return
 
 
 class MetadataAttribute:
-
     def __init__(self, obj):
-        self.__obj = obj
+        self._obj = obj
 
     def newMetadataAttribute(name, data, readOnly):
-        return MetadataAttribute(MetadataAttribute_newMetadataAttribute(name, data.__obj, readOnly))
+        return MetadataAttribute(MetadataAttribute_newMetadataAttribute(name, data._obj, readOnly))
 
     def getParentElement(self):
-        return MetadataElement(self.MetadataAttribute_getParentElement(self.__obj))
+        return MetadataElement(MetadataAttribute_getParentElement(self._obj))
 
     def equals(self, object):
-        return self.MetadataAttribute_equals(self.__obj, object.__obj)
+        return MetadataAttribute_equals(self._obj, object._obj)
 
     def acceptVisitor(self, visitor):
-        self.MetadataAttribute_acceptVisitor(self.__obj, visitor.__obj)
+        MetadataAttribute_acceptVisitor(self._obj, visitor._obj)
         return
 
     def createDeepClone(self):
-        return MetadataAttribute(self.MetadataAttribute_createDeepClone(self.__obj))
+        return MetadataAttribute(MetadataAttribute_createDeepClone(self._obj))
 
     def getDataType(self):
-        return self.MetadataAttribute_getDataType(self.__obj)
+        return MetadataAttribute_getDataType(self._obj)
 
     def isFloatingPointType(self):
-        return self.MetadataAttribute_isFloatingPointType(self.__obj)
+        return MetadataAttribute_isFloatingPointType(self._obj)
 
     def getNumDataElems(self):
-        return self.MetadataAttribute_getNumDataElems(self.__obj)
+        return MetadataAttribute_getNumDataElems(self._obj)
 
     def setData(self, data):
-        self.MetadataAttribute_setData(self.__obj, data.__obj)
+        MetadataAttribute_setData(self._obj, data._obj)
         return
 
     def getData(self):
-        return ProductData(self.MetadataAttribute_getData(self.__obj))
+        return ProductData(MetadataAttribute_getData(self._obj))
 
     def setDataElems(self, elems):
-        self.MetadataAttribute_setDataElems(self.__obj, elems.__obj)
+        MetadataAttribute_setDataElems(self._obj, elems._obj)
         return
 
     def getDataElems(self):
-        return Object(self.MetadataAttribute_getDataElems(self.__obj))
+        return Object(MetadataAttribute_getDataElems(self._obj))
 
     def getDataElemSize(self):
-        return self.MetadataAttribute_getDataElemSize(self.__obj)
+        return MetadataAttribute_getDataElemSize(self._obj)
 
     def setReadOnly(self, readOnly):
-        self.MetadataAttribute_setReadOnly(self.__obj, readOnly)
+        MetadataAttribute_setReadOnly(self._obj, readOnly)
         return
 
     def isReadOnly(self):
-        return self.MetadataAttribute_isReadOnly(self.__obj)
+        return MetadataAttribute_isReadOnly(self._obj)
 
     def setUnit(self, unit):
-        self.MetadataAttribute_setUnit(self.__obj, unit)
+        MetadataAttribute_setUnit(self._obj, unit)
         return
 
     def getUnit(self):
-        return self.MetadataAttribute_getUnit(self.__obj)
+        return MetadataAttribute_getUnit(self._obj)
 
     def fireProductNodeDataChanged(self):
-        self.MetadataAttribute_fireProductNodeDataChanged(self.__obj)
+        MetadataAttribute_fireProductNodeDataChanged(self._obj)
         return
 
     def dispose(self):
-        self.MetadataAttribute_dispose(self.__obj)
+        MetadataAttribute_dispose(self._obj)
         return
 
     def createCompatibleProductData(self, numElems):
-        return ProductData(self.MetadataAttribute_createCompatibleProductData(self.__obj, numElems))
+        return ProductData(MetadataAttribute_createCompatibleProductData(self._obj, numElems))
 
     def getOwner(self):
-        return ProductNode(self.MetadataAttribute_getOwner(self.__obj))
+        return ProductNode(MetadataAttribute_getOwner(self._obj))
 
     def getName(self):
-        return self.MetadataAttribute_getName(self.__obj)
+        return MetadataAttribute_getName(self._obj)
 
     def setName(self, name):
-        self.MetadataAttribute_setName(self.__obj, name)
+        MetadataAttribute_setName(self._obj, name)
         return
 
     def getDescription(self):
-        return self.MetadataAttribute_getDescription(self.__obj)
+        return MetadataAttribute_getDescription(self._obj)
 
     def setDescription(self, description):
-        self.MetadataAttribute_setDescription(self.__obj, description)
+        MetadataAttribute_setDescription(self._obj, description)
         return
 
     def isModified(self):
-        return self.MetadataAttribute_isModified(self.__obj)
+        return MetadataAttribute_isModified(self._obj)
 
     def setModified(self, modified):
-        self.MetadataAttribute_setModified(self.__obj, modified)
+        MetadataAttribute_setModified(self._obj, modified)
         return
 
     def toString(self):
-        return self.MetadataAttribute_toString(self.__obj)
+        return MetadataAttribute_toString(self._obj)
 
     def isValidNodeName(name):
         return MetadataAttribute_isValidNodeName(name)
 
     def getProduct(self):
-        return Product(self.MetadataAttribute_getProduct(self.__obj))
+        return Product(MetadataAttribute_getProduct(self._obj))
 
     def getProductReader(self):
-        return ProductReader(self.MetadataAttribute_getProductReader(self.__obj))
+        return ProductReader(MetadataAttribute_getProductReader(self._obj))
 
     def getProductWriter(self):
-        return ProductWriter(self.MetadataAttribute_getProductWriter(self.__obj))
+        return ProductWriter(MetadataAttribute_getProductWriter(self._obj))
 
     def getDisplayName(self):
-        return self.MetadataAttribute_getDisplayName(self.__obj)
+        return MetadataAttribute_getDisplayName(self._obj)
 
     def getProductRefString(self):
-        return self.MetadataAttribute_getProductRefString(self.__obj)
+        return MetadataAttribute_getProductRefString(self._obj)
 
     def updateExpression(self, oldExternalName, newExternalName):
-        self.MetadataAttribute_updateExpression(self.__obj, oldExternalName, newExternalName)
+        MetadataAttribute_updateExpression(self._obj, oldExternalName, newExternalName)
         return
 
     def removeFromFile(self, productWriter):
-        self.MetadataAttribute_removeFromFile(self.__obj, productWriter.__obj)
+        MetadataAttribute_removeFromFile(self._obj, productWriter._obj)
         return
 
 
 class ProgressMonitor:
-
     def __init__(self, obj):
-        self.__obj = obj
+        self._obj = obj
 
 
 class VectorDataNode:
-
     def __init__(self, obj):
-        self.__obj = obj
+        self._obj = obj
 
 
 class GeneralPath:
-
     def __init__(self, obj):
-        self.__obj = obj
+        self._obj = obj
 
 
 class ImageInputStream:
-
     def __init__(self, obj):
-        self.__obj = obj
+        self._obj = obj
 
 

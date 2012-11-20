@@ -109,7 +109,10 @@ To-do List
 ----------
 
 * Done: Use BEAM_HOME env and auto-configure JVM parameters (use Util_listDir)
-* Separate C modules: beam_capi --> beam_capi_gen (generated code) + beam_capi_util (constant code)
+* Make sure Python classes implement correctly: __eq__, __ne__, __hash__
+* Generate usable documentation (Doxgen + PyDoc)
+* Handle reference counting JNI / Python/C
+* Handle return parameters in Python (done in C)
 
 
 Design Considerations
