@@ -157,20 +157,23 @@ public final class ApiInfo {
     }
 
     private static Map<ApiClass, ApiMembers> getAllClasses(Map<ApiClass, ApiMembers> apiClasses) {
-        Map<ApiClass, ApiMembers> usedClasses = new HashMap<ApiClass, ApiMembers>();
+        Map<ApiClass, ApiMembers> allClasses = new HashMap<ApiClass, ApiMembers>();
+        for (Map.Entry<ApiClass, ApiMembers> entry : apiClasses.entrySet()) {
+            allClasses.put(entry.getKey(), new ApiMembers());
+        }
         for (Map.Entry<ApiClass, ApiMembers> entry : apiClasses.entrySet()) {
             ApiMembers apiMembers = entry.getValue();
             for (ApiConstant apiConstant : apiMembers.apiConstants) {
-                collectAllClasses(apiConstant.getType(), apiConstant, usedClasses);
+                collectAllClasses(apiConstant.getType(), apiConstant, allClasses);
             }
             for (ApiMethod apiMethod : apiMembers.apiMethods) {
-                collectAllClasses(apiMethod.getReturnType(), apiMethod, usedClasses);
+                collectAllClasses(apiMethod.getReturnType(), apiMethod, allClasses);
                 for (Parameter parameter : apiMethod.getMemberDoc().parameters()) {
-                    collectAllClasses(parameter.type(), apiMethod, usedClasses);
+                    collectAllClasses(parameter.type(), apiMethod, allClasses);
                 }
             }
         }
-        return usedClasses;
+        return allClasses;
     }
 
     private static void collectAllClasses(Type type, ApiConstant apiConstant, Map<ApiClass, ApiMembers> allClasses) {
