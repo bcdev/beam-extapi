@@ -39,6 +39,7 @@ public class PyCModuleGenerator extends ModuleGenerator {
     public static final String BEAM_PYAPI_VARNAMEPREFIX = "BeamPy";
     public static final String THIS_VAR_NAME = "thisObj";
     public static final String RESULT_VAR_NAME = "result";
+    public static final String SELF_OBJ_NAME = "_obj";
 
     private final CModuleGenerator cModuleGenerator;
 
@@ -76,11 +77,9 @@ public class PyCModuleGenerator extends ModuleGenerator {
             writer.printf("from _%s import *\n", BEAM_PYAPI_NAME);
             writer.printf("\n");
             for (ApiClass apiClass : getApiInfo().getAllClasses()) {
-                System.out.println("apiClass = " + apiClass);
                 writer.printf("class %s:\n", getClassName(apiClass.getType()));
-                writer.printf("\n");
                 writer.printf("    def __init__(self, obj):\n");
-                writer.printf("        self.__obj = obj\n");
+                writer.printf("        self.%s = obj\n", SELF_OBJ_NAME);
                 writer.printf("\n");
                 for (FunctionGenerator generator : getFunctionGenerators(apiClass)) {
                     String instanceFName = generator.getApiMethod().getJavaName();
@@ -102,7 +101,8 @@ public class PyCModuleGenerator extends ModuleGenerator {
                         }
                         if (isObject(parameterGenerator.getType())) {
                             args.append(parameterGenerator.getName());
-                            args.append(".__obj");
+                            args.append(".");
+                            args.append(SELF_OBJ_NAME);
                         } else {
                             args.append(parameterGenerator.getName());
                         }
@@ -110,7 +110,7 @@ public class PyCModuleGenerator extends ModuleGenerator {
                     if (JavadocHelpers.isVoid(generator.getApiMethod().getReturnType())) {
                         if (JavadocHelpers.isInstance(generator.getApiMethod().getMemberDoc())) {
                             writer.printf("    def %s(self%s):\n", instanceFName, params.length() > 0 ? ", " + params : "");
-                            writer.printf("        self.%s(self.__obj%s)\n", staticFName, args.length() > 0 ? ", " + args : "");
+                            writer.printf("        %s(self.%s%s)\n", staticFName, SELF_OBJ_NAME, args.length() > 0 ? ", " + args : "");
                             writer.printf("        return\n");
                         } else {
                             writer.printf("    def %s(%s):\n", instanceFName, params);
@@ -122,7 +122,7 @@ public class PyCModuleGenerator extends ModuleGenerator {
                             String className = getClassName(generator.getApiMethod().getReturnType());
                             if (JavadocHelpers.isInstance(generator.getApiMethod().getMemberDoc())) {
                                 writer.printf("    def %s(self%s):\n", instanceFName, params.length() > 0 ? ", " + params : "");
-                                writer.printf("        return %s(self.%s(self.__obj%s))\n", className, staticFName, args.length() > 0 ? ", " + args : "");
+                                writer.printf("        return %s(%s(self.%s%s))\n", className, staticFName, SELF_OBJ_NAME, args.length() > 0 ? ", " + args : "");
                             } else {
                                 writer.printf("    def %s(%s):\n", instanceFName, params);
                                 writer.printf("        return %s(%s(%s))\n", className, staticFName, args);
@@ -130,7 +130,7 @@ public class PyCModuleGenerator extends ModuleGenerator {
                         } else {
                             if (JavadocHelpers.isInstance(generator.getApiMethod().getMemberDoc())) {
                                 writer.printf("    def %s(self%s):\n", instanceFName, params.length() > 0 ? ", " + params : "");
-                                writer.printf("        return self.%s(self.__obj%s)\n", staticFName, args.length() > 0 ? ", " + args : "");
+                                writer.printf("        return %s(self.%s%s)\n", staticFName, SELF_OBJ_NAME, args.length() > 0 ? ", " + args : "");
                             } else {
                                 writer.printf("    def %s(%s):\n", instanceFName, params);
                                 writer.printf("        return %s(%s)\n", staticFName, args);
