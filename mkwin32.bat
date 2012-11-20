@@ -72,7 +72,7 @@ src\main\c\gen\beampy.def ^
 /D "UNICODE" ^
 /D "_CRT_SECURE_NO_WARNINGS" ^
 /link ^
-/OUT:"target\win32\beampy.pyd" ^
+/OUT:"target\win32\_beampy.pyd" ^
 /NOLOGO ^
 /LIBPATH:"%JDK32_HOME%\lib" ^
 /LIBPATH:"%PYTHON32_HOME%\libs" ^
@@ -94,7 +94,7 @@ goto error
 echo "Please specify PYTHON32_HOME (path to your Python 32-bit SDK)"
 goto error
 
-:no_msvs
+:no_msvc
 echo "Please specify MSVC_HOME (path to your Microsoft Visual C++ 10 SDK)"
 
 :ok

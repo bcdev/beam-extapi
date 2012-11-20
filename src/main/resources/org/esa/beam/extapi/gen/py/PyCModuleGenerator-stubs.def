@@ -1,4 +1,4 @@
-LIBRARY "${libName}.pyd"
+LIBRARY "_${libName}.pyd"
 
 EXPORTS
-	PyInit_${libName}
+	PyInit__${libName}

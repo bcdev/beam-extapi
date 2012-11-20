@@ -4,8 +4,8 @@
 static struct PyModuleDef BeamPy_Module =
 {
    PyModuleDef_HEAD_INIT,
-   "${libName}",           /* Name of the Python module */
-   "BEAM/Python API",  /* Module documentation */
+   "_${libName}",           /* Name of the Python module */
+   "Native BEAM/Python API",  /* Module documentation */
    -1,                 /* Size of per-interpreter state of the module, or -1 if the module keeps state in global variables. */
    BeamPy_Methods      /* Structure containing all BEAM/Python API functions */
 };
@@ -13,7 +13,7 @@ static struct PyModuleDef BeamPy_Module =
 /*
  * Called by the Python interpreter once immediately after the shared lib has been loaded.
  */
-PyMODINIT_FUNC PyInit_${libName}()
+PyMODINIT_FUNC PyInit__${libName}()
 {
     PyObject* m;
 

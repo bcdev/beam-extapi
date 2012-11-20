@@ -66,17 +66,12 @@ public abstract class ModuleGenerator implements GeneratorContext {
         return apiInfo.getParametersFor(apiMethod);
     }
 
+    public abstract String getModuleName();
+
     public void run() throws IOException {
-        writeWinDef();
-        writeCHeader();
-        writeCSource();
+        getTemplateEval().add("libName", getModuleName());
+        getTemplateEval().add("libNameUC", getModuleName().toUpperCase().replace("-", "_"));
     }
-
-    protected abstract void writeWinDef() throws IOException;
-
-    protected abstract void writeCHeader() throws IOException;
-
-    protected abstract void writeCSource() throws IOException;
 
     protected void writeCHeader(Writer writer) throws IOException {
         PrintWriter pw = new PrintWriter(writer);

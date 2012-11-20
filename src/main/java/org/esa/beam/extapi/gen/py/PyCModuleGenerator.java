@@ -33,10 +33,10 @@ import static org.esa.beam.extapi.gen.TemplateEval.kv;
  */
 public class PyCModuleGenerator extends ModuleGenerator {
 
+    // todo: move to config
     public static final String BEAM_PYAPI_SRCDIR = "src/main/c/gen";
     public static final String BEAM_PYAPI_NAME = "beampy";
     public static final String BEAM_PYAPI_VARNAMEPREFIX = "BeamPy";
-
     public static final String THIS_VAR_NAME = "thisObj";
     public static final String RESULT_VAR_NAME = "result";
 
@@ -45,12 +45,15 @@ public class PyCModuleGenerator extends ModuleGenerator {
     public PyCModuleGenerator(CModuleGenerator cModuleGenerator) {
         super(cModuleGenerator.getApiInfo(), new PyCFunctionGeneratorFactory(cModuleGenerator.getApiInfo()));
         this.cModuleGenerator = cModuleGenerator;
-        getTemplateEval().add("libName", BEAM_PYAPI_NAME);
-        getTemplateEval().add("libNameUC", BEAM_PYAPI_NAME.toUpperCase().replace("-", "_"));
     }
 
     CModuleGenerator getCModuleGenerator() {
         return cModuleGenerator;
+    }
+
+    @Override
+    public String getModuleName() {
+        return BEAM_PYAPI_NAME;
     }
 
     @Override
@@ -61,15 +64,19 @@ public class PyCModuleGenerator extends ModuleGenerator {
     @Override
     public void run() throws IOException {
         super.run();
+        writeWinDef();
+        writeCHeader();
+        writeCSource();
         writePythonSource();
     }
 
     private void writePythonSource() throws IOException {
-        final PrintWriter writer = new PrintWriter(new FileWriter(new File(BEAM_PYAPI_SRCDIR, BEAM_PYAPI_NAME + "_obj.py")));
+        final PrintWriter writer = new PrintWriter(new FileWriter(new File(BEAM_PYAPI_SRCDIR, BEAM_PYAPI_NAME + ".py")));
         try {
-            writer.printf("from beampy import *\n");
+            writer.printf("from _%s import *\n", BEAM_PYAPI_NAME);
             writer.printf("\n");
             for (ApiClass apiClass : getApiInfo().getAllClasses()) {
+                System.out.println("apiClass = " + apiClass);
                 writer.printf("class %s:\n", getClassName(apiClass.getType()));
                 writer.printf("\n");
                 writer.printf("    def __init__(self, obj):\n");
@@ -147,8 +154,7 @@ public class PyCModuleGenerator extends ModuleGenerator {
         return !type.isPrimitive() && !JavadocHelpers.isString(type);
     }
 
-    @Override
-    protected void writeWinDef() throws IOException {
+    private void writeWinDef() throws IOException {
         PrintWriter writer = new PrintWriter(new FileWriter(new File(BEAM_PYAPI_SRCDIR, BEAM_PYAPI_NAME + ".def")));
         try {
             writeResource(writer, "PyCModuleGenerator-stubs.def");
@@ -157,8 +163,7 @@ public class PyCModuleGenerator extends ModuleGenerator {
         }
     }
 
-    @Override
-    protected void writeCHeader() throws IOException {
+    private void writeCHeader() throws IOException {
         final FileWriter fileWriter = new FileWriter(new File(BEAM_PYAPI_SRCDIR, BEAM_PYAPI_NAME + ".h"));
         try {
             writeCHeader(fileWriter);
@@ -171,8 +176,7 @@ public class PyCModuleGenerator extends ModuleGenerator {
     protected void writeCHeaderContents(PrintWriter writer) throws IOException {
     }
 
-    @Override
-    protected void writeCSource() throws IOException {
+    private void writeCSource() throws IOException {
         PrintWriter writer = new PrintWriter(new FileWriter(new File(BEAM_PYAPI_SRCDIR, BEAM_PYAPI_NAME + ".c")));
         try {
             writeFileInfo(writer);

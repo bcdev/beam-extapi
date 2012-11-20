@@ -42,9 +42,9 @@ import java.util.TreeSet;
  */
 public class CModuleGenerator extends ModuleGenerator {
 
+    // todo: move to config
     public static final String BEAM_CAPI_SRCDIR = "src/main/c/gen";
     public static final String BEAM_CAPI_NAME = "beam_capi";
-
     public static final String THIS_VAR_NAME = "_this";
     public static final String METHOD_VAR_NAME = "_method";
     public static final String RESULT_VAR_NAME = "_result";
@@ -57,6 +57,19 @@ public class CModuleGenerator extends ModuleGenerator {
         this.functionNames = createFunctionNames(apiInfo);
         getTemplateEval().add("libName", BEAM_CAPI_NAME);
         getTemplateEval().add("libNameUC", BEAM_CAPI_NAME.toUpperCase().replace("-", "_"));
+    }
+
+    public String getModuleName() {
+            return BEAM_CAPI_NAME;
+    }
+
+    @Override
+    public void run() throws IOException {
+        super.run();
+        writeWinDef();
+        writeCHeader();
+        writeCSource();
+        printStats();
     }
 
     @Override
@@ -83,14 +96,7 @@ public class CModuleGenerator extends ModuleGenerator {
         return String.format("%s_%s", targetTypeName, methodCName);
     }
 
-    @Override
-    public void run() throws IOException {
-        super.run();
-        printStats();
-    }
-
-    @Override
-    protected void writeWinDef() throws IOException {
+    private void writeWinDef() throws IOException {
         PrintWriter writer = new PrintWriter(new FileWriter(new File(BEAM_CAPI_SRCDIR, BEAM_CAPI_NAME + ".def")));
         try {
             writeResource(writer, "CModuleGenerator-stubs.def");
@@ -104,8 +110,7 @@ public class CModuleGenerator extends ModuleGenerator {
         }
     }
 
-    @Override
-    protected void writeCHeader() throws IOException {
+    private void writeCHeader() throws IOException {
         PrintWriter writer = new PrintWriter(new FileWriter(new File(BEAM_CAPI_SRCDIR, BEAM_CAPI_NAME + ".h")));
         try {
             writeCHeader(writer);
@@ -114,7 +119,6 @@ public class CModuleGenerator extends ModuleGenerator {
         }
     }
 
-    @Override
     protected void writeCHeaderContents(PrintWriter writer) throws IOException {
 
         writer.write("\n");
@@ -167,8 +171,7 @@ public class CModuleGenerator extends ModuleGenerator {
         }
     }
 
-    @Override
-    protected void writeCSource() throws IOException {
+    private void writeCSource() throws IOException {
         PrintWriter writer = new PrintWriter(new FileWriter(new File(BEAM_CAPI_SRCDIR, BEAM_CAPI_NAME + ".c")));
         try {
             writeFileInfo(writer);
