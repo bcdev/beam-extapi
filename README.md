@@ -125,6 +125,7 @@ To-do BEAM API doc
 * Review and update API doc of all core classes
 * Remove all "@version $Revision$ $Date$"
 * Try to remove all HTML elements
+* Get rid of all this annoying console outputs when invoking BEAM API: SLF4J warnings, JAI plain Java error, GeoTools EPSG database creation
 
 Design Considerations
 ---------------------
