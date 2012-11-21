@@ -121,7 +121,7 @@ Object* beam_alloc_object_array(jarray array, int* array_length)
 
     array_elems = (Object*) malloc(n * sizeof (char*));
     for (i = 0; i < n; i++) {
-        // todo: check if we must incremenet a global reference here!
+        // todo: check if we must increment a global reference here!
         array_elems[i] = (*jenv)->GetObjectArrayElement(jenv, array, i);
     }
 
@@ -332,6 +332,8 @@ jboolean beam_create_jvm_with_defaults()
     if (class_path_option == NULL) {
         return JNI_FALSE;
     }
+
+    fprintf(stdout, "beam_capi: %s\n", class_path_option);
 
     jvm_options[0] = class_path_option;
     jvm_options[1] = "-Djava.library.path=c:\\mylibs";
