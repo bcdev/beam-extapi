@@ -120,7 +120,7 @@ public class PyCModuleGenerator extends ModuleGenerator {
 
                     final String functionCommentText = JavadocHelpers.convertToPythonDoc(getApiInfo(),
                                                                                          generator.getApiMethod().getMemberDoc(),
-                                                                                         "        ",
+                                                                                         "           ",
                                                                                          false);
 
                     if (JavadocHelpers.isVoid(generator.getApiMethod().getReturnType())) {
