@@ -9,7 +9,7 @@ BEAM Python API
 * Install JDK 1.6 32-bit. Set `JDK32_HOME`.
 * Install Python 3 32-bit. Set `PYTHON32_HOME`.
 * Checkout sources from GitHub (https://github.com/bcdev/beam-extapi). In the following, the checkout directory is named `BEAM_EXTAPI`.
-* On Windows, install Visual C++ 2012 Express (http://www.microsoft.com/visualstudio/eng/products/visual-studio-express-products)
+* On Windows, install Visual C++ 2012 Express (http://www.microsoft.com/visualstudio/eng/products/visual-studio-express-products). Set `MSVC_HOME` (must point to `VC`. 
 * On Windows, execute `%BEAM_EXTAPI%/mkwinall.bat`
 * On Unix, execute `$BEAM_EXTAPI/mkunixall.sh`  (not available yet)
 
