@@ -196,7 +196,7 @@ public abstract class PyCFunctionGenerator implements FunctionGenerator {
     @Override
     public String generateDocText(GeneratorContext context) {
         // todo: generate Python-style documentation
-        final String text = JavadocHelpers.encodeRawDocText(apiMethod.getMemberDoc());
+        final String text = JavadocHelpers.encodeCCodeString(apiMethod.getMemberDoc().getRawCommentText());
         if (isInstanceMethod()) {
             final String thisParamText = String.format("@param this The %s object.", JavadocHelpers.getComponentCTypeName(apiMethod.getEnclosingClass().getType()));
             final int i = text.indexOf("@param");

@@ -105,8 +105,8 @@ C-Code Generation Considerations
 * Care: Check ALWAYS for possible null return values (many JNI functions may return null)
   --> Not addressed so far. Must throw Java exceptions.
 
-To-do List
-----------
+To-do List Code Generation
+--------------------------
 
 * Done: Use BEAM_HOME env and auto-configure JVM parameters (use Util_listDir)
 * Make sure Python classes implement correctly: __eq__, __ne__, __hash__
@@ -114,6 +114,11 @@ To-do List
 * Handle reference counting JNI / Python/C
 * Handle return parameters in Python (done in C)
 
+To-do BEAM API doc
+------------------
+* Review and update API doc of all core classes
+* Remove all "@version $Revision$ $Date$"
+* Try to remove all HTML elements
 
 Design Considerations
 ---------------------

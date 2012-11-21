@@ -1,9 +1,6 @@
 package org.esa.beam.extapi.gen;
 
 import com.sun.javadoc.Parameter;
-import org.esa.beam.extapi.gen.ApiMethod;
-import org.esa.beam.extapi.gen.ApiParameter;
-import org.esa.beam.extapi.gen.GeneratorContext;
 
 /**
 * @author Norman Fomferra
@@ -22,5 +19,10 @@ public class MyGeneratorContext implements GeneratorContext {
             apiParameters[i] = new ApiParameter(parameters[i], ApiParameter.Modifier.IN);
         }
         return apiParameters;
+    }
+
+    @Override
+    public ApiInfo getApiInfo() {
+        return null;
     }
 }

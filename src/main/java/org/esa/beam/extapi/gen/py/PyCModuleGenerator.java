@@ -17,7 +17,13 @@
 package org.esa.beam.extapi.gen.py;
 
 import com.sun.javadoc.Type;
-import org.esa.beam.extapi.gen.*;
+import org.esa.beam.extapi.gen.ApiClass;
+import org.esa.beam.extapi.gen.ApiConstant;
+import org.esa.beam.extapi.gen.ApiMethod;
+import org.esa.beam.extapi.gen.FunctionGenerator;
+import org.esa.beam.extapi.gen.JavadocHelpers;
+import org.esa.beam.extapi.gen.ModuleGenerator;
+import org.esa.beam.extapi.gen.ParameterGenerator;
 import org.esa.beam.extapi.gen.c.CModuleGenerator;
 
 import java.io.File;
@@ -77,6 +83,10 @@ public class PyCModuleGenerator extends ModuleGenerator {
             writer.printf("from _%s import *\n", BEAM_PYAPI_NAME);
             writer.printf("\n");
             for (ApiClass apiClass : getApiInfo().getAllClasses()) {
+                final String commentText = JavadocHelpers.convertToPythonDoc(getApiInfo(), apiClass.getType().asClassDoc(), "", false);
+                if (!commentText.isEmpty()) {
+                    writer.printf("\"\"\"\n%s\n\"\"\"\n", commentText);
+                }
                 writer.printf("class %s:\n", getClassName(apiClass.getType()));
                 writer.printf("    def __init__(self, obj):\n");
                 writer.printf("        self.%s = obj\n", SELF_OBJ_NAME);
@@ -107,13 +117,19 @@ public class PyCModuleGenerator extends ModuleGenerator {
                             args.append(parameterGenerator.getName());
                         }
                     }
+
+                    final String functionCommentText = JavadocHelpers.convertToPythonDoc(getApiInfo(),
+                                                                                         generator.getApiMethod().getMemberDoc(),
+                                                                                         "        ",
+                                                                                         false);
+
                     if (JavadocHelpers.isVoid(generator.getApiMethod().getReturnType())) {
                         if (JavadocHelpers.isInstance(generator.getApiMethod().getMemberDoc())) {
-                            writer.printf("    def %s(self%s):\n", instanceFName, params.length() > 0 ? ", " + params : "");
+                            writePythonInstanceFuncHeader(writer, instanceFName, params, functionCommentText);
                             writer.printf("        %s(self.%s%s)\n", staticFName, SELF_OBJ_NAME, args.length() > 0 ? ", " + args : "");
                             writer.printf("        return\n");
                         } else {
-                            writer.printf("    def %s(%s):\n", instanceFName, params);
+                            writePythonStaticFuncHeader(writer, instanceFName, params, functionCommentText);
                             writer.printf("        %s(%s)\n", staticFName, args);
                             writer.printf("        return\n");
                         }
@@ -121,18 +137,18 @@ public class PyCModuleGenerator extends ModuleGenerator {
                         if (isObject(generator.getApiMethod().getReturnType())) {
                             String className = getClassName(generator.getApiMethod().getReturnType());
                             if (JavadocHelpers.isInstance(generator.getApiMethod().getMemberDoc())) {
-                                writer.printf("    def %s(self%s):\n", instanceFName, params.length() > 0 ? ", " + params : "");
+                                writePythonInstanceFuncHeader(writer, instanceFName, params, functionCommentText);
                                 writer.printf("        return %s(%s(self.%s%s))\n", className, staticFName, SELF_OBJ_NAME, args.length() > 0 ? ", " + args : "");
                             } else {
-                                writer.printf("    def %s(%s):\n", instanceFName, params);
+                                writePythonStaticFuncHeader(writer, instanceFName, params, functionCommentText);
                                 writer.printf("        return %s(%s(%s))\n", className, staticFName, args);
                             }
                         } else {
                             if (JavadocHelpers.isInstance(generator.getApiMethod().getMemberDoc())) {
-                                writer.printf("    def %s(self%s):\n", instanceFName, params.length() > 0 ? ", " + params : "");
+                                writePythonInstanceFuncHeader(writer, instanceFName, params, functionCommentText);
                                 writer.printf("        return %s(self.%s%s)\n", staticFName, SELF_OBJ_NAME, args.length() > 0 ? ", " + args : "");
                             } else {
-                                writer.printf("    def %s(%s):\n", instanceFName, params);
+                                writePythonStaticFuncHeader(writer, instanceFName, params, functionCommentText);
                                 writer.printf("        return %s(%s)\n", staticFName, args);
                             }
                         }
@@ -143,6 +159,24 @@ public class PyCModuleGenerator extends ModuleGenerator {
             }
         } finally {
             writer.close();
+        }
+    }
+
+    private void writePythonStaticFuncHeader(PrintWriter writer, String instanceFName, StringBuilder params, String functionCommentText) {
+        writer.printf("    def %s(%s):\n", instanceFName, params);
+        if (!functionCommentText.isEmpty()) {
+            writer.printf("        \"\"\"\n");
+            writer.printf("%s\n", functionCommentText);
+            writer.printf("        \"\"\"\n");
+        }
+    }
+
+    private void writePythonInstanceFuncHeader(PrintWriter writer, String instanceFName, StringBuilder params, String functionCommentText) {
+        writer.printf("    def %s(self%s):\n", instanceFName, params.length() > 0 ? ", " + params : "");
+        if (!functionCommentText.isEmpty()) {
+            writer.printf("        \"\"\"\n");
+            writer.printf("%s\n", functionCommentText);
+            writer.printf("        \"\"\"\n");
         }
     }
 

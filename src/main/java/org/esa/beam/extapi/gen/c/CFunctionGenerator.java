@@ -165,7 +165,7 @@ public abstract class CFunctionGenerator implements FunctionGenerator {
     @Override
     public String generateDocText(GeneratorContext context) {
         // todo: generate C Doxygen-style documentation
-        return JavadocHelpers.encodeRawDocText(apiMethod.getMemberDoc());
+        return JavadocHelpers.convertToDoxygenDoc(context.getApiInfo(), apiMethod.getMemberDoc());
     }
 
     static class VoidMethod extends CFunctionGenerator {
