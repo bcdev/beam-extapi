@@ -7,11 +7,11 @@ BEAM Python API
 ### How to build:
 
 * Install JDK 1.6 32-bit. Set `JDK32_HOME`.
-* Install Python 3.2 32bit. Set `PYTHON32_HOME`.
-* Checkout sources from GitHub (https://github.com/bcdev/beam-extapi). Checkout directory is `%BEAM_EXTAPI%` (Windows) or `$BEAM_EXTAPI` (Unix).
-* On Windows, install Visual C++ 2010 Express (http://www.microsoft.com/visualstudio/deu/downloads#d-2010-express)
-* On Windows, execute `%BEAM_EXTAPI%/mkwin32.bat`
-* On Unix, execute `$BEAM_EXTAPI/mkunix.sh`  (not available yet)
+* Install Python 3 32-bit. Set `PYTHON32_HOME`.
+* Checkout sources from GitHub (https://github.com/bcdev/beam-extapi). In the following, the checkout directory is named `BEAM_EXTAPI`.
+* On Windows, install Visual C++ 2012 Express (http://www.microsoft.com/visualstudio/eng/products/visual-studio-express-products)
+* On Windows, execute `%BEAM_EXTAPI%/mkwinall.bat`
+* On Unix, execute `$BEAM_EXTAPI/mkunixall.sh`  (not available yet)
 
 ### How to install:
 
@@ -23,18 +23,24 @@ BEAM Python API
 
 Start Python, then type
 
-    >>> import beampy
-    >>> dir(beampy)
-    >>> help(beampy)
+    >>> import _beampy
+    >>> dir(_beampy)
+    >>> help(_beampy)
     >>> 
-    >>> from beampy import *
+    >>> from _beampy import *
     >>> p = ProductIO_readProduct('testdata/MER_RR__1PPBCM20110809_093213_000001383105_00223_49375_0022.N1')
     >>> p
-    >>> n = Product_getBandNames(p)
-    >>> n
+    >>> Product_getBandNames(p)
     >>> b13 = Product_getBand(p, 'radiance_13')
     >>> Band_getSpectralWavelength(b13)
     >>> Product_dispose(p)
+    >>> 
+    >>> import beampy
+    >>> p = ProductIO_readProduct('testdata/MER_RR__1PPBCM20110809_093213_000001383105_00223_49375_0022.N1')
+    >>> p.getBandNames()
+    >>> b13 = p.getBand('radiance_13')
+    >>> b13.getSpectralWavelength()
+    >>> p.dispose()
 
 
 
