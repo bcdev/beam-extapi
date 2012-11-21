@@ -162,20 +162,21 @@ public class PyCModuleGenerator extends ModuleGenerator {
         }
     }
 
-    private void writePythonStaticFuncHeader(PrintWriter writer, String instanceFName, StringBuilder params, String functionCommentText) {
-        writer.printf("    def %s(%s):\n", instanceFName, params);
-        if (!functionCommentText.isEmpty()) {
+    private void writePythonStaticFuncHeader(PrintWriter writer, String funcName, StringBuilder params, String commentText) {
+        writer.printf("    @staticmethod\n");
+        writer.printf("    def %s(%s):\n", funcName, params);
+        if (!commentText.isEmpty()) {
             writer.printf("        \"\"\"\n");
-            writer.printf("%s\n", functionCommentText);
+            writer.printf("%s\n", commentText);
             writer.printf("        \"\"\"\n");
         }
     }
 
-    private void writePythonInstanceFuncHeader(PrintWriter writer, String instanceFName, StringBuilder params, String functionCommentText) {
-        writer.printf("    def %s(self%s):\n", instanceFName, params.length() > 0 ? ", " + params : "");
-        if (!functionCommentText.isEmpty()) {
+    private void writePythonInstanceFuncHeader(PrintWriter writer, String funcName, StringBuilder params, String commentText) {
+        writer.printf("    def %s(self%s):\n", funcName, params.length() > 0 ? ", " + params : "");
+        if (!commentText.isEmpty()) {
             writer.printf("        \"\"\"\n");
-            writer.printf("%s\n", functionCommentText);
+            writer.printf("%s\n", commentText);
             writer.printf("        \"\"\"\n");
         }
     }
