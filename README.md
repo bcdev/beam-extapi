@@ -114,11 +114,12 @@ C-Code Generation Considerations
 To-do List Code Generation
 --------------------------
 
-* Done: Use BEAM_HOME env and auto-configure JVM parameters (use Util_listDir)
-* Make sure Python classes implement correctly: __eq__, __ne__, __hash__
-* Generate usable documentation (Doxgen + PyDoc)
-* Handle reference counting JNI / Python/C
-* Handle return parameters in Python (done in C)
+* Done: Use BEAM_HOME env and auto-configure JVM parameters (use Util_listDir).
+* Make sure Python classes implement correctly: __eq__, __ne__, __hash__ ...
+* Generate usable documentation (Doxgen + PyDoc).
+* Handle reference counting JNI / Python/C.
+* Handle return parameters in Python (done in C).
+* Generate error handling code. Check all JNI and all Py return values.
 
 To-do BEAM API doc
 ------------------
