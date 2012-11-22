@@ -9,15 +9,20 @@ BEAM Python API
 * Install JDK 1.6 32-bit. Set `JDK32_HOME`.
 * Install Python 3 32-bit. Set `PYTHON32_HOME`.
 * Checkout sources from GitHub (https://github.com/bcdev/beam-extapi). In the following, the checkout directory is named `BEAM_EXTAPI`.
-* On Windows, install Visual C++ 2012 Express (http://www.microsoft.com/visualstudio/eng/products/visual-studio-express-products). Set `MSVC_HOME` (must point to `VC` inside Visual Studio's installation directory). 
-* On Windows, execute `%BEAM_EXTAPI%/mkwinall.bat`
+* On Windows,
+  1. install Visual C++ 2012 Express (http://www.microsoft.com/visualstudio/eng/products/visual-studio-express-products). Set `MSVC_HOME` (must point to `VC` inside Visual Studio's installation directory). 
+  2. execute `%BEAM_EXTAPI%/mkwinall.bat`
 * On Unix, execute `$BEAM_EXTAPI/mkunixall.sh`  (not available yet)
 
 ### How to install:
 
 * Install BEAM 4.10.3. Set `BEAM_HOME`.
-* On Windows, copy `beampy.pyd` and `beam_capi.dll` from `%BEAM_EXTAPI%/target/win32` to `%PYTHON32_HOME%/DLLs`
-* On Unix, copy `beampy.pyd` and `beam_capi.sh` from `$BEAM_EXTAPI/target/unix32` to `$PYTHON32_HOME/DLLs` (not available yet)
+* On Windows, 
+  1. copy `beampy.pyd` and `beam_capi.dll` from `%BEAM_EXTAPI%/target/win32` to `%PYTHON32_HOME%/DLLs`
+  2. Set `PATH=%PATH%;%BEAM_HOME%/jre/bin/client` (todo: avoid this step)
+* On Unix,
+  1. copy `beampy.pyd` and `beam_capi.sh` from `$BEAM_EXTAPI/target/unix32` to `$PYTHON32_HOME/DLLs` (not available yet)
+  2. Set `PATH=$PATH%;$BEAM_HOME/jre/bin/client`  (todo: avoid this step and what about Mac OS?)
 
 ### How to run:
 
