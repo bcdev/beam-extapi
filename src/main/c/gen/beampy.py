@@ -14,6 +14,7 @@ class ImageGeometry:
     def __init__(self, obj):
         self._obj = obj
 
+    @staticmethod
     def newImageGeometry(bounds, mapCrs, image2map):
         return ImageGeometry(ImageGeometry_newImageGeometry(bounds._obj, mapCrs._obj, image2map._obj))
 
@@ -30,15 +31,19 @@ class ImageGeometry:
         ImageGeometry_changeYAxisDirection(self._obj)
         return
 
+    @staticmethod
     def calculateEastingNorthing(sourceProduct, targetCrs, referencePixelX, referencePixelY, pixelSizeX, pixelSizeY):
         return Point2D(ImageGeometry_calculateEastingNorthing(sourceProduct._obj, targetCrs._obj, referencePixelX, referencePixelY, pixelSizeX, pixelSizeY))
 
+    @staticmethod
     def calculateProductSize(sourceProduct, targetCrs, pixelSizeX, pixelSizeY):
         return Rectangle(ImageGeometry_calculateProductSize(sourceProduct._obj, targetCrs._obj, pixelSizeX, pixelSizeY))
 
+    @staticmethod
     def createTargetGeometry(sourceProduct, targetCrs, pixelSizeX, pixelSizeY, width, height, orientation, easting, northing, referencePixelX, referencePixelY):
         return ImageGeometry(ImageGeometry_createTargetGeometry(sourceProduct._obj, targetCrs._obj, pixelSizeX._obj, pixelSizeY._obj, width._obj, height._obj, orientation._obj, easting._obj, northing._obj, referencePixelX._obj, referencePixelY._obj))
 
+    @staticmethod
     def createCollocationTargetGeometry(targetProduct, collocationProduct):
         return ImageGeometry(ImageGeometry_createCollocationTargetGeometry(targetProduct._obj, collocationProduct._obj))
 
@@ -175,6 +180,7 @@ class ProductData:
     def __init__(self, obj):
         self._obj = obj
 
+    @staticmethod
     def createInstance(type):
         """
            Factory method which creates a value instance of the given type and with exactly one element.
@@ -183,6 +189,7 @@ class ProductData:
         """
         return ProductData(ProductData_createInstance1(type))
 
+    @staticmethod
     def createInstance(type, numElems):
         """
            Factory method which creates a value instance of the given type and with the specified number of elements.
@@ -193,6 +200,7 @@ class ProductData:
         """
         return ProductData(ProductData_createInstance2(type, numElems))
 
+    @staticmethod
     def createInstance(type, data):
         """
            Factory method which creates a value instance of the given type and with the specified number of elements.
@@ -203,33 +211,43 @@ class ProductData:
         """
         return ProductData(ProductData_createInstance3(type, data._obj))
 
+    @staticmethod
     def createInstance(elems):
         return ProductData(ProductData_createInstance5(elems))
 
+    @staticmethod
     def createUnsignedInstance(elems):
         return ProductData(ProductData_createUnsignedInstance1(elems))
 
+    @staticmethod
     def createInstance(elems):
         return ProductData(ProductData_createInstance10(elems))
 
+    @staticmethod
     def createUnsignedInstance(elems):
         return ProductData(ProductData_createUnsignedInstance3(elems))
 
+    @staticmethod
     def createInstance(elems):
         return ProductData(ProductData_createInstance8(elems))
 
+    @staticmethod
     def createUnsignedInstance(elems):
         return ProductData(ProductData_createUnsignedInstance2(elems))
 
+    @staticmethod
     def createInstance(elems):
         return ProductData(ProductData_createInstance9(elems))
 
+    @staticmethod
     def createInstance(strData):
         return ProductData(ProductData_createInstance4(strData))
 
+    @staticmethod
     def createInstance(elems):
         return ProductData(ProductData_createInstance7(elems))
 
+    @staticmethod
     def createInstance(elems):
         return ProductData(ProductData_createInstance6(elems))
 
@@ -239,6 +257,7 @@ class ProductData:
         """
         return ProductData_getType1(self._obj)
 
+    @staticmethod
     def getElemSize(type):
         """
            Gets the element size of an element of the given type in bytes.
@@ -255,6 +274,7 @@ class ProductData:
         """
         return ProductData_getElemSize1(self._obj)
 
+    @staticmethod
     def getTypeString(type):
         """
            Returns a textual representation of the given data type.
@@ -262,6 +282,7 @@ class ProductData:
         """
         return ProductData_getTypeString2(type)
 
+    @staticmethod
     def getType(type):
         """
            Returns a integer representation of the given data type string.
@@ -282,6 +303,7 @@ class ProductData:
         """
         return ProductData_isInt(self._obj)
 
+    @staticmethod
     def isIntType(type):
         """
            Tests whether the given value type is a signed or unsigned integer type.
@@ -303,6 +325,7 @@ class ProductData:
         """
         return ProductData_isUnsigned(self._obj)
 
+    @staticmethod
     def isUIntType(type):
         """
            Tests whether the given value type is an unsigned integer type.
@@ -310,6 +333,7 @@ class ProductData:
         """
         return ProductData_isUIntType(type)
 
+    @staticmethod
     def isFloatingPointType(type):
         """
            Tests whether the given value type is a floating point type.
@@ -755,6 +779,7 @@ class IndexCoding:
     def __init__(self, obj):
         self._obj = obj
 
+    @staticmethod
     def newIndexCoding(name):
         """
            Constructs a new index coding object with the given name.
@@ -1162,13 +1187,14 @@ class IndexCoding:
     def toString(self):
         return IndexCoding_toString(self._obj)
 
+    @staticmethod
     def isValidNodeName(name):
         """
            Tests whether the given name is valid name for a node.
            A valid node name must not start with a dot. Also a valid node name must not contain
            any of the character  <code>\/:*?"&lt;&gt;|</code>
            @param name the name to test
-           @return <code>true</code> if the name is a valid node ifentifier, <code>false</code> otherwise
+           @return <code>true</code> if the name is a valid node identifier, <code>false</code> otherwise
         """
         return IndexCoding_isValidNodeName(name)
 
@@ -1266,12 +1292,14 @@ class PixelPos:
     def __init__(self, obj):
         self._obj = obj
 
+    @staticmethod
     def newPixelPos():
         """
            Constructs and initializes a <code>PixelPos</code> with coordinate (0,&nbsp;0).
         """
         return PixelPos(PixelPos_newPixelPos1())
 
+    @staticmethod
     def newPixelPos(x, y):
         """
            Constructs and initializes a <code>PixelPos</code> with the specified coordinate.
@@ -1315,9 +1343,11 @@ class PixelPos:
         PixelPos_setLocation3(self._obj, arg0._obj)
         return
 
+    @staticmethod
     def distanceSq(arg0, arg1, arg2, arg3):
         return PixelPos_distanceSq2(arg0, arg1, arg2, arg3)
 
+    @staticmethod
     def distance(arg0, arg1, arg2, arg3):
         return PixelPos_distance2(arg0, arg1, arg2, arg3)
 
@@ -1394,6 +1424,7 @@ class ProductIO:
     def __init__(self, obj):
         self._obj = obj
 
+    @staticmethod
     def getProductReader(formatName):
         """
            Gets a product reader for the given format name.
@@ -1402,6 +1433,7 @@ class ProductIO:
         """
         return ProductReader(ProductIO_getProductReader(formatName))
 
+    @staticmethod
     def getProductWriterExtensions(formatName):
         """
            Gets an array of writer product file extensions for the given format name.
@@ -1410,6 +1442,7 @@ class ProductIO:
         """
         return ProductIO_getProductWriterExtensions(formatName)
 
+    @staticmethod
     def getProductWriter(formatName):
         """
            Gets a product writer for the given format name.
@@ -1418,6 +1451,7 @@ class ProductIO:
         """
         return ProductWriter(ProductIO_getProductWriter(formatName))
 
+    @staticmethod
     def readProduct(filePath):
         """
            Reads the data product specified by the given file path.
@@ -1434,6 +1468,7 @@ class ProductIO:
         """
         return Product(ProductIO_readProduct(filePath))
 
+    @staticmethod
     def getProductReaderForInput(input):
         """
            Tries to find a product reader instance suitable for the given input.
@@ -1450,6 +1485,7 @@ class ProductIO:
         """
         return ProductReader(ProductIO_getProductReaderForInput(input._obj))
 
+    @staticmethod
     def writeProduct(product, filePath, formatName):
         """
            Writes a product with the specified format to the given file path.
@@ -1486,6 +1522,7 @@ class AngularDirection:
     def __init__(self, obj):
         self._obj = obj
 
+    @staticmethod
     def newAngularDirection(azimuth, zenith):
         return AngularDirection(AngularDirection_newAngularDirection(azimuth, zenith))
 
@@ -1679,6 +1716,7 @@ class Band:
     def __init__(self, obj):
         self._obj = obj
 
+    @staticmethod
     def newBand(name, dataType, width, height):
         """
            Constructs a new <code>Band</code>.
@@ -2139,6 +2177,7 @@ class Band:
         """
         return Band_isScalingApplied(self._obj)
 
+    @staticmethod
     def isValidMaskProperty(propertyName):
         """
            Tests if the given name is the name of a property which is relevant for the computation of the valid mask.
@@ -2865,13 +2904,14 @@ class Band:
         """
         return Band_isModified(self._obj)
 
+    @staticmethod
     def isValidNodeName(name):
         """
            Tests whether the given name is valid name for a node.
            A valid node name must not start with a dot. Also a valid node name must not contain
            any of the character  <code>\/:*?"&lt;&gt;|</code>
            @param name the name to test
-           @return <code>true</code> if the name is a valid node ifentifier, <code>false</code> otherwise
+           @return <code>true</code> if the name is a valid node identifier, <code>false</code> otherwise
         """
         return Band_isValidNodeName(name)
 
@@ -2940,6 +2980,7 @@ class Placemark:
     def __init__(self, obj):
         self._obj = obj
 
+    @staticmethod
     def newPlacemark(descriptor, feature):
         """
            Constructor.
@@ -2948,6 +2989,7 @@ class Placemark:
         """
         return Placemark(Placemark_newPlacemark(descriptor._obj, feature._obj))
 
+    @staticmethod
     def createPointPlacemark(descriptor, name, label, text, pixelPos, geoPos, geoCoding):
         """
            Creates a point placemark.
@@ -3064,15 +3106,19 @@ class Placemark:
         Placemark_updatePositions(self._obj)
         return
 
+    @staticmethod
     def createPinFeatureType():
         return SimpleFeatureType(Placemark_createPinFeatureType())
 
+    @staticmethod
     def createGcpFeatureType():
         return SimpleFeatureType(Placemark_createGcpFeatureType())
 
+    @staticmethod
     def createGeometryFeatureType():
         return SimpleFeatureType(Placemark_createGeometryFeatureType())
 
+    @staticmethod
     def createPointFeatureType(name):
         return SimpleFeatureType(Placemark_createPointFeatureType(name))
 
@@ -3146,13 +3192,14 @@ class Placemark:
         Placemark_dispose(self._obj)
         return
 
+    @staticmethod
     def isValidNodeName(name):
         """
            Tests whether the given name is valid name for a node.
            A valid node name must not start with a dot. Also a valid node name must not contain
            any of the character  <code>\/:*?"&lt;&gt;|</code>
            @param name the name to test
-           @return <code>true</code> if the name is a valid node ifentifier, <code>false</code> otherwise
+           @return <code>true</code> if the name is a valid node identifier, <code>false</code> otherwise
         """
         return Placemark_isValidNodeName(name)
 
@@ -3277,6 +3324,7 @@ class GeoPos:
     def __init__(self, obj):
         self._obj = obj
 
+    @staticmethod
     def newGeoPos(lat, lon):
         """
            Constructs a new geo-position with the given latitude and longitude values.
@@ -3315,6 +3363,7 @@ class GeoPos:
         """
         return GeoPos_isValid(self._obj)
 
+    @staticmethod
     def areValid(a):
         """
            Tests whether or not all given geo-positions are valid.
@@ -3359,6 +3408,7 @@ class GeoPos:
         GeoPos_normalize(self._obj)
         return
 
+    @staticmethod
     def normalizeLon(lon):
         """
            Normalizes the given longitude so that it is in the range -180 to +180 degree and returns it.
@@ -3390,6 +3440,7 @@ class ProductNodeGroup:
     def __init__(self, obj):
         self._obj = obj
 
+    @staticmethod
     def newProductNodeGroup(name):
         """
            Constructs a node group with no owner and which will not take ownership of added children.
@@ -3397,6 +3448,7 @@ class ProductNodeGroup:
         """
         return ProductNodeGroup(ProductNodeGroup_newProductNodeGroup1(name))
 
+    @staticmethod
     def newProductNodeGroup(owner, name, takingOverNodeOwnership):
         """
            Constructs a node group for the given owner.
@@ -3598,13 +3650,14 @@ class ProductNodeGroup:
     def toString(self):
         return ProductNodeGroup_toString(self._obj)
 
+    @staticmethod
     def isValidNodeName(name):
         """
            Tests whether the given name is valid name for a node.
            A valid node name must not start with a dot. Also a valid node name must not contain
            any of the character  <code>\/:*?"&lt;&gt;|</code>
            @param name the name to test
-           @return <code>true</code> if the name is a valid node ifentifier, <code>false</code> otherwise
+           @return <code>true</code> if the name is a valid node identifier, <code>false</code> otherwise
         """
         return ProductNodeGroup_isValidNodeName(name)
 
@@ -3689,6 +3742,7 @@ class ProductManager:
     def __init__(self, obj):
         self._obj = obj
 
+    @staticmethod
     def newProductManager():
         """
            Constructs an product manager with an empty list of products.
@@ -3821,6 +3875,7 @@ class FlagCoding:
     def __init__(self, obj):
         self._obj = obj
 
+    @staticmethod
     def newFlagCoding(name):
         """
            Constructs a new flag coding object with the given name.
@@ -4228,13 +4283,14 @@ class FlagCoding:
     def toString(self):
         return FlagCoding_toString(self._obj)
 
+    @staticmethod
     def isValidNodeName(name):
         """
            Tests whether the given name is valid name for a node.
            A valid node name must not start with a dot. Also a valid node name must not contain
            any of the character  <code>\/:*?"&lt;&gt;|</code>
            @param name the name to test
-           @return <code>true</code> if the name is a valid node ifentifier, <code>false</code> otherwise
+           @return <code>true</code> if the name is a valid node identifier, <code>false</code> otherwise
         """
         return FlagCoding_isValidNodeName(name)
 
@@ -4336,9 +4392,11 @@ class ProductUtils:
     def __init__(self, obj):
         self._obj = obj
 
+    @staticmethod
     def newProductUtils():
         return ProductUtils(ProductUtils_newProductUtils())
 
+    @staticmethod
     def createImageInfo(rasters, assignMissingImageInfos, pm):
         """
            Creates image creation information.
@@ -4350,6 +4408,7 @@ class ProductUtils:
         """
         return ImageInfo(ProductUtils_createImageInfo(rasters._obj, assignMissingImageInfos, pm._obj))
 
+    @staticmethod
     def createRgbImage(rasters, imageInfo, pm):
         """
            Creates a RGB image from the given array of <code>{@link RasterDataNode}</code>s.
@@ -4364,6 +4423,7 @@ class ProductUtils:
         """
         return BufferedImage(ProductUtils_createRgbImage(rasters._obj, imageInfo._obj, pm._obj))
 
+    @staticmethod
     def createColorIndexedImage(rasterDataNode, pm):
         """
            Creates a greyscale image from the given <code>{@link RasterDataNode}</code>.
@@ -4378,6 +4438,7 @@ class ProductUtils:
         """
         return BufferedImage(ProductUtils_createColorIndexedImage(rasterDataNode._obj, pm._obj))
 
+    @staticmethod
     def createSuitableMapInfo(product, rect, mapProjection):
         """
            Retuns a suitable <code>MapInfo</code> instance for the given (geo-coded) product which includes the entire or a
@@ -4391,6 +4452,7 @@ class ProductUtils:
         """
         return MapInfo(ProductUtils_createSuitableMapInfo1(product._obj, rect._obj, mapProjection._obj))
 
+    @staticmethod
     def createSuitableMapInfo(product, mapProjection, orientation, noDataValue):
         """
            Retuns a suitable <code>MapInfo</code> instance for the given (geo-coded) product which includes the entire or a
@@ -4403,9 +4465,11 @@ class ProductUtils:
         """
         return MapInfo(ProductUtils_createSuitableMapInfo2(product._obj, mapProjection._obj, orientation, noDataValue))
 
+    @staticmethod
     def getOutputRasterSize(product, rect, mapTransform, pixelSizeX, pixelSizeY):
         return Dimension(ProductUtils_getOutputRasterSize(product._obj, rect._obj, mapTransform._obj, pixelSizeX, pixelSizeY))
 
+    @staticmethod
     def createMapEnvelope(product, rect, mapTransform):
         """
            Creates the boundary in map coordinates for the given product, source rectangle (in product pixel coordinates)
@@ -4420,6 +4484,7 @@ class ProductUtils:
         """
         return Point2D(ProductUtils_createMapEnvelope2(product._obj, rect._obj, mapTransform._obj))
 
+    @staticmethod
     def createMapEnvelope(product, rect, step, mapTransform):
         """
            Creates the boundary in map coordinates for the given product, source rectangle (in product
@@ -4435,12 +4500,15 @@ class ProductUtils:
         """
         return Point2D(ProductUtils_createMapEnvelope1(product._obj, rect._obj, step, mapTransform._obj))
 
+    @staticmethod
     def getMinMax(boundary):
         return Point2D(ProductUtils_getMinMax(boundary._obj))
 
+    @staticmethod
     def createMapBoundary(product, rect, step, mapTransform):
         return Point2D(ProductUtils_createMapBoundary(product._obj, rect._obj, step, mapTransform._obj))
 
+    @staticmethod
     def createGeoBoundary(product, step):
         """
            Creates the geographical boundary of the given product and returns it as a list of geographical coordinates.
@@ -4451,6 +4519,7 @@ class ProductUtils:
         """
         return GeoPos(ProductUtils_createGeoBoundary1(product._obj, step))
 
+    @staticmethod
     def createGeoBoundary(product, region, step):
         """
            Creates the geographical boundary of the given region within the given product and returns it as a list of
@@ -4466,6 +4535,7 @@ class ProductUtils:
         """
         return GeoPos(ProductUtils_createGeoBoundary2(product._obj, region._obj, step))
 
+    @staticmethod
     def createGeoBoundary(product, region, step, usePixelCenter):
         """
            Creates the geographical boundary of the given region within the given product and returns it as a list of
@@ -4480,6 +4550,7 @@ class ProductUtils:
         """
         return GeoPos(ProductUtils_createGeoBoundary3(product._obj, region._obj, step, usePixelCenter))
 
+    @staticmethod
     def createGeoBoundary(raster, region, step):
         """
            Creates the geographical boundary of the given region within the given raster and returns it as a list of
@@ -4493,6 +4564,7 @@ class ProductUtils:
         """
         return GeoPos(ProductUtils_createGeoBoundary4(raster._obj, region._obj, step))
 
+    @staticmethod
     def createGeoBoundaryPaths(product):
         """
            Converts the geographic boundary entire product into one, two or three shape objects. If the product does not
@@ -4507,6 +4579,7 @@ class ProductUtils:
         """
         return GeneralPath(ProductUtils_createGeoBoundaryPaths1(product._obj))
 
+    @staticmethod
     def createGeoBoundaryPaths(product, region, step):
         """
            Converts the geographic boundary of the region within the given product into one, two or three shape objects. If
@@ -4526,6 +4599,7 @@ class ProductUtils:
         """
         return GeneralPath(ProductUtils_createGeoBoundaryPaths2(product._obj, region._obj, step))
 
+    @staticmethod
     def createGeoBoundaryPaths(product, region, step, usePixelCenter):
         """
            Converts the geographic boundary of the region within the given product into one, two or three shape objects. If
@@ -4543,6 +4617,7 @@ class ProductUtils:
         """
         return GeneralPath(ProductUtils_createGeoBoundaryPaths3(product._obj, region._obj, step, usePixelCenter))
 
+    @staticmethod
     def createPixelBoundary(product, rect, step):
         """
            Creates a rectangular boundary expressed in pixel positions for the given source rectangle. If the source
@@ -4560,6 +4635,7 @@ class ProductUtils:
         """
         return PixelPos(ProductUtils_createPixelBoundary1(product._obj, rect._obj, step))
 
+    @staticmethod
     def createPixelBoundary(product, rect, step, usePixelCenter):
         """
            Creates a rectangular boundary expressed in pixel positions for the given source rectangle. If the source
@@ -4576,6 +4652,7 @@ class ProductUtils:
         """
         return PixelPos(ProductUtils_createPixelBoundary2(product._obj, rect._obj, step, usePixelCenter))
 
+    @staticmethod
     def createPixelBoundary(raster, rect, step):
         """
            Creates a rectangular boundary expressed in pixel positions for the given source rectangle. If the source
@@ -4591,6 +4668,7 @@ class ProductUtils:
         """
         return PixelPos(ProductUtils_createPixelBoundary3(raster._obj, rect._obj, step))
 
+    @staticmethod
     def createRectBoundary(rect, step):
         """
            Creates a rectangular boundary expressed in pixel positions for the given source rectangle. If the source
@@ -4606,6 +4684,7 @@ class ProductUtils:
         """
         return PixelPos(ProductUtils_createRectBoundary1(rect._obj, step))
 
+    @staticmethod
     def createRectBoundary(rect, step, usePixelCenter):
         """
            Creates a rectangular boundary expressed in pixel positions for the given source rectangle. If the source
@@ -4622,6 +4701,7 @@ class ProductUtils:
         """
         return PixelPos(ProductUtils_createRectBoundary2(rect._obj, step, usePixelCenter))
 
+    @staticmethod
     def copyFlagCodings(source, target):
         """
            Copies the flag codings from the source product to the target.
@@ -4631,6 +4711,7 @@ class ProductUtils:
         ProductUtils_copyFlagCodings(source._obj, target._obj)
         return
 
+    @staticmethod
     def copyFlagCoding(sourceFlagCoding, target):
         """
            Copies the given source flag coding to the target product.
@@ -4641,6 +4722,7 @@ class ProductUtils:
         """
         return FlagCoding(ProductUtils_copyFlagCoding(sourceFlagCoding._obj, target._obj))
 
+    @staticmethod
     def copyIndexCoding(sourceIndexCoding, target):
         """
            Copies the given source index coding to the target product
@@ -4651,6 +4733,7 @@ class ProductUtils:
         """
         return IndexCoding(ProductUtils_copyIndexCoding(sourceIndexCoding._obj, target._obj))
 
+    @staticmethod
     def copyMasks(sourceProduct, targetProduct):
         """
            Copies the {@link Mask}s from the source product to the target product.
@@ -4666,6 +4749,7 @@ class ProductUtils:
         ProductUtils_copyMasks(sourceProduct._obj, targetProduct._obj)
         return
 
+    @staticmethod
     def copyOverlayMasks(sourceProduct, targetProduct):
         """
            Copies the overlay {@link Mask}s from the source product's raster data nodes to
@@ -4681,6 +4765,7 @@ class ProductUtils:
         ProductUtils_copyOverlayMasks(sourceProduct._obj, targetProduct._obj)
         return
 
+    @staticmethod
     def copyFlagBands(sourceProduct, targetProduct, copySourceImage):
         """
            Copies all bands which contain a flagcoding from the source product to the target product.
@@ -4691,6 +4776,7 @@ class ProductUtils:
         ProductUtils_copyFlagBands(sourceProduct._obj, targetProduct._obj, copySourceImage)
         return
 
+    @staticmethod
     def copyTiePointGrid(gridName, sourceProduct, targetProduct):
         """
            Copies the named tie-point grid from the source product to the target product.
@@ -4701,6 +4787,7 @@ class ProductUtils:
         """
         return TiePointGrid(ProductUtils_copyTiePointGrid(gridName, sourceProduct._obj, targetProduct._obj))
 
+    @staticmethod
     def copyBand(sourceBandName, sourceProduct, targetProduct, copySourceImage):
         """
            Copies the named band from the source product to the target product.
@@ -4712,6 +4799,7 @@ class ProductUtils:
         """
         return Band(ProductUtils_copyBand2(sourceBandName, sourceProduct._obj, targetProduct._obj, copySourceImage))
 
+    @staticmethod
     def copyBand(sourceBandName, sourceProduct, targetBandName, targetProduct, copySourceImage):
         """
            Copies the named band from the source product to the target product.
@@ -4724,6 +4812,7 @@ class ProductUtils:
         """
         return Band(ProductUtils_copyBand1(sourceBandName, sourceProduct._obj, targetBandName, targetProduct._obj, copySourceImage))
 
+    @staticmethod
     def copyRasterDataNodeProperties(sourceRaster, targetRaster):
         """
            Copies all properties from source band to the target band.
@@ -4734,6 +4823,7 @@ class ProductUtils:
         ProductUtils_copyRasterDataNodeProperties(sourceRaster._obj, targetRaster._obj)
         return
 
+    @staticmethod
     def copySpectralBandProperties(sourceBand, targetBand):
         """
            Copies the spectral properties from source band to target band. These properties are:
@@ -4750,14 +4840,10 @@ class ProductUtils:
         ProductUtils_copySpectralBandProperties(sourceBand._obj, targetBand._obj)
         return
 
+    @staticmethod
     def copyGeoCoding(sourceProduct, targetProduct):
         """
            Copies the geocoding from the source product to target product.
-           
-           If the geo-coding in the source product is a {@link TiePointGeoCoding} or a {@link PixelGeoCoding},
-           the method expects existing latitude and longitude tie-point grids respectively existing latitude and longitude
-           bands in the target product. The method will NOT automatically copy them as well.
-           This behaviour may change in the future.
            @param sourceProduct the source product
            @param targetProduct the target product
            @throws IllegalArgumentException if one of the params is <code>null</code>.
@@ -4765,6 +4851,7 @@ class ProductUtils:
         ProductUtils_copyGeoCoding(sourceProduct._obj, targetProduct._obj)
         return
 
+    @staticmethod
     def copyTiePointGrids(sourceProduct, targetProduct):
         """
            Copies all tie point grids from one product to another.
@@ -4774,10 +4861,12 @@ class ProductUtils:
         ProductUtils_copyTiePointGrids(sourceProduct._obj, targetProduct._obj)
         return
 
+    @staticmethod
     def copyVectorData(sourceProduct, targetProduct):
         ProductUtils_copyVectorData(sourceProduct._obj, targetProduct._obj)
         return
 
+    @staticmethod
     def canGetPixelPos(product):
         """
            Returns whether or not a product can return a pixel position from a given geographical position.
@@ -4786,6 +4875,7 @@ class ProductUtils:
         """
         return ProductUtils_canGetPixelPos1(product._obj)
 
+    @staticmethod
     def canGetPixelPos(raster):
         """
            Returns whether or not a raster can return a pixel position from a given geographical position.
@@ -4794,6 +4884,7 @@ class ProductUtils:
         """
         return ProductUtils_canGetPixelPos2(raster._obj)
 
+    @staticmethod
     def createDensityPlotImage(raster1, sampleMin1, sampleMax1, raster2, sampleMin2, sampleMax2, roiMask, width, height, background, image, pm):
         """
            Creates a density plot image from two raster data nodes.
@@ -4814,6 +4905,7 @@ class ProductUtils:
         """
         return BufferedImage(ProductUtils_createDensityPlotImage(raster1._obj, sampleMin1, sampleMax1, raster2._obj, sampleMin2, sampleMax2, roiMask._obj, width, height, background._obj, image._obj, pm._obj))
 
+    @staticmethod
     def overlayMasks(raster, overlayBIm, pm):
         """
            Draws all the masks contained overlay mask group of the given raster to the ovelayBIm image.
@@ -4825,9 +4917,11 @@ class ProductUtils:
         """
         return BufferedImage(ProductUtils_overlayMasks(raster._obj, overlayBIm._obj, pm._obj))
 
+    @staticmethod
     def getCenterGeoPos(product):
         return GeoPos(ProductUtils_getCenterGeoPos(product._obj))
 
+    @staticmethod
     def normalizeGeoPolygon(polygon):
         """
            Normalizes the given geographical polygon so that maximum longitude differences between two points are 180
@@ -4839,9 +4933,11 @@ class ProductUtils:
         """
         return ProductUtils_normalizeGeoPolygon(polygon._obj)
 
+    @staticmethod
     def normalizeGeoPolygon_old(polygon):
         return ProductUtils_normalizeGeoPolygon_old(polygon._obj)
 
+    @staticmethod
     def denormalizeGeoPolygon(polygon):
         """
            Denormalizes the longitude values which have been normalized using the
@@ -4852,20 +4948,25 @@ class ProductUtils:
         ProductUtils_denormalizeGeoPolygon(polygon._obj)
         return
 
+    @staticmethod
     def denormalizeGeoPos(geoPos):
         ProductUtils_denormalizeGeoPos(geoPos._obj)
         return
 
+    @staticmethod
     def denormalizeGeoPos_old(geoPos):
         ProductUtils_denormalizeGeoPos_old(geoPos._obj)
         return
 
+    @staticmethod
     def getRotationDirection(polygon):
         return ProductUtils_getRotationDirection(polygon._obj)
 
+    @staticmethod
     def getAngleSum(polygon):
         return ProductUtils_getAngleSum(polygon._obj)
 
+    @staticmethod
     def convertToPixelPath(geoPath, geoCoding):
         """
            Converts a <code>GeneralPath</code> given in geographic lon/lat coordinates into a <code>GeneralPath</code> in
@@ -4881,6 +4982,7 @@ class ProductUtils:
         """
         return GeneralPath(ProductUtils_convertToPixelPath(geoPath._obj, geoCoding._obj))
 
+    @staticmethod
     def convertToGeoPath(shape, geoCoding):
         """
            Converts a <code>Shape</code> given in pixel X/Y coordinates into a <code>GeneralPath</code> in geografic
@@ -4897,6 +4999,7 @@ class ProductUtils:
         """
         return GeneralPath(ProductUtils_convertToGeoPath(shape._obj, geoCoding._obj))
 
+    @staticmethod
     def copyMetadata(source, target):
         """
            Copies all metadata elements and attributes of the source product to the target product.
@@ -4908,6 +5011,7 @@ class ProductUtils:
         ProductUtils_copyMetadata2(source._obj, target._obj)
         return
 
+    @staticmethod
     def copyMetadata(source, target):
         """
            Copies all metadata elements and attributes of the source element to the target element.
@@ -4919,6 +5023,7 @@ class ProductUtils:
         ProductUtils_copyMetadata1(source._obj, target._obj)
         return
 
+    @staticmethod
     def copyPreferredTileSize(sourceProduct, targetProduct):
         """
            Copies the source product's preferred tile size (if any) to the target product.
@@ -4928,15 +5033,19 @@ class ProductUtils:
         ProductUtils_copyPreferredTileSize(sourceProduct._obj, targetProduct._obj)
         return
 
+    @staticmethod
     def createGeoTIFFMetadata(product):
         return GeoTIFFMetadata(ProductUtils_createGeoTIFFMetadata2(product._obj))
 
+    @staticmethod
     def createGeoTIFFMetadata(geoCoding, width, height):
         return GeoTIFFMetadata(ProductUtils_createGeoTIFFMetadata1(geoCoding._obj, width, height))
 
+    @staticmethod
     def areaToPath(negativeArea, deltaX):
         return GeneralPath(ProductUtils_areaToPath(negativeArea._obj, deltaX))
 
+    @staticmethod
     def addElementToHistory(product, elem):
         """
            Adds a given elem to the history of the given product. If the products metadata root
@@ -4947,6 +5056,7 @@ class ProductUtils:
         ProductUtils_addElementToHistory(product._obj, elem._obj)
         return
 
+    @staticmethod
     def removeInvalidExpressions(product):
         """
            Validates all the expressions contained in the given (output) product. If an expression is not applicable to the given
@@ -4956,6 +5066,7 @@ class ProductUtils:
         """
         return ProductUtils_removeInvalidExpressions(product._obj)
 
+    @staticmethod
     def findSuitableQuicklookBandName(product):
         """
            Finds the name of a band in the given product which is suitable to product a good quicklook.
@@ -4965,9 +5076,11 @@ class ProductUtils:
         """
         return ProductUtils_findSuitableQuicklookBandName(product._obj)
 
+    @staticmethod
     def computeSourcePixelCoordinates(sourceGeoCoding, sourceWidth, sourceHeight, destGeoCoding, destArea):
         return PixelPos(ProductUtils_computeSourcePixelCoordinates(sourceGeoCoding._obj, sourceWidth, sourceHeight, destGeoCoding._obj, destArea._obj))
 
+    @staticmethod
     def computeMinMaxY(pixelPositions):
         """
            Computes the minimum and maximum y value of the given {@link PixelPos} array.
@@ -4980,6 +5093,7 @@ class ProductUtils:
         """
         return ProductUtils_computeMinMaxY(pixelPositions._obj)
 
+    @staticmethod
     def copyBandsForGeomTransform(sourceProduct, targetProduct, defaultNoDataValue, addedRasterDataNodes):
         """
            Copies only the bands from source to target.
@@ -4988,6 +5102,7 @@ class ProductUtils:
         ProductUtils_copyBandsForGeomTransform1(sourceProduct._obj, targetProduct._obj, defaultNoDataValue, addedRasterDataNodes._obj)
         return
 
+    @staticmethod
     def copyBandsForGeomTransform(sourceProduct, targetProduct, includeTiePointGrids, defaultNoDataValue, targetToSourceMap):
         """
            Adds raster data nodes of a source product as bands to the given target product. This method is especially usefull if the target
@@ -5018,12 +5133,15 @@ class ProductUtils:
         ProductUtils_copyBandsForGeomTransform2(sourceProduct._obj, targetProduct._obj, includeTiePointGrids, defaultNoDataValue, targetToSourceMap._obj)
         return
 
+    @staticmethod
     def getScanLineTime(product, y):
         return ProductData_UTC(ProductUtils_getScanLineTime(product._obj, y))
 
+    @staticmethod
     def getGeophysicalSampleDouble(band, pixelX, pixelY, level):
         return ProductUtils_getGeophysicalSampleDouble(band._obj, pixelX, pixelY, level)
 
+    @staticmethod
     def getGeophysicalSampleLong(band, pixelX, pixelY, level):
         return ProductUtils_getGeophysicalSampleLong(band._obj, pixelX, pixelY, level)
 
@@ -5036,6 +5154,7 @@ class MetadataElement:
     def __init__(self, obj):
         self._obj = obj
 
+    @staticmethod
     def newMetadataElement(name):
         """
            Constructs a new metadata element.
@@ -5371,13 +5490,14 @@ class MetadataElement:
     def toString(self):
         return MetadataElement_toString(self._obj)
 
+    @staticmethod
     def isValidNodeName(name):
         """
            Tests whether the given name is valid name for a node.
            A valid node name must not start with a dot. Also a valid node name must not contain
            any of the character  <code>\/:*?"&lt;&gt;|</code>
            @param name the name to test
-           @return <code>true</code> if the name is a valid node ifentifier, <code>false</code> otherwise
+           @return <code>true</code> if the name is a valid node identifier, <code>false</code> otherwise
         """
         return MetadataElement_isValidNodeName(name)
 
@@ -5706,13 +5826,14 @@ class PlacemarkGroup:
     def toString(self):
         return PlacemarkGroup_toString(self._obj)
 
+    @staticmethod
     def isValidNodeName(name):
         """
            Tests whether the given name is valid name for a node.
            A valid node name must not start with a dot. Also a valid node name must not contain
            any of the character  <code>\/:*?"&lt;&gt;|</code>
            @param name the name to test
-           @return <code>true</code> if the name is a valid node ifentifier, <code>false</code> otherwise
+           @return <code>true</code> if the name is a valid node identifier, <code>false</code> otherwise
         """
         return PlacemarkGroup_isValidNodeName(name)
 
@@ -5799,6 +5920,7 @@ class Product:
     def __init__(self, obj):
         self._obj = obj
 
+    @staticmethod
     def newProduct(name, type, sceneRasterWidth, sceneRasterHeight):
         """
            Creates a new product without any reader (in-memory product)
@@ -6586,13 +6708,14 @@ class Product:
     def toString(self):
         return Product_toString(self._obj)
 
+    @staticmethod
     def isValidNodeName(name):
         """
            Tests whether the given name is valid name for a node.
            A valid node name must not start with a dot. Also a valid node name must not contain
            any of the character  <code>\/:*?"&lt;&gt;|</code>
            @param name the name to test
-           @return <code>true</code> if the name is a valid node ifentifier, <code>false</code> otherwise
+           @return <code>true</code> if the name is a valid node identifier, <code>false</code> otherwise
         """
         return Product_isValidNodeName(name)
 
@@ -6725,9 +6848,11 @@ class ColorPaletteDef:
     def __init__(self, obj):
         self._obj = obj
 
+    @staticmethod
     def newColorPaletteDef(minSample, maxSample):
         return ColorPaletteDef(ColorPaletteDef_newColorPaletteDefFromRange(minSample, maxSample))
 
+    @staticmethod
     def newColorPaletteDef(points, numColors):
         return ColorPaletteDef(ColorPaletteDef_newColorPaletteDefFromPoints(points._obj, numColors))
 
@@ -6787,6 +6912,7 @@ class ColorPaletteDef:
         """
         return ColorPaletteDef_createPointAfter(self._obj, index, scaling._obj)
 
+    @staticmethod
     def getCenterColor(c1, c2):
         """
            Creates the center color between the given two colors.
@@ -6820,6 +6946,7 @@ class ColorPaletteDef:
     def createDeepCopy(self):
         return ColorPaletteDef(ColorPaletteDef_createDeepCopy(self._obj))
 
+    @staticmethod
     def loadColorPaletteDef(file):
         """
            Loads a color palette definition from the given file
@@ -6829,6 +6956,7 @@ class ColorPaletteDef:
         """
         return ColorPaletteDef(ColorPaletteDef_loadColorPaletteDef(file._obj))
 
+    @staticmethod
     def storeColorPaletteDef(colorPaletteDef, file):
         """
            Stores this color palette definition in the given file
@@ -6874,6 +7002,7 @@ class ImageInfo:
     def __init__(self, obj):
         self._obj = obj
 
+    @staticmethod
     def newImageInfo(colorPaletteDef):
         """
            Constructs a new image information instance.
@@ -6881,6 +7010,7 @@ class ImageInfo:
         """
         return ImageInfo(ImageInfo_newImageInfoPalette(colorPaletteDef._obj))
 
+    @staticmethod
     def newImageInfo(rgbChannelDef):
         """
            Constructs a new RGB image information instance.
@@ -6985,6 +7115,7 @@ class ImageInfo:
         ImageInfo_setColorPaletteDef(self._obj, colorPaletteDef._obj, minSample, maxSample, autoDistribute)
         return
 
+    @staticmethod
     def getHistogramMatching(mode):
         """
            Converts a string to a histogram matching.
@@ -7013,6 +7144,7 @@ class RGBChannelDef:
     def __init__(self, obj):
         self._obj = obj
 
+    @staticmethod
     def newRGBChannelDef():
         return RGBChannelDef(RGBChannelDef_newRGBChannelDef())
 
@@ -7071,6 +7203,7 @@ class TiePointGrid:
     def __init__(self, obj):
         self._obj = obj
 
+    @staticmethod
     def newTiePointGrid(name, gridWidth, gridHeight, offsetX, offsetY, subSamplingX, subSamplingY, tiePoints):
         """
            Constructs a new <code>TiePointGrid</code> with the given tie point grid properties.
@@ -7087,6 +7220,7 @@ class TiePointGrid:
         """
         return TiePointGrid(TiePointGrid_newTiePointGrid1(name, gridWidth, gridHeight, offsetX, offsetY, subSamplingX, subSamplingY, tiePoints))
 
+    @staticmethod
     def newTiePointGrid(name, gridWidth, gridHeight, offsetX, offsetY, subSamplingX, subSamplingY, tiePoints, discontinuity):
         """
            Constructs a new <code>TiePointGrid</code> with the given tie point grid properties.
@@ -7105,6 +7239,7 @@ class TiePointGrid:
         """
         return TiePointGrid(TiePointGrid_newTiePointGrid2(name, gridWidth, gridHeight, offsetX, offsetY, subSamplingX, subSamplingY, tiePoints, discontinuity))
 
+    @staticmethod
     def newTiePointGrid(name, gridWidth, gridHeight, offsetX, offsetY, subSamplingX, subSamplingY, tiePoints, containsAngles):
         """
            Constructs a new <code>TiePointGrid</code> with the given tie point grid properties.
@@ -7122,6 +7257,7 @@ class TiePointGrid:
         """
         return TiePointGrid(TiePointGrid_newTiePointGrid3(name, gridWidth, gridHeight, offsetX, offsetY, subSamplingX, subSamplingY, tiePoints, containsAngles))
 
+    @staticmethod
     def getDiscontinuity(tiePoints):
         """
            Determines the angular discontinuity of the given tie point values.
@@ -7487,9 +7623,11 @@ class TiePointGrid:
     def cloneTiePointGrid(self):
         return TiePointGrid(TiePointGrid_cloneTiePointGrid(self._obj))
 
+    @staticmethod
     def createZenithFromElevationAngleTiePointGrid(elevationAngleGrid):
         return TiePointGrid(TiePointGrid_createZenithFromElevationAngleTiePointGrid(elevationAngleGrid._obj))
 
+    @staticmethod
     def createSubset(sourceTiePointGrid, subsetDef):
         return TiePointGrid(TiePointGrid_createSubset(sourceTiePointGrid._obj, subsetDef._obj))
 
@@ -7617,6 +7755,7 @@ class TiePointGrid:
         """
         return TiePointGrid_isScalingApplied(self._obj)
 
+    @staticmethod
     def isValidMaskProperty(propertyName):
         """
            Tests if the given name is the name of a property which is relevant for the computation of the valid mask.
@@ -8488,13 +8627,14 @@ class TiePointGrid:
     def toString(self):
         return TiePointGrid_toString(self._obj)
 
+    @staticmethod
     def isValidNodeName(name):
         """
            Tests whether the given name is valid name for a node.
            A valid node name must not start with a dot. Also a valid node name must not contain
            any of the character  <code>\/:*?"&lt;&gt;|</code>
            @param name the name to test
-           @return <code>true</code> if the name is a valid node ifentifier, <code>false</code> otherwise
+           @return <code>true</code> if the name is a valid node identifier, <code>false</code> otherwise
         """
         return TiePointGrid_isValidNodeName(name)
 
@@ -8720,6 +8860,7 @@ class MetadataAttribute:
     def __init__(self, obj):
         self._obj = obj
 
+    @staticmethod
     def newMetadataAttribute(name, data, readOnly):
         return MetadataAttribute(MetadataAttribute_newMetadataAttribute(name, data._obj, readOnly))
 
@@ -8899,13 +9040,14 @@ class MetadataAttribute:
     def toString(self):
         return MetadataAttribute_toString(self._obj)
 
+    @staticmethod
     def isValidNodeName(name):
         """
            Tests whether the given name is valid name for a node.
            A valid node name must not start with a dot. Also a valid node name must not contain
            any of the character  <code>\/:*?"&lt;&gt;|</code>
            @param name the name to test
-           @return <code>true</code> if the name is a valid node ifentifier, <code>false</code> otherwise
+           @return <code>true</code> if the name is a valid node identifier, <code>false</code> otherwise
         """
         return MetadataAttribute_isValidNodeName(name)
 
