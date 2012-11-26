@@ -4,7 +4,6 @@ import org.esa.beam.extapi.gen.ApiParameter;
 import org.esa.beam.extapi.gen.DocMock;
 import org.esa.beam.extapi.gen.MyGeneratorContext;
 import org.esa.beam.extapi.gen.ParameterGenerator;
-import org.esa.beam.extapi.gen.c.CParameterGenerator;
 import org.esa.beam.framework.datamodel.Band;
 import org.esa.beam.framework.datamodel.Product;
 import org.esa.beam.framework.datamodel.ProductData;
@@ -65,166 +64,149 @@ public class PyCParameterGeneratorTest {
     @Test
     public void test_CodeGenParameter_StringScalar() {
         testGenerators(new PyCParameterGenerator.StringScalar(createParam("name", String.class, Modifier.IN)),
-                       null,
                        "const char* name;",
                        null,
-                       "name",
-                       null);
+                       "name"
+        );
     }
 
     @Test
     public void test_CodeGenParameter_PrimitiveArray() {
         testPrimitiveArray("data", boolean[].class, Modifier.IN,
-                           null,
                            "boolean* data;\n" +
                                    "int dataLength;\n" +
                                    "PyObject* dataSeq;",
                            "data = beam_new_boolean_array_from_pyseq(dataSeq, &dataLength);",
-                           "data, dataLength",
-                           null);
+                           "data, dataLength"
+        );
 
         testPrimitiveArray("data", int[].class, Modifier.OUT,
-                           null,
                            "int* data;\n" +
                                    "int dataLength;\n" +
                                    "PyObject* dataSeq;",
                            "data = beam_new_int_array_from_pyseq(dataSeq, &dataLength);",
-                           "data, dataLength",
-                           null);
+                           "data, dataLength"
+        );
 
         testPrimitiveArray("data", float[].class, Modifier.RETURN,
-                           null,
                            "float* data;\n" +
                                    "int dataLength;\n" +
                                    "PyObject* dataSeq;",
                            "data = beam_new_float_array_from_pyseq(dataSeq, &dataLength);",
-                           "data, dataLength",
-                           null);
+                           "data, dataLength"
+        );
     }
 
     @Test
     public void test_CodeGenParameter_ObjectArray() {
         testObjectArray("bands", Band[].class, Modifier.IN,
-                        null,
                         "Band bands;\n" +
                                 "int bandsLength;\n" +
                                 "PyObject* bandsSeq;",
                         "bands = beam_new_jobject_array_from_pyseq(\"Band\", bandsSeq, &bandsLength);",
-                        "bands, bandsLength",
-                        null);
+                        "bands, bandsLength"
+        );
 
         testObjectArray("bands", Band[].class, Modifier.OUT,
-                       null,
                         "Band bands;\n" +
                                 "int bandsLength;\n" +
                                 "PyObject* bandsSeq;",
                         "bands = beam_new_jobject_array_from_pyseq(\"Band\", bandsSeq, &bandsLength);",
-                        "bands, bandsLength",
-                        null);
+                        "bands, bandsLength"
+        );
 
         testObjectArray("bands", Band[].class, Modifier.RETURN,
-                       null,
                         "Band bands;\n" +
                                 "int bandsLength;\n" +
                                 "PyObject* bandsSeq;",
                         "bands = beam_new_jobject_array_from_pyseq(\"Band\", bandsSeq, &bandsLength);",
-                        "bands, bandsLength",
-                        null);
+                        "bands, bandsLength"
+        );
     }
 
     @Test
     public void test_CodeGenParameter_StringArray() {
         testStringArray("names", String[].class, Modifier.IN,
-                        null,
                         "char** names;\n" +
                                 "int namesLength;\n" +
                                 "PyObject* namesSeq;",
                         "names = beam_new_string_array_from_pyseq(namesSeq, &namesLength);",
-                        "names, namesLength",
-                        null);
+                        "names, namesLength"
+        );
 
         testStringArray("names", String[].class, Modifier.OUT,
-                        null,
                         "char** names;\n" +
                                 "int namesLength;\n" +
                                 "PyObject* namesSeq;",
                         "names = beam_new_string_array_from_pyseq(namesSeq, &namesLength);",
-                        "names, namesLength",
-                        null);
+                        "names, namesLength"
+        );
 
         testStringArray("names", String[].class, Modifier.RETURN,
-                        null,
                         "char** names;\n" +
                                 "int namesLength;\n" +
                                 "PyObject* namesSeq;",
                         "names = beam_new_string_array_from_pyseq(namesSeq, &namesLength);",
-                        "names, namesLength",
-                        null);
+                        "names, namesLength"
+        );
     }
 
     private void testPrimitiveScalar(String name, Class<?> type, Modifier modifier, String localVarDecl, String callArgExpr) {
         testGenerators(new PyCParameterGenerator.PrimitiveScalar(createParam(name, type, modifier)),
-                       null,
                        localVarDecl,
                        null,
-                       callArgExpr,
-                       null);
+                       callArgExpr
+        );
     }
 
-    private void testPrimitiveArray(String name, Class<?> type, Modifier modifier, String paramListDecl, String localVarDecl, String preCallCode, String callArgExpr, String postCallCode) {
+    private void testPrimitiveArray(String name, Class<?> type, Modifier modifier,
+                                    String localVarDecl,
+                                    String preCallCode,
+                                    String callArgExpr) {
         testGenerators(new PyCParameterGenerator.PrimitiveArray(createParam(name, type, modifier)),
-                       null,
                        localVarDecl,
                        preCallCode,
-                       callArgExpr,
-                       postCallCode);
+                       callArgExpr
+        );
     }
 
     private void testStringArray(String name, Class<?> type, Modifier modifier,
-                                 String paramListDecl,
                                  String localVarDecl,
                                  String preCallCode,
-                                 String callArgExpr,
-                                 String postCallCode) {
+                                 String callArgExpr) {
         testGenerators(new PyCParameterGenerator.StringArray(createParam(name, type, modifier)),
-                       paramListDecl,
                        localVarDecl,
                        preCallCode,
-                       callArgExpr,
-                       postCallCode);
+                       callArgExpr
+        );
     }
 
     private void testObjectArray(String name, Class<?> type, Modifier modifier,
-                                 String paramListDecl,
                                  String localVarDecl,
                                  String preCallCode,
-                                 String callArgExpr,
-                                 String postCallCode) {
+                                 String callArgExpr) {
         testGenerators(new PyCParameterGenerator.ObjectArray(createParam(name, type, modifier)),
-                       paramListDecl,
                        localVarDecl,
                        preCallCode,
-                       callArgExpr,
-                       postCallCode);
+                       callArgExpr
+        );
     }
 
     private void testObjectScalar(String name, Class<?> type, String localVarDecl, String callArgExpr) {
         testGenerators(new PyCParameterGenerator.ObjectScalar(createParam(name, type, Modifier.IN)),
-                       null, localVarDecl, null, callArgExpr, null);
+                       localVarDecl, null, callArgExpr);
     }
 
     private void testGenerators(ParameterGenerator parameterGenerator,
-                                String paramListDecl,
                                 String localVarDecl,
                                 String preCallCode,
-                                String callArgExpr,
-                                String postCallCode) {
+                                String callArgExpr) {
         // We don't generate parameters because the Python API uses PyObject* args
         assertEquals(null, parameterGenerator.generateParamListDecl(context));
         assertEquals(localVarDecl, parameterGenerator.generateLocalVarDecl(context));
         assertEquals(preCallCode, parameterGenerator.generatePreCallCode(context));
         assertEquals(callArgExpr, parameterGenerator.generateCallCode(context));
-        assertEquals(postCallCode, parameterGenerator.generatePostCallCode(context));
+        assertEquals(null, parameterGenerator.generatePostCallCode(context));
     }
 
     private ApiParameter createParam(String name, Class<?> type, Modifier modifier) {
