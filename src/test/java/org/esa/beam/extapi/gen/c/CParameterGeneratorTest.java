@@ -90,6 +90,8 @@ public class CParameterGeneratorTest {
                            "if (dataElems != NULL && (*jenv)->IsSameObject(jenv, dataArray, _resultArray)) {\n" +
                                    "    beam_copy_from_jarray(_resultArray, dataElems, dataLength, sizeof (float));\n" +
                                    "    _result = dataElems;\n" +
+                                   "    if (resultArrayLength != NULL)\n" +
+                                   "        *resultArrayLength = dataLength;\n" +
                                    "} else {\n" +
                                    "    _result = beam_alloc_float_array(_resultArray, resultArrayLength);\n" +
                                    "}");
