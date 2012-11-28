@@ -264,6 +264,7 @@ public class PyCModuleGenerator extends ModuleGenerator {
             for (ApiClass apiClass : getApiClasses()) {
                 for (FunctionGenerator generator : getFunctionGenerators(apiClass)) {
                     writeFunctionDefinition(generator, writer);
+                    writer.println();
                 }
             }
 

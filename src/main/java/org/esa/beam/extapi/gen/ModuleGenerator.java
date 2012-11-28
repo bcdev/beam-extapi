@@ -100,7 +100,7 @@ public abstract class ModuleGenerator implements GeneratorContext {
         writer.printf("%s;\n", generator.generateFunctionSignature(this));
     }
 
-    protected void writeFunctionDefinition(FunctionGenerator functionGenerator, PrintWriter writer) throws IOException {
+    public void writeFunctionDefinition(FunctionGenerator functionGenerator, PrintWriter writer) throws IOException {
         writer.printf("%s\n", functionGenerator.generateFunctionSignature(this));
         writer.print("{\n");
         writeLocalMethodVarDecl(writer);
@@ -121,7 +121,6 @@ public abstract class ModuleGenerator implements GeneratorContext {
         }
         writeCode(writer, functionGenerator.generateReturnCode(this));
         writer.print("}\n");
-        writer.print("\n");
     }
 
     protected abstract void writeLocalMethodVarDecl(PrintWriter writer) throws IOException;
