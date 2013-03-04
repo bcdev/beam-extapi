@@ -162,7 +162,7 @@ Shall the API allow for modification of single structures elements that are pass
 Frequently seen problems
 ========================
 
-Windows VC++ using "Release" configuration:
+Windows VC++ using "Debug" configuration:
 Fehler	11	error LNK1104: Datei "python32_d.lib" kann nicht geöffnet werden.	C:\Users\Norman\JavaProjects\beam-extapi\msvc\beampy\LINK	beampy
 
 --> No solution; Google does not help. Must use Release configuration
