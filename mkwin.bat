@@ -41,7 +41,7 @@ src\main\c\gen\beam_capi.def ^
 /Gm- /GS /Gy /Gd ^
 /Zi /Zc:wchar_t /Zc:forScope ^
 /EHsc /fp:precise /analyze- ^
-/nologo /W3 /WX- /GL ^
+/nologo /W3 /Wp64 /WX- /GL ^
 /D "WIN32" ^
 /D "NDEBUG" ^
 /D "_WINDOWS" ^
@@ -63,6 +63,39 @@ src\main\c\gen\beam_capi.def ^
 /MACHINE:%PF%
 
 
+rem Building BEAM/C API
+
+cl ^
+src\main\c\beam_capi_test.c ^
+/Fotarget\%OUT%\ ^
+/Fdtarget\%OUT%\ ^
+/I"%J_HOME%\include\win32" ^
+/I"%J_HOME%\include" ^
+/Gm- /GS /Gy /Gd ^
+/Zi /Zc:wchar_t /Zc:forScope ^
+/EHsc /fp:precise /analyze- ^
+/nologo /W3 /Wp64 /WX- /GL ^
+/D "WIN32" ^
+/D "NDEBUG" ^
+/D "_WINDOWS" ^
+/D "_USRDLL" ^
+/D "BEAM_CAPI_EXPORTS" ^
+/D "_WINDLL" ^
+/D "_UNICODE" ^
+/D "UNICODE" ^
+/D "_CRT_SECURE_NO_WARNINGS" ^
+/link ^
+/OUT:"target\%OUT%\beam_capi_test.exe" ^
+/NOLOGO ^
+/LIBPATH:"%J_HOME%\lib" ^
+/LIBPATH:"target\%OUT%" ^
+/SUBSYSTEM:CONSOLE ^
+/TLBID:1 ^
+/DYNAMICBASE ^
+/NXCOMPAT  ^
+/MACHINE:%PF% ^
+"jvm.lib" "beam_capi.lib"
+
 rem Building BEAM/Python API
 
 cl ^
@@ -76,7 +109,7 @@ src\main\c\gen\beampy.def ^
 /Gm- /GS /Gy /Gd ^
 /Zi /Zc:wchar_t /Zc:forScope ^
 /EHsc /fp:precise /analyze- ^
-/nologo /W3 /WX- /GL ^
+/nologo /W3 /Wp64 /WX- /GL ^
 /D "WIN32" ^
 /D "NDEBUG" ^
 /D "_WINDOWS" ^
