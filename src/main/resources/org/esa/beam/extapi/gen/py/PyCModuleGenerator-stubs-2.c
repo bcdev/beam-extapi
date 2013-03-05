@@ -1,19 +1,19 @@
 typedef struct {
     PyObject_HEAD
-	void* jobjectId;
+    void* jobjectId;
 } BeamPyJObject;
 
 static int BeamPyJObject_init(BeamPyJObject* self, PyObject* args, PyObject* kwds)
 {
-	printf("BeamPyJObject_init\n");
-	self->jobjectId = PyLong_AsVoidPtr(args);
+    printf("BeamPyJObject_init\n");
+    self->jobjectId = PyLong_AsVoidPtr(args);
     return self->jobjectId != NULL ? 0 : 1;
 }
 
 static void BeamPyJObject_dealloc(BeamPyJObject* self)
 {
-	printf("BeamPyJObject_dealloc\n");
-	beam_release_jobject(&self->jobjectId);
+    printf("BeamPyJObject_dealloc\n");
+    beam_release_jobject(&self->jobjectId);
 }
 
 static PyTypeObject BeamPy_JObjectTypeV = {
@@ -38,7 +38,7 @@ static PyTypeObject BeamPy_JObjectTypeV = {
     NULL,                         /* tp_as_buffer */
     Py_TPFLAGS_DEFAULT,           /* tp_flags */
     "BEAM Java Object",           /* tp_doc */
-	NULL,                         /* tp_traverse */
+    NULL,                         /* tp_traverse */
     NULL,                         /* tp_clear */
     NULL,                         /* tp_richcompare */
     0,                            /* tp_weaklistoffset */
@@ -79,8 +79,7 @@ PyMODINIT_FUNC PyInit__${libName}()
 {
     PyObject* m;
 
-    BEAM_TRACE("${libName}: PyInit_${libName}() called\n");
-
+    fprintf(stdout, "${libName}: PyInit__${libName}() called\n");
     m = PyModule_Create(&BeamPy_Module);
     if (m == NULL) {
         return NULL;
