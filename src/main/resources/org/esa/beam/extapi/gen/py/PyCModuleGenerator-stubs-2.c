@@ -6,7 +6,7 @@ typedef struct {
 static int BeamPyJObject_init(BeamPyJObject* self, PyObject* args, PyObject* kwds)
 {
 	printf("BeamPyJObject_init\n");
-	self->jobjectId = PyLong_asVoidPtr(args);
+	self->jobjectId = PyLong_AsVoidPtr(args);
     return self->jobjectId != NULL ? 0 : 1;
 }
 
@@ -100,7 +100,7 @@ PyMODINIT_FUNC PyInit__${libName}()
     // Py_DECREF(arg);
 
     // todo - in  BeamPyJObject_init use:
-    // self->jobject = PyLong_asVoidPtr(args);
+    // self->jobject = PyLong_AsVoidPtr(args);
 
     if (!beam_create_jvm_with_defaults()) {
         PyErr_SetString(BeamPy_Error, "Failed to create Java VM");
