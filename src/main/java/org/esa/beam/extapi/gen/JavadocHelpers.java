@@ -129,6 +129,7 @@ public class JavadocHelpers {
             return "";
         }
         return text
+                .replace("\\", "\\\\")
                 .replace("\"", "\\\"")
                 .replace("\n", "\\n")
                 .replace("\t", "    ");
