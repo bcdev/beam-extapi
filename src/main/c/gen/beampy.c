@@ -1128,7 +1128,7 @@ static PyMethodDef BeamPy_Methods[] = {
     {"IndexCoding_setDescription", BeamPyIndexCoding_setDescription, METH_VARARGS, " Sets a short textual description for this products node.\n\n \n@param this The IndexCoding object.\n@param description a description, can be <code>null</code>\n"},
     {"IndexCoding_isModified", BeamPyIndexCoding_isModified, METH_VARARGS, " Returns whether or not this node is modified.\n\n @return <code>true</code> if so\n\n@param this The IndexCoding object."},
     {"IndexCoding_toString", BeamPyIndexCoding_toString, METH_VARARGS, "\n@param this The IndexCoding object."},
-    {"IndexCoding_isValidNodeName", BeamPyIndexCoding_isValidNodeName, METH_VARARGS, " Tests whether the given name is valid name for a node.\n A valid node name must not start with a dot. Also a valid node name must not contain\n any of the character  <code>\/:*?\"&lt;&gt;|</code>\n\n @param name the name to test\n @return <code>true</code> if the name is a valid node identifier, <code>false</code> otherwise\n"},
+    {"IndexCoding_isValidNodeName", BeamPyIndexCoding_isValidNodeName, METH_VARARGS, " Tests whether the given name is valid name for a node.\n A valid node name must not start with a dot. Also a valid node name must not contain\n any of the character  <code>\\/:*?\"&lt;&gt;|</code>\n\n @param name the name to test\n @return <code>true</code> if the name is a valid node identifier, <code>false</code> otherwise\n"},
     {"IndexCoding_getProduct", BeamPyIndexCoding_getProduct, METH_VARARGS, " Returns the product to which this node belongs to.\n\n @return the product, or <code>null</code> if this node was not owned by a product at the time this method was\n         called\n\n@param this The IndexCoding object."},
     {"IndexCoding_getProductReader", BeamPyIndexCoding_getProductReader, METH_VARARGS, " Returns the product reader for the product to which this node belongs to.\n\n @return the product reader, or <code>null</code> if no such exists\n\n@param this The IndexCoding object."},
     {"IndexCoding_getProductWriter", BeamPyIndexCoding_getProductWriter, METH_VARARGS, " Returns the product writer for the product to which this node belongs to.\n\n @return the product writer, or <code>null</code> if no such exists\n\n@param this The IndexCoding object."},
@@ -1192,7 +1192,7 @@ static PyMethodDef BeamPy_Methods[] = {
     {"Placemark_setModified", BeamPyPlacemark_setModified, METH_VARARGS, " Sets this node's modified flag.\n <p/>\n If the modified flag changes to true and this node has an owner, the owner's modified flag is also set to\n true.\n\n \n@param this The Placemark object.\n@param modified whether or not this node is beeing marked as modified.\n @see org.esa.beam.framework.datamodel.Product#fireNodeChanged\n"},
     {"Placemark_toString", BeamPyPlacemark_toString, METH_VARARGS, "\n@param this The Placemark object."},
     {"Placemark_dispose", BeamPyPlacemark_dispose, METH_VARARGS, " Releases all of the resources used by this object instance and all of its owned children. Its primary use is to\n allow the garbage collector to perform a vanilla job.\n <p/>\n <p>This method should be called only if it is for sure that this object instance will never be used again. The\n results of referencing an instance of this class after a call to <code>dispose()</code> are undefined.\n <p/>\n <p>Overrides of this method should always call <code>super.dispose();</code> after disposing this instance.\n\n@param this The Placemark object."},
-    {"Placemark_isValidNodeName", BeamPyPlacemark_isValidNodeName, METH_VARARGS, " Tests whether the given name is valid name for a node.\n A valid node name must not start with a dot. Also a valid node name must not contain\n any of the character  <code>\/:*?\"&lt;&gt;|</code>\n\n @param name the name to test\n @return <code>true</code> if the name is a valid node identifier, <code>false</code> otherwise\n"},
+    {"Placemark_isValidNodeName", BeamPyPlacemark_isValidNodeName, METH_VARARGS, " Tests whether the given name is valid name for a node.\n A valid node name must not start with a dot. Also a valid node name must not contain\n any of the character  <code>\\/:*?\"&lt;&gt;|</code>\n\n @param name the name to test\n @return <code>true</code> if the name is a valid node identifier, <code>false</code> otherwise\n"},
     {"Placemark_getProduct", BeamPyPlacemark_getProduct, METH_VARARGS, " Returns the product to which this node belongs to.\n\n @return the product, or <code>null</code> if this node was not owned by a product at the time this method was\n         called\n\n@param this The Placemark object."},
     {"Placemark_getProductReader", BeamPyPlacemark_getProductReader, METH_VARARGS, " Returns the product reader for the product to which this node belongs to.\n\n @return the product reader, or <code>null</code> if no such exists\n\n@param this The Placemark object."},
     {"Placemark_getProductWriter", BeamPyPlacemark_getProductWriter, METH_VARARGS, " Returns the product writer for the product to which this node belongs to.\n\n @return the product writer, or <code>null</code> if no such exists\n\n@param this The Placemark object."},
@@ -1241,7 +1241,7 @@ static PyMethodDef BeamPy_Methods[] = {
     {"MetadataElement_setDescription", BeamPyMetadataElement_setDescription, METH_VARARGS, " Sets a short textual description for this products node.\n\n \n@param this The MetadataElement object.\n@param description a description, can be <code>null</code>\n"},
     {"MetadataElement_isModified", BeamPyMetadataElement_isModified, METH_VARARGS, " Returns whether or not this node is modified.\n\n @return <code>true</code> if so\n\n@param this The MetadataElement object."},
     {"MetadataElement_toString", BeamPyMetadataElement_toString, METH_VARARGS, "\n@param this The MetadataElement object."},
-    {"MetadataElement_isValidNodeName", BeamPyMetadataElement_isValidNodeName, METH_VARARGS, " Tests whether the given name is valid name for a node.\n A valid node name must not start with a dot. Also a valid node name must not contain\n any of the character  <code>\/:*?\"&lt;&gt;|</code>\n\n @param name the name to test\n @return <code>true</code> if the name is a valid node identifier, <code>false</code> otherwise\n"},
+    {"MetadataElement_isValidNodeName", BeamPyMetadataElement_isValidNodeName, METH_VARARGS, " Tests whether the given name is valid name for a node.\n A valid node name must not start with a dot. Also a valid node name must not contain\n any of the character  <code>\\/:*?\"&lt;&gt;|</code>\n\n @param name the name to test\n @return <code>true</code> if the name is a valid node identifier, <code>false</code> otherwise\n"},
     {"MetadataElement_getProduct", BeamPyMetadataElement_getProduct, METH_VARARGS, " Returns the product to which this node belongs to.\n\n @return the product, or <code>null</code> if this node was not owned by a product at the time this method was\n         called\n\n@param this The MetadataElement object."},
     {"MetadataElement_getProductReader", BeamPyMetadataElement_getProductReader, METH_VARARGS, " Returns the product reader for the product to which this node belongs to.\n\n @return the product reader, or <code>null</code> if no such exists\n\n@param this The MetadataElement object."},
     {"MetadataElement_getProductWriter", BeamPyMetadataElement_getProductWriter, METH_VARARGS, " Returns the product writer for the product to which this node belongs to.\n\n @return the product writer, or <code>null</code> if no such exists\n\n@param this The MetadataElement object."},
@@ -1344,7 +1344,7 @@ static PyMethodDef BeamPy_Methods[] = {
     {"Product_setDescription", BeamPyProduct_setDescription, METH_VARARGS, " Sets a short textual description for this products node.\n\n \n@param this The Product object.\n@param description a description, can be <code>null</code>\n"},
     {"Product_isModified", BeamPyProduct_isModified, METH_VARARGS, " Returns whether or not this node is modified.\n\n @return <code>true</code> if so\n\n@param this The Product object."},
     {"Product_toString", BeamPyProduct_toString, METH_VARARGS, "\n@param this The Product object."},
-    {"Product_isValidNodeName", BeamPyProduct_isValidNodeName, METH_VARARGS, " Tests whether the given name is valid name for a node.\n A valid node name must not start with a dot. Also a valid node name must not contain\n any of the character  <code>\/:*?\"&lt;&gt;|</code>\n\n @param name the name to test\n @return <code>true</code> if the name is a valid node identifier, <code>false</code> otherwise\n"},
+    {"Product_isValidNodeName", BeamPyProduct_isValidNodeName, METH_VARARGS, " Tests whether the given name is valid name for a node.\n A valid node name must not start with a dot. Also a valid node name must not contain\n any of the character  <code>\\/:*?\"&lt;&gt;|</code>\n\n @param name the name to test\n @return <code>true</code> if the name is a valid node identifier, <code>false</code> otherwise\n"},
     {"Product_getProduct", BeamPyProduct_getProduct, METH_VARARGS, " Returns the product to which this node belongs to.\n\n @return the product, or <code>null</code> if this node was not owned by a product at the time this method was\n         called\n\n@param this The Product object."},
     {"Product_getDisplayName", BeamPyProduct_getDisplayName, METH_VARARGS, " Returns this node's display name. The display name is the product reference string with the node name appended.\n <p>Example: The string <code>\"[2] <i>node-name</i>\"</code> means node <code><i>node-name</i></code> of the\n product with the reference number <code>2</code>.\n\n @return this node's name with a product prefix <br>or this node's name only if this node's product prefix is\n         <code>null</code>\n @see #getProductRefString\n\n@param this The Product object."},
     {"Product_getProductRefString", BeamPyProduct_getProductRefString, METH_VARARGS, " Gets the product reference string. The product reference string is the product reference number enclosed in\n square brackets. <p>Example: The string <code>\"[2]\"</code> stands for a product with the reference number\n <code>2</code>.\n\n @return the product reference string. <br>or <code>null</code> if this node has no product <br>or\n         <code>null</code> if its product reference number was inactive\n\n@param this The Product object."},
@@ -1559,7 +1559,7 @@ static PyMethodDef BeamPy_Methods[] = {
     {"Band_getDescription", BeamPyBand_getDescription, METH_VARARGS, " Returns a short textual description for this products node.\n\n @return a description or <code>null</code>\n\n@param this The Band object."},
     {"Band_setDescription", BeamPyBand_setDescription, METH_VARARGS, " Sets a short textual description for this products node.\n\n \n@param this The Band object.\n@param description a description, can be <code>null</code>\n"},
     {"Band_isModified", BeamPyBand_isModified, METH_VARARGS, " Returns whether or not this node is modified.\n\n @return <code>true</code> if so\n\n@param this The Band object."},
-    {"Band_isValidNodeName", BeamPyBand_isValidNodeName, METH_VARARGS, " Tests whether the given name is valid name for a node.\n A valid node name must not start with a dot. Also a valid node name must not contain\n any of the character  <code>\/:*?\"&lt;&gt;|</code>\n\n @param name the name to test\n @return <code>true</code> if the name is a valid node identifier, <code>false</code> otherwise\n"},
+    {"Band_isValidNodeName", BeamPyBand_isValidNodeName, METH_VARARGS, " Tests whether the given name is valid name for a node.\n A valid node name must not start with a dot. Also a valid node name must not contain\n any of the character  <code>\\/:*?\"&lt;&gt;|</code>\n\n @param name the name to test\n @return <code>true</code> if the name is a valid node identifier, <code>false</code> otherwise\n"},
     {"Band_getProduct", BeamPyBand_getProduct, METH_VARARGS, " Returns the product to which this node belongs to.\n\n @return the product, or <code>null</code> if this node was not owned by a product at the time this method was\n         called\n\n@param this The Band object."},
     {"Band_getProductReader", BeamPyBand_getProductReader, METH_VARARGS, " Returns the product reader for the product to which this node belongs to.\n\n @return the product reader, or <code>null</code> if no such exists\n\n@param this The Band object."},
     {"Band_getProductWriter", BeamPyBand_getProductWriter, METH_VARARGS, " Returns the product writer for the product to which this node belongs to.\n\n @return the product writer, or <code>null</code> if no such exists\n\n@param this The Band object."},
@@ -1601,7 +1601,7 @@ static PyMethodDef BeamPy_Methods[] = {
     {"PlacemarkGroup_setDescription", BeamPyPlacemarkGroup_setDescription, METH_VARARGS, " Sets a short textual description for this products node.\n\n \n@param this The PlacemarkGroup object.\n@param description a description, can be <code>null</code>\n"},
     {"PlacemarkGroup_isModified", BeamPyPlacemarkGroup_isModified, METH_VARARGS, " Returns whether or not this node is modified.\n\n @return <code>true</code> if so\n\n@param this The PlacemarkGroup object."},
     {"PlacemarkGroup_toString", BeamPyPlacemarkGroup_toString, METH_VARARGS, "\n@param this The PlacemarkGroup object."},
-    {"PlacemarkGroup_isValidNodeName", BeamPyPlacemarkGroup_isValidNodeName, METH_VARARGS, " Tests whether the given name is valid name for a node.\n A valid node name must not start with a dot. Also a valid node name must not contain\n any of the character  <code>\/:*?\"&lt;&gt;|</code>\n\n @param name the name to test\n @return <code>true</code> if the name is a valid node identifier, <code>false</code> otherwise\n"},
+    {"PlacemarkGroup_isValidNodeName", BeamPyPlacemarkGroup_isValidNodeName, METH_VARARGS, " Tests whether the given name is valid name for a node.\n A valid node name must not start with a dot. Also a valid node name must not contain\n any of the character  <code>\\/:*?\"&lt;&gt;|</code>\n\n @param name the name to test\n @return <code>true</code> if the name is a valid node identifier, <code>false</code> otherwise\n"},
     {"PlacemarkGroup_getProduct", BeamPyPlacemarkGroup_getProduct, METH_VARARGS, " Returns the product to which this node belongs to.\n\n @return the product, or <code>null</code> if this node was not owned by a product at the time this method was\n         called\n\n@param this The PlacemarkGroup object."},
     {"PlacemarkGroup_getProductReader", BeamPyPlacemarkGroup_getProductReader, METH_VARARGS, " Returns the product reader for the product to which this node belongs to.\n\n @return the product reader, or <code>null</code> if no such exists\n\n@param this The PlacemarkGroup object."},
     {"PlacemarkGroup_getProductWriter", BeamPyPlacemarkGroup_getProductWriter, METH_VARARGS, " Returns the product writer for the product to which this node belongs to.\n\n @return the product writer, or <code>null</code> if no such exists\n\n@param this The PlacemarkGroup object."},
@@ -1765,7 +1765,7 @@ static PyMethodDef BeamPy_Methods[] = {
     {"TiePointGrid_setDescription", BeamPyTiePointGrid_setDescription, METH_VARARGS, " Sets a short textual description for this products node.\n\n \n@param this The TiePointGrid object.\n@param description a description, can be <code>null</code>\n"},
     {"TiePointGrid_isModified", BeamPyTiePointGrid_isModified, METH_VARARGS, " Returns whether or not this node is modified.\n\n @return <code>true</code> if so\n\n@param this The TiePointGrid object."},
     {"TiePointGrid_toString", BeamPyTiePointGrid_toString, METH_VARARGS, "\n@param this The TiePointGrid object."},
-    {"TiePointGrid_isValidNodeName", BeamPyTiePointGrid_isValidNodeName, METH_VARARGS, " Tests whether the given name is valid name for a node.\n A valid node name must not start with a dot. Also a valid node name must not contain\n any of the character  <code>\/:*?\"&lt;&gt;|</code>\n\n @param name the name to test\n @return <code>true</code> if the name is a valid node identifier, <code>false</code> otherwise\n"},
+    {"TiePointGrid_isValidNodeName", BeamPyTiePointGrid_isValidNodeName, METH_VARARGS, " Tests whether the given name is valid name for a node.\n A valid node name must not start with a dot. Also a valid node name must not contain\n any of the character  <code>\\/:*?\"&lt;&gt;|</code>\n\n @param name the name to test\n @return <code>true</code> if the name is a valid node identifier, <code>false</code> otherwise\n"},
     {"TiePointGrid_getProduct", BeamPyTiePointGrid_getProduct, METH_VARARGS, " Returns the product to which this node belongs to.\n\n @return the product, or <code>null</code> if this node was not owned by a product at the time this method was\n         called\n\n@param this The TiePointGrid object."},
     {"TiePointGrid_getProductReader", BeamPyTiePointGrid_getProductReader, METH_VARARGS, " Returns the product reader for the product to which this node belongs to.\n\n @return the product reader, or <code>null</code> if no such exists\n\n@param this The TiePointGrid object."},
     {"TiePointGrid_getProductWriter", BeamPyTiePointGrid_getProductWriter, METH_VARARGS, " Returns the product writer for the product to which this node belongs to.\n\n @return the product writer, or <code>null</code> if no such exists\n\n@param this The TiePointGrid object."},
@@ -1827,7 +1827,7 @@ static PyMethodDef BeamPy_Methods[] = {
     {"FlagCoding_setDescription", BeamPyFlagCoding_setDescription, METH_VARARGS, " Sets a short textual description for this products node.\n\n \n@param this The FlagCoding object.\n@param description a description, can be <code>null</code>\n"},
     {"FlagCoding_isModified", BeamPyFlagCoding_isModified, METH_VARARGS, " Returns whether or not this node is modified.\n\n @return <code>true</code> if so\n\n@param this The FlagCoding object."},
     {"FlagCoding_toString", BeamPyFlagCoding_toString, METH_VARARGS, "\n@param this The FlagCoding object."},
-    {"FlagCoding_isValidNodeName", BeamPyFlagCoding_isValidNodeName, METH_VARARGS, " Tests whether the given name is valid name for a node.\n A valid node name must not start with a dot. Also a valid node name must not contain\n any of the character  <code>\/:*?\"&lt;&gt;|</code>\n\n @param name the name to test\n @return <code>true</code> if the name is a valid node identifier, <code>false</code> otherwise\n"},
+    {"FlagCoding_isValidNodeName", BeamPyFlagCoding_isValidNodeName, METH_VARARGS, " Tests whether the given name is valid name for a node.\n A valid node name must not start with a dot. Also a valid node name must not contain\n any of the character  <code>\\/:*?\"&lt;&gt;|</code>\n\n @param name the name to test\n @return <code>true</code> if the name is a valid node identifier, <code>false</code> otherwise\n"},
     {"FlagCoding_getProduct", BeamPyFlagCoding_getProduct, METH_VARARGS, " Returns the product to which this node belongs to.\n\n @return the product, or <code>null</code> if this node was not owned by a product at the time this method was\n         called\n\n@param this The FlagCoding object."},
     {"FlagCoding_getProductReader", BeamPyFlagCoding_getProductReader, METH_VARARGS, " Returns the product reader for the product to which this node belongs to.\n\n @return the product reader, or <code>null</code> if no such exists\n\n@param this The FlagCoding object."},
     {"FlagCoding_getProductWriter", BeamPyFlagCoding_getProductWriter, METH_VARARGS, " Returns the product writer for the product to which this node belongs to.\n\n @return the product writer, or <code>null</code> if no such exists\n\n@param this The FlagCoding object."},
@@ -1968,7 +1968,7 @@ static PyMethodDef BeamPy_Methods[] = {
     {"ProductNodeGroup_setDescription", BeamPyProductNodeGroup_setDescription, METH_VARARGS, " Sets a short textual description for this products node.\n\n \n@param this The ProductNodeGroup object.\n@param description a description, can be <code>null</code>\n"},
     {"ProductNodeGroup_isModified", BeamPyProductNodeGroup_isModified, METH_VARARGS, " Returns whether or not this node is modified.\n\n @return <code>true</code> if so\n\n@param this The ProductNodeGroup object."},
     {"ProductNodeGroup_toString", BeamPyProductNodeGroup_toString, METH_VARARGS, "\n@param this The ProductNodeGroup object."},
-    {"ProductNodeGroup_isValidNodeName", BeamPyProductNodeGroup_isValidNodeName, METH_VARARGS, " Tests whether the given name is valid name for a node.\n A valid node name must not start with a dot. Also a valid node name must not contain\n any of the character  <code>\/:*?\"&lt;&gt;|</code>\n\n @param name the name to test\n @return <code>true</code> if the name is a valid node identifier, <code>false</code> otherwise\n"},
+    {"ProductNodeGroup_isValidNodeName", BeamPyProductNodeGroup_isValidNodeName, METH_VARARGS, " Tests whether the given name is valid name for a node.\n A valid node name must not start with a dot. Also a valid node name must not contain\n any of the character  <code>\\/:*?\"&lt;&gt;|</code>\n\n @param name the name to test\n @return <code>true</code> if the name is a valid node identifier, <code>false</code> otherwise\n"},
     {"ProductNodeGroup_getProduct", BeamPyProductNodeGroup_getProduct, METH_VARARGS, " Returns the product to which this node belongs to.\n\n @return the product, or <code>null</code> if this node was not owned by a product at the time this method was\n         called\n\n@param this The ProductNodeGroup object."},
     {"ProductNodeGroup_getProductReader", BeamPyProductNodeGroup_getProductReader, METH_VARARGS, " Returns the product reader for the product to which this node belongs to.\n\n @return the product reader, or <code>null</code> if no such exists\n\n@param this The ProductNodeGroup object."},
     {"ProductNodeGroup_getProductWriter", BeamPyProductNodeGroup_getProductWriter, METH_VARARGS, " Returns the product writer for the product to which this node belongs to.\n\n @return the product writer, or <code>null</code> if no such exists\n\n@param this The ProductNodeGroup object."},
@@ -2073,7 +2073,7 @@ static PyMethodDef BeamPy_Methods[] = {
     {"MetadataAttribute_isModified", BeamPyMetadataAttribute_isModified, METH_VARARGS, " Returns whether or not this node is modified.\n\n @return <code>true</code> if so\n\n@param this The MetadataAttribute object."},
     {"MetadataAttribute_setModified", BeamPyMetadataAttribute_setModified, METH_VARARGS, " Sets this node's modified flag.\n <p/>\n If the modified flag changes to true and this node has an owner, the owner's modified flag is also set to\n true.\n\n \n@param this The MetadataAttribute object.\n@param modified whether or not this node is beeing marked as modified.\n @see org.esa.beam.framework.datamodel.Product#fireNodeChanged\n"},
     {"MetadataAttribute_toString", BeamPyMetadataAttribute_toString, METH_VARARGS, "\n@param this The MetadataAttribute object."},
-    {"MetadataAttribute_isValidNodeName", BeamPyMetadataAttribute_isValidNodeName, METH_VARARGS, " Tests whether the given name is valid name for a node.\n A valid node name must not start with a dot. Also a valid node name must not contain\n any of the character  <code>\/:*?\"&lt;&gt;|</code>\n\n @param name the name to test\n @return <code>true</code> if the name is a valid node identifier, <code>false</code> otherwise\n"},
+    {"MetadataAttribute_isValidNodeName", BeamPyMetadataAttribute_isValidNodeName, METH_VARARGS, " Tests whether the given name is valid name for a node.\n A valid node name must not start with a dot. Also a valid node name must not contain\n any of the character  <code>\\/:*?\"&lt;&gt;|</code>\n\n @param name the name to test\n @return <code>true</code> if the name is a valid node identifier, <code>false</code> otherwise\n"},
     {"MetadataAttribute_getProduct", BeamPyMetadataAttribute_getProduct, METH_VARARGS, " Returns the product to which this node belongs to.\n\n @return the product, or <code>null</code> if this node was not owned by a product at the time this method was\n         called\n\n@param this The MetadataAttribute object."},
     {"MetadataAttribute_getProductReader", BeamPyMetadataAttribute_getProductReader, METH_VARARGS, " Returns the product reader for the product to which this node belongs to.\n\n @return the product reader, or <code>null</code> if no such exists\n\n@param this The MetadataAttribute object."},
     {"MetadataAttribute_getProductWriter", BeamPyMetadataAttribute_getProductWriter, METH_VARARGS, " Returns the product writer for the product to which this node belongs to.\n\n @return the product writer, or <code>null</code> if no such exists\n\n@param this The MetadataAttribute object."},
@@ -2087,20 +2087,20 @@ static PyMethodDef BeamPy_Methods[] = {
 
 typedef struct {
     PyObject_HEAD
-	void* jobjectId;
+    void* jobjectId;
 } BeamPyJObject;
 
 static int BeamPyJObject_init(BeamPyJObject* self, PyObject* args, PyObject* kwds)
 {
-	printf("BeamPyJObject_init\n");
-	self->jobjectId = PyLong_AsVoidPtr(args);
+    printf("BeamPyJObject_init\n");
+    self->jobjectId = PyLong_AsVoidPtr(args);
     return self->jobjectId != NULL ? 0 : 1;
 }
 
 static void BeamPyJObject_dealloc(BeamPyJObject* self)
 {
-	printf("BeamPyJObject_dealloc\n");
-	beam_release_jobject(&self->jobjectId);
+    printf("BeamPyJObject_dealloc\n");
+    beam_release_jobject(&self->jobjectId);
 }
 
 static PyTypeObject BeamPy_JObjectTypeV = {
@@ -2125,7 +2125,7 @@ static PyTypeObject BeamPy_JObjectTypeV = {
     NULL,                         /* tp_as_buffer */
     Py_TPFLAGS_DEFAULT,           /* tp_flags */
     "BEAM Java Object",           /* tp_doc */
-	NULL,                         /* tp_traverse */
+    NULL,                         /* tp_traverse */
     NULL,                         /* tp_clear */
     NULL,                         /* tp_richcompare */
     0,                            /* tp_weaklistoffset */
@@ -2166,8 +2166,7 @@ PyMODINIT_FUNC PyInit__beampy()
 {
     PyObject* m;
 
-    BEAM_TRACE("beampy: PyInit_beampy() called\n");
-
+    fprintf(stdout, "beampy: Enter PyInit__beampy()\n");
     m = PyModule_Create(&BeamPy_Module);
     if (m == NULL) {
         return NULL;
@@ -2177,8 +2176,8 @@ PyMODINIT_FUNC PyInit__beampy()
     Py_INCREF(BeamPy_Error);
     PyModule_AddObject(m, "error", BeamPy_Error);
 
-    Py_INCREF(BeamPy_JObjectType);
-    PyModule_AddObject(m, "JObject", BeamPy_JObjectType);
+    //Py_INCREF(BeamPy_JObjectType);
+    //PyModule_AddObject(m, "JObject", BeamPy_JObjectType);
 
     // todo - use the new BeamPy_JObjectType object instead of the currently used (sK) tuples.
     // // JObject instances shall be created using the following pattern:
@@ -2193,6 +2192,8 @@ PyMODINIT_FUNC PyInit__beampy()
         PyErr_SetString(BeamPy_Error, "Failed to create Java VM");
         return NULL;
     }
+
+    fprintf(stdout, "beampy: Exit PyInit__beampy()\n");
 
     return m;
 }

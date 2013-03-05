@@ -472,17 +472,20 @@ jboolean beam_create_jvm(const char* option_strings[], int option_count)
         return JNI_TRUE;
     }
 
+    fprintf(stdout, "beam_capi: Creating Java VM using %d options:\n", option_count);
+
     options = (JavaVMOption*) calloc(option_count, sizeof (JavaVMOption));
     {
         int i;
         for (i = 0; i < option_count; i++) {
             options[i].optionString = (char*) option_strings[i];
+            fprintf(stdout, "beam_capi: option_strings[%d] = \"%s\":\n", i, options[i].optionString);
         }
     }
 
     vm_args.version = JNI_VERSION_1_6;
     vm_args.options = options;
-    vm_args.nOptions = 4;
+    vm_args.nOptions = option_count;
     vm_args.ignoreUnrecognized = 0;
     res = JNI_CreateJavaVM(&jvm, (void**) &jenv, &vm_args);
 
@@ -491,6 +494,8 @@ jboolean beam_create_jvm(const char* option_strings[], int option_count)
     if (res != 0) {
         fprintf(stderr, "beam_capi error: JNI_CreateJavaVM failed with exit code %d\n", res);
         return JNI_FALSE;
+    } else {
+        fprintf(stdout, "beam_capi: Java VM successfully created\n");
     }
 
     return JNI_TRUE;
