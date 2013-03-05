@@ -34,7 +34,6 @@ PyObject* beam_new_pyseq_from_jobject_array(const char* type, const void* elems,
 
 
 
-PyObject* BeamPyGeoCoding_isCrossingMeridianAt180(PyObject* self, PyObject* args);
 PyObject* BeamPyGeoCoding_canGetPixelPos(PyObject* self, PyObject* args);
 PyObject* BeamPyGeoCoding_canGetGeoPos(PyObject* self, PyObject* args);
 PyObject* BeamPyGeoCoding_getPixelPos(PyObject* self, PyObject* args);
@@ -252,7 +251,8 @@ PyObject* BeamPyProduct_setStartTime(PyObject* self, PyObject* args);
 PyObject* BeamPyProduct_getEndTime(PyObject* self, PyObject* args);
 PyObject* BeamPyProduct_setEndTime(PyObject* self, PyObject* args);
 PyObject* BeamPyProduct_getMetadataRoot(PyObject* self, PyObject* args);
-PyObject* BeamPyProduct_getBandGroup(PyObject* self, PyObject* args);
+PyObject* BeamPyProduct_getGroups(PyObject* self, PyObject* args);
+PyObject* BeamPyProduct_getGroup(PyObject* self, PyObject* args);
 PyObject* BeamPyProduct_getTiePointGridGroup(PyObject* self, PyObject* args);
 PyObject* BeamPyProduct_addTiePointGrid(PyObject* self, PyObject* args);
 PyObject* BeamPyProduct_removeTiePointGrid(PyObject* self, PyObject* args);
@@ -262,6 +262,7 @@ PyObject* BeamPyProduct_getTiePointGridNames(PyObject* self, PyObject* args);
 PyObject* BeamPyProduct_getTiePointGrids(PyObject* self, PyObject* args);
 PyObject* BeamPyProduct_getTiePointGrid(PyObject* self, PyObject* args);
 PyObject* BeamPyProduct_containsTiePointGrid(PyObject* self, PyObject* args);
+PyObject* BeamPyProduct_getBandGroup(PyObject* self, PyObject* args);
 PyObject* BeamPyProduct_addBand(PyObject* self, PyObject* args);
 PyObject* BeamPyProduct_addNewBand(PyObject* self, PyObject* args);
 PyObject* BeamPyProduct_addComputedBand(PyObject* self, PyObject* args);
@@ -282,6 +283,8 @@ PyObject* BeamPyProduct_getIndexCodingGroup(PyObject* self, PyObject* args);
 PyObject* BeamPyProduct_containsPixel(PyObject* self, PyObject* args);
 PyObject* BeamPyProduct_getGcpGroup(PyObject* self, PyObject* args);
 PyObject* BeamPyProduct_getPinGroup(PyObject* self, PyObject* args);
+PyObject* BeamPyProduct_getNumResolutionsMax(PyObject* self, PyObject* args);
+PyObject* BeamPyProduct_setNumResolutionsMax(PyObject* self, PyObject* args);
 PyObject* BeamPyProduct_isCompatibleProduct(PyObject* self, PyObject* args);
 PyObject* BeamPyProduct_parseExpression(PyObject* self, PyObject* args);
 PyObject* BeamPyProduct_acceptVisitor(PyObject* self, PyObject* args);
@@ -398,6 +401,7 @@ PyObject* BeamPyImageGeometry_calculateEastingNorthing(PyObject* self, PyObject*
 PyObject* BeamPyImageGeometry_calculateProductSize(PyObject* self, PyObject* args);
 PyObject* BeamPyImageGeometry_createTargetGeometry(PyObject* self, PyObject* args);
 PyObject* BeamPyImageGeometry_createCollocationTargetGeometry(PyObject* self, PyObject* args);
+PyObject* BeamPyImageGeometry_createValidRect(PyObject* self, PyObject* args);
 PyObject* BeamPyBand_newBand(PyObject* self, PyObject* args);
 PyObject* BeamPyBand_getFlagCoding(PyObject* self, PyObject* args);
 PyObject* BeamPyBand_isFlagBand(PyObject* self, PyObject* args);
@@ -516,7 +520,6 @@ PyObject* BeamPyBand_getDataType(PyObject* self, PyObject* args);
 PyObject* BeamPyBand_getNumDataElems(PyObject* self, PyObject* args);
 PyObject* BeamPyBand_setData(PyObject* self, PyObject* args);
 PyObject* BeamPyBand_getData(PyObject* self, PyObject* args);
-PyObject* BeamPyBand_setDataElems(PyObject* self, PyObject* args);
 PyObject* BeamPyBand_getDataElems(PyObject* self, PyObject* args);
 PyObject* BeamPyBand_getDataElemSize(PyObject* self, PyObject* args);
 PyObject* BeamPyBand_setReadOnly(PyObject* self, PyObject* args);
@@ -721,7 +724,6 @@ PyObject* BeamPyTiePointGrid_getDataType(PyObject* self, PyObject* args);
 PyObject* BeamPyTiePointGrid_getNumDataElems(PyObject* self, PyObject* args);
 PyObject* BeamPyTiePointGrid_setData(PyObject* self, PyObject* args);
 PyObject* BeamPyTiePointGrid_getData(PyObject* self, PyObject* args);
-PyObject* BeamPyTiePointGrid_setDataElems(PyObject* self, PyObject* args);
 PyObject* BeamPyTiePointGrid_getDataElems(PyObject* self, PyObject* args);
 PyObject* BeamPyTiePointGrid_getDataElemSize(PyObject* self, PyObject* args);
 PyObject* BeamPyTiePointGrid_setReadOnly(PyObject* self, PyObject* args);
@@ -965,6 +967,7 @@ PyObject* BeamPyProductUtils_createMapBoundary(PyObject* self, PyObject* args);
 PyObject* BeamPyProductUtils_createGeoBoundary1(PyObject* self, PyObject* args);
 PyObject* BeamPyProductUtils_createGeoBoundary2(PyObject* self, PyObject* args);
 PyObject* BeamPyProductUtils_createGeoBoundary3(PyObject* self, PyObject* args);
+PyObject* BeamPyProductUtils_getClosestGeoPos(PyObject* self, PyObject* args);
 PyObject* BeamPyProductUtils_createGeoBoundary4(PyObject* self, PyObject* args);
 PyObject* BeamPyProductUtils_createGeoBoundaryPaths1(PyObject* self, PyObject* args);
 PyObject* BeamPyProductUtils_createGeoBoundaryPaths2(PyObject* self, PyObject* args);
@@ -1028,7 +1031,6 @@ PyObject* BeamPyMetadataAttribute_isFloatingPointType(PyObject* self, PyObject* 
 PyObject* BeamPyMetadataAttribute_getNumDataElems(PyObject* self, PyObject* args);
 PyObject* BeamPyMetadataAttribute_setData(PyObject* self, PyObject* args);
 PyObject* BeamPyMetadataAttribute_getData(PyObject* self, PyObject* args);
-PyObject* BeamPyMetadataAttribute_setDataElems(PyObject* self, PyObject* args);
 PyObject* BeamPyMetadataAttribute_getDataElems(PyObject* self, PyObject* args);
 PyObject* BeamPyMetadataAttribute_getDataElemSize(PyObject* self, PyObject* args);
 PyObject* BeamPyMetadataAttribute_setReadOnly(PyObject* self, PyObject* args);
@@ -1057,7 +1059,6 @@ PyObject* BeamPyMetadataAttribute_removeFromFile(PyObject* self, PyObject* args)
 
 
 static PyMethodDef BeamPy_Methods[] = {
-    {"GeoCoding_isCrossingMeridianAt180", BeamPyGeoCoding_isCrossingMeridianAt180, METH_VARARGS, " Checks whether or not the longitudes of this geo-coding cross the +/- 180 degree meridian.\n\n @return <code>true</code>, if so\n\n@param this The GeoCoding object."},
     {"GeoCoding_canGetPixelPos", BeamPyGeoCoding_canGetPixelPos, METH_VARARGS, " Checks whether or not this geo-coding can determine the pixel position from a geodetic position.\n\n @return <code>true</code>, if so\n\n@param this The GeoCoding object."},
     {"GeoCoding_canGetGeoPos", BeamPyGeoCoding_canGetGeoPos, METH_VARARGS, " Checks whether or not this geo-coding can determine the geodetic position from a pixel position.\n\n @return <code>true</code>, if so\n\n@param this The GeoCoding object."},
     {"GeoCoding_getPixelPos", BeamPyGeoCoding_getPixelPos, METH_VARARGS, " Returns the pixel co-ordinates as x/y for a given geographical position given as lat/lon.\n\n \n@param this The GeoCoding object.\n@param geoPos   the geographical position as lat/lon in the coodinate system determined by {@link #getDatum()}\n @param pixelPos an instance of <code>Point</code> to be used as retun value. If this parameter is\n                 <code>null</code>, the method creates a new instance which it then returns.\n\n @return the pixel co-ordinates as x/y\n"},
@@ -1253,21 +1254,21 @@ static PyMethodDef BeamPy_Methods[] = {
     {"Product_setFileLocation", BeamPyProduct_setFileLocation, METH_VARARGS, " Sets the file location for this product.\n\n \n@param this The Product object.\n@param fileLocation the file location, may be <code>null</code>\n"},
     {"Product_getProductType", BeamPyProduct_getProductType, METH_VARARGS, " Gets the product type string.\n\n @return the product type string\n\n@param this The Product object."},
     {"Product_setProductType", BeamPyProduct_setProductType, METH_VARARGS, " Sets the product type of this product.\n\n \n@param this The Product object.\n@param productType the product type.\n"},
-    {"Product_setProductReader", BeamPyProduct_setProductReader, METH_VARARGS, " Sets the product reader which will be used to create this product in-memory represention from an external source\n and which will be used to (re-)load band rasters.\n\n \n@param this The Product object.\n@param reader the product reader.\n\n @throws IllegalArgumentException if the given reader is null.\n"},
+    {"Product_setProductReader", BeamPyProduct_setProductReader, METH_VARARGS, " Sets the product reader which will be used to create this product in-memory represention from an external source\n and which will be used to (re-)load band rasters.\n\n \n@param this The Product object.\n@param reader the product reader.\n @throws IllegalArgumentException if the given reader is null.\n"},
     {"Product_getProductReader", BeamPyProduct_getProductReader, METH_VARARGS, " Returns the reader which was used to create this product in-memory represention from an external source and which\n will be used to (re-)load band rasters.\n\n @return the product reader, can be <code>null</code>\n\n@param this The Product object."},
     {"Product_setProductWriter", BeamPyProduct_setProductWriter, METH_VARARGS, " Sets the writer which will be used to write modifications of this product's in-memory represention to an external\n destination.\n\n \n@param this The Product object.\n@param writer the product writer, can be <code>null</code>\n"},
     {"Product_getProductWriter", BeamPyProduct_getProductWriter, METH_VARARGS, " Returns the writer which will be used to write modifications of this product's in-memory represention to an\n external destination.\n\n @return the product writer, can be <code>null</code>\n\n@param this The Product object."},
-    {"Product_writeHeader", BeamPyProduct_writeHeader, METH_VARARGS, " <p>Writes the header of a data product.<p/>\n\n \n@param this The Product object.\n@param output an object representing a valid output for this writer, might be a <code>ImageOutputStream</code>\n               or a <code>File</code> or other <code>Object</code> to use for future decoding.\n\n @throws IllegalArgumentException if <code>output</code> is <code>null</code> or it's type is none of the\n                                  supported output types.\n @throws IOException              if an I/O error occurs\n"},
+    {"Product_writeHeader", BeamPyProduct_writeHeader, METH_VARARGS, " <p>Writes the header of a data product.<p/>\n\n \n@param this The Product object.\n@param output an object representing a valid output for this writer, might be a <code>ImageOutputStream</code>\n               or a <code>File</code> or other <code>Object</code> to use for future decoding.\n @throws IllegalArgumentException if <code>output</code> is <code>null</code> or it's type is none of the\n                                  supported output types.\n @throws IOException              if an I/O error occurs\n"},
     {"Product_closeProductReader", BeamPyProduct_closeProductReader, METH_VARARGS, " Closes and clears this product's reader (if any).\n\n @throws IOException if an I/O error occurs\n @see #closeIO\n\n@param this The Product object."},
     {"Product_closeProductWriter", BeamPyProduct_closeProductWriter, METH_VARARGS, " Closes and clears this product's writer (if any).\n\n @throws IOException if an I/O error occurs\n @see #closeIO\n\n@param this The Product object."},
     {"Product_closeIO", BeamPyProduct_closeIO, METH_VARARGS, " Closes the file I/O for this product. Calls in sequence <code>{@link #closeProductReader}</code>  and\n <code>{@link #closeProductWriter}</code>. The <code>{@link #dispose}</code> method is <b>not</b> called, but\n should be called if the product instance is no longer in use.\n\n @throws IOException if an I/O error occurs\n @see #closeProductReader\n @see #closeProductWriter\n @see #dispose\n\n@param this The Product object."},
     {"Product_dispose", BeamPyProduct_dispose, METH_VARARGS, " Releases all of the resources used by this object instance and all of its owned children. Its primary use is to\n allow the garbage collector to perform a vanilla job.\n <p/>\n <p>This method should be called only if it is for sure that this object instance will never be used again. The\n results of referencing an instance of this class after a call to <code>dispose()</code> are undefined.\n </p>\n <p>Overrides of this method should always call <code>super.dispose();</code> after disposing this instance.\n </p>\n <p>This implementation also calls the <code>closeIO</code> in order to release all open I/O resources.\n\n@param this The Product object."},
     {"Product_getPointingFactory", BeamPyProduct_getPointingFactory, METH_VARARGS, " Gets the pointing factory associated with this data product.\n\n @return the pointing factory or null, if none\n\n@param this The Product object."},
     {"Product_setPointingFactory", BeamPyProduct_setPointingFactory, METH_VARARGS, " Sets the pointing factory for this data product.\n\n \n@param this The Product object.\n@param pointingFactory the pointing factory\n"},
-    {"Product_setGeoCoding", BeamPyProduct_setGeoCoding, METH_VARARGS, " Geo-codes this data product.\n\n \n@param this The Product object.\n@param geoCoding the geo-coding, if <code>null</code> geo-coding is removed\n\n @throws IllegalArgumentException <br>- if the given <code>GeoCoding</code> is a <code>TiePointGeoCoding</code>\n                                  and <code>latGrid</code> or <code>lonGrid</code> are not instances of tie point\n                                  grids in this product. <br>- if the given <code>GeoCoding</code> is a\n                                  <code>MapGeoCoding</code> and its <code>MapInfo</code> is <code>null</code>\n                                  <br>- if the given <code>GeoCoding</code> is a <code>MapGeoCoding</code> and the\n                                  <code>sceneWith</code> or <code>sceneHeight</code> of its <code>MapInfo</code>\n                                  is not equal to this products <code>sceneRasterWidth</code> or\n                                  <code>sceneRasterHeight</code>\n"},
+    {"Product_setGeoCoding", BeamPyProduct_setGeoCoding, METH_VARARGS, " Geo-codes this data product.\n\n \n@param this The Product object.\n@param geoCoding the geo-coding, if <code>null</code> geo-coding is removed\n @throws IllegalArgumentException <br>- if the given <code>GeoCoding</code> is a <code>TiePointGeoCoding</code>\n                                  and <code>latGrid</code> or <code>lonGrid</code> are not instances of tie point\n                                  grids in this product. <br>- if the given <code>GeoCoding</code> is a\n                                  <code>MapGeoCoding</code> and its <code>MapInfo</code> is <code>null</code>\n                                  <br>- if the given <code>GeoCoding</code> is a <code>MapGeoCoding</code> and the\n                                  <code>sceneWith</code> or <code>sceneHeight</code> of its <code>MapInfo</code>\n                                  is not equal to this products <code>sceneRasterWidth</code> or\n                                  <code>sceneRasterHeight</code>\n"},
     {"Product_getGeoCoding", BeamPyProduct_getGeoCoding, METH_VARARGS, " Returns the geo-coding used for this data product.\n\n @return the geo-coding, can be <code>null</code> if this product is not geo-coded.\n\n@param this The Product object."},
     {"Product_isUsingSingleGeoCoding", BeamPyProduct_isUsingSingleGeoCoding, METH_VARARGS, " Tests if all bands of this product are using a single, uniform geo-coding. Uniformity is tested by comparing\n the band's geo-coding against the geo-coding of this product using the {@link Object#equals(Object)} method.\n If this product does not have a geo-coding, the method returns false.\n\n @return true, if so\n\n@param this The Product object."},
-    {"Product_transferGeoCodingTo", BeamPyProduct_transferGeoCodingTo, METH_VARARGS, " Transfers the geo-coding of this product instance to the {@link Product destProduct} with respect to\n the given {@link ProductSubsetDef subsetDef}.\n\n \n@param this The Product object.\n@param destProduct the destination product\n @param subsetDef   the definition of the subset, may be <code>null</code>\n\n @return true, if the geo-coding could be transferred.\n"},
+    {"Product_transferGeoCodingTo", BeamPyProduct_transferGeoCodingTo, METH_VARARGS, " Transfers the geo-coding of this product instance to the {@link Product destProduct} with respect to\n the given {@link ProductSubsetDef subsetDef}.\n\n \n@param this The Product object.\n@param destProduct the destination product\n @param subsetDef   the definition of the subset, may be <code>null</code>\n @return true, if the geo-coding could be transferred.\n"},
     {"Product_getSceneRasterWidth", BeamPyProduct_getSceneRasterWidth, METH_VARARGS, " Returns the scene width in pixels for this data product.\n\n @return the scene width in pixels for this data product.\n\n@param this The Product object."},
     {"Product_getSceneRasterHeight", BeamPyProduct_getSceneRasterHeight, METH_VARARGS, " Returns the scene height in pixels for this data product.\n\n @return the scene height in pixels for this data product.\n\n@param this The Product object."},
     {"Product_getStartTime", BeamPyProduct_getStartTime, METH_VARARGS, " Gets the (sensing) start time associated with the first raster data line.\n <p/>\n <p>For Level-1/2 products this is\n the data-take time associated with the first raster data line.\n For Level-3 products, this could be the start time of first input product\n contributing data.</p>\n\n @return the sensing start time, can be null e.g. for non-swath products\n\n@param this The Product object."},
@@ -1275,63 +1276,67 @@ static PyMethodDef BeamPy_Methods[] = {
     {"Product_getEndTime", BeamPyProduct_getEndTime, METH_VARARGS, " Gets the (sensing) stop time associated with the last raster data line.\n <p/>\n <p>For Level-1/2 products this is\n the data-take time associated with the last raster data line.\n For Level-3 products, this could be the end time of last input product\n contributing data.</p>\n\n @return the stop time , can be null e.g. for non-swath products\n\n@param this The Product object."},
     {"Product_setEndTime", BeamPyProduct_setEndTime, METH_VARARGS, " Sets the (sensing) stop time associated with the first raster data line.\n <p/>\n <p>For Level-1/2 products this is\n the data-take time associated with the last raster data line.\n For Level-3 products, this could be the end time of last input product\n contributing data.</p>\n\n \n@param this The Product object.\n@param endTime the sensing stop time, can be null\n"},
     {"Product_getMetadataRoot", BeamPyProduct_getMetadataRoot, METH_VARARGS, " Gets the root element of the associated metadata.\n\n @return the metadata root element\n\n@param this The Product object."},
-    {"Product_getBandGroup", BeamPyProduct_getBandGroup, METH_VARARGS, " Gets the band group of this product.\n\n @return The group of all bands.\n\n @since BEAM 4.7\n\n@param this The Product object."},
-    {"Product_getTiePointGridGroup", BeamPyProduct_getTiePointGridGroup, METH_VARARGS, " Gets the tie-point grid group of this product.\n\n @return The group of all tie-point grids.\n\n @since BEAM 4.7\n\n@param this The Product object."},
+    {"Product_getGroups", BeamPyProduct_getGroups, METH_VARARGS, " @return The group which contains all other product node groups.\n @since BEAM 5.0\n\n@param this The Product object."},
+    {"Product_getGroup", BeamPyProduct_getGroup, METH_VARARGS, " \n@param this The Product object.\n@param name The group name.\n @return The group with the given name, or {@code null} if no such group exists.\n @since BEAM 5.0\n"},
+    {"Product_getTiePointGridGroup", BeamPyProduct_getTiePointGridGroup, METH_VARARGS, " Gets the tie-point grid group of this product.\n\n @return The group of all tie-point grids.\n @since BEAM 4.7\n\n@param this The Product object."},
     {"Product_addTiePointGrid", BeamPyProduct_addTiePointGrid, METH_VARARGS, " Adds the given tie-point grid to this product.\n\n \n@param this The Product object.\n@param tiePointGrid the tie-point grid to added, ignored if <code>null</code>\n"},
-    {"Product_removeTiePointGrid", BeamPyProduct_removeTiePointGrid, METH_VARARGS, " Removes the tie-point grid from this product.\n\n \n@param this The Product object.\n@param tiePointGrid the tie-point grid to be removed, ignored if <code>null</code>\n\n @return <code>true</code> if node could be removed\n"},
+    {"Product_removeTiePointGrid", BeamPyProduct_removeTiePointGrid, METH_VARARGS, " Removes the tie-point grid from this product.\n\n \n@param this The Product object.\n@param tiePointGrid the tie-point grid to be removed, ignored if <code>null</code>\n @return <code>true</code> if node could be removed\n"},
     {"Product_getNumTiePointGrids", BeamPyProduct_getNumTiePointGrids, METH_VARARGS, " Returns the number of tie-point grids contained in this product\n\n @return the number of tie-point grids\n\n@param this The Product object."},
-    {"Product_getTiePointGridAt", BeamPyProduct_getTiePointGridAt, METH_VARARGS, " Returns the tie-point grid at the given index.\n\n \n@param this The Product object.\n@param index the tie-point grid index\n\n @return the tie-point grid at the given index\n\n @throws IndexOutOfBoundsException if the index is out of bounds\n"},
+    {"Product_getTiePointGridAt", BeamPyProduct_getTiePointGridAt, METH_VARARGS, " Returns the tie-point grid at the given index.\n\n \n@param this The Product object.\n@param index the tie-point grid index\n @return the tie-point grid at the given index\n @throws IndexOutOfBoundsException if the index is out of bounds\n"},
     {"Product_getTiePointGridNames", BeamPyProduct_getTiePointGridNames, METH_VARARGS, " Returns a string array containing the names of the tie-point grids contained in this product\n\n @return a string array containing the names of the tie-point grids contained in this product. If this product has\n         no tie-point grids a zero-length-array is returned.\n\n@param this The Product object."},
     {"Product_getTiePointGrids", BeamPyProduct_getTiePointGrids, METH_VARARGS, " Returns an array of tie-point grids contained in this product\n\n @return an array of tie-point grids contained in this product. If this product has no  tie-point grids a\n         zero-length-array is returned.\n\n@param this The Product object."},
-    {"Product_getTiePointGrid", BeamPyProduct_getTiePointGrid, METH_VARARGS, " Returns the tie-point grid with the given name.\n\n \n@param this The Product object.\n@param name the tie-point grid name\n\n @return the tie-point grid with the given name or <code>null</code> if a tie-point grid with the given name is\n         not contained in this product.\n"},
-    {"Product_containsTiePointGrid", BeamPyProduct_containsTiePointGrid, METH_VARARGS, " Tests if a tie-point grid with the given name is contained in this product.\n\n \n@param this The Product object.\n@param name the name, must not be <code>null</code>\n\n @return <code>true</code> if a tie-point grid with the given name is contained in this product,\n         <code>false</code> otherwise\n"},
+    {"Product_getTiePointGrid", BeamPyProduct_getTiePointGrid, METH_VARARGS, " Returns the tie-point grid with the given name.\n\n \n@param this The Product object.\n@param name the tie-point grid name\n @return the tie-point grid with the given name or <code>null</code> if a tie-point grid with the given name is\n         not contained in this product.\n"},
+    {"Product_containsTiePointGrid", BeamPyProduct_containsTiePointGrid, METH_VARARGS, " Tests if a tie-point grid with the given name is contained in this product.\n\n \n@param this The Product object.\n@param name the name, must not be <code>null</code>\n @return <code>true</code> if a tie-point grid with the given name is contained in this product,\n         <code>false</code> otherwise\n"},
+    {"Product_getBandGroup", BeamPyProduct_getBandGroup, METH_VARARGS, " Gets the band group of this product.\n\n @return The group of all bands.\n @since BEAM 4.7\n\n@param this The Product object."},
     {"Product_addBand", BeamPyProduct_addBand, METH_VARARGS, " Adds the given band to this product.\n\n \n@param this The Product object.\n@param band the band to added, must not be <code>null</code>\n"},
-    {"Product_addNewBand", BeamPyProduct_addNewBand, METH_VARARGS, " Creates a new band with the given name and data type and adds it to this product and returns it.\n\n \n@param this The Product object.\n@param bandName the new band's name\n @param dataType the raster data type, must be one of the multiple <code>ProductData.TYPE_<i>X</i></code>\n                 constants\n\n @return the new band which has just been added\n"},
-    {"Product_addComputedBand", BeamPyProduct_addComputedBand, METH_VARARGS, " Creates a new band with the given name and adds it to this product and returns it.\n The new band's data type is {@code float} and it's samples are computed from the given band maths expression.\n\n \n@param this The Product object.\n@param bandName   the new band's name\n @param expression the band maths expression\n\n @return the new band which has just been added\n\n @since BEAM 4.9\n"},
-    {"Product_removeBand", BeamPyProduct_removeBand, METH_VARARGS, " Removes the given band from this product.\n\n \n@param this The Product object.\n@param band the band to be removed, ignored if <code>null</code>\n\n @return {@code true} if removed succesfully, otherwise {@code false}\n"},
+    {"Product_addNewBand", BeamPyProduct_addNewBand, METH_VARARGS, " Creates a new band with the given name and data type and adds it to this product and returns it.\n\n \n@param this The Product object.\n@param bandName the new band's name\n @param dataType the raster data type, must be one of the multiple <code>ProductData.TYPE_<i>X</i></code>\n                 constants\n @return the new band which has just been added\n"},
+    {"Product_addComputedBand", BeamPyProduct_addComputedBand, METH_VARARGS, " Creates a new band with the given name and adds it to this product and returns it.\n The new band's data type is {@code float} and it's samples are computed from the given band maths expression.\n\n \n@param this The Product object.\n@param bandName   the new band's name\n @param expression the band maths expression\n @return the new band which has just been added\n @since BEAM 4.9\n"},
+    {"Product_removeBand", BeamPyProduct_removeBand, METH_VARARGS, " Removes the given band from this product.\n\n \n@param this The Product object.\n@param band the band to be removed, ignored if <code>null</code>\n @return {@code true} if removed succesfully, otherwise {@code false}\n"},
     {"Product_getNumBands", BeamPyProduct_getNumBands, METH_VARARGS, " @return the number of bands contained in this product.\n\n@param this The Product object."},
-    {"Product_getBandAt", BeamPyProduct_getBandAt, METH_VARARGS, " Returns the band at the given index.\n\n \n@param this The Product object.\n@param index the band index\n\n @return the band at the given index\n\n @throws IndexOutOfBoundsException if the index is out of bounds\n"},
+    {"Product_getBandAt", BeamPyProduct_getBandAt, METH_VARARGS, " Returns the band at the given index.\n\n \n@param this The Product object.\n@param index the band index\n @return the band at the given index\n @throws IndexOutOfBoundsException if the index is out of bounds\n"},
     {"Product_getBandNames", BeamPyProduct_getBandNames, METH_VARARGS, " Returns a string array containing the names of the bands contained in this product\n\n @return a string array containing the names of the bands contained in this product. If this product has no bands\n         a zero-length-array is returned.\n\n@param this The Product object."},
     {"Product_getBands", BeamPyProduct_getBands, METH_VARARGS, " Returns an array of bands contained in this product\n\n @return an array of bands contained in this product. If this product has no bands a zero-length-array is\n         returned.\n\n@param this The Product object."},
-    {"Product_getBand", BeamPyProduct_getBand, METH_VARARGS, " Returns the band with the given name.\n\n \n@param this The Product object.\n@param name the band name\n\n @return the band with the given name or <code>null</code> if a band with the given name is not contained in this\n         product.\n\n @throws IllegalArgumentException if the given name is <code>null</code> or empty.\n"},
-    {"Product_getBandIndex", BeamPyProduct_getBandIndex, METH_VARARGS, " Returns the index for the band with the given name.\n\n \n@param this The Product object.\n@param name the band name\n\n @return the band index or <code>-1</code> if a band with the given name is not contained in this product.\n\n @throws IllegalArgumentException if the given name is <code>null</code> or empty.\n"},
-    {"Product_containsBand", BeamPyProduct_containsBand, METH_VARARGS, " Tests if a band with the given name is contained in this product.\n\n \n@param this The Product object.\n@param name the name, must not be <code>null</code>\n\n @return <code>true</code> if a band with the given name is contained in this product, <code>false</code>\n         otherwise\n\n @throws IllegalArgumentException if the given name is <code>null</code> or empty.\n"},
-    {"Product_containsRasterDataNode", BeamPyProduct_containsRasterDataNode, METH_VARARGS, " Tests if a raster data node with the given name is contained in this product. Raster data nodes can be bands or\n tie-point grids.\n\n \n@param this The Product object.\n@param name the name, must not be <code>null</code>\n\n @return <code>true</code> if a raster data node with the given name is contained in this product,\n         <code>false</code> otherwise\n"},
-    {"Product_getRasterDataNode", BeamPyProduct_getRasterDataNode, METH_VARARGS, " Gets the raster data node with the given name. The method first searches for bands with the given name, then for\n tie-point grids. If neither bands nor tie-point grids exist with the given name, <code>null</code> is returned.\n\n \n@param this The Product object.\n@param name the name, must not be <code>null</code>\n\n @return the raster data node with the given name or <code>null</code> if a raster data node with the given name\n         is not contained in this product.\n"},
+    {"Product_getBand", BeamPyProduct_getBand, METH_VARARGS, " Returns the band with the given name.\n\n \n@param this The Product object.\n@param name the band name\n @return the band with the given name or <code>null</code> if a band with the given name is not contained in this\n         product.\n @throws IllegalArgumentException if the given name is <code>null</code> or empty.\n"},
+    {"Product_getBandIndex", BeamPyProduct_getBandIndex, METH_VARARGS, " Returns the index for the band with the given name.\n\n \n@param this The Product object.\n@param name the band name\n @return the band index or <code>-1</code> if a band with the given name is not contained in this product.\n @throws IllegalArgumentException if the given name is <code>null</code> or empty.\n"},
+    {"Product_containsBand", BeamPyProduct_containsBand, METH_VARARGS, " Tests if a band with the given name is contained in this product.\n\n \n@param this The Product object.\n@param name the name, must not be <code>null</code>\n @return <code>true</code> if a band with the given name is contained in this product, <code>false</code>\n         otherwise\n @throws IllegalArgumentException if the given name is <code>null</code> or empty.\n"},
+    {"Product_containsRasterDataNode", BeamPyProduct_containsRasterDataNode, METH_VARARGS, " Tests if a raster data node with the given name is contained in this product. Raster data nodes can be bands or\n tie-point grids.\n\n \n@param this The Product object.\n@param name the name, must not be <code>null</code>\n @return <code>true</code> if a raster data node with the given name is contained in this product,\n         <code>false</code> otherwise\n"},
+    {"Product_getRasterDataNode", BeamPyProduct_getRasterDataNode, METH_VARARGS, " Gets the raster data node with the given name. The method first searches for bands with the given name, then for\n tie-point grids. If neither bands nor tie-point grids exist with the given name, <code>null</code> is returned.\n\n \n@param this The Product object.\n@param name the name, must not be <code>null</code>\n @return the raster data node with the given name or <code>null</code> if a raster data node with the given name\n         is not contained in this product.\n"},
     {"Product_getMaskGroup", BeamPyProduct_getMaskGroup, METH_VARARGS, "\n@param this The Product object."},
     {"Product_getVectorDataGroup", BeamPyProduct_getVectorDataGroup, METH_VARARGS, "\n@param this The Product object."},
     {"Product_getFlagCodingGroup", BeamPyProduct_getFlagCodingGroup, METH_VARARGS, "\n@param this The Product object."},
     {"Product_getIndexCodingGroup", BeamPyProduct_getIndexCodingGroup, METH_VARARGS, "\n@param this The Product object."},
-    {"Product_containsPixel", BeamPyProduct_containsPixel, METH_VARARGS, " Tests if the given pixel position is within the product pixel bounds.\n\n \n@param this The Product object.\n@param x the x coordinate of the pixel position\n @param y the y coordinate of the pixel position\n\n @return true, if so\n\n @see #containsPixel(PixelPos)\n"},
+    {"Product_containsPixel", BeamPyProduct_containsPixel, METH_VARARGS, " Tests if the given pixel position is within the product pixel bounds.\n\n \n@param this The Product object.\n@param x the x coordinate of the pixel position\n @param y the y coordinate of the pixel position\n @return true, if so\n @see #containsPixel(PixelPos)\n"},
     {"Product_getGcpGroup", BeamPyProduct_getGcpGroup, METH_VARARGS, " Gets the group of ground-control points (GCPs).\n Note that this method will create the group, if none exists already.\n\n @return the GCP group.\n\n@param this The Product object."},
     {"Product_getPinGroup", BeamPyProduct_getPinGroup, METH_VARARGS, " Gets the group of pins.\n Note that this method will create the group, if none exists already.\n\n @return the pin group.\n\n@param this The Product object."},
-    {"Product_isCompatibleProduct", BeamPyProduct_isCompatibleProduct, METH_VARARGS, " Checks whether or not the given product is compatible with this product.\n\n \n@param this The Product object.\n@param product the product to compare with\n @param eps     the maximum lat/lon error in degree\n\n @return <code>false</code> if the scene dimensions or geocoding are different, <code>true</code> otherwise.\n"},
-    {"Product_parseExpression", BeamPyProduct_parseExpression, METH_VARARGS, " Parses a mathematical expression given as a text string.\n\n \n@param this The Product object.\n@param expression a expression given as a text string, e.g. \"radiance_4 / (1.0 + radiance_11)\".\n\n @return a term parsed from the given expression string\n\n @throws ParseException if the expression could not successfully be parsed\n"},
+    {"Product_getNumResolutionsMax", BeamPyProduct_getNumResolutionsMax, METH_VARARGS, " @return The maximum number of resolution levels common to all band images.\n         If less than or equal to zero, the  number of resolution levels is considered to be unknown.\n @since BEAM 5.0\n\n@param this The Product object."},
+    {"Product_setNumResolutionsMax", BeamPyProduct_setNumResolutionsMax, METH_VARARGS, " \n@param this The Product object.\n@param numResolutionsMax The maximum number of resolution levels common to all band images.\n                          If less than or equal to zero, the  number of resolution levels is considered to be unknown.\n @since BEAM 5.0\n"},
+    {"Product_isCompatibleProduct", BeamPyProduct_isCompatibleProduct, METH_VARARGS, " Checks whether or not the given product is compatible with this product.\n\n \n@param this The Product object.\n@param product the product to compare with\n @param eps     the maximum lat/lon error in degree\n @return <code>false</code> if the scene dimensions or geocoding are different, <code>true</code> otherwise.\n"},
+    {"Product_parseExpression", BeamPyProduct_parseExpression, METH_VARARGS, " Parses a mathematical expression given as a text string.\n\n \n@param this The Product object.\n@param expression a expression given as a text string, e.g. \"radiance_4 / (1.0 + radiance_11)\".\n @return a term parsed from the given expression string\n @throws ParseException if the expression could not successfully be parsed\n"},
     {"Product_acceptVisitor", BeamPyProduct_acceptVisitor, METH_VARARGS, " Accepts the given visitor. This method implements the well known 'Visitor' design pattern of the gang-of-four.\n The visitor pattern allows to define new operations on the product data model without the need to add more code\n to it. The new operation is implemented by the visitor.\n <p/>\n <p>The method subsequentially visits (calls <code>acceptVisitor</code> for) all bands, tie-point grids and flag\n codings. Finally it visits product metadata root element and calls <code>visitor.visit(this)</code>.\n\n \n@param this The Product object.\n@param visitor the visitor, must not be <code>null</code>\n"},
-    {"Product_addProductNodeListener", BeamPyProduct_addProductNodeListener, METH_VARARGS, " Adds a <code>ProductNodeListener</code> to this product. The <code>ProductNodeListener</code> is informed each\n time a node in this product changes.\n\n \n@param this The Product object.\n@param listener the listener to be added\n\n @return boolean if listener was added or not\n"},
+    {"Product_addProductNodeListener", BeamPyProduct_addProductNodeListener, METH_VARARGS, " Adds a <code>ProductNodeListener</code> to this product. The <code>ProductNodeListener</code> is informed each\n time a node in this product changes.\n\n \n@param this The Product object.\n@param listener the listener to be added\n @return boolean if listener was added or not\n"},
     {"Product_removeProductNodeListener", BeamPyProduct_removeProductNodeListener, METH_VARARGS, " Removes a <code>ProductNodeListener</code> from this product.\n\n \n@param this The Product object.\n@param listener the listener to be removed.\n"},
     {"Product_getProductNodeListeners", BeamPyProduct_getProductNodeListeners, METH_VARARGS, "\n@param this The Product object."},
     {"Product_getRefNo", BeamPyProduct_getRefNo, METH_VARARGS, " @return The reference number of this product.\n\n@param this The Product object."},
-    {"Product_setRefNo", BeamPyProduct_setRefNo, METH_VARARGS, " Sets the reference number.\n\n \n@param this The Product object.\n@param refNo the reference number to set must be in the range 1 .. Integer.MAX_VALUE\n\n @throws IllegalArgumentException if the refNo is out of range\n @throws IllegalStateException\n"},
+    {"Product_setRefNo", BeamPyProduct_setRefNo, METH_VARARGS, " Sets the reference number.\n\n \n@param this The Product object.\n@param refNo the reference number to set must be in the range 1 .. Integer.MAX_VALUE\n @throws IllegalArgumentException if the refNo is out of range\n @throws IllegalStateException\n"},
     {"Product_resetRefNo", BeamPyProduct_resetRefNo, METH_VARARGS, "\n@param this The Product object."},
     {"Product_getProductManager", BeamPyProduct_getProductManager, METH_VARARGS, " Returns the product manager for this product.\n\n @return this product's manager, can be <code>null</code>\n\n@param this The Product object."},
     {"Product_createBandArithmeticParser", BeamPyProduct_createBandArithmeticParser, METH_VARARGS, " Creates a parser for band arithmetic expressions.\n The parser created will use a namespace comprising all tie-point grids, bands and flags of this product.\n\n @return a parser for band arithmetic expressions for this product, never null\n\n@param this The Product object."},
     {"Product_createBandArithmeticDefaultNamespace", BeamPyProduct_createBandArithmeticDefaultNamespace, METH_VARARGS, " Creates a namespace to be used by parsers for band arithmetic expressions.\n The namespace created comprises all tie-point grids, bands and flags of this product.\n\n @return a namespace, never null\n\n@param this The Product object."},
-    {"Product_createSubset", BeamPyProduct_createSubset, METH_VARARGS, " Creates a subset of this product. The returned product represents a true spatial and spectral subset of this\n product, but it has not loaded any bands into memory. If name or desc are null or empty, the name and the\n description from this product was used.\n\n \n@param this The Product object.\n@param subsetDef the product subset definition\n @param name      the name for the new product\n @param desc      the description for the new product\n\n @return the product subset, or <code>null</code> if the product/subset combination is not valid\n\n @throws IOException if an I/O error occurs\n"},
-    {"Product_createProjectedProduct", BeamPyProduct_createProjectedProduct, METH_VARARGS, " Creates a map-projected version of this product.\n\n \n@param this The Product object.\n@param mapInfo the map information\n @param name    the name for the new product\n @param desc    the description for the new product\n\n @return the product subset, or <code>null</code> if the product/subset combination is not valid\n\n @throws IOException if an I/O error occurs\n"},
-    {"Product_createFlippedProduct", BeamPyProduct_createFlippedProduct, METH_VARARGS, " Creates flipped raster-data version of this product.\n\n \n@param this The Product object.\n@param flipType the flip type, see <code>{@link org.esa.beam.framework.dataio.ProductFlipper}</code>\n @param name     the name for the new product\n @param desc     the description for the new product\n\n @return the product subset, or <code>null</code> if the product/subset combination is not valid\n\n @throws IOException if an I/O error occurs\n"},
+    {"Product_createSubset", BeamPyProduct_createSubset, METH_VARARGS, " Creates a subset of this product. The returned product represents a true spatial and spectral subset of this\n product, but it has not loaded any bands into memory. If name or desc are null or empty, the name and the\n description from this product was used.\n\n \n@param this The Product object.\n@param subsetDef the product subset definition\n @param name      the name for the new product\n @param desc      the description for the new product\n @return the product subset, or <code>null</code> if the product/subset combination is not valid\n @throws IOException if an I/O error occurs\n"},
+    {"Product_createProjectedProduct", BeamPyProduct_createProjectedProduct, METH_VARARGS, " Creates a map-projected version of this product.\n\n \n@param this The Product object.\n@param mapInfo the map information\n @param name    the name for the new product\n @param desc    the description for the new product\n @return the product subset, or <code>null</code> if the product/subset combination is not valid\n @throws IOException if an I/O error occurs\n"},
+    {"Product_createFlippedProduct", BeamPyProduct_createFlippedProduct, METH_VARARGS, " Creates flipped raster-data version of this product.\n\n \n@param this The Product object.\n@param flipType the flip type, see <code>{@link org.esa.beam.framework.dataio.ProductFlipper}</code>\n @param name     the name for the new product\n @param desc     the description for the new product\n @return the product subset, or <code>null</code> if the product/subset combination is not valid\n @throws IOException if an I/O error occurs\n"},
     {"Product_setModified", BeamPyProduct_setModified, METH_VARARGS, "\n@param this The Product object."},
     {"Product_getQuicklookBandName", BeamPyProduct_getQuicklookBandName, METH_VARARGS, " Gets the name of the band suitable for quicklook generation.\n\n @return the name of the quicklook band, or null if none has been defined\n\n@param this The Product object."},
     {"Product_setQuicklookBandName", BeamPyProduct_setQuicklookBandName, METH_VARARGS, " Sets the name of the band suitable for quicklook generation.\n\n \n@param this The Product object.\n@param quicklookBandName the name of the quicklook band, or null\n"},
-    {"Product_createPixelInfoString", BeamPyProduct_createPixelInfoString, METH_VARARGS, " Creates a string containing all available information at the given pixel position. The string returned is a line\n separated text with each line containing a key/value pair.\n\n \n@param this The Product object.\n@param pixelX the pixel X co-ordinate\n @param pixelY the pixel Y co-ordinate\n\n @return the info string at the given position\n"},
+    {"Product_createPixelInfoString", BeamPyProduct_createPixelInfoString, METH_VARARGS, " Creates a string containing all available information at the given pixel position. The string returned is a line\n separated text with each line containing a key/value pair.\n\n \n@param this The Product object.\n@param pixelX the pixel X co-ordinate\n @param pixelY the pixel Y co-ordinate\n @return the info string at the given position\n"},
     {"Product_getRemovedChildNodes", BeamPyProduct_getRemovedChildNodes, METH_VARARGS, " @return All removed child nodes. Array may be empty.\n\n@param this The Product object."},
     {"Product_canBeOrthorectified", BeamPyProduct_canBeOrthorectified, METH_VARARGS, " Checks whether or not this product can be ortorectified.\n\n @return true if {@link Band#canBeOrthorectified()} returns true for all bands, false otherwise\n\n@param this The Product object."},
-    {"Product_getPreferredTileSize", BeamPyProduct_getPreferredTileSize, METH_VARARGS, " Gets the preferred tile size which may be used for a the {@link java.awt.image.RenderedImage rendered image}\n created for a {@link RasterDataNode} of this product.\n\n @return the preferred tile size, may be <code>null</null> if not specified\n\n @see RasterDataNode#getSourceImage()\n @see RasterDataNode# setSourceImage (java.awt.image.RenderedImage)\n\n@param this The Product object."},
-    {"Product_setPreferredTileSize", BeamPyProduct_setPreferredTileSize, METH_VARARGS, " Sets the preferred tile size which may be used for a the {@link java.awt.image.RenderedImage rendered image}\n created for a {@link RasterDataNode} of this product.\n\n \n@param this The Product object.\n@param tileWidth  the preferred tile width\n @param tileHeight the preferred tile height\n\n @see #setPreferredTileSize(java.awt.Dimension)\n"},
-    {"Product_getAllFlagNames", BeamPyProduct_getAllFlagNames, METH_VARARGS, " Returns the names of all flags of all flag datasets contained this product.\n <p/>\n <p>A flag name contains the dataset (a band of this product) and the actual flag name as defined in the\n flag-coding associated with the dataset. The general format for the flag name strings returned is therefore\n <code>\"<i>dataset</i>.<i>flag_name</i>\"</code>.\n </p>\n <p>The method is used to find out which flags a product has in order to use them in bit-mask expressions.\n\n @return the array of all flag names. If this product does not support flags, an empty array is returned, but\n         never <code>null</code>.\n\n @see #parseExpression(String)\n\n@param this The Product object."},
-    {"Product_getAutoGrouping", BeamPyProduct_getAutoGrouping, METH_VARARGS, " Gets the auto-grouping applicable to product nodes contained in this product.\n\n @return The auto-grouping or {@code null}.\n\n @since BEAM 4.8\n\n@param this The Product object."},
-    {"Product_setAutoGrouping", BeamPyProduct_setAutoGrouping, METH_VARARGS, " Sets the auto-grouping applicable to product nodes contained in this product.\n A given {@code pattern} parameter is a textual representation of the auto-grouping.\n The syntax for the pattern is:\n <pre>\n pattern    :=  &lt;groupPath&gt; {':' &lt;groupPath&gt;} | \"\" (empty string)\n groupPath  :=  &lt;groupName&gt; {'/' &lt;groupName&gt;}\n groupName  :=  any non-empty string without characters ':' and '/'\n </pre>\n An example for {@code pattern} applicable to Envisat AATSR data is\n <pre>\n nadir/reflec:nadir/btemp:fward/reflec:fward/btemp:nadir:fward\n </pre>\n\n \n@param this The Product object.\n@param pattern The auto-grouping pattern.\n\n @since BEAM 4.8\n"},
-    {"Product_addComputedMask", BeamPyProduct_addComputedMask, METH_VARARGS, " Creates a new mask using a band arithmetic expression\n and adds it to this product and returns it.\n\n \n@param this The Product object.\n@param maskName     the new mask's name\n @param expression   the band arithmetic expression\n @param description  the mask's description\n @param color        the display color\n @param transparency the display transparency\n\n @return the new mask which has just been added\n\n @since BEAM 4.10\n"},
+    {"Product_getPreferredTileSize", BeamPyProduct_getPreferredTileSize, METH_VARARGS, " Gets the preferred tile size which may be used for a the {@link java.awt.image.RenderedImage rendered image}\n created for a {@link RasterDataNode} of this product.\n\n @return the preferred tile size, may be <code>null</null> if not specified\n @see RasterDataNode#getSourceImage()\n @see RasterDataNode# setSourceImage (java.awt.image.RenderedImage)\n\n@param this The Product object."},
+    {"Product_setPreferredTileSize", BeamPyProduct_setPreferredTileSize, METH_VARARGS, " Sets the preferred tile size which may be used for a the {@link java.awt.image.RenderedImage rendered image}\n created for a {@link RasterDataNode} of this product.\n\n \n@param this The Product object.\n@param tileWidth  the preferred tile width\n @param tileHeight the preferred tile height\n @see #setPreferredTileSize(java.awt.Dimension)\n"},
+    {"Product_getAllFlagNames", BeamPyProduct_getAllFlagNames, METH_VARARGS, " Returns the names of all flags of all flag datasets contained this product.\n <p/>\n <p>A flag name contains the dataset (a band of this product) and the actual flag name as defined in the\n flag-coding associated with the dataset. The general format for the flag name strings returned is therefore\n <code>\"<i>dataset</i>.<i>flag_name</i>\"</code>.\n </p>\n <p>The method is used to find out which flags a product has in order to use them in bit-mask expressions.\n\n @return the array of all flag names. If this product does not support flags, an empty array is returned, but\n         never <code>null</code>.\n @see #parseExpression(String)\n\n@param this The Product object."},
+    {"Product_getAutoGrouping", BeamPyProduct_getAutoGrouping, METH_VARARGS, " Gets the auto-grouping applicable to product nodes contained in this product.\n\n @return The auto-grouping or {@code null}.\n @since BEAM 4.8\n\n@param this The Product object."},
+    {"Product_setAutoGrouping", BeamPyProduct_setAutoGrouping, METH_VARARGS, " Sets the auto-grouping applicable to product nodes contained in this product.\n A given {@code pattern} parameter is a textual representation of the auto-grouping.\n The syntax for the pattern is:\n <pre>\n pattern    :=  &lt;groupPath&gt; {':' &lt;groupPath&gt;} | \"\" (empty string)\n groupPath  :=  &lt;groupName&gt; {'/' &lt;groupName&gt;}\n groupName  :=  any non-empty string without characters ':' and '/'\n </pre>\n An example for {@code pattern} applicable to Envisat AATSR data is\n <pre>\n nadir/reflec:nadir/btemp:fward/reflec:fward/btemp:nadir:fward\n </pre>\n\n \n@param this The Product object.\n@param pattern The auto-grouping pattern.\n @since BEAM 4.8\n"},
+    {"Product_addComputedMask", BeamPyProduct_addComputedMask, METH_VARARGS, " Creates a new mask using a band arithmetic expression\n and adds it to this product and returns it.\n\n \n@param this The Product object.\n@param maskName     the new mask's name\n @param expression   the band arithmetic expression\n @param description  the mask's description\n @param color        the display color\n @param transparency the display transparency\n @return the new mask which has just been added\n @since BEAM 4.10\n"},
     {"Product_getOwner", BeamPyProduct_getOwner, METH_VARARGS, " @return The owner node of this node.\n\n@param this The Product object."},
     {"Product_getName", BeamPyProduct_getName, METH_VARARGS, " @return This node's name.\n\n@param this The Product object."},
     {"Product_setName", BeamPyProduct_setName, METH_VARARGS, " Sets this product's name.\n\n \n@param this The Product object.\n@param name The name.\n"},
@@ -1421,6 +1426,7 @@ static PyMethodDef BeamPy_Methods[] = {
     {"ImageGeometry_calculateProductSize", BeamPyImageGeometry_calculateProductSize, METH_VARARGS, ""},
     {"ImageGeometry_createTargetGeometry", BeamPyImageGeometry_createTargetGeometry, METH_VARARGS, ""},
     {"ImageGeometry_createCollocationTargetGeometry", BeamPyImageGeometry_createCollocationTargetGeometry, METH_VARARGS, ""},
+    {"ImageGeometry_createValidRect", BeamPyImageGeometry_createValidRect, METH_VARARGS, ""},
     {"Band_newBand", BeamPyBand_newBand, METH_VARARGS, " Constructs a new <code>Band</code>.\n\n @param name     the name of the new object\n @param dataType the raster data type, must be one of the multiple <code>ProductData.TYPE_<i>X</i></code>\n                 constants, with the exception of <code>ProductData.TYPE_UINT32</code>\n @param width    the width of the raster in pixels\n @param height   the height of the raster in pixels\n"},
     {"Band_getFlagCoding", BeamPyBand_getFlagCoding, METH_VARARGS, " Gets the flag coding for this band.\n\n @return a non-null value if this band is a flag dataset, <code>null</code> otherwise\n\n@param this The Band object."},
     {"Band_isFlagBand", BeamPyBand_isFlagBand, METH_VARARGS, " Tests whether or not this band is a flag band (<code>getFlagCoding() != null</code>).\n\n @return <code>true</code> if so\n\n@param this The Band object."},
@@ -1539,7 +1545,6 @@ static PyMethodDef BeamPy_Methods[] = {
     {"Band_getNumDataElems", BeamPyBand_getNumDataElems, METH_VARARGS, " Gets the number of data elements in this data node.\n\n@param this The Band object."},
     {"Band_setData", BeamPyBand_setData, METH_VARARGS, " Sets the data of this data node.\n\n@param this The Band object."},
     {"Band_getData", BeamPyBand_getData, METH_VARARGS, " Gets the data of this data node.\n\n@param this The Band object."},
-    {"Band_setDataElems", BeamPyBand_setDataElems, METH_VARARGS, " Sets the data elements of this data node.\n\n @see ProductData#setElems(Object)\n\n@param this The Band object."},
     {"Band_getDataElems", BeamPyBand_getDataElems, METH_VARARGS, " Gets the data elements of this data node.\n\n @see ProductData#getElems()\n\n@param this The Band object."},
     {"Band_getDataElemSize", BeamPyBand_getDataElemSize, METH_VARARGS, " Gets the data element size in bytes.\n\n @see ProductData#getElemSize(int)\n\n@param this The Band object."},
     {"Band_setReadOnly", BeamPyBand_setReadOnly, METH_VARARGS, "\n@param this The Band object."},
@@ -1744,7 +1749,6 @@ static PyMethodDef BeamPy_Methods[] = {
     {"TiePointGrid_getNumDataElems", BeamPyTiePointGrid_getNumDataElems, METH_VARARGS, " Gets the number of data elements in this data node.\n\n@param this The TiePointGrid object."},
     {"TiePointGrid_setData", BeamPyTiePointGrid_setData, METH_VARARGS, " Sets the data of this data node.\n\n@param this The TiePointGrid object."},
     {"TiePointGrid_getData", BeamPyTiePointGrid_getData, METH_VARARGS, " Gets the data of this data node.\n\n@param this The TiePointGrid object."},
-    {"TiePointGrid_setDataElems", BeamPyTiePointGrid_setDataElems, METH_VARARGS, " Sets the data elements of this data node.\n\n @see ProductData#setElems(Object)\n\n@param this The TiePointGrid object."},
     {"TiePointGrid_getDataElems", BeamPyTiePointGrid_getDataElems, METH_VARARGS, " Gets the data elements of this data node.\n\n @see ProductData#getElems()\n\n@param this The TiePointGrid object."},
     {"TiePointGrid_getDataElemSize", BeamPyTiePointGrid_getDataElemSize, METH_VARARGS, " Gets the data element size in bytes.\n\n @see ProductData#getElemSize(int)\n\n@param this The TiePointGrid object."},
     {"TiePointGrid_setReadOnly", BeamPyTiePointGrid_setReadOnly, METH_VARARGS, "\n@param this The TiePointGrid object."},
@@ -1988,6 +1992,7 @@ static PyMethodDef BeamPy_Methods[] = {
     {"ProductUtils_createGeoBoundary1", BeamPyProductUtils_createGeoBoundary1, METH_VARARGS, " Creates the geographical boundary of the given product and returns it as a list of geographical coordinates.\n\n @param product the input product, must not be null\n @param step    the step given in pixels\n @return an array of geographical coordinates\n @throws IllegalArgumentException if product is null or if the product's {@link GeoCoding} is null\n"},
     {"ProductUtils_createGeoBoundary2", BeamPyProductUtils_createGeoBoundary2, METH_VARARGS, " Creates the geographical boundary of the given region within the given product and returns it as a list of\n geographical coordinates.\n <p> This method delegates to {@link #createGeoBoundary(org.esa.beam.framework.datamodel.Product, java.awt.Rectangle, int, boolean) createGeoBoundary(Product, Rectangle, int, boolean)}\n and the additional boolean parameter <code>usePixelCenter</code> is <code>true</code>.\n\n @param product the input product, must not be null\n @param region  the region rectangle in product pixel coordinates, can be null for entire product\n @param step    the step given in pixels\n @return an array of geographical coordinates\n @throws IllegalArgumentException if product is null or if the product's {@link GeoCoding} is null\n @see #createPixelBoundary(org.esa.beam.framework.datamodel.RasterDataNode, java.awt.Rectangle, int)\n"},
     {"ProductUtils_createGeoBoundary3", BeamPyProductUtils_createGeoBoundary3, METH_VARARGS, " Creates the geographical boundary of the given region within the given product and returns it as a list of\n geographical coordinates.\n\n @param product        the input product, must not be null\n @param region         the region rectangle in product pixel coordinates, can be null for entire product\n @param step           the step given in pixels\n @param usePixelCenter <code>true</code> if the pixel center should be used to create the boundary\n @return an array of geographical coordinates\n @throws IllegalArgumentException if product is null or if the product's {@link GeoCoding} is null\n @see #createPixelBoundary(org.esa.beam.framework.datamodel.Product, java.awt.Rectangle, int, boolean)\n"},
+    {"ProductUtils_getClosestGeoPos", BeamPyProductUtils_getClosestGeoPos, METH_VARARGS, " Searches for a valid GeoPos by considering the vicinity of a {@link PixelPos}. It does not check\n the original pixel position, but uses it for determining which pixel positions to examine.\n\n @param gc      the GeoCoding, must not be null\n @param origPos the original pixel position, must not be null\n @param region  the rectangle which determines the valid pixel positions, must not be null\n @param step    determines the step size between pixels which is used in the search process. Small step\n                sizes will increase the accuracy, but need more computational time\n @return a {@link GeoPos}. This will be valid if the search was successful. If not, a {@link GeoPos} with\n         NaN-values for latitude and longitude will be returned.\n"},
     {"ProductUtils_createGeoBoundary4", BeamPyProductUtils_createGeoBoundary4, METH_VARARGS, " Creates the geographical boundary of the given region within the given raster and returns it as a list of\n geographical coordinates.\n\n @param raster the input raster, must not be null\n @param region the region rectangle in raster pixel coordinates, can be null for entire raster\n @param step   the step given in pixels\n @return an array of geographical coordinates\n @throws IllegalArgumentException if raster is null or if the raster has no {@link GeoCoding} is null\n @see #createPixelBoundary(org.esa.beam.framework.datamodel.RasterDataNode, java.awt.Rectangle, int)\n"},
     {"ProductUtils_createGeoBoundaryPaths1", BeamPyProductUtils_createGeoBoundaryPaths1, METH_VARARGS, " Converts the geographic boundary entire product into one, two or three shape objects. If the product does not\n intersect the 180 degree meridian, a single general path is returned. Otherwise two or three shapes are created\n and returned in the order from west to east.\n <p/>\n The geographic boundary of the given product are returned as shapes comprising (longitude,latitude) pairs.\n\n @param product the input product\n @return an array of shape objects\n @throws IllegalArgumentException if product is null or if the product's {@link GeoCoding} is null\n @see #createGeoBoundary(org.esa.beam.framework.datamodel.Product, int)\n"},
     {"ProductUtils_createGeoBoundaryPaths2", BeamPyProductUtils_createGeoBoundaryPaths2, METH_VARARGS, " Converts the geographic boundary of the region within the given product into one, two or three shape objects. If\n the product does not intersect the 180 degree meridian, a single general path is returned. Otherwise two or three\n shapes are created and returned in the order from west to east.\n <p/>\n This method delegates to {@link #createGeoBoundaryPaths(org.esa.beam.framework.datamodel.Product, java.awt.Rectangle, int, boolean) createGeoBoundaryPaths(Product, Rectangle, int, boolean)}\n and the additional parameter <code>usePixelCenter</code> is <code>true</code>.\n <p/>\n The geographic boundary of the given product are returned as shapes comprising (longitude,latitude) pairs.\n\n @param product the input product\n @param region  the region rectangle in product pixel coordinates, can be null for entire product\n @param step    the step given in pixels\n @return an array of shape objects\n @throws IllegalArgumentException if product is null or if the product's {@link GeoCoding} is null\n @see #createGeoBoundary(org.esa.beam.framework.datamodel.Product, java.awt.Rectangle, int)\n"},
@@ -2051,7 +2056,6 @@ static PyMethodDef BeamPy_Methods[] = {
     {"MetadataAttribute_getNumDataElems", BeamPyMetadataAttribute_getNumDataElems, METH_VARARGS, " Gets the number of data elements in this data node.\n\n@param this The MetadataAttribute object."},
     {"MetadataAttribute_setData", BeamPyMetadataAttribute_setData, METH_VARARGS, " Sets the data of this data node.\n\n@param this The MetadataAttribute object."},
     {"MetadataAttribute_getData", BeamPyMetadataAttribute_getData, METH_VARARGS, " Gets the data of this data node.\n\n@param this The MetadataAttribute object."},
-    {"MetadataAttribute_setDataElems", BeamPyMetadataAttribute_setDataElems, METH_VARARGS, " Sets the data elements of this data node.\n\n @see ProductData#setElems(Object)\n\n@param this The MetadataAttribute object."},
     {"MetadataAttribute_getDataElems", BeamPyMetadataAttribute_getDataElems, METH_VARARGS, " Gets the data elements of this data node.\n\n @see ProductData#getElems()\n\n@param this The MetadataAttribute object."},
     {"MetadataAttribute_getDataElemSize", BeamPyMetadataAttribute_getDataElemSize, METH_VARARGS, " Gets the data element size in bytes.\n\n @see ProductData#getElemSize(int)\n\n@param this The MetadataAttribute object."},
     {"MetadataAttribute_setReadOnly", BeamPyMetadataAttribute_setReadOnly, METH_VARARGS, "\n@param this The MetadataAttribute object."},
@@ -2089,7 +2093,7 @@ typedef struct {
 static int BeamPyJObject_init(BeamPyJObject* self, PyObject* args, PyObject* kwds)
 {
 	printf("BeamPyJObject_init\n");
-	self->jobjectId = PyLong_asVoidPtr(args);
+	self->jobjectId = PyLong_AsVoidPtr(args);
     return self->jobjectId != NULL ? 0 : 1;
 }
 
@@ -2183,7 +2187,7 @@ PyMODINIT_FUNC PyInit__beampy()
     // Py_DECREF(arg);
 
     // todo - in  BeamPyJObject_init use:
-    // self->jobject = PyLong_asVoidPtr(args);
+    // self->jobject = PyLong_AsVoidPtr(args);
 
     if (!beam_create_jvm_with_defaults()) {
         PyErr_SetString(BeamPy_Error, "Failed to create Java VM");
@@ -2193,18 +2197,6 @@ PyMODINIT_FUNC PyInit__beampy()
     return m;
 }
 
-
-PyObject* BeamPyGeoCoding_isCrossingMeridianAt180(PyObject* self, PyObject* args)
-{
-    const char* thisObjType;
-    unsigned PY_LONG_LONG thisObj;
-    boolean result;
-    if (!PyArg_ParseTuple(args, "(sK):GeoCoding_isCrossingMeridianAt180", &thisObjType, &thisObj)) {
-        return NULL;
-    }
-    result = GeoCoding_isCrossingMeridianAt180((GeoCoding) thisObj);
-    return PyBool_FromLong(result);
-}
 
 PyObject* BeamPyGeoCoding_canGetPixelPos(PyObject* self, PyObject* args)
 {
@@ -5434,15 +5426,32 @@ PyObject* BeamPyProduct_getMetadataRoot(PyObject* self, PyObject* args)
     }
 }
 
-PyObject* BeamPyProduct_getBandGroup(PyObject* self, PyObject* args)
+PyObject* BeamPyProduct_getGroups(PyObject* self, PyObject* args)
 {
     const char* thisObjType;
     unsigned PY_LONG_LONG thisObj;
     void* result;
-    if (!PyArg_ParseTuple(args, "(sK):Product_getBandGroup", &thisObjType, &thisObj)) {
+    if (!PyArg_ParseTuple(args, "(sK):Product_getGroups", &thisObjType, &thisObj)) {
         return NULL;
     }
-    result = Product_getBandGroup((Product) thisObj);
+    result = Product_getGroups((Product) thisObj);
+    if (result != NULL) {
+        return Py_BuildValue("(sK)", "ProductNodeGroup", (unsigned PY_LONG_LONG) result);
+    } else {
+        return Py_BuildValue("");
+    }
+}
+
+PyObject* BeamPyProduct_getGroup(PyObject* self, PyObject* args)
+{
+    const char* name;
+    const char* thisObjType;
+    unsigned PY_LONG_LONG thisObj;
+    void* result;
+    if (!PyArg_ParseTuple(args, "(sK)s:Product_getGroup", &thisObjType, &thisObj, &name)) {
+        return NULL;
+    }
+    result = Product_getGroup((Product) thisObj, name);
     if (result != NULL) {
         return Py_BuildValue("(sK)", "ProductNodeGroup", (unsigned PY_LONG_LONG) result);
     } else {
@@ -5590,6 +5599,22 @@ PyObject* BeamPyProduct_containsTiePointGrid(PyObject* self, PyObject* args)
     }
     result = Product_containsTiePointGrid((Product) thisObj, name);
     return PyBool_FromLong(result);
+}
+
+PyObject* BeamPyProduct_getBandGroup(PyObject* self, PyObject* args)
+{
+    const char* thisObjType;
+    unsigned PY_LONG_LONG thisObj;
+    void* result;
+    if (!PyArg_ParseTuple(args, "(sK):Product_getBandGroup", &thisObjType, &thisObj)) {
+        return NULL;
+    }
+    result = Product_getBandGroup((Product) thisObj);
+    if (result != NULL) {
+        return Py_BuildValue("(sK)", "ProductNodeGroup", (unsigned PY_LONG_LONG) result);
+    } else {
+        return Py_BuildValue("");
+    }
 }
 
 PyObject* BeamPyProduct_addBand(PyObject* self, PyObject* args)
@@ -5905,6 +5930,30 @@ PyObject* BeamPyProduct_getPinGroup(PyObject* self, PyObject* args)
     } else {
         return Py_BuildValue("");
     }
+}
+
+PyObject* BeamPyProduct_getNumResolutionsMax(PyObject* self, PyObject* args)
+{
+    const char* thisObjType;
+    unsigned PY_LONG_LONG thisObj;
+    int result;
+    if (!PyArg_ParseTuple(args, "(sK):Product_getNumResolutionsMax", &thisObjType, &thisObj)) {
+        return NULL;
+    }
+    result = Product_getNumResolutionsMax((Product) thisObj);
+    return PyLong_FromLong(result);
+}
+
+PyObject* BeamPyProduct_setNumResolutionsMax(PyObject* self, PyObject* args)
+{
+    int numResolutionsMax;
+    const char* thisObjType;
+    unsigned PY_LONG_LONG thisObj;
+    if (!PyArg_ParseTuple(args, "(sK)i:Product_setNumResolutionsMax", &thisObjType, &thisObj, &numResolutionsMax)) {
+        return NULL;
+    }
+    Product_setNumResolutionsMax((Product) thisObj, numResolutionsMax);
+    return Py_BuildValue("");
 }
 
 PyObject* BeamPyProduct_isCompatibleProduct(PyObject* self, PyObject* args)
@@ -7714,6 +7763,22 @@ PyObject* BeamPyImageGeometry_createCollocationTargetGeometry(PyObject* self, Py
     }
 }
 
+PyObject* BeamPyImageGeometry_createValidRect(PyObject* self, PyObject* args)
+{
+    const char* productType;
+    unsigned PY_LONG_LONG product;
+    void* result;
+    if (!PyArg_ParseTuple(args, "(sK):ImageGeometry_createValidRect", &productType, &product)) {
+        return NULL;
+    }
+    result = ImageGeometry_createValidRect((Product) product);
+    if (result != NULL) {
+        return Py_BuildValue("(sK)", "Rectangle2D", (unsigned PY_LONG_LONG) result);
+    } else {
+        return Py_BuildValue("");
+    }
+}
+
 PyObject* BeamPyBand_newBand(PyObject* self, PyObject* args)
 {
     const char* name;
@@ -9471,19 +9536,6 @@ PyObject* BeamPyBand_getData(PyObject* self, PyObject* args)
     } else {
         return Py_BuildValue("");
     }
-}
-
-PyObject* BeamPyBand_setDataElems(PyObject* self, PyObject* args)
-{
-    const char* elemsType;
-    unsigned PY_LONG_LONG elems;
-    const char* thisObjType;
-    unsigned PY_LONG_LONG thisObj;
-    if (!PyArg_ParseTuple(args, "(sK)(sK):Band_setDataElems", &thisObjType, &thisObj, &elemsType, &elems)) {
-        return NULL;
-    }
-    Band_setDataElems((Band) thisObj, (Object) elems);
-    return Py_BuildValue("");
 }
 
 PyObject* BeamPyBand_getDataElems(PyObject* self, PyObject* args)
@@ -12720,19 +12772,6 @@ PyObject* BeamPyTiePointGrid_getData(PyObject* self, PyObject* args)
     } else {
         return Py_BuildValue("");
     }
-}
-
-PyObject* BeamPyTiePointGrid_setDataElems(PyObject* self, PyObject* args)
-{
-    const char* elemsType;
-    unsigned PY_LONG_LONG elems;
-    const char* thisObjType;
-    unsigned PY_LONG_LONG thisObj;
-    if (!PyArg_ParseTuple(args, "(sK)(sK):TiePointGrid_setDataElems", &thisObjType, &thisObj, &elemsType, &elems)) {
-        return NULL;
-    }
-    TiePointGrid_setDataElems((TiePointGrid) thisObj, (Object) elems);
-    return Py_BuildValue("");
 }
 
 PyObject* BeamPyTiePointGrid_getDataElems(PyObject* self, PyObject* args)
@@ -16416,6 +16455,27 @@ PyObject* BeamPyProductUtils_createGeoBoundary3(PyObject* self, PyObject* args)
     }
 }
 
+PyObject* BeamPyProductUtils_getClosestGeoPos(PyObject* self, PyObject* args)
+{
+    const char* gcType;
+    unsigned PY_LONG_LONG gc;
+    const char* origPosType;
+    unsigned PY_LONG_LONG origPos;
+    const char* regionType;
+    unsigned PY_LONG_LONG region;
+    int step;
+    void* result;
+    if (!PyArg_ParseTuple(args, "(sK)(sK)(sK)i:ProductUtils_getClosestGeoPos", &gcType, &gc, &origPosType, &origPos, &regionType, &region, &step)) {
+        return NULL;
+    }
+    result = ProductUtils_getClosestGeoPos((GeoCoding) gc, (PixelPos) origPos, (Rectangle) region, step);
+    if (result != NULL) {
+        return Py_BuildValue("(sK)", "GeoPos", (unsigned PY_LONG_LONG) result);
+    } else {
+        return Py_BuildValue("");
+    }
+}
+
 PyObject* BeamPyProductUtils_createGeoBoundary4(PyObject* self, PyObject* args)
 {
     const char* rasterType;
@@ -17462,19 +17522,6 @@ PyObject* BeamPyMetadataAttribute_getData(PyObject* self, PyObject* args)
     } else {
         return Py_BuildValue("");
     }
-}
-
-PyObject* BeamPyMetadataAttribute_setDataElems(PyObject* self, PyObject* args)
-{
-    const char* elemsType;
-    unsigned PY_LONG_LONG elems;
-    const char* thisObjType;
-    unsigned PY_LONG_LONG thisObj;
-    if (!PyArg_ParseTuple(args, "(sK)(sK):MetadataAttribute_setDataElems", &thisObjType, &thisObj, &elemsType, &elems)) {
-        return NULL;
-    }
-    MetadataAttribute_setDataElems((MetadataAttribute) thisObj, (Object) elems);
-    return Py_BuildValue("");
 }
 
 PyObject* BeamPyMetadataAttribute_getDataElems(PyObject* self, PyObject* args)
