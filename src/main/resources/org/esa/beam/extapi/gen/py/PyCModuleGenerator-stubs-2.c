@@ -79,7 +79,7 @@ PyMODINIT_FUNC PyInit__${libName}()
 {
     PyObject* m;
 
-    fprintf(stdout, "${libName}: PyInit__${libName}() called\n");
+    fprintf(stdout, "${libName}: Enter PyInit__${libName}()\n");
     m = PyModule_Create(&BeamPy_Module);
     if (m == NULL) {
         return NULL;
@@ -89,8 +89,8 @@ PyMODINIT_FUNC PyInit__${libName}()
     Py_INCREF(BeamPy_Error);
     PyModule_AddObject(m, "error", BeamPy_Error);
 
-    Py_INCREF(BeamPy_JObjectType);
-    PyModule_AddObject(m, "JObject", BeamPy_JObjectType);
+    //Py_INCREF(BeamPy_JObjectType);
+    //PyModule_AddObject(m, "JObject", BeamPy_JObjectType);
 
     // todo - use the new BeamPy_JObjectType object instead of the currently used (sK) tuples.
     // // JObject instances shall be created using the following pattern:
@@ -105,6 +105,8 @@ PyMODINIT_FUNC PyInit__${libName}()
         PyErr_SetString(BeamPy_Error, "Failed to create Java VM");
         return NULL;
     }
+
+    fprintf(stdout, "${libName}: Exit PyInit__${libName}()\n");
 
     return m;
 }
