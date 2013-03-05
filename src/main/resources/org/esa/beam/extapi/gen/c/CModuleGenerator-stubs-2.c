@@ -225,6 +225,7 @@ jboolean beam_create_jvm(const char* option_strings[], int option_count)
         }
     }
 
+    fprintf(stdout, "beam_capi: Creating Java VM...\n");
     vm_args.version = JNI_VERSION_1_6;
     vm_args.options = options;
     vm_args.nOptions = 4;
