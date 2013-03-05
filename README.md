@@ -54,12 +54,13 @@ Developer Links
 beam-extapi code repository  
 
 * Project on Github: https://github.com/bcdev/beam-extapi
-* Java Native Interface (JNI) website:  http://docs.oracle.com/javase/7/docs/technotes/guides/jni/
-* JNI data types:	http://docs.oracle.com/javase/7/docs/technotes/guides/jni/spec/types.html
+* Java Native Interface (JNI) website: http://docs.oracle.com/javase/7/docs/technotes/guides/jni/
+* JNI data types: http://docs.oracle.com/javase/7/docs/technotes/guides/jni/spec/types.html
 * JNI function reference: http://docs.oracle.com/javase/7/docs/technotes/guides/jni/spec/functions.html
-* Python/C API reference:	http://docs.python.org/py3k/c-api/index.html
-* Python/C API tutorial:	http://docs.python.org/py3k/extending/index.html
+* Python/C API reference: http://docs.python.org/py3k/c-api/index.html
+* Python/C API tutorial: http://docs.python.org/py3k/extending/index.html
 * Python/C argument parsing:  http://docs.python.org/py3k/c-api/arg.html
+* Microsoft *cl* Compiler: http://msdn.microsoft.com/en-us/library/vstudio/9s7c9wdw.aspx
 
 
 C-Code Generation Considerations
