@@ -120,7 +120,7 @@ public class JavadocHelpers {
                 strippedLines.add(indent + strippedLine);
             }
         }
-        final String docText = StringUtils.join(strippedLines.toArray(new String[strippedLines.size()]), "\n");
+        final String docText = StringUtils.join(strippedLines.toArray(new String[strippedLines.size()]), "\n").trim();
         return cCodeString ? encodeCCodeString(docText) : docText;
     }
 
