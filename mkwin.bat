@@ -39,11 +39,12 @@ src\main\c\gen\beam_capi.def ^
 /I"%J_HOME%\include\win32" ^
 /I"%J_HOME%\include" ^
 /Gm- /GS /Gy /Gd ^
+/MDd ^
 /Zi /Zc:wchar_t /Zc:forScope ^
 /EHsc /fp:precise /analyze- ^
 /nologo /W3 /Wp64 /WX- /GL ^
 /D "WIN32" ^
-/D "NDEBUG" ^
+/D "_DEBUG" ^
 /D "_WINDOWS" ^
 /D "_USRDLL" ^
 /D "BEAM_CAPI_EXPORTS" ^
@@ -76,7 +77,7 @@ src\main\c\beam_capi_test.c ^
 /EHsc /fp:precise /analyze- ^
 /nologo /W3 /Wp64 /WX- /GL ^
 /D "WIN32" ^
-/D "NDEBUG" ^
+/D "_DEBUG" ^
 /D "_WINDOWS" ^
 /D "_USRDLL" ^
 /D "BEAM_CAPI_EXPORTS" ^
@@ -111,7 +112,7 @@ src\main\c\gen\beampy.def ^
 /EHsc /fp:precise /analyze- ^
 /nologo /W3 /Wp64 /WX- /GL ^
 /D "WIN32" ^
-/D "NDEBUG" ^
+/D "_DEBUG" ^
 /D "_WINDOWS" ^
 /D "_USRDLL" ^
 /D "BEAM_CAPI_EXPORTS" ^

@@ -1,0 +1,45 @@
+
+http://msdn.microsoft.com/en-us/library/974tc9t1%28v=vs.80%29.aspx
+
+
+
+
+#include "crtdbg.h"
+
+
+// Get current flag
+int tmpFlag = _CrtSetDbgFlag( _CRTDBG_REPORT_FLAG );
+
+// Turn on leak-checking bit.
+tmpFlag |= _CRTDBG_LEAK_CHECK_DF;
+
+// Turn off CRT block checking bit.
+tmpFlag &= ~_CRTDBG_CHECK_CRT_DF;
+
+// Set flag to the new value.
+_CrtSetDbgFlag( tmpFlag );
+
+
+
+
+
+
+
+
+
+
+
+_CrtDumpMemoryLeaks();
+
+
+
+
+Debug:
+
+/I"C:\Program Files (x86)\Java\jdk1.7.0\include\win32" /I"C:\Program Files (x86)\Java\jdk1.7.0\include" /I"C:\Program Files (x86)\Java\jdk1.7.0_07\include\win32" /I"C:\Program Files (x86)\Java\jdk1.7.0_07\include" /ZI /nologo /W3 /WX- /Od /Oy- /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_USRDLL" /D "BEAM_CAPI_EXPORTS" /D "_WINDLL" /D "_UNICODE" /D "UNICODE" /Gm /EHsc /RTC1 /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fp"Debug\beam_capi.pch" /Fa"Debug\" /Fo"Debug\" /Fd"Debug\vc100.pdb" /Gd /analyze- /errorReport:queue
+/OUT:"C:\Users\Norman\JavaProjects\beam-extapi\msvc\beam_capi\Debug\beam_capi.dll" /INCREMENTAL /NOLOGO /LIBPATH:"C:\Program Files (x86)\Java\jdk1.7.0_07\lib" /LIBPATH:"C:\Program Files (x86)\Java\jdk1.7.0\lib" /DLL "jvm.lib" "kernel32.lib" "user32.lib" "gdi32.lib" "winspool.lib" "comdlg32.lib" "advapi32.lib" "shell32.lib" "ole32.lib" "oleaut32.lib" "uuid.lib" "odbc32.lib" "odbccp32.lib" /DEF:"..\..\src\main\c\gen\beam_capi.def" /MANIFEST /ManifestFile:"Debug\beam_capi.dll.intermediate.manifest" /ALLOWISOLATION /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /DEBUG /PDB:"C:\Users\Norman\JavaProjects\beam-extapi\msvc\beam_capi\Debug\beam_capi.pdb" /SUBSYSTEM:WINDOWS /PGD:"C:\Users\Norman\JavaProjects\beam-extapi\msvc\beam_capi\Debug\beam_capi.pgd" /TLBID:1 /DYNAMICBASE /NXCOMPAT /MACHINE:X86 /ERRORREPORT:QUEUE
+
+Release:
+
+/I"C:\Program Files (x86)\Java\jdk1.7.0\include\win32" /I"C:\Program Files (x86)\Java\jdk1.7.0\include" /I"C:\Program Files (x86)\Java\jdk1.7.0_07\include\win32" /I"C:\Program Files (x86)\Java\jdk1.7.0_07\include" /Zi /nologo /W3 /WX- /O2 /Oi /Oy- /GL /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_USRDLL" /D "BEAM_CAPI_EXPORTS" /D "_WINDLL" /D "_UNICODE" /D "UNICODE" /Gm- /EHsc /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fp"Release\beam_capi.pch" /Fa"Release\" /Fo"Release\" /Fd"Release\vc100.pdb" /Gd /analyze- /errorReport:queue
+/OUT:"C:\Users\Norman\JavaProjects\beam-extapi\msvc\beam_capi\Release\beam_capi.dll" /INCREMENTAL:NO /NOLOGO /LIBPATH:"C:\Program Files (x86)\Java\jdk1.7.0_07\lib" /LIBPATH:"C:\Program Files (x86)\Java\jdk1.7.0\lib" /DLL "jvm.lib" "kernel32.lib" "user32.lib" "gdi32.lib" "winspool.lib" "comdlg32.lib" "advapi32.lib" "shell32.lib" "ole32.lib" "oleaut32.lib" "uuid.lib" "odbc32.lib" "odbccp32.lib" /DEF:"..\..\src\main\c\gen\beam_capi.def" /MANIFEST /ManifestFile:"Release\beam_capi.dll.intermediate.manifest" /ALLOWISOLATION /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /DEBUG /PDB:"C:\Users\Norman\JavaProjects\beam-extapi\msvc\beam_capi\Release\beam_capi.pdb" /SUBSYSTEM:WINDOWS /OPT:REF /OPT:ICF /PGD:"C:\Users\Norman\JavaProjects\beam-extapi\msvc\beam_capi\Release\beam_capi.pgd" /LTCG /TLBID:1 /DYNAMICBASE /NXCOMPAT /MACHINE:X86 /ERRORREPORT:QUEUE
