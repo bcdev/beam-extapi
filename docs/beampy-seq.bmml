@@ -70,7 +70,7 @@
         <text>PyModule_Create%28%26BeamPy_Module%29</text>
       </controlProperties>
     </control>
-    <control controlID="40" controlTypeID="com.balsamiq.mockups::Canvas" x="526" y="352" w="17" h="67" measuredW="100" measuredH="70" zOrder="17" locked="false" isInGroup="-1"/>
+    <control controlID="40" controlTypeID="com.balsamiq.mockups::Canvas" x="526" y="352" w="17" h="40" measuredW="100" measuredH="70" zOrder="17" locked="false" isInGroup="-1"/>
     <control controlID="41" controlTypeID="com.balsamiq.mockups::Arrow" x="276" y="476" w="479" h="10" measuredW="150" measuredH="100" zOrder="18" locked="false" isInGroup="-1">
       <controlProperties>
         <curvature>0</curvature>
@@ -87,8 +87,8 @@
       </controlProperties>
     </control>
     <control controlID="46" controlTypeID="com.balsamiq.mockups::VRule" x="1263" y="195" w="-1" h="550" measuredW="5" measuredH="100" zOrder="22" locked="false" isInGroup="-1"/>
-    <control controlID="48" controlTypeID="com.balsamiq.mockups::Canvas" x="1256" y="316" w="17" h="52" measuredW="100" measuredH="70" zOrder="23" locked="false" isInGroup="-1"/>
-    <control controlID="49" controlTypeID="com.balsamiq.mockups::Arrow" x="1061" y="321" w="195" h="10" measuredW="150" measuredH="100" zOrder="24" locked="false" isInGroup="-1">
+    <control controlID="48" controlTypeID="com.balsamiq.mockups::Canvas" x="1256" y="399" w="17" h="52" measuredW="100" measuredH="70" zOrder="23" locked="false" isInGroup="-1"/>
+    <control controlID="49" controlTypeID="com.balsamiq.mockups::Arrow" x="1061" y="406" w="195" h="10" measuredW="150" measuredH="100" zOrder="24" locked="false" isInGroup="-1">
       <controlProperties>
         <curvature>0</curvature>
         <direction>bottom</direction>
@@ -96,12 +96,12 @@
         <text>beam_create_vm%28...%29</text>
       </controlProperties>
     </control>
-    <control controlID="50" controlTypeID="com.balsamiq.mockups::Button" x="1447" y="323" w="-1" h="-1" measuredW="76" measuredH="27" zOrder="25" locked="false" isInGroup="-1">
+    <control controlID="50" controlTypeID="com.balsamiq.mockups::Button" x="1447" y="407" w="-1" h="-1" measuredW="76" measuredH="27" zOrder="25" locked="false" isInGroup="-1">
       <controlProperties>
         <text>Java%20VM</text>
       </controlProperties>
     </control>
-    <control controlID="51" controlTypeID="com.balsamiq.mockups::VRule" x="1483" y="340" w="-1" h="405" measuredW="5" measuredH="100" zOrder="26" locked="false" isInGroup="-1"/>
+    <control controlID="51" controlTypeID="com.balsamiq.mockups::VRule" x="1483" y="434" w="-1" h="311" measuredW="5" measuredH="100" zOrder="26" locked="false" isInGroup="-1"/>
     <control controlID="54" controlTypeID="com.balsamiq.mockups::Canvas" x="1256" y="638" w="17" h="52" measuredW="100" measuredH="70" zOrder="27" locked="false" isInGroup="-1"/>
     <control controlID="55" controlTypeID="com.balsamiq.mockups::Arrow" x="1061" y="643" w="195" h="10" measuredW="150" measuredH="100" zOrder="28" locked="false" isInGroup="-1">
       <controlProperties>
@@ -129,7 +129,7 @@
         <text>BeamPyPropductIO_readProduct%28file%29</text>
       </controlProperties>
     </control>
-    <control controlID="59" controlTypeID="com.balsamiq.mockups::Arrow" x="1271" y="331" w="176" h="10" measuredW="150" measuredH="100" zOrder="32" locked="false" isInGroup="-1">
+    <control controlID="59" controlTypeID="com.balsamiq.mockups::Arrow" x="1271" y="415" w="176" h="10" measuredW="150" measuredH="100" zOrder="32" locked="false" isInGroup="-1">
       <controlProperties>
         <curvature>0</curvature>
         <direction>bottom</direction>
