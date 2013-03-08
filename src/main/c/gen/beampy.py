@@ -73,21 +73,21 @@ class GeoCoding:
 
     def canGetPixelPos(self):
         """
-           Checks whether or not this geo-coding can determine the pixel position from a geodetic position.
+Checks whether or not this geo-coding can determine the pixel position from a geodetic position.
            @return <code>true</code>, if so
         """
         return GeoCoding_canGetPixelPos(self._obj)
 
     def canGetGeoPos(self):
         """
-           Checks whether or not this geo-coding can determine the geodetic position from a pixel position.
+Checks whether or not this geo-coding can determine the geodetic position from a pixel position.
            @return <code>true</code>, if so
         """
         return GeoCoding_canGetGeoPos(self._obj)
 
     def getPixelPos(self, geoPos, pixelPos):
         """
-           Returns the pixel co-ordinates as x/y for a given geographical position given as lat/lon.
+Returns the pixel co-ordinates as x/y for a given geographical position given as lat/lon.
            @param geoPos   the geographical position as lat/lon in the coodinate system determined by {@link #getDatum()}
            @param pixelPos an instance of <code>Point</code> to be used as retun value. If this parameter is
            <code>null</code>, the method creates a new instance which it then returns.
@@ -97,7 +97,7 @@ class GeoCoding:
 
     def getGeoPos(self, pixelPos, geoPos):
         """
-           Returns the latitude and longitude value for a given pixel co-ordinate.
+Returns the latitude and longitude value for a given pixel co-ordinate.
            @param pixelPos the pixel's co-ordinates given as x,y
            @param geoPos   an instance of <code>GeoPos</code> to be used as retun value. If this parameter is
            <code>null</code>, the method creates a new instance which it then returns.
@@ -107,7 +107,7 @@ class GeoCoding:
 
     def dispose(self):
         """
-           Releases all of the resources used by this object instance and all of its owned children. Its primary use is to
+Releases all of the resources used by this object instance and all of its owned children. Its primary use is to
            allow the garbage collector to perform a vanilla job.
            
            This method should be called only if it is for sure that this object instance will never be used again. The
@@ -118,28 +118,28 @@ class GeoCoding:
 
     def getImageCRS(self):
         """
-           @return The image coordinate reference system (CRS). It is usually derived from the base CRS by including
+@return The image coordinate reference system (CRS). It is usually derived from the base CRS by including
            a linear or non-linear transformation from base (geodetic) coordinates to image coordinates.
         """
         return CoordinateReferenceSystem(GeoCoding_getImageCRS(self._obj))
 
     def getMapCRS(self):
         """
-           @return The map coordinate reference system (CRS). It may be either a geographical CRS (nominal case is
+@return The map coordinate reference system (CRS). It may be either a geographical CRS (nominal case is
            "WGS-84") or a derived projected CRS, e.g. "UTM 32 - North".
         """
         return CoordinateReferenceSystem(GeoCoding_getMapCRS(self._obj))
 
     def getGeoCRS(self):
         """
-           @return The geographical coordinate reference system (CRS). It may be either "WGS-84" (nominal case) or
+@return The geographical coordinate reference system (CRS). It may be either "WGS-84" (nominal case) or
            any other geographical CRS.
         """
         return CoordinateReferenceSystem(GeoCoding_getGeoCRS(self._obj))
 
     def getImageToMapTransform(self):
         """
-           @return The math transformation used to convert image coordinates to map coordinates.
+@return The math transformation used to convert image coordinates to map coordinates.
         """
         return MathTransform(GeoCoding_getImageToMapTransform(self._obj))
 
@@ -191,7 +191,7 @@ class ProductData:
     @staticmethod
     def createInstance(type):
         """
-           Factory method which creates a value instance of the given type and with exactly one element.
+Factory method which creates a value instance of the given type and with exactly one element.
            @param type the value's type
            @return a new value instance, <code>null</code> if the given type is not known
         """
@@ -200,7 +200,7 @@ class ProductData:
     @staticmethod
     def createInstance(type, numElems):
         """
-           Factory method which creates a value instance of the given type and with the specified number of elements.
+Factory method which creates a value instance of the given type and with the specified number of elements.
            @param type     the value's type
            @param numElems the number of elements, must be greater than zero if type is not {@link ProductData#TYPE_UTC}
            @return a new value instance, <code>null</code> if the given type is not known
@@ -211,7 +211,7 @@ class ProductData:
     @staticmethod
     def createInstance(type, data):
         """
-           Factory method which creates a value instance of the given type and with the specified number of elements.
+Factory method which creates a value instance of the given type and with the specified number of elements.
            @param type the value's type
            @param data if <code>type</code> is <code>TYPE_ASCII</code> the <code>String</code>, otherwise the primitive array type corresponding to <code>type</code>
            @return a new value instance, <code>null</code> if the given type is not known
@@ -261,14 +261,14 @@ class ProductData:
 
     def getType(self):
         """
-           Returns this value's type ID.
+Returns this value's type ID.
         """
         return ProductData_getType1(self._obj)
 
     @staticmethod
     def getElemSize(type):
         """
-           Gets the element size of an element of the given type in bytes.
+Gets the element size of an element of the given type in bytes.
            @param type the element type
            @return the size of a single element in bytes.
            @throws IllegalArgumentException if the type is not supported.
@@ -277,7 +277,7 @@ class ProductData:
 
     def getElemSize(self):
         """
-           Gets the element size of an element of this product data in bytes.
+Gets the element size of an element of this product data in bytes.
            @return the size of a single element in bytes
         """
         return ProductData_getElemSize1(self._obj)
@@ -285,7 +285,7 @@ class ProductData:
     @staticmethod
     def getTypeString(type):
         """
-           Returns a textual representation of the given data type.
+Returns a textual representation of the given data type.
            @return a data type string, <code>null</code> if the type is unknown
         """
         return ProductData_getTypeString2(type)
@@ -293,20 +293,20 @@ class ProductData:
     @staticmethod
     def getType(type):
         """
-           Returns a integer representation of the given data type string.
+Returns a integer representation of the given data type string.
            @return a data type integer, <code>null</code> if the type is unknown
         """
         return ProductData_getType2(type)
 
     def getTypeString(self):
         """
-           Returns this value's data type String.
+Returns this value's data type String.
         """
         return ProductData_getTypeString1(self._obj)
 
     def isInt(self):
         """
-           Tests whether this value has an integer.
+Tests whether this value has an integer.
            @return true, if so
         """
         return ProductData_isInt(self._obj)
@@ -314,21 +314,21 @@ class ProductData:
     @staticmethod
     def isIntType(type):
         """
-           Tests whether the given value type is a signed or unsigned integer type.
+Tests whether the given value type is a signed or unsigned integer type.
            @return true, if so
         """
         return ProductData_isIntType(type)
 
     def isSigned(self):
         """
-           Tests whether the actual instance is an signed data type.
+Tests whether the actual instance is an signed data type.
            @return true, if so
         """
         return ProductData_isSigned(self._obj)
 
     def isUnsigned(self):
         """
-           Tests whether the actual instance is an unsigned data type.
+Tests whether the actual instance is an unsigned data type.
            @return true, if so
         """
         return ProductData_isUnsigned(self._obj)
@@ -336,7 +336,7 @@ class ProductData:
     @staticmethod
     def isUIntType(type):
         """
-           Tests whether the given value type is an unsigned integer type.
+Tests whether the given value type is an unsigned integer type.
            @return true, if so
         """
         return ProductData_isUIntType(type)
@@ -344,27 +344,27 @@ class ProductData:
     @staticmethod
     def isFloatingPointType(type):
         """
-           Tests whether the given value type is a floating point type.
+Tests whether the given value type is a floating point type.
            @return true, if so
         """
         return ProductData_isFloatingPointType(type)
 
     def isScalar(self):
         """
-           Tests if this value is a scalar.
+Tests if this value is a scalar.
            @return true, if so
         """
         return ProductData_isScalar(self._obj)
 
     def getNumElems(self):
         """
-           Returns the number of data elements this value has.
+Returns the number of data elements this value has.
         """
         return ProductData_getNumElems(self._obj)
 
     def getElemInt(self):
         """
-           Returns the value as an <code>int</code>. The method assumes that this value is a scalar and therefore simply
+Returns the value as an <code>int</code>. The method assumes that this value is a scalar and therefore simply
            returns <code>getElemIntAt(0)</code>.
            @see #getElemIntAt(int index)
         """
@@ -372,7 +372,7 @@ class ProductData:
 
     def getElemUInt(self):
         """
-           Returns the value as an unsigned <code>int</code> given as a <code>long</code>. The method assumes that this
+Returns the value as an unsigned <code>int</code> given as a <code>long</code>. The method assumes that this
            value is a scalar and therefore simply returns <code>getElemUIntAt(0)</code>.
            @see #getElemUIntAt(int index)
         """
@@ -380,7 +380,7 @@ class ProductData:
 
     def getElemFloat(self):
         """
-           Returns the value as an <code>float</code>. The method assumes that this value is a scalar and therefore
+Returns the value as an <code>float</code>. The method assumes that this value is a scalar and therefore
            simply returns <code>getElemFloatAt(0)</code>.
            @see #getElemFloatAt(int index)
         """
@@ -388,7 +388,7 @@ class ProductData:
 
     def getElemDouble(self):
         """
-           Returns the value as an <code>double</code>. The method assumes that this value is a scalar and therefore
+Returns the value as an <code>double</code>. The method assumes that this value is a scalar and therefore
            simply returns <code>getElemDoubleAt(0)</code>.
            @see #getElemDoubleAt(int index)
         """
@@ -396,7 +396,7 @@ class ProductData:
 
     def getElemString(self):
         """
-           Returns the value as a <code>String</code>. The text returned is the comma-separated list of elements contained
+Returns the value as a <code>String</code>. The text returned is the comma-separated list of elements contained
            in this value.
            @return a text representing this fields value, never <code>null</code>
         """
@@ -404,7 +404,7 @@ class ProductData:
 
     def getElemBoolean(self):
         """
-           Returns the value as an <code>boolean</code>. The method assumes that this value is a scalar and therefore
+Returns the value as an <code>boolean</code>. The method assumes that this value is a scalar and therefore
            simply returns <code>getElemBooleanAt(0)</code>.
            @see #getElemBooleanAt(int index)
         """
@@ -412,7 +412,7 @@ class ProductData:
 
     def getElemIntAt(self, index):
         """
-           Gets the value element with the given index as an <code>int</code>.
+Gets the value element with the given index as an <code>int</code>.
            @param index the value index, must be <code>&gt;=0</code> and <code>&lt;getNumDataElems()</code>
            @throws IndexOutOfBoundsException if the index is out of bounds
         """
@@ -420,7 +420,7 @@ class ProductData:
 
     def getElemUIntAt(self, index):
         """
-           Gets the value element with the given index as a <code>long</code>.
+Gets the value element with the given index as a <code>long</code>.
            @param index the value index, must be <code>&gt;=0</code> and <code>&lt;getNumDataElems()</code>
            @throws IndexOutOfBoundsException if the index is out of bounds
         """
@@ -428,7 +428,7 @@ class ProductData:
 
     def getElemFloatAt(self, index):
         """
-           Gets the value element with the given index as a <code>float</code>.
+Gets the value element with the given index as a <code>float</code>.
            @param index the value index, must be <code>&gt;=0</code> and <code>&lt;getNumDataElems()</code>
            @throws IndexOutOfBoundsException if the index is out of bounds
         """
@@ -436,7 +436,7 @@ class ProductData:
 
     def getElemDoubleAt(self, index):
         """
-           Gets the value element with the given index as a <code>double</code>.
+Gets the value element with the given index as a <code>double</code>.
            @param index the value index, must be <code>&gt;=0</code> and <code>&lt;getNumDataElems()</code>
            @throws IndexOutOfBoundsException if the index is out of bounds
         """
@@ -444,7 +444,7 @@ class ProductData:
 
     def getElemStringAt(self, index):
         """
-           Gets the value element with the given index as a <code>String</code>.
+Gets the value element with the given index as a <code>String</code>.
            @param index the value index, must be <code>&gt;=0</code> and <code>&lt;getNumDataElems()</code>
            @throws IndexOutOfBoundsException if the index is out of bounds
         """
@@ -452,7 +452,7 @@ class ProductData:
 
     def getElemBooleanAt(self, index):
         """
-           Gets the value element with the given index as a <code>boolean</code>.
+Gets the value element with the given index as a <code>boolean</code>.
            @param index the value index, must be <code>&gt;=0</code> and <code>&lt;getNumDataElems()</code>
            @throws IndexOutOfBoundsException if the index is out of bounds
         """
@@ -460,7 +460,7 @@ class ProductData:
 
     def setElemInt(self, value):
         """
-           Sets the value as an <code>int</code>. The method assumes that this value is a scalar and therefore simply
+Sets the value as an <code>int</code>. The method assumes that this value is a scalar and therefore simply
            calls <code>setElemInt(0, value)</code>.
            @param value the value to be set
            @see #setElemIntAt(int index, int value)
@@ -470,7 +470,7 @@ class ProductData:
 
     def setElemUInt(self, value):
         """
-           Sets the value as an unsigned <code>int</code> given as a <code>long</code>. The method assumes that this
+Sets the value as an unsigned <code>int</code> given as a <code>long</code>. The method assumes that this
            value is a scalar and therefore simply calls <code>setElemUInt(0, value)</code>.
            @param value the value to be set
            @see #setElemUIntAt(int index, long value)
@@ -480,7 +480,7 @@ class ProductData:
 
     def setElemFloat(self, value):
         """
-           Sets the value as a <code>float</code>. The method assumes that this value is a scalar and therefore simply
+Sets the value as a <code>float</code>. The method assumes that this value is a scalar and therefore simply
            calls <code>setElemFloatAt(0, value)</code>.
            @param value the value to be set
            @see #setElemFloatAt(int index, float value)
@@ -490,7 +490,7 @@ class ProductData:
 
     def setElemDouble(self, value):
         """
-           Sets the value as a <code>double</code>. The method assumes that this value is a scalar and therefore simply
+Sets the value as a <code>double</code>. The method assumes that this value is a scalar and therefore simply
            calls <code>setElemDoubleAt(0)</code>.
            @param value the value to be set
            @see #setElemDoubleAt(int index, double value)
@@ -500,7 +500,7 @@ class ProductData:
 
     def setElemString(self, value):
         """
-           Sets the value as a <code>String</code>. The method assumes that this value is a scalar and therefore simply
+Sets the value as a <code>String</code>. The method assumes that this value is a scalar and therefore simply
            calls <code>setElemStringAt(0)</code>.
            @param value the value to be set
            @see #setElemStringAt
@@ -510,7 +510,7 @@ class ProductData:
 
     def setElemBoolean(self, value):
         """
-           Sets the value as a <code>boolean</code>. The method assumes that this value is a scalar and therefore simply
+Sets the value as a <code>boolean</code>. The method assumes that this value is a scalar and therefore simply
            calls <code>setElemDoubleAt(0)</code>.
            @param value the value to be set
            @see #setElemBooleanAt(int index, boolean value)
@@ -520,7 +520,7 @@ class ProductData:
 
     def setElemIntAt(self, index, value):
         """
-           Sets the value at the specified index as an <code>int</code>.
+Sets the value at the specified index as an <code>int</code>.
            @param index the value index, must be <code>&gt;=0</code> and <code>&lt;getNumDataElems()</code>
            @param value the value to be set
            @throws IndexOutOfBoundsException if the index is out of bounds
@@ -530,7 +530,7 @@ class ProductData:
 
     def setElemUIntAt(self, index, value):
         """
-           Sets the value at the specified index as an unsigned <code>int</code> given as a <code>long</code>.
+Sets the value at the specified index as an unsigned <code>int</code> given as a <code>long</code>.
            @param index the value index, must be <code>&gt;=0</code> and <code>&lt;getNumDataElems()</code>
            @param value the value to be set
            @throws IndexOutOfBoundsException if the index is out of bounds
@@ -540,7 +540,7 @@ class ProductData:
 
     def setElemFloatAt(self, index, value):
         """
-           Sets the value at the specified index as a <code>float</code>.
+Sets the value at the specified index as a <code>float</code>.
            @param index the value index, must be <code>&gt;=0</code> and <code>&lt;getNumDataElems()</code>
            @param value the value to be set
            @throws IndexOutOfBoundsException if the index is out of bounds
@@ -550,7 +550,7 @@ class ProductData:
 
     def setElemDoubleAt(self, index, value):
         """
-           Sets the value at the specified index as a <code>double</code>.
+Sets the value at the specified index as a <code>double</code>.
            @param index the value index, must be <code>&gt;=0</code> and <code>&lt;getNumDataElems()</code>
            @param value the value to be set
            @throws IndexOutOfBoundsException if the index is out of bounds
@@ -560,7 +560,7 @@ class ProductData:
 
     def setElemStringAt(self, index, value):
         """
-           Sets the value at the specified index as a <code>String</code>.
+Sets the value at the specified index as a <code>String</code>.
            
            <i>THE METHOD IS CURRENTLY NOT IMPLEMENTED.</i>
            @param index the value index, must be <code>&gt;=0</code> and <code>&lt;getNumDataElems()</code>
@@ -572,7 +572,7 @@ class ProductData:
 
     def setElemBooleanAt(self, index, value):
         """
-           Sets the value at the specified index as a <code>boolean</code>.
+Sets the value at the specified index as a <code>boolean</code>.
            @param index the value index, must be <code>&gt;=0</code> and <code>&lt;getNumDataElems()</code>
            @param value the value to be set
            @throws IndexOutOfBoundsException if the index is out of bounds
@@ -582,7 +582,7 @@ class ProductData:
 
     def getElems(self):
         """
-           Returns the internal value. The actual type of the returned object should only be one of <ol>
+Returns the internal value. The actual type of the returned object should only be one of <ol>
            <li><code>byte[]</code> - for signed/unsigned 8-bit integer fields</li> <li><code>short[]</code> - for
            signed/unsigned 16-bit integer fields</li> <li><code>int[]</code> - for signed/unsigned 32-bit integer
            fields</li> <li><code>float[]</code> - for signed 32-bit floating point fields</li> <li><code>double[]</code> -
@@ -593,7 +593,7 @@ class ProductData:
 
     def setElems(self, data):
         """
-           Sets the internal value. The actual type of the given data object should only be one of <ol>
+Sets the internal value. The actual type of the given data object should only be one of <ol>
            <li><code>byte[]</code> - for signed/unsigned 8-bit integer fields</li> <li><code>short[]</code> - for
            signed/unsigned 16-bit integer fields</li> <li><code>int[]</code> - for signed/unsigned 32-bit integer
            fields</li> <li><code>float[]</code> - for signed 32-bit floating point fields</li> <li><code>double[]</code> -
@@ -605,7 +605,7 @@ class ProductData:
 
     def readFrom(self, input):
         """
-           Reads all elements of this <code>ProductData</code> instance from to the given input stream.
+Reads all elements of this <code>ProductData</code> instance from to the given input stream.
            
             The method subsequentially reads the elements at <code>0</code> to <code>getNumElems()-1</code> of this
            <code>ProductData</code> instance from the given input stream.<br> Reading starts at the current seek position
@@ -618,7 +618,7 @@ class ProductData:
 
     def readFrom(self, pos, input):
         """
-           Reads a single element of this <code>ProductData</code> instance from to the given output stream.
+Reads a single element of this <code>ProductData</code> instance from to the given output stream.
            
             The method reads the element at <code>pos</code> of this <code>ProductData</code> instance from the given
            output stream.<br> Reading starts at the current seek position within the output stream.
@@ -631,7 +631,7 @@ class ProductData:
 
     def readFrom(self, startPos, numElems, input):
         """
-           Reads elements of this <code>ProductData</code> instance from the given output stream.
+Reads elements of this <code>ProductData</code> instance from the given output stream.
            
             The method subsequentially reads the elements at <code>startPos</code> to <code>startPos+numElems-1</code> of
            this <code>ProductData</code> instance from the given input stream.<br> Reading starts at the current seek
@@ -646,7 +646,7 @@ class ProductData:
 
     def readFrom(self, startPos, numElems, input, inputPos):
         """
-           Reads elements into this <code>ProductData</code> instance from the given input stream.
+Reads elements into this <code>ProductData</code> instance from the given input stream.
            
             The method subsequentially reads the elements at <code>startPos</code> to <code>startPos+numElems-1</code> of
            this <code>ProductData</code> instance from the given input stream.<br> Reading starts at <code>inputPos</code>
@@ -663,7 +663,7 @@ class ProductData:
 
     def writeTo(self, output):
         """
-           Writes all elements of this <code>ProductData</code> instance to to the given output stream.
+Writes all elements of this <code>ProductData</code> instance to to the given output stream.
            
             The method subsequentially writes the elements at <code>0</code> to <code>getNumElems()-1</code> of this
            <code>ProductData</code> instance to the given output stream.<br> Writing starts at the current seek position
@@ -676,7 +676,7 @@ class ProductData:
 
     def writeTo(self, pos, output):
         """
-           Writes a single element of this <code>ProductData</code> instance to to the given output stream.
+Writes a single element of this <code>ProductData</code> instance to to the given output stream.
            
             The method writes the element at <code>pos</code> of this <code>ProductData</code> instance to the given
            output stream.<br> Writing starts at the current seek position within the output stream.
@@ -689,7 +689,7 @@ class ProductData:
 
     def writeTo(self, startPos, numElems, output):
         """
-           Writes elements of this <code>ProductData</code> instance to to the given output stream.
+Writes elements of this <code>ProductData</code> instance to to the given output stream.
            
             The method subsequentially writes the elements at <code>startPos</code> to <code>startPos+numElems-1</code>
            of this <code>ProductData</code> instance to the given output stream.<br> Writing starts at the current seek
@@ -704,7 +704,7 @@ class ProductData:
 
     def writeTo(self, startPos, numElems, output, outputPos):
         """
-           Writes elements of this <code>ProductData</code> instance to to the given output stream.
+Writes elements of this <code>ProductData</code> instance to to the given output stream.
            
             The method subsequentially writes the elements at <code>startPos</code> to <code>startPos+numElems-1</code>
            of this <code>ProductData</code> instance to the given output stream.<br> Writing starts at
@@ -721,26 +721,26 @@ class ProductData:
 
     def toString(self):
         """
-           Returns a string representation of this value which can be used for debugging purposes.
+Returns a string representation of this value which can be used for debugging purposes.
         """
         return ProductData_toString(self._obj)
 
     def hashCode(self):
         """
-           Returns {@link Object#hashCode()}.
+Returns {@link Object#hashCode()}.
         """
         return ProductData_hashCode(self._obj)
 
     def equals(self, other):
         """
-           Returns {@link Object#equals(Object)}.
+Returns {@link Object#equals(Object)}.
            Use {@link #equalElems} in order to perform an element-wise comparision.
         """
         return ProductData_equals(self._obj, other._obj)
 
     def equalElems(self, other):
         """
-           Tests whether this ProductData is equal to another one.
+Tests whether this ProductData is equal to another one.
            Performs an element-wise comparision if the other object is a {@link ProductData} instance of the same data type.
            Otherwise the method behaves like {@link Object#equals(Object)}.
            @param other the other one
@@ -749,7 +749,7 @@ class ProductData:
 
     def dispose(self):
         """
-           Releases all of the resources used by this object instance and all of its owned children. Its primary use is to
+Releases all of the resources used by this object instance and all of its owned children. Its primary use is to
            allow the garbage collector to perform a vanilla job.
            
            This method should be called only if it is for sure that this object instance will never be used again. The
@@ -790,14 +790,14 @@ class IndexCoding:
     @staticmethod
     def newIndexCoding(name):
         """
-           Constructs a new index coding object with the given name.
+Constructs a new index coding object with the given name.
            @param name the name
         """
         return IndexCoding(IndexCoding_newIndexCoding(name))
 
     def getIndex(self, name):
         """
-           Returns a metadata attribute wich is the representation of the index with the given name. This method delegates to
+Returns a metadata attribute wich is the representation of the index with the given name. This method delegates to
            getPropertyValue(String).
            @param name the flag name
            @return a metadata attribute wich is the representation of the flag with the given name
@@ -806,7 +806,7 @@ class IndexCoding:
 
     def getIndexNames(self):
         """
-           Returns a string array which contains the names of all indexes contained in this <code>IndexCoding</code> object.
+Returns a string array which contains the names of all indexes contained in this <code>IndexCoding</code> object.
            @return a string array which contains all names of this <code>FlagCoding</code>.<br> If this
            <code>FlagCoding</code> does not contain any flag, <code>null</code> is returned
         """
@@ -814,7 +814,7 @@ class IndexCoding:
 
     def addIndex(self, name, value, description):
         """
-           Adds a new index definition to this flags coding.
+Adds a new index definition to this flags coding.
            @param name        the index name
            @param value       the index value
            @param description the description text
@@ -825,7 +825,7 @@ class IndexCoding:
 
     def getIndexValue(self, name):
         """
-           Returns the flag mask value for the specified flag name.
+Returns the flag mask value for the specified flag name.
            @param name the flag name
            @return flagMask the flag's bit mask as a 32 bit integer
            @throws IllegalArgumentException if <code>name</code> is null, or a flag with the name does not exist
@@ -834,7 +834,7 @@ class IndexCoding:
 
     def acceptVisitor(self, visitor):
         """
-           Accepts the given visitor. This method implements the well known 'Visitor' design pattern of the gang-of-four.
+Accepts the given visitor. This method implements the well known 'Visitor' design pattern of the gang-of-four.
            The visitor pattern allows to define new operations on the product data model without the need to add more code
            to it. The new operation is implemented by the visitor.
            
@@ -846,7 +846,7 @@ class IndexCoding:
 
     def addElement(self, element):
         """
-           Overrides the base class <code>addElement</code> in order to <b>not</b> add an element to this flag coding
+Overrides the base class <code>addElement</code> in order to <b>not</b> add an element to this flag coding
            because flag codings do not support inner elements.
            @param element the element to be added, always ignored
         """
@@ -855,7 +855,7 @@ class IndexCoding:
 
     def addAttribute(self, attribute):
         """
-           Adds an attribute to this node. If an attribute with the same name already exists, the method does nothing.
+Adds an attribute to this node. If an attribute with the same name already exists, the method does nothing.
            @param attribute the attribute to be added
            @throws IllegalArgumentException if the attribute added is not an integer or does not have a scalar value
         """
@@ -864,7 +864,7 @@ class IndexCoding:
 
     def addSample(self, name, value, description):
         """
-           Adds a new coding value to this sample coding.
+Adds a new coding value to this sample coding.
            @param name        the coding name
            @param value       the value
            @param description the description text
@@ -875,14 +875,14 @@ class IndexCoding:
 
     def getSampleCount(self):
         """
-           Gets the number of coded sample values.
+Gets the number of coded sample values.
            @return the number of coded sample values
         """
         return IndexCoding_getSampleCount(self._obj)
 
     def getSampleName(self, index):
         """
-           Gets the sample name at the specified attribute index.
+Gets the sample name at the specified attribute index.
            @param index the attribute index.
            @return the sample name.
         """
@@ -890,7 +890,7 @@ class IndexCoding:
 
     def getSampleValue(self, index):
         """
-           Gets the sample value at the specified attribute index.
+Gets the sample value at the specified attribute index.
            @param index the attribute index.
            @return the sample value.
         """
@@ -898,7 +898,7 @@ class IndexCoding:
 
     def getElementGroup(self):
         """
-           Gets the group of child elements. The method returns null, if this element has no children.
+Gets the group of child elements. The method returns null, if this element has no children.
            @return The child element group, may be null.
         """
         return ProductNodeGroup(IndexCoding_getElementGroup(self._obj))
@@ -908,7 +908,7 @@ class IndexCoding:
 
     def addElementAt(self, element, index):
         """
-           Adds the given element to this element at index.
+Adds the given element to this element at index.
            @param element the element to added, ignored if <code>null</code>
            @param index   where to put it
         """
@@ -917,7 +917,7 @@ class IndexCoding:
 
     def removeElement(self, element):
         """
-           Removes the given element from this element.
+Removes the given element from this element.
            @param element the element to be removed, ignored if <code>null</code>
            @return true, if so
         """
@@ -925,13 +925,13 @@ class IndexCoding:
 
     def getNumElements(self):
         """
-           @return the number of elements contained in this element.
+@return the number of elements contained in this element.
         """
         return IndexCoding_getNumElements(self._obj)
 
     def getElementAt(self, index):
         """
-           Returns the element at the given index.
+Returns the element at the given index.
            @param index the element index
            @return the element at the given index
            @throws IndexOutOfBoundsException if the index is out of bounds
@@ -940,7 +940,7 @@ class IndexCoding:
 
     def getElementNames(self):
         """
-           Returns a string array containing the names of the groups contained in this element
+Returns a string array containing the names of the groups contained in this element
            @return a string array containing the names of the groups contained in this element. If this element has no
            groups a zero-length-array is returned.
         """
@@ -948,7 +948,7 @@ class IndexCoding:
 
     def getElements(self):
         """
-           Returns an array of elements contained in this element.
+Returns an array of elements contained in this element.
            @return an array of elements contained in this product. If this element has no elements a zero-length-array is
            returned.
         """
@@ -956,7 +956,7 @@ class IndexCoding:
 
     def getElement(self, name):
         """
-           Returns the element with the given name.
+Returns the element with the given name.
            @param name the element name
            @return the element with the given name or <code>null</code> if a element with the given name is not contained in
            this element.
@@ -965,7 +965,7 @@ class IndexCoding:
 
     def containsElement(self, name):
         """
-           Tests if a element with the given name is contained in this element.
+Tests if a element with the given name is contained in this element.
            @param name the name, must not be <code>null</code>
            @return <code>true</code> if a element with the given name is contained in this element, <code>false</code>
            otherwise
@@ -974,7 +974,7 @@ class IndexCoding:
 
     def getElementIndex(self, element):
         """
-           Gets the index of the given element.
+Gets the index of the given element.
            @param element  The element .
            @return The element's index, or -1.
         """
@@ -982,7 +982,7 @@ class IndexCoding:
 
     def removeAttribute(self, attribute):
         """
-           Removes the given attribute from this annotation. If an attribute with the same name already exists, the method
+Removes the given attribute from this annotation. If an attribute with the same name already exists, the method
            does nothing.
            @param attribute the attribute to be removed, <code>null</code> is ignored
            @return <code>true</code> if it was removed
@@ -991,14 +991,14 @@ class IndexCoding:
 
     def getNumAttributes(self):
         """
-           Returns the number of attributes attaached to this node.
+Returns the number of attributes attaached to this node.
            @return the number of attributes
         """
         return IndexCoding_getNumAttributes(self._obj)
 
     def getAttributeAt(self, index):
         """
-           Returns the attribute at the given index.
+Returns the attribute at the given index.
            @param index the attribute index
            @return the attribute, or <code>null</code> if this node does not contain attributes
            @throws IndexOutOfBoundsException
@@ -1007,14 +1007,14 @@ class IndexCoding:
 
     def getAttributeNames(self):
         """
-           Returns the names of all attributes of this node.
+Returns the names of all attributes of this node.
            @return the attribute name array, never <code>null</code>
         """
         return IndexCoding_getAttributeNames(self._obj)
 
     def getAttributes(self):
         """
-           Returns an array of attributes contained in this element.
+Returns an array of attributes contained in this element.
            @return an array of attributes contained in this product. If this element has no attributes a zero-length-array
            is returned.
         """
@@ -1022,7 +1022,7 @@ class IndexCoding:
 
     def getAttribute(self, name):
         """
-           Returns the attribute with the given name.
+Returns the attribute with the given name.
            @param name the attribute name
            @return the attribute with the given name or <code>null</code> if it could not be found
         """
@@ -1030,7 +1030,7 @@ class IndexCoding:
 
     def containsAttribute(self, name):
         """
-           Checks whether this node has an element with the given name.
+Checks whether this node has an element with the given name.
            @param name the attribute name
            @return <code>true</code> if so
         """
@@ -1038,7 +1038,7 @@ class IndexCoding:
 
     def getAttributeIndex(self, attribute):
         """
-           Gets the index of the given attribute.
+Gets the index of the given attribute.
            @param attribute  The attribute.
            @return The attribute's index, or -1.
         """
@@ -1046,7 +1046,7 @@ class IndexCoding:
 
     def getAttributeDouble(self, name, defaultValue):
         """
-           Returns the double value of the attribute with the given name. The given default value is returned if an
+Returns the double value of the attribute with the given name. The given default value is returned if an
            attribute with the given name could not be found in this node.
            @param name         the attribute name
            @param defaultValue the default value
@@ -1057,7 +1057,7 @@ class IndexCoding:
 
     def getAttributeUTC(self, name, defaultValue):
         """
-           Returns the UTC value of the attribute with the given name. The given default value is returned if an
+Returns the UTC value of the attribute with the given name. The given default value is returned if an
            attribute with the given name could not be found in this node.
            @param name         the attribute name
            @param defaultValue the default value
@@ -1067,7 +1067,7 @@ class IndexCoding:
 
     def getAttributeInt(self, name, defaultValue):
         """
-           Returns the integer value of the attribute with the given name. The given default value is returned if an
+Returns the integer value of the attribute with the given name. The given default value is returned if an
            attribute with the given name could not be found in this node.
            @param name         the attribute name
            @param defaultValue the default value
@@ -1078,7 +1078,7 @@ class IndexCoding:
 
     def setAttributeInt(self, name, value):
         """
-           Sets the attribute with the given name to the given integer value. A new attribute with
+Sets the attribute with the given name to the given integer value. A new attribute with
            <code>ProductData.TYPE_INT32</code> is added to this node if an attribute with the given name could not be found
            in this node.
            @param name  the attribute name
@@ -1089,7 +1089,7 @@ class IndexCoding:
 
     def setAttributeDouble(self, name, value):
         """
-           Sets the attribute with the given name to the given double value. A new attribute with
+Sets the attribute with the given name to the given double value. A new attribute with
            <code>ProductData.TYPE_FLOAT64</code> is added to this node if an attribute with the given name could not be found
            in this node.
            @param name  the attribute name
@@ -1100,7 +1100,7 @@ class IndexCoding:
 
     def setAttributeUTC(self, name, value):
         """
-           Sets the attribute with the given name to the given utc value. A new attribute with
+Sets the attribute with the given name to the given utc value. A new attribute with
            <code>ProductData.UTC</code> is added to this node if an attribute with the given name could not be found
            in this node.
            @param name  the attribute name
@@ -1111,7 +1111,7 @@ class IndexCoding:
 
     def getAttributeString(self, name, defaultValue):
         """
-           Returns the string value of the attribute with the given name. The given default value is returned if an
+Returns the string value of the attribute with the given name. The given default value is returned if an
            attribute with the given name could not be found in this node.
            @param name         the attribute name
            @param defaultValue the default value
@@ -1121,7 +1121,7 @@ class IndexCoding:
 
     def setAttributeString(self, name, value):
         """
-           Sets the attribute with the given name to the given string value. A new attribute with
+Sets the attribute with the given name to the given string value. A new attribute with
            <code>ProductData.TYPE_ASCII</code> is added to this node if an attribute with the given name could not be found
            in this node.
            @param name  the attribute name
@@ -1139,7 +1139,7 @@ class IndexCoding:
 
     def dispose(self):
         """
-           Releases all of the resources used by this object instance and all of its owned children. Its primary use is to
+Releases all of the resources used by this object instance and all of its owned children. Its primary use is to
            allow the garbage collector to perform a vanilla job.
            
            This method should be called only if it is for sure that this object instance will never be used again. The
@@ -1152,19 +1152,19 @@ class IndexCoding:
 
     def getOwner(self):
         """
-           @return The owner node of this node.
+@return The owner node of this node.
         """
         return ProductNode(IndexCoding_getOwner(self._obj))
 
     def getName(self):
         """
-           @return This node's name.
+@return This node's name.
         """
         return IndexCoding_getName(self._obj)
 
     def setName(self, name):
         """
-           Sets this product's name.
+Sets this product's name.
            @param name The name.
         """
         IndexCoding_setName(self._obj, name)
@@ -1172,14 +1172,14 @@ class IndexCoding:
 
     def getDescription(self):
         """
-           Returns a short textual description for this products node.
+Returns a short textual description for this products node.
            @return a description or <code>null</code>
         """
         return IndexCoding_getDescription(self._obj)
 
     def setDescription(self, description):
         """
-           Sets a short textual description for this products node.
+Sets a short textual description for this products node.
            @param description a description, can be <code>null</code>
         """
         IndexCoding_setDescription(self._obj, description)
@@ -1187,7 +1187,7 @@ class IndexCoding:
 
     def isModified(self):
         """
-           Returns whether or not this node is modified.
+Returns whether or not this node is modified.
            @return <code>true</code> if so
         """
         return IndexCoding_isModified(self._obj)
@@ -1198,7 +1198,7 @@ class IndexCoding:
     @staticmethod
     def isValidNodeName(name):
         """
-           Tests whether the given name is valid name for a node.
+Tests whether the given name is valid name for a node.
            A valid node name must not start with a dot. Also a valid node name must not contain
            any of the character  <code>\/:*?"&lt;&gt;|</code>
            @param name the name to test
@@ -1208,7 +1208,7 @@ class IndexCoding:
 
     def getProduct(self):
         """
-           Returns the product to which this node belongs to.
+Returns the product to which this node belongs to.
            @return the product, or <code>null</code> if this node was not owned by a product at the time this method was
            called
         """
@@ -1216,21 +1216,21 @@ class IndexCoding:
 
     def getProductReader(self):
         """
-           Returns the product reader for the product to which this node belongs to.
+Returns the product reader for the product to which this node belongs to.
            @return the product reader, or <code>null</code> if no such exists
         """
         return ProductReader(IndexCoding_getProductReader(self._obj))
 
     def getProductWriter(self):
         """
-           Returns the product writer for the product to which this node belongs to.
+Returns the product writer for the product to which this node belongs to.
            @return the product writer, or <code>null</code> if no such exists
         """
         return ProductWriter(IndexCoding_getProductWriter(self._obj))
 
     def getDisplayName(self):
         """
-           Returns this node's display name. The display name is the product reference string with the node name appended.
+Returns this node's display name. The display name is the product reference string with the node name appended.
            Example: The string <code>"[2] <i>node-name</i>"</code> means node <code><i>node-name</i></code> of the
            product with the reference number <code>2</code>.
            @return this node's name with a product prefix <br>or this node's name only if this node's product prefix is
@@ -1241,7 +1241,7 @@ class IndexCoding:
 
     def getProductRefString(self):
         """
-           Gets the product reference string. The product reference string is the product reference number enclosed in
+Gets the product reference string. The product reference string is the product reference number enclosed in
            square brackets. Example: The string <code>"[2]"</code> stands for a product with the reference number
            <code>2</code>.
            @return the product reference string. <br>or <code>null</code> if this node has no product <br>or
@@ -1251,7 +1251,7 @@ class IndexCoding:
 
     def updateExpression(self, oldExternalName, newExternalName):
         """
-           Asks a product node to replace all occurences of and references to the node name
+Asks a product node to replace all occurences of and references to the node name
            given by {@code oldExternalName} with {@code oldExternalName}. Such references most often occur
            in band arithmetic expressions.
            @param oldExternalName The old node name.
@@ -1262,7 +1262,7 @@ class IndexCoding:
 
     def removeFromFile(self, productWriter):
         """
-           Physically remove this node from the file associated with the given product writer. The default implementation
+Physically remove this node from the file associated with the given product writer. The default implementation
            does nothing.
            @param productWriter the product writer to be used to remove this node from the underlying file.
         """
@@ -1315,14 +1315,14 @@ class PixelPos:
     @staticmethod
     def newPixelPos():
         """
-           Constructs and initializes a <code>PixelPos</code> with coordinate (0,&nbsp;0).
+Constructs and initializes a <code>PixelPos</code> with coordinate (0,&nbsp;0).
         """
         return PixelPos(PixelPos_newPixelPos1())
 
     @staticmethod
     def newPixelPos(x, y):
         """
-           Constructs and initializes a <code>PixelPos</code> with the specified coordinate.
+Constructs and initializes a <code>PixelPos</code> with the specified coordinate.
            @param x the x component of the coordinate
            @param y the y component of the coordinate
         """
@@ -1330,14 +1330,14 @@ class PixelPos:
 
     def isValid(self):
         """
-           Tests whether or not this pixel position is valid.
+Tests whether or not this pixel position is valid.
            @return true, if so
         """
         return PixelPos_isValid(self._obj)
 
     def setInvalid(self):
         """
-           Sets this pixel position so that is becomes invalid.
+Sets this pixel position so that is becomes invalid.
         """
         PixelPos_setInvalid(self._obj)
         return
@@ -1447,7 +1447,7 @@ class ProductIO:
     @staticmethod
     def getProductReader(formatName):
         """
-           Gets a product reader for the given format name.
+Gets a product reader for the given format name.
            @param formatName the product format name
            @return a suitable product reader or <code>null</code> if none was found
         """
@@ -1456,7 +1456,7 @@ class ProductIO:
     @staticmethod
     def getProductWriterExtensions(formatName):
         """
-           Gets an array of writer product file extensions for the given format name.
+Gets an array of writer product file extensions for the given format name.
            @param formatName the format name
            @return an array of extensions or null if the format does not exist
         """
@@ -1465,7 +1465,7 @@ class ProductIO:
     @staticmethod
     def getProductWriter(formatName):
         """
-           Gets a product writer for the given format name.
+Gets a product writer for the given format name.
            @param formatName the product format name
            @return a suitable product writer or <code>null</code> if none was found
         """
@@ -1474,7 +1474,7 @@ class ProductIO:
     @staticmethod
     def readProduct(filePath):
         """
-           Reads the data product specified by the given file path.
+Reads the data product specified by the given file path.
            The product returned will be associated with the reader appropriate for the given
            file format (see also {@link Product#getProductReader() Product.productReader}).
            The method does not automatically read band data, thus
@@ -1491,7 +1491,7 @@ class ProductIO:
     @staticmethod
     def getProductReaderForInput(input):
         """
-           Tries to find a product reader instance suitable for the given input.
+Tries to find a product reader instance suitable for the given input.
            The method returns {@code null}, if no
            registered product reader can handle the given {@code input} value.
            
@@ -1508,7 +1508,7 @@ class ProductIO:
     @staticmethod
     def writeProduct(product, filePath, formatName):
         """
-           Writes a product with the specified format to the given file path.
+Writes a product with the specified format to the given file path.
            The method also writes all band data to the file. Therefore the band data must either
            <ld>
            <li>be completely loaded ({@link Band#getRasterData() Band.rasterData} is not null)</li>
@@ -1583,28 +1583,28 @@ class ProductReader:
 
     def getReaderPlugIn(self):
         """
-           Returns the plug-in which created this product reader.
+Returns the plug-in which created this product reader.
            @return the product reader plug-in, should never be <code>null</code>
         """
         return ProductReaderPlugIn(ProductReader_getReaderPlugIn(self._obj))
 
     def getInput(self):
         """
-           Retrives the current input destination object. Thie return value might be <code>null</code> if the
+Retrives the current input destination object. Thie return value might be <code>null</code> if the
            <code>setInput</code> has not been called so far.
         """
         return Object(ProductReader_getInput(self._obj))
 
     def getSubsetDef(self):
         """
-           Returns the subset information with which this a data product is read from its physical source.
+Returns the subset information with which this a data product is read from its physical source.
            @return the subset information, can be <code>null</code>
         """
         return ProductSubsetDef(ProductReader_getSubsetDef(self._obj))
 
     def readProductNodes(self, input, subsetDef):
         """
-           Reads a data product and returns a in-memory representation of it.
+Reads a data product and returns a in-memory representation of it.
            
             The given subset info can be used to specify spatial and spectral portions of the original proudct. If the
            subset is omitted, the complete product is read in.
@@ -1624,7 +1624,7 @@ class ProductReader:
 
     def readBandRasterData(self, destBand, destOffsetX, destOffsetY, destWidth, destHeight, destBuffer, pm):
         """
-           Reads raster data from the data source specified by the given destination band into the given in-memory buffer
+Reads raster data from the data source specified by the given destination band into the given in-memory buffer
            and region.
            
            <h3>Destination band</h3> The destination band is used to identify the data source from which this method
@@ -1661,7 +1661,7 @@ class ProductReader:
 
     def close(self):
         """
-           Closes the access to all currently opened resources such as file input streams and all resources of this children
+Closes the access to all currently opened resources such as file input streams and all resources of this children
            directly owned by this reader. Its primary use is to allow the garbage collector to perform a vanilla job.
            
            This method should be called only if it is for sure that this object instance will never be used again. The
@@ -1739,7 +1739,7 @@ class Band:
     @staticmethod
     def newBand(name, dataType, width, height):
         """
-           Constructs a new <code>Band</code>.
+Constructs a new <code>Band</code>.
            @param name     the name of the new object
            @param dataType the raster data type, must be one of the multiple <code>ProductData.TYPE_<i>X</i></code>
            constants, with the exception of <code>ProductData.TYPE_UINT32</code>
@@ -1750,42 +1750,42 @@ class Band:
 
     def getFlagCoding(self):
         """
-           Gets the flag coding for this band.
+Gets the flag coding for this band.
            @return a non-null value if this band is a flag dataset, <code>null</code> otherwise
         """
         return FlagCoding(Band_getFlagCoding(self._obj))
 
     def isFlagBand(self):
         """
-           Tests whether or not this band is a flag band (<code>getFlagCoding() != null</code>).
+Tests whether or not this band is a flag band (<code>getFlagCoding() != null</code>).
            @return <code>true</code> if so
         """
         return Band_isFlagBand(self._obj)
 
     def getIndexCoding(self):
         """
-           Gets the index coding for this band.
+Gets the index coding for this band.
            @return a non-null value if this band is a flag dataset, <code>null</code> otherwise
         """
         return IndexCoding(Band_getIndexCoding(self._obj))
 
     def isIndexBand(self):
         """
-           Tests whether or not this band is an index band (<code>getIndexCoding() != null</code>).
+Tests whether or not this band is an index band (<code>getIndexCoding() != null</code>).
            @return <code>true</code> if so
         """
         return Band_isIndexBand(self._obj)
 
     def getSampleCoding(self):
         """
-           Gets the sample coding.
+Gets the sample coding.
            @return the sample coding, or {@value null} if not set.
         """
         return SampleCoding(Band_getSampleCoding(self._obj))
 
     def setSampleCoding(self, sampleCoding):
         """
-           Sets the sample coding for this band.
+Sets the sample coding for this band.
            @param sampleCoding the sample coding
            @throws IllegalArgumentException if this band does not contain integer pixels
         """
@@ -1794,14 +1794,14 @@ class Band:
 
     def getSpectralBandIndex(self):
         """
-           Gets the (zero-based) spectral band index.
+Gets the (zero-based) spectral band index.
            @return the (zero-based) spectral band index or <code>-1</code> if it is unknown
         """
         return Band_getSpectralBandIndex(self._obj)
 
     def setSpectralBandIndex(self, spectralBandIndex):
         """
-           Sets the (zero-based) spectral band index.
+Sets the (zero-based) spectral band index.
            @param spectralBandIndex the (zero-based) spectral band index or <code>-1</code> if it is unknown
         """
         Band_setSpectralBandIndex(self._obj, spectralBandIndex)
@@ -1809,7 +1809,7 @@ class Band:
 
     def getSpectralWavelength(self):
         """
-           Gets the spectral wavelength in <code>nm</code> (nanomater) units.
+Gets the spectral wavelength in <code>nm</code> (nanomater) units.
            @return the wave length in nanometers of this band, or zero if this is not a spectral band or the wave length is
            not known.
         """
@@ -1817,7 +1817,7 @@ class Band:
 
     def setSpectralWavelength(self, spectralWavelength):
         """
-           Sets the spectral wavelength in <code>nm</code> (nanomater) units.
+Sets the spectral wavelength in <code>nm</code> (nanomater) units.
            @param spectralWavelength the wavelength in nanometers of this band, or zero if this is not a spectral band or
            the wavelength is not known.
         """
@@ -1826,7 +1826,7 @@ class Band:
 
     def getSpectralBandwidth(self):
         """
-           Gets the spectral bandwidth in <code>nm</code> (nanomater) units.
+Gets the spectral bandwidth in <code>nm</code> (nanomater) units.
            @return the bandwidth in nanometers of this band, or zero if this is not a spectral band or the bandwidth is not
            known.
         """
@@ -1834,7 +1834,7 @@ class Band:
 
     def setSpectralBandwidth(self, spectralBandwidth):
         """
-           Sets the spectral bandwidth in <code>nm</code> (nanomater) units.
+Sets the spectral bandwidth in <code>nm</code> (nanomater) units.
            @param spectralBandwidth the spectral bandwidth in nanometers of this band, or zero if this is not a spectral band
            or the spectral bandwidth is not known.
         """
@@ -1843,7 +1843,7 @@ class Band:
 
     def getSolarFlux(self):
         """
-           Gets the solar flux in <code>mW/(m^2 nm)</code> (milli-watts per square metre per nanometer)
+Gets the solar flux in <code>mW/(m^2 nm)</code> (milli-watts per square metre per nanometer)
            units for the wavelength of this band.
            @return the solar flux for the wavelength of this band, or zero if this is not a spectral band or the solar flux
            is not known.
@@ -1852,7 +1852,7 @@ class Band:
 
     def setSolarFlux(self, solarFlux):
         """
-           Sets the solar flux in <code>mW/(m^2 nm)</code> (milli-watts per square metre per nanometer)
+Sets the solar flux in <code>mW/(m^2 nm)</code> (milli-watts per square metre per nanometer)
            units for the wavelength of this band.
            @param solarFlux the solar flux for the wavelength of this band, or zero if this is not a spectral band or the
            solar flux is not known.
@@ -1862,7 +1862,7 @@ class Band:
 
     def acceptVisitor(self, visitor):
         """
-           Accepts the given visitor. This method implements the well known 'Visitor' design pattern of the gang-of-four.
+Accepts the given visitor. This method implements the well known 'Visitor' design pattern of the gang-of-four.
            The visitor pattern allows to define new operations on the product data model without the need to add more code
            to it. The new operation is implemented by the visitor.
            
@@ -1874,7 +1874,7 @@ class Band:
 
     def toString(self):
         """
-           Creates a string defining this band object.
+Creates a string defining this band object.
         """
         return Band_toString(self._obj)
 
@@ -1884,7 +1884,7 @@ class Band:
 
     def dispose(self):
         """
-           Releases all of the resources used by this object instance and all of its owned children. Its primary use is to
+Releases all of the resources used by this object instance and all of its owned children. Its primary use is to
            allow the garbage collector to perform a vanilla job.
            
            This method should be called only if it is for sure that this object instance will never be used again. The
@@ -1897,7 +1897,7 @@ class Band:
 
     def getSceneRasterData(self):
         """
-           Gets a raster data holding this band's pixel data for an entire product scene. If the data has'nt been loaded so
+Gets a raster data holding this band's pixel data for an entire product scene. If the data has'nt been loaded so
            far the method returns <code>null</code>.
            
            In opposite to the <code>getRasterData</code> method, this method returns raster data that has at least
@@ -1912,7 +1912,7 @@ class Band:
 
     def getPixelInt(self, x, y):
         """
-           Gets the sample for the pixel located at (x,y) as an integer value.
+Gets the sample for the pixel located at (x,y) as an integer value.
            @param x The X co-ordinate of the pixel location
            @param y The Y co-ordinate of the pixel location
            @throws NullPointerException if this band has no raster data
@@ -1923,7 +1923,7 @@ class Band:
 
     def getPixelFloat(self, x, y):
         """
-           Gets the sample for the pixel located at (x,y) as a float value.
+Gets the sample for the pixel located at (x,y) as a float value.
            @param x The X co-ordinate of the pixel location
            @param y The Y co-ordinate of the pixel location
            @throws NullPointerException if this band has no raster data
@@ -1934,7 +1934,7 @@ class Band:
 
     def getPixelDouble(self, x, y):
         """
-           Gets the sample for the pixel located at (x,y) as a double value.
+Gets the sample for the pixel located at (x,y) as a double value.
            @param x The X co-ordinate of the pixel location
            @param y The Y co-ordinate of the pixel location
            @throws NullPointerException if this band has no raster data
@@ -1945,7 +1945,7 @@ class Band:
 
     def setPixelInt(self, x, y, pixelValue):
         """
-           Sets the pixel at the given pixel co-ordinate to the given pixel value.
+Sets the pixel at the given pixel co-ordinate to the given pixel value.
            @param x          The X co-ordinate of the pixel location
            @param y          The Y co-ordinate of the pixel location
            @param pixelValue the new pixel value
@@ -1956,7 +1956,7 @@ class Band:
 
     def setPixelFloat(self, x, y, pixelValue):
         """
-           Sets the pixel at the given pixel coordinate to the given pixel value.
+Sets the pixel at the given pixel coordinate to the given pixel value.
            @param x          The X co-ordinate of the pixel location
            @param y          The Y co-ordinate of the pixel location
            @param pixelValue the new pixel value
@@ -1967,7 +1967,7 @@ class Band:
 
     def setPixelDouble(self, x, y, pixelValue):
         """
-           Sets the pixel value at the given pixel coordinate to the given pixel value.
+Sets the pixel value at the given pixel coordinate to the given pixel value.
            @param x          The X co-ordinate of the pixel location
            @param y          The Y co-ordinate of the pixel location
            @param pixelValue the new pixel value
@@ -1978,7 +1978,7 @@ class Band:
 
     def setPixels(self, x, y, w, h, pixels):
         """
-           Sets a range of pixels specified by the coordinates as integer array. Copies the data to the memory buffer of
+Sets a range of pixels specified by the coordinates as integer array. Copies the data to the memory buffer of
            data at the specified location. Throws exception when the target buffer is not in memory.
            @param x      x offset into the band
            @param y      y offset into the band
@@ -1992,7 +1992,7 @@ class Band:
 
     def setPixels(self, x, y, w, h, pixels):
         """
-           Sets a range of pixels specified by the coordinates as float array. Copies the data to the memory buffer of data
+Sets a range of pixels specified by the coordinates as float array. Copies the data to the memory buffer of data
            at the specified location. Throws exception when the target buffer is not in memory.
            @param x      x offset into the band
            @param y      y offset into the band
@@ -2006,7 +2006,7 @@ class Band:
 
     def setPixels(self, x, y, w, h, pixels):
         """
-           Sets a range of pixels specified by the coordinates as double array. Copies the data to the memory buffer of data
+Sets a range of pixels specified by the coordinates as double array. Copies the data to the memory buffer of data
            at the specified location. Throws exception when the target buffer is not in memory.
            @param x      x offset into the band
            @param y      y offset into the band
@@ -2020,14 +2020,14 @@ class Band:
 
     def ensureRasterData(self):
         """
-           Ensures that raster data exists
+Ensures that raster data exists
         """
         Band_ensureRasterData(self._obj)
         return
 
     def unloadRasterData(self):
         """
-           Un-loads the raster data for this band.
+Un-loads the raster data for this band.
            
            After this method has been called successfully, the <code>hasRasterData()</code> method returns
            <code>false</code> and <code>getRasterData()</code> returns <code>null</code>.
@@ -2042,7 +2042,7 @@ class Band:
 
     def getSceneRasterWidth(self):
         """
-           Returns the width in pixels of the scene represented by this product raster. By default, the method simply
+Returns the width in pixels of the scene represented by this product raster. By default, the method simply
            returns <code>getRasterWidth()</code>.
            @return the scene width in pixels
         """
@@ -2050,7 +2050,7 @@ class Band:
 
     def getSceneRasterHeight(self):
         """
-           Returns the height in pixels of the scene represented by this product raster. By default, the method simply
+Returns the height in pixels of the scene represented by this product raster. By default, the method simply
            returns <code>getRasterHeight()</code>.
            @return the scene height in pixels
         """
@@ -2058,14 +2058,14 @@ class Band:
 
     def getRasterWidth(self):
         """
-           Returns the width of the raster used by this product raster.
+Returns the width of the raster used by this product raster.
            @return the width of the raster
         """
         return Band_getRasterWidth(self._obj)
 
     def getRasterHeight(self):
         """
-           Returns the height of the raster used by this product raster.
+Returns the height of the raster used by this product raster.
            @return the height of the raster
         """
         return Band_getRasterHeight(self._obj)
@@ -2076,14 +2076,14 @@ class Band:
 
     def getGeoCoding(self):
         """
-           Returns the geo-coding of this {@link RasterDataNode}.
+Returns the geo-coding of this {@link RasterDataNode}.
            @return the geo-coding
         """
         return GeoCoding(Band_getGeoCoding(self._obj))
 
     def setGeoCoding(self, geoCoding):
         """
-           Sets the geo-coding for this {@link RasterDataNode}.
+Sets the geo-coding for this {@link RasterDataNode}.
            Also sets the geo-coding of the parent {@link Product} if it has no geo-coding yet.
            On property change, the method calls {@link #fireProductNodeChanged(String)} with the property
            name {@link #PROPERTY_NAME_GEOCODING}.
@@ -2095,7 +2095,7 @@ class Band:
 
     def getPointing(self):
         """
-           Gets a {@link Pointing} if one is available for this raster.
+Gets a {@link Pointing} if one is available for this raster.
            The methods calls {@link #createPointing()} if a pointing has not been set so far or if its {@link GeoCoding} changed
            since the last creation of this raster's {@link Pointing} instance.
            @return the pointing object, or null if a pointing is not available
@@ -2104,21 +2104,21 @@ class Band:
 
     def canBeOrthorectified(self):
         """
-           Tests if this raster data node can be orthorectified.
+Tests if this raster data node can be orthorectified.
            @return true, if so
         """
         return Band_canBeOrthorectified(self._obj)
 
     def isFloatingPointType(self):
         """
-           Returns <code>true</code> if the pixel data contained in this band is "naturally" a floating point number type.
+Returns <code>true</code> if the pixel data contained in this band is "naturally" a floating point number type.
            @return true, if so
         """
         return Band_isFloatingPointType(self._obj)
 
     def getGeophysicalDataType(self):
         """
-           Returns the geophysical data type of this <code>RasterDataNode</code>. The value returned is always one of the
+Returns the geophysical data type of this <code>RasterDataNode</code>. The value returned is always one of the
            <code>ProductData.TYPE_XXX</code> constants.
            @return the geophysical data type
            @see ProductData
@@ -2128,7 +2128,7 @@ class Band:
 
     def getScalingFactor(self):
         """
-           Gets the scaling factor which is applied to raw {@link <code>ProductData</code>}. The default value is
+Gets the scaling factor which is applied to raw {@link <code>ProductData</code>}. The default value is
            <code>1.0</code> (no factor).
            @return the scaling factor
            @see #isScalingApplied()
@@ -2137,7 +2137,7 @@ class Band:
 
     def setScalingFactor(self, scalingFactor):
         """
-           Sets the scaling factor which is applied to raw {@link <code>ProductData</code>}.
+Sets the scaling factor which is applied to raw {@link <code>ProductData</code>}.
            @param scalingFactor the scaling factor
            @see #isScalingApplied()
         """
@@ -2146,7 +2146,7 @@ class Band:
 
     def getScalingOffset(self):
         """
-           Gets the scaling offset which is applied to raw {@link <code>ProductData</code>}. The default value is
+Gets the scaling offset which is applied to raw {@link <code>ProductData</code>}. The default value is
            <code>0.0</code> (no offset).
            @return the scaling offset
            @see #isScalingApplied()
@@ -2155,7 +2155,7 @@ class Band:
 
     def setScalingOffset(self, scalingOffset):
         """
-           Sets the scaling offset which is applied to raw {@link <code>ProductData</code>}.
+Sets the scaling offset which is applied to raw {@link <code>ProductData</code>}.
            @param scalingOffset the scaling offset
            @see #isScalingApplied()
         """
@@ -2164,7 +2164,7 @@ class Band:
 
     def isLog10Scaled(self):
         """
-           Gets whether or not the {@link <code>ProductData</code>} of this band has a negative binominal distribution and
+Gets whether or not the {@link <code>ProductData</code>} of this band has a negative binominal distribution and
            thus the common logarithm (base 10) of the values is stored in the raw data. The default value is
            <code>false</code>.
            @return whether or not the data is logging-10 scaled
@@ -2174,7 +2174,7 @@ class Band:
 
     def setLog10Scaled(self, log10Scaled):
         """
-           Sets whether or not the {@link <code>ProductData</code>} of this band has a negative binominal distribution and
+Sets whether or not the {@link <code>ProductData</code>} of this band has a negative binominal distribution and
            thus the common logarithm (base 10) of the values is stored in the raw data.
            @param log10Scaled whether or not the data is logging-10 scaled
            @see #isScalingApplied()
@@ -2184,7 +2184,7 @@ class Band:
 
     def isScalingApplied(self):
         """
-           Tests whether scaling of raw raster data values is applied before they are returned as geophysically meaningful
+Tests whether scaling of raw raster data values is applied before they are returned as geophysically meaningful
            pixel values. The methods which return geophysical pixel values are all {@link #getPixels(int, int, int, int, int[])},
            {@link #setPixels(int, int, int, int, int[])}, {@link #readPixels(int, int, int, int, int[])} and
            {@link #writePixels(int, int, int, int, int[])} methods as well as the <code>getPixel&lt;Type&gt;</code> and
@@ -2200,7 +2200,7 @@ class Band:
     @staticmethod
     def isValidMaskProperty(propertyName):
         """
-           Tests if the given name is the name of a property which is relevant for the computation of the valid mask.
+Tests if the given name is the name of a property which is relevant for the computation of the valid mask.
            @param propertyName the  name to test
            @return {@code true}, if so.
         """
@@ -2208,7 +2208,7 @@ class Band:
 
     def isNoDataValueSet(self):
         """
-           Tests whether or not a no-data value has been specified. The no-data value is not-specified unless either
+Tests whether or not a no-data value has been specified. The no-data value is not-specified unless either
            {@link #setNoDataValue(double)} or {@link #setGeophysicalNoDataValue(double)} is called.
            @return true, if so
            @see #isNoDataValueUsed()
@@ -2218,14 +2218,14 @@ class Band:
 
     def clearNoDataValue(self):
         """
-           Clears the no-data value, so that {@link #isNoDataValueSet()} will return <code>false</code>.
+Clears the no-data value, so that {@link #isNoDataValueSet()} will return <code>false</code>.
         """
         Band_clearNoDataValue(self._obj)
         return
 
     def isNoDataValueUsed(self):
         """
-           Tests whether or not the no-data value is used.
+Tests whether or not the no-data value is used.
            The no-data value is used to determine valid pixels. For more information
            on valid pixels, please refer to the documentation of the {@link #isPixelValid(int, int, javax.media.jai.ROI)}
            method.
@@ -2237,7 +2237,7 @@ class Band:
 
     def setNoDataValueUsed(self, noDataValueUsed):
         """
-           Sets whether or not the no-data value is used.
+Sets whether or not the no-data value is used.
            If the no-data value is enabled and the no-data value has not been set so far,
            a default no-data value it is set with a value of to zero.
            The no-data value is used to determine valid pixels. For more information
@@ -2253,7 +2253,7 @@ class Band:
 
     def getNoDataValue(self):
         """
-           Gets the no-data value as a primitive <code>double</code>.
+Gets the no-data value as a primitive <code>double</code>.
            Note that the value returned is NOT necessarily the same as the value returned by
            {@link #getGeophysicalNoDataValue()} because no scaling is applied.
            The no-data value is used to determine valid pixels. For more information
@@ -2268,7 +2268,7 @@ class Band:
 
     def setNoDataValue(self, noDataValue):
         """
-           Sets the no-data value as a primitive <code>double</code>.
+Sets the no-data value as a primitive <code>double</code>.
            Note that the given value is related to the "raw", un-scaled raster data.
            In order to set the geophysical, scaled no-data value use the method
            {@link #setGeophysicalNoDataValue(double)}.
@@ -2286,7 +2286,7 @@ class Band:
 
     def getGeophysicalNoDataValue(self):
         """
-           Gets the geophysical no-data value which is simply the scaled "raw" no-data value
+Gets the geophysical no-data value which is simply the scaled "raw" no-data value
            returned by {@link #getNoDataValue()}.
            The no-data value is used to determine valid pixels. For more information
            on valid pixels, please refer to the documentation of the {@link #isPixelValid(int, int, javax.media.jai.ROI)}
@@ -2298,7 +2298,7 @@ class Band:
 
     def setGeophysicalNoDataValue(self, noDataValue):
         """
-           Sets the geophysical no-data value which is simply the scaled "raw" no-data value
+Sets the geophysical no-data value which is simply the scaled "raw" no-data value
            returned by {@link #getNoDataValue()}.
            The no-data value is used to determine valid pixels. For more information
            on valid pixels, please refer to the documentation of the {@link #isPixelValid(int, int, javax.media.jai.ROI)}
@@ -2314,7 +2314,7 @@ class Band:
 
     def getValidPixelExpression(self):
         """
-           Gets the expression that is used to determine whether a pixel is valid or not.
+Gets the expression that is used to determine whether a pixel is valid or not.
            For more information
            on valid pixels, please refer to the documentation of the {@link #isPixelValid(int, int, javax.media.jai.ROI)}
            method.
@@ -2324,7 +2324,7 @@ class Band:
 
     def setValidPixelExpression(self, validPixelExpression):
         """
-           Sets the expression that is used to determine whether a pixel is valid or not.
+Sets the expression that is used to determine whether a pixel is valid or not.
            The valid-pixel expression is used to determine valid pixels. For more information
            on valid pixels, please refer to the documentation of the {@link #isPixelValid(int, int, javax.media.jai.ROI)}
            method.
@@ -2337,7 +2337,7 @@ class Band:
 
     def isValidMaskUsed(self):
         """
-           Tests whether or not this raster data node uses a data-mask in order to determine valid pixels. The method returns
+Tests whether or not this raster data node uses a data-mask in order to determine valid pixels. The method returns
            true if either {@link #isValidPixelExpressionSet()} or {@link #isNoDataValueUsed()} returns true.
            The data-mask is used to determine valid pixels. For more information
            on valid pixels, please refer to the documentation of the {@link #isPixelValid(int, int, javax.media.jai.ROI)}
@@ -2348,7 +2348,7 @@ class Band:
 
     def resetValidMask(self):
         """
-           Resets the valid mask of this raster.
+Resets the valid mask of this raster.
            The mask will be lazily regenerated when requested the next time.
         """
         Band_resetValidMask(self._obj)
@@ -2356,7 +2356,7 @@ class Band:
 
     def getValidMaskExpression(self):
         """
-           Gets the expression used for the computation of the mask which identifies valid pixel values.
+Gets the expression used for the computation of the mask which identifies valid pixel values.
            It recognizes the value of the {@link #getNoDataValue() noDataValue} and the
            {@link #getValidPixelExpression() validPixelExpression} properties, if any.
            The method returns {@code null},  if none of these properties are set.
@@ -2369,14 +2369,14 @@ class Band:
 
     def updateExpression(self, oldExternalName, newExternalName):
         """
-           {@inheritDoc}
+{@inheritDoc}
         """
         Band_updateExpression(self._obj, oldExternalName, newExternalName)
         return
 
     def hasRasterData(self):
         """
-           Returns true if the raster data of this <code>RasterDataNode</code> is loaded or elsewhere available, otherwise
+Returns true if the raster data of this <code>RasterDataNode</code> is loaded or elsewhere available, otherwise
            false.
            @return true, if so.
         """
@@ -2384,7 +2384,7 @@ class Band:
 
     def getRasterData(self):
         """
-           Gets the raster data for this dataset. If the data has'nt been loaded so far the method returns
+Gets the raster data for this dataset. If the data has'nt been loaded so far the method returns
            <code>null</code>.
            @return the raster data for this band, or <code>null</code> if data has not been loaded
         """
@@ -2392,7 +2392,7 @@ class Band:
 
     def setRasterData(self, rasterData):
         """
-           Sets the raster data of this dataset.
+Sets the raster data of this dataset.
            
             Note that this method does not copy data at all. If the supplied raster data is compatible with this product
            raster, then simply its reference is stored. Modifications in the supplied raster data will also affect this
@@ -2405,7 +2405,7 @@ class Band:
 
     def loadRasterData(self):
         """
-           @throws java.io.IOException if an I/O error occurs
+@throws java.io.IOException if an I/O error occurs
            @see #loadRasterData(com.bc.ceres.core.ProgressMonitor)
         """
         Band_loadRasterData(self._obj)
@@ -2413,7 +2413,7 @@ class Band:
 
     def isPixelValid(self, x, y):
         """
-           Checks whether or not the pixel located at (x,y) is valid.
+Checks whether or not the pixel located at (x,y) is valid.
            A pixel is assumed to be valid either if  {@link #getValidMaskImage() validMaskImage} is null or
            or if the bit corresponding to (x,y) is set within the returned mask image.
            
@@ -2433,7 +2433,7 @@ class Band:
 
     def getSampleInt(self, x, y):
         """
-           Gets a geo-physical sample value at the given pixel coordinate as {@code int} value.
+Gets a geo-physical sample value at the given pixel coordinate as {@code int} value.
            
            <i>Note: This method does not belong to the public API.
            It has been added by Norman (2011-08-09) in order to perform performance tests.</i>
@@ -2445,7 +2445,7 @@ class Band:
 
     def getSampleFloat(self, x, y):
         """
-           Gets a geo-physical sample value at the given pixel coordinate as {@code float} value.
+Gets a geo-physical sample value at the given pixel coordinate as {@code float} value.
            
            <i>Note: This method does not belong to the public API.
            It has been added by Norman (2011-08-09) in order to perform performance tests.</i>
@@ -2457,57 +2457,57 @@ class Band:
 
     def getPixels(self, x, y, w, h, pixels):
         """
-           @see #getPixels(int, int, int, int, int[], ProgressMonitor)
+@see #getPixels(int, int, int, int, int[], ProgressMonitor)
         """
         return Band_getPixelsInt(self._obj, x, y, w, h, pixels)
 
     def getPixels(self, x, y, w, h, pixels):
         """
-           @see #getPixels(int, int, int, int, float[], ProgressMonitor)
+@see #getPixels(int, int, int, int, float[], ProgressMonitor)
         """
         return Band_getPixelsFloat(self._obj, x, y, w, h, pixels)
 
     def getPixels(self, x, y, w, h, pixels):
         """
-           @see #getPixels(int, int, int, int, double[], ProgressMonitor)
+@see #getPixels(int, int, int, int, double[], ProgressMonitor)
         """
         return Band_getPixelsDouble(self._obj, x, y, w, h, pixels)
 
     def readPixels(self, x, y, w, h, pixels):
         """
-           @see #readPixels(int, int, int, int, int[], ProgressMonitor)
+@see #readPixels(int, int, int, int, int[], ProgressMonitor)
         """
         return Band_readPixelsInt(self._obj, x, y, w, h, pixels)
 
     def readPixels(self, x, y, w, h, pixels):
         """
-           @see #readPixels(int, int, int, int, float[], ProgressMonitor)
+@see #readPixels(int, int, int, int, float[], ProgressMonitor)
         """
         return Band_readPixelsFloat(self._obj, x, y, w, h, pixels)
 
     def readPixels(self, x, y, w, h, pixels):
         """
-           @see #readPixels(int, int, int, int, double[], ProgressMonitor)
+@see #readPixels(int, int, int, int, double[], ProgressMonitor)
         """
         return Band_readPixelsDouble(self._obj, x, y, w, h, pixels)
 
     def writePixels(self, x, y, w, h, pixels):
         """
-           @see #writePixels(int, int, int, int, int[], ProgressMonitor)
+@see #writePixels(int, int, int, int, int[], ProgressMonitor)
         """
         Band_writePixelsInt(self._obj, x, y, w, h, pixels)
         return
 
     def writePixels(self, x, y, w, h, pixels):
         """
-           @see #writePixels(int, int, int, int, float[], ProgressMonitor)
+@see #writePixels(int, int, int, int, float[], ProgressMonitor)
         """
         Band_writePixelsFloat(self._obj, x, y, w, h, pixels)
         return
 
     def writePixels(self, x, y, w, h, pixels):
         """
-           @see #writePixels(int, int, int, int, double[], ProgressMonitor)
+@see #writePixels(int, int, int, int, double[], ProgressMonitor)
         """
         Band_writePixelsDouble(self._obj, x, y, w, h, pixels)
         return
@@ -2517,7 +2517,7 @@ class Band:
 
     def readRasterDataFully(self):
         """
-           @throws java.io.IOException if an I/O error occurs
+@throws java.io.IOException if an I/O error occurs
            @see #readRasterDataFully(ProgressMonitor)
         """
         Band_readRasterDataFully(self._obj)
@@ -2525,7 +2525,7 @@ class Band:
 
     def readRasterData(self, offsetX, offsetY, width, height, rasterData):
         """
-           Reads raster data from the node's associated data source into the given data
+Reads raster data from the node's associated data source into the given data
            buffer.
            @param offsetX    the X-offset in the raster co-ordinates where reading starts
            @param offsetY    the Y-offset in the raster co-ordinates where reading starts
@@ -2551,7 +2551,7 @@ class Band:
 
     def createCompatibleRasterData(self):
         """
-           Creates raster data that is compatible to this dataset's data type. The data buffer returned contains exactly
+Creates raster data that is compatible to this dataset's data type. The data buffer returned contains exactly
            <code>getRasterWidth()*getRasterHeight()</code> elements of a compatible data type.
            @return raster data compatible with this product raster
            @see #createCompatibleSceneRasterData
@@ -2560,7 +2560,7 @@ class Band:
 
     def createCompatibleSceneRasterData(self):
         """
-           Creates raster data that is compatible to this dataset's data type. The data buffer returned contains exactly
+Creates raster data that is compatible to this dataset's data type. The data buffer returned contains exactly
            <code>getBandOutputRasterWidth()*getBandOutputRasterHeight()</code> elements of a compatible data type.
            @return raster data compatible with this product raster
            @see #createCompatibleRasterData
@@ -2569,7 +2569,7 @@ class Band:
 
     def createCompatibleRasterData(self, width, height):
         """
-           Creates raster data that is compatible to this dataset's data type. The data buffer returned contains exactly
+Creates raster data that is compatible to this dataset's data type. The data buffer returned contains exactly
            <code>width*height</code> elements of a compatible data type.
            @param width  the width of the raster data to be created
            @param height the height of the raster data to be created
@@ -2581,7 +2581,7 @@ class Band:
 
     def isCompatibleRasterData(self, rasterData, w, h):
         """
-           Tests whether the given parameters specify a compatible raster or not.
+Tests whether the given parameters specify a compatible raster or not.
            @param rasterData the raster data
            @param w          the raster width
            @param h          the raster height
@@ -2591,7 +2591,7 @@ class Band:
 
     def checkCompatibleRasterData(self, rasterData, w, h):
         """
-           Throws an <code>IllegalArgumentException</code> if the given parameters dont specify a compatible raster.
+Throws an <code>IllegalArgumentException</code> if the given parameters dont specify a compatible raster.
            @param rasterData the raster data
            @param w          the raster width
            @param h          the raster height
@@ -2601,14 +2601,14 @@ class Band:
 
     def hasIntPixels(self):
         """
-           Determines whether this raster data node contains integer samples.
+Determines whether this raster data node contains integer samples.
            @return true if this raster data node contains integer samples.
         """
         return Band_hasIntPixels(self._obj)
 
     def createTransectProfileData(self, shape):
         """
-           Creates a transect profile for the given shape (-outline).
+Creates a transect profile for the given shape (-outline).
            @param shape the shape
            @return the profile data
            @throws IOException if an I/O error occurs
@@ -2617,14 +2617,14 @@ class Band:
 
     def getImageInfo(self):
         """
-           Gets the image information for image display.
+Gets the image information for image display.
            @return the image info or null
         """
         return ImageInfo(Band_getImageInfo(self._obj))
 
     def setImageInfo(self, imageInfo):
         """
-           Sets the image information for image display.
+Sets the image information for image display.
            @param imageInfo the image info, can be null
         """
         Band_setImageInfo(self._obj, imageInfo._obj)
@@ -2632,14 +2632,14 @@ class Band:
 
     def fireImageInfoChanged(self):
         """
-           Notifies listeners that the image (display) information has changed.
+Notifies listeners that the image (display) information has changed.
         """
         Band_fireImageInfoChanged(self._obj)
         return
 
     def createDefaultImageInfo(self, histoSkipAreas, histogram):
         """
-           Creates an instance of a default image information.
+Creates an instance of a default image information.
            
            An <code>IllegalStateException</code> is thrown in the case that this raster data node has no raster data.
            @param histoSkipAreas the left (at index 0) and right (at index 1) normalized areas of the raster data
@@ -2653,13 +2653,13 @@ class Band:
 
     def getOverlayMaskGroup(self):
         """
-           @return The overlay mask group.
+@return The overlay mask group.
         """
         return ProductNodeGroup(Band_getOverlayMaskGroup(self._obj))
 
     def createColorIndexedImage(self, pm):
         """
-           Creates an image for this raster data node. The method simply returns <code>ProductUtils.createColorIndexedImage(this,
+Creates an image for this raster data node. The method simply returns <code>ProductUtils.createColorIndexedImage(this,
            null)</code>.
            @param pm a monitor to inform the user about progress
            @return a greyscale/palette-based image for this raster data node
@@ -2670,7 +2670,7 @@ class Band:
 
     def createRgbImage(self, pm):
         """
-           Creates an RGB image for this raster data node.
+Creates an RGB image for this raster data node.
            @param pm a monitor to inform the user about progress
            @return a greyscale/palette-based image for this raster data node
            @throws IOException if the raster data is not loaded so far and reload causes an I/O error
@@ -2680,7 +2680,7 @@ class Band:
 
     def createPixelValidator(self, lineOffset, roi):
         """
-           Creates a validator which can be used to validate indexes of pixels in a flat raster data buffer.
+Creates a validator which can be used to validate indexes of pixels in a flat raster data buffer.
            @param lineOffset the absolute line offset, zero based
            @param roi        an optional ROI
            @return a new validator instance, never null
@@ -2690,7 +2690,7 @@ class Band:
 
     def scale(self, v):
         """
-           Applies the scaling <code>v * scalingFactor + scalingOffset</code> the the given input value. If the
+Applies the scaling <code>v * scalingFactor + scalingOffset</code> the the given input value. If the
            <code>log10Scaled</code> property is true, the result is taken to the power of 10 <i>after</i> the actual
            scaling.
            @param v the input value
@@ -2700,7 +2700,7 @@ class Band:
 
     def scaleInverse(self, v):
         """
-           Applies the inverse scaling <code>(v - scalingOffset) / scalingFactor</code> the the given input value. If the
+Applies the inverse scaling <code>(v - scalingOffset) / scalingFactor</code> the the given input value. If the
            <code>log10Scaled</code> property is true, the common logarithm is applied to the input <i>before</i> the actual
            scaling.
            @param v the input value
@@ -2710,7 +2710,7 @@ class Band:
 
     def getPixelString(self, x, y):
         """
-           Returns the pixel located at (x,y) as a string value.
+Returns the pixel located at (x,y) as a string value.
            @param x the X co-ordinate of the pixel location
            @param y the Y co-ordinate of the pixel location
            @return the pixel value at (x,y) as string or an error message text
@@ -2719,7 +2719,7 @@ class Band:
 
     def isSourceImageSet(self):
         """
-           Returns whether the source image is set on this {@code RasterDataNode}.
+Returns whether the source image is set on this {@code RasterDataNode}.
            @return whether the source image is set.
            @see #getSourceImage()
            @see #setSourceImage(java.awt.image.RenderedImage)
@@ -2730,7 +2730,7 @@ class Band:
 
     def getSourceImage(self):
         """
-           Gets the source image associated with this {@code RasterDataNode}.
+Gets the source image associated with this {@code RasterDataNode}.
            @return The source image. Never {@code null}. In the case that {@link #isSourceImageSet()} returns {@code false},
            the method {@link #createSourceImage()} will be called in order to set and return a valid source image.
            @see #createSourceImage()
@@ -2740,7 +2740,7 @@ class Band:
 
     def isGeophysicalImageSet(self):
         """
-           Returns whether the geophysical image is set on this {@code RasterDataNode}.
+Returns whether the geophysical image is set on this {@code RasterDataNode}.
            
            This method belongs to preliminary API and may be removed or changed in the future.
            @return whether the geophysical image is set.
@@ -2749,20 +2749,20 @@ class Band:
 
     def getGeophysicalImage(self):
         """
-           @return The geophysical source image.
+@return The geophysical source image.
         """
         return MultiLevelImage(Band_getGeophysicalImage(self._obj))
 
     def isValidMaskImageSet(self):
         """
-           Returns wether the valid mask image is set on this {@code RasterDataNode}.
+Returns wether the valid mask image is set on this {@code RasterDataNode}.
            @return Wether the source image is set.
         """
         return Band_isValidMaskImageSet(self._obj)
 
     def getValidMaskImage(self):
         """
-           Gets the valid-mask image associated with this {@code RasterDataNode}.
+Gets the valid-mask image associated with this {@code RasterDataNode}.
            @return The rendered image.
         """
         return MultiLevelImage(Band_getValidMaskImage(self._obj))
@@ -2772,7 +2772,7 @@ class Band:
 
     def getStx(self):
         """
-           Gets the statistics. If statistcs are not yet available,
+Gets the statistics. If statistcs are not yet available,
            the method will compute (possibly inaccurate) statistics and return those.
            
            If accurate statistics are required, the {@link #getStx(boolean, com.bc.ceres.core.ProgressMonitor)}
@@ -2787,7 +2787,7 @@ class Band:
 
     def setStx(self, stx):
         """
-           Sets the statistics. It is the responsibility of the caller to ensure that the given statistics
+Sets the statistics. It is the responsibility of the caller to ensure that the given statistics
            are really related to this {@code RasterDataNode}'s raster data.
            The method fires a property change event for the property {@link #PROPERTY_NAME_STX}.
            This method belongs to preliminary API and may be removed or changed in the future.
@@ -2798,7 +2798,7 @@ class Band:
 
     def getValidShape(self):
         """
-           Gets the shape of the area where this raster data contains valid samples.
+Gets the shape of the area where this raster data contains valid samples.
            The method returns <code>null</code>, if the entire raster contains valid samples.
            @return The shape of the area where the raster data has samples, can be {@code null}.
         """
@@ -2806,40 +2806,40 @@ class Band:
 
     def getDataType(self):
         """
-           Gets the data type of this data node.
+Gets the data type of this data node.
            @return the data type which is always one of the multiple <code>ProductData.TYPE_<i>X</i></code> constants
         """
         return Band_getDataType(self._obj)
 
     def getNumDataElems(self):
         """
-           Gets the number of data elements in this data node.
+Gets the number of data elements in this data node.
         """
         return Band_getNumDataElems(self._obj)
 
     def setData(self, data):
         """
-           Sets the data of this data node.
+Sets the data of this data node.
         """
         Band_setData(self._obj, data._obj)
         return
 
     def getData(self):
         """
-           Gets the data of this data node.
+Gets the data of this data node.
         """
         return ProductData(Band_getData(self._obj))
 
     def getDataElems(self):
         """
-           Gets the data elements of this data node.
+Gets the data elements of this data node.
            @see ProductData#getElems()
         """
         return Object(Band_getDataElems(self._obj))
 
     def getDataElemSize(self):
         """
-           Gets the data element size in bytes.
+Gets the data element size in bytes.
            @see ProductData#getElemSize(int)
         """
         return Band_getDataElemSize(self._obj)
@@ -2860,14 +2860,14 @@ class Band:
 
     def fireProductNodeDataChanged(self):
         """
-           Fires a node data changed event. This method is called after the data of this data node changed.
+Fires a node data changed event. This method is called after the data of this data node changed.
         """
         Band_fireProductNodeDataChanged(self._obj)
         return
 
     def createCompatibleProductData(self, numElems):
         """
-           Creates product data that is compatible to this dataset's data type. The data buffer returned contains exactly
+Creates product data that is compatible to this dataset's data type. The data buffer returned contains exactly
            <code>numElems</code> elements of a compatible data type.
            @param numElems the number of elements, must not be less than one
            @return product data compatible with this data node
@@ -2876,19 +2876,19 @@ class Band:
 
     def getOwner(self):
         """
-           @return The owner node of this node.
+@return The owner node of this node.
         """
         return ProductNode(Band_getOwner(self._obj))
 
     def getName(self):
         """
-           @return This node's name.
+@return This node's name.
         """
         return Band_getName(self._obj)
 
     def setName(self, name):
         """
-           Sets this product's name.
+Sets this product's name.
            @param name The name.
         """
         Band_setName(self._obj, name)
@@ -2896,14 +2896,14 @@ class Band:
 
     def getDescription(self):
         """
-           Returns a short textual description for this products node.
+Returns a short textual description for this products node.
            @return a description or <code>null</code>
         """
         return Band_getDescription(self._obj)
 
     def setDescription(self, description):
         """
-           Sets a short textual description for this products node.
+Sets a short textual description for this products node.
            @param description a description, can be <code>null</code>
         """
         Band_setDescription(self._obj, description)
@@ -2911,7 +2911,7 @@ class Band:
 
     def isModified(self):
         """
-           Returns whether or not this node is modified.
+Returns whether or not this node is modified.
            @return <code>true</code> if so
         """
         return Band_isModified(self._obj)
@@ -2919,7 +2919,7 @@ class Band:
     @staticmethod
     def isValidNodeName(name):
         """
-           Tests whether the given name is valid name for a node.
+Tests whether the given name is valid name for a node.
            A valid node name must not start with a dot. Also a valid node name must not contain
            any of the character  <code>\/:*?"&lt;&gt;|</code>
            @param name the name to test
@@ -2929,7 +2929,7 @@ class Band:
 
     def getProduct(self):
         """
-           Returns the product to which this node belongs to.
+Returns the product to which this node belongs to.
            @return the product, or <code>null</code> if this node was not owned by a product at the time this method was
            called
         """
@@ -2937,21 +2937,21 @@ class Band:
 
     def getProductReader(self):
         """
-           Returns the product reader for the product to which this node belongs to.
+Returns the product reader for the product to which this node belongs to.
            @return the product reader, or <code>null</code> if no such exists
         """
         return ProductReader(Band_getProductReader(self._obj))
 
     def getProductWriter(self):
         """
-           Returns the product writer for the product to which this node belongs to.
+Returns the product writer for the product to which this node belongs to.
            @return the product writer, or <code>null</code> if no such exists
         """
         return ProductWriter(Band_getProductWriter(self._obj))
 
     def getDisplayName(self):
         """
-           Returns this node's display name. The display name is the product reference string with the node name appended.
+Returns this node's display name. The display name is the product reference string with the node name appended.
            Example: The string <code>"[2] <i>node-name</i>"</code> means node <code><i>node-name</i></code> of the
            product with the reference number <code>2</code>.
            @return this node's name with a product prefix <br>or this node's name only if this node's product prefix is
@@ -2962,7 +2962,7 @@ class Band:
 
     def getProductRefString(self):
         """
-           Gets the product reference string. The product reference string is the product reference number enclosed in
+Gets the product reference string. The product reference string is the product reference number enclosed in
            square brackets. Example: The string <code>"[2]"</code> stands for a product with the reference number
            <code>2</code>.
            @return the product reference string. <br>or <code>null</code> if this node has no product <br>or
@@ -2995,7 +2995,7 @@ class Placemark:
     @staticmethod
     def newPlacemark(descriptor, feature):
         """
-           Constructor.
+Constructor.
            @param descriptor The placemark descriptor that created this placemark.
            @param feature    The wrapped feature.
         """
@@ -3004,7 +3004,7 @@ class Placemark:
     @staticmethod
     def createPointPlacemark(descriptor, name, label, text, pixelPos, geoPos, geoCoding):
         """
-           Creates a point placemark.
+Creates a point placemark.
            @param descriptor The placemark descriptor that created this placemark.
            @param name       The placemark's name.
            @param label      The placemark's label. May be {@code null}.
@@ -3018,19 +3018,19 @@ class Placemark:
 
     def getDescriptor(self):
         """
-           @return The placemark descriptor that created this placemark.
+@return The placemark descriptor that created this placemark.
         """
         return PlacemarkDescriptor(Placemark_getDescriptor(self._obj))
 
     def getFeature(self):
         """
-           @return The wrapped {@link SimpleFeature} underlying this placemark.
+@return The wrapped {@link SimpleFeature} underlying this placemark.
         """
         return SimpleFeature(Placemark_getFeature(self._obj))
 
     def getAttributeValue(self, attributeName):
         """
-           Gets the attribute value of the underlying feature.
+Gets the attribute value of the underlying feature.
            @param attributeName The feature's attribute name.
            @return The feature's attribute value, may be {@code null}.
         """
@@ -3038,7 +3038,7 @@ class Placemark:
 
     def setAttributeValue(self, attributeName, attributeValue):
         """
-           Sets the attribute value of the underlying feature.
+Sets the attribute value of the underlying feature.
            @param attributeName  The feature's attribute name.
            @param attributeValue The feature's attribute value, may be {@code null}.
         """
@@ -3047,7 +3047,7 @@ class Placemark:
 
     def setLabel(self, label):
         """
-           Sets this placemark's label.
+Sets this placemark's label.
            @param label the label, if {@code null} an empty label is set.
         """
         Placemark_setLabel(self._obj, label)
@@ -3055,13 +3055,13 @@ class Placemark:
 
     def getLabel(self):
         """
-           @return This placemark's label, cannot be {@code null}.
+@return This placemark's label, cannot be {@code null}.
         """
         return Placemark_getLabel(self._obj)
 
     def setText(self, text):
         """
-           Sets this placemark's (XHTML) text.
+Sets this placemark's (XHTML) text.
            @param text The text, if {@code null} an empty text is set.
         """
         Placemark_setText(self._obj, text)
@@ -3069,13 +3069,13 @@ class Placemark:
 
     def getText(self):
         """
-           @return This placemark's (XHTML) text, cannot be {@code null}.
+@return This placemark's (XHTML) text, cannot be {@code null}.
         """
         return Placemark_getText(self._obj)
 
     def setStyleCss(self, styleCss):
         """
-           Sets this placemark's CSS style.
+Sets this placemark's CSS style.
            @param styleCss The text, if {@code null} an empty text is set.
         """
         Placemark_setStyleCss(self._obj, styleCss)
@@ -3083,13 +3083,13 @@ class Placemark:
 
     def getStyleCss(self):
         """
-           @return This placemark's CSS style, cannot be {@code null}.
+@return This placemark's CSS style, cannot be {@code null}.
         """
         return Placemark_getStyleCss(self._obj)
 
     def acceptVisitor(self, visitor):
         """
-           Accepts the given visitor. This method implements the well known 'Visitor' design pattern of the gang-of-four.
+Accepts the given visitor. This method implements the well known 'Visitor' design pattern of the gang-of-four.
            The visitor pattern allows to define new operations on the product data model without the need to add more code
            to it. The new operation is implemented by the visitor.
            @param visitor the visitor
@@ -3113,7 +3113,7 @@ class Placemark:
 
     def updatePositions(self):
         """
-           Updates pixel and geo position according to the current geometry (model coordinates).
+Updates pixel and geo position according to the current geometry (model coordinates).
         """
         Placemark_updatePositions(self._obj)
         return
@@ -3136,19 +3136,19 @@ class Placemark:
 
     def getOwner(self):
         """
-           @return The owner node of this node.
+@return The owner node of this node.
         """
         return ProductNode(Placemark_getOwner(self._obj))
 
     def getName(self):
         """
-           @return This node's name.
+@return This node's name.
         """
         return Placemark_getName(self._obj)
 
     def setName(self, name):
         """
-           Sets this product's name.
+Sets this product's name.
            @param name The name.
         """
         Placemark_setName(self._obj, name)
@@ -3156,14 +3156,14 @@ class Placemark:
 
     def getDescription(self):
         """
-           Returns a short textual description for this products node.
+Returns a short textual description for this products node.
            @return a description or <code>null</code>
         """
         return Placemark_getDescription(self._obj)
 
     def setDescription(self, description):
         """
-           Sets a short textual description for this products node.
+Sets a short textual description for this products node.
            @param description a description, can be <code>null</code>
         """
         Placemark_setDescription(self._obj, description)
@@ -3171,14 +3171,14 @@ class Placemark:
 
     def isModified(self):
         """
-           Returns whether or not this node is modified.
+Returns whether or not this node is modified.
            @return <code>true</code> if so
         """
         return Placemark_isModified(self._obj)
 
     def setModified(self, modified):
         """
-           Sets this node's modified flag.
+Sets this node's modified flag.
            
            If the modified flag changes to true and this node has an owner, the owner's modified flag is also set to
            true.
@@ -3193,7 +3193,7 @@ class Placemark:
 
     def dispose(self):
         """
-           Releases all of the resources used by this object instance and all of its owned children. Its primary use is to
+Releases all of the resources used by this object instance and all of its owned children. Its primary use is to
            allow the garbage collector to perform a vanilla job.
            
            This method should be called only if it is for sure that this object instance will never be used again. The
@@ -3207,7 +3207,7 @@ class Placemark:
     @staticmethod
     def isValidNodeName(name):
         """
-           Tests whether the given name is valid name for a node.
+Tests whether the given name is valid name for a node.
            A valid node name must not start with a dot. Also a valid node name must not contain
            any of the character  <code>\/:*?"&lt;&gt;|</code>
            @param name the name to test
@@ -3217,7 +3217,7 @@ class Placemark:
 
     def getProduct(self):
         """
-           Returns the product to which this node belongs to.
+Returns the product to which this node belongs to.
            @return the product, or <code>null</code> if this node was not owned by a product at the time this method was
            called
         """
@@ -3225,21 +3225,21 @@ class Placemark:
 
     def getProductReader(self):
         """
-           Returns the product reader for the product to which this node belongs to.
+Returns the product reader for the product to which this node belongs to.
            @return the product reader, or <code>null</code> if no such exists
         """
         return ProductReader(Placemark_getProductReader(self._obj))
 
     def getProductWriter(self):
         """
-           Returns the product writer for the product to which this node belongs to.
+Returns the product writer for the product to which this node belongs to.
            @return the product writer, or <code>null</code> if no such exists
         """
         return ProductWriter(Placemark_getProductWriter(self._obj))
 
     def getDisplayName(self):
         """
-           Returns this node's display name. The display name is the product reference string with the node name appended.
+Returns this node's display name. The display name is the product reference string with the node name appended.
            Example: The string <code>"[2] <i>node-name</i>"</code> means node <code><i>node-name</i></code> of the
            product with the reference number <code>2</code>.
            @return this node's name with a product prefix <br>or this node's name only if this node's product prefix is
@@ -3250,7 +3250,7 @@ class Placemark:
 
     def getProductRefString(self):
         """
-           Gets the product reference string. The product reference string is the product reference number enclosed in
+Gets the product reference string. The product reference string is the product reference number enclosed in
            square brackets. Example: The string <code>"[2]"</code> stands for a product with the reference number
            <code>2</code>.
            @return the product reference string. <br>or <code>null</code> if this node has no product <br>or
@@ -3260,7 +3260,7 @@ class Placemark:
 
     def updateExpression(self, oldExternalName, newExternalName):
         """
-           Asks a product node to replace all occurences of and references to the node name
+Asks a product node to replace all occurences of and references to the node name
            given by {@code oldExternalName} with {@code oldExternalName}. Such references most often occur
            in band arithmetic expressions.
            @param oldExternalName The old node name.
@@ -3271,7 +3271,7 @@ class Placemark:
 
     def removeFromFile(self, productWriter):
         """
-           Physically remove this node from the file associated with the given product writer. The default implementation
+Physically remove this node from the file associated with the given product writer. The default implementation
            does nothing.
            @param productWriter the product writer to be used to remove this node from the underlying file.
         """
@@ -3349,7 +3349,7 @@ class GeoPos:
     @staticmethod
     def newGeoPos(lat, lon):
         """
-           Constructs a new geo-position with the given latitude and longitude values.
+Constructs a new geo-position with the given latitude and longitude values.
            @param lat the geographical latitude in decimal degree, valid range is -90 to +90
            @param lon the geographical longitude in decimal degree, valid range is -180 to +180
         """
@@ -3357,21 +3357,21 @@ class GeoPos:
 
     def getLat(self):
         """
-           Gets the latitude value.
+Gets the latitude value.
            @return the geographical latitude in decimal degree
         """
         return GeoPos_getLat(self._obj)
 
     def getLon(self):
         """
-           Gets the longitude value.
+Gets the longitude value.
            @return the geographical longitude in decimal degree
         """
         return GeoPos_getLon(self._obj)
 
     def setLocation(self, lat, lon):
         """
-           Sets the geographical location of this point.
+Sets the geographical location of this point.
            @param lat the geographical latitude in decimal degree, valid range is -90 to +90
            @param lon the geographical longitude in decimal degree, valid range is -180 to +180
         """
@@ -3380,7 +3380,7 @@ class GeoPos:
 
     def isValid(self):
         """
-           Tests whether or not this geo-position is valid.
+Tests whether or not this geo-position is valid.
            @return true, if so
         """
         return GeoPos_isValid(self._obj)
@@ -3388,21 +3388,21 @@ class GeoPos:
     @staticmethod
     def areValid(a):
         """
-           Tests whether or not all given geo-positions are valid.
+Tests whether or not all given geo-positions are valid.
            @return true, if so
         """
         return GeoPos_areValid(a._obj)
 
     def setInvalid(self):
         """
-           Sets the lat/lon fields so that {@link #isValid()} will return false.
+Sets the lat/lon fields so that {@link #isValid()} will return false.
         """
         GeoPos_setInvalid(self._obj)
         return
 
     def equals(self, obj):
         """
-           Indicates whether some other object is "equal to" this one.
+Indicates whether some other object is "equal to" this one.
            @param obj the reference object with which to compare.
            @return <code>true</code> if this object is the same as the obj argument; <code>false</code> otherwise.
         """
@@ -3410,14 +3410,14 @@ class GeoPos:
 
     def hashCode(self):
         """
-           Returns a hash code value for the object.
+Returns a hash code value for the object.
            @return a hash code value for this object.
         """
         return GeoPos_hashCode(self._obj)
 
     def toString(self):
         """
-           Returns a string representation of the object. In general, the <code>toString</code> method returns a string that
+Returns a string representation of the object. In general, the <code>toString</code> method returns a string that
            "textually represents" this object.
            @return a string representation of the object.
         """
@@ -3425,7 +3425,7 @@ class GeoPos:
 
     def normalize(self):
         """
-           Normalizes this position so that its longitude is in the range -180 to +180 degree.
+Normalizes this position so that its longitude is in the range -180 to +180 degree.
         """
         GeoPos_normalize(self._obj)
         return
@@ -3433,7 +3433,7 @@ class GeoPos:
     @staticmethod
     def normalizeLon(lon):
         """
-           Normalizes the given longitude so that it is in the range -180 to +180 degree and returns it.
+Normalizes the given longitude so that it is in the range -180 to +180 degree and returns it.
            Note that -180 will remain as is, although -180 is equivalent to +180 degrees.
            @param lon the longitude in degree
            @return the normalized longitude in the range
@@ -3442,14 +3442,14 @@ class GeoPos:
 
     def getLatString(self):
         """
-           Returns a string representation of the latitude value.
+Returns a string representation of the latitude value.
            @return a string of the form DDD°[MM'[SS"]] [N|S].
         """
         return GeoPos_getLatString(self._obj)
 
     def getLonString(self):
         """
-           Returns a string representation of the latitude value.
+Returns a string representation of the latitude value.
            @return a string of the form DDD°[MM'[SS"]] [W|E].
         """
         return GeoPos_getLonString(self._obj)
@@ -3465,7 +3465,7 @@ class ProductNodeGroup:
     @staticmethod
     def newProductNodeGroup(name):
         """
-           Constructs a node group with no owner and which will not take ownership of added children.
+Constructs a node group with no owner and which will not take ownership of added children.
            @param name The group name.
         """
         return ProductNodeGroup(ProductNodeGroup_newProductNodeGroup1(name))
@@ -3473,7 +3473,7 @@ class ProductNodeGroup:
     @staticmethod
     def newProductNodeGroup(owner, name, takingOverNodeOwnership):
         """
-           Constructs a node group for the given owner.
+Constructs a node group for the given owner.
            @param owner                   The owner of the group.
            @param name                    The group name.
            @param takingOverNodeOwnership If {@code true}, child nodes will have this group as owner after adding.
@@ -3482,26 +3482,26 @@ class ProductNodeGroup:
 
     def isTakingOverNodeOwnership(self):
         """
-           @return {@code true}, if child nodes will have this group as owner after adding.
+@return {@code true}, if child nodes will have this group as owner after adding.
         """
         return ProductNodeGroup_isTakingOverNodeOwnership(self._obj)
 
     def getNodeCount(self):
         """
-           @return The number of product nodes in this product group.
+@return The number of product nodes in this product group.
         """
         return ProductNodeGroup_getNodeCount(self._obj)
 
     def get(self, index):
         """
-           @param index The node index.
+@param index The node index.
            @return The product node at the given index.
         """
         return T(ProductNodeGroup_get1(self._obj, index))
 
     def getNodeDisplayNames(self):
         """
-           Returns the display names of all products currently managed.
+Returns the display names of all products currently managed.
            @return an array containing the display names, never <code>null</code>, but the array can have zero length
            @see ProductNode#getDisplayName()
         """
@@ -3509,21 +3509,21 @@ class ProductNodeGroup:
 
     def getNodeNames(self):
         """
-           Returns the names of all products currently managed.
+Returns the names of all products currently managed.
            @return an array containing the names, never <code>null</code>, but the array can have zero length
         """
         return ProductNodeGroup_getNodeNames(self._obj)
 
     def toArray(self):
         """
-           Returns an array of all products currently managed.
+Returns an array of all products currently managed.
            @return an array containing the products, never <code>null</code>, but the array can have zero length
         """
         return ProductNode(ProductNodeGroup_toArray1(self._obj))
 
     def toArray(self, array):
         """
-           @param array the array into which the elements of the list are to be stored, if it is big enough; otherwise, a
+@param array the array into which the elements of the list are to be stored, if it is big enough; otherwise, a
            new array of the same runtime type is allocated for this purpose.
            @return an array containing the product nodes, never <code>null</code>, but the array can have zero length
         """
@@ -3537,21 +3537,21 @@ class ProductNodeGroup:
 
     def getByDisplayName(self, displayName):
         """
-           @param displayName the display name
+@param displayName the display name
            @return the product node with the given display name.
         """
         return T(ProductNodeGroup_getByDisplayName(self._obj, displayName))
 
     def get(self, name):
         """
-           @param name the name
+@param name the name
            @return the product node with the given name.
         """
         return T(ProductNodeGroup_get2(self._obj, name))
 
     def contains(self, name):
         """
-           Tests whether a node with the given name is contained in this group.
+Tests whether a node with the given name is contained in this group.
            @param name the name
            @return true, if so
         """
@@ -3559,7 +3559,7 @@ class ProductNodeGroup:
 
     def contains(self, node):
         """
-           Tests whether the given product is contained in this list.
+Tests whether the given product is contained in this list.
            @param node the node
            @return true, if so
         """
@@ -3567,7 +3567,7 @@ class ProductNodeGroup:
 
     def add(self, node):
         """
-           Adds the given node to this group.
+Adds the given node to this group.
            @param node the node to be added, ignored if <code>null</code>
            @return true, if the node has been added
         """
@@ -3575,7 +3575,7 @@ class ProductNodeGroup:
 
     def add(self, index, node):
         """
-           Adds the given node to this group.
+Adds the given node to this group.
            @param index the index.
            @param node  the node to be added, ignored if <code>null</code>
         """
@@ -3584,7 +3584,7 @@ class ProductNodeGroup:
 
     def remove(self, node):
         """
-           Removes the given node from this group.
+Removes the given node from this group.
            @param node the node to be removed
            @return true, if the node was removed
         """
@@ -3592,7 +3592,7 @@ class ProductNodeGroup:
 
     def removeAll(self):
         """
-           Removes all nodes from this group.
+Removes all nodes from this group.
         """
         ProductNodeGroup_removeAll(self._obj)
         return
@@ -3603,7 +3603,7 @@ class ProductNodeGroup:
 
     def getRemovedNodes(self):
         """
-           Gets all removed node nodes.
+Gets all removed node nodes.
            @return a collection of all removed node nodes.
         """
         return Collection(ProductNodeGroup_getRemovedNodes(self._obj))
@@ -3629,19 +3629,19 @@ class ProductNodeGroup:
 
     def getOwner(self):
         """
-           @return The owner node of this node.
+@return The owner node of this node.
         """
         return ProductNode(ProductNodeGroup_getOwner(self._obj))
 
     def getName(self):
         """
-           @return This node's name.
+@return This node's name.
         """
         return ProductNodeGroup_getName(self._obj)
 
     def setName(self, name):
         """
-           Sets this product's name.
+Sets this product's name.
            @param name The name.
         """
         ProductNodeGroup_setName(self._obj, name)
@@ -3649,14 +3649,14 @@ class ProductNodeGroup:
 
     def getDescription(self):
         """
-           Returns a short textual description for this products node.
+Returns a short textual description for this products node.
            @return a description or <code>null</code>
         """
         return ProductNodeGroup_getDescription(self._obj)
 
     def setDescription(self, description):
         """
-           Sets a short textual description for this products node.
+Sets a short textual description for this products node.
            @param description a description, can be <code>null</code>
         """
         ProductNodeGroup_setDescription(self._obj, description)
@@ -3664,7 +3664,7 @@ class ProductNodeGroup:
 
     def isModified(self):
         """
-           Returns whether or not this node is modified.
+Returns whether or not this node is modified.
            @return <code>true</code> if so
         """
         return ProductNodeGroup_isModified(self._obj)
@@ -3675,7 +3675,7 @@ class ProductNodeGroup:
     @staticmethod
     def isValidNodeName(name):
         """
-           Tests whether the given name is valid name for a node.
+Tests whether the given name is valid name for a node.
            A valid node name must not start with a dot. Also a valid node name must not contain
            any of the character  <code>\/:*?"&lt;&gt;|</code>
            @param name the name to test
@@ -3685,7 +3685,7 @@ class ProductNodeGroup:
 
     def getProduct(self):
         """
-           Returns the product to which this node belongs to.
+Returns the product to which this node belongs to.
            @return the product, or <code>null</code> if this node was not owned by a product at the time this method was
            called
         """
@@ -3693,21 +3693,21 @@ class ProductNodeGroup:
 
     def getProductReader(self):
         """
-           Returns the product reader for the product to which this node belongs to.
+Returns the product reader for the product to which this node belongs to.
            @return the product reader, or <code>null</code> if no such exists
         """
         return ProductReader(ProductNodeGroup_getProductReader(self._obj))
 
     def getProductWriter(self):
         """
-           Returns the product writer for the product to which this node belongs to.
+Returns the product writer for the product to which this node belongs to.
            @return the product writer, or <code>null</code> if no such exists
         """
         return ProductWriter(ProductNodeGroup_getProductWriter(self._obj))
 
     def getDisplayName(self):
         """
-           Returns this node's display name. The display name is the product reference string with the node name appended.
+Returns this node's display name. The display name is the product reference string with the node name appended.
            Example: The string <code>"[2] <i>node-name</i>"</code> means node <code><i>node-name</i></code> of the
            product with the reference number <code>2</code>.
            @return this node's name with a product prefix <br>or this node's name only if this node's product prefix is
@@ -3718,7 +3718,7 @@ class ProductNodeGroup:
 
     def getProductRefString(self):
         """
-           Gets the product reference string. The product reference string is the product reference number enclosed in
+Gets the product reference string. The product reference string is the product reference number enclosed in
            square brackets. Example: The string <code>"[2]"</code> stands for a product with the reference number
            <code>2</code>.
            @return the product reference string. <br>or <code>null</code> if this node has no product <br>or
@@ -3728,7 +3728,7 @@ class ProductNodeGroup:
 
     def getRawStorageSize(self):
         """
-           Gets an estimated, raw storage size in bytes of this product node.
+Gets an estimated, raw storage size in bytes of this product node.
            @return the size in bytes.
         """
         return ProductNodeGroup_getRawStorageSize1(self._obj)
@@ -3743,7 +3743,7 @@ class ProductNodeGroup:
 
     def removeFromFile(self, productWriter):
         """
-           Physically remove this node from the file associated with the given product writer. The default implementation
+Physically remove this node from the file associated with the given product writer. The default implementation
            does nothing.
            @param productWriter the product writer to be used to remove this node from the underlying file.
         """
@@ -3773,19 +3773,19 @@ class ProductManager:
     @staticmethod
     def newProductManager():
         """
-           Constructs an product manager with an empty list of products.
+Constructs an product manager with an empty list of products.
         """
         return ProductManager(ProductManager_newProductManager())
 
     def getProductCount(self):
         """
-           @return The number of products in this product manager.
+@return The number of products in this product manager.
         """
         return ProductManager_getProductCount(self._obj)
 
     def getProduct(self, index):
         """
-           Gets the product at the given index.
+Gets the product at the given index.
            @param index the index
            @return The product at the given index.
         """
@@ -3793,7 +3793,7 @@ class ProductManager:
 
     def getProductDisplayNames(self):
         """
-           Returns the display names of all products currently managed.
+Returns the display names of all products currently managed.
            @return an array containing the display names, never <code>null</code>, but the array can have zero length
            @see ProductNode#getDisplayName()
         """
@@ -3801,35 +3801,35 @@ class ProductManager:
 
     def getProductNames(self):
         """
-           Returns the names of all products currently managed.
+Returns the names of all products currently managed.
            @return an array containing the names, never <code>null</code>, but the array can have zero length
         """
         return ProductManager_getProductNames(self._obj)
 
     def getProducts(self):
         """
-           Returns an array of all products currently managed.
+Returns an array of all products currently managed.
            @return an array containing the products, never <code>null</code>, but the array can have zero length
         """
         return Product(ProductManager_getProducts(self._obj))
 
     def getProductByDisplayName(self, displayName):
         """
-           @param displayName The product's display name.
+@param displayName The product's display name.
            @return The product with the given display name.
         """
         return Product(ProductManager_getProductByDisplayName(self._obj, displayName))
 
     def getProductByRefNo(self, refNo):
         """
-           @param refNo The reference number.
+@param refNo The reference number.
            @return The product with the given reference number.
         """
         return Product(ProductManager_getProductByRefNo(self._obj, refNo))
 
     def getProduct(self, name):
         """
-           @param name The product name.
+@param name The product name.
            @return The product with the given name.
         """
         return Product(ProductManager_getProductByName(self._obj, name))
@@ -3839,7 +3839,7 @@ class ProductManager:
 
     def containsProduct(self, name):
         """
-           Tests whether a product with the given name is contained in this list.
+Tests whether a product with the given name is contained in this list.
            @param name the product name
            @return true, if so
         """
@@ -3847,7 +3847,7 @@ class ProductManager:
 
     def contains(self, product):
         """
-           Tests whether the given product is contained in this list.
+Tests whether the given product is contained in this list.
            @param product The product.
            @return {@code true} if so.
         """
@@ -3855,7 +3855,7 @@ class ProductManager:
 
     def addProduct(self, product):
         """
-           Adds the given product to this product manager if it does not already exists and sets it's reference number one
+Adds the given product to this product manager if it does not already exists and sets it's reference number one
            biger than the greatest reference number in this product manager.
            @param product the product to be added, ignored if <code>null</code>
         """
@@ -3864,7 +3864,7 @@ class ProductManager:
 
     def removeProduct(self, product):
         """
-           Removes the given product from this product manager if it exists.
+Removes the given product from this product manager if it exists.
            @param product the product to be removed, ignored if <code>null</code>
            @return true, if the product was removed
         """
@@ -3872,14 +3872,14 @@ class ProductManager:
 
     def removeAllProducts(self):
         """
-           Removes all product from this list.
+Removes all product from this list.
         """
         ProductManager_removeAllProducts(self._obj)
         return
 
     def addListener(self, listener):
         """
-           Adds a <code>ProductManagerListener</code> to this product manager. The <code>ProductManagerListener</code> is
+Adds a <code>ProductManagerListener</code> to this product manager. The <code>ProductManagerListener</code> is
            informed each time a product was added or removed.
            @param listener the listener to be added.
            @return true if the listener was added, otherwise false.
@@ -3888,7 +3888,7 @@ class ProductManager:
 
     def removeListener(self, listener):
         """
-           Removes a <code>ProductManagerListener</code> from this product manager.
+Removes a <code>ProductManagerListener</code> from this product manager.
            @param listener The listener.
            @return true, if the listener was removed, otherwise false.
         """
@@ -3906,14 +3906,14 @@ class FlagCoding:
     @staticmethod
     def newFlagCoding(name):
         """
-           Constructs a new flag coding object with the given name.
+Constructs a new flag coding object with the given name.
            @param name the name
         """
         return FlagCoding(FlagCoding_newFlagCoding(name))
 
     def getFlag(self, name):
         """
-           Returns a metadata attribute wich is the representation of the flag with the given name. This method delegates to
+Returns a metadata attribute wich is the representation of the flag with the given name. This method delegates to
            getPropertyValue(String).
            @param name the flag name
            @return a metadata attribute wich is the representation of the flag with the given name
@@ -3922,7 +3922,7 @@ class FlagCoding:
 
     def getFlagNames(self):
         """
-           Returns a string array which contains the names of all flags contained in this <code>FlagCoding</code> object.
+Returns a string array which contains the names of all flags contained in this <code>FlagCoding</code> object.
            @return a string array which contains all names of this <code>FlagCoding</code>.<br> If this
            <code>FlagCoding</code> does not contain any flag, <code>null</code> is returned
         """
@@ -3930,7 +3930,7 @@ class FlagCoding:
 
     def addFlag(self, name, flagMask, description):
         """
-           Adds a new flag definition to this flags coding.
+Adds a new flag definition to this flags coding.
            @param name        the flag name
            @param flagMask    the flag's bit mask
            @param description the description text
@@ -3941,7 +3941,7 @@ class FlagCoding:
 
     def getFlagMask(self, name):
         """
-           Returns the flag mask value for the specified flag name.
+Returns the flag mask value for the specified flag name.
            @param name the flag name
            @return flagMask the flag's bit mask as a 32 bit integer
            @throws IllegalArgumentException if <code>name</code> is null, or a flag with the name does not exist
@@ -3950,7 +3950,7 @@ class FlagCoding:
 
     def acceptVisitor(self, visitor):
         """
-           Accepts the given visitor. This method implements the well known 'Visitor' design pattern of the gang-of-four.
+Accepts the given visitor. This method implements the well known 'Visitor' design pattern of the gang-of-four.
            The visitor pattern allows to define new operations on the product data model without the need to add more code
            to it. The new operation is implemented by the visitor.
            
@@ -3962,7 +3962,7 @@ class FlagCoding:
 
     def addElement(self, element):
         """
-           Overrides the base class <code>addElement</code> in order to <b>not</b> add an element to this flag coding
+Overrides the base class <code>addElement</code> in order to <b>not</b> add an element to this flag coding
            because flag codings do not support inner elements.
            @param element the element to be added, always ignored
         """
@@ -3971,7 +3971,7 @@ class FlagCoding:
 
     def addAttribute(self, attribute):
         """
-           Adds an attribute to this node. If an attribute with the same name already exists, the method does nothing.
+Adds an attribute to this node. If an attribute with the same name already exists, the method does nothing.
            @param attribute the attribute to be added
            @throws IllegalArgumentException if the attribute added is not an integer or does not have a scalar value
         """
@@ -3980,7 +3980,7 @@ class FlagCoding:
 
     def addSample(self, name, value, description):
         """
-           Adds a new coding value to this sample coding.
+Adds a new coding value to this sample coding.
            @param name        the coding name
            @param value       the value
            @param description the description text
@@ -3991,14 +3991,14 @@ class FlagCoding:
 
     def getSampleCount(self):
         """
-           Gets the number of coded sample values.
+Gets the number of coded sample values.
            @return the number of coded sample values
         """
         return FlagCoding_getSampleCount(self._obj)
 
     def getSampleName(self, index):
         """
-           Gets the sample name at the specified attribute index.
+Gets the sample name at the specified attribute index.
            @param index the attribute index.
            @return the sample name.
         """
@@ -4006,7 +4006,7 @@ class FlagCoding:
 
     def getSampleValue(self, index):
         """
-           Gets the sample value at the specified attribute index.
+Gets the sample value at the specified attribute index.
            @param index the attribute index.
            @return the sample value.
         """
@@ -4014,7 +4014,7 @@ class FlagCoding:
 
     def getElementGroup(self):
         """
-           Gets the group of child elements. The method returns null, if this element has no children.
+Gets the group of child elements. The method returns null, if this element has no children.
            @return The child element group, may be null.
         """
         return ProductNodeGroup(FlagCoding_getElementGroup(self._obj))
@@ -4024,7 +4024,7 @@ class FlagCoding:
 
     def addElementAt(self, element, index):
         """
-           Adds the given element to this element at index.
+Adds the given element to this element at index.
            @param element the element to added, ignored if <code>null</code>
            @param index   where to put it
         """
@@ -4033,7 +4033,7 @@ class FlagCoding:
 
     def removeElement(self, element):
         """
-           Removes the given element from this element.
+Removes the given element from this element.
            @param element the element to be removed, ignored if <code>null</code>
            @return true, if so
         """
@@ -4041,13 +4041,13 @@ class FlagCoding:
 
     def getNumElements(self):
         """
-           @return the number of elements contained in this element.
+@return the number of elements contained in this element.
         """
         return FlagCoding_getNumElements(self._obj)
 
     def getElementAt(self, index):
         """
-           Returns the element at the given index.
+Returns the element at the given index.
            @param index the element index
            @return the element at the given index
            @throws IndexOutOfBoundsException if the index is out of bounds
@@ -4056,7 +4056,7 @@ class FlagCoding:
 
     def getElementNames(self):
         """
-           Returns a string array containing the names of the groups contained in this element
+Returns a string array containing the names of the groups contained in this element
            @return a string array containing the names of the groups contained in this element. If this element has no
            groups a zero-length-array is returned.
         """
@@ -4064,7 +4064,7 @@ class FlagCoding:
 
     def getElements(self):
         """
-           Returns an array of elements contained in this element.
+Returns an array of elements contained in this element.
            @return an array of elements contained in this product. If this element has no elements a zero-length-array is
            returned.
         """
@@ -4072,7 +4072,7 @@ class FlagCoding:
 
     def getElement(self, name):
         """
-           Returns the element with the given name.
+Returns the element with the given name.
            @param name the element name
            @return the element with the given name or <code>null</code> if a element with the given name is not contained in
            this element.
@@ -4081,7 +4081,7 @@ class FlagCoding:
 
     def containsElement(self, name):
         """
-           Tests if a element with the given name is contained in this element.
+Tests if a element with the given name is contained in this element.
            @param name the name, must not be <code>null</code>
            @return <code>true</code> if a element with the given name is contained in this element, <code>false</code>
            otherwise
@@ -4090,7 +4090,7 @@ class FlagCoding:
 
     def getElementIndex(self, element):
         """
-           Gets the index of the given element.
+Gets the index of the given element.
            @param element  The element .
            @return The element's index, or -1.
         """
@@ -4098,7 +4098,7 @@ class FlagCoding:
 
     def removeAttribute(self, attribute):
         """
-           Removes the given attribute from this annotation. If an attribute with the same name already exists, the method
+Removes the given attribute from this annotation. If an attribute with the same name already exists, the method
            does nothing.
            @param attribute the attribute to be removed, <code>null</code> is ignored
            @return <code>true</code> if it was removed
@@ -4107,14 +4107,14 @@ class FlagCoding:
 
     def getNumAttributes(self):
         """
-           Returns the number of attributes attaached to this node.
+Returns the number of attributes attaached to this node.
            @return the number of attributes
         """
         return FlagCoding_getNumAttributes(self._obj)
 
     def getAttributeAt(self, index):
         """
-           Returns the attribute at the given index.
+Returns the attribute at the given index.
            @param index the attribute index
            @return the attribute, or <code>null</code> if this node does not contain attributes
            @throws IndexOutOfBoundsException
@@ -4123,14 +4123,14 @@ class FlagCoding:
 
     def getAttributeNames(self):
         """
-           Returns the names of all attributes of this node.
+Returns the names of all attributes of this node.
            @return the attribute name array, never <code>null</code>
         """
         return FlagCoding_getAttributeNames(self._obj)
 
     def getAttributes(self):
         """
-           Returns an array of attributes contained in this element.
+Returns an array of attributes contained in this element.
            @return an array of attributes contained in this product. If this element has no attributes a zero-length-array
            is returned.
         """
@@ -4138,7 +4138,7 @@ class FlagCoding:
 
     def getAttribute(self, name):
         """
-           Returns the attribute with the given name.
+Returns the attribute with the given name.
            @param name the attribute name
            @return the attribute with the given name or <code>null</code> if it could not be found
         """
@@ -4146,7 +4146,7 @@ class FlagCoding:
 
     def containsAttribute(self, name):
         """
-           Checks whether this node has an element with the given name.
+Checks whether this node has an element with the given name.
            @param name the attribute name
            @return <code>true</code> if so
         """
@@ -4154,7 +4154,7 @@ class FlagCoding:
 
     def getAttributeIndex(self, attribute):
         """
-           Gets the index of the given attribute.
+Gets the index of the given attribute.
            @param attribute  The attribute.
            @return The attribute's index, or -1.
         """
@@ -4162,7 +4162,7 @@ class FlagCoding:
 
     def getAttributeDouble(self, name, defaultValue):
         """
-           Returns the double value of the attribute with the given name. The given default value is returned if an
+Returns the double value of the attribute with the given name. The given default value is returned if an
            attribute with the given name could not be found in this node.
            @param name         the attribute name
            @param defaultValue the default value
@@ -4173,7 +4173,7 @@ class FlagCoding:
 
     def getAttributeUTC(self, name, defaultValue):
         """
-           Returns the UTC value of the attribute with the given name. The given default value is returned if an
+Returns the UTC value of the attribute with the given name. The given default value is returned if an
            attribute with the given name could not be found in this node.
            @param name         the attribute name
            @param defaultValue the default value
@@ -4183,7 +4183,7 @@ class FlagCoding:
 
     def getAttributeInt(self, name, defaultValue):
         """
-           Returns the integer value of the attribute with the given name. The given default value is returned if an
+Returns the integer value of the attribute with the given name. The given default value is returned if an
            attribute with the given name could not be found in this node.
            @param name         the attribute name
            @param defaultValue the default value
@@ -4194,7 +4194,7 @@ class FlagCoding:
 
     def setAttributeInt(self, name, value):
         """
-           Sets the attribute with the given name to the given integer value. A new attribute with
+Sets the attribute with the given name to the given integer value. A new attribute with
            <code>ProductData.TYPE_INT32</code> is added to this node if an attribute with the given name could not be found
            in this node.
            @param name  the attribute name
@@ -4205,7 +4205,7 @@ class FlagCoding:
 
     def setAttributeDouble(self, name, value):
         """
-           Sets the attribute with the given name to the given double value. A new attribute with
+Sets the attribute with the given name to the given double value. A new attribute with
            <code>ProductData.TYPE_FLOAT64</code> is added to this node if an attribute with the given name could not be found
            in this node.
            @param name  the attribute name
@@ -4216,7 +4216,7 @@ class FlagCoding:
 
     def setAttributeUTC(self, name, value):
         """
-           Sets the attribute with the given name to the given utc value. A new attribute with
+Sets the attribute with the given name to the given utc value. A new attribute with
            <code>ProductData.UTC</code> is added to this node if an attribute with the given name could not be found
            in this node.
            @param name  the attribute name
@@ -4227,7 +4227,7 @@ class FlagCoding:
 
     def getAttributeString(self, name, defaultValue):
         """
-           Returns the string value of the attribute with the given name. The given default value is returned if an
+Returns the string value of the attribute with the given name. The given default value is returned if an
            attribute with the given name could not be found in this node.
            @param name         the attribute name
            @param defaultValue the default value
@@ -4237,7 +4237,7 @@ class FlagCoding:
 
     def setAttributeString(self, name, value):
         """
-           Sets the attribute with the given name to the given string value. A new attribute with
+Sets the attribute with the given name to the given string value. A new attribute with
            <code>ProductData.TYPE_ASCII</code> is added to this node if an attribute with the given name could not be found
            in this node.
            @param name  the attribute name
@@ -4255,7 +4255,7 @@ class FlagCoding:
 
     def dispose(self):
         """
-           Releases all of the resources used by this object instance and all of its owned children. Its primary use is to
+Releases all of the resources used by this object instance and all of its owned children. Its primary use is to
            allow the garbage collector to perform a vanilla job.
            
            This method should be called only if it is for sure that this object instance will never be used again. The
@@ -4268,19 +4268,19 @@ class FlagCoding:
 
     def getOwner(self):
         """
-           @return The owner node of this node.
+@return The owner node of this node.
         """
         return ProductNode(FlagCoding_getOwner(self._obj))
 
     def getName(self):
         """
-           @return This node's name.
+@return This node's name.
         """
         return FlagCoding_getName(self._obj)
 
     def setName(self, name):
         """
-           Sets this product's name.
+Sets this product's name.
            @param name The name.
         """
         FlagCoding_setName(self._obj, name)
@@ -4288,14 +4288,14 @@ class FlagCoding:
 
     def getDescription(self):
         """
-           Returns a short textual description for this products node.
+Returns a short textual description for this products node.
            @return a description or <code>null</code>
         """
         return FlagCoding_getDescription(self._obj)
 
     def setDescription(self, description):
         """
-           Sets a short textual description for this products node.
+Sets a short textual description for this products node.
            @param description a description, can be <code>null</code>
         """
         FlagCoding_setDescription(self._obj, description)
@@ -4303,7 +4303,7 @@ class FlagCoding:
 
     def isModified(self):
         """
-           Returns whether or not this node is modified.
+Returns whether or not this node is modified.
            @return <code>true</code> if so
         """
         return FlagCoding_isModified(self._obj)
@@ -4314,7 +4314,7 @@ class FlagCoding:
     @staticmethod
     def isValidNodeName(name):
         """
-           Tests whether the given name is valid name for a node.
+Tests whether the given name is valid name for a node.
            A valid node name must not start with a dot. Also a valid node name must not contain
            any of the character  <code>\/:*?"&lt;&gt;|</code>
            @param name the name to test
@@ -4324,7 +4324,7 @@ class FlagCoding:
 
     def getProduct(self):
         """
-           Returns the product to which this node belongs to.
+Returns the product to which this node belongs to.
            @return the product, or <code>null</code> if this node was not owned by a product at the time this method was
            called
         """
@@ -4332,21 +4332,21 @@ class FlagCoding:
 
     def getProductReader(self):
         """
-           Returns the product reader for the product to which this node belongs to.
+Returns the product reader for the product to which this node belongs to.
            @return the product reader, or <code>null</code> if no such exists
         """
         return ProductReader(FlagCoding_getProductReader(self._obj))
 
     def getProductWriter(self):
         """
-           Returns the product writer for the product to which this node belongs to.
+Returns the product writer for the product to which this node belongs to.
            @return the product writer, or <code>null</code> if no such exists
         """
         return ProductWriter(FlagCoding_getProductWriter(self._obj))
 
     def getDisplayName(self):
         """
-           Returns this node's display name. The display name is the product reference string with the node name appended.
+Returns this node's display name. The display name is the product reference string with the node name appended.
            Example: The string <code>"[2] <i>node-name</i>"</code> means node <code><i>node-name</i></code> of the
            product with the reference number <code>2</code>.
            @return this node's name with a product prefix <br>or this node's name only if this node's product prefix is
@@ -4357,7 +4357,7 @@ class FlagCoding:
 
     def getProductRefString(self):
         """
-           Gets the product reference string. The product reference string is the product reference number enclosed in
+Gets the product reference string. The product reference string is the product reference number enclosed in
            square brackets. Example: The string <code>"[2]"</code> stands for a product with the reference number
            <code>2</code>.
            @return the product reference string. <br>or <code>null</code> if this node has no product <br>or
@@ -4367,7 +4367,7 @@ class FlagCoding:
 
     def updateExpression(self, oldExternalName, newExternalName):
         """
-           Asks a product node to replace all occurences of and references to the node name
+Asks a product node to replace all occurences of and references to the node name
            given by {@code oldExternalName} with {@code oldExternalName}. Such references most often occur
            in band arithmetic expressions.
            @param oldExternalName The old node name.
@@ -4378,7 +4378,7 @@ class FlagCoding:
 
     def removeFromFile(self, productWriter):
         """
-           Physically remove this node from the file associated with the given product writer. The default implementation
+Physically remove this node from the file associated with the given product writer. The default implementation
            does nothing.
            @param productWriter the product writer to be used to remove this node from the underlying file.
         """
@@ -4427,7 +4427,7 @@ class ProductUtils:
     @staticmethod
     def createImageInfo(rasters, assignMissingImageInfos, pm):
         """
-           Creates image creation information.
+Creates image creation information.
            @param rasters                 The raster data nodes.
            @param assignMissingImageInfos if {@code true}, it is ensured that to all {@code RasterDataNode}s a valid {@code ImageInfo} will be assigned.
            @param pm                      The progress monitor.
@@ -4439,7 +4439,7 @@ class ProductUtils:
     @staticmethod
     def createRgbImage(rasters, imageInfo, pm):
         """
-           Creates a RGB image from the given array of <code>{@link RasterDataNode}</code>s.
+Creates a RGB image from the given array of <code>{@link RasterDataNode}</code>s.
            The given array <code>rasters</code> containing one or three raster data nodes. If three rasters are given
            RGB image is created, if only one raster is provided a gray scale image created.
            @param rasters   an array of one or three raster nodes.
@@ -4454,7 +4454,7 @@ class ProductUtils:
     @staticmethod
     def createColorIndexedImage(rasterDataNode, pm):
         """
-           Creates a greyscale image from the given <code>{@link RasterDataNode}</code>.
+Creates a greyscale image from the given <code>{@link RasterDataNode}</code>.
            
            The method uses the given raster data node's image information (an instance of <code>{@link
            ImageInfo}</code>) to create the image.
@@ -4469,7 +4469,7 @@ class ProductUtils:
     @staticmethod
     def createSuitableMapInfo(product, rect, mapProjection):
         """
-           Retuns a suitable <code>MapInfo</code> instance for the given (geo-coded) product which includes the entire or a
+Retuns a suitable <code>MapInfo</code> instance for the given (geo-coded) product which includes the entire or a
            subset of the product's scene region for the given map projection. The position of the reference pixel will be
            the upper left pixel's center (0.5, 0.5).
            @param product       the product, must not be <code>null</code>
@@ -4483,7 +4483,7 @@ class ProductUtils:
     @staticmethod
     def createSuitableMapInfo(product, mapProjection, orientation, noDataValue):
         """
-           Retuns a suitable <code>MapInfo</code> instance for the given (geo-coded) product which includes the entire or a
+Retuns a suitable <code>MapInfo</code> instance for the given (geo-coded) product which includes the entire or a
            subset of the product's scene region for the given map projection. The position of the reference pixel will be the scene center.
            @param product       the product, must not be <code>null</code>
            @param mapProjection the map projection, must not be <code>null</code>
@@ -4500,7 +4500,7 @@ class ProductUtils:
     @staticmethod
     def createMapEnvelope(product, rect, mapTransform):
         """
-           Creates the boundary in map coordinates for the given product, source rectangle (in product pixel coordinates)
+Creates the boundary in map coordinates for the given product, source rectangle (in product pixel coordinates)
            and the given map transfromation. The method delegates to {@link #createMapEnvelope(Product,
            java.awt.Rectangle, int, org.esa.beam.framework.dataop.maptransf.MapTransform) createMapEnvelope(product, rect,
            step, mapTransform)} where <code>step</code> is the half of the minimum of the product scene raster width and
@@ -4515,7 +4515,7 @@ class ProductUtils:
     @staticmethod
     def createMapEnvelope(product, rect, step, mapTransform):
         """
-           Creates the boundary in map coordinates for the given product, source rectangle (in product
+Creates the boundary in map coordinates for the given product, source rectangle (in product
            pixel coordinates) and the given map transfromation. The method delegates to
            {@link #createMapBoundary(Product, Rectangle, int, MapTransform) createMapBoundary(product, rect,
            step, mapTransform)} where <code>step</code> is the half of the minimum of the product scene
@@ -4539,7 +4539,7 @@ class ProductUtils:
     @staticmethod
     def createGeoBoundary(product, step):
         """
-           Creates the geographical boundary of the given product and returns it as a list of geographical coordinates.
+Creates the geographical boundary of the given product and returns it as a list of geographical coordinates.
            @param product the input product, must not be null
            @param step    the step given in pixels
            @return an array of geographical coordinates
@@ -4550,7 +4550,7 @@ class ProductUtils:
     @staticmethod
     def createGeoBoundary(product, region, step):
         """
-           Creates the geographical boundary of the given region within the given product and returns it as a list of
+Creates the geographical boundary of the given region within the given product and returns it as a list of
            geographical coordinates.
             This method delegates to {@link #createGeoBoundary(Product, java.awt.Rectangle, int, boolean) createGeoBoundary(Product, Rectangle, int, boolean)}
            and the additional boolean parameter <code>usePixelCenter</code> is <code>true</code>.
@@ -4566,7 +4566,7 @@ class ProductUtils:
     @staticmethod
     def createGeoBoundary(product, region, step, usePixelCenter):
         """
-           Creates the geographical boundary of the given region within the given product and returns it as a list of
+Creates the geographical boundary of the given region within the given product and returns it as a list of
            geographical coordinates.
            @param product        the input product, must not be null
            @param region         the region rectangle in product pixel coordinates, can be null for entire product
@@ -4581,7 +4581,7 @@ class ProductUtils:
     @staticmethod
     def getClosestGeoPos(gc, origPos, region, step):
         """
-           Searches for a valid GeoPos by considering the vicinity of a {@link PixelPos}. It does not check
+Searches for a valid GeoPos by considering the vicinity of a {@link PixelPos}. It does not check
            the original pixel position, but uses it for determining which pixel positions to examine.
            @param gc      the GeoCoding, must not be null
            @param origPos the original pixel position, must not be null
@@ -4596,7 +4596,7 @@ class ProductUtils:
     @staticmethod
     def createGeoBoundary(raster, region, step):
         """
-           Creates the geographical boundary of the given region within the given raster and returns it as a list of
+Creates the geographical boundary of the given region within the given raster and returns it as a list of
            geographical coordinates.
            @param raster the input raster, must not be null
            @param region the region rectangle in raster pixel coordinates, can be null for entire raster
@@ -4610,7 +4610,7 @@ class ProductUtils:
     @staticmethod
     def createGeoBoundaryPaths(product):
         """
-           Converts the geographic boundary entire product into one, two or three shape objects. If the product does not
+Converts the geographic boundary entire product into one, two or three shape objects. If the product does not
            intersect the 180 degree meridian, a single general path is returned. Otherwise two or three shapes are created
            and returned in the order from west to east.
            
@@ -4625,7 +4625,7 @@ class ProductUtils:
     @staticmethod
     def createGeoBoundaryPaths(product, region, step):
         """
-           Converts the geographic boundary of the region within the given product into one, two or three shape objects. If
+Converts the geographic boundary of the region within the given product into one, two or three shape objects. If
            the product does not intersect the 180 degree meridian, a single general path is returned. Otherwise two or three
            shapes are created and returned in the order from west to east.
            
@@ -4645,7 +4645,7 @@ class ProductUtils:
     @staticmethod
     def createGeoBoundaryPaths(product, region, step, usePixelCenter):
         """
-           Converts the geographic boundary of the region within the given product into one, two or three shape objects. If
+Converts the geographic boundary of the region within the given product into one, two or three shape objects. If
            the product does not intersect the 180 degree meridian, a single general path is returned. Otherwise two or three
            shapes are created and returned in the order from west to east.
            
@@ -4663,7 +4663,7 @@ class ProductUtils:
     @staticmethod
     def createPixelBoundary(product, rect, step):
         """
-           Creates a rectangular boundary expressed in pixel positions for the given source rectangle. If the source
+Creates a rectangular boundary expressed in pixel positions for the given source rectangle. If the source
            <code>rect</code> is 100 x 50 pixels and <code>step</code> is 10 the returned array will countain exactly 2 * 10
            + 2 * (5 - 2) = 26 pixel positions.
            
@@ -4681,7 +4681,7 @@ class ProductUtils:
     @staticmethod
     def createPixelBoundary(product, rect, step, usePixelCenter):
         """
-           Creates a rectangular boundary expressed in pixel positions for the given source rectangle. If the source
+Creates a rectangular boundary expressed in pixel positions for the given source rectangle. If the source
            <code>rect</code> is 100 x 50 pixels and <code>step</code> is 10 the returned array will countain exactly 2 * 10
            + 2 * (5 - 2) = 26 pixel positions.
            
@@ -4698,7 +4698,7 @@ class ProductUtils:
     @staticmethod
     def createPixelBoundary(raster, rect, step):
         """
-           Creates a rectangular boundary expressed in pixel positions for the given source rectangle. If the source
+Creates a rectangular boundary expressed in pixel positions for the given source rectangle. If the source
            <code>rect</code> is 100 x 50 pixels and <code>step</code> is 10 the returned array will countain exactly 2 * 10
            + 2 * (5 - 2) = 26 pixel positions.
            
@@ -4714,7 +4714,7 @@ class ProductUtils:
     @staticmethod
     def createRectBoundary(rect, step):
         """
-           Creates a rectangular boundary expressed in pixel positions for the given source rectangle. If the source
+Creates a rectangular boundary expressed in pixel positions for the given source rectangle. If the source
            <code>rect</code> is 100 x 50 pixels and <code>step</code> is 10 the returned array will countain exactly 2 * 10
            + 2 * (5 - 2) = 26 pixel positions.
            This method is used for an intermediate step when determining a product boundary expressed in geographical
@@ -4730,7 +4730,7 @@ class ProductUtils:
     @staticmethod
     def createRectBoundary(rect, step, usePixelCenter):
         """
-           Creates a rectangular boundary expressed in pixel positions for the given source rectangle. If the source
+Creates a rectangular boundary expressed in pixel positions for the given source rectangle. If the source
            <code>rect</code> is 100 x 50 pixels and <code>step</code> is 10 the returned array will countain exactly 2 * 10
            + 2 * (5 - 2) = 26 pixel positions.
            
@@ -4747,7 +4747,7 @@ class ProductUtils:
     @staticmethod
     def copyFlagCodings(source, target):
         """
-           Copies the flag codings from the source product to the target.
+Copies the flag codings from the source product to the target.
            @param source the source product
            @param target the target product
         """
@@ -4757,7 +4757,7 @@ class ProductUtils:
     @staticmethod
     def copyFlagCoding(sourceFlagCoding, target):
         """
-           Copies the given source flag coding to the target product.
+Copies the given source flag coding to the target product.
            If it exists already, the method simply returns the existing instance.
            @param sourceFlagCoding the source flag coding
            @param target           the target product
@@ -4768,7 +4768,7 @@ class ProductUtils:
     @staticmethod
     def copyIndexCoding(sourceIndexCoding, target):
         """
-           Copies the given source index coding to the target product
+Copies the given source index coding to the target product
            If it exists already, the method simply returns the existing instance.
            @param sourceIndexCoding the source index coding
            @param target            the target product
@@ -4779,7 +4779,7 @@ class ProductUtils:
     @staticmethod
     def copyMasks(sourceProduct, targetProduct):
         """
-           Copies the {@link Mask}s from the source product to the target product.
+Copies the {@link Mask}s from the source product to the target product.
            
            IMPORTANT NOTE: This method should only be used, if it is known that all masks
            in the source product will also be valid in the target product. This method does
@@ -4795,7 +4795,7 @@ class ProductUtils:
     @staticmethod
     def copyOverlayMasks(sourceProduct, targetProduct):
         """
-           Copies the overlay {@link Mask}s from the source product's raster data nodes to
+Copies the overlay {@link Mask}s from the source product's raster data nodes to
            the target product's raster data nodes.
            
            IMPORTANT NOTE: This method should only be used, if it is known that all masks
@@ -4811,7 +4811,7 @@ class ProductUtils:
     @staticmethod
     def copyFlagBands(sourceProduct, targetProduct, copySourceImage):
         """
-           Copies all bands which contain a flagcoding from the source product to the target product.
+Copies all bands which contain a flagcoding from the source product to the target product.
            @param sourceProduct   the source product
            @param targetProduct   the target product
            @param copySourceImage whether the source image of the source band should be copied.
@@ -4822,7 +4822,7 @@ class ProductUtils:
     @staticmethod
     def copyTiePointGrid(gridName, sourceProduct, targetProduct):
         """
-           Copies the named tie-point grid from the source product to the target product.
+Copies the named tie-point grid from the source product to the target product.
            @param gridName      the name of the tie-point grid to be copied.
            @param sourceProduct the source product
            @param targetProduct the target product
@@ -4833,7 +4833,7 @@ class ProductUtils:
     @staticmethod
     def copyBand(sourceBandName, sourceProduct, targetProduct, copySourceImage):
         """
-           Copies the named band from the source product to the target product.
+Copies the named band from the source product to the target product.
            @param sourceBandName  the name of the band to be copied.
            @param sourceProduct   the source product.
            @param targetProduct   the target product.
@@ -4845,7 +4845,7 @@ class ProductUtils:
     @staticmethod
     def copyBand(sourceBandName, sourceProduct, targetBandName, targetProduct, copySourceImage):
         """
-           Copies the named band from the source product to the target product.
+Copies the named band from the source product to the target product.
            @param sourceBandName  the name of the band to be copied.
            @param sourceProduct   the source product.
            @param targetBandName  the name of the band copied.
@@ -4858,7 +4858,7 @@ class ProductUtils:
     @staticmethod
     def copyRasterDataNodeProperties(sourceRaster, targetRaster):
         """
-           Copies all properties from source band to the target band.
+Copies all properties from source band to the target band.
            @param sourceRaster the source band
            @param targetRaster the target band
            @see #copySpectralBandProperties(Band, Band)
@@ -4869,7 +4869,7 @@ class ProductUtils:
     @staticmethod
     def copySpectralBandProperties(sourceBand, targetBand):
         """
-           Copies the spectral properties from source band to target band. These properties are:
+Copies the spectral properties from source band to target band. These properties are:
            <ul>
            <li>{@link Band#getSpectralBandIndex() spectral band index},</li>
            <li>{@link Band#getSpectralWavelength() the central wavelength},</li>
@@ -4886,7 +4886,7 @@ class ProductUtils:
     @staticmethod
     def copyGeoCoding(sourceProduct, targetProduct):
         """
-           Copies the geocoding from the source product to target product.
+Copies the geocoding from the source product to target product.
            @param sourceProduct the source product
            @param targetProduct the target product
            @throws IllegalArgumentException if one of the params is <code>null</code>.
@@ -4897,7 +4897,7 @@ class ProductUtils:
     @staticmethod
     def copyTiePointGrids(sourceProduct, targetProduct):
         """
-           Copies all tie point grids from one product to another.
+Copies all tie point grids from one product to another.
            @param sourceProduct the source product
            @param targetProduct the target product
         """
@@ -4912,7 +4912,7 @@ class ProductUtils:
     @staticmethod
     def canGetPixelPos(product):
         """
-           Returns whether or not a product can return a pixel position from a given geographical position.
+Returns whether or not a product can return a pixel position from a given geographical position.
            @param product the product to be checked
            @return <code>true</code> if the given product can return a pixel position
         """
@@ -4921,7 +4921,7 @@ class ProductUtils:
     @staticmethod
     def canGetPixelPos(raster):
         """
-           Returns whether or not a raster can return a pixel position from a given geographical position.
+Returns whether or not a raster can return a pixel position from a given geographical position.
            @param raster the raster to be checked
            @return <code>true</code> if the given raster can return a pixel position
         """
@@ -4930,7 +4930,7 @@ class ProductUtils:
     @staticmethod
     def createDensityPlotImage(raster1, sampleMin1, sampleMax1, raster2, sampleMin2, sampleMax2, roiMask, width, height, background, image, pm):
         """
-           Creates a density plot image from two raster data nodes.
+Creates a density plot image from two raster data nodes.
            @param raster1    the first raster data node
            @param sampleMin1 the minimum sample value to be considered in the first raster
            @param sampleMax1 the maximum sample value to be considered in the first raster
@@ -4951,7 +4951,7 @@ class ProductUtils:
     @staticmethod
     def overlayMasks(raster, overlayBIm, pm):
         """
-           Draws all the masks contained overlay mask group of the given raster to the ovelayBIm image.
+Draws all the masks contained overlay mask group of the given raster to the ovelayBIm image.
            @param raster     the raster data node which contains all the activated bitmask definitions
            @param overlayBIm the source image which is used as base image for all the overlays.
            @param pm         a monitor to inform the user about progress
@@ -4967,7 +4967,7 @@ class ProductUtils:
     @staticmethod
     def normalizeGeoPolygon(polygon):
         """
-           Normalizes the given geographical polygon so that maximum longitude differences between two points are 180
+Normalizes the given geographical polygon so that maximum longitude differences between two points are 180
            degrees. The method operates only on the longitude values of the given polygon.
            @param polygon a geographical, closed polygon
            @return 0 if normalizing has not been applied , -1 if negative normalizing has been applied, 1 if positive
@@ -4983,7 +4983,7 @@ class ProductUtils:
     @staticmethod
     def denormalizeGeoPolygon(polygon):
         """
-           Denormalizes the longitude values which have been normalized using the
+Denormalizes the longitude values which have been normalized using the
            {@link #normalizeGeoPolygon(GeoPos[])} method. The
            method operates only on the longitude values of the given polygon.
            @param polygon a geographical, closed polygon
@@ -5012,7 +5012,7 @@ class ProductUtils:
     @staticmethod
     def convertToPixelPath(geoPath, geoCoding):
         """
-           Converts a <code>GeneralPath</code> given in geographic lon/lat coordinates into a <code>GeneralPath</code> in
+Converts a <code>GeneralPath</code> given in geographic lon/lat coordinates into a <code>GeneralPath</code> in
            pixel coordinates using the supplied geo coding.
            @param geoPath   a <code>GeneralPath</code> given in geographic lon/lat coordinates, as returned by the {@link
            #convertToGeoPath(Shape, GeoCoding)} method
@@ -5028,7 +5028,7 @@ class ProductUtils:
     @staticmethod
     def convertToGeoPath(shape, geoCoding):
         """
-           Converts a <code>Shape</code> given in pixel X/Y coordinates into a <code>GeneralPath</code> in geografic
+Converts a <code>Shape</code> given in pixel X/Y coordinates into a <code>GeneralPath</code> in geografic
            coordinates using the supplied geo coding.
            @param shape     a <code>Shape</code> given in pixel X/Y coordinates
            @param geoCoding the geo coding used to convert the pixel coordinates into geografic coordinates.
@@ -5045,7 +5045,7 @@ class ProductUtils:
     @staticmethod
     def copyMetadata(source, target):
         """
-           Copies all metadata elements and attributes of the source product to the target product.
+Copies all metadata elements and attributes of the source product to the target product.
            The copied elements and attributes are deeply cloned.
            @param source the source product.
            @param target the target product.
@@ -5057,7 +5057,7 @@ class ProductUtils:
     @staticmethod
     def copyMetadata(source, target):
         """
-           Copies all metadata elements and attributes of the source element to the target element.
+Copies all metadata elements and attributes of the source element to the target element.
            The copied elements and attributes are deeply cloned.
            @param source the source element.
            @param target the target element.
@@ -5069,7 +5069,7 @@ class ProductUtils:
     @staticmethod
     def copyPreferredTileSize(sourceProduct, targetProduct):
         """
-           Copies the source product's preferred tile size (if any) to the target product.
+Copies the source product's preferred tile size (if any) to the target product.
            @param sourceProduct The source product.
            @param targetProduct The target product.
         """
@@ -5091,7 +5091,7 @@ class ProductUtils:
     @staticmethod
     def addElementToHistory(product, elem):
         """
-           Adds a given elem to the history of the given product. If the products metadata root
+Adds a given elem to the history of the given product. If the products metadata root
            does not contain a history entry a new one will be created.
            @param product the product to add the history element.
            @param elem    the element to add to the products history. If <code>null</code> nothing will be added.
@@ -5102,7 +5102,7 @@ class ProductUtils:
     @staticmethod
     def removeInvalidExpressions(product):
         """
-           Validates all the expressions contained in the given (output) product. If an expression is not applicable to the given
+Validates all the expressions contained in the given (output) product. If an expression is not applicable to the given
            product, the related element is removed.
            @param product the (output) product to be cleaned up
            @return an array of messages which changes are done to the given product.
@@ -5112,7 +5112,7 @@ class ProductUtils:
     @staticmethod
     def findSuitableQuicklookBandName(product):
         """
-           Finds the name of a band in the given product which is suitable to product a good quicklook.
+Finds the name of a band in the given product which is suitable to product a good quicklook.
            The method prefers bands with longer wavelengths, in order to produce good results for night-time scenes.
            @param product the product to be searched
            @return the name of a suitable band or null if the given product does not contain any bands
@@ -5126,7 +5126,7 @@ class ProductUtils:
     @staticmethod
     def computeMinMaxY(pixelPositions):
         """
-           Computes the minimum and maximum y value of the given {@link PixelPos} array.
+Computes the minimum and maximum y value of the given {@link PixelPos} array.
            @param pixelPositions the {@link PixelPos} array
            @return an int array which containes the minimum and maximum y value of the given {@link PixelPos} array in the
            order:<br> &nbsp;&nbsp;&nbsp;&nbsp;[0] - the minimum value<br>&nbsp;&nbsp;&nbsp;&nbsp;[1] - the maximum
@@ -5139,7 +5139,7 @@ class ProductUtils:
     @staticmethod
     def copyBandsForGeomTransform(sourceProduct, targetProduct, defaultNoDataValue, addedRasterDataNodes):
         """
-           Copies only the bands from source to target.
+Copies only the bands from source to target.
            @see #copyBandsForGeomTransform(Product, Product, boolean, double, java.util.Map)
         """
         ProductUtils_copyBandsForGeomTransform1(sourceProduct._obj, targetProduct._obj, defaultNoDataValue, addedRasterDataNodes._obj)
@@ -5148,7 +5148,7 @@ class ProductUtils:
     @staticmethod
     def copyBandsForGeomTransform(sourceProduct, targetProduct, includeTiePointGrids, defaultNoDataValue, targetToSourceMap):
         """
-           Adds raster data nodes of a source product as bands to the given target product. This method is especially usefull if the target
+Adds raster data nodes of a source product as bands to the given target product. This method is especially usefull if the target
            product is a geometric transformation (e.g. map-projection) of the source product.
            If
            {@link RasterDataNode#isScalingApplied() sourceBand.scalingApplied} is true,
@@ -5200,14 +5200,14 @@ class MetadataElement:
     @staticmethod
     def newMetadataElement(name):
         """
-           Constructs a new metadata element.
+Constructs a new metadata element.
            @param name the element name
         """
         return MetadataElement(MetadataElement_newMetadataElement(name))
 
     def getElementGroup(self):
         """
-           Gets the group of child elements. The method returns null, if this element has no children.
+Gets the group of child elements. The method returns null, if this element has no children.
            @return The child element group, may be null.
         """
         return ProductNodeGroup(MetadataElement_getElementGroup(self._obj))
@@ -5217,7 +5217,7 @@ class MetadataElement:
 
     def addElement(self, element):
         """
-           Adds the given element to this element.
+Adds the given element to this element.
            @param element the element to added, ignored if <code>null</code>
         """
         MetadataElement_addElement(self._obj, element._obj)
@@ -5225,7 +5225,7 @@ class MetadataElement:
 
     def addElementAt(self, element, index):
         """
-           Adds the given element to this element at index.
+Adds the given element to this element at index.
            @param element the element to added, ignored if <code>null</code>
            @param index   where to put it
         """
@@ -5234,7 +5234,7 @@ class MetadataElement:
 
     def removeElement(self, element):
         """
-           Removes the given element from this element.
+Removes the given element from this element.
            @param element the element to be removed, ignored if <code>null</code>
            @return true, if so
         """
@@ -5242,13 +5242,13 @@ class MetadataElement:
 
     def getNumElements(self):
         """
-           @return the number of elements contained in this element.
+@return the number of elements contained in this element.
         """
         return MetadataElement_getNumElements(self._obj)
 
     def getElementAt(self, index):
         """
-           Returns the element at the given index.
+Returns the element at the given index.
            @param index the element index
            @return the element at the given index
            @throws IndexOutOfBoundsException if the index is out of bounds
@@ -5257,7 +5257,7 @@ class MetadataElement:
 
     def getElementNames(self):
         """
-           Returns a string array containing the names of the groups contained in this element
+Returns a string array containing the names of the groups contained in this element
            @return a string array containing the names of the groups contained in this element. If this element has no
            groups a zero-length-array is returned.
         """
@@ -5265,7 +5265,7 @@ class MetadataElement:
 
     def getElements(self):
         """
-           Returns an array of elements contained in this element.
+Returns an array of elements contained in this element.
            @return an array of elements contained in this product. If this element has no elements a zero-length-array is
            returned.
         """
@@ -5273,7 +5273,7 @@ class MetadataElement:
 
     def getElement(self, name):
         """
-           Returns the element with the given name.
+Returns the element with the given name.
            @param name the element name
            @return the element with the given name or <code>null</code> if a element with the given name is not contained in
            this element.
@@ -5282,7 +5282,7 @@ class MetadataElement:
 
     def containsElement(self, name):
         """
-           Tests if a element with the given name is contained in this element.
+Tests if a element with the given name is contained in this element.
            @param name the name, must not be <code>null</code>
            @return <code>true</code> if a element with the given name is contained in this element, <code>false</code>
            otherwise
@@ -5291,7 +5291,7 @@ class MetadataElement:
 
     def getElementIndex(self, element):
         """
-           Gets the index of the given element.
+Gets the index of the given element.
            @param element  The element .
            @return The element's index, or -1.
         """
@@ -5299,7 +5299,7 @@ class MetadataElement:
 
     def addAttribute(self, attribute):
         """
-           Adds an attribute to this node.
+Adds an attribute to this node.
            @param attribute the attribute to be added, <code>null</code> is ignored
         """
         MetadataElement_addAttribute(self._obj, attribute._obj)
@@ -5307,7 +5307,7 @@ class MetadataElement:
 
     def removeAttribute(self, attribute):
         """
-           Removes the given attribute from this annotation. If an attribute with the same name already exists, the method
+Removes the given attribute from this annotation. If an attribute with the same name already exists, the method
            does nothing.
            @param attribute the attribute to be removed, <code>null</code> is ignored
            @return <code>true</code> if it was removed
@@ -5316,14 +5316,14 @@ class MetadataElement:
 
     def getNumAttributes(self):
         """
-           Returns the number of attributes attaached to this node.
+Returns the number of attributes attaached to this node.
            @return the number of attributes
         """
         return MetadataElement_getNumAttributes(self._obj)
 
     def getAttributeAt(self, index):
         """
-           Returns the attribute at the given index.
+Returns the attribute at the given index.
            @param index the attribute index
            @return the attribute, or <code>null</code> if this node does not contain attributes
            @throws IndexOutOfBoundsException
@@ -5332,14 +5332,14 @@ class MetadataElement:
 
     def getAttributeNames(self):
         """
-           Returns the names of all attributes of this node.
+Returns the names of all attributes of this node.
            @return the attribute name array, never <code>null</code>
         """
         return MetadataElement_getAttributeNames(self._obj)
 
     def getAttributes(self):
         """
-           Returns an array of attributes contained in this element.
+Returns an array of attributes contained in this element.
            @return an array of attributes contained in this product. If this element has no attributes a zero-length-array
            is returned.
         """
@@ -5347,7 +5347,7 @@ class MetadataElement:
 
     def getAttribute(self, name):
         """
-           Returns the attribute with the given name.
+Returns the attribute with the given name.
            @param name the attribute name
            @return the attribute with the given name or <code>null</code> if it could not be found
         """
@@ -5355,7 +5355,7 @@ class MetadataElement:
 
     def containsAttribute(self, name):
         """
-           Checks whether this node has an element with the given name.
+Checks whether this node has an element with the given name.
            @param name the attribute name
            @return <code>true</code> if so
         """
@@ -5363,7 +5363,7 @@ class MetadataElement:
 
     def getAttributeIndex(self, attribute):
         """
-           Gets the index of the given attribute.
+Gets the index of the given attribute.
            @param attribute  The attribute.
            @return The attribute's index, or -1.
         """
@@ -5371,7 +5371,7 @@ class MetadataElement:
 
     def getAttributeDouble(self, name, defaultValue):
         """
-           Returns the double value of the attribute with the given name. The given default value is returned if an
+Returns the double value of the attribute with the given name. The given default value is returned if an
            attribute with the given name could not be found in this node.
            @param name         the attribute name
            @param defaultValue the default value
@@ -5382,7 +5382,7 @@ class MetadataElement:
 
     def getAttributeUTC(self, name, defaultValue):
         """
-           Returns the UTC value of the attribute with the given name. The given default value is returned if an
+Returns the UTC value of the attribute with the given name. The given default value is returned if an
            attribute with the given name could not be found in this node.
            @param name         the attribute name
            @param defaultValue the default value
@@ -5392,7 +5392,7 @@ class MetadataElement:
 
     def getAttributeInt(self, name, defaultValue):
         """
-           Returns the integer value of the attribute with the given name. The given default value is returned if an
+Returns the integer value of the attribute with the given name. The given default value is returned if an
            attribute with the given name could not be found in this node.
            @param name         the attribute name
            @param defaultValue the default value
@@ -5403,7 +5403,7 @@ class MetadataElement:
 
     def setAttributeInt(self, name, value):
         """
-           Sets the attribute with the given name to the given integer value. A new attribute with
+Sets the attribute with the given name to the given integer value. A new attribute with
            <code>ProductData.TYPE_INT32</code> is added to this node if an attribute with the given name could not be found
            in this node.
            @param name  the attribute name
@@ -5414,7 +5414,7 @@ class MetadataElement:
 
     def setAttributeDouble(self, name, value):
         """
-           Sets the attribute with the given name to the given double value. A new attribute with
+Sets the attribute with the given name to the given double value. A new attribute with
            <code>ProductData.TYPE_FLOAT64</code> is added to this node if an attribute with the given name could not be found
            in this node.
            @param name  the attribute name
@@ -5425,7 +5425,7 @@ class MetadataElement:
 
     def setAttributeUTC(self, name, value):
         """
-           Sets the attribute with the given name to the given utc value. A new attribute with
+Sets the attribute with the given name to the given utc value. A new attribute with
            <code>ProductData.UTC</code> is added to this node if an attribute with the given name could not be found
            in this node.
            @param name  the attribute name
@@ -5436,7 +5436,7 @@ class MetadataElement:
 
     def getAttributeString(self, name, defaultValue):
         """
-           Returns the string value of the attribute with the given name. The given default value is returned if an
+Returns the string value of the attribute with the given name. The given default value is returned if an
            attribute with the given name could not be found in this node.
            @param name         the attribute name
            @param defaultValue the default value
@@ -5446,7 +5446,7 @@ class MetadataElement:
 
     def setAttributeString(self, name, value):
         """
-           Sets the attribute with the given name to the given string value. A new attribute with
+Sets the attribute with the given name to the given string value. A new attribute with
            <code>ProductData.TYPE_ASCII</code> is added to this node if an attribute with the given name could not be found
            in this node.
            @param name  the attribute name
@@ -5461,7 +5461,7 @@ class MetadataElement:
 
     def acceptVisitor(self, visitor):
         """
-           Accepts the given visitor. This method implements the well known 'Visitor' design pattern of the gang-of-four.
+Accepts the given visitor. This method implements the well known 'Visitor' design pattern of the gang-of-four.
            The visitor pattern allows to define new operations on the product data model without the need to add more code
            to it. The new operation is implemented by the visitor.
            
@@ -5477,7 +5477,7 @@ class MetadataElement:
 
     def dispose(self):
         """
-           Releases all of the resources used by this object instance and all of its owned children. Its primary use is to
+Releases all of the resources used by this object instance and all of its owned children. Its primary use is to
            allow the garbage collector to perform a vanilla job.
            
            This method should be called only if it is for sure that this object instance will never be used again. The
@@ -5490,19 +5490,19 @@ class MetadataElement:
 
     def getOwner(self):
         """
-           @return The owner node of this node.
+@return The owner node of this node.
         """
         return ProductNode(MetadataElement_getOwner(self._obj))
 
     def getName(self):
         """
-           @return This node's name.
+@return This node's name.
         """
         return MetadataElement_getName(self._obj)
 
     def setName(self, name):
         """
-           Sets this product's name.
+Sets this product's name.
            @param name The name.
         """
         MetadataElement_setName(self._obj, name)
@@ -5510,14 +5510,14 @@ class MetadataElement:
 
     def getDescription(self):
         """
-           Returns a short textual description for this products node.
+Returns a short textual description for this products node.
            @return a description or <code>null</code>
         """
         return MetadataElement_getDescription(self._obj)
 
     def setDescription(self, description):
         """
-           Sets a short textual description for this products node.
+Sets a short textual description for this products node.
            @param description a description, can be <code>null</code>
         """
         MetadataElement_setDescription(self._obj, description)
@@ -5525,7 +5525,7 @@ class MetadataElement:
 
     def isModified(self):
         """
-           Returns whether or not this node is modified.
+Returns whether or not this node is modified.
            @return <code>true</code> if so
         """
         return MetadataElement_isModified(self._obj)
@@ -5536,7 +5536,7 @@ class MetadataElement:
     @staticmethod
     def isValidNodeName(name):
         """
-           Tests whether the given name is valid name for a node.
+Tests whether the given name is valid name for a node.
            A valid node name must not start with a dot. Also a valid node name must not contain
            any of the character  <code>\/:*?"&lt;&gt;|</code>
            @param name the name to test
@@ -5546,7 +5546,7 @@ class MetadataElement:
 
     def getProduct(self):
         """
-           Returns the product to which this node belongs to.
+Returns the product to which this node belongs to.
            @return the product, or <code>null</code> if this node was not owned by a product at the time this method was
            called
         """
@@ -5554,21 +5554,21 @@ class MetadataElement:
 
     def getProductReader(self):
         """
-           Returns the product reader for the product to which this node belongs to.
+Returns the product reader for the product to which this node belongs to.
            @return the product reader, or <code>null</code> if no such exists
         """
         return ProductReader(MetadataElement_getProductReader(self._obj))
 
     def getProductWriter(self):
         """
-           Returns the product writer for the product to which this node belongs to.
+Returns the product writer for the product to which this node belongs to.
            @return the product writer, or <code>null</code> if no such exists
         """
         return ProductWriter(MetadataElement_getProductWriter(self._obj))
 
     def getDisplayName(self):
         """
-           Returns this node's display name. The display name is the product reference string with the node name appended.
+Returns this node's display name. The display name is the product reference string with the node name appended.
            Example: The string <code>"[2] <i>node-name</i>"</code> means node <code><i>node-name</i></code> of the
            product with the reference number <code>2</code>.
            @return this node's name with a product prefix <br>or this node's name only if this node's product prefix is
@@ -5579,7 +5579,7 @@ class MetadataElement:
 
     def getProductRefString(self):
         """
-           Gets the product reference string. The product reference string is the product reference number enclosed in
+Gets the product reference string. The product reference string is the product reference number enclosed in
            square brackets. Example: The string <code>"[2]"</code> stands for a product with the reference number
            <code>2</code>.
            @return the product reference string. <br>or <code>null</code> if this node has no product <br>or
@@ -5589,7 +5589,7 @@ class MetadataElement:
 
     def updateExpression(self, oldExternalName, newExternalName):
         """
-           Asks a product node to replace all occurences of and references to the node name
+Asks a product node to replace all occurences of and references to the node name
            given by {@code oldExternalName} with {@code oldExternalName}. Such references most often occur
            in band arithmetic expressions.
            @param oldExternalName The old node name.
@@ -5600,7 +5600,7 @@ class MetadataElement:
 
     def removeFromFile(self, productWriter):
         """
-           Physically remove this node from the file associated with the given product writer. The default implementation
+Physically remove this node from the file associated with the given product writer. The default implementation
            does nothing.
            @param productWriter the product writer to be used to remove this node from the underlying file.
         """
@@ -5683,26 +5683,26 @@ class PlacemarkGroup:
 
     def isTakingOverNodeOwnership(self):
         """
-           @return {@code true}, if child nodes will have this group as owner after adding.
+@return {@code true}, if child nodes will have this group as owner after adding.
         """
         return PlacemarkGroup_isTakingOverNodeOwnership(self._obj)
 
     def getNodeCount(self):
         """
-           @return The number of product nodes in this product group.
+@return The number of product nodes in this product group.
         """
         return PlacemarkGroup_getNodeCount(self._obj)
 
     def get(self, index):
         """
-           @param index The node index.
+@param index The node index.
            @return The product node at the given index.
         """
         return T(PlacemarkGroup_get1(self._obj, index))
 
     def getNodeDisplayNames(self):
         """
-           Returns the display names of all products currently managed.
+Returns the display names of all products currently managed.
            @return an array containing the display names, never <code>null</code>, but the array can have zero length
            @see ProductNode#getDisplayName()
         """
@@ -5710,21 +5710,21 @@ class PlacemarkGroup:
 
     def getNodeNames(self):
         """
-           Returns the names of all products currently managed.
+Returns the names of all products currently managed.
            @return an array containing the names, never <code>null</code>, but the array can have zero length
         """
         return PlacemarkGroup_getNodeNames(self._obj)
 
     def toArray(self):
         """
-           Returns an array of all products currently managed.
+Returns an array of all products currently managed.
            @return an array containing the products, never <code>null</code>, but the array can have zero length
         """
         return ProductNode(PlacemarkGroup_toArray1(self._obj))
 
     def toArray(self, array):
         """
-           @param array the array into which the elements of the list are to be stored, if it is big enough; otherwise, a
+@param array the array into which the elements of the list are to be stored, if it is big enough; otherwise, a
            new array of the same runtime type is allocated for this purpose.
            @return an array containing the product nodes, never <code>null</code>, but the array can have zero length
         """
@@ -5738,21 +5738,21 @@ class PlacemarkGroup:
 
     def getByDisplayName(self, displayName):
         """
-           @param displayName the display name
+@param displayName the display name
            @return the product node with the given display name.
         """
         return T(PlacemarkGroup_getByDisplayName(self._obj, displayName))
 
     def get(self, name):
         """
-           @param name the name
+@param name the name
            @return the product node with the given name.
         """
         return T(PlacemarkGroup_get2(self._obj, name))
 
     def contains(self, name):
         """
-           Tests whether a node with the given name is contained in this group.
+Tests whether a node with the given name is contained in this group.
            @param name the name
            @return true, if so
         """
@@ -5760,7 +5760,7 @@ class PlacemarkGroup:
 
     def contains(self, node):
         """
-           Tests whether the given product is contained in this list.
+Tests whether the given product is contained in this list.
            @param node the node
            @return true, if so
         """
@@ -5768,7 +5768,7 @@ class PlacemarkGroup:
 
     def add(self, node):
         """
-           Adds the given node to this group.
+Adds the given node to this group.
            @param node the node to be added, ignored if <code>null</code>
            @return true, if the node has been added
         """
@@ -5776,7 +5776,7 @@ class PlacemarkGroup:
 
     def add(self, index, node):
         """
-           Adds the given node to this group.
+Adds the given node to this group.
            @param index the index.
            @param node  the node to be added, ignored if <code>null</code>
         """
@@ -5785,7 +5785,7 @@ class PlacemarkGroup:
 
     def remove(self, node):
         """
-           Removes the given node from this group.
+Removes the given node from this group.
            @param node the node to be removed
            @return true, if the node was removed
         """
@@ -5793,7 +5793,7 @@ class PlacemarkGroup:
 
     def removeAll(self):
         """
-           Removes all nodes from this group.
+Removes all nodes from this group.
         """
         PlacemarkGroup_removeAll(self._obj)
         return
@@ -5804,7 +5804,7 @@ class PlacemarkGroup:
 
     def getRemovedNodes(self):
         """
-           Gets all removed node nodes.
+Gets all removed node nodes.
            @return a collection of all removed node nodes.
         """
         return Collection(PlacemarkGroup_getRemovedNodes(self._obj))
@@ -5826,19 +5826,19 @@ class PlacemarkGroup:
 
     def getOwner(self):
         """
-           @return The owner node of this node.
+@return The owner node of this node.
         """
         return ProductNode(PlacemarkGroup_getOwner(self._obj))
 
     def getName(self):
         """
-           @return This node's name.
+@return This node's name.
         """
         return PlacemarkGroup_getName(self._obj)
 
     def setName(self, name):
         """
-           Sets this product's name.
+Sets this product's name.
            @param name The name.
         """
         PlacemarkGroup_setName(self._obj, name)
@@ -5846,14 +5846,14 @@ class PlacemarkGroup:
 
     def getDescription(self):
         """
-           Returns a short textual description for this products node.
+Returns a short textual description for this products node.
            @return a description or <code>null</code>
         """
         return PlacemarkGroup_getDescription(self._obj)
 
     def setDescription(self, description):
         """
-           Sets a short textual description for this products node.
+Sets a short textual description for this products node.
            @param description a description, can be <code>null</code>
         """
         PlacemarkGroup_setDescription(self._obj, description)
@@ -5861,7 +5861,7 @@ class PlacemarkGroup:
 
     def isModified(self):
         """
-           Returns whether or not this node is modified.
+Returns whether or not this node is modified.
            @return <code>true</code> if so
         """
         return PlacemarkGroup_isModified(self._obj)
@@ -5872,7 +5872,7 @@ class PlacemarkGroup:
     @staticmethod
     def isValidNodeName(name):
         """
-           Tests whether the given name is valid name for a node.
+Tests whether the given name is valid name for a node.
            A valid node name must not start with a dot. Also a valid node name must not contain
            any of the character  <code>\/:*?"&lt;&gt;|</code>
            @param name the name to test
@@ -5882,7 +5882,7 @@ class PlacemarkGroup:
 
     def getProduct(self):
         """
-           Returns the product to which this node belongs to.
+Returns the product to which this node belongs to.
            @return the product, or <code>null</code> if this node was not owned by a product at the time this method was
            called
         """
@@ -5890,21 +5890,21 @@ class PlacemarkGroup:
 
     def getProductReader(self):
         """
-           Returns the product reader for the product to which this node belongs to.
+Returns the product reader for the product to which this node belongs to.
            @return the product reader, or <code>null</code> if no such exists
         """
         return ProductReader(PlacemarkGroup_getProductReader(self._obj))
 
     def getProductWriter(self):
         """
-           Returns the product writer for the product to which this node belongs to.
+Returns the product writer for the product to which this node belongs to.
            @return the product writer, or <code>null</code> if no such exists
         """
         return ProductWriter(PlacemarkGroup_getProductWriter(self._obj))
 
     def getDisplayName(self):
         """
-           Returns this node's display name. The display name is the product reference string with the node name appended.
+Returns this node's display name. The display name is the product reference string with the node name appended.
            Example: The string <code>"[2] <i>node-name</i>"</code> means node <code><i>node-name</i></code> of the
            product with the reference number <code>2</code>.
            @return this node's name with a product prefix <br>or this node's name only if this node's product prefix is
@@ -5915,7 +5915,7 @@ class PlacemarkGroup:
 
     def getProductRefString(self):
         """
-           Gets the product reference string. The product reference string is the product reference number enclosed in
+Gets the product reference string. The product reference string is the product reference number enclosed in
            square brackets. Example: The string <code>"[2]"</code> stands for a product with the reference number
            <code>2</code>.
            @return the product reference string. <br>or <code>null</code> if this node has no product <br>or
@@ -5925,7 +5925,7 @@ class PlacemarkGroup:
 
     def getRawStorageSize(self):
         """
-           Gets an estimated, raw storage size in bytes of this product node.
+Gets an estimated, raw storage size in bytes of this product node.
            @return the size in bytes.
         """
         return PlacemarkGroup_getRawStorageSize1(self._obj)
@@ -5940,7 +5940,7 @@ class PlacemarkGroup:
 
     def removeFromFile(self, productWriter):
         """
-           Physically remove this node from the file associated with the given product writer. The default implementation
+Physically remove this node from the file associated with the given product writer. The default implementation
            does nothing.
            @param productWriter the product writer to be used to remove this node from the underlying file.
         """
@@ -5966,7 +5966,7 @@ class Product:
     @staticmethod
     def newProduct(name, type, sceneRasterWidth, sceneRasterHeight):
         """
-           Creates a new product without any reader (in-memory product)
+Creates a new product without any reader (in-memory product)
            @param name              the product name
            @param type              the product type
            @param sceneRasterWidth  the scene width in pixels for this data product
@@ -5976,7 +5976,7 @@ class Product:
 
     def getFileLocation(self):
         """
-           Retrieves the disk location of this product. The return value can be <code>null</code> when the product has no
+Retrieves the disk location of this product. The return value can be <code>null</code> when the product has no
            disk location (pure virtual memory product)
            @return the file location, may be <code>null</code>
         """
@@ -5984,7 +5984,7 @@ class Product:
 
     def setFileLocation(self, fileLocation):
         """
-           Sets the file location for this product.
+Sets the file location for this product.
            @param fileLocation the file location, may be <code>null</code>
         """
         Product_setFileLocation(self._obj, fileLocation._obj)
@@ -5992,14 +5992,14 @@ class Product:
 
     def getProductType(self):
         """
-           Gets the product type string.
+Gets the product type string.
            @return the product type string
         """
         return Product_getProductType(self._obj)
 
     def setProductType(self, productType):
         """
-           Sets the product type of this product.
+Sets the product type of this product.
            @param productType the product type.
         """
         Product_setProductType(self._obj, productType)
@@ -6007,7 +6007,7 @@ class Product:
 
     def setProductReader(self, reader):
         """
-           Sets the product reader which will be used to create this product in-memory represention from an external source
+Sets the product reader which will be used to create this product in-memory represention from an external source
            and which will be used to (re-)load band rasters.
            @param reader the product reader.
            @throws IllegalArgumentException if the given reader is null.
@@ -6017,7 +6017,7 @@ class Product:
 
     def getProductReader(self):
         """
-           Returns the reader which was used to create this product in-memory represention from an external source and which
+Returns the reader which was used to create this product in-memory represention from an external source and which
            will be used to (re-)load band rasters.
            @return the product reader, can be <code>null</code>
         """
@@ -6025,7 +6025,7 @@ class Product:
 
     def setProductWriter(self, writer):
         """
-           Sets the writer which will be used to write modifications of this product's in-memory represention to an external
+Sets the writer which will be used to write modifications of this product's in-memory represention to an external
            destination.
            @param writer the product writer, can be <code>null</code>
         """
@@ -6034,7 +6034,7 @@ class Product:
 
     def getProductWriter(self):
         """
-           Returns the writer which will be used to write modifications of this product's in-memory represention to an
+Returns the writer which will be used to write modifications of this product's in-memory represention to an
            external destination.
            @return the product writer, can be <code>null</code>
         """
@@ -6042,7 +6042,7 @@ class Product:
 
     def writeHeader(self, output):
         """
-           Writes the header of a data product.
+Writes the header of a data product.
            @param output an object representing a valid output for this writer, might be a <code>ImageOutputStream</code>
            or a <code>File</code> or other <code>Object</code> to use for future decoding.
            @throws IllegalArgumentException if <code>output</code> is <code>null</code> or it's type is none of the
@@ -6054,7 +6054,7 @@ class Product:
 
     def closeProductReader(self):
         """
-           Closes and clears this product's reader (if any).
+Closes and clears this product's reader (if any).
            @throws IOException if an I/O error occurs
            @see #closeIO
         """
@@ -6063,7 +6063,7 @@ class Product:
 
     def closeProductWriter(self):
         """
-           Closes and clears this product's writer (if any).
+Closes and clears this product's writer (if any).
            @throws IOException if an I/O error occurs
            @see #closeIO
         """
@@ -6072,7 +6072,7 @@ class Product:
 
     def closeIO(self):
         """
-           Closes the file I/O for this product. Calls in sequence <code>{@link #closeProductReader}</code>  and
+Closes the file I/O for this product. Calls in sequence <code>{@link #closeProductReader}</code>  and
            <code>{@link #closeProductWriter}</code>. The <code>{@link #dispose}</code> method is <b>not</b> called, but
            should be called if the product instance is no longer in use.
            @throws IOException if an I/O error occurs
@@ -6085,7 +6085,7 @@ class Product:
 
     def dispose(self):
         """
-           Releases all of the resources used by this object instance and all of its owned children. Its primary use is to
+Releases all of the resources used by this object instance and all of its owned children. Its primary use is to
            allow the garbage collector to perform a vanilla job.
            
            This method should be called only if it is for sure that this object instance will never be used again. The
@@ -6100,14 +6100,14 @@ class Product:
 
     def getPointingFactory(self):
         """
-           Gets the pointing factory associated with this data product.
+Gets the pointing factory associated with this data product.
            @return the pointing factory or null, if none
         """
         return PointingFactory(Product_getPointingFactory(self._obj))
 
     def setPointingFactory(self, pointingFactory):
         """
-           Sets the pointing factory for this data product.
+Sets the pointing factory for this data product.
            @param pointingFactory the pointing factory
         """
         Product_setPointingFactory(self._obj, pointingFactory._obj)
@@ -6115,7 +6115,7 @@ class Product:
 
     def setGeoCoding(self, geoCoding):
         """
-           Geo-codes this data product.
+Geo-codes this data product.
            @param geoCoding the geo-coding, if <code>null</code> geo-coding is removed
            @throws IllegalArgumentException <br>- if the given <code>GeoCoding</code> is a <code>TiePointGeoCoding</code>
            and <code>latGrid</code> or <code>lonGrid</code> are not instances of tie point
@@ -6131,14 +6131,14 @@ class Product:
 
     def getGeoCoding(self):
         """
-           Returns the geo-coding used for this data product.
+Returns the geo-coding used for this data product.
            @return the geo-coding, can be <code>null</code> if this product is not geo-coded.
         """
         return GeoCoding(Product_getGeoCoding(self._obj))
 
     def isUsingSingleGeoCoding(self):
         """
-           Tests if all bands of this product are using a single, uniform geo-coding. Uniformity is tested by comparing
+Tests if all bands of this product are using a single, uniform geo-coding. Uniformity is tested by comparing
            the band's geo-coding against the geo-coding of this product using the {@link Object#equals(Object)} method.
            If this product does not have a geo-coding, the method returns false.
            @return true, if so
@@ -6147,7 +6147,7 @@ class Product:
 
     def transferGeoCodingTo(self, destProduct, subsetDef):
         """
-           Transfers the geo-coding of this product instance to the {@link Product destProduct} with respect to
+Transfers the geo-coding of this product instance to the {@link Product destProduct} with respect to
            the given {@link ProductSubsetDef subsetDef}.
            @param destProduct the destination product
            @param subsetDef   the definition of the subset, may be <code>null</code>
@@ -6157,21 +6157,21 @@ class Product:
 
     def getSceneRasterWidth(self):
         """
-           Returns the scene width in pixels for this data product.
+Returns the scene width in pixels for this data product.
            @return the scene width in pixels for this data product.
         """
         return Product_getSceneRasterWidth(self._obj)
 
     def getSceneRasterHeight(self):
         """
-           Returns the scene height in pixels for this data product.
+Returns the scene height in pixels for this data product.
            @return the scene height in pixels for this data product.
         """
         return Product_getSceneRasterHeight(self._obj)
 
     def getStartTime(self):
         """
-           Gets the (sensing) start time associated with the first raster data line.
+Gets the (sensing) start time associated with the first raster data line.
            
            For Level-1/2 products this is
            the data-take time associated with the first raster data line.
@@ -6183,7 +6183,7 @@ class Product:
 
     def setStartTime(self, startTime):
         """
-           Sets the (sensing) start time of this product.
+Sets the (sensing) start time of this product.
            
            For Level-1/2 products this is
            the data-take time associated with the first raster data line.
@@ -6196,7 +6196,7 @@ class Product:
 
     def getEndTime(self):
         """
-           Gets the (sensing) stop time associated with the last raster data line.
+Gets the (sensing) stop time associated with the last raster data line.
            
            For Level-1/2 products this is
            the data-take time associated with the last raster data line.
@@ -6208,7 +6208,7 @@ class Product:
 
     def setEndTime(self, endTime):
         """
-           Sets the (sensing) stop time associated with the first raster data line.
+Sets the (sensing) stop time associated with the first raster data line.
            
            For Level-1/2 products this is
            the data-take time associated with the last raster data line.
@@ -6221,34 +6221,34 @@ class Product:
 
     def getMetadataRoot(self):
         """
-           Gets the root element of the associated metadata.
+Gets the root element of the associated metadata.
            @return the metadata root element
         """
         return MetadataElement(Product_getMetadataRoot(self._obj))
 
     def getGroups(self):
         """
-           @return The group which contains all other product node groups.
+@return The group which contains all other product node groups.
         """
         return ProductNodeGroup(Product_getGroups(self._obj))
 
     def getGroup(self, name):
         """
-           @param name The group name.
+@param name The group name.
            @return The group with the given name, or {@code null} if no such group exists.
         """
         return ProductNodeGroup(Product_getGroup(self._obj, name))
 
     def getTiePointGridGroup(self):
         """
-           Gets the tie-point grid group of this product.
+Gets the tie-point grid group of this product.
            @return The group of all tie-point grids.
         """
         return ProductNodeGroup(Product_getTiePointGridGroup(self._obj))
 
     def addTiePointGrid(self, tiePointGrid):
         """
-           Adds the given tie-point grid to this product.
+Adds the given tie-point grid to this product.
            @param tiePointGrid the tie-point grid to added, ignored if <code>null</code>
         """
         Product_addTiePointGrid(self._obj, tiePointGrid._obj)
@@ -6256,7 +6256,7 @@ class Product:
 
     def removeTiePointGrid(self, tiePointGrid):
         """
-           Removes the tie-point grid from this product.
+Removes the tie-point grid from this product.
            @param tiePointGrid the tie-point grid to be removed, ignored if <code>null</code>
            @return <code>true</code> if node could be removed
         """
@@ -6264,14 +6264,14 @@ class Product:
 
     def getNumTiePointGrids(self):
         """
-           Returns the number of tie-point grids contained in this product
+Returns the number of tie-point grids contained in this product
            @return the number of tie-point grids
         """
         return Product_getNumTiePointGrids(self._obj)
 
     def getTiePointGridAt(self, index):
         """
-           Returns the tie-point grid at the given index.
+Returns the tie-point grid at the given index.
            @param index the tie-point grid index
            @return the tie-point grid at the given index
            @throws IndexOutOfBoundsException if the index is out of bounds
@@ -6280,7 +6280,7 @@ class Product:
 
     def getTiePointGridNames(self):
         """
-           Returns a string array containing the names of the tie-point grids contained in this product
+Returns a string array containing the names of the tie-point grids contained in this product
            @return a string array containing the names of the tie-point grids contained in this product. If this product has
            no tie-point grids a zero-length-array is returned.
         """
@@ -6288,7 +6288,7 @@ class Product:
 
     def getTiePointGrids(self):
         """
-           Returns an array of tie-point grids contained in this product
+Returns an array of tie-point grids contained in this product
            @return an array of tie-point grids contained in this product. If this product has no  tie-point grids a
            zero-length-array is returned.
         """
@@ -6296,7 +6296,7 @@ class Product:
 
     def getTiePointGrid(self, name):
         """
-           Returns the tie-point grid with the given name.
+Returns the tie-point grid with the given name.
            @param name the tie-point grid name
            @return the tie-point grid with the given name or <code>null</code> if a tie-point grid with the given name is
            not contained in this product.
@@ -6305,7 +6305,7 @@ class Product:
 
     def containsTiePointGrid(self, name):
         """
-           Tests if a tie-point grid with the given name is contained in this product.
+Tests if a tie-point grid with the given name is contained in this product.
            @param name the name, must not be <code>null</code>
            @return <code>true</code> if a tie-point grid with the given name is contained in this product,
            <code>false</code> otherwise
@@ -6314,14 +6314,14 @@ class Product:
 
     def getBandGroup(self):
         """
-           Gets the band group of this product.
+Gets the band group of this product.
            @return The group of all bands.
         """
         return ProductNodeGroup(Product_getBandGroup(self._obj))
 
     def addBand(self, band):
         """
-           Adds the given band to this product.
+Adds the given band to this product.
            @param band the band to added, must not be <code>null</code>
         """
         Product_addBand(self._obj, band._obj)
@@ -6329,7 +6329,7 @@ class Product:
 
     def addBand(self, bandName, dataType):
         """
-           Creates a new band with the given name and data type and adds it to this product and returns it.
+Creates a new band with the given name and data type and adds it to this product and returns it.
            @param bandName the new band's name
            @param dataType the raster data type, must be one of the multiple <code>ProductData.TYPE_<i>X</i></code>
            constants
@@ -6339,7 +6339,7 @@ class Product:
 
     def addBand(self, bandName, expression):
         """
-           Creates a new band with the given name and adds it to this product and returns it.
+Creates a new band with the given name and adds it to this product and returns it.
            The new band's data type is {@code float} and it's samples are computed from the given band maths expression.
            @param bandName   the new band's name
            @param expression the band maths expression
@@ -6349,7 +6349,7 @@ class Product:
 
     def removeBand(self, band):
         """
-           Removes the given band from this product.
+Removes the given band from this product.
            @param band the band to be removed, ignored if <code>null</code>
            @return {@code true} if removed succesfully, otherwise {@code false}
         """
@@ -6357,13 +6357,13 @@ class Product:
 
     def getNumBands(self):
         """
-           @return the number of bands contained in this product.
+@return the number of bands contained in this product.
         """
         return Product_getNumBands(self._obj)
 
     def getBandAt(self, index):
         """
-           Returns the band at the given index.
+Returns the band at the given index.
            @param index the band index
            @return the band at the given index
            @throws IndexOutOfBoundsException if the index is out of bounds
@@ -6372,7 +6372,7 @@ class Product:
 
     def getBandNames(self):
         """
-           Returns a string array containing the names of the bands contained in this product
+Returns a string array containing the names of the bands contained in this product
            @return a string array containing the names of the bands contained in this product. If this product has no bands
            a zero-length-array is returned.
         """
@@ -6380,7 +6380,7 @@ class Product:
 
     def getBands(self):
         """
-           Returns an array of bands contained in this product
+Returns an array of bands contained in this product
            @return an array of bands contained in this product. If this product has no bands a zero-length-array is
            returned.
         """
@@ -6388,7 +6388,7 @@ class Product:
 
     def getBand(self, name):
         """
-           Returns the band with the given name.
+Returns the band with the given name.
            @param name the band name
            @return the band with the given name or <code>null</code> if a band with the given name is not contained in this
            product.
@@ -6398,7 +6398,7 @@ class Product:
 
     def getBandIndex(self, name):
         """
-           Returns the index for the band with the given name.
+Returns the index for the band with the given name.
            @param name the band name
            @return the band index or <code>-1</code> if a band with the given name is not contained in this product.
            @throws IllegalArgumentException if the given name is <code>null</code> or empty.
@@ -6407,7 +6407,7 @@ class Product:
 
     def containsBand(self, name):
         """
-           Tests if a band with the given name is contained in this product.
+Tests if a band with the given name is contained in this product.
            @param name the name, must not be <code>null</code>
            @return <code>true</code> if a band with the given name is contained in this product, <code>false</code>
            otherwise
@@ -6417,7 +6417,7 @@ class Product:
 
     def containsRasterDataNode(self, name):
         """
-           Tests if a raster data node with the given name is contained in this product. Raster data nodes can be bands or
+Tests if a raster data node with the given name is contained in this product. Raster data nodes can be bands or
            tie-point grids.
            @param name the name, must not be <code>null</code>
            @return <code>true</code> if a raster data node with the given name is contained in this product,
@@ -6427,7 +6427,7 @@ class Product:
 
     def getRasterDataNode(self, name):
         """
-           Gets the raster data node with the given name. The method first searches for bands with the given name, then for
+Gets the raster data node with the given name. The method first searches for bands with the given name, then for
            tie-point grids. If neither bands nor tie-point grids exist with the given name, <code>null</code> is returned.
            @param name the name, must not be <code>null</code>
            @return the raster data node with the given name or <code>null</code> if a raster data node with the given name
@@ -6449,7 +6449,7 @@ class Product:
 
     def containsPixel(self, x, y):
         """
-           Tests if the given pixel position is within the product pixel bounds.
+Tests if the given pixel position is within the product pixel bounds.
            @param x the x coordinate of the pixel position
            @param y the y coordinate of the pixel position
            @return true, if so
@@ -6459,7 +6459,7 @@ class Product:
 
     def getGcpGroup(self):
         """
-           Gets the group of ground-control points (GCPs).
+Gets the group of ground-control points (GCPs).
            Note that this method will create the group, if none exists already.
            @return the GCP group.
         """
@@ -6467,7 +6467,7 @@ class Product:
 
     def getPinGroup(self):
         """
-           Gets the group of pins.
+Gets the group of pins.
            Note that this method will create the group, if none exists already.
            @return the pin group.
         """
@@ -6475,14 +6475,14 @@ class Product:
 
     def getNumResolutionsMax(self):
         """
-           @return The maximum number of resolution levels common to all band images.
+@return The maximum number of resolution levels common to all band images.
            If less than or equal to zero, the  number of resolution levels is considered to be unknown.
         """
         return Product_getNumResolutionsMax(self._obj)
 
     def setNumResolutionsMax(self, numResolutionsMax):
         """
-           @param numResolutionsMax The maximum number of resolution levels common to all band images.
+@param numResolutionsMax The maximum number of resolution levels common to all band images.
            If less than or equal to zero, the  number of resolution levels is considered to be unknown.
         """
         Product_setNumResolutionsMax(self._obj, numResolutionsMax)
@@ -6490,7 +6490,7 @@ class Product:
 
     def isCompatibleProduct(self, product, eps):
         """
-           Checks whether or not the given product is compatible with this product.
+Checks whether or not the given product is compatible with this product.
            @param product the product to compare with
            @param eps     the maximum lat/lon error in degree
            @return <code>false</code> if the scene dimensions or geocoding are different, <code>true</code> otherwise.
@@ -6499,7 +6499,7 @@ class Product:
 
     def parseExpression(self, expression):
         """
-           Parses a mathematical expression given as a text string.
+Parses a mathematical expression given as a text string.
            @param expression a expression given as a text string, e.g. "radiance_4 / (1.0 + radiance_11)".
            @return a term parsed from the given expression string
            @throws ParseException if the expression could not successfully be parsed
@@ -6508,7 +6508,7 @@ class Product:
 
     def acceptVisitor(self, visitor):
         """
-           Accepts the given visitor. This method implements the well known 'Visitor' design pattern of the gang-of-four.
+Accepts the given visitor. This method implements the well known 'Visitor' design pattern of the gang-of-four.
            The visitor pattern allows to define new operations on the product data model without the need to add more code
            to it. The new operation is implemented by the visitor.
            
@@ -6521,7 +6521,7 @@ class Product:
 
     def addProductNodeListener(self, listener):
         """
-           Adds a <code>ProductNodeListener</code> to this product. The <code>ProductNodeListener</code> is informed each
+Adds a <code>ProductNodeListener</code> to this product. The <code>ProductNodeListener</code> is informed each
            time a node in this product changes.
            @param listener the listener to be added
            @return boolean if listener was added or not
@@ -6530,7 +6530,7 @@ class Product:
 
     def removeProductNodeListener(self, listener):
         """
-           Removes a <code>ProductNodeListener</code> from this product.
+Removes a <code>ProductNodeListener</code> from this product.
            @param listener the listener to be removed.
         """
         Product_removeProductNodeListener(self._obj, listener._obj)
@@ -6541,13 +6541,13 @@ class Product:
 
     def getRefNo(self):
         """
-           @return The reference number of this product.
+@return The reference number of this product.
         """
         return Product_getRefNo(self._obj)
 
     def setRefNo(self, refNo):
         """
-           Sets the reference number.
+Sets the reference number.
            @param refNo the reference number to set must be in the range 1 .. Integer.MAX_VALUE
            @throws IllegalArgumentException if the refNo is out of range
            @throws IllegalStateException
@@ -6561,14 +6561,14 @@ class Product:
 
     def getProductManager(self):
         """
-           Returns the product manager for this product.
+Returns the product manager for this product.
            @return this product's manager, can be <code>null</code>
         """
         return ProductManager(Product_getProductManager(self._obj))
 
     def createBandArithmeticParser(self):
         """
-           Creates a parser for band arithmetic expressions.
+Creates a parser for band arithmetic expressions.
            The parser created will use a namespace comprising all tie-point grids, bands and flags of this product.
            @return a parser for band arithmetic expressions for this product, never null
         """
@@ -6576,7 +6576,7 @@ class Product:
 
     def createBandArithmeticDefaultNamespace(self):
         """
-           Creates a namespace to be used by parsers for band arithmetic expressions.
+Creates a namespace to be used by parsers for band arithmetic expressions.
            The namespace created comprises all tie-point grids, bands and flags of this product.
            @return a namespace, never null
         """
@@ -6584,7 +6584,7 @@ class Product:
 
     def createSubset(self, subsetDef, name, desc):
         """
-           Creates a subset of this product. The returned product represents a true spatial and spectral subset of this
+Creates a subset of this product. The returned product represents a true spatial and spectral subset of this
            product, but it has not loaded any bands into memory. If name or desc are null or empty, the name and the
            description from this product was used.
            @param subsetDef the product subset definition
@@ -6597,7 +6597,7 @@ class Product:
 
     def createProjectedProduct(self, mapInfo, name, desc):
         """
-           Creates a map-projected version of this product.
+Creates a map-projected version of this product.
            @param mapInfo the map information
            @param name    the name for the new product
            @param desc    the description for the new product
@@ -6608,7 +6608,7 @@ class Product:
 
     def createFlippedProduct(self, flipType, name, desc):
         """
-           Creates flipped raster-data version of this product.
+Creates flipped raster-data version of this product.
            @param flipType the flip type, see <code>{@link ProductFlipper}</code>
            @param name     the name for the new product
            @param desc     the description for the new product
@@ -6623,14 +6623,14 @@ class Product:
 
     def getQuicklookBandName(self):
         """
-           Gets the name of the band suitable for quicklook generation.
+Gets the name of the band suitable for quicklook generation.
            @return the name of the quicklook band, or null if none has been defined
         """
         return Product_getQuicklookBandName(self._obj)
 
     def setQuicklookBandName(self, quicklookBandName):
         """
-           Sets the name of the band suitable for quicklook generation.
+Sets the name of the band suitable for quicklook generation.
            @param quicklookBandName the name of the quicklook band, or null
         """
         Product_setQuicklookBandName(self._obj, quicklookBandName)
@@ -6638,7 +6638,7 @@ class Product:
 
     def createPixelInfoString(self, pixelX, pixelY):
         """
-           Creates a string containing all available information at the given pixel position. The string returned is a line
+Creates a string containing all available information at the given pixel position. The string returned is a line
            separated text with each line containing a key/value pair.
            @param pixelX the pixel X co-ordinate
            @param pixelY the pixel Y co-ordinate
@@ -6648,20 +6648,20 @@ class Product:
 
     def getRemovedChildNodes(self):
         """
-           @return All removed child nodes. Array may be empty.
+@return All removed child nodes. Array may be empty.
         """
         return ProductNode(Product_getRemovedChildNodes(self._obj))
 
     def canBeOrthorectified(self):
         """
-           Checks whether or not this product can be ortorectified.
+Checks whether or not this product can be ortorectified.
            @return true if {@link Band#canBeOrthorectified()} returns true for all bands, false otherwise
         """
         return Product_canBeOrthorectified(self._obj)
 
     def getPreferredTileSize(self):
         """
-           Gets the preferred tile size which may be used for a the {@link java.awt.image.RenderedImage rendered image}
+Gets the preferred tile size which may be used for a the {@link java.awt.image.RenderedImage rendered image}
            created for a {@link RasterDataNode} of this product.
            @return the preferred tile size, may be <code>null</null> if not specified
            @see RasterDataNode#getSourceImage()
@@ -6671,7 +6671,7 @@ class Product:
 
     def setPreferredTileSize(self, tileWidth, tileHeight):
         """
-           Sets the preferred tile size which may be used for a the {@link java.awt.image.RenderedImage rendered image}
+Sets the preferred tile size which may be used for a the {@link java.awt.image.RenderedImage rendered image}
            created for a {@link RasterDataNode} of this product.
            @param tileWidth  the preferred tile width
            @param tileHeight the preferred tile height
@@ -6682,7 +6682,7 @@ class Product:
 
     def getAllFlagNames(self):
         """
-           Returns the names of all flags of all flag datasets contained this product.
+Returns the names of all flags of all flag datasets contained this product.
            
            A flag name contains the dataset (a band of this product) and the actual flag name as defined in the
            flag-coding associated with the dataset. The general format for the flag name strings returned is therefore
@@ -6697,14 +6697,14 @@ class Product:
 
     def getAutoGrouping(self):
         """
-           Gets the auto-grouping applicable to product nodes contained in this product.
+Gets the auto-grouping applicable to product nodes contained in this product.
            @return The auto-grouping or {@code null}.
         """
         return Product_AutoGrouping(Product_getAutoGrouping(self._obj))
 
     def setAutoGrouping(self, pattern):
         """
-           Sets the auto-grouping applicable to product nodes contained in this product.
+Sets the auto-grouping applicable to product nodes contained in this product.
            A given {@code pattern} parameter is a textual representation of the auto-grouping.
            The syntax for the pattern is:
            <pre>
@@ -6723,7 +6723,7 @@ class Product:
 
     def addMask(self, maskName, expression, description, color, transparency):
         """
-           Creates a new mask using a band arithmetic expression
+Creates a new mask using a band arithmetic expression
            and adds it to this product and returns it.
            @param maskName     the new mask's name
            @param expression   the band arithmetic expression
@@ -6736,19 +6736,19 @@ class Product:
 
     def getOwner(self):
         """
-           @return The owner node of this node.
+@return The owner node of this node.
         """
         return ProductNode(Product_getOwner(self._obj))
 
     def getName(self):
         """
-           @return This node's name.
+@return This node's name.
         """
         return Product_getName(self._obj)
 
     def setName(self, name):
         """
-           Sets this product's name.
+Sets this product's name.
            @param name The name.
         """
         Product_setName(self._obj, name)
@@ -6756,14 +6756,14 @@ class Product:
 
     def getDescription(self):
         """
-           Returns a short textual description for this products node.
+Returns a short textual description for this products node.
            @return a description or <code>null</code>
         """
         return Product_getDescription(self._obj)
 
     def setDescription(self, description):
         """
-           Sets a short textual description for this products node.
+Sets a short textual description for this products node.
            @param description a description, can be <code>null</code>
         """
         Product_setDescription(self._obj, description)
@@ -6771,7 +6771,7 @@ class Product:
 
     def isModified(self):
         """
-           Returns whether or not this node is modified.
+Returns whether or not this node is modified.
            @return <code>true</code> if so
         """
         return Product_isModified(self._obj)
@@ -6782,7 +6782,7 @@ class Product:
     @staticmethod
     def isValidNodeName(name):
         """
-           Tests whether the given name is valid name for a node.
+Tests whether the given name is valid name for a node.
            A valid node name must not start with a dot. Also a valid node name must not contain
            any of the character  <code>\/:*?"&lt;&gt;|</code>
            @param name the name to test
@@ -6792,7 +6792,7 @@ class Product:
 
     def getProduct(self):
         """
-           Returns the product to which this node belongs to.
+Returns the product to which this node belongs to.
            @return the product, or <code>null</code> if this node was not owned by a product at the time this method was
            called
         """
@@ -6800,7 +6800,7 @@ class Product:
 
     def getDisplayName(self):
         """
-           Returns this node's display name. The display name is the product reference string with the node name appended.
+Returns this node's display name. The display name is the product reference string with the node name appended.
            Example: The string <code>"[2] <i>node-name</i>"</code> means node <code><i>node-name</i></code> of the
            product with the reference number <code>2</code>.
            @return this node's name with a product prefix <br>or this node's name only if this node's product prefix is
@@ -6811,7 +6811,7 @@ class Product:
 
     def getProductRefString(self):
         """
-           Gets the product reference string. The product reference string is the product reference number enclosed in
+Gets the product reference string. The product reference string is the product reference number enclosed in
            square brackets. Example: The string <code>"[2]"</code> stands for a product with the reference number
            <code>2</code>.
            @return the product reference string. <br>or <code>null</code> if this node has no product <br>or
@@ -6821,7 +6821,7 @@ class Product:
 
     def updateExpression(self, oldExternalName, newExternalName):
         """
-           Asks a product node to replace all occurences of and references to the node name
+Asks a product node to replace all occurences of and references to the node name
            given by {@code oldExternalName} with {@code oldExternalName}. Such references most often occur
            in band arithmetic expressions.
            @param oldExternalName The old node name.
@@ -6832,7 +6832,7 @@ class Product:
 
     def removeFromFile(self, productWriter):
         """
-           Physically remove this node from the file associated with the given product writer. The default implementation
+Physically remove this node from the file associated with the given product writer. The default implementation
            does nothing.
            @param productWriter the product writer to be used to remove this node from the underlying file.
         """
@@ -6976,7 +6976,7 @@ class ColorPaletteDef:
 
     def createPointAfter(self, index, scaling):
         """
-           creates a new point between the point at the given index
+creates a new point between the point at the given index
            @param index   the index
            @param scaling the scaling
            @return true, if a point has been inserted
@@ -6986,7 +6986,7 @@ class ColorPaletteDef:
     @staticmethod
     def getCenterColor(c1, c2):
         """
-           Creates the center color between the given two colors.
+Creates the center color between the given two colors.
            @param c1 1st color
            @param c2 2nd color
            @return the center color
@@ -7020,7 +7020,7 @@ class ColorPaletteDef:
     @staticmethod
     def loadColorPaletteDef(file):
         """
-           Loads a color palette definition from the given file
+Loads a color palette definition from the given file
            @param file the file
            @return the color palette definition, never null
            @throws IOException if an I/O error occurs
@@ -7030,7 +7030,7 @@ class ColorPaletteDef:
     @staticmethod
     def storeColorPaletteDef(colorPaletteDef, file):
         """
-           Stores this color palette definition in the given file
+Stores this color palette definition in the given file
            @param colorPaletteDef thje color palette definition
            @param file            the file
            @throws IOException if an I/O error occurs
@@ -7040,7 +7040,7 @@ class ColorPaletteDef:
 
     def dispose(self):
         """
-           Releases all of the resources used by this color palette definition and all of its owned children. Its primary
+Releases all of the resources used by this color palette definition and all of its owned children. Its primary
            use is to allow the garbage collector to perform a vanilla job.
            
            This method should be called only if it is for sure that this object instance will never be used again. The
@@ -7082,7 +7082,7 @@ class ImageInfo:
     @staticmethod
     def newImageInfo(colorPaletteDef):
         """
-           Constructs a new image information instance.
+Constructs a new image information instance.
            @param colorPaletteDef the color palette definition
         """
         return ImageInfo(ImageInfo_newImageInfoPalette(colorPaletteDef._obj))
@@ -7090,14 +7090,14 @@ class ImageInfo:
     @staticmethod
     def newImageInfo(rgbChannelDef):
         """
-           Constructs a new RGB image information instance.
+Constructs a new RGB image information instance.
            @param rgbChannelDef the RGB channel definition
         """
         return ImageInfo(ImageInfo_newImageInfoRGB(rgbChannelDef._obj))
 
     def getColorPaletteDef(self):
         """
-           Gets the color palette definition as used for images created from single bands.
+Gets the color palette definition as used for images created from single bands.
            @return The color palette definition. Can be {@code null}.
            In this case {@link #getRgbChannelDef()} is non-null.
         """
@@ -7105,7 +7105,7 @@ class ImageInfo:
 
     def getRgbChannelDef(self):
         """
-           Gets the RGB(A) channel definition as used for images created from 3 tp 4 bands.
+Gets the RGB(A) channel definition as used for images created from 3 tp 4 bands.
            @return The RGB(A) channel definition.
            Can be {@code null}. In this case {@link #getColorPaletteDef()} is non-null.
         """
@@ -7134,7 +7134,7 @@ class ImageInfo:
 
     def getColorComponentCount(self):
         """
-           Gets the number of color components the image shall have using an instance of this {@code ImageInfo}.
+Gets the number of color components the image shall have using an instance of this {@code ImageInfo}.
            @return {@code 3} for RGB images, {@code 4} for RGB images with an alpha channel (transparency)
         """
         return ImageInfo_getColorComponentCount(self._obj)
@@ -7147,14 +7147,14 @@ class ImageInfo:
 
     def clone(self):
         """
-           Creates and returns a copy of this object.
+Creates and returns a copy of this object.
            @return a copy of this object
         """
         return Object(ImageInfo_clone(self._obj))
 
     def createDeepCopy(self):
         """
-           Creates and returns a "deep" copy of this object. The method simply returns the value of
+Creates and returns a "deep" copy of this object. The method simply returns the value of
            {@link #clone()}.
            @return a copy of this object
         """
@@ -7162,7 +7162,7 @@ class ImageInfo:
 
     def dispose(self):
         """
-           Releases all of the resources used by this object instance and all of its owned children. Its primary use is to
+Releases all of the resources used by this object instance and all of its owned children. Its primary use is to
            allow the garbage collector to perform a vanilla job.
            
            This method should be called only if it is for sure that this object instance will never be used again. The
@@ -7175,7 +7175,7 @@ class ImageInfo:
 
     def setColors(self, colors):
         """
-           Sets the colours of the colour palette of this image info.
+Sets the colours of the colour palette of this image info.
            @param colors the new colours
         """
         ImageInfo_setColors(self._obj, colors._obj)
@@ -7183,7 +7183,7 @@ class ImageInfo:
 
     def setColorPaletteDef(self, colorPaletteDef, minSample, maxSample, autoDistribute):
         """
-           Transfers the colour palette into this image info.
+Transfers the colour palette into this image info.
            @param colorPaletteDef another colour palette
            @param minSample       the minium allowed sample value in the new colour palette
            @param maxSample       the maximum allowed sample value in the new colour palette
@@ -7195,7 +7195,7 @@ class ImageInfo:
     @staticmethod
     def getHistogramMatching(mode):
         """
-           Converts a string to a histogram matching.
+Converts a string to a histogram matching.
            @param mode the histogram matching string
            @return the histogram matching. {@link ImageInfo.HistogramMatching#None} if {@code maode} is not "Equalize" or "Normalize".
         """
@@ -7286,7 +7286,7 @@ class TiePointGrid:
     @staticmethod
     def newTiePointGrid(name, gridWidth, gridHeight, offsetX, offsetY, subSamplingX, subSamplingY, tiePoints):
         """
-           Constructs a new <code>TiePointGrid</code> with the given tie point grid properties.
+Constructs a new <code>TiePointGrid</code> with the given tie point grid properties.
            @param name         the name of the new object
            @param gridWidth    the width of the tie-point grid in pixels
            @param gridHeight   the height of the tie-point grid in pixels
@@ -7303,7 +7303,7 @@ class TiePointGrid:
     @staticmethod
     def newTiePointGrid(name, gridWidth, gridHeight, offsetX, offsetY, subSamplingX, subSamplingY, tiePoints, discontinuity):
         """
-           Constructs a new <code>TiePointGrid</code> with the given tie point grid properties.
+Constructs a new <code>TiePointGrid</code> with the given tie point grid properties.
            @param name          the name of the new object
            @param gridWidth     the width of the tie-point grid in pixels
            @param gridHeight    the height of the tie-point grid in pixels
@@ -7322,7 +7322,7 @@ class TiePointGrid:
     @staticmethod
     def newTiePointGrid(name, gridWidth, gridHeight, offsetX, offsetY, subSamplingX, subSamplingY, tiePoints, containsAngles):
         """
-           Constructs a new <code>TiePointGrid</code> with the given tie point grid properties.
+Constructs a new <code>TiePointGrid</code> with the given tie point grid properties.
            @param name           the name of the new object
            @param gridWidth      the width of the tie-point grid in pixels
            @param gridHeight     the height of the tie-point grid in pixels
@@ -7340,7 +7340,7 @@ class TiePointGrid:
     @staticmethod
     def getDiscontinuity(tiePoints):
         """
-           Determines the angular discontinuity of the given tie point values.
+Determines the angular discontinuity of the given tie point values.
            @return the angular discontinuity, will always be either {@link #DISCONT_AT_180} or
            {@link #DISCONT_AT_360}
         """
@@ -7348,7 +7348,7 @@ class TiePointGrid:
 
     def getDiscontinuity(self):
         """
-           Gets the angular discontinuity.
+Gets the angular discontinuity.
            @return the angular discontinuity, will always be either {@link #DISCONT_NONE} or {@link #DISCONT_AT_180} or
            {@link #DISCONT_AT_360}
         """
@@ -7356,7 +7356,7 @@ class TiePointGrid:
 
     def setDiscontinuity(self, discontinuity):
         """
-           Sets the angular discontinuity.
+Sets the angular discontinuity.
            @param discontinuity angular discontinuity, can be either {@link #DISCONT_NONE} or {@link #DISCONT_AT_180} or
            {@link #DISCONT_AT_360}
         """
@@ -7365,14 +7365,14 @@ class TiePointGrid:
 
     def isFloatingPointType(self):
         """
-           Returns <code>true</code>
+Returns <code>true</code>
            @return true
         """
         return TiePointGrid_isFloatingPointType(self._obj)
 
     def getGeophysicalDataType(self):
         """
-           Returns the geophysical data type of this <code>RasterDataNode</code>. The value retuned is always one of the
+Returns the geophysical data type of this <code>RasterDataNode</code>. The value retuned is always one of the
            <code>ProductData.TYPE_XXX</code> constants.
            @return the geophysical data type
            @see ProductData
@@ -7381,7 +7381,7 @@ class TiePointGrid:
 
     def getSceneRasterData(self):
         """
-           Gets a raster data holding this tie-point's interpolated pixel data for an entire product scene. 
+Gets a raster data holding this tie-point's interpolated pixel data for an entire product scene. 
            
            In opposite to the <code>getRasterData</code> method, this method returns raster data that has at least
            <code>getBandOutputRasterWidth()*getBandOutputRasterHeight()</code> elements of the given data type to store
@@ -7397,7 +7397,7 @@ class TiePointGrid:
 
     def getSceneRasterWidth(self):
         """
-           Returns the width in pixels of the scene represented by this tie-point grid. The value returned is
+Returns the width in pixels of the scene represented by this tie-point grid. The value returned is
            <code>(getRasterWidth() - 1) * getSubSamplingX() + 1</code>
            @return the scene width in pixels
         """
@@ -7405,7 +7405,7 @@ class TiePointGrid:
 
     def getSceneRasterHeight(self):
         """
-           Returns the height in pixels of the scene represented by this tie-point grid. The value returned is
+Returns the height in pixels of the scene represented by this tie-point grid. The value returned is
            <code>(getRasterHeight() - 1) * getSubSamplingY() + 1</code>
            @return the scene height in pixels
         """
@@ -7413,19 +7413,19 @@ class TiePointGrid:
 
     def getOffsetX(self):
         """
-           Retrieves the x co-ordinate of the first (upper-left) tie-point in pixels.
+Retrieves the x co-ordinate of the first (upper-left) tie-point in pixels.
         """
         return TiePointGrid_getOffsetX(self._obj)
 
     def getOffsetY(self):
         """
-           Retrieves the y co-ordinate of the first (upper-left) tie-point in pixels.
+Retrieves the y co-ordinate of the first (upper-left) tie-point in pixels.
         """
         return TiePointGrid_getOffsetY(self._obj)
 
     def getSubSamplingX(self):
         """
-           Returns the sub-sampling in X-direction given in the pixel co-ordinates of the data product to which this
+Returns the sub-sampling in X-direction given in the pixel co-ordinates of the data product to which this
            tie-pint grid belongs to.
            @return the sub-sampling in X-direction, never less than one.
         """
@@ -7433,7 +7433,7 @@ class TiePointGrid:
 
     def getSubSamplingY(self):
         """
-           Returns the sub-sampling in Y-direction given in the pixel co-ordinates of the data product to which this
+Returns the sub-sampling in Y-direction given in the pixel co-ordinates of the data product to which this
            tie-pint grid belongs to.
            @return the sub-sampling in Y-direction, never less than one.
         """
@@ -7441,7 +7441,7 @@ class TiePointGrid:
 
     def getTiePoints(self):
         """
-           Gets the data array holding this band's pixel samples.
+Gets the data array holding this band's pixel samples.
            @return the data array for this band, or <code>null</code> if no data has been loaded
            @see ProductData#getElems
         """
@@ -7449,7 +7449,7 @@ class TiePointGrid:
 
     def getPixelInt(self, x, y):
         """
-           Gets the interpolated sample for the pixel located at (x,y) as an integer value. 
+Gets the interpolated sample for the pixel located at (x,y) as an integer value. 
            
            If the pixel co-odinates given by (x,y) are not covered by this tie-point grid, the method extrapolates.
            @param x The X co-ordinate of the pixel location
@@ -7464,7 +7464,7 @@ class TiePointGrid:
 
     def getPixelFloat(self, x, y):
         """
-           Computes the interpolated sample for the pixel located at (x,y). 
+Computes the interpolated sample for the pixel located at (x,y). 
            
            If the pixel co-odinates given by (x,y) are not covered by this tie-point grid, the method extrapolates.
            @param x The X co-ordinate of the pixel location, given in the pixel co-ordinates of the data product to which
@@ -7477,7 +7477,7 @@ class TiePointGrid:
 
     def getPixelFloat(self, x, y):
         """
-           Computes the interpolated sample for the pixel located at (x,y) given as floating point co-ordinates. 
+Computes the interpolated sample for the pixel located at (x,y) given as floating point co-ordinates. 
            
            If the pixel co-odinates given by (x,y) are not covered by this tie-point grid, the method extrapolates.
            @param x The X co-ordinate of the pixel location, given in the pixel co-ordinates of the data product to which
@@ -7490,7 +7490,7 @@ class TiePointGrid:
 
     def getPixelDouble(self, x, y):
         """
-           Gets the interpolated sample for the pixel located at (x,y) as a double value. 
+Gets the interpolated sample for the pixel located at (x,y) as a double value. 
            
            If the pixel co-ordinates given by (x,y) are not covered by this tie-point grid, the method extrapolates.
            @param x The X co-ordinate of the pixel location, given in the pixel co-ordinates of the data product to which
@@ -7503,28 +7503,28 @@ class TiePointGrid:
 
     def setPixelInt(self, x, y, pixelValue):
         """
-           This method is not implemented because pixels are read-only in tie-point grids.
+This method is not implemented because pixels are read-only in tie-point grids.
         """
         TiePointGrid_setPixelInt(self._obj, x, y, pixelValue)
         return
 
     def setPixelFloat(self, x, y, pixelValue):
         """
-           This method is not implemented because pixels are read-only in tie-point grids.
+This method is not implemented because pixels are read-only in tie-point grids.
         """
         TiePointGrid_setPixelFloat(self._obj, x, y, pixelValue)
         return
 
     def setPixelDouble(self, x, y, pixelValue):
         """
-           This method is not implemented because pixels are read-only in tie-point grids.
+This method is not implemented because pixels are read-only in tie-point grids.
         """
         TiePointGrid_setPixelDouble(self._obj, x, y, pixelValue)
         return
 
     def getPixels(self, x, y, w, h, pixels, pm):
         """
-           Retrieves an array of tie point data interpolated to the product with and height as integer array. If the given
+Retrieves an array of tie point data interpolated to the product with and height as integer array. If the given
            array is <code>null</code> a new one was created and returned.
            @param x      the x coordinate of the array to be read
            @param y      the y coordinate of the array to be read
@@ -7538,7 +7538,7 @@ class TiePointGrid:
 
     def getPixels(self, x, y, w, h, pixels, pm):
         """
-           Retrieves an array of tie point data interpolated to the product width and height as float array. If the given
+Retrieves an array of tie point data interpolated to the product width and height as float array. If the given
            array is <code>null</code> a new one is created and returned.
            @param x      the x coordinate of the array to be read
            @param y      the y coordinate of the array to be read
@@ -7552,7 +7552,7 @@ class TiePointGrid:
 
     def getPixels(self, x, y, w, h, pixels, pm):
         """
-           Retrieves an array of tie point data interpolated to the product with and height as double array. If the given
+Retrieves an array of tie point data interpolated to the product with and height as double array. If the given
            array is <code>null</code> a new one was created and returned.
            @param x      the x coordinate of the array to be read
            @param y      the y coordinate of the array to be read
@@ -7565,28 +7565,28 @@ class TiePointGrid:
 
     def setPixels(self, x, y, w, h, pixels):
         """
-           This method is not implemented because pixels are read-only in tie-point grids.
+This method is not implemented because pixels are read-only in tie-point grids.
         """
         TiePointGrid_setPixels3(self._obj, x, y, w, h, pixels)
         return
 
     def setPixels(self, x, y, w, h, pixels):
         """
-           This method is not implemented because pixels are read-only in tie-point grids.
+This method is not implemented because pixels are read-only in tie-point grids.
         """
         TiePointGrid_setPixels2(self._obj, x, y, w, h, pixels)
         return
 
     def setPixels(self, x, y, w, h, pixels):
         """
-           This method is not implemented because pixels are read-only in tie-point grids.
+This method is not implemented because pixels are read-only in tie-point grids.
         """
         TiePointGrid_setPixels1(self._obj, x, y, w, h, pixels)
         return
 
     def readPixels(self, x, y, w, h, pixels, pm):
         """
-           Retrieves an array of tie point data interpolated to the product with and height as float array. If the given
+Retrieves an array of tie point data interpolated to the product with and height as float array. If the given
            array is <code>null</code> a new one was created and returned.
            @param x      the x coordinate of the array to be read
            @param y      the y coordinate of the array to be read
@@ -7599,7 +7599,7 @@ class TiePointGrid:
 
     def readPixels(self, x, y, w, h, pixels, pm):
         """
-           Retrieves an array of tie point data interpolated to the product with and height as float array. If the given
+Retrieves an array of tie point data interpolated to the product with and height as float array. If the given
            array is <code>null</code> a new one was created and returned. *
            @param x      the x coordinate of the array to be read
            @param y      the y coordinate of the array to be read
@@ -7613,7 +7613,7 @@ class TiePointGrid:
 
     def readPixels(self, x, y, w, h, pixels, pm):
         """
-           Retrieves an array of tie point data interpolated to the product with and height as double array. If the given
+Retrieves an array of tie point data interpolated to the product with and height as double array. If the given
            array is <code>null</code> a new one was created and returned.
            @param x      the x coordinate of the array to be read
            @param y      the y coordinate of the array to be read
@@ -7627,28 +7627,28 @@ class TiePointGrid:
 
     def writePixels(self, x, y, w, h, pixels, pm):
         """
-           This method is not implemented because pixels are read-only in tie-point grids.
+This method is not implemented because pixels are read-only in tie-point grids.
         """
         TiePointGrid_writePixels6(self._obj, x, y, w, h, pixels, pm._obj)
         return
 
     def writePixels(self, x, y, w, h, pixels, pm):
         """
-           This method is not implemented because pixels are read-only in tie-point grids.
+This method is not implemented because pixels are read-only in tie-point grids.
         """
         TiePointGrid_writePixels4(self._obj, x, y, w, h, pixels, pm._obj)
         return
 
     def writePixels(self, x, y, w, h, pixels, pm):
         """
-           This method is not implemented because pixels are read-only in tie-point grids.
+This method is not implemented because pixels are read-only in tie-point grids.
         """
         TiePointGrid_writePixels2(self._obj, x, y, w, h, pixels, pm._obj)
         return
 
     def readRasterData(self, offsetX, offsetY, width, height, rasterData, pm):
         """
-           Reads raster data from this dataset into the user-supplied raster data buffer. 
+Reads raster data from this dataset into the user-supplied raster data buffer. 
            
            This method always directly (re-)reads this band's data from its associated data source into the given data
            buffer.
@@ -7669,28 +7669,28 @@ class TiePointGrid:
 
     def readRasterDataFully(self, pm):
         """
-           {@inheritDoc}
+{@inheritDoc}
         """
         TiePointGrid_readRasterDataFully2(self._obj, pm._obj)
         return
 
     def writeRasterData(self, offsetX, offsetY, width, height, rasterData, pm):
         """
-           {@inheritDoc}
+{@inheritDoc}
         """
         TiePointGrid_writeRasterData2(self._obj, offsetX, offsetY, width, height, rasterData._obj, pm._obj)
         return
 
     def writeRasterDataFully(self, pm):
         """
-           {@inheritDoc}
+{@inheritDoc}
         """
         TiePointGrid_writeRasterDataFully2(self._obj, pm._obj)
         return
 
     def acceptVisitor(self, visitor):
         """
-           Accepts the given visitor. This method implements the well known 'Visitor' design pattern of the gang-of-four.
+Accepts the given visitor. This method implements the well known 'Visitor' design pattern of the gang-of-four.
            The visitor pattern allows to define new operations on the product data model without the need to add more code
            to it. The new operation is implemented by the visitor. 
            
@@ -7713,14 +7713,14 @@ class TiePointGrid:
 
     def getRasterWidth(self):
         """
-           Returns the width of the raster used by this product raster.
+Returns the width of the raster used by this product raster.
            @return the width of the raster
         """
         return TiePointGrid_getRasterWidth(self._obj)
 
     def getRasterHeight(self):
         """
-           Returns the height of the raster used by this product raster.
+Returns the height of the raster used by this product raster.
            @return the height of the raster
         """
         return TiePointGrid_getRasterHeight(self._obj)
@@ -7731,14 +7731,14 @@ class TiePointGrid:
 
     def getGeoCoding(self):
         """
-           Returns the geo-coding of this {@link RasterDataNode}.
+Returns the geo-coding of this {@link RasterDataNode}.
            @return the geo-coding
         """
         return GeoCoding(TiePointGrid_getGeoCoding(self._obj))
 
     def setGeoCoding(self, geoCoding):
         """
-           Sets the geo-coding for this {@link RasterDataNode}.
+Sets the geo-coding for this {@link RasterDataNode}.
            Also sets the geo-coding of the parent {@link Product} if it has no geo-coding yet.
            On property change, the method calls {@link #fireProductNodeChanged(String)} with the property
            name {@link #PROPERTY_NAME_GEOCODING}.
@@ -7750,7 +7750,7 @@ class TiePointGrid:
 
     def getPointing(self):
         """
-           Gets a {@link Pointing} if one is available for this raster.
+Gets a {@link Pointing} if one is available for this raster.
            The methods calls {@link #createPointing()} if a pointing has not been set so far or if its {@link GeoCoding} changed
            since the last creation of this raster's {@link Pointing} instance.
            @return the pointing object, or null if a pointing is not available
@@ -7759,14 +7759,14 @@ class TiePointGrid:
 
     def canBeOrthorectified(self):
         """
-           Tests if this raster data node can be orthorectified.
+Tests if this raster data node can be orthorectified.
            @return true, if so
         """
         return TiePointGrid_canBeOrthorectified(self._obj)
 
     def getScalingFactor(self):
         """
-           Gets the scaling factor which is applied to raw {@link <code>ProductData</code>}. The default value is
+Gets the scaling factor which is applied to raw {@link <code>ProductData</code>}. The default value is
            <code>1.0</code> (no factor).
            @return the scaling factor
            @see #isScalingApplied()
@@ -7775,7 +7775,7 @@ class TiePointGrid:
 
     def setScalingFactor(self, scalingFactor):
         """
-           Sets the scaling factor which is applied to raw {@link <code>ProductData</code>}.
+Sets the scaling factor which is applied to raw {@link <code>ProductData</code>}.
            @param scalingFactor the scaling factor
            @see #isScalingApplied()
         """
@@ -7784,7 +7784,7 @@ class TiePointGrid:
 
     def getScalingOffset(self):
         """
-           Gets the scaling offset which is applied to raw {@link <code>ProductData</code>}. The default value is
+Gets the scaling offset which is applied to raw {@link <code>ProductData</code>}. The default value is
            <code>0.0</code> (no offset).
            @return the scaling offset
            @see #isScalingApplied()
@@ -7793,7 +7793,7 @@ class TiePointGrid:
 
     def setScalingOffset(self, scalingOffset):
         """
-           Sets the scaling offset which is applied to raw {@link <code>ProductData</code>}.
+Sets the scaling offset which is applied to raw {@link <code>ProductData</code>}.
            @param scalingOffset the scaling offset
            @see #isScalingApplied()
         """
@@ -7802,7 +7802,7 @@ class TiePointGrid:
 
     def isLog10Scaled(self):
         """
-           Gets whether or not the {@link <code>ProductData</code>} of this band has a negative binominal distribution and
+Gets whether or not the {@link <code>ProductData</code>} of this band has a negative binominal distribution and
            thus the common logarithm (base 10) of the values is stored in the raw data. The default value is
            <code>false</code>.
            @return whether or not the data is logging-10 scaled
@@ -7812,7 +7812,7 @@ class TiePointGrid:
 
     def setLog10Scaled(self, log10Scaled):
         """
-           Sets whether or not the {@link <code>ProductData</code>} of this band has a negative binominal distribution and
+Sets whether or not the {@link <code>ProductData</code>} of this band has a negative binominal distribution and
            thus the common logarithm (base 10) of the values is stored in the raw data.
            @param log10Scaled whether or not the data is logging-10 scaled
            @see #isScalingApplied()
@@ -7822,7 +7822,7 @@ class TiePointGrid:
 
     def isScalingApplied(self):
         """
-           Tests whether scaling of raw raster data values is applied before they are returned as geophysically meaningful
+Tests whether scaling of raw raster data values is applied before they are returned as geophysically meaningful
            pixel values. The methods which return geophysical pixel values are all {@link #getPixels(int, int, int, int, int[])},
            {@link #setPixels(int, int, int, int, int[])}, {@link #readPixels(int, int, int, int, int[])} and
            {@link #writePixels(int, int, int, int, int[])} methods as well as the <code>getPixel&lt;Type&gt;</code> and
@@ -7838,7 +7838,7 @@ class TiePointGrid:
     @staticmethod
     def isValidMaskProperty(propertyName):
         """
-           Tests if the given name is the name of a property which is relevant for the computation of the valid mask.
+Tests if the given name is the name of a property which is relevant for the computation of the valid mask.
            @param propertyName the  name to test
            @return {@code true}, if so.
         """
@@ -7846,7 +7846,7 @@ class TiePointGrid:
 
     def isNoDataValueSet(self):
         """
-           Tests whether or not a no-data value has been specified. The no-data value is not-specified unless either
+Tests whether or not a no-data value has been specified. The no-data value is not-specified unless either
            {@link #setNoDataValue(double)} or {@link #setGeophysicalNoDataValue(double)} is called.
            @return true, if so
            @see #isNoDataValueUsed()
@@ -7856,14 +7856,14 @@ class TiePointGrid:
 
     def clearNoDataValue(self):
         """
-           Clears the no-data value, so that {@link #isNoDataValueSet()} will return <code>false</code>.
+Clears the no-data value, so that {@link #isNoDataValueSet()} will return <code>false</code>.
         """
         TiePointGrid_clearNoDataValue(self._obj)
         return
 
     def isNoDataValueUsed(self):
         """
-           Tests whether or not the no-data value is used.
+Tests whether or not the no-data value is used.
            The no-data value is used to determine valid pixels. For more information
            on valid pixels, please refer to the documentation of the {@link #isPixelValid(int, int, javax.media.jai.ROI)}
            method.
@@ -7875,7 +7875,7 @@ class TiePointGrid:
 
     def setNoDataValueUsed(self, noDataValueUsed):
         """
-           Sets whether or not the no-data value is used.
+Sets whether or not the no-data value is used.
            If the no-data value is enabled and the no-data value has not been set so far,
            a default no-data value it is set with a value of to zero.
            The no-data value is used to determine valid pixels. For more information
@@ -7891,7 +7891,7 @@ class TiePointGrid:
 
     def getNoDataValue(self):
         """
-           Gets the no-data value as a primitive <code>double</code>.
+Gets the no-data value as a primitive <code>double</code>.
            Note that the value returned is NOT necessarily the same as the value returned by
            {@link #getGeophysicalNoDataValue()} because no scaling is applied.
            The no-data value is used to determine valid pixels. For more information
@@ -7906,7 +7906,7 @@ class TiePointGrid:
 
     def setNoDataValue(self, noDataValue):
         """
-           Sets the no-data value as a primitive <code>double</code>.
+Sets the no-data value as a primitive <code>double</code>.
            Note that the given value is related to the "raw", un-scaled raster data.
            In order to set the geophysical, scaled no-data value use the method
            {@link #setGeophysicalNoDataValue(double)}.
@@ -7924,7 +7924,7 @@ class TiePointGrid:
 
     def getGeophysicalNoDataValue(self):
         """
-           Gets the geophysical no-data value which is simply the scaled "raw" no-data value
+Gets the geophysical no-data value which is simply the scaled "raw" no-data value
            returned by {@link #getNoDataValue()}.
            The no-data value is used to determine valid pixels. For more information
            on valid pixels, please refer to the documentation of the {@link #isPixelValid(int, int, javax.media.jai.ROI)}
@@ -7936,7 +7936,7 @@ class TiePointGrid:
 
     def setGeophysicalNoDataValue(self, noDataValue):
         """
-           Sets the geophysical no-data value which is simply the scaled "raw" no-data value
+Sets the geophysical no-data value which is simply the scaled "raw" no-data value
            returned by {@link #getNoDataValue()}.
            The no-data value is used to determine valid pixels. For more information
            on valid pixels, please refer to the documentation of the {@link #isPixelValid(int, int, javax.media.jai.ROI)}
@@ -7952,7 +7952,7 @@ class TiePointGrid:
 
     def getValidPixelExpression(self):
         """
-           Gets the expression that is used to determine whether a pixel is valid or not.
+Gets the expression that is used to determine whether a pixel is valid or not.
            For more information
            on valid pixels, please refer to the documentation of the {@link #isPixelValid(int, int, javax.media.jai.ROI)}
            method.
@@ -7962,7 +7962,7 @@ class TiePointGrid:
 
     def setValidPixelExpression(self, validPixelExpression):
         """
-           Sets the expression that is used to determine whether a pixel is valid or not.
+Sets the expression that is used to determine whether a pixel is valid or not.
            The valid-pixel expression is used to determine valid pixels. For more information
            on valid pixels, please refer to the documentation of the {@link #isPixelValid(int, int, javax.media.jai.ROI)}
            method.
@@ -7975,7 +7975,7 @@ class TiePointGrid:
 
     def isValidMaskUsed(self):
         """
-           Tests whether or not this raster data node uses a data-mask in order to determine valid pixels. The method returns
+Tests whether or not this raster data node uses a data-mask in order to determine valid pixels. The method returns
            true if either {@link #isValidPixelExpressionSet()} or {@link #isNoDataValueUsed()} returns true.
            The data-mask is used to determine valid pixels. For more information
            on valid pixels, please refer to the documentation of the {@link #isPixelValid(int, int, javax.media.jai.ROI)}
@@ -7986,7 +7986,7 @@ class TiePointGrid:
 
     def resetValidMask(self):
         """
-           Resets the valid mask of this raster.
+Resets the valid mask of this raster.
            The mask will be lazily regenerated when requested the next time.
         """
         TiePointGrid_resetValidMask(self._obj)
@@ -7994,7 +7994,7 @@ class TiePointGrid:
 
     def getValidMaskExpression(self):
         """
-           Gets the expression used for the computation of the mask which identifies valid pixel values.
+Gets the expression used for the computation of the mask which identifies valid pixel values.
            It recognizes the value of the {@link #getNoDataValue() noDataValue} and the
            {@link #getValidPixelExpression() validPixelExpression} properties, if any.
            The method returns {@code null},  if none of these properties are set.
@@ -8007,14 +8007,14 @@ class TiePointGrid:
 
     def updateExpression(self, oldExternalName, newExternalName):
         """
-           {@inheritDoc}
+{@inheritDoc}
         """
         TiePointGrid_updateExpression(self._obj, oldExternalName, newExternalName)
         return
 
     def hasRasterData(self):
         """
-           Returns true if the raster data of this <code>RasterDataNode</code> is loaded or elsewhere available, otherwise
+Returns true if the raster data of this <code>RasterDataNode</code> is loaded or elsewhere available, otherwise
            false.
            @return true, if so.
         """
@@ -8022,7 +8022,7 @@ class TiePointGrid:
 
     def getRasterData(self):
         """
-           Gets the raster data for this dataset. If the data has'nt been loaded so far the method returns
+Gets the raster data for this dataset. If the data has'nt been loaded so far the method returns
            <code>null</code>.
            @return the raster data for this band, or <code>null</code> if data has not been loaded
         """
@@ -8030,7 +8030,7 @@ class TiePointGrid:
 
     def setRasterData(self, rasterData):
         """
-           Sets the raster data of this dataset.
+Sets the raster data of this dataset.
            
             Note that this method does not copy data at all. If the supplied raster data is compatible with this product
            raster, then simply its reference is stored. Modifications in the supplied raster data will also affect this
@@ -8043,7 +8043,7 @@ class TiePointGrid:
 
     def loadRasterData(self):
         """
-           @throws java.io.IOException if an I/O error occurs
+@throws java.io.IOException if an I/O error occurs
            @see #loadRasterData(com.bc.ceres.core.ProgressMonitor)
         """
         TiePointGrid_loadRasterData1(self._obj)
@@ -8051,7 +8051,7 @@ class TiePointGrid:
 
     def loadRasterData(self, pm):
         """
-           Loads the raster data for this <code>RasterDataNode</code>. After this method has been called successfully,
+Loads the raster data for this <code>RasterDataNode</code>. After this method has been called successfully,
            <code>hasRasterData()</code> should always return <code>true</code> and <code>getRasterData()</code> should
            always return a valid <code>ProductData</code> instance with at least <code>getRasterWidth()*getRasterHeight()</code>
            elements (samples).
@@ -8066,7 +8066,7 @@ class TiePointGrid:
 
     def unloadRasterData(self):
         """
-           Un-loads the raster data for this <code>RasterDataNode</code>.
+Un-loads the raster data for this <code>RasterDataNode</code>.
            
            It is up to the implementation whether after this method has been called successfully, the
            <code>hasRasterData()</code> method returns <code>false</code> or <code>true</code>.
@@ -8079,7 +8079,7 @@ class TiePointGrid:
 
     def isPixelValid(self, x, y):
         """
-           Checks whether or not the pixel located at (x,y) is valid.
+Checks whether or not the pixel located at (x,y) is valid.
            A pixel is assumed to be valid either if  {@link #getValidMaskImage() validMaskImage} is null or
            or if the bit corresponding to (x,y) is set within the returned mask image.
            
@@ -8099,7 +8099,7 @@ class TiePointGrid:
 
     def getSampleInt(self, x, y):
         """
-           Gets a geo-physical sample value at the given pixel coordinate as {@code int} value.
+Gets a geo-physical sample value at the given pixel coordinate as {@code int} value.
            
            <i>Note: This method does not belong to the public API.
            It has been added by Norman (2011-08-09) in order to perform performance tests.</i>
@@ -8111,7 +8111,7 @@ class TiePointGrid:
 
     def getSampleFloat(self, x, y):
         """
-           Gets a geo-physical sample value at the given pixel coordinate as {@code float} value.
+Gets a geo-physical sample value at the given pixel coordinate as {@code float} value.
            
            <i>Note: This method does not belong to the public API.
            It has been added by Norman (2011-08-09) in order to perform performance tests.</i>
@@ -8123,7 +8123,7 @@ class TiePointGrid:
 
     def isPixelValid(self, pixelIndex):
         """
-           Checks whether or not the pixel located at (x,y) is valid.
+Checks whether or not the pixel located at (x,y) is valid.
            A pixel is assumed to be valid either if  {@link #getValidMaskImage() validMaskImage} is null or
            or if the bit corresponding to (x,y) is set within the returned mask image.
            @param pixelIndex the linear pixel index in the range 0 to width * height - 1
@@ -8138,7 +8138,7 @@ class TiePointGrid:
 
     def isPixelValid(self, x, y, roi):
         """
-           Checks whether or not the pixel located at (x,y) is valid.
+Checks whether or not the pixel located at (x,y) is valid.
            The method first test whether a pixel is valid by using the {@link #isPixelValid(int, int)} method,
            and secondly, if the pixel is within the ROI (if any).
            @param x   the X co-ordinate of the pixel location
@@ -8155,57 +8155,57 @@ class TiePointGrid:
 
     def getPixels(self, x, y, w, h, pixels):
         """
-           @see #getPixels(int, int, int, int, int[], ProgressMonitor)
+@see #getPixels(int, int, int, int, int[], ProgressMonitor)
         """
         return TiePointGrid_getPixels5(self._obj, x, y, w, h, pixels)
 
     def getPixels(self, x, y, w, h, pixels):
         """
-           @see #getPixels(int, int, int, int, float[], ProgressMonitor)
+@see #getPixels(int, int, int, int, float[], ProgressMonitor)
         """
         return TiePointGrid_getPixels3(self._obj, x, y, w, h, pixels)
 
     def getPixels(self, x, y, w, h, pixels):
         """
-           @see #getPixels(int, int, int, int, double[], ProgressMonitor)
+@see #getPixels(int, int, int, int, double[], ProgressMonitor)
         """
         return TiePointGrid_getPixels1(self._obj, x, y, w, h, pixels)
 
     def readPixels(self, x, y, w, h, pixels):
         """
-           @see #readPixels(int, int, int, int, int[], ProgressMonitor)
+@see #readPixels(int, int, int, int, int[], ProgressMonitor)
         """
         return TiePointGrid_readPixels5(self._obj, x, y, w, h, pixels)
 
     def readPixels(self, x, y, w, h, pixels):
         """
-           @see #readPixels(int, int, int, int, float[], ProgressMonitor)
+@see #readPixels(int, int, int, int, float[], ProgressMonitor)
         """
         return TiePointGrid_readPixels3(self._obj, x, y, w, h, pixels)
 
     def readPixels(self, x, y, w, h, pixels):
         """
-           @see #readPixels(int, int, int, int, double[], ProgressMonitor)
+@see #readPixels(int, int, int, int, double[], ProgressMonitor)
         """
         return TiePointGrid_readPixels1(self._obj, x, y, w, h, pixels)
 
     def writePixels(self, x, y, w, h, pixels):
         """
-           @see #writePixels(int, int, int, int, int[], ProgressMonitor)
+@see #writePixels(int, int, int, int, int[], ProgressMonitor)
         """
         TiePointGrid_writePixels5(self._obj, x, y, w, h, pixels)
         return
 
     def writePixels(self, x, y, w, h, pixels):
         """
-           @see #writePixels(int, int, int, int, float[], ProgressMonitor)
+@see #writePixels(int, int, int, int, float[], ProgressMonitor)
         """
         TiePointGrid_writePixels3(self._obj, x, y, w, h, pixels)
         return
 
     def writePixels(self, x, y, w, h, pixels):
         """
-           @see #writePixels(int, int, int, int, double[], ProgressMonitor)
+@see #writePixels(int, int, int, int, double[], ProgressMonitor)
         """
         TiePointGrid_writePixels1(self._obj, x, y, w, h, pixels)
         return
@@ -8215,7 +8215,7 @@ class TiePointGrid:
 
     def readRasterDataFully(self):
         """
-           @throws java.io.IOException if an I/O error occurs
+@throws java.io.IOException if an I/O error occurs
            @see #readRasterDataFully(ProgressMonitor)
         """
         TiePointGrid_readRasterDataFully1(self._obj)
@@ -8223,7 +8223,7 @@ class TiePointGrid:
 
     def readRasterData(self, offsetX, offsetY, width, height, rasterData):
         """
-           Reads raster data from the node's associated data source into the given data
+Reads raster data from the node's associated data source into the given data
            buffer.
            @param offsetX    the X-offset in the raster co-ordinates where reading starts
            @param offsetY    the Y-offset in the raster co-ordinates where reading starts
@@ -8249,7 +8249,7 @@ class TiePointGrid:
 
     def createCompatibleRasterData(self):
         """
-           Creates raster data that is compatible to this dataset's data type. The data buffer returned contains exactly
+Creates raster data that is compatible to this dataset's data type. The data buffer returned contains exactly
            <code>getRasterWidth()*getRasterHeight()</code> elements of a compatible data type.
            @return raster data compatible with this product raster
            @see #createCompatibleSceneRasterData
@@ -8258,7 +8258,7 @@ class TiePointGrid:
 
     def createCompatibleSceneRasterData(self):
         """
-           Creates raster data that is compatible to this dataset's data type. The data buffer returned contains exactly
+Creates raster data that is compatible to this dataset's data type. The data buffer returned contains exactly
            <code>getBandOutputRasterWidth()*getBandOutputRasterHeight()</code> elements of a compatible data type.
            @return raster data compatible with this product raster
            @see #createCompatibleRasterData
@@ -8267,7 +8267,7 @@ class TiePointGrid:
 
     def createCompatibleRasterData(self, width, height):
         """
-           Creates raster data that is compatible to this dataset's data type. The data buffer returned contains exactly
+Creates raster data that is compatible to this dataset's data type. The data buffer returned contains exactly
            <code>width*height</code> elements of a compatible data type.
            @param width  the width of the raster data to be created
            @param height the height of the raster data to be created
@@ -8279,7 +8279,7 @@ class TiePointGrid:
 
     def isCompatibleRasterData(self, rasterData, w, h):
         """
-           Tests whether the given parameters specify a compatible raster or not.
+Tests whether the given parameters specify a compatible raster or not.
            @param rasterData the raster data
            @param w          the raster width
            @param h          the raster height
@@ -8289,7 +8289,7 @@ class TiePointGrid:
 
     def checkCompatibleRasterData(self, rasterData, w, h):
         """
-           Throws an <code>IllegalArgumentException</code> if the given parameters dont specify a compatible raster.
+Throws an <code>IllegalArgumentException</code> if the given parameters dont specify a compatible raster.
            @param rasterData the raster data
            @param w          the raster width
            @param h          the raster height
@@ -8299,14 +8299,14 @@ class TiePointGrid:
 
     def hasIntPixels(self):
         """
-           Determines whether this raster data node contains integer samples.
+Determines whether this raster data node contains integer samples.
            @return true if this raster data node contains integer samples.
         """
         return TiePointGrid_hasIntPixels(self._obj)
 
     def createTransectProfileData(self, shape):
         """
-           Creates a transect profile for the given shape (-outline).
+Creates a transect profile for the given shape (-outline).
            @param shape the shape
            @return the profile data
            @throws IOException if an I/O error occurs
@@ -8315,14 +8315,14 @@ class TiePointGrid:
 
     def getImageInfo(self):
         """
-           Gets the image information for image display.
+Gets the image information for image display.
            @return the image info or null
         """
         return ImageInfo(TiePointGrid_getImageInfo1(self._obj))
 
     def setImageInfo(self, imageInfo):
         """
-           Sets the image information for image display.
+Sets the image information for image display.
            @param imageInfo the image info, can be null
         """
         TiePointGrid_setImageInfo(self._obj, imageInfo._obj)
@@ -8330,14 +8330,14 @@ class TiePointGrid:
 
     def fireImageInfoChanged(self):
         """
-           Notifies listeners that the image (display) information has changed.
+Notifies listeners that the image (display) information has changed.
         """
         TiePointGrid_fireImageInfoChanged(self._obj)
         return
 
     def getImageInfo(self, pm):
         """
-           Returns the image information for this raster data node.
+Returns the image information for this raster data node.
            
            The method simply returns the value of <code>ensureValidImageInfo(null, ProgressMonitor.NULL)</code>.
            @param pm A progress monitor.
@@ -8348,7 +8348,7 @@ class TiePointGrid:
 
     def getImageInfo(self, histoSkipAreas, pm):
         """
-           Gets the image creation information.
+Gets the image creation information.
            
            If no image information has been assigned before, the <code>{@link #createDefaultImageInfo(double[], com.bc.ceres.core.ProgressMonitor)}</code> method is
            called with the given parameters passed to this method.
@@ -8361,7 +8361,7 @@ class TiePointGrid:
 
     def createDefaultImageInfo(self, histoSkipAreas, pm):
         """
-           Creates a default image information instance.
+Creates a default image information instance.
            
            An <code>IllegalStateException</code> is thrown in the case that this raster data node has no raster data.
            @param histoSkipAreas the left (at index 0) and right (at index 1) normalized areas of the raster data
@@ -8375,7 +8375,7 @@ class TiePointGrid:
 
     def createDefaultImageInfo(self, histoSkipAreas, histogram):
         """
-           Creates an instance of a default image information.
+Creates an instance of a default image information.
            
            An <code>IllegalStateException</code> is thrown in the case that this raster data node has no raster data.
            @param histoSkipAreas the left (at index 0) and right (at index 1) normalized areas of the raster data
@@ -8389,13 +8389,13 @@ class TiePointGrid:
 
     def getOverlayMaskGroup(self):
         """
-           @return The overlay mask group.
+@return The overlay mask group.
         """
         return ProductNodeGroup(TiePointGrid_getOverlayMaskGroup(self._obj))
 
     def createColorIndexedImage(self, pm):
         """
-           Creates an image for this raster data node. The method simply returns <code>ProductUtils.createColorIndexedImage(this,
+Creates an image for this raster data node. The method simply returns <code>ProductUtils.createColorIndexedImage(this,
            null)</code>.
            @param pm a monitor to inform the user about progress
            @return a greyscale/palette-based image for this raster data node
@@ -8406,7 +8406,7 @@ class TiePointGrid:
 
     def createRgbImage(self, pm):
         """
-           Creates an RGB image for this raster data node.
+Creates an RGB image for this raster data node.
            @param pm a monitor to inform the user about progress
            @return a greyscale/palette-based image for this raster data node
            @throws IOException if the raster data is not loaded so far and reload causes an I/O error
@@ -8423,7 +8423,7 @@ class TiePointGrid:
 
     def createPixelValidator(self, lineOffset, roi):
         """
-           Creates a validator which can be used to validate indexes of pixels in a flat raster data buffer.
+Creates a validator which can be used to validate indexes of pixels in a flat raster data buffer.
            @param lineOffset the absolute line offset, zero based
            @param roi        an optional ROI
            @return a new validator instance, never null
@@ -8433,7 +8433,7 @@ class TiePointGrid:
 
     def scale(self, v):
         """
-           Applies the scaling <code>v * scalingFactor + scalingOffset</code> the the given input value. If the
+Applies the scaling <code>v * scalingFactor + scalingOffset</code> the the given input value. If the
            <code>log10Scaled</code> property is true, the result is taken to the power of 10 <i>after</i> the actual
            scaling.
            @param v the input value
@@ -8443,7 +8443,7 @@ class TiePointGrid:
 
     def scaleInverse(self, v):
         """
-           Applies the inverse scaling <code>(v - scalingOffset) / scalingFactor</code> the the given input value. If the
+Applies the inverse scaling <code>(v - scalingOffset) / scalingFactor</code> the the given input value. If the
            <code>log10Scaled</code> property is true, the common logarithm is applied to the input <i>before</i> the actual
            scaling.
            @param v the input value
@@ -8453,7 +8453,7 @@ class TiePointGrid:
 
     def getPixelString(self, x, y):
         """
-           Returns the pixel located at (x,y) as a string value.
+Returns the pixel located at (x,y) as a string value.
            @param x the X co-ordinate of the pixel location
            @param y the Y co-ordinate of the pixel location
            @return the pixel value at (x,y) as string or an error message text
@@ -8462,7 +8462,7 @@ class TiePointGrid:
 
     def isSourceImageSet(self):
         """
-           Returns whether the source image is set on this {@code RasterDataNode}.
+Returns whether the source image is set on this {@code RasterDataNode}.
            @return whether the source image is set.
            @see #getSourceImage()
            @see #setSourceImage(java.awt.image.RenderedImage)
@@ -8473,7 +8473,7 @@ class TiePointGrid:
 
     def getSourceImage(self):
         """
-           Gets the source image associated with this {@code RasterDataNode}.
+Gets the source image associated with this {@code RasterDataNode}.
            @return The source image. Never {@code null}. In the case that {@link #isSourceImageSet()} returns {@code false},
            the method {@link #createSourceImage()} will be called in order to set and return a valid source image.
            @see #createSourceImage()
@@ -8483,7 +8483,7 @@ class TiePointGrid:
 
     def setSourceImage(self, sourceImage):
         """
-           Sets the source image associated with this {@code RasterDataNode}.
+Sets the source image associated with this {@code RasterDataNode}.
            @param sourceImage The source image.
            Can be {@code null}. If so, {@link #isSourceImageSet()} will return {@code false}.
         """
@@ -8492,7 +8492,7 @@ class TiePointGrid:
 
     def setSourceImage(self, sourceImage):
         """
-           Sets the source image associated with this {@code RasterDataNode}.
+Sets the source image associated with this {@code RasterDataNode}.
            @param sourceImage The source image.
            Can be {@code null}. If so, {@link #isSourceImageSet()} will return {@code false}.
         """
@@ -8501,7 +8501,7 @@ class TiePointGrid:
 
     def isGeophysicalImageSet(self):
         """
-           Returns whether the geophysical image is set on this {@code RasterDataNode}.
+Returns whether the geophysical image is set on this {@code RasterDataNode}.
            
            This method belongs to preliminary API and may be removed or changed in the future.
            @return whether the geophysical image is set.
@@ -8510,20 +8510,20 @@ class TiePointGrid:
 
     def getGeophysicalImage(self):
         """
-           @return The geophysical source image.
+@return The geophysical source image.
         """
         return MultiLevelImage(TiePointGrid_getGeophysicalImage(self._obj))
 
     def isValidMaskImageSet(self):
         """
-           Returns wether the valid mask image is set on this {@code RasterDataNode}.
+Returns wether the valid mask image is set on this {@code RasterDataNode}.
            @return Wether the source image is set.
         """
         return TiePointGrid_isValidMaskImageSet(self._obj)
 
     def getValidMaskImage(self):
         """
-           Gets the valid-mask image associated with this {@code RasterDataNode}.
+Gets the valid-mask image associated with this {@code RasterDataNode}.
            @return The rendered image.
         """
         return MultiLevelImage(TiePointGrid_getValidMaskImage(self._obj))
@@ -8533,7 +8533,7 @@ class TiePointGrid:
 
     def getStx(self):
         """
-           Gets the statistics. If statistcs are not yet available,
+Gets the statistics. If statistcs are not yet available,
            the method will compute (possibly inaccurate) statistics and return those.
            
            If accurate statistics are required, the {@link #getStx(boolean, com.bc.ceres.core.ProgressMonitor)}
@@ -8548,7 +8548,7 @@ class TiePointGrid:
 
     def getStx(self, accurate, pm):
         """
-           Gets the statistics.
+Gets the statistics.
            If the statistics have not been set before they are computed using the given progress monitor {@code pm} and then set.
            This method belongs to preliminary API and may be removed or changed in the future.
            @param accurate If true, accurate statistics are computed.
@@ -8559,7 +8559,7 @@ class TiePointGrid:
 
     def setStx(self, stx):
         """
-           Sets the statistics. It is the responsibility of the caller to ensure that the given statistics
+Sets the statistics. It is the responsibility of the caller to ensure that the given statistics
            are really related to this {@code RasterDataNode}'s raster data.
            The method fires a property change event for the property {@link #PROPERTY_NAME_STX}.
            This method belongs to preliminary API and may be removed or changed in the future.
@@ -8570,7 +8570,7 @@ class TiePointGrid:
 
     def getValidShape(self):
         """
-           Gets the shape of the area where this raster data contains valid samples.
+Gets the shape of the area where this raster data contains valid samples.
            The method returns <code>null</code>, if the entire raster contains valid samples.
            @return The shape of the area where the raster data has samples, can be {@code null}.
         """
@@ -8578,40 +8578,40 @@ class TiePointGrid:
 
     def getDataType(self):
         """
-           Gets the data type of this data node.
+Gets the data type of this data node.
            @return the data type which is always one of the multiple <code>ProductData.TYPE_<i>X</i></code> constants
         """
         return TiePointGrid_getDataType(self._obj)
 
     def getNumDataElems(self):
         """
-           Gets the number of data elements in this data node.
+Gets the number of data elements in this data node.
         """
         return TiePointGrid_getNumDataElems(self._obj)
 
     def setData(self, data):
         """
-           Sets the data of this data node.
+Sets the data of this data node.
         """
         TiePointGrid_setData(self._obj, data._obj)
         return
 
     def getData(self):
         """
-           Gets the data of this data node.
+Gets the data of this data node.
         """
         return ProductData(TiePointGrid_getData(self._obj))
 
     def getDataElems(self):
         """
-           Gets the data elements of this data node.
+Gets the data elements of this data node.
            @see ProductData#getElems()
         """
         return Object(TiePointGrid_getDataElems(self._obj))
 
     def getDataElemSize(self):
         """
-           Gets the data element size in bytes.
+Gets the data element size in bytes.
            @see ProductData#getElemSize(int)
         """
         return TiePointGrid_getDataElemSize(self._obj)
@@ -8632,14 +8632,14 @@ class TiePointGrid:
 
     def fireProductNodeDataChanged(self):
         """
-           Fires a node data changed event. This method is called after the data of this data node changed.
+Fires a node data changed event. This method is called after the data of this data node changed.
         """
         TiePointGrid_fireProductNodeDataChanged(self._obj)
         return
 
     def getRawStorageSize(self, subsetDef):
         """
-           Gets the estimated size in bytes of this product node.
+Gets the estimated size in bytes of this product node.
            @param subsetDef if not <code>null</code> the subset may limit the size returned
            @return the size in bytes.
         """
@@ -8647,7 +8647,7 @@ class TiePointGrid:
 
     def createCompatibleProductData(self, numElems):
         """
-           Creates product data that is compatible to this dataset's data type. The data buffer returned contains exactly
+Creates product data that is compatible to this dataset's data type. The data buffer returned contains exactly
            <code>numElems</code> elements of a compatible data type.
            @param numElems the number of elements, must not be less than one
            @return product data compatible with this data node
@@ -8656,19 +8656,19 @@ class TiePointGrid:
 
     def getOwner(self):
         """
-           @return The owner node of this node.
+@return The owner node of this node.
         """
         return ProductNode(TiePointGrid_getOwner(self._obj))
 
     def getName(self):
         """
-           @return This node's name.
+@return This node's name.
         """
         return TiePointGrid_getName(self._obj)
 
     def setName(self, name):
         """
-           Sets this product's name.
+Sets this product's name.
            @param name The name.
         """
         TiePointGrid_setName(self._obj, name)
@@ -8676,14 +8676,14 @@ class TiePointGrid:
 
     def getDescription(self):
         """
-           Returns a short textual description for this products node.
+Returns a short textual description for this products node.
            @return a description or <code>null</code>
         """
         return TiePointGrid_getDescription(self._obj)
 
     def setDescription(self, description):
         """
-           Sets a short textual description for this products node.
+Sets a short textual description for this products node.
            @param description a description, can be <code>null</code>
         """
         TiePointGrid_setDescription(self._obj, description)
@@ -8691,7 +8691,7 @@ class TiePointGrid:
 
     def isModified(self):
         """
-           Returns whether or not this node is modified.
+Returns whether or not this node is modified.
            @return <code>true</code> if so
         """
         return TiePointGrid_isModified(self._obj)
@@ -8702,7 +8702,7 @@ class TiePointGrid:
     @staticmethod
     def isValidNodeName(name):
         """
-           Tests whether the given name is valid name for a node.
+Tests whether the given name is valid name for a node.
            A valid node name must not start with a dot. Also a valid node name must not contain
            any of the character  <code>\/:*?"&lt;&gt;|</code>
            @param name the name to test
@@ -8712,7 +8712,7 @@ class TiePointGrid:
 
     def getProduct(self):
         """
-           Returns the product to which this node belongs to.
+Returns the product to which this node belongs to.
            @return the product, or <code>null</code> if this node was not owned by a product at the time this method was
            called
         """
@@ -8720,21 +8720,21 @@ class TiePointGrid:
 
     def getProductReader(self):
         """
-           Returns the product reader for the product to which this node belongs to.
+Returns the product reader for the product to which this node belongs to.
            @return the product reader, or <code>null</code> if no such exists
         """
         return ProductReader(TiePointGrid_getProductReader(self._obj))
 
     def getProductWriter(self):
         """
-           Returns the product writer for the product to which this node belongs to.
+Returns the product writer for the product to which this node belongs to.
            @return the product writer, or <code>null</code> if no such exists
         """
         return ProductWriter(TiePointGrid_getProductWriter(self._obj))
 
     def getDisplayName(self):
         """
-           Returns this node's display name. The display name is the product reference string with the node name appended.
+Returns this node's display name. The display name is the product reference string with the node name appended.
            Example: The string <code>"[2] <i>node-name</i>"</code> means node <code><i>node-name</i></code> of the
            product with the reference number <code>2</code>.
            @return this node's name with a product prefix <br>or this node's name only if this node's product prefix is
@@ -8745,7 +8745,7 @@ class TiePointGrid:
 
     def getProductRefString(self):
         """
-           Gets the product reference string. The product reference string is the product reference number enclosed in
+Gets the product reference string. The product reference string is the product reference number enclosed in
            square brackets. Example: The string <code>"[2]"</code> stands for a product with the reference number
            <code>2</code>.
            @return the product reference string. <br>or <code>null</code> if this node has no product <br>or
@@ -8755,7 +8755,7 @@ class TiePointGrid:
 
     def getRawStorageSize(self):
         """
-           Gets an estimated, raw storage size in bytes of this product node.
+Gets an estimated, raw storage size in bytes of this product node.
            @return the size in bytes.
         """
         return TiePointGrid_getRawStorageSize1(self._obj)
@@ -8770,7 +8770,7 @@ class TiePointGrid:
 
     def removeFromFile(self, productWriter):
         """
-           Physically remove this node from the file associated with the given product writer. The default implementation
+Physically remove this node from the file associated with the given product writer. The default implementation
            does nothing.
            @param productWriter the product writer to be used to remove this node from the underlying file.
         """
@@ -8804,14 +8804,14 @@ class ProductWriter:
 
     def getWriterPlugIn(self):
         """
-           Returns the plug-in which created this product writer.
+Returns the plug-in which created this product writer.
            @return the product writer plug-in, should never be <code>null</code>
         """
         return ProductWriterPlugIn(ProductWriter_getWriterPlugIn(self._obj))
 
     def getOutput(self):
         """
-           Retrives the current output destination object. Thie return value might be <code>null</code> if the
+Retrives the current output destination object. Thie return value might be <code>null</code> if the
            <code>setOutput</code> has not been called so far.
            @return the output
         """
@@ -8819,7 +8819,7 @@ class ProductWriter:
 
     def writeProductNodes(self, product, output):
         """
-           Writes the in-memory representation of a data product.
+Writes the in-memory representation of a data product.
            
             Whether the band data - the actual pixel values - is written out immediately or later when pixels are
            flushed, is up to the implementation.
@@ -8835,7 +8835,7 @@ class ProductWriter:
 
     def writeBandRasterData(self, sourceBand, sourceOffsetX, sourceOffsetY, sourceWidth, sourceHeight, sourceBuffer, pm):
         """
-           Writes raster data from the given in-memory source buffer into the data sink specified by the given source band
+Writes raster data from the given in-memory source buffer into the data sink specified by the given source band
            and region.
            
            <h3>Source band</h3> The source band is used to identify the data sink in which this method transfers the sample
@@ -8869,7 +8869,7 @@ class ProductWriter:
 
     def flush(self):
         """
-           Writes all data in memory to the data sink(s) associated with this writer.
+Writes all data in memory to the data sink(s) associated with this writer.
            @throws IOException if an I/O error occurs
         """
         ProductWriter_flush(self._obj)
@@ -8877,7 +8877,7 @@ class ProductWriter:
 
     def close(self):
         """
-           Closes all output streams currently open. A concrete implementation should call <code>flush</code> before
+Closes all output streams currently open. A concrete implementation should call <code>flush</code> before
            performing the actual close-operation.
            @throws IOException if an I/O error occurs
         """
@@ -8886,7 +8886,7 @@ class ProductWriter:
 
     def shouldWrite(self, node):
         """
-           Returns wether the given product node is to be written.
+Returns wether the given product node is to be written.
            @param node the product node
            @return <code>true</code> if so
         """
@@ -8894,14 +8894,14 @@ class ProductWriter:
 
     def isIncrementalMode(self):
         """
-           Returns whether this product writer writes only modified product nodes.
+Returns whether this product writer writes only modified product nodes.
            @return <code>true</code> if so
         """
         return ProductWriter_isIncrementalMode(self._obj)
 
     def setIncrementalMode(self, enabled):
         """
-           Enables resp. disables incremental writing of this product writer. By default, a reader should enable progress
+Enables resp. disables incremental writing of this product writer. By default, a reader should enable progress
            listening.
            @param enabled enables or disables progress listening.
         """
@@ -8910,7 +8910,7 @@ class ProductWriter:
 
     def deleteOutput(self):
         """
-           Complete deletes the physical representation of the given product from the file system.
+Complete deletes the physical representation of the given product from the file system.
            @throws IOException if an I/O error occurs
         """
         ProductWriter_deleteOutput(self._obj)
@@ -8918,7 +8918,7 @@ class ProductWriter:
 
     def removeBand(self, band):
         """
-           Physically deletes a <code>Band</code> in a product writer's output.
+Physically deletes a <code>Band</code> in a product writer's output.
            @param band The band to delete.
         """
         ProductWriter_removeBand(self._obj, band._obj)
@@ -8944,7 +8944,7 @@ class MetadataAttribute:
 
     def acceptVisitor(self, visitor):
         """
-           Accepts the given visitor. This method implements the well known 'Visitor' design pattern of the gang-of-four.
+Accepts the given visitor. This method implements the well known 'Visitor' design pattern of the gang-of-four.
            The visitor pattern allows to define new operations on the product data model without the need to add more code
            to it. The new operation is implemented by the visitor.
            
@@ -8959,47 +8959,47 @@ class MetadataAttribute:
 
     def getDataType(self):
         """
-           Gets the data type of this data node.
+Gets the data type of this data node.
            @return the data type which is always one of the multiple <code>ProductData.TYPE_<i>X</i></code> constants
         """
         return MetadataAttribute_getDataType(self._obj)
 
     def isFloatingPointType(self):
         """
-           Tests whether the data type of this node is a floating point type.
+Tests whether the data type of this node is a floating point type.
            @return true, if so
         """
         return MetadataAttribute_isFloatingPointType(self._obj)
 
     def getNumDataElems(self):
         """
-           Gets the number of data elements in this data node.
+Gets the number of data elements in this data node.
         """
         return MetadataAttribute_getNumDataElems(self._obj)
 
     def setData(self, data):
         """
-           Sets the data of this data node.
+Sets the data of this data node.
         """
         MetadataAttribute_setData(self._obj, data._obj)
         return
 
     def getData(self):
         """
-           Gets the data of this data node.
+Gets the data of this data node.
         """
         return ProductData(MetadataAttribute_getData(self._obj))
 
     def getDataElems(self):
         """
-           Gets the data elements of this data node.
+Gets the data elements of this data node.
            @see ProductData#getElems()
         """
         return Object(MetadataAttribute_getDataElems(self._obj))
 
     def getDataElemSize(self):
         """
-           Gets the data element size in bytes.
+Gets the data element size in bytes.
            @see ProductData#getElemSize(int)
         """
         return MetadataAttribute_getDataElemSize(self._obj)
@@ -9020,14 +9020,14 @@ class MetadataAttribute:
 
     def fireProductNodeDataChanged(self):
         """
-           Fires a node data changed event. This method is called after the data of this data node changed.
+Fires a node data changed event. This method is called after the data of this data node changed.
         """
         MetadataAttribute_fireProductNodeDataChanged(self._obj)
         return
 
     def dispose(self):
         """
-           Releases all of the resources used by this object instance and all of its owned children. Its primary use is to
+Releases all of the resources used by this object instance and all of its owned children. Its primary use is to
            allow the garbage collector to perform a vanilla job.
            
            This method should be called only if it is for sure that this object instance will never be used again. The
@@ -9040,7 +9040,7 @@ class MetadataAttribute:
 
     def createCompatibleProductData(self, numElems):
         """
-           Creates product data that is compatible to this dataset's data type. The data buffer returned contains exactly
+Creates product data that is compatible to this dataset's data type. The data buffer returned contains exactly
            <code>numElems</code> elements of a compatible data type.
            @param numElems the number of elements, must not be less than one
            @return product data compatible with this data node
@@ -9049,19 +9049,19 @@ class MetadataAttribute:
 
     def getOwner(self):
         """
-           @return The owner node of this node.
+@return The owner node of this node.
         """
         return ProductNode(MetadataAttribute_getOwner(self._obj))
 
     def getName(self):
         """
-           @return This node's name.
+@return This node's name.
         """
         return MetadataAttribute_getName(self._obj)
 
     def setName(self, name):
         """
-           Sets this product's name.
+Sets this product's name.
            @param name The name.
         """
         MetadataAttribute_setName(self._obj, name)
@@ -9069,14 +9069,14 @@ class MetadataAttribute:
 
     def getDescription(self):
         """
-           Returns a short textual description for this products node.
+Returns a short textual description for this products node.
            @return a description or <code>null</code>
         """
         return MetadataAttribute_getDescription(self._obj)
 
     def setDescription(self, description):
         """
-           Sets a short textual description for this products node.
+Sets a short textual description for this products node.
            @param description a description, can be <code>null</code>
         """
         MetadataAttribute_setDescription(self._obj, description)
@@ -9084,14 +9084,14 @@ class MetadataAttribute:
 
     def isModified(self):
         """
-           Returns whether or not this node is modified.
+Returns whether or not this node is modified.
            @return <code>true</code> if so
         """
         return MetadataAttribute_isModified(self._obj)
 
     def setModified(self, modified):
         """
-           Sets this node's modified flag.
+Sets this node's modified flag.
            
            If the modified flag changes to true and this node has an owner, the owner's modified flag is also set to
            true.
@@ -9107,7 +9107,7 @@ class MetadataAttribute:
     @staticmethod
     def isValidNodeName(name):
         """
-           Tests whether the given name is valid name for a node.
+Tests whether the given name is valid name for a node.
            A valid node name must not start with a dot. Also a valid node name must not contain
            any of the character  <code>\/:*?"&lt;&gt;|</code>
            @param name the name to test
@@ -9117,7 +9117,7 @@ class MetadataAttribute:
 
     def getProduct(self):
         """
-           Returns the product to which this node belongs to.
+Returns the product to which this node belongs to.
            @return the product, or <code>null</code> if this node was not owned by a product at the time this method was
            called
         """
@@ -9125,21 +9125,21 @@ class MetadataAttribute:
 
     def getProductReader(self):
         """
-           Returns the product reader for the product to which this node belongs to.
+Returns the product reader for the product to which this node belongs to.
            @return the product reader, or <code>null</code> if no such exists
         """
         return ProductReader(MetadataAttribute_getProductReader(self._obj))
 
     def getProductWriter(self):
         """
-           Returns the product writer for the product to which this node belongs to.
+Returns the product writer for the product to which this node belongs to.
            @return the product writer, or <code>null</code> if no such exists
         """
         return ProductWriter(MetadataAttribute_getProductWriter(self._obj))
 
     def getDisplayName(self):
         """
-           Returns this node's display name. The display name is the product reference string with the node name appended.
+Returns this node's display name. The display name is the product reference string with the node name appended.
            Example: The string <code>"[2] <i>node-name</i>"</code> means node <code><i>node-name</i></code> of the
            product with the reference number <code>2</code>.
            @return this node's name with a product prefix <br>or this node's name only if this node's product prefix is
@@ -9150,7 +9150,7 @@ class MetadataAttribute:
 
     def getProductRefString(self):
         """
-           Gets the product reference string. The product reference string is the product reference number enclosed in
+Gets the product reference string. The product reference string is the product reference number enclosed in
            square brackets. Example: The string <code>"[2]"</code> stands for a product with the reference number
            <code>2</code>.
            @return the product reference string. <br>or <code>null</code> if this node has no product <br>or
@@ -9160,7 +9160,7 @@ class MetadataAttribute:
 
     def updateExpression(self, oldExternalName, newExternalName):
         """
-           Asks a product node to replace all occurences of and references to the node name
+Asks a product node to replace all occurences of and references to the node name
            given by {@code oldExternalName} with {@code oldExternalName}. Such references most often occur
            in band arithmetic expressions.
            @param oldExternalName The old node name.
@@ -9171,7 +9171,7 @@ class MetadataAttribute:
 
     def removeFromFile(self, productWriter):
         """
-           Physically remove this node from the file associated with the given product writer. The default implementation
+Physically remove this node from the file associated with the given product writer. The default implementation
            does nothing.
            @param productWriter the product writer to be used to remove this node from the underlying file.
         """

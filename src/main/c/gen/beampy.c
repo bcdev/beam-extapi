@@ -2657,7 +2657,7 @@ PyObject* BeamPyIndexCoding_getSampleName(PyObject* self, PyObject* args)
     result = IndexCoding_getSampleName((IndexCoding) thisObj, index);
     if (result != NULL) {
         resultStr = PyUnicode_FromString(result);
-        free(result);
+        beam_release_string(result);
         return resultStr;
     } else {
         return Py_BuildValue("");
@@ -3078,7 +3078,7 @@ PyObject* BeamPyIndexCoding_getAttributeString(PyObject* self, PyObject* args)
     result = IndexCoding_getAttributeString((IndexCoding) thisObj, name, defaultValue);
     if (result != NULL) {
         resultStr = PyUnicode_FromString(result);
-        free(result);
+        beam_release_string(result);
         return resultStr;
     } else {
         return Py_BuildValue("");
@@ -3165,7 +3165,7 @@ PyObject* BeamPyIndexCoding_getName(PyObject* self, PyObject* args)
     result = IndexCoding_getName((IndexCoding) thisObj);
     if (result != NULL) {
         resultStr = PyUnicode_FromString(result);
-        free(result);
+        beam_release_string(result);
         return resultStr;
     } else {
         return Py_BuildValue("");
@@ -3196,7 +3196,7 @@ PyObject* BeamPyIndexCoding_getDescription(PyObject* self, PyObject* args)
     result = IndexCoding_getDescription((IndexCoding) thisObj);
     if (result != NULL) {
         resultStr = PyUnicode_FromString(result);
-        free(result);
+        beam_release_string(result);
         return resultStr;
     } else {
         return Py_BuildValue("");
@@ -3239,7 +3239,7 @@ PyObject* BeamPyIndexCoding_toString(PyObject* self, PyObject* args)
     result = IndexCoding_toString((IndexCoding) thisObj);
     if (result != NULL) {
         resultStr = PyUnicode_FromString(result);
-        free(result);
+        beam_release_string(result);
         return resultStr;
     } else {
         return Py_BuildValue("");
@@ -3317,7 +3317,7 @@ PyObject* BeamPyIndexCoding_getDisplayName(PyObject* self, PyObject* args)
     result = IndexCoding_getDisplayName((IndexCoding) thisObj);
     if (result != NULL) {
         resultStr = PyUnicode_FromString(result);
-        free(result);
+        beam_release_string(result);
         return resultStr;
     } else {
         return Py_BuildValue("");
@@ -3336,7 +3336,7 @@ PyObject* BeamPyIndexCoding_getProductRefString(PyObject* self, PyObject* args)
     result = IndexCoding_getProductRefString((IndexCoding) thisObj);
     if (result != NULL) {
         resultStr = PyUnicode_FromString(result);
-        free(result);
+        beam_release_string(result);
         return resultStr;
     } else {
         return Py_BuildValue("");
@@ -3481,7 +3481,7 @@ PyObject* BeamPyPixelPos_toString(PyObject* self, PyObject* args)
     result = PixelPos_toString((PixelPos) thisObj);
     if (result != NULL) {
         resultStr = PyUnicode_FromString(result);
-        free(result);
+        beam_release_string(result);
         return resultStr;
     } else {
         return Py_BuildValue("");
@@ -3850,7 +3850,7 @@ PyObject* BeamPyPlacemark_getLabel(PyObject* self, PyObject* args)
     result = Placemark_getLabel((Placemark) thisObj);
     if (result != NULL) {
         resultStr = PyUnicode_FromString(result);
-        free(result);
+        beam_release_string(result);
         return resultStr;
     } else {
         return Py_BuildValue("");
@@ -3881,7 +3881,7 @@ PyObject* BeamPyPlacemark_getText(PyObject* self, PyObject* args)
     result = Placemark_getText((Placemark) thisObj);
     if (result != NULL) {
         resultStr = PyUnicode_FromString(result);
-        free(result);
+        beam_release_string(result);
         return resultStr;
     } else {
         return Py_BuildValue("");
@@ -3912,7 +3912,7 @@ PyObject* BeamPyPlacemark_getStyleCss(PyObject* self, PyObject* args)
     result = Placemark_getStyleCss((Placemark) thisObj);
     if (result != NULL) {
         resultStr = PyUnicode_FromString(result);
-        free(result);
+        beam_release_string(result);
         return resultStr;
     } else {
         return Py_BuildValue("");
@@ -4077,7 +4077,7 @@ PyObject* BeamPyPlacemark_getName(PyObject* self, PyObject* args)
     result = Placemark_getName((Placemark) thisObj);
     if (result != NULL) {
         resultStr = PyUnicode_FromString(result);
-        free(result);
+        beam_release_string(result);
         return resultStr;
     } else {
         return Py_BuildValue("");
@@ -4108,7 +4108,7 @@ PyObject* BeamPyPlacemark_getDescription(PyObject* self, PyObject* args)
     result = Placemark_getDescription((Placemark) thisObj);
     if (result != NULL) {
         resultStr = PyUnicode_FromString(result);
-        free(result);
+        beam_release_string(result);
         return resultStr;
     } else {
         return Py_BuildValue("");
@@ -4163,7 +4163,7 @@ PyObject* BeamPyPlacemark_toString(PyObject* self, PyObject* args)
     result = Placemark_toString((Placemark) thisObj);
     if (result != NULL) {
         resultStr = PyUnicode_FromString(result);
-        free(result);
+        beam_release_string(result);
         return resultStr;
     } else {
         return Py_BuildValue("");
@@ -4252,7 +4252,7 @@ PyObject* BeamPyPlacemark_getDisplayName(PyObject* self, PyObject* args)
     result = Placemark_getDisplayName((Placemark) thisObj);
     if (result != NULL) {
         resultStr = PyUnicode_FromString(result);
-        free(result);
+        beam_release_string(result);
         return resultStr;
     } else {
         return Py_BuildValue("");
@@ -4271,7 +4271,7 @@ PyObject* BeamPyPlacemark_getProductRefString(PyObject* self, PyObject* args)
     result = Placemark_getProductRefString((Placemark) thisObj);
     if (result != NULL) {
         resultStr = PyUnicode_FromString(result);
-        free(result);
+        beam_release_string(result);
         return resultStr;
     } else {
         return Py_BuildValue("");
@@ -4746,7 +4746,7 @@ PyObject* BeamPyMetadataElement_getAttributeString(PyObject* self, PyObject* arg
     result = MetadataElement_getAttributeString((MetadataElement) thisObj, name, defaultValue);
     if (result != NULL) {
         resultStr = PyUnicode_FromString(result);
-        free(result);
+        beam_release_string(result);
         return resultStr;
     } else {
         return Py_BuildValue("");
@@ -4846,7 +4846,7 @@ PyObject* BeamPyMetadataElement_getName(PyObject* self, PyObject* args)
     result = MetadataElement_getName((MetadataElement) thisObj);
     if (result != NULL) {
         resultStr = PyUnicode_FromString(result);
-        free(result);
+        beam_release_string(result);
         return resultStr;
     } else {
         return Py_BuildValue("");
@@ -4877,7 +4877,7 @@ PyObject* BeamPyMetadataElement_getDescription(PyObject* self, PyObject* args)
     result = MetadataElement_getDescription((MetadataElement) thisObj);
     if (result != NULL) {
         resultStr = PyUnicode_FromString(result);
-        free(result);
+        beam_release_string(result);
         return resultStr;
     } else {
         return Py_BuildValue("");
@@ -4920,7 +4920,7 @@ PyObject* BeamPyMetadataElement_toString(PyObject* self, PyObject* args)
     result = MetadataElement_toString((MetadataElement) thisObj);
     if (result != NULL) {
         resultStr = PyUnicode_FromString(result);
-        free(result);
+        beam_release_string(result);
         return resultStr;
     } else {
         return Py_BuildValue("");
@@ -4998,7 +4998,7 @@ PyObject* BeamPyMetadataElement_getDisplayName(PyObject* self, PyObject* args)
     result = MetadataElement_getDisplayName((MetadataElement) thisObj);
     if (result != NULL) {
         resultStr = PyUnicode_FromString(result);
-        free(result);
+        beam_release_string(result);
         return resultStr;
     } else {
         return Py_BuildValue("");
@@ -5017,7 +5017,7 @@ PyObject* BeamPyMetadataElement_getProductRefString(PyObject* self, PyObject* ar
     result = MetadataElement_getProductRefString((MetadataElement) thisObj);
     if (result != NULL) {
         resultStr = PyUnicode_FromString(result);
-        free(result);
+        beam_release_string(result);
         return resultStr;
     } else {
         return Py_BuildValue("");
@@ -5109,7 +5109,7 @@ PyObject* BeamPyProduct_getProductType(PyObject* self, PyObject* args)
     result = Product_getProductType((Product) thisObj);
     if (result != NULL) {
         resultStr = PyUnicode_FromString(result);
-        free(result);
+        beam_release_string(result);
         return resultStr;
     } else {
         return Py_BuildValue("");
@@ -6215,7 +6215,7 @@ PyObject* BeamPyProduct_getQuicklookBandName(PyObject* self, PyObject* args)
     result = Product_getQuicklookBandName((Product) thisObj);
     if (result != NULL) {
         resultStr = PyUnicode_FromString(result);
-        free(result);
+        beam_release_string(result);
         return resultStr;
     } else {
         return Py_BuildValue("");
@@ -6248,7 +6248,7 @@ PyObject* BeamPyProduct_createPixelInfoString(PyObject* self, PyObject* args)
     result = Product_createPixelInfoString((Product) thisObj, pixelX, pixelY);
     if (result != NULL) {
         resultStr = PyUnicode_FromString(result);
-        free(result);
+        beam_release_string(result);
         return resultStr;
     } else {
         return Py_BuildValue("");
@@ -6414,7 +6414,7 @@ PyObject* BeamPyProduct_getName(PyObject* self, PyObject* args)
     result = Product_getName((Product) thisObj);
     if (result != NULL) {
         resultStr = PyUnicode_FromString(result);
-        free(result);
+        beam_release_string(result);
         return resultStr;
     } else {
         return Py_BuildValue("");
@@ -6445,7 +6445,7 @@ PyObject* BeamPyProduct_getDescription(PyObject* self, PyObject* args)
     result = Product_getDescription((Product) thisObj);
     if (result != NULL) {
         resultStr = PyUnicode_FromString(result);
-        free(result);
+        beam_release_string(result);
         return resultStr;
     } else {
         return Py_BuildValue("");
@@ -6488,7 +6488,7 @@ PyObject* BeamPyProduct_toString(PyObject* self, PyObject* args)
     result = Product_toString((Product) thisObj);
     if (result != NULL) {
         resultStr = PyUnicode_FromString(result);
-        free(result);
+        beam_release_string(result);
         return resultStr;
     } else {
         return Py_BuildValue("");
@@ -6534,7 +6534,7 @@ PyObject* BeamPyProduct_getDisplayName(PyObject* self, PyObject* args)
     result = Product_getDisplayName((Product) thisObj);
     if (result != NULL) {
         resultStr = PyUnicode_FromString(result);
-        free(result);
+        beam_release_string(result);
         return resultStr;
     } else {
         return Py_BuildValue("");
@@ -6553,7 +6553,7 @@ PyObject* BeamPyProduct_getProductRefString(PyObject* self, PyObject* args)
     result = Product_getProductRefString((Product) thisObj);
     if (result != NULL) {
         resultStr = PyUnicode_FromString(result);
-        free(result);
+        beam_release_string(result);
         return resultStr;
     } else {
         return Py_BuildValue("");
@@ -8004,7 +8004,7 @@ PyObject* BeamPyBand_toString(PyObject* self, PyObject* args)
     result = Band_toString((Band) thisObj);
     if (result != NULL) {
         resultStr = PyUnicode_FromString(result);
-        free(result);
+        beam_release_string(result);
         return resultStr;
     } else {
         return Py_BuildValue("");
@@ -8227,7 +8227,7 @@ PyObject* BeamPyBand_getViewModeId(PyObject* self, PyObject* args)
     result = Band_getViewModeId((Band) thisObj, bandName);
     if (result != NULL) {
         resultStr = PyUnicode_FromString(result);
-        free(result);
+        beam_release_string(result);
         return resultStr;
     } else {
         return Py_BuildValue("");
@@ -8577,7 +8577,7 @@ PyObject* BeamPyBand_getValidPixelExpression(PyObject* self, PyObject* args)
     result = Band_getValidPixelExpression((Band) thisObj);
     if (result != NULL) {
         resultStr = PyUnicode_FromString(result);
-        free(result);
+        beam_release_string(result);
         return resultStr;
     } else {
         return Py_BuildValue("");
@@ -8631,7 +8631,7 @@ PyObject* BeamPyBand_getValidMaskExpression(PyObject* self, PyObject* args)
     result = Band_getValidMaskExpression((Band) thisObj);
     if (result != NULL) {
         resultStr = PyUnicode_FromString(result);
-        free(result);
+        beam_release_string(result);
         return resultStr;
     } else {
         return Py_BuildValue("");
@@ -9338,7 +9338,7 @@ PyObject* BeamPyBand_getPixelString(PyObject* self, PyObject* args)
     result = Band_getPixelString((Band) thisObj, x, y);
     if (result != NULL) {
         resultStr = PyUnicode_FromString(result);
-        free(result);
+        beam_release_string(result);
         return resultStr;
     } else {
         return Py_BuildValue("");
@@ -9615,7 +9615,7 @@ PyObject* BeamPyBand_getUnit(PyObject* self, PyObject* args)
     result = Band_getUnit((Band) thisObj);
     if (result != NULL) {
         resultStr = PyUnicode_FromString(result);
-        free(result);
+        beam_release_string(result);
         return resultStr;
     } else {
         return Py_BuildValue("");
@@ -9678,7 +9678,7 @@ PyObject* BeamPyBand_getName(PyObject* self, PyObject* args)
     result = Band_getName((Band) thisObj);
     if (result != NULL) {
         resultStr = PyUnicode_FromString(result);
-        free(result);
+        beam_release_string(result);
         return resultStr;
     } else {
         return Py_BuildValue("");
@@ -9709,7 +9709,7 @@ PyObject* BeamPyBand_getDescription(PyObject* self, PyObject* args)
     result = Band_getDescription((Band) thisObj);
     if (result != NULL) {
         resultStr = PyUnicode_FromString(result);
-        free(result);
+        beam_release_string(result);
         return resultStr;
     } else {
         return Py_BuildValue("");
@@ -9811,7 +9811,7 @@ PyObject* BeamPyBand_getDisplayName(PyObject* self, PyObject* args)
     result = Band_getDisplayName((Band) thisObj);
     if (result != NULL) {
         resultStr = PyUnicode_FromString(result);
-        free(result);
+        beam_release_string(result);
         return resultStr;
     } else {
         return Py_BuildValue("");
@@ -9830,7 +9830,7 @@ PyObject* BeamPyBand_getProductRefString(PyObject* self, PyObject* args)
     result = Band_getProductRefString((Band) thisObj);
     if (result != NULL) {
         resultStr = PyUnicode_FromString(result);
-        free(result);
+        beam_release_string(result);
         return resultStr;
     } else {
         return Py_BuildValue("");
@@ -10297,7 +10297,7 @@ PyObject* BeamPyPlacemarkGroup_getName(PyObject* self, PyObject* args)
     result = PlacemarkGroup_getName((PlacemarkGroup) thisObj);
     if (result != NULL) {
         resultStr = PyUnicode_FromString(result);
-        free(result);
+        beam_release_string(result);
         return resultStr;
     } else {
         return Py_BuildValue("");
@@ -10328,7 +10328,7 @@ PyObject* BeamPyPlacemarkGroup_getDescription(PyObject* self, PyObject* args)
     result = PlacemarkGroup_getDescription((PlacemarkGroup) thisObj);
     if (result != NULL) {
         resultStr = PyUnicode_FromString(result);
-        free(result);
+        beam_release_string(result);
         return resultStr;
     } else {
         return Py_BuildValue("");
@@ -10371,7 +10371,7 @@ PyObject* BeamPyPlacemarkGroup_toString(PyObject* self, PyObject* args)
     result = PlacemarkGroup_toString((PlacemarkGroup) thisObj);
     if (result != NULL) {
         resultStr = PyUnicode_FromString(result);
-        free(result);
+        beam_release_string(result);
         return resultStr;
     } else {
         return Py_BuildValue("");
@@ -10449,7 +10449,7 @@ PyObject* BeamPyPlacemarkGroup_getDisplayName(PyObject* self, PyObject* args)
     result = PlacemarkGroup_getDisplayName((PlacemarkGroup) thisObj);
     if (result != NULL) {
         resultStr = PyUnicode_FromString(result);
-        free(result);
+        beam_release_string(result);
         return resultStr;
     } else {
         return Py_BuildValue("");
@@ -10468,7 +10468,7 @@ PyObject* BeamPyPlacemarkGroup_getProductRefString(PyObject* self, PyObject* arg
     result = PlacemarkGroup_getProductRefString((PlacemarkGroup) thisObj);
     if (result != NULL) {
         resultStr = PyUnicode_FromString(result);
-        free(result);
+        beam_release_string(result);
         return resultStr;
     } else {
         return Py_BuildValue("");
@@ -11606,7 +11606,7 @@ PyObject* BeamPyTiePointGrid_getValidPixelExpression(PyObject* self, PyObject* a
     result = TiePointGrid_getValidPixelExpression((TiePointGrid) thisObj);
     if (result != NULL) {
         resultStr = PyUnicode_FromString(result);
-        free(result);
+        beam_release_string(result);
         return resultStr;
     } else {
         return Py_BuildValue("");
@@ -11660,7 +11660,7 @@ PyObject* BeamPyTiePointGrid_getValidMaskExpression(PyObject* self, PyObject* ar
     result = TiePointGrid_getValidMaskExpression((TiePointGrid) thisObj);
     if (result != NULL) {
         resultStr = PyUnicode_FromString(result);
-        free(result);
+        beam_release_string(result);
         return resultStr;
     } else {
         return Py_BuildValue("");
@@ -12529,7 +12529,7 @@ PyObject* BeamPyTiePointGrid_getPixelString(PyObject* self, PyObject* args)
     result = TiePointGrid_getPixelString((TiePointGrid) thisObj, x, y);
     if (result != NULL) {
         resultStr = PyUnicode_FromString(result);
-        free(result);
+        beam_release_string(result);
         return resultStr;
     } else {
         return Py_BuildValue("");
@@ -12851,7 +12851,7 @@ PyObject* BeamPyTiePointGrid_getUnit(PyObject* self, PyObject* args)
     result = TiePointGrid_getUnit((TiePointGrid) thisObj);
     if (result != NULL) {
         resultStr = PyUnicode_FromString(result);
-        free(result);
+        beam_release_string(result);
         return resultStr;
     } else {
         return Py_BuildValue("");
@@ -12928,7 +12928,7 @@ PyObject* BeamPyTiePointGrid_getName(PyObject* self, PyObject* args)
     result = TiePointGrid_getName((TiePointGrid) thisObj);
     if (result != NULL) {
         resultStr = PyUnicode_FromString(result);
-        free(result);
+        beam_release_string(result);
         return resultStr;
     } else {
         return Py_BuildValue("");
@@ -12959,7 +12959,7 @@ PyObject* BeamPyTiePointGrid_getDescription(PyObject* self, PyObject* args)
     result = TiePointGrid_getDescription((TiePointGrid) thisObj);
     if (result != NULL) {
         resultStr = PyUnicode_FromString(result);
-        free(result);
+        beam_release_string(result);
         return resultStr;
     } else {
         return Py_BuildValue("");
@@ -13002,7 +13002,7 @@ PyObject* BeamPyTiePointGrid_toString(PyObject* self, PyObject* args)
     result = TiePointGrid_toString((TiePointGrid) thisObj);
     if (result != NULL) {
         resultStr = PyUnicode_FromString(result);
-        free(result);
+        beam_release_string(result);
         return resultStr;
     } else {
         return Py_BuildValue("");
@@ -13080,7 +13080,7 @@ PyObject* BeamPyTiePointGrid_getDisplayName(PyObject* self, PyObject* args)
     result = TiePointGrid_getDisplayName((TiePointGrid) thisObj);
     if (result != NULL) {
         resultStr = PyUnicode_FromString(result);
-        free(result);
+        beam_release_string(result);
         return resultStr;
     } else {
         return Py_BuildValue("");
@@ -13099,7 +13099,7 @@ PyObject* BeamPyTiePointGrid_getProductRefString(PyObject* self, PyObject* args)
     result = TiePointGrid_getProductRefString((TiePointGrid) thisObj);
     if (result != NULL) {
         resultStr = PyUnicode_FromString(result);
-        free(result);
+        beam_release_string(result);
         return resultStr;
     } else {
         return Py_BuildValue("");
@@ -13201,7 +13201,7 @@ PyObject* BeamPyAngularDirection_toString(PyObject* self, PyObject* args)
     result = AngularDirection_toString((AngularDirection) thisObj);
     if (result != NULL) {
         resultStr = PyUnicode_FromString(result);
-        free(result);
+        beam_release_string(result);
         return resultStr;
     } else {
         return Py_BuildValue("");
@@ -13375,7 +13375,7 @@ PyObject* BeamPyFlagCoding_getSampleName(PyObject* self, PyObject* args)
     result = FlagCoding_getSampleName((FlagCoding) thisObj, index);
     if (result != NULL) {
         resultStr = PyUnicode_FromString(result);
-        free(result);
+        beam_release_string(result);
         return resultStr;
     } else {
         return Py_BuildValue("");
@@ -13796,7 +13796,7 @@ PyObject* BeamPyFlagCoding_getAttributeString(PyObject* self, PyObject* args)
     result = FlagCoding_getAttributeString((FlagCoding) thisObj, name, defaultValue);
     if (result != NULL) {
         resultStr = PyUnicode_FromString(result);
-        free(result);
+        beam_release_string(result);
         return resultStr;
     } else {
         return Py_BuildValue("");
@@ -13883,7 +13883,7 @@ PyObject* BeamPyFlagCoding_getName(PyObject* self, PyObject* args)
     result = FlagCoding_getName((FlagCoding) thisObj);
     if (result != NULL) {
         resultStr = PyUnicode_FromString(result);
-        free(result);
+        beam_release_string(result);
         return resultStr;
     } else {
         return Py_BuildValue("");
@@ -13914,7 +13914,7 @@ PyObject* BeamPyFlagCoding_getDescription(PyObject* self, PyObject* args)
     result = FlagCoding_getDescription((FlagCoding) thisObj);
     if (result != NULL) {
         resultStr = PyUnicode_FromString(result);
-        free(result);
+        beam_release_string(result);
         return resultStr;
     } else {
         return Py_BuildValue("");
@@ -13957,7 +13957,7 @@ PyObject* BeamPyFlagCoding_toString(PyObject* self, PyObject* args)
     result = FlagCoding_toString((FlagCoding) thisObj);
     if (result != NULL) {
         resultStr = PyUnicode_FromString(result);
-        free(result);
+        beam_release_string(result);
         return resultStr;
     } else {
         return Py_BuildValue("");
@@ -14035,7 +14035,7 @@ PyObject* BeamPyFlagCoding_getDisplayName(PyObject* self, PyObject* args)
     result = FlagCoding_getDisplayName((FlagCoding) thisObj);
     if (result != NULL) {
         resultStr = PyUnicode_FromString(result);
-        free(result);
+        beam_release_string(result);
         return resultStr;
     } else {
         return Py_BuildValue("");
@@ -14054,7 +14054,7 @@ PyObject* BeamPyFlagCoding_getProductRefString(PyObject* self, PyObject* args)
     result = FlagCoding_getProductRefString((FlagCoding) thisObj);
     if (result != NULL) {
         resultStr = PyUnicode_FromString(result);
-        free(result);
+        beam_release_string(result);
         return resultStr;
     } else {
         return Py_BuildValue("");
@@ -14211,7 +14211,7 @@ PyObject* BeamPyRGBChannelDef_getSourceName(PyObject* self, PyObject* args)
     result = RGBChannelDef_getSourceName((RGBChannelDef) thisObj, index);
     if (result != NULL) {
         resultStr = PyUnicode_FromString(result);
-        free(result);
+        beam_release_string(result);
         return resultStr;
     } else {
         return Py_BuildValue("");
@@ -14656,7 +14656,7 @@ PyObject* BeamPyProductData_getTypeString2(PyObject* self, PyObject* args)
     result = ProductData_getTypeString2(type);
     if (result != NULL) {
         resultStr = PyUnicode_FromString(result);
-        free(result);
+        beam_release_string(result);
         return resultStr;
     } else {
         return Py_BuildValue("");
@@ -14686,7 +14686,7 @@ PyObject* BeamPyProductData_getTypeString1(PyObject* self, PyObject* args)
     result = ProductData_getTypeString1((ProductData) thisObj);
     if (result != NULL) {
         resultStr = PyUnicode_FromString(result);
-        free(result);
+        beam_release_string(result);
         return resultStr;
     } else {
         return Py_BuildValue("");
@@ -14846,7 +14846,7 @@ PyObject* BeamPyProductData_getElemString(PyObject* self, PyObject* args)
     result = ProductData_getElemString((ProductData) thisObj);
     if (result != NULL) {
         resultStr = PyUnicode_FromString(result);
-        free(result);
+        beam_release_string(result);
         return resultStr;
     } else {
         return Py_BuildValue("");
@@ -14930,7 +14930,7 @@ PyObject* BeamPyProductData_getElemStringAt(PyObject* self, PyObject* args)
     result = ProductData_getElemStringAt((ProductData) thisObj, index);
     if (result != NULL) {
         resultStr = PyUnicode_FromString(result);
-        free(result);
+        beam_release_string(result);
         return resultStr;
     } else {
         return Py_BuildValue("");
@@ -15257,7 +15257,7 @@ PyObject* BeamPyProductData_toString(PyObject* self, PyObject* args)
     result = ProductData_toString((ProductData) thisObj);
     if (result != NULL) {
         resultStr = PyUnicode_FromString(result);
-        free(result);
+        beam_release_string(result);
         return resultStr;
     } else {
         return Py_BuildValue("");
@@ -15443,7 +15443,7 @@ PyObject* BeamPyGeoPos_toString(PyObject* self, PyObject* args)
     result = GeoPos_toString((GeoPos) thisObj);
     if (result != NULL) {
         resultStr = PyUnicode_FromString(result);
-        free(result);
+        beam_release_string(result);
         return resultStr;
     } else {
         return Py_BuildValue("");
@@ -15484,7 +15484,7 @@ PyObject* BeamPyGeoPos_getLatString(PyObject* self, PyObject* args)
     result = GeoPos_getLatString((GeoPos) thisObj);
     if (result != NULL) {
         resultStr = PyUnicode_FromString(result);
-        free(result);
+        beam_release_string(result);
         return resultStr;
     } else {
         return Py_BuildValue("");
@@ -15503,7 +15503,7 @@ PyObject* BeamPyGeoPos_getLonString(PyObject* self, PyObject* args)
     result = GeoPos_getLonString((GeoPos) thisObj);
     if (result != NULL) {
         resultStr = PyUnicode_FromString(result);
-        free(result);
+        beam_release_string(result);
         return resultStr;
     } else {
         return Py_BuildValue("");
@@ -15927,7 +15927,7 @@ PyObject* BeamPyProductNodeGroup_getName(PyObject* self, PyObject* args)
     result = ProductNodeGroup_getName((ProductNodeGroup) thisObj);
     if (result != NULL) {
         resultStr = PyUnicode_FromString(result);
-        free(result);
+        beam_release_string(result);
         return resultStr;
     } else {
         return Py_BuildValue("");
@@ -15958,7 +15958,7 @@ PyObject* BeamPyProductNodeGroup_getDescription(PyObject* self, PyObject* args)
     result = ProductNodeGroup_getDescription((ProductNodeGroup) thisObj);
     if (result != NULL) {
         resultStr = PyUnicode_FromString(result);
-        free(result);
+        beam_release_string(result);
         return resultStr;
     } else {
         return Py_BuildValue("");
@@ -16001,7 +16001,7 @@ PyObject* BeamPyProductNodeGroup_toString(PyObject* self, PyObject* args)
     result = ProductNodeGroup_toString((ProductNodeGroup) thisObj);
     if (result != NULL) {
         resultStr = PyUnicode_FromString(result);
-        free(result);
+        beam_release_string(result);
         return resultStr;
     } else {
         return Py_BuildValue("");
@@ -16079,7 +16079,7 @@ PyObject* BeamPyProductNodeGroup_getDisplayName(PyObject* self, PyObject* args)
     result = ProductNodeGroup_getDisplayName((ProductNodeGroup) thisObj);
     if (result != NULL) {
         resultStr = PyUnicode_FromString(result);
-        free(result);
+        beam_release_string(result);
         return resultStr;
     } else {
         return Py_BuildValue("");
@@ -16098,7 +16098,7 @@ PyObject* BeamPyProductNodeGroup_getProductRefString(PyObject* self, PyObject* a
     result = ProductNodeGroup_getProductRefString((ProductNodeGroup) thisObj);
     if (result != NULL) {
         resultStr = PyUnicode_FromString(result);
-        free(result);
+        beam_release_string(result);
         return resultStr;
     } else {
         return Py_BuildValue("");
@@ -17248,7 +17248,7 @@ PyObject* BeamPyProductUtils_findSuitableQuicklookBandName(PyObject* self, PyObj
     result = ProductUtils_findSuitableQuicklookBandName((Product) product);
     if (result != NULL) {
         resultStr = PyUnicode_FromString(result);
-        free(result);
+        beam_release_string(result);
         return resultStr;
     } else {
         return Py_BuildValue("");
@@ -17601,7 +17601,7 @@ PyObject* BeamPyMetadataAttribute_getUnit(PyObject* self, PyObject* args)
     result = MetadataAttribute_getUnit((MetadataAttribute) thisObj);
     if (result != NULL) {
         resultStr = PyUnicode_FromString(result);
-        free(result);
+        beam_release_string(result);
         return resultStr;
     } else {
         return Py_BuildValue("");
@@ -17675,7 +17675,7 @@ PyObject* BeamPyMetadataAttribute_getName(PyObject* self, PyObject* args)
     result = MetadataAttribute_getName((MetadataAttribute) thisObj);
     if (result != NULL) {
         resultStr = PyUnicode_FromString(result);
-        free(result);
+        beam_release_string(result);
         return resultStr;
     } else {
         return Py_BuildValue("");
@@ -17706,7 +17706,7 @@ PyObject* BeamPyMetadataAttribute_getDescription(PyObject* self, PyObject* args)
     result = MetadataAttribute_getDescription((MetadataAttribute) thisObj);
     if (result != NULL) {
         resultStr = PyUnicode_FromString(result);
-        free(result);
+        beam_release_string(result);
         return resultStr;
     } else {
         return Py_BuildValue("");
@@ -17761,7 +17761,7 @@ PyObject* BeamPyMetadataAttribute_toString(PyObject* self, PyObject* args)
     result = MetadataAttribute_toString((MetadataAttribute) thisObj);
     if (result != NULL) {
         resultStr = PyUnicode_FromString(result);
-        free(result);
+        beam_release_string(result);
         return resultStr;
     } else {
         return Py_BuildValue("");
@@ -17839,7 +17839,7 @@ PyObject* BeamPyMetadataAttribute_getDisplayName(PyObject* self, PyObject* args)
     result = MetadataAttribute_getDisplayName((MetadataAttribute) thisObj);
     if (result != NULL) {
         resultStr = PyUnicode_FromString(result);
-        free(result);
+        beam_release_string(result);
         return resultStr;
     } else {
         return Py_BuildValue("");
@@ -17858,7 +17858,7 @@ PyObject* BeamPyMetadataAttribute_getProductRefString(PyObject* self, PyObject* 
     result = MetadataAttribute_getProductRefString((MetadataAttribute) thisObj);
     if (result != NULL) {
         resultStr = PyUnicode_FromString(result);
-        free(result);
+        beam_release_string(result);
         return resultStr;
     } else {
         return Py_BuildValue("");

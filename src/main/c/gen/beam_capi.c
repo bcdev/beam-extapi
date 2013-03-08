@@ -400,6 +400,13 @@ char* beam_alloc_string(jstring str)
     return result;
 }
 
+void beam_release_string(char* chars)
+{
+    if (chars != NULL) {
+        free(chars);
+    }
+}
+
 char** beam_alloc_string_array(jarray array, int* array_length)
 {
     char** array_elems;
