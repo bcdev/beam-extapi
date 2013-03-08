@@ -340,7 +340,7 @@ public abstract class PyCFunctionGenerator implements FunctionGenerator {
         public String generateReturnCode(GeneratorContext context) {
             return format("if (${res} != NULL) {\n" +
                                   "    ${res}Str = PyUnicode_FromString(${res});\n" +
-                                  "    free(${res});\n" +
+                                  "    beam_release_string(${res});\n" +
                                   "    return ${res}Str;\n" +
                                   "} else {\n" +
                                   "    return Py_BuildValue(\"\");\n" +
