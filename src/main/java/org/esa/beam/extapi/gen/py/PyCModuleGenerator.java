@@ -85,10 +85,12 @@ public class PyCModuleGenerator extends ModuleGenerator {
             for (ApiClass apiClass : getApiInfo().getAllClasses()) {
                 final String commentText = JavadocHelpers.convertToPythonDoc(getApiInfo(), apiClass.getType().asClassDoc(), "", false);
                 if (!commentText.isEmpty()) {
-                    writer.printf("\"\"\"\n%s\n\"\"\"\n", commentText);
+                    writer.printf("\"\"\" %s\n\"\"\"\n", commentText);
                 }
                 writer.printf("class %s:\n", getClassName(apiClass.getType()));
                 writer.printf("    def __init__(self, obj):\n");
+                writer.printf("        if obj == None:\n");
+                writer.printf("            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')\n");
                 writer.printf("        self.%s = obj\n", SELF_OBJ_NAME);
                 writer.printf("\n");
                 for (FunctionGenerator generator : getFunctionGenerators(apiClass)) {
