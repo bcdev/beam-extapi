@@ -2,21 +2,26 @@ from _beampy import *
 
 class Shape:
     def __init__(self, obj):
+        if obj == None:
+            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
         self._obj = obj
 
 
-"""
-Provides a parameterized, mathematical algorithm for a map transformation.
+""" Provides a parameterized, mathematical algorithm for a map transformation.
 
 @deprecated since BEAM 4.7, use geotools {@link org.geotools.referencing.operation.projection.MapProjection} instead.
 """
 class MapTransform:
     def __init__(self, obj):
+        if obj == None:
+            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
         self._obj = obj
 
 
 class ImageGeometry:
     def __init__(self, obj):
+        if obj == None:
+            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
         self._obj = obj
 
     @staticmethod
@@ -57,8 +62,7 @@ class ImageGeometry:
         return Rectangle2D(ImageGeometry_createValidRect(product._obj))
 
 
-"""
-The <code>GeoCoding</code> interface provides geo-spatial latitude and longitude information for a given X/Y position
+""" The <code>GeoCoding</code> interface provides geo-spatial latitude and longitude information for a given X/Y position
 of any (two-dimensional) raster.
  <b> Note: New geo-coding implementations shall implement the abstract class {@link AbstractGeoCoding},
 instead of implementing this interface.</b>
@@ -69,6 +73,8 @@ the {@link Object#equals(Object) equals()} and  {@link Object#hashCode() hashCod
 """
 class GeoCoding:
     def __init__(self, obj):
+        if obj == None:
+            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
         self._obj = obj
 
     def canGetPixelPos(self):
@@ -144,19 +150,19 @@ Releases all of the resources used by this object instance and all of its owned 
         return MathTransform(GeoCoding_getImageToMapTransform(self._obj))
 
 
-"""
-Instances of the <code>Parser</code> interface are used to convert a code
+""" Instances of the <code>Parser</code> interface are used to convert a code
 string representing an arithmetic expression in a tree of terms
 which can then be executed by using one of the evaluation methods of
 the <code>{@link Term}</code> class.
 """
 class Parser:
     def __init__(self, obj):
+        if obj == None:
+            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
         self._obj = obj
 
 
-"""
-The abstract <code>ProductData</code> class represents a generic data buffer used to hold the actual data values
+""" The abstract <code>ProductData</code> class represents a generic data buffer used to hold the actual data values
 stored in remote sensing data products.
 
  A single <code>ProductData</code> instance can have one or more elements of a primitive type. The primitive types
@@ -186,10 +192,12 @@ Where the transfer data type <code><b>Type</b></code> is one of <code>int</code>
 """
 class ProductData:
     def __init__(self, obj):
+        if obj == None:
+            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
         self._obj = obj
 
     @staticmethod
-    def createInstance(type):
+    def createInstance1(type):
         """
 Factory method which creates a value instance of the given type and with exactly one element.
            @param type the value's type
@@ -198,7 +206,7 @@ Factory method which creates a value instance of the given type and with exactly
         return ProductData(ProductData_createInstance1(type))
 
     @staticmethod
-    def createInstance(type, numElems):
+    def createInstance2(type, numElems):
         """
 Factory method which creates a value instance of the given type and with the specified number of elements.
            @param type     the value's type
@@ -209,7 +217,7 @@ Factory method which creates a value instance of the given type and with the spe
         return ProductData(ProductData_createInstance2(type, numElems))
 
     @staticmethod
-    def createInstance(type, data):
+    def createInstance3(type, data):
         """
 Factory method which creates a value instance of the given type and with the specified number of elements.
            @param type the value's type
@@ -220,53 +228,53 @@ Factory method which creates a value instance of the given type and with the spe
         return ProductData(ProductData_createInstance3(type, data._obj))
 
     @staticmethod
-    def createInstance(elems):
+    def createInstance5(elems):
         return ProductData(ProductData_createInstance5(elems))
 
     @staticmethod
-    def createUnsignedInstance(elems):
+    def createUnsignedInstance1(elems):
         return ProductData(ProductData_createUnsignedInstance1(elems))
 
     @staticmethod
-    def createInstance(elems):
+    def createInstance10(elems):
         return ProductData(ProductData_createInstance10(elems))
 
     @staticmethod
-    def createUnsignedInstance(elems):
+    def createUnsignedInstance3(elems):
         return ProductData(ProductData_createUnsignedInstance3(elems))
 
     @staticmethod
-    def createInstance(elems):
+    def createInstance8(elems):
         return ProductData(ProductData_createInstance8(elems))
 
     @staticmethod
-    def createUnsignedInstance(elems):
+    def createUnsignedInstance2(elems):
         return ProductData(ProductData_createUnsignedInstance2(elems))
 
     @staticmethod
-    def createInstance(elems):
+    def createInstance9(elems):
         return ProductData(ProductData_createInstance9(elems))
 
     @staticmethod
-    def createInstance(strData):
+    def createInstance4(strData):
         return ProductData(ProductData_createInstance4(strData))
 
     @staticmethod
-    def createInstance(elems):
+    def createInstance7(elems):
         return ProductData(ProductData_createInstance7(elems))
 
     @staticmethod
-    def createInstance(elems):
+    def createInstance6(elems):
         return ProductData(ProductData_createInstance6(elems))
 
-    def getType(self):
+    def getType1(self):
         """
 Returns this value's type ID.
         """
         return ProductData_getType1(self._obj)
 
     @staticmethod
-    def getElemSize(type):
+    def getElemSize2(type):
         """
 Gets the element size of an element of the given type in bytes.
            @param type the element type
@@ -275,7 +283,7 @@ Gets the element size of an element of the given type in bytes.
         """
         return ProductData_getElemSize2(type)
 
-    def getElemSize(self):
+    def getElemSize1(self):
         """
 Gets the element size of an element of this product data in bytes.
            @return the size of a single element in bytes
@@ -283,7 +291,7 @@ Gets the element size of an element of this product data in bytes.
         return ProductData_getElemSize1(self._obj)
 
     @staticmethod
-    def getTypeString(type):
+    def getTypeString2(type):
         """
 Returns a textual representation of the given data type.
            @return a data type string, <code>null</code> if the type is unknown
@@ -291,14 +299,14 @@ Returns a textual representation of the given data type.
         return ProductData_getTypeString2(type)
 
     @staticmethod
-    def getType(type):
+    def getType2(type):
         """
 Returns a integer representation of the given data type string.
            @return a data type integer, <code>null</code> if the type is unknown
         """
         return ProductData_getType2(type)
 
-    def getTypeString(self):
+    def getTypeString1(self):
         """
 Returns this value's data type String.
         """
@@ -603,7 +611,7 @@ Sets the internal value. The actual type of the given data object should only be
         ProductData_setElems(self._obj, data._obj)
         return
 
-    def readFrom(self, input):
+    def readFrom4(self, input):
         """
 Reads all elements of this <code>ProductData</code> instance from to the given input stream.
            
@@ -616,7 +624,7 @@ Reads all elements of this <code>ProductData</code> instance from to the given i
         ProductData_readFrom4(self._obj, input._obj)
         return
 
-    def readFrom(self, pos, input):
+    def readFrom3(self, pos, input):
         """
 Reads a single element of this <code>ProductData</code> instance from to the given output stream.
            
@@ -629,7 +637,7 @@ Reads a single element of this <code>ProductData</code> instance from to the giv
         ProductData_readFrom3(self._obj, pos, input._obj)
         return
 
-    def readFrom(self, startPos, numElems, input):
+    def readFrom1(self, startPos, numElems, input):
         """
 Reads elements of this <code>ProductData</code> instance from the given output stream.
            
@@ -644,7 +652,7 @@ Reads elements of this <code>ProductData</code> instance from the given output s
         ProductData_readFrom1(self._obj, startPos, numElems, input._obj)
         return
 
-    def readFrom(self, startPos, numElems, input, inputPos):
+    def readFrom2(self, startPos, numElems, input, inputPos):
         """
 Reads elements into this <code>ProductData</code> instance from the given input stream.
            
@@ -661,7 +669,7 @@ Reads elements into this <code>ProductData</code> instance from the given input 
         ProductData_readFrom2(self._obj, startPos, numElems, input._obj, inputPos)
         return
 
-    def writeTo(self, output):
+    def writeTo4(self, output):
         """
 Writes all elements of this <code>ProductData</code> instance to to the given output stream.
            
@@ -674,7 +682,7 @@ Writes all elements of this <code>ProductData</code> instance to to the given ou
         ProductData_writeTo4(self._obj, output._obj)
         return
 
-    def writeTo(self, pos, output):
+    def writeTo3(self, pos, output):
         """
 Writes a single element of this <code>ProductData</code> instance to to the given output stream.
            
@@ -687,7 +695,7 @@ Writes a single element of this <code>ProductData</code> instance to to the give
         ProductData_writeTo3(self._obj, pos, output._obj)
         return
 
-    def writeTo(self, startPos, numElems, output):
+    def writeTo1(self, startPos, numElems, output):
         """
 Writes elements of this <code>ProductData</code> instance to to the given output stream.
            
@@ -702,7 +710,7 @@ Writes elements of this <code>ProductData</code> instance to to the given output
         ProductData_writeTo1(self._obj, startPos, numElems, output._obj)
         return
 
-    def writeTo(self, startPos, numElems, output, outputPos):
+    def writeTo2(self, startPos, numElems, output, outputPos):
         """
 Writes elements of this <code>ProductData</code> instance to to the given output stream.
            
@@ -761,30 +769,36 @@ Releases all of the resources used by this object instance and all of its owned 
 
 class AffineTransform:
     def __init__(self, obj):
+        if obj == None:
+            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
         self._obj = obj
 
 
-"""
-A {@code Mask} is used to mask image pixels of other raster data nodes.
+""" A {@code Mask} is used to mask image pixels of other raster data nodes.
 
 This is a preliminary API under construction for BEAM 4.7. Not intended for public use.
 """
 class Mask:
     def __init__(self, obj):
+        if obj == None:
+            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
         self._obj = obj
 
 
 class Double:
     def __init__(self, obj):
+        if obj == None:
+            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
         self._obj = obj
 
 
-"""
-Provides the information required to decode integer sample values that
+""" Provides the information required to decode integer sample values that
 represent index values (e.g. types, classes, categories).
 """
 class IndexCoding:
     def __init__(self, obj):
+        if obj == None:
+            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
         self._obj = obj
 
     @staticmethod
@@ -1270,8 +1284,7 @@ Physically remove this node from the file associated with the given product writ
         return
 
 
-"""
-The abstract <code>Term</code> class is an in-memory representation of an
+""" The abstract <code>Term</code> class is an in-memory representation of an
 element within an arbitrary expression tree. The class defines a number of
 concrete <code>Term</code> implementations each representing either an
 an atomic leave (number constant, symbol reference) or a node
@@ -1284,11 +1297,12 @@ implementation of such a parser.
 """
 class Term:
     def __init__(self, obj):
+        if obj == None:
+            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
         self._obj = obj
 
 
-"""
-The <code>RasterDataNode</code> class ist the abstract base class for all objects in the product package that contain
+""" The <code>RasterDataNode</code> class ist the abstract base class for all objects in the product package that contain
 rasterized data. i.e. <code>Band</code> and <code>TiePointGrid</code>. It unifies the access to raster data in the
 product model. A raster is considered as a rectangular raw data array with a fixed width and height. A raster data
 node can scale its raw raster data samples in order to return geophysically meaningful pixel values.
@@ -1302,14 +1316,17 @@ node can scale its raw raster data samples in order to return geophysically mean
 """
 class RasterDataNode:
     def __init__(self, obj):
+        if obj == None:
+            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
         self._obj = obj
 
 
-"""
-A <code>PixelPos</code> represents a position or point in a pixel coordinate system.
+""" A <code>PixelPos</code> represents a position or point in a pixel coordinate system.
 """
 class PixelPos:
     def __init__(self, obj):
+        if obj == None:
+            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
         self._obj = obj
 
     @staticmethod
@@ -1348,39 +1365,39 @@ Sets this pixel position so that is becomes invalid.
     def getY(self):
         return PixelPos_getY(self._obj)
 
-    def setLocation(self, arg0, arg1):
+    def setLocation1(self, arg0, arg1):
         PixelPos_setLocation1(self._obj, arg0, arg1)
         return
 
-    def setLocation(self, arg0, arg1):
+    def setLocation2(self, arg0, arg1):
         PixelPos_setLocation2(self._obj, arg0, arg1)
         return
 
     def toString(self):
         return PixelPos_toString(self._obj)
 
-    def setLocation(self, arg0):
+    def setLocation3(self, arg0):
         PixelPos_setLocation3(self._obj, arg0._obj)
         return
 
     @staticmethod
-    def distanceSq(arg0, arg1, arg2, arg3):
+    def distanceSq2(arg0, arg1, arg2, arg3):
         return PixelPos_distanceSq2(arg0, arg1, arg2, arg3)
 
     @staticmethod
-    def distance(arg0, arg1, arg2, arg3):
+    def distance2(arg0, arg1, arg2, arg3):
         return PixelPos_distance2(arg0, arg1, arg2, arg3)
 
-    def distanceSq(self, arg0, arg1):
+    def distanceSq1(self, arg0, arg1):
         return PixelPos_distanceSq1(self._obj, arg0, arg1)
 
-    def distanceSq(self, arg0):
+    def distanceSq3(self, arg0):
         return PixelPos_distanceSq3(self._obj, arg0._obj)
 
-    def distance(self, arg0, arg1):
+    def distance1(self, arg0, arg1):
         return PixelPos_distance1(self._obj, arg0, arg1)
 
-    def distance(self, arg0):
+    def distance3(self, arg0):
         return PixelPos_distance3(self._obj, arg0._obj)
 
     def clone(self):
@@ -1393,22 +1410,24 @@ Sets this pixel position so that is becomes invalid.
         return PixelPos_equals(self._obj, arg0._obj)
 
 
-"""
-AutoGrouping can be used by an application to auto-group a long list of product nodes (e.g. bands)
+""" AutoGrouping can be used by an application to auto-group a long list of product nodes (e.g. bands)
 as a tree of product nodes.
 """
 class Product_AutoGrouping:
     def __init__(self, obj):
+        if obj == None:
+            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
         self._obj = obj
 
 
 class ImageOutputStream:
     def __init__(self, obj):
+        if obj == None:
+            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
         self._obj = obj
 
 
-"""
-Provides statistic information for a raster data node at a given image resolution level.
+""" Provides statistic information for a raster data node at a given image resolution level.
 Instances of the <code>Stx</code> class are created using the {@link StxFactory}.
 
 <i>Important note: This class has been revised in BEAM 4.10. All behaviour has been moved to {@link StxFactory}
@@ -1419,16 +1438,19 @@ not required to scale the returned statistical properties, e.g. we used to write
 """
 class Stx:
     def __init__(self, obj):
+        if obj == None:
+            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
         self._obj = obj
 
 
 class Rectangle:
     def __init__(self, obj):
+        if obj == None:
+            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
         self._obj = obj
 
 
-"""
-The <code>ProductIO</code> class provides several utility methods concerning data I/O for remote sensing data
+""" The <code>ProductIO</code> class provides several utility methods concerning data I/O for remote sensing data
 products.
 
  For example, a product can be read in using a single method call:
@@ -1442,6 +1464,8 @@ ProductIO.writeProduct(product, "HDF5", "test.h5", null);
 """
 class ProductIO:
     def __init__(self, obj):
+        if obj == None:
+            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
         self._obj = obj
 
     @staticmethod
@@ -1524,22 +1548,27 @@ Writes a product with the specified format to the given file path.
         return
 
 
-"""
-The <code>ProductNode</code> is the base class for all nodes within a remote sensing data product and even the data
+""" The <code>ProductNode</code> is the base class for all nodes within a remote sensing data product and even the data
 product itself.
 """
 class ProductNode:
     def __init__(self, obj):
+        if obj == None:
+            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
         self._obj = obj
 
 
 class Dimension:
     def __init__(self, obj):
+        if obj == None:
+            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
         self._obj = obj
 
 
 class AngularDirection:
     def __init__(self, obj):
+        if obj == None:
+            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
         self._obj = obj
 
     @staticmethod
@@ -1555,30 +1584,36 @@ class AngularDirection:
 
 class SimpleFeatureType:
     def __init__(self, obj):
+        if obj == None:
+            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
         self._obj = obj
 
 
-"""
-Provides the information required to decode integer sample values that
+""" Provides the information required to decode integer sample values that
 are combined of single flags (bit indexes).
 """
 class SampleCoding:
     def __init__(self, obj):
+        if obj == None:
+            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
         self._obj = obj
 
 
 class Object:
     def __init__(self, obj):
+        if obj == None:
+            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
         self._obj = obj
 
 
-"""
-Classes implementing the <code>ProductReader</code> interface know how to create an in-memory representation of a
+""" Classes implementing the <code>ProductReader</code> interface know how to create an in-memory representation of a
 given data product as input source.
 @see ProductWriter
 """
 class ProductReader:
     def __init__(self, obj):
+        if obj == None:
+            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
         self._obj = obj
 
     def getReaderPlugIn(self):
@@ -1674,8 +1709,7 @@ Closes the access to all currently opened resources such as file input streams a
         return
 
 
-"""
-The <code>ProductReaderPlugIn</code> interface is implemented by data product reader plug-ins.
+""" The <code>ProductReaderPlugIn</code> interface is implemented by data product reader plug-ins.
 
 XMLDecoder plug-ins are used to provide meta-information about a particular data format and to create instances of
 the actual reader objects.
@@ -1686,16 +1720,19 @@ a classpath scan.
 """
 class ProductReaderPlugIn:
     def __init__(self, obj):
+        if obj == None:
+            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
         self._obj = obj
 
 
 class Integer:
     def __init__(self, obj):
+        if obj == None:
+            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
         self._obj = obj
 
 
-"""
-The <code>ProductData.UTC</code> class is a <code>ProductData.UInt</code> specialisation for UTC date/time
+""" The <code>ProductData.UTC</code> class is a <code>ProductData.UInt</code> specialisation for UTC date/time
 values.
 
  Internally, data is stored in an <code>int[3]</code> array which represents a Modified Julian Day 2000
@@ -1710,11 +1747,12 @@ ProductData.UTC#getMicroSecondsFraction() micro-seconds} fraction.
 """
 class ProductData_UTC:
     def __init__(self, obj):
+        if obj == None:
+            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
         self._obj = obj
 
 
-"""
-A band contains the data for geophysical parameter in remote sensing data products. Bands are two-dimensional images
+""" A band contains the data for geophysical parameter in remote sensing data products. Bands are two-dimensional images
 which hold their pixel values (samples) in a buffer of the type {@link ProductData}. The band class is just a
 container for attached metadata of the band, currently: <ul> <li>the flag coding {@link FlagCoding}</li> <li>the band
 index at which position the band is stored in the associated product</li> <li>the center wavelength of the band</li>
@@ -1734,6 +1772,8 @@ and <code>writePixel</code> perform the inverse operations in this case.
 """
 class Band:
     def __init__(self, obj):
+        if obj == None:
+            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
         self._obj = obj
 
     @staticmethod
@@ -1976,7 +2016,7 @@ Sets the pixel value at the given pixel coordinate to the given pixel value.
         Band_setPixelDouble(self._obj, x, y, pixelValue)
         return
 
-    def setPixels(self, x, y, w, h, pixels):
+    def setPixelsInt(self, x, y, w, h, pixels):
         """
 Sets a range of pixels specified by the coordinates as integer array. Copies the data to the memory buffer of
            data at the specified location. Throws exception when the target buffer is not in memory.
@@ -1990,7 +2030,7 @@ Sets a range of pixels specified by the coordinates as integer array. Copies the
         Band_setPixelsInt(self._obj, x, y, w, h, pixels)
         return
 
-    def setPixels(self, x, y, w, h, pixels):
+    def setPixelsFloat(self, x, y, w, h, pixels):
         """
 Sets a range of pixels specified by the coordinates as float array. Copies the data to the memory buffer of data
            at the specified location. Throws exception when the target buffer is not in memory.
@@ -2004,7 +2044,7 @@ Sets a range of pixels specified by the coordinates as float array. Copies the d
         Band_setPixelsFloat(self._obj, x, y, w, h, pixels)
         return
 
-    def setPixels(self, x, y, w, h, pixels):
+    def setPixelsDouble(self, x, y, w, h, pixels):
         """
 Sets a range of pixels specified by the coordinates as double array. Copies the data to the memory buffer of data
            at the specified location. Throws exception when the target buffer is not in memory.
@@ -2455,57 +2495,57 @@ Gets a geo-physical sample value at the given pixel coordinate as {@code float} 
         """
         return Band_getSampleFloat(self._obj, x, y)
 
-    def getPixels(self, x, y, w, h, pixels):
+    def getPixelsInt(self, x, y, w, h, pixels):
         """
 @see #getPixels(int, int, int, int, int[], ProgressMonitor)
         """
         return Band_getPixelsInt(self._obj, x, y, w, h, pixels)
 
-    def getPixels(self, x, y, w, h, pixels):
+    def getPixelsFloat(self, x, y, w, h, pixels):
         """
 @see #getPixels(int, int, int, int, float[], ProgressMonitor)
         """
         return Band_getPixelsFloat(self._obj, x, y, w, h, pixels)
 
-    def getPixels(self, x, y, w, h, pixels):
+    def getPixelsDouble(self, x, y, w, h, pixels):
         """
 @see #getPixels(int, int, int, int, double[], ProgressMonitor)
         """
         return Band_getPixelsDouble(self._obj, x, y, w, h, pixels)
 
-    def readPixels(self, x, y, w, h, pixels):
+    def readPixelsInt(self, x, y, w, h, pixels):
         """
 @see #readPixels(int, int, int, int, int[], ProgressMonitor)
         """
         return Band_readPixelsInt(self._obj, x, y, w, h, pixels)
 
-    def readPixels(self, x, y, w, h, pixels):
+    def readPixelsFloat(self, x, y, w, h, pixels):
         """
 @see #readPixels(int, int, int, int, float[], ProgressMonitor)
         """
         return Band_readPixelsFloat(self._obj, x, y, w, h, pixels)
 
-    def readPixels(self, x, y, w, h, pixels):
+    def readPixelsDouble(self, x, y, w, h, pixels):
         """
 @see #readPixels(int, int, int, int, double[], ProgressMonitor)
         """
         return Band_readPixelsDouble(self._obj, x, y, w, h, pixels)
 
-    def writePixels(self, x, y, w, h, pixels):
+    def writePixelsInt(self, x, y, w, h, pixels):
         """
 @see #writePixels(int, int, int, int, int[], ProgressMonitor)
         """
         Band_writePixelsInt(self._obj, x, y, w, h, pixels)
         return
 
-    def writePixels(self, x, y, w, h, pixels):
+    def writePixelsFloat(self, x, y, w, h, pixels):
         """
 @see #writePixels(int, int, int, int, float[], ProgressMonitor)
         """
         Band_writePixelsFloat(self._obj, x, y, w, h, pixels)
         return
 
-    def writePixels(self, x, y, w, h, pixels):
+    def writePixelsDouble(self, x, y, w, h, pixels):
         """
 @see #writePixels(int, int, int, int, double[], ProgressMonitor)
         """
@@ -2567,7 +2607,7 @@ Creates raster data that is compatible to this dataset's data type. The data buf
         """
         return ProductData(Band_createCompatibleSceneRasterData(self._obj))
 
-    def createCompatibleRasterData(self, width, height):
+    def createCompatibleRasterDataForRect(self, width, height):
         """
 Creates raster data that is compatible to this dataset's data type. The data buffer returned contains exactly
            <code>width*height</code> elements of a compatible data type.
@@ -2973,16 +3013,19 @@ Gets the product reference string. The product reference string is the product r
 
 class ColorPaletteDef_Point:
     def __init__(self, obj):
+        if obj == None:
+            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
         self._obj = obj
 
 
 class RenderedImage:
     def __init__(self, obj):
+        if obj == None:
+            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
         self._obj = obj
 
 
-"""
-Placemarks are displayed as symbols at the image's pixel position corresponding to their geographical position. The name is
+""" Placemarks are displayed as symbols at the image's pixel position corresponding to their geographical position. The name is
 displayed as label next to the symbol. If the user moves the mouse over a placemark, the textual description property shall
 appear as tool-tip text. Single placemarks can be selected either by mouse-click or by the ? Prev./Next Placemark tool.
 Placemarks are contained in the active product and stored in CSV format. To share placemarks between products,
@@ -2990,6 +3033,8 @@ the placemarks of a product can be imported and exported.
 """
 class Placemark:
     def __init__(self, obj):
+        if obj == None:
+            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
         self._obj = obj
 
     @staticmethod
@@ -3279,43 +3324,53 @@ Physically remove this node from the file associated with the given product writ
         return
 
 
-"""
-An interface used as parameter to several methods which perform some actions on data arrays.
+""" An interface used as parameter to several methods which perform some actions on data arrays.
 It is used to decide whether or not an array value shall be taken into account for a particular
 computation.
 """
 class IndexValidator:
     def __init__(self, obj):
+        if obj == None:
+            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
         self._obj = obj
 
 
 class Area:
     def __init__(self, obj):
+        if obj == None:
+            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
         self._obj = obj
 
 
 class ComponentColorModel:
     def __init__(self, obj):
+        if obj == None:
+            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
         self._obj = obj
 
 
 class Iterator:
     def __init__(self, obj):
+        if obj == None:
+            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
         self._obj = obj
 
 
 class MathTransform:
     def __init__(self, obj):
+        if obj == None:
+            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
         self._obj = obj
 
 
 class CoordinateReferenceSystem:
     def __init__(self, obj):
+        if obj == None:
+            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
         self._obj = obj
 
 
-"""
-The <code>ProductWriterPlugIn</code> interface is implemented by data product writer plug-ins.
+""" The <code>ProductWriterPlugIn</code> interface is implemented by data product writer plug-ins.
 
 XMLCoder plug-ins are used to provide meta-information about a particular data format and to create instances of
 the actual writer objects.
@@ -3326,24 +3381,31 @@ a classpath scan.
 """
 class ProductWriterPlugIn:
     def __init__(self, obj):
+        if obj == None:
+            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
         self._obj = obj
 
 
 class Rectangle2D:
     def __init__(self, obj):
+        if obj == None:
+            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
         self._obj = obj
 
 
 class File:
     def __init__(self, obj):
+        if obj == None:
+            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
         self._obj = obj
 
 
-"""
-The <code>GeoPos</code> class represents a geographical position measured in longitudes and latitudes.
+""" The <code>GeoPos</code> class represents a geographical position measured in longitudes and latitudes.
 """
 class GeoPos:
     def __init__(self, obj):
+        if obj == None:
+            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
         self._obj = obj
 
     @staticmethod
@@ -3455,11 +3517,12 @@ Returns a string representation of the latitude value.
         return GeoPos_getLonString(self._obj)
 
 
-"""
-A type-safe container for elements of the type <code>ProductNode</code>.
+""" A type-safe container for elements of the type <code>ProductNode</code>.
 """
 class ProductNodeGroup:
     def __init__(self, obj):
+        if obj == None:
+            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
         self._obj = obj
 
     @staticmethod
@@ -3492,7 +3555,7 @@ Constructs a node group for the given owner.
         """
         return ProductNodeGroup_getNodeCount(self._obj)
 
-    def get(self, index):
+    def get1(self, index):
         """
 @param index The node index.
            @return The product node at the given index.
@@ -3514,14 +3577,14 @@ Returns the names of all products currently managed.
         """
         return ProductNodeGroup_getNodeNames(self._obj)
 
-    def toArray(self):
+    def toArray1(self):
         """
 Returns an array of all products currently managed.
            @return an array containing the products, never <code>null</code>, but the array can have zero length
         """
         return ProductNode(ProductNodeGroup_toArray1(self._obj))
 
-    def toArray(self, array):
+    def toArray2(self, array):
         """
 @param array the array into which the elements of the list are to be stored, if it is big enough; otherwise, a
            new array of the same runtime type is allocated for this purpose.
@@ -3529,10 +3592,10 @@ Returns an array of all products currently managed.
         """
         return T(ProductNodeGroup_toArray2(self._obj, array._obj))
 
-    def indexOf(self, name):
+    def indexOf2(self, name):
         return ProductNodeGroup_indexOf2(self._obj, name)
 
-    def indexOf(self, element):
+    def indexOf1(self, element):
         return ProductNodeGroup_indexOf1(self._obj, element._obj)
 
     def getByDisplayName(self, displayName):
@@ -3542,14 +3605,14 @@ Returns an array of all products currently managed.
         """
         return T(ProductNodeGroup_getByDisplayName(self._obj, displayName))
 
-    def get(self, name):
+    def get2(self, name):
         """
 @param name the name
            @return the product node with the given name.
         """
         return T(ProductNodeGroup_get2(self._obj, name))
 
-    def contains(self, name):
+    def contains2(self, name):
         """
 Tests whether a node with the given name is contained in this group.
            @param name the name
@@ -3557,7 +3620,7 @@ Tests whether a node with the given name is contained in this group.
         """
         return ProductNodeGroup_contains2(self._obj, name)
 
-    def contains(self, node):
+    def contains1(self, node):
         """
 Tests whether the given product is contained in this list.
            @param node the node
@@ -3565,7 +3628,7 @@ Tests whether the given product is contained in this list.
         """
         return ProductNodeGroup_contains1(self._obj, node._obj)
 
-    def add(self, node):
+    def add2(self, node):
         """
 Adds the given node to this group.
            @param node the node to be added, ignored if <code>null</code>
@@ -3573,7 +3636,7 @@ Adds the given node to this group.
         """
         return ProductNodeGroup_add2(self._obj, node._obj)
 
-    def add(self, index, node):
+    def add1(self, index, node):
         """
 Adds the given node to this group.
            @param index the index.
@@ -3608,7 +3671,7 @@ Gets all removed node nodes.
         """
         return Collection(ProductNodeGroup_getRemovedNodes(self._obj))
 
-    def getRawStorageSize(self, subsetDef):
+    def getRawStorageSize2(self, subsetDef):
         return ProductNodeGroup_getRawStorageSize2(self._obj, subsetDef._obj)
 
     def setModified(self, modified):
@@ -3726,18 +3789,18 @@ Gets the product reference string. The product reference string is the product r
         """
         return ProductNodeGroup_getProductRefString(self._obj)
 
-    def getRawStorageSize(self):
+    def getRawStorageSize1(self):
         """
 Gets an estimated, raw storage size in bytes of this product node.
            @return the size in bytes.
         """
         return ProductNodeGroup_getRawStorageSize1(self._obj)
 
-    def fireProductNodeChanged(self, propertyName):
+    def fireProductNodeChanged1(self, propertyName):
         ProductNodeGroup_fireProductNodeChanged1(self._obj, propertyName)
         return
 
-    def fireProductNodeChanged(self, propertyName, oldValue, newValue):
+    def fireProductNodeChanged2(self, propertyName, oldValue, newValue):
         ProductNodeGroup_fireProductNodeChanged2(self._obj, propertyName, oldValue._obj, newValue._obj)
         return
 
@@ -3751,23 +3814,25 @@ Physically remove this node from the file associated with the given product writ
         return
 
 
-"""
-A map projection is a mathematical model for the transformation of locations from a three-dimensional earth surface
+""" A map projection is a mathematical model for the transformation of locations from a three-dimensional earth surface
 to a two-dimensional map representation.
 
 @deprecated since BEAM 4.7, use geotools {@link org.geotools.referencing.operation.projection.MapProjection} instead.
 """
 class MapProjection:
     def __init__(self, obj):
+        if obj == None:
+            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
         self._obj = obj
 
 
-"""
-A type-safe container for elements of the type <code>Product</code>. ProductListeners can be added to inform if a
+""" A type-safe container for elements of the type <code>Product</code>. ProductListeners can be added to inform if a
 <code>Product</code> was added or removed.
 """
 class ProductManager:
     def __init__(self, obj):
+        if obj == None:
+            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
         self._obj = obj
 
     @staticmethod
@@ -3827,7 +3892,7 @@ Returns an array of all products currently managed.
         """
         return Product(ProductManager_getProductByRefNo(self._obj, refNo))
 
-    def getProduct(self, name):
+    def getProductByName(self, name):
         """
 @param name The product name.
            @return The product with the given name.
@@ -3895,12 +3960,13 @@ Removes a <code>ProductManagerListener</code> from this product manager.
         return ProductManager_removeListener(self._obj, listener._obj)
 
 
-"""
-Provides the information required to decode integer sample values that
+""" Provides the information required to decode integer sample values that
 are combined of single flags (bit indexes).
 """
 class FlagCoding:
     def __init__(self, obj):
+        if obj == None:
+            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
         self._obj = obj
 
     @staticmethod
@@ -4388,36 +4454,43 @@ Physically remove this node from the file associated with the given product writ
 
 class IndexColorModel:
     def __init__(self, obj):
+        if obj == None:
+            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
         self._obj = obj
 
 
-"""
-Enumerates the possible histogram matching modes.
+""" Enumerates the possible histogram matching modes.
 """
 class ImageInfo_HistogramMatching:
     def __init__(self, obj):
+        if obj == None:
+            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
         self._obj = obj
 
 
-"""
-A listener which listens to internal data product changes.
+""" A listener which listens to internal data product changes.
 """
 class ProductNodeListener:
     def __init__(self, obj):
+        if obj == None:
+            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
         self._obj = obj
 
 
 class Map:
     def __init__(self, obj):
+        if obj == None:
+            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
         self._obj = obj
 
 
-"""
-This class provides many static factory methods to be used in conjunction with data products.
+""" This class provides many static factory methods to be used in conjunction with data products.
 @see Product
 """
 class ProductUtils:
     def __init__(self, obj):
+        if obj == None:
+            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
         self._obj = obj
 
     @staticmethod
@@ -4467,7 +4540,7 @@ Creates a greyscale image from the given <code>{@link RasterDataNode}</code>.
         return BufferedImage(ProductUtils_createColorIndexedImage(rasterDataNode._obj, pm._obj))
 
     @staticmethod
-    def createSuitableMapInfo(product, rect, mapProjection):
+    def createSuitableMapInfo1(product, rect, mapProjection):
         """
 Retuns a suitable <code>MapInfo</code> instance for the given (geo-coded) product which includes the entire or a
            subset of the product's scene region for the given map projection. The position of the reference pixel will be
@@ -4481,7 +4554,7 @@ Retuns a suitable <code>MapInfo</code> instance for the given (geo-coded) produc
         return MapInfo(ProductUtils_createSuitableMapInfo1(product._obj, rect._obj, mapProjection._obj))
 
     @staticmethod
-    def createSuitableMapInfo(product, mapProjection, orientation, noDataValue):
+    def createSuitableMapInfo2(product, mapProjection, orientation, noDataValue):
         """
 Retuns a suitable <code>MapInfo</code> instance for the given (geo-coded) product which includes the entire or a
            subset of the product's scene region for the given map projection. The position of the reference pixel will be the scene center.
@@ -4498,7 +4571,7 @@ Retuns a suitable <code>MapInfo</code> instance for the given (geo-coded) produc
         return Dimension(ProductUtils_getOutputRasterSize(product._obj, rect._obj, mapTransform._obj, pixelSizeX, pixelSizeY))
 
     @staticmethod
-    def createMapEnvelope(product, rect, mapTransform):
+    def createMapEnvelope2(product, rect, mapTransform):
         """
 Creates the boundary in map coordinates for the given product, source rectangle (in product pixel coordinates)
            and the given map transfromation. The method delegates to {@link #createMapEnvelope(Product,
@@ -4513,7 +4586,7 @@ Creates the boundary in map coordinates for the given product, source rectangle 
         return Point2D(ProductUtils_createMapEnvelope2(product._obj, rect._obj, mapTransform._obj))
 
     @staticmethod
-    def createMapEnvelope(product, rect, step, mapTransform):
+    def createMapEnvelope1(product, rect, step, mapTransform):
         """
 Creates the boundary in map coordinates for the given product, source rectangle (in product
            pixel coordinates) and the given map transfromation. The method delegates to
@@ -4537,7 +4610,7 @@ Creates the boundary in map coordinates for the given product, source rectangle 
         return Point2D(ProductUtils_createMapBoundary(product._obj, rect._obj, step, mapTransform._obj))
 
     @staticmethod
-    def createGeoBoundary(product, step):
+    def createGeoBoundary1(product, step):
         """
 Creates the geographical boundary of the given product and returns it as a list of geographical coordinates.
            @param product the input product, must not be null
@@ -4548,7 +4621,7 @@ Creates the geographical boundary of the given product and returns it as a list 
         return GeoPos(ProductUtils_createGeoBoundary1(product._obj, step))
 
     @staticmethod
-    def createGeoBoundary(product, region, step):
+    def createGeoBoundary2(product, region, step):
         """
 Creates the geographical boundary of the given region within the given product and returns it as a list of
            geographical coordinates.
@@ -4564,7 +4637,7 @@ Creates the geographical boundary of the given region within the given product a
         return GeoPos(ProductUtils_createGeoBoundary2(product._obj, region._obj, step))
 
     @staticmethod
-    def createGeoBoundary(product, region, step, usePixelCenter):
+    def createGeoBoundary3(product, region, step, usePixelCenter):
         """
 Creates the geographical boundary of the given region within the given product and returns it as a list of
            geographical coordinates.
@@ -4594,7 +4667,7 @@ Searches for a valid GeoPos by considering the vicinity of a {@link PixelPos}. I
         return GeoPos(ProductUtils_getClosestGeoPos(gc._obj, origPos._obj, region._obj, step))
 
     @staticmethod
-    def createGeoBoundary(raster, region, step):
+    def createGeoBoundary4(raster, region, step):
         """
 Creates the geographical boundary of the given region within the given raster and returns it as a list of
            geographical coordinates.
@@ -4608,7 +4681,7 @@ Creates the geographical boundary of the given region within the given raster an
         return GeoPos(ProductUtils_createGeoBoundary4(raster._obj, region._obj, step))
 
     @staticmethod
-    def createGeoBoundaryPaths(product):
+    def createGeoBoundaryPaths1(product):
         """
 Converts the geographic boundary entire product into one, two or three shape objects. If the product does not
            intersect the 180 degree meridian, a single general path is returned. Otherwise two or three shapes are created
@@ -4623,7 +4696,7 @@ Converts the geographic boundary entire product into one, two or three shape obj
         return GeneralPath(ProductUtils_createGeoBoundaryPaths1(product._obj))
 
     @staticmethod
-    def createGeoBoundaryPaths(product, region, step):
+    def createGeoBoundaryPaths2(product, region, step):
         """
 Converts the geographic boundary of the region within the given product into one, two or three shape objects. If
            the product does not intersect the 180 degree meridian, a single general path is returned. Otherwise two or three
@@ -4643,7 +4716,7 @@ Converts the geographic boundary of the region within the given product into one
         return GeneralPath(ProductUtils_createGeoBoundaryPaths2(product._obj, region._obj, step))
 
     @staticmethod
-    def createGeoBoundaryPaths(product, region, step, usePixelCenter):
+    def createGeoBoundaryPaths3(product, region, step, usePixelCenter):
         """
 Converts the geographic boundary of the region within the given product into one, two or three shape objects. If
            the product does not intersect the 180 degree meridian, a single general path is returned. Otherwise two or three
@@ -4661,7 +4734,7 @@ Converts the geographic boundary of the region within the given product into one
         return GeneralPath(ProductUtils_createGeoBoundaryPaths3(product._obj, region._obj, step, usePixelCenter))
 
     @staticmethod
-    def createPixelBoundary(product, rect, step):
+    def createPixelBoundary1(product, rect, step):
         """
 Creates a rectangular boundary expressed in pixel positions for the given source rectangle. If the source
            <code>rect</code> is 100 x 50 pixels and <code>step</code> is 10 the returned array will countain exactly 2 * 10
@@ -4679,7 +4752,7 @@ Creates a rectangular boundary expressed in pixel positions for the given source
         return PixelPos(ProductUtils_createPixelBoundary1(product._obj, rect._obj, step))
 
     @staticmethod
-    def createPixelBoundary(product, rect, step, usePixelCenter):
+    def createPixelBoundary2(product, rect, step, usePixelCenter):
         """
 Creates a rectangular boundary expressed in pixel positions for the given source rectangle. If the source
            <code>rect</code> is 100 x 50 pixels and <code>step</code> is 10 the returned array will countain exactly 2 * 10
@@ -4696,7 +4769,7 @@ Creates a rectangular boundary expressed in pixel positions for the given source
         return PixelPos(ProductUtils_createPixelBoundary2(product._obj, rect._obj, step, usePixelCenter))
 
     @staticmethod
-    def createPixelBoundary(raster, rect, step):
+    def createPixelBoundary3(raster, rect, step):
         """
 Creates a rectangular boundary expressed in pixel positions for the given source rectangle. If the source
            <code>rect</code> is 100 x 50 pixels and <code>step</code> is 10 the returned array will countain exactly 2 * 10
@@ -4712,7 +4785,7 @@ Creates a rectangular boundary expressed in pixel positions for the given source
         return PixelPos(ProductUtils_createPixelBoundary3(raster._obj, rect._obj, step))
 
     @staticmethod
-    def createRectBoundary(rect, step):
+    def createRectBoundary1(rect, step):
         """
 Creates a rectangular boundary expressed in pixel positions for the given source rectangle. If the source
            <code>rect</code> is 100 x 50 pixels and <code>step</code> is 10 the returned array will countain exactly 2 * 10
@@ -4728,7 +4801,7 @@ Creates a rectangular boundary expressed in pixel positions for the given source
         return PixelPos(ProductUtils_createRectBoundary1(rect._obj, step))
 
     @staticmethod
-    def createRectBoundary(rect, step, usePixelCenter):
+    def createRectBoundary2(rect, step, usePixelCenter):
         """
 Creates a rectangular boundary expressed in pixel positions for the given source rectangle. If the source
            <code>rect</code> is 100 x 50 pixels and <code>step</code> is 10 the returned array will countain exactly 2 * 10
@@ -4831,7 +4904,7 @@ Copies the named tie-point grid from the source product to the target product.
         return TiePointGrid(ProductUtils_copyTiePointGrid(gridName, sourceProduct._obj, targetProduct._obj))
 
     @staticmethod
-    def copyBand(sourceBandName, sourceProduct, targetProduct, copySourceImage):
+    def copyBand2(sourceBandName, sourceProduct, targetProduct, copySourceImage):
         """
 Copies the named band from the source product to the target product.
            @param sourceBandName  the name of the band to be copied.
@@ -4843,7 +4916,7 @@ Copies the named band from the source product to the target product.
         return Band(ProductUtils_copyBand2(sourceBandName, sourceProduct._obj, targetProduct._obj, copySourceImage))
 
     @staticmethod
-    def copyBand(sourceBandName, sourceProduct, targetBandName, targetProduct, copySourceImage):
+    def copyBand1(sourceBandName, sourceProduct, targetBandName, targetProduct, copySourceImage):
         """
 Copies the named band from the source product to the target product.
            @param sourceBandName  the name of the band to be copied.
@@ -4910,7 +4983,7 @@ Copies all tie point grids from one product to another.
         return
 
     @staticmethod
-    def canGetPixelPos(product):
+    def canGetPixelPos1(product):
         """
 Returns whether or not a product can return a pixel position from a given geographical position.
            @param product the product to be checked
@@ -4919,7 +4992,7 @@ Returns whether or not a product can return a pixel position from a given geogra
         return ProductUtils_canGetPixelPos1(product._obj)
 
     @staticmethod
-    def canGetPixelPos(raster):
+    def canGetPixelPos2(raster):
         """
 Returns whether or not a raster can return a pixel position from a given geographical position.
            @param raster the raster to be checked
@@ -5043,7 +5116,7 @@ Converts a <code>Shape</code> given in pixel X/Y coordinates into a <code>Genera
         return GeneralPath(ProductUtils_convertToGeoPath(shape._obj, geoCoding._obj))
 
     @staticmethod
-    def copyMetadata(source, target):
+    def copyMetadata2(source, target):
         """
 Copies all metadata elements and attributes of the source product to the target product.
            The copied elements and attributes are deeply cloned.
@@ -5055,7 +5128,7 @@ Copies all metadata elements and attributes of the source product to the target 
         return
 
     @staticmethod
-    def copyMetadata(source, target):
+    def copyMetadata1(source, target):
         """
 Copies all metadata elements and attributes of the source element to the target element.
            The copied elements and attributes are deeply cloned.
@@ -5077,11 +5150,11 @@ Copies the source product's preferred tile size (if any) to the target product.
         return
 
     @staticmethod
-    def createGeoTIFFMetadata(product):
+    def createGeoTIFFMetadata2(product):
         return GeoTIFFMetadata(ProductUtils_createGeoTIFFMetadata2(product._obj))
 
     @staticmethod
-    def createGeoTIFFMetadata(geoCoding, width, height):
+    def createGeoTIFFMetadata1(geoCoding, width, height):
         return GeoTIFFMetadata(ProductUtils_createGeoTIFFMetadata1(geoCoding._obj, width, height))
 
     @staticmethod
@@ -5137,7 +5210,7 @@ Computes the minimum and maximum y value of the given {@link PixelPos} array.
         return ProductUtils_computeMinMaxY(pixelPositions._obj)
 
     @staticmethod
-    def copyBandsForGeomTransform(sourceProduct, targetProduct, defaultNoDataValue, addedRasterDataNodes):
+    def copyBandsForGeomTransform1(sourceProduct, targetProduct, defaultNoDataValue, addedRasterDataNodes):
         """
 Copies only the bands from source to target.
            @see #copyBandsForGeomTransform(Product, Product, boolean, double, java.util.Map)
@@ -5146,7 +5219,7 @@ Copies only the bands from source to target.
         return
 
     @staticmethod
-    def copyBandsForGeomTransform(sourceProduct, targetProduct, includeTiePointGrids, defaultNoDataValue, targetToSourceMap):
+    def copyBandsForGeomTransform2(sourceProduct, targetProduct, includeTiePointGrids, defaultNoDataValue, targetToSourceMap):
         """
 Adds raster data nodes of a source product as bands to the given target product. This method is especially usefull if the target
            product is a geometric transformation (e.g. map-projection) of the source product.
@@ -5189,12 +5262,13 @@ Adds raster data nodes of a source product as bands to the given target product.
         return ProductUtils_getGeophysicalSampleLong(band._obj, pixelX, pixelY, level)
 
 
-"""
-A <code>MetadataElement</code> is a data node used to store metadata. Metadata elements can have any number of
+""" A <code>MetadataElement</code> is a data node used to store metadata. Metadata elements can have any number of
 metadata attributes of the type {@link MetadataAttribute} and any number of inner <code>MetadataElement</code>s.
 """
 class MetadataElement:
     def __init__(self, obj):
+        if obj == None:
+            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
         self._obj = obj
 
     @staticmethod
@@ -5608,8 +5682,7 @@ Physically remove this node from the file associated with the given product writ
         return
 
 
-"""
-The interface <code>Pointing</code> wraps a {@link GeoCoding} and optionally provides more geometry
+""" The interface <code>Pointing</code> wraps a {@link GeoCoding} and optionally provides more geometry
 information such as sun direction, satellite (view) direction and elevation at a given pixel position.
 
 All <code>Pointing</code> implementations should override
@@ -5617,16 +5690,19 @@ the {@link Object#equals(Object) equals()} and  {@link Object#hashCode() hashCod
 """
 class Pointing:
     def __init__(self, obj):
+        if obj == None:
+            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
         self._obj = obj
 
 
 class Color:
     def __init__(self, obj):
+        if obj == None:
+            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
         self._obj = obj
 
 
-"""
-Placemark descriptors are used to describe and create {@link Placemark}s.
+""" Placemark descriptors are used to describe and create {@link Placemark}s.
 
 New placemark descriptors can be added by using the Service Provider Interface
 {@code META-INF/services/PlacemarkDescriptor}.
@@ -5636,29 +5712,35 @@ Instead they should derive their implementation from {@link AbstractPlacemarkDes
 """
 class PlacemarkDescriptor:
     def __init__(self, obj):
+        if obj == None:
+            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
         self._obj = obj
 
 
-"""
-A factory which creates instances of a {@link Pointing} for a given raster data node.
+""" A factory which creates instances of a {@link Pointing} for a given raster data node.
 A <code>PointingFactory</code> is usually assigned to data {@link Product} by its {@link ProductReader ProductReader}
 """
 class PointingFactory:
     def __init__(self, obj):
+        if obj == None:
+            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
         self._obj = obj
 
 
-"""
-A container for data which fully describes a transect profile. Use {@link TransectProfileDataBuilder} to create
+""" A container for data which fully describes a transect profile. Use {@link TransectProfileDataBuilder} to create
 instances.
 """
 class TransectProfileData:
     def __init__(self, obj):
+        if obj == None:
+            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
         self._obj = obj
 
 
 class PlacemarkGroup:
     def __init__(self, obj):
+        if obj == None:
+            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
         self._obj = obj
 
     def getVectorDataNode(self):
@@ -5667,14 +5749,14 @@ class PlacemarkGroup:
     def getPlacemark(self, feature):
         return Placemark(PlacemarkGroup_getPlacemark(self._obj, feature._obj))
 
-    def add(self, placemark):
+    def add4(self, placemark):
         return PlacemarkGroup_add4(self._obj, placemark._obj)
 
-    def add(self, index, placemark):
+    def add2(self, index, placemark):
         PlacemarkGroup_add2(self._obj, index, placemark._obj)
         return
 
-    def remove(self, placemark):
+    def remove2(self, placemark):
         return PlacemarkGroup_remove2(self._obj, placemark._obj)
 
     def dispose(self):
@@ -5693,7 +5775,7 @@ class PlacemarkGroup:
         """
         return PlacemarkGroup_getNodeCount(self._obj)
 
-    def get(self, index):
+    def get1(self, index):
         """
 @param index The node index.
            @return The product node at the given index.
@@ -5715,14 +5797,14 @@ Returns the names of all products currently managed.
         """
         return PlacemarkGroup_getNodeNames(self._obj)
 
-    def toArray(self):
+    def toArray1(self):
         """
 Returns an array of all products currently managed.
            @return an array containing the products, never <code>null</code>, but the array can have zero length
         """
         return ProductNode(PlacemarkGroup_toArray1(self._obj))
 
-    def toArray(self, array):
+    def toArray2(self, array):
         """
 @param array the array into which the elements of the list are to be stored, if it is big enough; otherwise, a
            new array of the same runtime type is allocated for this purpose.
@@ -5730,10 +5812,10 @@ Returns an array of all products currently managed.
         """
         return T(PlacemarkGroup_toArray2(self._obj, array._obj))
 
-    def indexOf(self, name):
+    def indexOf2(self, name):
         return PlacemarkGroup_indexOf2(self._obj, name)
 
-    def indexOf(self, element):
+    def indexOf1(self, element):
         return PlacemarkGroup_indexOf1(self._obj, element._obj)
 
     def getByDisplayName(self, displayName):
@@ -5743,14 +5825,14 @@ Returns an array of all products currently managed.
         """
         return T(PlacemarkGroup_getByDisplayName(self._obj, displayName))
 
-    def get(self, name):
+    def get2(self, name):
         """
 @param name the name
            @return the product node with the given name.
         """
         return T(PlacemarkGroup_get2(self._obj, name))
 
-    def contains(self, name):
+    def contains2(self, name):
         """
 Tests whether a node with the given name is contained in this group.
            @param name the name
@@ -5758,7 +5840,7 @@ Tests whether a node with the given name is contained in this group.
         """
         return PlacemarkGroup_contains2(self._obj, name)
 
-    def contains(self, node):
+    def contains1(self, node):
         """
 Tests whether the given product is contained in this list.
            @param node the node
@@ -5766,7 +5848,7 @@ Tests whether the given product is contained in this list.
         """
         return PlacemarkGroup_contains1(self._obj, node._obj)
 
-    def add(self, node):
+    def add3(self, node):
         """
 Adds the given node to this group.
            @param node the node to be added, ignored if <code>null</code>
@@ -5774,7 +5856,7 @@ Adds the given node to this group.
         """
         return PlacemarkGroup_add3(self._obj, node._obj)
 
-    def add(self, index, node):
+    def add1(self, index, node):
         """
 Adds the given node to this group.
            @param index the index.
@@ -5783,7 +5865,7 @@ Adds the given node to this group.
         PlacemarkGroup_add1(self._obj, index, node._obj)
         return
 
-    def remove(self, node):
+    def remove1(self, node):
         """
 Removes the given node from this group.
            @param node the node to be removed
@@ -5809,7 +5891,7 @@ Gets all removed node nodes.
         """
         return Collection(PlacemarkGroup_getRemovedNodes(self._obj))
 
-    def getRawStorageSize(self, subsetDef):
+    def getRawStorageSize2(self, subsetDef):
         return PlacemarkGroup_getRawStorageSize2(self._obj, subsetDef._obj)
 
     def setModified(self, modified):
@@ -5923,18 +6005,18 @@ Gets the product reference string. The product reference string is the product r
         """
         return PlacemarkGroup_getProductRefString(self._obj)
 
-    def getRawStorageSize(self):
+    def getRawStorageSize1(self):
         """
 Gets an estimated, raw storage size in bytes of this product node.
            @return the size in bytes.
         """
         return PlacemarkGroup_getRawStorageSize1(self._obj)
 
-    def fireProductNodeChanged(self, propertyName):
+    def fireProductNodeChanged1(self, propertyName):
         PlacemarkGroup_fireProductNodeChanged1(self._obj, propertyName)
         return
 
-    def fireProductNodeChanged(self, propertyName, oldValue, newValue):
+    def fireProductNodeChanged2(self, propertyName, oldValue, newValue):
         PlacemarkGroup_fireProductNodeChanged2(self._obj, propertyName, oldValue._obj, newValue._obj)
         return
 
@@ -5948,8 +6030,7 @@ Physically remove this node from the file associated with the given product writ
         return
 
 
-"""
-<code>Product</code> instances are an in-memory representation of a remote sensing data product. The product is more
+""" <code>Product</code> instances are an in-memory representation of a remote sensing data product. The product is more
 an abstract hull containing references to the data of the product or readers to retrieve the data on demant. The
 product itself does not hold the remote sensing data. Data products can contain multiple geophysical parameters
 stored as bands and can also have multiple metadata attributes. Also, a <code>Product</code> can contain any number
@@ -5961,6 +6042,8 @@ necessarily store data in the same format. Furthermore, it is not mandatory for 
 """
 class Product:
     def __init__(self, obj):
+        if obj == None:
+            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
         self._obj = obj
 
     @staticmethod
@@ -6327,7 +6410,7 @@ Adds the given band to this product.
         Product_addBand(self._obj, band._obj)
         return
 
-    def addBand(self, bandName, dataType):
+    def addNewBand(self, bandName, dataType):
         """
 Creates a new band with the given name and data type and adds it to this product and returns it.
            @param bandName the new band's name
@@ -6337,7 +6420,7 @@ Creates a new band with the given name and data type and adds it to this product
         """
         return Band(Product_addNewBand(self._obj, bandName, dataType))
 
-    def addBand(self, bandName, expression):
+    def addComputedBand(self, bandName, expression):
         """
 Creates a new band with the given name and adds it to this product and returns it.
            The new band's data type is {@code float} and it's samples are computed from the given band maths expression.
@@ -6721,7 +6804,7 @@ Sets the auto-grouping applicable to product nodes contained in this product.
         Product_setAutoGrouping(self._obj, pattern)
         return
 
-    def addMask(self, maskName, expression, description, color, transparency):
+    def addComputedMask(self, maskName, expression, description, color, transparency):
         """
 Creates a new mask using a band arithmetic expression
            and adds it to this product and returns it.
@@ -6842,20 +6925,22 @@ Physically remove this node from the file associated with the given product writ
 
 class Point2D:
     def __init__(self, obj):
+        if obj == None:
+            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
         self._obj = obj
 
 
-"""
-The <code>ProductNode</code> is the base class for all nodes within a remote sensing data product and even the data
+""" The <code>ProductNode</code> is the base class for all nodes within a remote sensing data product and even the data
 product itself.
 """
 class T:
     def __init__(self, obj):
+        if obj == None:
+            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
         self._obj = obj
 
 
-"""
-A visitor for a product and all other product nodes. This interface is part of the <i>visitor pattern</i> used to
+""" A visitor for a product and all other product nodes. This interface is part of the <i>visitor pattern</i> used to
 visit all nodes of a data product. Implementations of this interface can be passed to the <code>acceptVisitor</code>
 method of an <code>Product</code> (or any other <code>ProductNode</code>).
 @see Product#acceptVisitor(ProductVisitor)
@@ -6863,52 +6948,65 @@ method of an <code>Product</code> (or any other <code>ProductNode</code>).
 """
 class ProductVisitor:
     def __init__(self, obj):
+        if obj == None:
+            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
         self._obj = obj
 
 
-"""
-The scaling method used for geophysical value transformation in a {@link Band}.
+""" The scaling method used for geophysical value transformation in a {@link Band}.
 """
 class Scaling:
     def __init__(self, obj):
+        if obj == None:
+            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
         self._obj = obj
 
 
 class WritableNamespace:
     def __init__(self, obj):
+        if obj == None:
+            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
         self._obj = obj
 
 
 class MultiLevelImage:
     def __init__(self, obj):
+        if obj == None:
+            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
         self._obj = obj
 
 
 class ROI:
     def __init__(self, obj):
+        if obj == None:
+            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
         self._obj = obj
 
 
 class Collection:
     def __init__(self, obj):
+        if obj == None:
+            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
         self._obj = obj
 
 
-"""
-A listener for the product manager.
+""" A listener for the product manager.
 """
 class ProductManager_Listener:
     def __init__(self, obj):
+        if obj == None:
+            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
         self._obj = obj
 
 
 class GeoTIFFMetadata:
     def __init__(self, obj):
+        if obj == None:
+            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
         self._obj = obj
 
 
-"""
-The <code>ColorPaletteDef</code> class represents a curve that is used to transform the sample values of a
+""" The <code>ColorPaletteDef</code> class represents a curve that is used to transform the sample values of a
 geo-physical band into color palette indexes.
 
  This special implemnentation of a gradation curve also provides separate color values for each of the tie points
@@ -6917,6 +7015,8 @@ values even if the curve points are used to create color gradient palettes.
 """
 class ColorPaletteDef:
     def __init__(self, obj):
+        if obj == None:
+            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
         self._obj = obj
 
     @staticmethod
@@ -7061,22 +7161,24 @@ Releases all of the resources used by this color palette definition and all of i
         return Color(ColorPaletteDef_computeColor(self._obj, scaling._obj, sample))
 
 
-"""
-The <code>MapInfo</code> class holds information required to bring the cartographic map co-ordinate system to a
+""" The <code>MapInfo</code> class holds information required to bring the cartographic map co-ordinate system to a
 raster co-ordinate system and back.
 
 @deprecated since BEAM 4.7, use geotools and {@link CrsGeoCoding} instead.
 """
 class MapInfo:
     def __init__(self, obj):
+        if obj == None:
+            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
         self._obj = obj
 
 
-"""
-This class contains information about how a product's raster data node is displayed as an image.
+""" This class contains information about how a product's raster data node is displayed as an image.
 """
 class ImageInfo:
     def __init__(self, obj):
+        if obj == None:
+            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
         self._obj = obj
 
     @staticmethod
@@ -7202,26 +7304,33 @@ Converts a string to a histogram matching.
         return ImageInfo_HistogramMatching(ImageInfo_getHistogramMatching(mode))
 
 
-"""
-Instances of the <code>Histogram</code> class store histogram data.
+""" Instances of the <code>Histogram</code> class store histogram data.
 """
 class Histogram:
     def __init__(self, obj):
+        if obj == None:
+            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
         self._obj = obj
 
 
 class String:
     def __init__(self, obj):
+        if obj == None:
+            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
         self._obj = obj
 
 
 class BufferedImage:
     def __init__(self, obj):
+        if obj == None:
+            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
         self._obj = obj
 
 
 class RGBChannelDef:
     def __init__(self, obj):
+        if obj == None:
+            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
         self._obj = obj
 
     @staticmethod
@@ -7273,14 +7382,15 @@ class RGBChannelDef:
         return Object(RGBChannelDef_clone(self._obj))
 
 
-"""
-A tie-point grid contains the data for geophysical parameter in remote sensing data products. Tie-point grid are
+""" A tie-point grid contains the data for geophysical parameter in remote sensing data products. Tie-point grid are
 two-dimensional images which hold their pixel values (samples) in a <code>float</code> array. 
 
 Usually, tie-point grids are a sub-sampling of a data product's scene resolution.
 """
 class TiePointGrid:
     def __init__(self, obj):
+        if obj == None:
+            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
         self._obj = obj
 
     @staticmethod
@@ -7338,7 +7448,7 @@ Constructs a new <code>TiePointGrid</code> with the given tie point grid propert
         return TiePointGrid(TiePointGrid_newTiePointGrid3(name, gridWidth, gridHeight, offsetX, offsetY, subSamplingX, subSamplingY, tiePoints, containsAngles))
 
     @staticmethod
-    def getDiscontinuity(tiePoints):
+    def getDiscontinuity2(tiePoints):
         """
 Determines the angular discontinuity of the given tie point values.
            @return the angular discontinuity, will always be either {@link #DISCONT_AT_180} or
@@ -7346,7 +7456,7 @@ Determines the angular discontinuity of the given tie point values.
         """
         return TiePointGrid_getDiscontinuity2(tiePoints)
 
-    def getDiscontinuity(self):
+    def getDiscontinuity1(self):
         """
 Gets the angular discontinuity.
            @return the angular discontinuity, will always be either {@link #DISCONT_NONE} or {@link #DISCONT_AT_180} or
@@ -7462,7 +7572,7 @@ Gets the interpolated sample for the pixel located at (x,y) as an integer value.
         TiePointGrid_dispose(self._obj)
         return
 
-    def getPixelFloat(self, x, y):
+    def getPixelFloat2(self, x, y):
         """
 Computes the interpolated sample for the pixel located at (x,y). 
            
@@ -7475,7 +7585,7 @@ Computes the interpolated sample for the pixel located at (x,y).
         """
         return TiePointGrid_getPixelFloat2(self._obj, x, y)
 
-    def getPixelFloat(self, x, y):
+    def getPixelFloat1(self, x, y):
         """
 Computes the interpolated sample for the pixel located at (x,y) given as floating point co-ordinates. 
            
@@ -7522,7 +7632,7 @@ This method is not implemented because pixels are read-only in tie-point grids.
         TiePointGrid_setPixelDouble(self._obj, x, y, pixelValue)
         return
 
-    def getPixels(self, x, y, w, h, pixels, pm):
+    def getPixels6(self, x, y, w, h, pixels, pm):
         """
 Retrieves an array of tie point data interpolated to the product with and height as integer array. If the given
            array is <code>null</code> a new one was created and returned.
@@ -7536,7 +7646,7 @@ Retrieves an array of tie point data interpolated to the product with and height
         """
         return TiePointGrid_getPixels6(self._obj, x, y, w, h, pixels, pm._obj)
 
-    def getPixels(self, x, y, w, h, pixels, pm):
+    def getPixels4(self, x, y, w, h, pixels, pm):
         """
 Retrieves an array of tie point data interpolated to the product width and height as float array. If the given
            array is <code>null</code> a new one is created and returned.
@@ -7550,7 +7660,7 @@ Retrieves an array of tie point data interpolated to the product width and heigh
         """
         return TiePointGrid_getPixels4(self._obj, x, y, w, h, pixels, pm._obj)
 
-    def getPixels(self, x, y, w, h, pixels, pm):
+    def getPixels2(self, x, y, w, h, pixels, pm):
         """
 Retrieves an array of tie point data interpolated to the product with and height as double array. If the given
            array is <code>null</code> a new one was created and returned.
@@ -7563,28 +7673,28 @@ Retrieves an array of tie point data interpolated to the product with and height
         """
         return TiePointGrid_getPixels2(self._obj, x, y, w, h, pixels, pm._obj)
 
-    def setPixels(self, x, y, w, h, pixels):
+    def setPixels3(self, x, y, w, h, pixels):
         """
 This method is not implemented because pixels are read-only in tie-point grids.
         """
         TiePointGrid_setPixels3(self._obj, x, y, w, h, pixels)
         return
 
-    def setPixels(self, x, y, w, h, pixels):
+    def setPixels2(self, x, y, w, h, pixels):
         """
 This method is not implemented because pixels are read-only in tie-point grids.
         """
         TiePointGrid_setPixels2(self._obj, x, y, w, h, pixels)
         return
 
-    def setPixels(self, x, y, w, h, pixels):
+    def setPixels1(self, x, y, w, h, pixels):
         """
 This method is not implemented because pixels are read-only in tie-point grids.
         """
         TiePointGrid_setPixels1(self._obj, x, y, w, h, pixels)
         return
 
-    def readPixels(self, x, y, w, h, pixels, pm):
+    def readPixels6(self, x, y, w, h, pixels, pm):
         """
 Retrieves an array of tie point data interpolated to the product with and height as float array. If the given
            array is <code>null</code> a new one was created and returned.
@@ -7597,7 +7707,7 @@ Retrieves an array of tie point data interpolated to the product with and height
         """
         return TiePointGrid_readPixels6(self._obj, x, y, w, h, pixels, pm._obj)
 
-    def readPixels(self, x, y, w, h, pixels, pm):
+    def readPixels4(self, x, y, w, h, pixels, pm):
         """
 Retrieves an array of tie point data interpolated to the product with and height as float array. If the given
            array is <code>null</code> a new one was created and returned. *
@@ -7611,7 +7721,7 @@ Retrieves an array of tie point data interpolated to the product with and height
         """
         return TiePointGrid_readPixels4(self._obj, x, y, w, h, pixels, pm._obj)
 
-    def readPixels(self, x, y, w, h, pixels, pm):
+    def readPixels2(self, x, y, w, h, pixels, pm):
         """
 Retrieves an array of tie point data interpolated to the product with and height as double array. If the given
            array is <code>null</code> a new one was created and returned.
@@ -7625,28 +7735,28 @@ Retrieves an array of tie point data interpolated to the product with and height
         """
         return TiePointGrid_readPixels2(self._obj, x, y, w, h, pixels, pm._obj)
 
-    def writePixels(self, x, y, w, h, pixels, pm):
+    def writePixels6(self, x, y, w, h, pixels, pm):
         """
 This method is not implemented because pixels are read-only in tie-point grids.
         """
         TiePointGrid_writePixels6(self._obj, x, y, w, h, pixels, pm._obj)
         return
 
-    def writePixels(self, x, y, w, h, pixels, pm):
+    def writePixels4(self, x, y, w, h, pixels, pm):
         """
 This method is not implemented because pixels are read-only in tie-point grids.
         """
         TiePointGrid_writePixels4(self._obj, x, y, w, h, pixels, pm._obj)
         return
 
-    def writePixels(self, x, y, w, h, pixels, pm):
+    def writePixels2(self, x, y, w, h, pixels, pm):
         """
 This method is not implemented because pixels are read-only in tie-point grids.
         """
         TiePointGrid_writePixels2(self._obj, x, y, w, h, pixels, pm._obj)
         return
 
-    def readRasterData(self, offsetX, offsetY, width, height, rasterData, pm):
+    def readRasterData2(self, offsetX, offsetY, width, height, rasterData, pm):
         """
 Reads raster data from this dataset into the user-supplied raster data buffer. 
            
@@ -7667,21 +7777,21 @@ Reads raster data from this dataset into the user-supplied raster data buffer.
         TiePointGrid_readRasterData2(self._obj, offsetX, offsetY, width, height, rasterData._obj, pm._obj)
         return
 
-    def readRasterDataFully(self, pm):
+    def readRasterDataFully2(self, pm):
         """
 {@inheritDoc}
         """
         TiePointGrid_readRasterDataFully2(self._obj, pm._obj)
         return
 
-    def writeRasterData(self, offsetX, offsetY, width, height, rasterData, pm):
+    def writeRasterData2(self, offsetX, offsetY, width, height, rasterData, pm):
         """
 {@inheritDoc}
         """
         TiePointGrid_writeRasterData2(self._obj, offsetX, offsetY, width, height, rasterData._obj, pm._obj)
         return
 
-    def writeRasterDataFully(self, pm):
+    def writeRasterDataFully2(self, pm):
         """
 {@inheritDoc}
         """
@@ -8041,7 +8151,7 @@ Sets the raster data of this dataset.
         TiePointGrid_setRasterData(self._obj, rasterData._obj)
         return
 
-    def loadRasterData(self):
+    def loadRasterData1(self):
         """
 @throws java.io.IOException if an I/O error occurs
            @see #loadRasterData(com.bc.ceres.core.ProgressMonitor)
@@ -8049,7 +8159,7 @@ Sets the raster data of this dataset.
         TiePointGrid_loadRasterData1(self._obj)
         return
 
-    def loadRasterData(self, pm):
+    def loadRasterData2(self, pm):
         """
 Loads the raster data for this <code>RasterDataNode</code>. After this method has been called successfully,
            <code>hasRasterData()</code> should always return <code>true</code> and <code>getRasterData()</code> should
@@ -8077,7 +8187,7 @@ Un-loads the raster data for this <code>RasterDataNode</code>.
         TiePointGrid_unloadRasterData(self._obj)
         return
 
-    def isPixelValid(self, x, y):
+    def isPixelValid2(self, x, y):
         """
 Checks whether or not the pixel located at (x,y) is valid.
            A pixel is assumed to be valid either if  {@link #getValidMaskImage() validMaskImage} is null or
@@ -8121,7 +8231,7 @@ Gets a geo-physical sample value at the given pixel coordinate as {@code float} 
         """
         return TiePointGrid_getSampleFloat(self._obj, x, y)
 
-    def isPixelValid(self, pixelIndex):
+    def isPixelValid1(self, pixelIndex):
         """
 Checks whether or not the pixel located at (x,y) is valid.
            A pixel is assumed to be valid either if  {@link #getValidMaskImage() validMaskImage} is null or
@@ -8136,7 +8246,7 @@ Checks whether or not the pixel located at (x,y) is valid.
         """
         return TiePointGrid_isPixelValid1(self._obj, pixelIndex)
 
-    def isPixelValid(self, x, y, roi):
+    def isPixelValid3(self, x, y, roi):
         """
 Checks whether or not the pixel located at (x,y) is valid.
            The method first test whether a pixel is valid by using the {@link #isPixelValid(int, int)} method,
@@ -8153,57 +8263,57 @@ Checks whether or not the pixel located at (x,y) is valid.
         """
         return TiePointGrid_isPixelValid3(self._obj, x, y, roi._obj)
 
-    def getPixels(self, x, y, w, h, pixels):
+    def getPixels5(self, x, y, w, h, pixels):
         """
 @see #getPixels(int, int, int, int, int[], ProgressMonitor)
         """
         return TiePointGrid_getPixels5(self._obj, x, y, w, h, pixels)
 
-    def getPixels(self, x, y, w, h, pixels):
+    def getPixels3(self, x, y, w, h, pixels):
         """
 @see #getPixels(int, int, int, int, float[], ProgressMonitor)
         """
         return TiePointGrid_getPixels3(self._obj, x, y, w, h, pixels)
 
-    def getPixels(self, x, y, w, h, pixels):
+    def getPixels1(self, x, y, w, h, pixels):
         """
 @see #getPixels(int, int, int, int, double[], ProgressMonitor)
         """
         return TiePointGrid_getPixels1(self._obj, x, y, w, h, pixels)
 
-    def readPixels(self, x, y, w, h, pixels):
+    def readPixels5(self, x, y, w, h, pixels):
         """
 @see #readPixels(int, int, int, int, int[], ProgressMonitor)
         """
         return TiePointGrid_readPixels5(self._obj, x, y, w, h, pixels)
 
-    def readPixels(self, x, y, w, h, pixels):
+    def readPixels3(self, x, y, w, h, pixels):
         """
 @see #readPixels(int, int, int, int, float[], ProgressMonitor)
         """
         return TiePointGrid_readPixels3(self._obj, x, y, w, h, pixels)
 
-    def readPixels(self, x, y, w, h, pixels):
+    def readPixels1(self, x, y, w, h, pixels):
         """
 @see #readPixels(int, int, int, int, double[], ProgressMonitor)
         """
         return TiePointGrid_readPixels1(self._obj, x, y, w, h, pixels)
 
-    def writePixels(self, x, y, w, h, pixels):
+    def writePixels5(self, x, y, w, h, pixels):
         """
 @see #writePixels(int, int, int, int, int[], ProgressMonitor)
         """
         TiePointGrid_writePixels5(self._obj, x, y, w, h, pixels)
         return
 
-    def writePixels(self, x, y, w, h, pixels):
+    def writePixels3(self, x, y, w, h, pixels):
         """
 @see #writePixels(int, int, int, int, float[], ProgressMonitor)
         """
         TiePointGrid_writePixels3(self._obj, x, y, w, h, pixels)
         return
 
-    def writePixels(self, x, y, w, h, pixels):
+    def writePixels1(self, x, y, w, h, pixels):
         """
 @see #writePixels(int, int, int, int, double[], ProgressMonitor)
         """
@@ -8213,7 +8323,7 @@ Checks whether or not the pixel located at (x,y) is valid.
     def readValidMask(self, x, y, w, h, validMask):
         return TiePointGrid_readValidMask(self._obj, x, y, w, h, validMask)
 
-    def readRasterDataFully(self):
+    def readRasterDataFully1(self):
         """
 @throws java.io.IOException if an I/O error occurs
            @see #readRasterDataFully(ProgressMonitor)
@@ -8221,7 +8331,7 @@ Checks whether or not the pixel located at (x,y) is valid.
         TiePointGrid_readRasterDataFully1(self._obj)
         return
 
-    def readRasterData(self, offsetX, offsetY, width, height, rasterData):
+    def readRasterData1(self, offsetX, offsetY, width, height, rasterData):
         """
 Reads raster data from the node's associated data source into the given data
            buffer.
@@ -8239,15 +8349,15 @@ Reads raster data from the node's associated data source into the given data
         TiePointGrid_readRasterData1(self._obj, offsetX, offsetY, width, height, rasterData._obj)
         return
 
-    def writeRasterDataFully(self):
+    def writeRasterDataFully1(self):
         TiePointGrid_writeRasterDataFully1(self._obj)
         return
 
-    def writeRasterData(self, offsetX, offsetY, width, height, rasterData):
+    def writeRasterData1(self, offsetX, offsetY, width, height, rasterData):
         TiePointGrid_writeRasterData1(self._obj, offsetX, offsetY, width, height, rasterData._obj)
         return
 
-    def createCompatibleRasterData(self):
+    def createCompatibleRasterData1(self):
         """
 Creates raster data that is compatible to this dataset's data type. The data buffer returned contains exactly
            <code>getRasterWidth()*getRasterHeight()</code> elements of a compatible data type.
@@ -8265,7 +8375,7 @@ Creates raster data that is compatible to this dataset's data type. The data buf
         """
         return ProductData(TiePointGrid_createCompatibleSceneRasterData(self._obj))
 
-    def createCompatibleRasterData(self, width, height):
+    def createCompatibleRasterData2(self, width, height):
         """
 Creates raster data that is compatible to this dataset's data type. The data buffer returned contains exactly
            <code>width*height</code> elements of a compatible data type.
@@ -8313,7 +8423,7 @@ Creates a transect profile for the given shape (-outline).
         """
         return TransectProfileData(TiePointGrid_createTransectProfileData(self._obj, shape._obj))
 
-    def getImageInfo(self):
+    def getImageInfo1(self):
         """
 Gets the image information for image display.
            @return the image info or null
@@ -8335,7 +8445,7 @@ Notifies listeners that the image (display) information has changed.
         TiePointGrid_fireImageInfoChanged(self._obj)
         return
 
-    def getImageInfo(self, pm):
+    def getImageInfo2(self, pm):
         """
 Returns the image information for this raster data node.
            
@@ -8346,7 +8456,7 @@ Returns the image information for this raster data node.
         """
         return ImageInfo(TiePointGrid_getImageInfo2(self._obj, pm._obj))
 
-    def getImageInfo(self, histoSkipAreas, pm):
+    def getImageInfo3(self, histoSkipAreas, pm):
         """
 Gets the image creation information.
            
@@ -8359,7 +8469,7 @@ Gets the image creation information.
         """
         return ImageInfo(TiePointGrid_getImageInfo3(self._obj, histoSkipAreas, pm._obj))
 
-    def createDefaultImageInfo(self, histoSkipAreas, pm):
+    def createDefaultImageInfo1(self, histoSkipAreas, pm):
         """
 Creates a default image information instance.
            
@@ -8373,7 +8483,7 @@ Creates a default image information instance.
         """
         return ImageInfo(TiePointGrid_createDefaultImageInfo1(self._obj, histoSkipAreas, pm._obj))
 
-    def createDefaultImageInfo(self, histoSkipAreas, histogram):
+    def createDefaultImageInfo2(self, histoSkipAreas, histogram):
         """
 Creates an instance of a default image information.
            
@@ -8414,10 +8524,10 @@ Creates an RGB image for this raster data node.
         """
         return BufferedImage(TiePointGrid_createRgbImage(self._obj, pm._obj))
 
-    def quantizeRasterData(self, newMin, newMax, gamma, pm):
+    def quantizeRasterData1(self, newMin, newMax, gamma, pm):
         return TiePointGrid_quantizeRasterData1(self._obj, newMin, newMax, gamma, pm._obj)
 
-    def quantizeRasterData(self, newMin, newMax, gamma, samples, offset, stride, pm):
+    def quantizeRasterData2(self, newMin, newMax, gamma, samples, offset, stride, pm):
         TiePointGrid_quantizeRasterData2(self._obj, newMin, newMax, gamma, samples, offset, stride, pm._obj)
         return
 
@@ -8481,7 +8591,7 @@ Gets the source image associated with this {@code RasterDataNode}.
         """
         return MultiLevelImage(TiePointGrid_getSourceImage(self._obj))
 
-    def setSourceImage(self, sourceImage):
+    def setSourceImage2(self, sourceImage):
         """
 Sets the source image associated with this {@code RasterDataNode}.
            @param sourceImage The source image.
@@ -8490,7 +8600,7 @@ Sets the source image associated with this {@code RasterDataNode}.
         TiePointGrid_setSourceImage2(self._obj, sourceImage._obj)
         return
 
-    def setSourceImage(self, sourceImage):
+    def setSourceImage1(self, sourceImage):
         """
 Sets the source image associated with this {@code RasterDataNode}.
            @param sourceImage The source image.
@@ -8531,7 +8641,7 @@ Gets the valid-mask image associated with this {@code RasterDataNode}.
     def isStxSet(self):
         return TiePointGrid_isStxSet(self._obj)
 
-    def getStx(self):
+    def getStx1(self):
         """
 Gets the statistics. If statistcs are not yet available,
            the method will compute (possibly inaccurate) statistics and return those.
@@ -8546,7 +8656,7 @@ Gets the statistics. If statistcs are not yet available,
         """
         return Stx(TiePointGrid_getStx1(self._obj))
 
-    def getStx(self, accurate, pm):
+    def getStx2(self, accurate, pm):
         """
 Gets the statistics.
            If the statistics have not been set before they are computed using the given progress monitor {@code pm} and then set.
@@ -8637,7 +8747,7 @@ Fires a node data changed event. This method is called after the data of this da
         TiePointGrid_fireProductNodeDataChanged(self._obj)
         return
 
-    def getRawStorageSize(self, subsetDef):
+    def getRawStorageSize2(self, subsetDef):
         """
 Gets the estimated size in bytes of this product node.
            @param subsetDef if not <code>null</code> the subset may limit the size returned
@@ -8753,18 +8863,18 @@ Gets the product reference string. The product reference string is the product r
         """
         return TiePointGrid_getProductRefString(self._obj)
 
-    def getRawStorageSize(self):
+    def getRawStorageSize1(self):
         """
 Gets an estimated, raw storage size in bytes of this product node.
            @return the size in bytes.
         """
         return TiePointGrid_getRawStorageSize1(self._obj)
 
-    def fireProductNodeChanged(self, propertyName):
+    def fireProductNodeChanged1(self, propertyName):
         TiePointGrid_fireProductNodeChanged1(self._obj, propertyName)
         return
 
-    def fireProductNodeChanged(self, propertyName, oldValue, newValue):
+    def fireProductNodeChanged2(self, propertyName, oldValue, newValue):
         TiePointGrid_fireProductNodeChanged2(self._obj, propertyName, oldValue._obj, newValue._obj)
         return
 
@@ -8780,26 +8890,30 @@ Physically remove this node from the file associated with the given product writ
 
 class SimpleFeature:
     def __init__(self, obj):
+        if obj == None:
+            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
         self._obj = obj
 
 
-"""
-The <code>ProductSubsetDef</code> class describes a subset or portion of a remote sensing data product.
+""" The <code>ProductSubsetDef</code> class describes a subset or portion of a remote sensing data product.
 
  Subsets can be spatial or spectral or both. A spatial subset is given through a rectangular region in pixels. The
 spectral subset as a list of band (or channel) names.
 """
 class ProductSubsetDef:
     def __init__(self, obj):
+        if obj == None:
+            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
         self._obj = obj
 
 
-"""
-An interface that supports writing a complete data product tree and single band rasters.
+""" An interface that supports writing a complete data product tree and single band rasters.
 @see ProductReader
 """
 class ProductWriter:
     def __init__(self, obj):
+        if obj == None:
+            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
         self._obj = obj
 
     def getWriterPlugIn(self):
@@ -8925,11 +9039,12 @@ Physically deletes a <code>Band</code> in a product writer's output.
         return
 
 
-"""
-A <code>MetadataAttribute</code> is part of a <code>{@link MetadataElement}</code> and represents a key/value pair.
+""" A <code>MetadataAttribute</code> is part of a <code>{@link MetadataElement}</code> and represents a key/value pair.
 """
 class MetadataAttribute:
     def __init__(self, obj):
+        if obj == None:
+            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
         self._obj = obj
 
     @staticmethod
@@ -9181,27 +9296,44 @@ Physically remove this node from the file associated with the given product writ
 
 class ProgressMonitor:
     def __init__(self, obj):
+        if obj == None:
+            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
         self._obj = obj
 
 
-"""
-A container which allows to store vector data in the BEAM product model.
+""" A container which allows to store vector data in the BEAM product model.
 
 This is a preliminary API under construction for BEAM 4.7. Not intended for public use.
 @see Product#getVectorDataGroup()
 """
 class VectorDataNode:
     def __init__(self, obj):
+        if obj == None:
+            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
         self._obj = obj
 
 
 class GeneralPath:
     def __init__(self, obj):
+        if obj == None:
+            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
         self._obj = obj
 
 
 class ImageInputStream:
     def __init__(self, obj):
+        if obj == None:
+            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
         self._obj = obj
 
+
+class String:
+    def __init__(self, obj):
+        if obj == None:
+            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
+        self._obj = obj
+    
+    @staticmethod
+    def newString(s):
+        return String(String_newString(s))
 

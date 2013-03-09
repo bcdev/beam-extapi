@@ -436,13 +436,29 @@ char** beam_alloc_string_array(jarray array, int* array_length)
 
 void beam_release_string_array(char** array_elems, int array_length)
 {
-    int i;
-    for (i = 0; i < array_length; i++) {
-        if (array_elems[i] != NULL) {
-            free(array_elems[i]);
+    if (array_elems != NULL) {
+        int i;
+        for (i = 0; i < array_length; i++) {
+            if (array_elems[i] != NULL) {
+                free(array_elems[i]);
+            }
         }
+        free(array_elems);
     }
-    free(array_elems);
+}
+
+// array_length currently not used, but useful for debugging
+void beam_release_object_array(void* array_elems, int array_length) {
+    if (array_elems != NULL) {
+         free(array_elems);
+    }
+}
+
+// array_length currently not used, but useful for debugging
+void beam_release_primitive_array(void* array_elems, int array_length) {
+     if (array_elems != NULL) {
+          free(array_elems);
+     }
 }
 
 /* Shared library callbacks (called if this module's code is linked into a shared library and loaded by a Java VM) */

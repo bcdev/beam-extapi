@@ -31,6 +31,9 @@ PyObject* beam_new_pyseq_from_double_array(const double* elems, int length);
 PyObject* beam_new_pyseq_from_string_array(const char** elems, int length);
 PyObject* beam_new_pyseq_from_jobject_array(const char* type, const void* elems, int length);
 
+/* Extra global functions for beampy. These will also go into the module definition. */
+PyObject* BeamPyString_newString(PyObject* self, PyObject* args);
+
 
 
 
@@ -2081,6 +2084,7 @@ static PyMethodDef BeamPy_Methods[] = {
     {"MetadataAttribute_getProductRefString", BeamPyMetadataAttribute_getProductRefString, METH_VARARGS, " Gets the product reference string. The product reference string is the product reference number enclosed in\n square brackets. <p>Example: The string <code>\"[2]\"</code> stands for a product with the reference number\n <code>2</code>.\n\n @return the product reference string. <br>or <code>null</code> if this node has no product <br>or\n         <code>null</code> if its product reference number was inactive\n\n@param this The MetadataAttribute object."},
     {"MetadataAttribute_updateExpression", BeamPyMetadataAttribute_updateExpression, METH_VARARGS, " Asks a product node to replace all occurences of and references to the node name\n given by {@code oldExternalName} with {@code oldExternalName}. Such references most often occur\n in band arithmetic expressions.\n\n \n@param this The MetadataAttribute object.\n@param oldExternalName The old node name.\n @param newExternalName The new node name.\n"},
     {"MetadataAttribute_removeFromFile", BeamPyMetadataAttribute_removeFromFile, METH_VARARGS, " Physically remove this node from the file associated with the given product writer. The default implementation\n does nothing.\n\n \n@param this The MetadataAttribute object.\n@param productWriter the product writer to be used to remove this node from the underlying file.\n"},
+    {"String_newString", BeamPyString_newString, METH_VARARGS, "Converts a Python unicode string into a Java object"},
     {NULL, NULL, 0, NULL}  /* Sentinel */
 };
 
@@ -2103,6 +2107,7 @@ static void BeamPyJObject_dealloc(BeamPyJObject* self)
     beam_release_jobject(&self->jobjectId);
 }
 
+// not used yet
 static PyTypeObject BeamPy_JObjectTypeV = {
     PyVarObject_HEAD_INIT(NULL, 0)
     "beampy.JObject",         /* tp_name */
@@ -2144,7 +2149,7 @@ static PyTypeObject BeamPy_JObjectTypeV = {
     NULL,                         /* tp_new */
 };
 
-
+// not used yet
 static PyObject* BeamPy_JObjectType = (PyObject*) &BeamPy_JObjectTypeV;
 
 /*
@@ -2196,6 +2201,24 @@ PyMODINIT_FUNC PyInit__beampy()
     fprintf(stdout, "beampy: Exit PyInit__beampy()\n");
 
     return m;
+}
+
+PyObject* BeamPyString_newString(PyObject* self, PyObject* args)
+{
+    const char* chars;
+    void* result;
+
+    if (!PyArg_ParseTuple(args, "s:strToObj", &chars)) {
+        return NULL;
+    }
+
+    result = String_newString(chars);
+
+    if (result != NULL) {
+        return Py_BuildValue("(sK)", "String", (unsigned PY_LONG_LONG) result);
+    } else {
+        return Py_BuildValue("");
+    }
 }
 
 
@@ -2799,7 +2822,7 @@ PyObject* BeamPyIndexCoding_getElements(PyObject* self, PyObject* args)
     result = IndexCoding_getElements((IndexCoding) thisObj, &resultLength);
     if (result != NULL) {
         resultSeq = beam_new_pyseq_from_jobject_array("MetadataElement", result, resultLength);
-        free(result);
+        beam_release_object_array(result, resultLength);
         return resultSeq;
     } else {
         return Py_BuildValue("");
@@ -2926,7 +2949,7 @@ PyObject* BeamPyIndexCoding_getAttributes(PyObject* self, PyObject* args)
     result = IndexCoding_getAttributes((IndexCoding) thisObj, &resultLength);
     if (result != NULL) {
         resultSeq = beam_new_pyseq_from_jobject_array("MetadataAttribute", result, resultLength);
-        free(result);
+        beam_release_object_array(result, resultLength);
         return resultSeq;
     } else {
         return Py_BuildValue("");
@@ -4454,7 +4477,7 @@ PyObject* BeamPyMetadataElement_getElements(PyObject* self, PyObject* args)
     result = MetadataElement_getElements((MetadataElement) thisObj, &resultLength);
     if (result != NULL) {
         resultSeq = beam_new_pyseq_from_jobject_array("MetadataElement", result, resultLength);
-        free(result);
+        beam_release_object_array(result, resultLength);
         return resultSeq;
     } else {
         return Py_BuildValue("");
@@ -4594,7 +4617,7 @@ PyObject* BeamPyMetadataElement_getAttributes(PyObject* self, PyObject* args)
     result = MetadataElement_getAttributes((MetadataElement) thisObj, &resultLength);
     if (result != NULL) {
         resultSeq = beam_new_pyseq_from_jobject_array("MetadataAttribute", result, resultLength);
-        free(result);
+        beam_release_object_array(result, resultLength);
         return resultSeq;
     } else {
         return Py_BuildValue("");
@@ -5565,7 +5588,7 @@ PyObject* BeamPyProduct_getTiePointGrids(PyObject* self, PyObject* args)
     result = Product_getTiePointGrids((Product) thisObj, &resultLength);
     if (result != NULL) {
         resultSeq = beam_new_pyseq_from_jobject_array("TiePointGrid", result, resultLength);
-        free(result);
+        beam_release_object_array(result, resultLength);
         return resultSeq;
     } else {
         return Py_BuildValue("");
@@ -5743,7 +5766,7 @@ PyObject* BeamPyProduct_getBands(PyObject* self, PyObject* args)
     result = Product_getBands((Product) thisObj, &resultLength);
     if (result != NULL) {
         resultSeq = beam_new_pyseq_from_jobject_array("Band", result, resultLength);
-        free(result);
+        beam_release_object_array(result, resultLength);
         return resultSeq;
     } else {
         return Py_BuildValue("");
@@ -6042,7 +6065,7 @@ PyObject* BeamPyProduct_getProductNodeListeners(PyObject* self, PyObject* args)
     result = Product_getProductNodeListeners((Product) thisObj, &resultLength);
     if (result != NULL) {
         resultSeq = beam_new_pyseq_from_jobject_array("ProductNodeListener", result, resultLength);
-        free(result);
+        beam_release_object_array(result, resultLength);
         return resultSeq;
     } else {
         return Py_BuildValue("");
@@ -6268,7 +6291,7 @@ PyObject* BeamPyProduct_getRemovedChildNodes(PyObject* self, PyObject* args)
     result = Product_getRemovedChildNodes((Product) thisObj, &resultLength);
     if (result != NULL) {
         resultSeq = beam_new_pyseq_from_jobject_array("ProductNode", result, resultLength);
-        free(result);
+        beam_release_object_array(result, resultLength);
         return resultSeq;
     } else {
         return Py_BuildValue("");
@@ -6875,7 +6898,7 @@ PyObject* BeamPyColorPaletteDef_getPoints(PyObject* self, PyObject* args)
     result = ColorPaletteDef_getPoints((ColorPaletteDef) thisObj, &resultLength);
     if (result != NULL) {
         resultSeq = beam_new_pyseq_from_jobject_array("ColorPaletteDef_Point", result, resultLength);
-        free(result);
+        beam_release_object_array(result, resultLength);
         return resultSeq;
     } else {
         return Py_BuildValue("");
@@ -6998,7 +7021,7 @@ PyObject* BeamPyColorPaletteDef_getColors(PyObject* self, PyObject* args)
     result = ColorPaletteDef_getColors((ColorPaletteDef) thisObj, &resultLength);
     if (result != NULL) {
         resultSeq = beam_new_pyseq_from_jobject_array("Color", result, resultLength);
-        free(result);
+        beam_release_object_array(result, resultLength);
         return resultSeq;
     } else {
         return Py_BuildValue("");
@@ -7020,7 +7043,7 @@ PyObject* BeamPyColorPaletteDef_createColorPalette(PyObject* self, PyObject* arg
     result = ColorPaletteDef_createColorPalette((ColorPaletteDef) thisObj, (Scaling) scaling, &resultLength);
     if (result != NULL) {
         resultSeq = beam_new_pyseq_from_jobject_array("Color", result, resultLength);
-        free(result);
+        beam_release_object_array(result, resultLength);
         return resultSeq;
     } else {
         return Py_BuildValue("");
@@ -7189,7 +7212,7 @@ PyObject* BeamPyImageInfo_getColors(PyObject* self, PyObject* args)
     result = ImageInfo_getColors((ImageInfo) thisObj, &resultLength);
     if (result != NULL) {
         resultSeq = beam_new_pyseq_from_jobject_array("Color", result, resultLength);
-        free(result);
+        beam_release_object_array(result, resultLength);
         return resultSeq;
     } else {
         return Py_BuildValue("");
@@ -7424,7 +7447,7 @@ PyObject* BeamPyProductManager_getProducts(PyObject* self, PyObject* args)
     result = ProductManager_getProducts((ProductManager) thisObj, &resultLength);
     if (result != NULL) {
         resultSeq = beam_new_pyseq_from_jobject_array("Product", result, resultLength);
-        free(result);
+        beam_release_object_array(result, resultLength);
         return resultSeq;
     } else {
         return Py_BuildValue("");
@@ -8766,7 +8789,7 @@ PyObject* BeamPyBand_getPixelsInt(PyObject* self, PyObject* args)
     result = Band_getPixelsInt((Band) thisObj, x, y, w, h, pixels, pixelsLength, &resultLength);
     if (result != NULL) {
         resultSeq = beam_new_pyseq_from_int_array(result, resultLength);
-        free(result);
+        beam_release_primitive_array(result, resultLength);
         return resultSeq;
     } else {
         return Py_BuildValue("");
@@ -8794,7 +8817,7 @@ PyObject* BeamPyBand_getPixelsFloat(PyObject* self, PyObject* args)
     result = Band_getPixelsFloat((Band) thisObj, x, y, w, h, pixels, pixelsLength, &resultLength);
     if (result != NULL) {
         resultSeq = beam_new_pyseq_from_float_array(result, resultLength);
-        free(result);
+        beam_release_primitive_array(result, resultLength);
         return resultSeq;
     } else {
         return Py_BuildValue("");
@@ -8822,7 +8845,7 @@ PyObject* BeamPyBand_getPixelsDouble(PyObject* self, PyObject* args)
     result = Band_getPixelsDouble((Band) thisObj, x, y, w, h, pixels, pixelsLength, &resultLength);
     if (result != NULL) {
         resultSeq = beam_new_pyseq_from_double_array(result, resultLength);
-        free(result);
+        beam_release_primitive_array(result, resultLength);
         return resultSeq;
     } else {
         return Py_BuildValue("");
@@ -8850,7 +8873,7 @@ PyObject* BeamPyBand_readPixelsInt(PyObject* self, PyObject* args)
     result = Band_readPixelsInt((Band) thisObj, x, y, w, h, pixels, pixelsLength, &resultLength);
     if (result != NULL) {
         resultSeq = beam_new_pyseq_from_int_array(result, resultLength);
-        free(result);
+        beam_release_primitive_array(result, resultLength);
         return resultSeq;
     } else {
         return Py_BuildValue("");
@@ -8878,7 +8901,7 @@ PyObject* BeamPyBand_readPixelsFloat(PyObject* self, PyObject* args)
     result = Band_readPixelsFloat((Band) thisObj, x, y, w, h, pixels, pixelsLength, &resultLength);
     if (result != NULL) {
         resultSeq = beam_new_pyseq_from_float_array(result, resultLength);
-        free(result);
+        beam_release_primitive_array(result, resultLength);
         return resultSeq;
     } else {
         return Py_BuildValue("");
@@ -8906,7 +8929,7 @@ PyObject* BeamPyBand_readPixelsDouble(PyObject* self, PyObject* args)
     result = Band_readPixelsDouble((Band) thisObj, x, y, w, h, pixels, pixelsLength, &resultLength);
     if (result != NULL) {
         resultSeq = beam_new_pyseq_from_double_array(result, resultLength);
-        free(result);
+        beam_release_primitive_array(result, resultLength);
         return resultSeq;
     } else {
         return Py_BuildValue("");
@@ -8991,7 +9014,7 @@ PyObject* BeamPyBand_readValidMask(PyObject* self, PyObject* args)
     result = Band_readValidMask((Band) thisObj, x, y, w, h, validMask, validMaskLength, &resultLength);
     if (result != NULL) {
         resultSeq = beam_new_pyseq_from_boolean_array(result, resultLength);
-        free(result);
+        beam_release_primitive_array(result, resultLength);
         return resultSeq;
     } else {
         return Py_BuildValue("");
@@ -10018,7 +10041,7 @@ PyObject* BeamPyPlacemarkGroup_toArray1(PyObject* self, PyObject* args)
     result = PlacemarkGroup_toArray1((PlacemarkGroup) thisObj, &resultLength);
     if (result != NULL) {
         resultSeq = beam_new_pyseq_from_jobject_array("ProductNode", result, resultLength);
-        free(result);
+        beam_release_object_array(result, resultLength);
         return resultSeq;
     } else {
         return Py_BuildValue("");
@@ -10042,7 +10065,7 @@ PyObject* BeamPyPlacemarkGroup_toArray2(PyObject* self, PyObject* args)
     result = PlacemarkGroup_toArray2((PlacemarkGroup) thisObj, array, arrayLength, &resultLength);
     if (result != NULL) {
         resultSeq = beam_new_pyseq_from_jobject_array("T", result, resultLength);
-        free(result);
+        beam_release_object_array(result, resultLength);
         return resultSeq;
     } else {
         return Py_BuildValue("");
@@ -10768,7 +10791,7 @@ PyObject* BeamPyTiePointGrid_getTiePoints(PyObject* self, PyObject* args)
     result = TiePointGrid_getTiePoints((TiePointGrid) thisObj, &resultLength);
     if (result != NULL) {
         resultSeq = beam_new_pyseq_from_float_array(result, resultLength);
-        free(result);
+        beam_release_primitive_array(result, resultLength);
         return resultSeq;
     } else {
         return Py_BuildValue("");
@@ -10907,7 +10930,7 @@ PyObject* BeamPyTiePointGrid_getPixels6(PyObject* self, PyObject* args)
     result = TiePointGrid_getPixels6((TiePointGrid) thisObj, x, y, w, h, pixels, pixelsLength, (ProgressMonitor) pm, &resultLength);
     if (result != NULL) {
         resultSeq = beam_new_pyseq_from_int_array(result, resultLength);
-        free(result);
+        beam_release_primitive_array(result, resultLength);
         return resultSeq;
     } else {
         return Py_BuildValue("");
@@ -10937,7 +10960,7 @@ PyObject* BeamPyTiePointGrid_getPixels4(PyObject* self, PyObject* args)
     result = TiePointGrid_getPixels4((TiePointGrid) thisObj, x, y, w, h, pixels, pixelsLength, (ProgressMonitor) pm, &resultLength);
     if (result != NULL) {
         resultSeq = beam_new_pyseq_from_float_array(result, resultLength);
-        free(result);
+        beam_release_primitive_array(result, resultLength);
         return resultSeq;
     } else {
         return Py_BuildValue("");
@@ -10967,7 +10990,7 @@ PyObject* BeamPyTiePointGrid_getPixels2(PyObject* self, PyObject* args)
     result = TiePointGrid_getPixels2((TiePointGrid) thisObj, x, y, w, h, pixels, pixelsLength, (ProgressMonitor) pm, &resultLength);
     if (result != NULL) {
         resultSeq = beam_new_pyseq_from_double_array(result, resultLength);
-        free(result);
+        beam_release_primitive_array(result, resultLength);
         return resultSeq;
     } else {
         return Py_BuildValue("");
@@ -11054,7 +11077,7 @@ PyObject* BeamPyTiePointGrid_readPixels6(PyObject* self, PyObject* args)
     result = TiePointGrid_readPixels6((TiePointGrid) thisObj, x, y, w, h, pixels, pixelsLength, (ProgressMonitor) pm, &resultLength);
     if (result != NULL) {
         resultSeq = beam_new_pyseq_from_int_array(result, resultLength);
-        free(result);
+        beam_release_primitive_array(result, resultLength);
         return resultSeq;
     } else {
         return Py_BuildValue("");
@@ -11084,7 +11107,7 @@ PyObject* BeamPyTiePointGrid_readPixels4(PyObject* self, PyObject* args)
     result = TiePointGrid_readPixels4((TiePointGrid) thisObj, x, y, w, h, pixels, pixelsLength, (ProgressMonitor) pm, &resultLength);
     if (result != NULL) {
         resultSeq = beam_new_pyseq_from_float_array(result, resultLength);
-        free(result);
+        beam_release_primitive_array(result, resultLength);
         return resultSeq;
     } else {
         return Py_BuildValue("");
@@ -11114,7 +11137,7 @@ PyObject* BeamPyTiePointGrid_readPixels2(PyObject* self, PyObject* args)
     result = TiePointGrid_readPixels2((TiePointGrid) thisObj, x, y, w, h, pixels, pixelsLength, (ProgressMonitor) pm, &resultLength);
     if (result != NULL) {
         resultSeq = beam_new_pyseq_from_double_array(result, resultLength);
-        free(result);
+        beam_release_primitive_array(result, resultLength);
         return resultSeq;
     } else {
         return Py_BuildValue("");
@@ -11848,7 +11871,7 @@ PyObject* BeamPyTiePointGrid_getPixels5(PyObject* self, PyObject* args)
     result = TiePointGrid_getPixels5((TiePointGrid) thisObj, x, y, w, h, pixels, pixelsLength, &resultLength);
     if (result != NULL) {
         resultSeq = beam_new_pyseq_from_int_array(result, resultLength);
-        free(result);
+        beam_release_primitive_array(result, resultLength);
         return resultSeq;
     } else {
         return Py_BuildValue("");
@@ -11876,7 +11899,7 @@ PyObject* BeamPyTiePointGrid_getPixels3(PyObject* self, PyObject* args)
     result = TiePointGrid_getPixels3((TiePointGrid) thisObj, x, y, w, h, pixels, pixelsLength, &resultLength);
     if (result != NULL) {
         resultSeq = beam_new_pyseq_from_float_array(result, resultLength);
-        free(result);
+        beam_release_primitive_array(result, resultLength);
         return resultSeq;
     } else {
         return Py_BuildValue("");
@@ -11904,7 +11927,7 @@ PyObject* BeamPyTiePointGrid_getPixels1(PyObject* self, PyObject* args)
     result = TiePointGrid_getPixels1((TiePointGrid) thisObj, x, y, w, h, pixels, pixelsLength, &resultLength);
     if (result != NULL) {
         resultSeq = beam_new_pyseq_from_double_array(result, resultLength);
-        free(result);
+        beam_release_primitive_array(result, resultLength);
         return resultSeq;
     } else {
         return Py_BuildValue("");
@@ -11932,7 +11955,7 @@ PyObject* BeamPyTiePointGrid_readPixels5(PyObject* self, PyObject* args)
     result = TiePointGrid_readPixels5((TiePointGrid) thisObj, x, y, w, h, pixels, pixelsLength, &resultLength);
     if (result != NULL) {
         resultSeq = beam_new_pyseq_from_int_array(result, resultLength);
-        free(result);
+        beam_release_primitive_array(result, resultLength);
         return resultSeq;
     } else {
         return Py_BuildValue("");
@@ -11960,7 +11983,7 @@ PyObject* BeamPyTiePointGrid_readPixels3(PyObject* self, PyObject* args)
     result = TiePointGrid_readPixels3((TiePointGrid) thisObj, x, y, w, h, pixels, pixelsLength, &resultLength);
     if (result != NULL) {
         resultSeq = beam_new_pyseq_from_float_array(result, resultLength);
-        free(result);
+        beam_release_primitive_array(result, resultLength);
         return resultSeq;
     } else {
         return Py_BuildValue("");
@@ -11988,7 +12011,7 @@ PyObject* BeamPyTiePointGrid_readPixels1(PyObject* self, PyObject* args)
     result = TiePointGrid_readPixels1((TiePointGrid) thisObj, x, y, w, h, pixels, pixelsLength, &resultLength);
     if (result != NULL) {
         resultSeq = beam_new_pyseq_from_double_array(result, resultLength);
-        free(result);
+        beam_release_primitive_array(result, resultLength);
         return resultSeq;
     } else {
         return Py_BuildValue("");
@@ -12073,7 +12096,7 @@ PyObject* BeamPyTiePointGrid_readValidMask(PyObject* self, PyObject* args)
     result = TiePointGrid_readValidMask((TiePointGrid) thisObj, x, y, w, h, validMask, validMaskLength, &resultLength);
     if (result != NULL) {
         resultSeq = beam_new_pyseq_from_boolean_array(result, resultLength);
-        free(result);
+        beam_release_primitive_array(result, resultLength);
         return resultSeq;
     } else {
         return Py_BuildValue("");
@@ -12441,7 +12464,7 @@ PyObject* BeamPyTiePointGrid_quantizeRasterData1(PyObject* self, PyObject* args)
     result = TiePointGrid_quantizeRasterData1((TiePointGrid) thisObj, newMin, newMax, gamma, (ProgressMonitor) pm, &resultLength);
     if (result != NULL) {
         resultSeq = beam_new_pyseq_from_byte_array(result, resultLength);
-        free(result);
+        beam_release_primitive_array(result, resultLength);
         return resultSeq;
     } else {
         return Py_BuildValue("");
@@ -13517,7 +13540,7 @@ PyObject* BeamPyFlagCoding_getElements(PyObject* self, PyObject* args)
     result = FlagCoding_getElements((FlagCoding) thisObj, &resultLength);
     if (result != NULL) {
         resultSeq = beam_new_pyseq_from_jobject_array("MetadataElement", result, resultLength);
-        free(result);
+        beam_release_object_array(result, resultLength);
         return resultSeq;
     } else {
         return Py_BuildValue("");
@@ -13644,7 +13667,7 @@ PyObject* BeamPyFlagCoding_getAttributes(PyObject* self, PyObject* args)
     result = FlagCoding_getAttributes((FlagCoding) thisObj, &resultLength);
     if (result != NULL) {
         resultSeq = beam_new_pyseq_from_jobject_array("MetadataAttribute", result, resultLength);
-        free(result);
+        beam_release_object_array(result, resultLength);
         return resultSeq;
     } else {
         return Py_BuildValue("");
@@ -15637,7 +15660,7 @@ PyObject* BeamPyProductNodeGroup_toArray1(PyObject* self, PyObject* args)
     result = ProductNodeGroup_toArray1((ProductNodeGroup) thisObj, &resultLength);
     if (result != NULL) {
         resultSeq = beam_new_pyseq_from_jobject_array("ProductNode", result, resultLength);
-        free(result);
+        beam_release_object_array(result, resultLength);
         return resultSeq;
     } else {
         return Py_BuildValue("");
@@ -15661,7 +15684,7 @@ PyObject* BeamPyProductNodeGroup_toArray2(PyObject* self, PyObject* args)
     result = ProductNodeGroup_toArray2((ProductNodeGroup) thisObj, array, arrayLength, &resultLength);
     if (result != NULL) {
         resultSeq = beam_new_pyseq_from_jobject_array("T", result, resultLength);
-        free(result);
+        beam_release_object_array(result, resultLength);
         return resultSeq;
     } else {
         return Py_BuildValue("");
@@ -16309,7 +16332,7 @@ PyObject* BeamPyProductUtils_createMapEnvelope2(PyObject* self, PyObject* args)
     result = ProductUtils_createMapEnvelope2((Product) product, (Rectangle) rect, (MapTransform) mapTransform, &resultLength);
     if (result != NULL) {
         resultSeq = beam_new_pyseq_from_jobject_array("Point2D", result, resultLength);
-        free(result);
+        beam_release_object_array(result, resultLength);
         return resultSeq;
     } else {
         return Py_BuildValue("");
@@ -16334,7 +16357,7 @@ PyObject* BeamPyProductUtils_createMapEnvelope1(PyObject* self, PyObject* args)
     result = ProductUtils_createMapEnvelope1((Product) product, (Rectangle) rect, step, (MapTransform) mapTransform, &resultLength);
     if (result != NULL) {
         resultSeq = beam_new_pyseq_from_jobject_array("Point2D", result, resultLength);
-        free(result);
+        beam_release_object_array(result, resultLength);
         return resultSeq;
     } else {
         return Py_BuildValue("");
@@ -16356,7 +16379,7 @@ PyObject* BeamPyProductUtils_getMinMax(PyObject* self, PyObject* args)
     result = ProductUtils_getMinMax(boundary, boundaryLength, &resultLength);
     if (result != NULL) {
         resultSeq = beam_new_pyseq_from_jobject_array("Point2D", result, resultLength);
-        free(result);
+        beam_release_object_array(result, resultLength);
         return resultSeq;
     } else {
         return Py_BuildValue("");
@@ -16381,7 +16404,7 @@ PyObject* BeamPyProductUtils_createMapBoundary(PyObject* self, PyObject* args)
     result = ProductUtils_createMapBoundary((Product) product, (Rectangle) rect, step, (MapTransform) mapTransform, &resultLength);
     if (result != NULL) {
         resultSeq = beam_new_pyseq_from_jobject_array("Point2D", result, resultLength);
-        free(result);
+        beam_release_object_array(result, resultLength);
         return resultSeq;
     } else {
         return Py_BuildValue("");
@@ -16402,7 +16425,7 @@ PyObject* BeamPyProductUtils_createGeoBoundary1(PyObject* self, PyObject* args)
     result = ProductUtils_createGeoBoundary1((Product) product, step, &resultLength);
     if (result != NULL) {
         resultSeq = beam_new_pyseq_from_jobject_array("GeoPos", result, resultLength);
-        free(result);
+        beam_release_object_array(result, resultLength);
         return resultSeq;
     } else {
         return Py_BuildValue("");
@@ -16425,7 +16448,7 @@ PyObject* BeamPyProductUtils_createGeoBoundary2(PyObject* self, PyObject* args)
     result = ProductUtils_createGeoBoundary2((Product) product, (Rectangle) region, step, &resultLength);
     if (result != NULL) {
         resultSeq = beam_new_pyseq_from_jobject_array("GeoPos", result, resultLength);
-        free(result);
+        beam_release_object_array(result, resultLength);
         return resultSeq;
     } else {
         return Py_BuildValue("");
@@ -16449,7 +16472,7 @@ PyObject* BeamPyProductUtils_createGeoBoundary3(PyObject* self, PyObject* args)
     result = ProductUtils_createGeoBoundary3((Product) product, (Rectangle) region, step, usePixelCenter, &resultLength);
     if (result != NULL) {
         resultSeq = beam_new_pyseq_from_jobject_array("GeoPos", result, resultLength);
-        free(result);
+        beam_release_object_array(result, resultLength);
         return resultSeq;
     } else {
         return Py_BuildValue("");
@@ -16493,7 +16516,7 @@ PyObject* BeamPyProductUtils_createGeoBoundary4(PyObject* self, PyObject* args)
     result = ProductUtils_createGeoBoundary4((RasterDataNode) raster, (Rectangle) region, step, &resultLength);
     if (result != NULL) {
         resultSeq = beam_new_pyseq_from_jobject_array("GeoPos", result, resultLength);
-        free(result);
+        beam_release_object_array(result, resultLength);
         return resultSeq;
     } else {
         return Py_BuildValue("");
@@ -16513,7 +16536,7 @@ PyObject* BeamPyProductUtils_createGeoBoundaryPaths1(PyObject* self, PyObject* a
     result = ProductUtils_createGeoBoundaryPaths1((Product) product, &resultLength);
     if (result != NULL) {
         resultSeq = beam_new_pyseq_from_jobject_array("GeneralPath", result, resultLength);
-        free(result);
+        beam_release_object_array(result, resultLength);
         return resultSeq;
     } else {
         return Py_BuildValue("");
@@ -16536,7 +16559,7 @@ PyObject* BeamPyProductUtils_createGeoBoundaryPaths2(PyObject* self, PyObject* a
     result = ProductUtils_createGeoBoundaryPaths2((Product) product, (Rectangle) region, step, &resultLength);
     if (result != NULL) {
         resultSeq = beam_new_pyseq_from_jobject_array("GeneralPath", result, resultLength);
-        free(result);
+        beam_release_object_array(result, resultLength);
         return resultSeq;
     } else {
         return Py_BuildValue("");
@@ -16560,7 +16583,7 @@ PyObject* BeamPyProductUtils_createGeoBoundaryPaths3(PyObject* self, PyObject* a
     result = ProductUtils_createGeoBoundaryPaths3((Product) product, (Rectangle) region, step, usePixelCenter, &resultLength);
     if (result != NULL) {
         resultSeq = beam_new_pyseq_from_jobject_array("GeneralPath", result, resultLength);
-        free(result);
+        beam_release_object_array(result, resultLength);
         return resultSeq;
     } else {
         return Py_BuildValue("");
@@ -16583,7 +16606,7 @@ PyObject* BeamPyProductUtils_createPixelBoundary1(PyObject* self, PyObject* args
     result = ProductUtils_createPixelBoundary1((Product) product, (Rectangle) rect, step, &resultLength);
     if (result != NULL) {
         resultSeq = beam_new_pyseq_from_jobject_array("PixelPos", result, resultLength);
-        free(result);
+        beam_release_object_array(result, resultLength);
         return resultSeq;
     } else {
         return Py_BuildValue("");
@@ -16607,7 +16630,7 @@ PyObject* BeamPyProductUtils_createPixelBoundary2(PyObject* self, PyObject* args
     result = ProductUtils_createPixelBoundary2((Product) product, (Rectangle) rect, step, usePixelCenter, &resultLength);
     if (result != NULL) {
         resultSeq = beam_new_pyseq_from_jobject_array("PixelPos", result, resultLength);
-        free(result);
+        beam_release_object_array(result, resultLength);
         return resultSeq;
     } else {
         return Py_BuildValue("");
@@ -16630,7 +16653,7 @@ PyObject* BeamPyProductUtils_createPixelBoundary3(PyObject* self, PyObject* args
     result = ProductUtils_createPixelBoundary3((RasterDataNode) raster, (Rectangle) rect, step, &resultLength);
     if (result != NULL) {
         resultSeq = beam_new_pyseq_from_jobject_array("PixelPos", result, resultLength);
-        free(result);
+        beam_release_object_array(result, resultLength);
         return resultSeq;
     } else {
         return Py_BuildValue("");
@@ -16651,7 +16674,7 @@ PyObject* BeamPyProductUtils_createRectBoundary1(PyObject* self, PyObject* args)
     result = ProductUtils_createRectBoundary1((Rectangle) rect, step, &resultLength);
     if (result != NULL) {
         resultSeq = beam_new_pyseq_from_jobject_array("PixelPos", result, resultLength);
-        free(result);
+        beam_release_object_array(result, resultLength);
         return resultSeq;
     } else {
         return Py_BuildValue("");
@@ -16673,7 +16696,7 @@ PyObject* BeamPyProductUtils_createRectBoundary2(PyObject* self, PyObject* args)
     result = ProductUtils_createRectBoundary2((Rectangle) rect, step, usePixelCenter, &resultLength);
     if (result != NULL) {
         resultSeq = beam_new_pyseq_from_jobject_array("PixelPos", result, resultLength);
-        free(result);
+        beam_release_object_array(result, resultLength);
         return resultSeq;
     } else {
         return Py_BuildValue("");
@@ -17274,7 +17297,7 @@ PyObject* BeamPyProductUtils_computeSourcePixelCoordinates(PyObject* self, PyObj
     result = ProductUtils_computeSourcePixelCoordinates((GeoCoding) sourceGeoCoding, sourceWidth, sourceHeight, (GeoCoding) destGeoCoding, (Rectangle) destArea, &resultLength);
     if (result != NULL) {
         resultSeq = beam_new_pyseq_from_jobject_array("PixelPos", result, resultLength);
-        free(result);
+        beam_release_object_array(result, resultLength);
         return resultSeq;
     } else {
         return Py_BuildValue("");
@@ -17296,7 +17319,7 @@ PyObject* BeamPyProductUtils_computeMinMaxY(PyObject* self, PyObject* args)
     result = ProductUtils_computeMinMaxY(pixelPositions, pixelPositionsLength, &resultLength);
     if (result != NULL) {
         resultSeq = beam_new_pyseq_from_float_array(result, resultLength);
-        free(result);
+        beam_release_primitive_array(result, resultLength);
         return resultSeq;
     } else {
         return Py_BuildValue("");
