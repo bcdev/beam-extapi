@@ -94,11 +94,14 @@ public class PyCModuleGenerator extends ModuleGenerator {
                 writer.printf("        self.%s = obj\n", SELF_OBJ_NAME);
                 writer.printf("\n");
                 for (FunctionGenerator generator : getFunctionGenerators(apiClass)) {
-                    String instanceFName = generator.getApiMethod().getJavaName();
-                    if (instanceFName.equals("<init>")) {
-                        instanceFName = "new" + getClassName(apiClass.getType());
-                    }
                     String staticFName = getCModuleGenerator().getFunctionNameFor(generator.getApiMethod());
+                    String javaFName = generator.getApiMethod().getJavaName();
+                    String instanceFName;
+                    if (javaFName.equals("<init>")) {
+                        instanceFName = "new" + getClassName(apiClass.getType());
+                    } else {
+                        instanceFName = staticFName.substring(staticFName.indexOf('_') + 1);
+                    }
                     StringBuilder params = new StringBuilder();
                     for (ParameterGenerator parameterGenerator : generator.getParameterGenerators()) {
                         if (params.length() > 0) {
