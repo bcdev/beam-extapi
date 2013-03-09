@@ -1,11 +1,15 @@
+import sys
 import beampy
+
 
 dir(beampy)
 
-p = beampy.ProductIO.readProduct("C:\EOData\MERIS\MER_RR__1alpen.N1")
+if len(sys.argv) != 2:
+    printf("usage: %s <file>", sys.argv[0]);
+    sys.exit(1)
+
+p = beampy.ProductIO.readProduct(sys.argv[1])
 print("p =", p)
-
-
 
 w = p.getSceneRasterWidth()
 print("w =", w)
@@ -13,21 +17,20 @@ print("w =", w)
 h = p.getSceneRasterHeight()
 print("h =", h)
 
-
 name = p.getName()
-print("name =", name)
+print("name = {!s}\n".format(name))
+
+desc = p.getDescription()
+print("desc =", desc)
+
+band_names = p.getBandNames();
+print("band_names =", band_names)
 
 '''
 pis = p.createPixelInfoString(100,100)
 print("pis =", pis)
 
 
-for i in range(10000):
-    band_names = p.getBandNames();
-    print("band_names =", band_names)
-
-desc = p.getDescription()
-print("desc =", desc)
 
 name = p.getName()
 print("name =", name)
