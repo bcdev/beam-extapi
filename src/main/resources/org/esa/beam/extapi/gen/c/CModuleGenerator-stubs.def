@@ -8,6 +8,8 @@ EXPORTS
 	beam_release_jobject
 	beam_release_string
 	beam_release_string_array
+	beam_release_object_array
+	beam_release_primitive_array
 	Util_appendString
 	Util_listDir
 	String_newString

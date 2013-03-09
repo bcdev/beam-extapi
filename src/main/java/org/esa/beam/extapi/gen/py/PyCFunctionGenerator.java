@@ -397,7 +397,7 @@ public abstract class PyCFunctionGenerator implements FunctionGenerator {
         public String generateReturnCode(GeneratorContext context) {
             return format("if (${res} != NULL) {\n" +
                                   "    ${res}Seq = beam_new_pyseq_from_${type}_array(${res}, ${res}Length);\n" +
-                                  "    free(${res});\n" +
+                                  "    beam_release_primitive_array(${res}, ${res}Length);\n" +
                                   "    return ${res}Seq;\n" +
                                   "} else {\n" +
                                   "    return Py_BuildValue(\"\");\n" +
@@ -415,7 +415,7 @@ public abstract class PyCFunctionGenerator implements FunctionGenerator {
         public String generateReturnCode(GeneratorContext context) {
             return format("if (${res} != NULL) {\n" +
                                   "    ${res}Seq = beam_new_pyseq_from_jobject_array(\"${type}\", ${res}, ${res}Length);\n" +
-                                  "    free(${res});\n" +
+                                  "    beam_release_object_array(${res}, ${res}Length);\n" +
                                   "    return ${res}Seq;\n" +
                                   "} else {\n" +
                                   "    return Py_BuildValue(\"\");\n" +
