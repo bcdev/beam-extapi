@@ -77,7 +77,8 @@ C-Code Generation Considerations
       or may need to define special translation rules for these methods that have this issue
 ** are used as method return values (see Band.readPixels() methods)
   --> e.g. new annotation @Return, or @Reuse or @ReturnedIfNotNull
-* How to deal with object parameters in which a C string is passed (generator doesn't know, that a string object needs to be created)
+* How to deal with object parameters in which a C string is passed (generator doesn't know, that a string object needs to be created),
+  for example Product.writeHeader(Object output)
    --> String_newString()
 * How to translate constants defined in Java classes?
    --> constants are already collected (--> ApiInfo)
