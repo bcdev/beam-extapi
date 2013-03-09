@@ -14,5 +14,6 @@ void beam_release_jobject(void** object);
 String String_newString(const char* chars);
 void beam_release_string(char* chars);
 void beam_release_string_array(char** array_elems, int array_length);
-void** beam_release_object_array(void* array_elems, int array_length);
-void* beam_release_primitive_array(void* array_elems, int array_length);
+void beam_release_object_array(void* array_elems, int array_length);
+void beam_release_primitive_array(void* array_elems, int array_length);
+
