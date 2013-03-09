@@ -162,6 +162,17 @@ public class PyCModuleGenerator extends ModuleGenerator {
                 }
                 writer.printf("\n");
             }
+
+            writer.write("class String:\n" +
+                                 "    def __init__(self, obj):\n" +
+                                 "        if obj == None:\n" +
+                                 "            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')\n" +
+                                 "        self._obj = obj\n" +
+                                 "    \n" +
+                                 "    @staticmethod\n" +
+                                 "    def newString(s):\n" +
+                                 "        return String(String_newString(s))\n" +
+                                 "\n");
         } finally {
             writer.close();
         }
@@ -258,6 +269,7 @@ public class PyCModuleGenerator extends ModuleGenerator {
                                   generator.generateDocText(this));
                 }
             }
+            writer.printf("    {\"String_newString\", BeamPyString_newString, METH_VARARGS, \"Converts a Python unicode string into a Java object\"},\n");
             writer.printf("    {NULL, NULL, 0, NULL}  /* Sentinel */\n");
             writer.printf("};\n");
             writer.printf("\n");

@@ -16,6 +16,7 @@ static void BeamPyJObject_dealloc(BeamPyJObject* self)
     beam_release_jobject(&self->jobjectId);
 }
 
+// not used yet
 static PyTypeObject BeamPy_JObjectTypeV = {
     PyVarObject_HEAD_INIT(NULL, 0)
     "${libName}.JObject",         /* tp_name */
@@ -57,7 +58,7 @@ static PyTypeObject BeamPy_JObjectTypeV = {
     NULL,                         /* tp_new */
 };
 
-
+// not used yet
 static PyObject* BeamPy_JObjectType = (PyObject*) &BeamPy_JObjectTypeV;
 
 /*
@@ -109,5 +110,23 @@ PyMODINIT_FUNC PyInit__${libName}()
     fprintf(stdout, "${libName}: Exit PyInit__${libName}()\n");
 
     return m;
+}
+
+PyObject* BeamPyString_newString(PyObject* self, PyObject* args)
+{
+    const char* chars;
+    void* result;
+
+    if (!PyArg_ParseTuple(args, "s:strToObj", &chars)) {
+        return NULL;
+    }
+
+    result = String_newString(chars);
+
+    if (result != NULL) {
+        return Py_BuildValue("(sK)", "String", (unsigned PY_LONG_LONG) result);
+    } else {
+        return Py_BuildValue("");
+    }
 }
 

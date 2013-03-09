@@ -79,7 +79,7 @@ C-Code Generation Considerations
   --> e.g. new annotation @Return, or @Reuse or @ReturnedIfNotNull
 * How to deal with object parameters in which a C string is passed (generator doesn't know, that a string object needs to be created),
   for example Product.writeHeader(Object output)
-   --> String_newString()
+   --> String_newString(), in Python: String.newString(s)
 * How to translate constants defined in Java classes?
    --> constants are already collected (--> ApiInfo)
 * How to deal with same function names originating from overloaded Java methods   (see Band.readPixels() methods)
@@ -105,8 +105,18 @@ C-Code Generation Considerations
   --> Not addressed so far
 * How to treat public fields? (e.g. GeoPos)
   --> Not addressed so far
-* How to treat Java SE classes: File, Date, Point, etc?
-  --> Not addressed so far
+* How to treat Java SE classes: File, Date, Point, Rectangle, etc?
+  --> Not addressed so far. One solution is to provide factories for these objects, e.g. in Python
+  class Rectangle:
+    def __init__(self, obj):
+        self._obj = obj
+    @staticmethod
+    def create(x, y, w, h):
+        Rectangle(Rectangle_create(x, y, w, h))
+
+    Where the global Rectangle_create() function is a defined in beampy.pyd (as BeamPyRectangle_create in C) and
+    delegates to the Rectangle_create() function in beam_capi.dll
+
 * How to make sure that JNI global refs are decreased/freed?
   --> Not addressed so far
 * Must treat thrown exceptions!
