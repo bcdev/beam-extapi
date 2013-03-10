@@ -33,7 +33,8 @@ static int BeamPyJObject_init(BeamPyJObject* self, PyObject* args, PyObject* kwd
 static void BeamPyJObject_dealloc(BeamPyJObject* self)
 {
     printf("BeamPyJObject_dealloc\n");
-    beam_release_jobject(&self->jobjectId);
+    beam_release_jobject(self->jobjectId);
+    self->jobjectId = NULL;
 }
 
 /**
@@ -93,7 +94,7 @@ static PyObject* BeamPy_JObjectType = (PyObject*) &BeamPy_JObjectTypeV;
 
 /**
  * The BEAM/Python API module definition structure.
- * The variable 'BeamPy_Methods' is defined in the generated file 'beampy.c'.
+ * The variable 'BeamPy_Methods' is defined in the generated file 'beampy_module.c'.
  */
 static struct PyModuleDef BeamPy_Module =
 {
@@ -109,29 +110,57 @@ static struct PyModuleDef BeamPy_Module =
  */
 PyMODINIT_FUNC PyInit__${libName}()
 {
-    PyObject* m;
+    PyObject* beampy_module;
 
     fprintf(stdout, "${libName}: Enter PyInit__${libName}()\n");
-    m = PyModule_Create(&BeamPy_Module);
-    if (m == NULL) {
+
+    /////////////////////////////////////////////////////////////////////////
+    // Create BeamPy_Module
+
+    beampy_module = PyModule_Create(&BeamPy_Module);
+    if (beampy_module == NULL) {
         return NULL;
     }
 
-    BeamPy_Error = PyErr_NewException("${libName}.error", NULL, NULL);
-    Py_INCREF(BeamPy_Error);
-    PyModule_AddObject(m, "error", BeamPy_Error);
+    /////////////////////////////////////////////////////////////////////////
+    // CArray_type / CArray_module
 
+    // In some forum I (nf) found one should use: CArray_type.tp_new = PyType_GenericNew;
+    if (PyType_Ready(&CArray_Type) < 0) {
+        return NULL;
+    }
+
+    Py_INCREF(&CArray_Type);
+    PyModule_AddObject(beampy_module, "CArray", (PyObject*) &CArray_Type);
+   
+
+    /////////////////////////////////////////////////////////////////////////
+    // Register BeamPy_JObjectType ('JObject')
+    //
+    //if (PyType_Ready(&BeamPy_JObjectType) < 0) {
+    //    return NULL;
+    //}
     //Py_INCREF(BeamPy_JObjectType);
-    //PyModule_AddObject(m, "JObject", BeamPy_JObjectType);
-
-    // todo - use the new BeamPy_JObjectType object instead of the currently used (sK) tuples.
+    //PyModule_AddObject(beampy_module, "JObject", BeamPy_JObjectType);
+    //
+    // TODO - use the new BeamPy_JObjectType object instead of the currently used (sK) tuples.
     // // JObject instances shall be created using the following pattern:
     // PyObject* arg = PyLong_FromVoidPtr(ptr); // ptr is the JNI Java object
     // PyObject* obj = PyObject_Call(BeamPy_JObjectType, arg, NULL);
     // Py_DECREF(arg);
-
-    // todo - in  BeamPyJObject_init use:
+    //
+    // TODO - in  BeamPyJObject_init use the following pattern:
     // self->jobject = PyLong_AsVoidPtr(args);
+
+    /////////////////////////////////////////////////////////////////////////
+    // Define exception type BeamPy_Error ('beampy.error')
+
+    BeamPy_Error = PyErr_NewException("${libName}.error", NULL, NULL);
+    Py_INCREF(BeamPy_Error);
+    PyModule_AddObject(beampy_module, "error", BeamPy_Error);
+
+    /////////////////////////////////////////////////////////////////////////
+    // Create JVM
 
     if (!beam_create_jvm_with_defaults()) {
         PyErr_SetString(BeamPy_Error, "Failed to create Java VM");
@@ -140,14 +169,14 @@ PyMODINIT_FUNC PyInit__${libName}()
 
     fprintf(stdout, "${libName}: Exit PyInit__${libName}()\n");
 
-    return m;
+    return beampy_module;
 }
 
 /**
  * Factory method for Java string instances.
  *
- * In Python, call <code>beampy.String_newString('foobar')</code>
- * or <code>beampy.String.newString('foobar')</code>.
+ * In Python, call <code>beampy_module.String_newString('foobar')</code>
+ * or <code>beampy_module.String.newString('foobar')</code>.
  */
 PyObject* BeamPyString_newString(PyObject* self, PyObject* args)
 {

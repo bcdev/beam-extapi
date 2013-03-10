@@ -17,13 +17,7 @@
 package org.esa.beam.extapi.gen.py;
 
 import com.sun.javadoc.Type;
-import org.esa.beam.extapi.gen.ApiClass;
-import org.esa.beam.extapi.gen.ApiConstant;
-import org.esa.beam.extapi.gen.ApiMethod;
-import org.esa.beam.extapi.gen.FunctionGenerator;
-import org.esa.beam.extapi.gen.JavadocHelpers;
-import org.esa.beam.extapi.gen.ModuleGenerator;
-import org.esa.beam.extapi.gen.ParameterGenerator;
+import org.esa.beam.extapi.gen.*;
 import org.esa.beam.extapi.gen.c.CModuleGenerator;
 
 import java.io.File;
@@ -39,7 +33,7 @@ import static org.esa.beam.extapi.gen.TemplateEval.kv;
  */
 public class PyCModuleGenerator extends ModuleGenerator {
 
-    // todo: move to config
+    // TODO: move the following constants into ApiGeneratorDoclet-config.xml
     public static final String BEAM_PYAPI_SRCDIR = "src/main/c/gen";
     public static final String BEAM_PYAPI_NAME = "beampy";
     public static final String BEAM_PYAPI_VARNAMEPREFIX = "BeamPy";
@@ -88,6 +82,23 @@ public class PyCModuleGenerator extends ModuleGenerator {
                     writer.printf("\"\"\" %s\n\"\"\"\n", commentText);
                 }
                 writer.printf("class %s:\n", getClassName(apiClass.getType()));
+
+                List<ApiConstant> constants = getApiInfo().getConstantsOf(apiClass);
+                if (!constants.isEmpty()) {
+                    writer.printf("\n");
+                    for (ApiConstant constant : constants) {
+                        Object value = constant.getValue();
+                        if (value == null) {
+                            writer.printf("    %s = None\n", constant.getJavaName());
+                        } else if (value instanceof String) {
+                            writer.printf("    %s = '%s'\n", constant.getJavaName(), ((String) value).replace("\n", "\\n").replace("\t", "\\t").replace("'", "''"));
+                        } else {
+                            writer.printf("    %s = %s\n", constant.getJavaName(), value);
+                        }
+                    }
+                    writer.printf("\n");
+                }
+
                 writer.printf("    def __init__(self, obj):\n");
                 writer.printf("        if obj == None:\n");
                 writer.printf("            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')\n");
@@ -233,21 +244,13 @@ public class PyCModuleGenerator extends ModuleGenerator {
             writeFileInfo(writer);
             writer.printf("#include \"%s\"\n", BEAM_PYAPI_NAME + ".h");
             writer.printf("#include \"%s\"\n", CModuleGenerator.BEAM_CAPI_NAME + ".h");
-            writer.printf("#include \"python.h\"\n");
+            writer.printf("#include \"Python.h\"\n");
+            writer.printf("#include \"structmember.h\"\n");
 
             writer.printf("\n");
             writeResource(writer, "PyCModuleGenerator-stubs-1.c");
             writer.printf("\n");
 
-            writer.write("\n");
-            for (ApiClass apiClass : getApiClasses()) {
-                List<ApiConstant> constants = getApiInfo().getConstantsOf(apiClass);
-                if (!constants.isEmpty()) {
-                    for (ApiConstant constant : constants) {
-                        // todo: generate Python constants
-                    }
-                }
-            }
             writer.write("\n");
 
             writer.printf("\n");
@@ -275,7 +278,8 @@ public class PyCModuleGenerator extends ModuleGenerator {
             writer.printf("\n");
 
             writer.printf("\n");
-            writeResource(writer, "PyCModuleGenerator-stubs-2.c");
+            writeResource(writer, "PyCModuleGenerator-stubs-2a.c");
+            writeResource(writer, "PyCModuleGenerator-stubs-2b.c");
             writer.printf("\n");
 
             for (ApiClass apiClass : getApiClasses()) {

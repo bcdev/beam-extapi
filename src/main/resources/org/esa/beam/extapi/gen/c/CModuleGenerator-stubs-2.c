@@ -16,7 +16,7 @@ jobjectArray beam_new_jstring_array(const char** array_elems, int array_length)
         (*jenv)->SetObjectArrayElement(jenv, array, i, str);
     }
 
-    // todo: check if we must return (*jenv)->NewGlobalRef(jenv, array);
+    // TODO: check if we must return (*jenv)->NewGlobalRef(jenv, array);
     return array;
 }
 
@@ -30,33 +30,32 @@ jobjectArray beam_new_jobject_array(const jobject* array_elems, int array_length
         (*jenv)->SetObjectArrayElement(jenv, array, i, array_elems[i]);
     }
 
-     // todo: check if we must return (*jenv)->NewGlobalRef(jenv, obj_array);
+     // TODO: check if we must return (*jenv)->NewGlobalRef(jenv, obj_array);
     return array;
 }
 
-void beam_release_jobject(jobject* object)
+void beam_release_jobject(jobject object)
 {
-    if (*object != NULL) {
-        (*jenv)->DeleteGlobalRef(jenv, *object);
-        *object = NULL;
+    if (object != NULL) {
+        (*jenv)->DeleteGlobalRef(jenv, object);
     }
 }
 
-void beam_copy_from_jarray(jarray array, void* elems, int array_length, size_t elem_size)
+void beam_copy_from_jarray(jarray array, void* elems, int array_length, int elem_size)
 {
     void* addr = (*jenv)->GetPrimitiveArrayCritical(jenv, array, NULL);
     memcpy(elems, addr, elem_size * array_length);
     (*jenv)->ReleasePrimitiveArrayCritical(jenv, array, addr, 0);
 }
 
-void beam_copy_to_jarray(jarray array, const void* elems, int array_length, size_t elem_size)
+void beam_copy_to_jarray(jarray array, const void* elems, int array_length, int elem_size)
 {
     void* addr = (*jenv)->GetPrimitiveArrayCritical(jenv, array, NULL);
     memcpy(addr, elems, elem_size * array_length);
     (*jenv)->ReleasePrimitiveArrayCritical(jenv, array, addr, 0);
 }
 
-void* beam_alloc_primitive_array(jarray array, int* array_length, size_t elem_size)
+void* beam_alloc_primitive_array(jarray array, int* array_length, int elem_size)
 {
     void* elems;
     int n;
@@ -121,7 +120,7 @@ Object* beam_alloc_object_array(jarray array, int* array_length)
 
     array_elems = (Object*) malloc(n * sizeof (char*));
     for (i = 0; i < n; i++) {
-        // todo: check if we must increment a global reference here!
+        // TODO: check if we must increment a global reference here!
         array_elems[i] = (*jenv)->GetObjectArrayElement(jenv, array, i);
     }
 
@@ -192,15 +191,22 @@ void beam_release_string_array(char** array_elems, int array_length)
     }
 }
 
-// array_length currently not used, but useful for debugging
-void beam_release_object_array(void* array_elems, int array_length) {
+void beam_release_object_array(void** array_elems, int array_length)
+{
     if (array_elems != NULL) {
-         free(array_elems);
+        void* object;
+        int i;
+        for (i = 0; i < array_length; i++) {
+             object = array_elems[i];
+             // TODO: check if we must increment a global object reference here!
+        }
+        free(array_elems);
     }
 }
 
 // array_length currently not used, but useful for debugging
-void beam_release_primitive_array(void* array_elems, int array_length) {
+void beam_release_primitive_array(void* array_elems, int array_length)
+{
      if (array_elems != NULL) {
           free(array_elems);
      }
