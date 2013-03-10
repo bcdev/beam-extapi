@@ -113,6 +113,8 @@ typedef void* GeneralPath;
 typedef void* ImageInputStream;
 
 
+extern JavaVM* jvm;
+extern JNIEnv* jenv;
 
 /*
  * Java VM functions that must be used if this module is used in stand-alone

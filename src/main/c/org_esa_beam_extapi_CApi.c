@@ -1,5 +1,5 @@
-#include "beamc.h"
-#include "org_esa_beam_extapi_CApi.h"
+#include "gen/beam_capi.h"
+#include "gen/org_esa_beam_extapi_CApi.h"
 
 JNIEXPORT jboolean JNICALL Java_org_esa_beam_extapi_CApi_init(JNIEnv *env, jobject extApi)
 {

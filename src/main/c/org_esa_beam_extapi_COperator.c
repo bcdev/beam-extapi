@@ -1,5 +1,5 @@
-#include "beamc.h"
-#include "org_esa_beam_extapi_COperator.h"
+#include "gen/beam_capi.h"
+#include "gen/org_esa_beam_extapi_COperator.h"
 
 /*
  * Class:     org_esa_beam_extapi_COperator

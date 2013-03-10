@@ -9,7 +9,7 @@ package org.esa.beam.extapi;
  */
 public class CApi {
     static {
-        System.loadLibrary("beam-capi");
+        System.loadLibrary("beam_capi");
     }
 
     public CApi() {
