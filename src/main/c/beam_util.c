@@ -9,7 +9,7 @@
 #include <string.h>
 
 
-int Util_appendString(char** result, const char* s)
+size_t Util_appendString(char** result, const char* s)
 {
     size_t slen, blen;    
     char* buf;

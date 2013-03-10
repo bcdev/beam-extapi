@@ -5,7 +5,8 @@
 
 #include "beampy.h"
 #include "beam_capi.h"
-#include "python.h"
+#include "Python.h"
+#include "structmember.h"
 
 static PyObject* BeamPy_Error;
 
@@ -33,7 +34,6 @@ PyObject* beam_new_pyseq_from_jobject_array(const char* type, const void* elems,
 
 /* Extra global functions for beampy. These will also go into the module definition. */
 PyObject* BeamPyString_newString(PyObject* self, PyObject* args);
-
 
 
 
@@ -2089,11 +2089,527 @@ static PyMethodDef BeamPy_Methods[] = {
 };
 
 
+typedef void (*CArrayFree)(void* array_elems, int array_length);
+
+
+/*
+ * Represents an instance of the CArray_Type class
+ */
 typedef struct {
     PyObject_HEAD
+	char type_code[2];
+	int length;
+	int elem_size;
+    void* elems;
+    CArrayFree free_fn;
+	size_t num_exports;
+} CArrayObj;
+
+/*
+ * Default implementation for the 'free_fn' field.
+ */
+static void CArray_releaseElements(void* elems, int length)
+{
+	if (elems != NULL) {
+	    free(elems);
+	}
+}
+
+/*
+ * Helper for the __init__() method for CArray_Type
+ */
+static void CArray_initInstance(CArrayObj* self, const char* type_code, void* elems, int elem_size, int length, CArrayFree free_fn)
+{
+	self->type_code[0] = type_code[0];
+	self->type_code[1] = 0;
+	self->elems = elems;
+	self->elem_size = elem_size;
+	self->length = length;
+	self->free_fn = free_fn;
+	self->num_exports = 0;
+}
+
+/*
+ * Implements the CArray() constructor for CArray_Type
+ */
+static PyObject* CArray_new(PyTypeObject* type, PyObject* args, PyObject* kwds)
+{
+    CArrayObj* self;
+	printf("CArray_new\n");
+    self = (CArrayObj*) type->tp_alloc(type, 0);
+    if (self != NULL) {
+        CArray_initInstance(self, "\0", 0, 0, 0, 0);
+    }
+    return (PyObject*) self;
+}
+
+/*
+ * Helper for the __init__() method for CArray_Type
+ */
+static int CArray_getElemSize(const char* type_code)
+{
+    if (strcmp(type_code, "B") == 0) {
+		return sizeof (char);
+    } else if (strcmp(type_code, "S") == 0) {
+		return sizeof (short);
+    } else if (strcmp(type_code, "I") == 0) {
+		return sizeof (int);
+    } else if (strcmp(type_code, "F") == 0) {
+		return sizeof (float);
+    } else if (strcmp(type_code, "D") == 0) {
+		return sizeof (double);
+    } else {
+        PyErr_SetString(PyExc_ValueError, "type_code must be one of 'B', 'S', 'I', 'F', 'D'");
+        return 0;
+    }
+}
+
+/*
+ * Implements the __init__() method for CArray_Type
+ */
+static int CArray_init(CArrayObj* self, PyObject* args, PyObject* kwds)
+{
+	const char* type_code = NULL;
+	void* elems = NULL;
+	int length = 0;
+	int elem_size = 0;
+
+	printf("CArray_init\n");
+
+    if (!PyArg_ParseTuple(args, "si", &type_code, &length)) {
+        return 1;
+	}
+
+	elem_size = CArray_getElemSize(type_code);
+	if (elem_size <= 0) {
+	    return 2;
+	}
+
+	if (length <= 0) {
+        PyErr_SetString(PyExc_ValueError, "length must be > 0");
+        return 3;
+	}
+
+    elems = calloc(elem_size, length);
+    if (elems == NULL) {
+        PyErr_SetString(PyExc_MemoryError, "failed to allocate memory for CArray");
+        return 4;
+    }
+
+    CArray_initInstance(self, type_code, elems, elem_size, length, CArray_releaseElements);
+    return 0;
+}
+
+/*
+ * Implements the dealloc() method for CArray_Type
+ */
+static void CArray_dealloc(CArrayObj* self)
+{
+	printf("CArray_dealloc\n");
+	if (self->elems != NULL && self->free_fn != NULL) {
+		self->free_fn(self->elems, self->length);
+		self->elems = NULL;
+	}
+    Py_TYPE(self)->tp_free((PyObject*) self);
+}
+
+
+/*
+ * Implements the repr() method for CArray_Type
+ */
+static PyObject* CArray_repr(CArrayObj* self)
+{
+	return PyUnicode_FromFormat("CArray('%s', %d)", self->type_code, self->length);
+}
+
+/*
+ * A test instance method of CArray_Type
+ */
+static PyObject* CArray_noargs(CArrayObj* self)
+{
+	printf("CArray_noargs self=%p\n", self);
+    return Py_BuildValue("");
+}
+
+/*
+ * A test instance method of CArray_Type
+ */
+static PyObject* CArray_varargs(CArrayObj* self, PyObject* args)
+{
+	printf("CArray_varargs self=%p, args=%p\n", self, args);
+    return Py_BuildValue("");
+}
+
+/*
+ * A test static method of CArray_Type
+ */
+static PyObject* CArray_varargsstatic(CArrayObj* self, PyObject* args)
+{
+	printf("CArray_varargsstatic self=%p, args=%p\n", self, args);
+    return Py_BuildValue("");
+}
+
+/*
+ * A test class method of CArray_Type
+ */
+static PyObject* CArray_varargsclass(PyTypeObject* cls, PyObject* args)
+{
+	printf("CArray_varargsclass cls=%p, args=%p\n", cls, args);
+    return Py_BuildValue("");
+}
+
+
+/*
+ * Implements all specific methods of the CArray_Type (currently all methods are tests)
+ */
+static PyMethodDef CArray_methods[] = {
+    {"noargs", (PyCFunction) CArray_noargs, METH_NOARGS, "METH_NOARGS test"},
+    {"varargs", (PyCFunction) CArray_varargs, METH_VARARGS, "METH_VARARGS test"},
+    {"varargsstatic", (PyCFunction) CArray_varargsstatic, METH_VARARGS | METH_STATIC, "METH_VARARGS | METH_STATIC test"},
+    {"varargsclass", (PyCFunction) CArray_varargsclass, METH_VARARGS | METH_CLASS, "METH_VARARGS | METH_CLASS test"},
+    {NULL}  /* Sentinel */
+};
+
+#define PRINT_FLAG(F) printf("CArray_getbufferproc: %s = %d\n", #F, (flags & F) != 0);
+#define PRINT_MEMB(F, M) printf("CArray_getbufferproc: %s = " ## F ## "\n", #M, M);
+
+/*
+ * Implements the getbuffer() method of the <buffer> interface for CArray_Type
+ */
+int CArray_getbufferproc(CArrayObj* self, Py_buffer* view, int flags)
+{
+	int ret = 0;
+
+	/*
+    printf("CArray_getbufferproc\n");
+	PRINT_FLAG(PyBUF_ANY_CONTIGUOUS);
+	PRINT_FLAG(PyBUF_CONTIG);
+	PRINT_FLAG(PyBUF_CONTIG_RO);
+	PRINT_FLAG(PyBUF_C_CONTIGUOUS);
+	PRINT_FLAG(PyBUF_FORMAT);
+	PRINT_FLAG(PyBUF_FULL);
+	PRINT_FLAG(PyBUF_FULL_RO);
+	PRINT_FLAG(PyBUF_F_CONTIGUOUS);
+	PRINT_FLAG(PyBUF_INDIRECT);
+	PRINT_FLAG(PyBUF_ND);
+	PRINT_FLAG(PyBUF_READ);
+	PRINT_FLAG(PyBUF_RECORDS);
+	PRINT_FLAG(PyBUF_RECORDS_RO);
+	PRINT_FLAG(PyBUF_SIMPLE);
+	PRINT_FLAG(PyBUF_STRIDED);
+	PRINT_FLAG(PyBUF_STRIDED_RO);
+	PRINT_FLAG(PyBUF_STRIDES);
+	PRINT_FLAG(PyBUF_WRITE);
+	PRINT_FLAG(PyBUF_WRITEABLE);
+	*/
+
+	// According to Python documentation,
+	// buffer allocation shall be done in the 5 following steps;
+
+	// Step 1/5
+	if (self->elems == NULL) {
+		view->obj = NULL;
+		PyErr_SetString(PyExc_BufferError, "invalid CArray, elems == NULL");
+		return -1;
+	}
+
+	// Step 2/5
+	view->buf = self->elems;
+	view->len = self->length * self->elem_size;
+	view->itemsize = self->elem_size;
+	view->readonly = 0;
+	view->ndim = 1;
+	view->shape = (Py_ssize_t*) malloc(view->ndim* sizeof (Py_ssize_t));
+	view->shape[0] = self->length;
+	view->strides = (Py_ssize_t*) malloc(view->ndim* sizeof (Py_ssize_t));
+	view->strides[0] = self->elem_size;
+	view->suboffsets = NULL;
+	if ((flags & PyBUF_FORMAT) != 0) {
+		view->format = self->type_code;
+	} else {
+		view->format = NULL;
+	}
+	/*
+	PRINT_MEMB("%d", view->len);
+	PRINT_MEMB("%d", view->ndim);
+	PRINT_MEMB("%s", view->format);
+	PRINT_MEMB("%d", view->itemsize);
+	PRINT_MEMB("%d", view->readonly);
+	PRINT_MEMB("%p", view->shape);
+	if (view->shape != NULL)
+		PRINT_MEMB("%d", view->shape[0]);
+	PRINT_MEMB("%p", view->strides);
+	if (view->strides != NULL)
+		PRINT_MEMB("%d", view->strides[0]);
+	PRINT_MEMB("%p", view->suboffsets);
+	if (view->suboffsets != NULL)
+		PRINT_MEMB("%d", view->suboffsets[0]);
+	*/
+
+	// Step 3/5
+	self->num_exports++;
+
+	// Step 4/5
+	view->obj = (PyObject*) self;
+	Py_INCREF(view->obj);
+
+	// Step 5/5
+	return ret;
+}
+
+/*
+ * Implements the releasebuffer() method of the <buffer> interface for CArray_Type
+ */
+void CArray_releasebufferproc(CArrayObj* self, Py_buffer* view)
+{
+	printf("CArray_releasebufferproc\n");
+	// Step 1
+	self->num_exports--;
+	// Step 2
+	if (self->num_exports == 0) {
+		view->buf = NULL;
+		if (view->strides != NULL) {
+			free(view->strides);
+			view->strides = NULL;
+		}
+		if (view->strides != NULL) {
+			free(view->strides);
+			view->shape = NULL;
+		}
+		// todo: release resources...
+	}
+}
+
+/*
+ * Implements <buffer> interface for CArray_Type
+ */
+static PyBufferProcs CArray_as_buffer = {
+	(getbufferproc) CArray_getbufferproc,
+	(releasebufferproc) CArray_releasebufferproc
+};
+
+/*
+ * Implements the length method of the <sequence> interface for CArray_Type
+ */
+Py_ssize_t CArray_sq_length(CArrayObj* self)
+{
+	return self->length;
+}
+
+/*
+ * Implements the item getter method of the <sequence> interface for CArray_Type
+ */
+PyObject* CArray_sq_item(CArrayObj* self, Py_ssize_t index)
+{
+	if (index < 0) {
+		index += self->length;
+	}
+	if (index < 0 || index >= self->length) {
+	    PyErr_SetString(PyExc_IndexError, "CArray index out of bounds");
+		return NULL;
+	}
+	switch (*self->type_code) {
+	case 'B':
+		return  PyLong_FromLong(((char*) self->elems)[index]);
+	case 'S':
+		return  PyLong_FromLong(((short*) self->elems)[index]);
+	case 'I':
+		return  PyLong_FromLong(((int*) self->elems)[index]);
+	case 'F':
+		return  PyFloat_FromDouble(((float*) self->elems)[index]);
+	case 'D':
+		return  PyFloat_FromDouble(((double*) self->elems)[index]);
+	default:
+		PyErr_SetString(PyExc_ValueError, "CArray type_code must be one of 'B', 'S', 'I', 'F', 'D'");
+		return NULL;
+	}
+}
+
+/*
+ * Implements the item assignment method of the <sequence> interface for CArray_Type
+ */
+int CArray_sq_ass_item(CArrayObj* self, Py_ssize_t index, PyObject* other)
+{
+	if (index < 0) {
+		index += self->length;
+	}
+	if (index < 0 || index >= self->length) {
+	    PyErr_SetString(PyExc_IndexError, "CArray index out of bounds");
+		return -1;
+	}
+	switch (*self->type_code) {
+	case 'B':
+		((char*) self->elems)[index] = (char) PyLong_AsLong(other);
+		return 0;
+	case 'S':
+		((short*) self->elems)[index] = (short) PyLong_AsLong(other);
+		return 0;
+	case 'I':
+		((int*) self->elems)[index] = (int) PyLong_AsLong(other);
+		return 0;
+	case 'F':
+		((float*) self->elems)[index] = (float) PyFloat_AsDouble(other);
+		return 0;
+	case 'D':
+		((double*) self->elems)[index] = PyFloat_AsDouble(other);
+		return 0;
+	default:
+		PyErr_SetString(PyExc_ValueError, "CArray type_code must be one of 'B', 'S', 'I', 'F', 'D'");
+		return -1;
+	}
+}
+
+/*
+ * Implements the <sequence> interface for CArray_Type
+ */
+static PySequenceMethods CArray_as_sequence = {
+	(lenfunc) CArray_sq_length,            /* sq_length */ 
+    NULL,   /* sq_concat */
+    NULL,   /* sq_repeat */
+    (ssizeargfunc) CArray_sq_item,         /* sq_item */
+    NULL,   /* was_sq_slice */
+    (ssizeobjargproc) CArray_sq_ass_item,  /* sq_ass_item */
+    NULL,   /* was_sq_ass_slice */
+    NULL,   /* sq_contains */
+    NULL,   /* sq_inplace_concat */
+    NULL,   /* sq_inplace_repeat */
+};
+
+#define CARRAY_DOC  "C-array object, a light-weight wrapper around one-dimensional C-arrays."
+
+/*
+ * Implements the new CArray_Type
+ */
+extern PyTypeObject CArray_Type = {
+    PyVarObject_HEAD_INIT(NULL, 0)
+    "beampy.CArray",       /* tp_name */
+    sizeof(CArrayObj),         /* tp_basicsize */
+    0,                         /* tp_itemsize */
+    (destructor)CArray_dealloc,/* tp_dealloc */
+    0,                         /* tp_print */
+    0,                         /* tp_getattr */
+    0,                         /* tp_setattr */
+    0,                         /* tp_reserved */
+    (reprfunc)CArray_repr,     /* tp_repr */
+    0,                         /* tp_as_number */
+    &CArray_as_sequence,       /* tp_as_sequence */
+    0,                         /* tp_as_mapping */
+    0,                         /* tp_hash  */
+    0,                         /* tp_call */
+    0,                         /* tp_str */
+    0,                         /* tp_getattro */
+    0,                         /* tp_setattro */
+    &CArray_as_buffer,         /* tp_as_buffer */
+    Py_TPFLAGS_DEFAULT,        /* tp_flags */
+    CARRAY_DOC,                /* tp_doc */
+	0,                         /* tp_traverse */
+    0,                         /* tp_clear */
+    0,                         /* tp_richcompare */
+    0,                         /* tp_weaklistoffset */
+    0,                         /* tp_iter */
+    0,                         /* tp_iternext */
+    CArray_methods,            /* tp_methods */
+    0,                         /* tp_members */
+    0,                         /* tp_getset */
+    0,                         /* tp_base */
+    0,                         /* tp_dict */
+    0,                         /* tp_descr_get */
+    0,                         /* tp_descr_set */
+    0,                         /* tp_dictoffset */
+    (initproc)CArray_init,     /* tp_init */
+    0,                         /* tp_alloc */
+    CArray_new,                /* tp_new */
+};
+
+/*
+ * The following CArray factory function will be used whenever a new C-Array
+ * is created by the BEAM C-API and returned to Python.
+ *
+ * Note that this method already increment the reference counter on the returned object.
+ */
+PyObject* CArray_createInstance(const char* type_code, void* elems, int length, CArrayFree free_fn) {
+	PyTypeObject* type = &CArray_Type;
+	CArrayObj* self;
+	int elem_size;
+
+	elem_size = CArray_getElemSize(type_code);
+	if (elem_size <= 0) {
+	    return NULL;
+	}
+
+    if (elems == NULL) {
+        PyErr_SetString(PyExc_MemoryError, "no element data given");
+        return NULL;
+    }
+
+	if (length <= 0) {
+        PyErr_SetString(PyExc_ValueError, "length must be > 0");
+        return NULL;
+	}
+
+    self = (CArrayObj*) type->tp_alloc(type, 0);
+    CArray_initInstance(self, type_code, elems, elem_size, length, free_fn);
+    Py_INCREF(self);
+    return (PyObject*) self;
+}
+
+/*
+ * Implements the 'carray' module.
+ * May be used for testing this CArray_Type in a separate module.
+ * However, the _beampy.pyd library already registers it.
+ */
+/*
+static PyModuleDef CArray_Module = {
+    PyModuleDef_HEAD_INIT,
+    "carray",
+    "Provides a light-weight wrapper around one-dimensional C-arrays.",
+    -1,
+    NULL, NULL, NULL, NULL, NULL
+};
+*/
+
+/*
+ * May be used for testing this CArray_Type in a separate module.
+ * However, the _beampy.pyd library already registers it.
+ */
+/*
+PyMODINIT_FUNC PyInit_carray()
+{
+    PyObject* m;
+
+    if (PyType_Ready(&CArray_Type) < 0) {
+        return NULL;
+	}
+
+    m = PyModule_Create(&CArray_Module);
+    if (m == NULL) {
+        return NULL;
+	}
+
+    Py_INCREF(&CArray_Type);
+    PyModule_AddObject(m, "CArray", (PyObject*) &CArray_Type);
+    return m;
+}
+*/
+/**
+ * Represents an instance of the BeamPy_JObjectType class.
+ * Used to represent Java JNI objects.
+ *
+ * THIS TYPE IS NOT YET IN USE: we currently use
+ * (<type_string>, <pointer>) tuples to represent Java JNI objects.
+ */
+typedef struct {
+    PyObject_HEAD
+    /** The pointer to the Java object obtained from JNI. */
     void* jobjectId;
 } BeamPyJObject;
 
+/**
+ * Implements the __init__() method of the BeamPy_JObjectType class.
+ *
+ * THIS TYPE IS NOT YET IN USE: we currently use
+ * (<type_string>, <pointer>) tuples to represent Java JNI objects.
+ */
 static int BeamPyJObject_init(BeamPyJObject* self, PyObject* args, PyObject* kwds)
 {
     printf("BeamPyJObject_init\n");
@@ -2101,13 +2617,25 @@ static int BeamPyJObject_init(BeamPyJObject* self, PyObject* args, PyObject* kwd
     return self->jobjectId != NULL ? 0 : 1;
 }
 
+/**
+ * Implements the dealloc() method of the BeamPy_JObjectType class.
+ *
+ * THIS TYPE IS NOT YET IN USE: we currently use
+ * (<type_string>, <pointer>) tuples to represent Java JNI objects.
+ */
 static void BeamPyJObject_dealloc(BeamPyJObject* self)
 {
     printf("BeamPyJObject_dealloc\n");
-    beam_release_jobject(&self->jobjectId);
+    beam_release_jobject(self->jobjectId);
+    self->jobjectId = NULL;
 }
 
-// not used yet
+/**
+ * Implements the BeamPy_JObjectType class singleton.
+ *
+ * THIS TYPE IS NOT YET IN USE: we currently use
+ * (<type_string>, <pointer>) tuples to represent Java JNI objects.
+ */
 static PyTypeObject BeamPy_JObjectTypeV = {
     PyVarObject_HEAD_INIT(NULL, 0)
     "beampy.JObject",         /* tp_name */
@@ -2149,11 +2677,17 @@ static PyTypeObject BeamPy_JObjectTypeV = {
     NULL,                         /* tp_new */
 };
 
-// not used yet
+/**
+ * Implements the BeamPy_JObjectType class singleton as PyObject pointer.
+ *
+ * THIS TYPE IS NOT YET IN USE: we currently use
+ * (<type_string>, <pointer>) tuples to represent Java JNI objects.
+ */
 static PyObject* BeamPy_JObjectType = (PyObject*) &BeamPy_JObjectTypeV;
 
-/*
+/**
  * The BEAM/Python API module definition structure.
+ * The variable 'BeamPy_Methods' is defined in the generated file 'beampy_module.c'.
  */
 static struct PyModuleDef BeamPy_Module =
 {
@@ -2164,34 +2698,62 @@ static struct PyModuleDef BeamPy_Module =
    BeamPy_Methods      /* Structure containing all BEAM/Python API functions */
 };
 
-/*
- * Called by the Python interpreter once immediately after the shared lib has been loaded.
+/**
+ * Called by the Python interpreter once immediately after the shared lib _beampy.pyk has been loaded.
  */
 PyMODINIT_FUNC PyInit__beampy()
 {
-    PyObject* m;
+    PyObject* beampy_module;
 
     fprintf(stdout, "beampy: Enter PyInit__beampy()\n");
-    m = PyModule_Create(&BeamPy_Module);
-    if (m == NULL) {
+
+    /////////////////////////////////////////////////////////////////////////
+    // Create BeamPy_Module
+
+    beampy_module = PyModule_Create(&BeamPy_Module);
+    if (beampy_module == NULL) {
         return NULL;
     }
 
-    BeamPy_Error = PyErr_NewException("beampy.error", NULL, NULL);
-    Py_INCREF(BeamPy_Error);
-    PyModule_AddObject(m, "error", BeamPy_Error);
+    /////////////////////////////////////////////////////////////////////////
+    // CArray_type / CArray_module
 
+    // In some forum I (nf) found one should use: CArray_type.tp_new = PyType_GenericNew;
+    if (PyType_Ready(&CArray_Type) < 0) {
+        return NULL;
+    }
+
+    Py_INCREF(&CArray_Type);
+    PyModule_AddObject(beampy_module, "CArray", (PyObject*) &CArray_Type);
+   
+
+    /////////////////////////////////////////////////////////////////////////
+    // Register BeamPy_JObjectType ('JObject')
+    //
+    //if (PyType_Ready(&BeamPy_JObjectType) < 0) {
+    //    return NULL;
+    //}
     //Py_INCREF(BeamPy_JObjectType);
-    //PyModule_AddObject(m, "JObject", BeamPy_JObjectType);
-
-    // todo - use the new BeamPy_JObjectType object instead of the currently used (sK) tuples.
+    //PyModule_AddObject(beampy_module, "JObject", BeamPy_JObjectType);
+    //
+    // TODO - use the new BeamPy_JObjectType object instead of the currently used (sK) tuples.
     // // JObject instances shall be created using the following pattern:
     // PyObject* arg = PyLong_FromVoidPtr(ptr); // ptr is the JNI Java object
     // PyObject* obj = PyObject_Call(BeamPy_JObjectType, arg, NULL);
     // Py_DECREF(arg);
-
-    // todo - in  BeamPyJObject_init use:
+    //
+    // TODO - in  BeamPyJObject_init use the following pattern:
     // self->jobject = PyLong_AsVoidPtr(args);
+
+    /////////////////////////////////////////////////////////////////////////
+    // Define exception type BeamPy_Error ('beampy.error')
+
+    BeamPy_Error = PyErr_NewException("beampy.error", NULL, NULL);
+    Py_INCREF(BeamPy_Error);
+    PyModule_AddObject(beampy_module, "error", BeamPy_Error);
+
+    /////////////////////////////////////////////////////////////////////////
+    // Create JVM
 
     if (!beam_create_jvm_with_defaults()) {
         PyErr_SetString(BeamPy_Error, "Failed to create Java VM");
@@ -2200,15 +2762,21 @@ PyMODINIT_FUNC PyInit__beampy()
 
     fprintf(stdout, "beampy: Exit PyInit__beampy()\n");
 
-    return m;
+    return beampy_module;
 }
 
+/**
+ * Factory method for Java string instances.
+ *
+ * In Python, call <code>beampy_module.String_newString('foobar')</code>
+ * or <code>beampy_module.String.newString('foobar')</code>.
+ */
 PyObject* BeamPyString_newString(PyObject* self, PyObject* args)
 {
     const char* chars;
     void* result;
 
-    if (!PyArg_ParseTuple(args, "s:strToObj", &chars)) {
+    if (!PyArg_ParseTuple(args, "s:newString", &chars)) {
         return NULL;
     }
 
@@ -8788,8 +9356,7 @@ PyObject* BeamPyBand_getPixelsInt(PyObject* self, PyObject* args)
     pixels = beam_new_int_array_from_pyseq(pixelsSeq, &pixelsLength);
     result = Band_getPixelsInt((Band) thisObj, x, y, w, h, pixels, pixelsLength, &resultLength);
     if (result != NULL) {
-        resultSeq = beam_new_pyseq_from_int_array(result, resultLength);
-        beam_release_primitive_array(result, resultLength);
+        resultSeq = CArray_createInstance("I", result, resultLength, beam_release_primitive_array);
         return resultSeq;
     } else {
         return Py_BuildValue("");
@@ -8816,8 +9383,7 @@ PyObject* BeamPyBand_getPixelsFloat(PyObject* self, PyObject* args)
     pixels = beam_new_float_array_from_pyseq(pixelsSeq, &pixelsLength);
     result = Band_getPixelsFloat((Band) thisObj, x, y, w, h, pixels, pixelsLength, &resultLength);
     if (result != NULL) {
-        resultSeq = beam_new_pyseq_from_float_array(result, resultLength);
-        beam_release_primitive_array(result, resultLength);
+        resultSeq = CArray_createInstance("F", result, resultLength, beam_release_primitive_array);
         return resultSeq;
     } else {
         return Py_BuildValue("");
@@ -8844,8 +9410,7 @@ PyObject* BeamPyBand_getPixelsDouble(PyObject* self, PyObject* args)
     pixels = beam_new_double_array_from_pyseq(pixelsSeq, &pixelsLength);
     result = Band_getPixelsDouble((Band) thisObj, x, y, w, h, pixels, pixelsLength, &resultLength);
     if (result != NULL) {
-        resultSeq = beam_new_pyseq_from_double_array(result, resultLength);
-        beam_release_primitive_array(result, resultLength);
+        resultSeq = CArray_createInstance("D", result, resultLength, beam_release_primitive_array);
         return resultSeq;
     } else {
         return Py_BuildValue("");
@@ -8872,8 +9437,7 @@ PyObject* BeamPyBand_readPixelsInt(PyObject* self, PyObject* args)
     pixels = beam_new_int_array_from_pyseq(pixelsSeq, &pixelsLength);
     result = Band_readPixelsInt((Band) thisObj, x, y, w, h, pixels, pixelsLength, &resultLength);
     if (result != NULL) {
-        resultSeq = beam_new_pyseq_from_int_array(result, resultLength);
-        beam_release_primitive_array(result, resultLength);
+        resultSeq = CArray_createInstance("I", result, resultLength, beam_release_primitive_array);
         return resultSeq;
     } else {
         return Py_BuildValue("");
@@ -8900,8 +9464,7 @@ PyObject* BeamPyBand_readPixelsFloat(PyObject* self, PyObject* args)
     pixels = beam_new_float_array_from_pyseq(pixelsSeq, &pixelsLength);
     result = Band_readPixelsFloat((Band) thisObj, x, y, w, h, pixels, pixelsLength, &resultLength);
     if (result != NULL) {
-        resultSeq = beam_new_pyseq_from_float_array(result, resultLength);
-        beam_release_primitive_array(result, resultLength);
+        resultSeq = CArray_createInstance("F", result, resultLength, beam_release_primitive_array);
         return resultSeq;
     } else {
         return Py_BuildValue("");
@@ -8928,8 +9491,7 @@ PyObject* BeamPyBand_readPixelsDouble(PyObject* self, PyObject* args)
     pixels = beam_new_double_array_from_pyseq(pixelsSeq, &pixelsLength);
     result = Band_readPixelsDouble((Band) thisObj, x, y, w, h, pixels, pixelsLength, &resultLength);
     if (result != NULL) {
-        resultSeq = beam_new_pyseq_from_double_array(result, resultLength);
-        beam_release_primitive_array(result, resultLength);
+        resultSeq = CArray_createInstance("D", result, resultLength, beam_release_primitive_array);
         return resultSeq;
     } else {
         return Py_BuildValue("");
@@ -9013,8 +9575,7 @@ PyObject* BeamPyBand_readValidMask(PyObject* self, PyObject* args)
     validMask = beam_new_boolean_array_from_pyseq(validMaskSeq, &validMaskLength);
     result = Band_readValidMask((Band) thisObj, x, y, w, h, validMask, validMaskLength, &resultLength);
     if (result != NULL) {
-        resultSeq = beam_new_pyseq_from_boolean_array(result, resultLength);
-        beam_release_primitive_array(result, resultLength);
+        resultSeq = CArray_createInstance("B", result, resultLength, beam_release_primitive_array);
         return resultSeq;
     } else {
         return Py_BuildValue("");
@@ -10790,8 +11351,7 @@ PyObject* BeamPyTiePointGrid_getTiePoints(PyObject* self, PyObject* args)
     }
     result = TiePointGrid_getTiePoints((TiePointGrid) thisObj, &resultLength);
     if (result != NULL) {
-        resultSeq = beam_new_pyseq_from_float_array(result, resultLength);
-        beam_release_primitive_array(result, resultLength);
+        resultSeq = CArray_createInstance("F", result, resultLength, beam_release_primitive_array);
         return resultSeq;
     } else {
         return Py_BuildValue("");
@@ -10929,8 +11489,7 @@ PyObject* BeamPyTiePointGrid_getPixels6(PyObject* self, PyObject* args)
     pixels = beam_new_int_array_from_pyseq(pixelsSeq, &pixelsLength);
     result = TiePointGrid_getPixels6((TiePointGrid) thisObj, x, y, w, h, pixels, pixelsLength, (ProgressMonitor) pm, &resultLength);
     if (result != NULL) {
-        resultSeq = beam_new_pyseq_from_int_array(result, resultLength);
-        beam_release_primitive_array(result, resultLength);
+        resultSeq = CArray_createInstance("I", result, resultLength, beam_release_primitive_array);
         return resultSeq;
     } else {
         return Py_BuildValue("");
@@ -10959,8 +11518,7 @@ PyObject* BeamPyTiePointGrid_getPixels4(PyObject* self, PyObject* args)
     pixels = beam_new_float_array_from_pyseq(pixelsSeq, &pixelsLength);
     result = TiePointGrid_getPixels4((TiePointGrid) thisObj, x, y, w, h, pixels, pixelsLength, (ProgressMonitor) pm, &resultLength);
     if (result != NULL) {
-        resultSeq = beam_new_pyseq_from_float_array(result, resultLength);
-        beam_release_primitive_array(result, resultLength);
+        resultSeq = CArray_createInstance("F", result, resultLength, beam_release_primitive_array);
         return resultSeq;
     } else {
         return Py_BuildValue("");
@@ -10989,8 +11547,7 @@ PyObject* BeamPyTiePointGrid_getPixels2(PyObject* self, PyObject* args)
     pixels = beam_new_double_array_from_pyseq(pixelsSeq, &pixelsLength);
     result = TiePointGrid_getPixels2((TiePointGrid) thisObj, x, y, w, h, pixels, pixelsLength, (ProgressMonitor) pm, &resultLength);
     if (result != NULL) {
-        resultSeq = beam_new_pyseq_from_double_array(result, resultLength);
-        beam_release_primitive_array(result, resultLength);
+        resultSeq = CArray_createInstance("D", result, resultLength, beam_release_primitive_array);
         return resultSeq;
     } else {
         return Py_BuildValue("");
@@ -11076,8 +11633,7 @@ PyObject* BeamPyTiePointGrid_readPixels6(PyObject* self, PyObject* args)
     pixels = beam_new_int_array_from_pyseq(pixelsSeq, &pixelsLength);
     result = TiePointGrid_readPixels6((TiePointGrid) thisObj, x, y, w, h, pixels, pixelsLength, (ProgressMonitor) pm, &resultLength);
     if (result != NULL) {
-        resultSeq = beam_new_pyseq_from_int_array(result, resultLength);
-        beam_release_primitive_array(result, resultLength);
+        resultSeq = CArray_createInstance("I", result, resultLength, beam_release_primitive_array);
         return resultSeq;
     } else {
         return Py_BuildValue("");
@@ -11106,8 +11662,7 @@ PyObject* BeamPyTiePointGrid_readPixels4(PyObject* self, PyObject* args)
     pixels = beam_new_float_array_from_pyseq(pixelsSeq, &pixelsLength);
     result = TiePointGrid_readPixels4((TiePointGrid) thisObj, x, y, w, h, pixels, pixelsLength, (ProgressMonitor) pm, &resultLength);
     if (result != NULL) {
-        resultSeq = beam_new_pyseq_from_float_array(result, resultLength);
-        beam_release_primitive_array(result, resultLength);
+        resultSeq = CArray_createInstance("F", result, resultLength, beam_release_primitive_array);
         return resultSeq;
     } else {
         return Py_BuildValue("");
@@ -11136,8 +11691,7 @@ PyObject* BeamPyTiePointGrid_readPixels2(PyObject* self, PyObject* args)
     pixels = beam_new_double_array_from_pyseq(pixelsSeq, &pixelsLength);
     result = TiePointGrid_readPixels2((TiePointGrid) thisObj, x, y, w, h, pixels, pixelsLength, (ProgressMonitor) pm, &resultLength);
     if (result != NULL) {
-        resultSeq = beam_new_pyseq_from_double_array(result, resultLength);
-        beam_release_primitive_array(result, resultLength);
+        resultSeq = CArray_createInstance("D", result, resultLength, beam_release_primitive_array);
         return resultSeq;
     } else {
         return Py_BuildValue("");
@@ -11870,8 +12424,7 @@ PyObject* BeamPyTiePointGrid_getPixels5(PyObject* self, PyObject* args)
     pixels = beam_new_int_array_from_pyseq(pixelsSeq, &pixelsLength);
     result = TiePointGrid_getPixels5((TiePointGrid) thisObj, x, y, w, h, pixels, pixelsLength, &resultLength);
     if (result != NULL) {
-        resultSeq = beam_new_pyseq_from_int_array(result, resultLength);
-        beam_release_primitive_array(result, resultLength);
+        resultSeq = CArray_createInstance("I", result, resultLength, beam_release_primitive_array);
         return resultSeq;
     } else {
         return Py_BuildValue("");
@@ -11898,8 +12451,7 @@ PyObject* BeamPyTiePointGrid_getPixels3(PyObject* self, PyObject* args)
     pixels = beam_new_float_array_from_pyseq(pixelsSeq, &pixelsLength);
     result = TiePointGrid_getPixels3((TiePointGrid) thisObj, x, y, w, h, pixels, pixelsLength, &resultLength);
     if (result != NULL) {
-        resultSeq = beam_new_pyseq_from_float_array(result, resultLength);
-        beam_release_primitive_array(result, resultLength);
+        resultSeq = CArray_createInstance("F", result, resultLength, beam_release_primitive_array);
         return resultSeq;
     } else {
         return Py_BuildValue("");
@@ -11926,8 +12478,7 @@ PyObject* BeamPyTiePointGrid_getPixels1(PyObject* self, PyObject* args)
     pixels = beam_new_double_array_from_pyseq(pixelsSeq, &pixelsLength);
     result = TiePointGrid_getPixels1((TiePointGrid) thisObj, x, y, w, h, pixels, pixelsLength, &resultLength);
     if (result != NULL) {
-        resultSeq = beam_new_pyseq_from_double_array(result, resultLength);
-        beam_release_primitive_array(result, resultLength);
+        resultSeq = CArray_createInstance("D", result, resultLength, beam_release_primitive_array);
         return resultSeq;
     } else {
         return Py_BuildValue("");
@@ -11954,8 +12505,7 @@ PyObject* BeamPyTiePointGrid_readPixels5(PyObject* self, PyObject* args)
     pixels = beam_new_int_array_from_pyseq(pixelsSeq, &pixelsLength);
     result = TiePointGrid_readPixels5((TiePointGrid) thisObj, x, y, w, h, pixels, pixelsLength, &resultLength);
     if (result != NULL) {
-        resultSeq = beam_new_pyseq_from_int_array(result, resultLength);
-        beam_release_primitive_array(result, resultLength);
+        resultSeq = CArray_createInstance("I", result, resultLength, beam_release_primitive_array);
         return resultSeq;
     } else {
         return Py_BuildValue("");
@@ -11982,8 +12532,7 @@ PyObject* BeamPyTiePointGrid_readPixels3(PyObject* self, PyObject* args)
     pixels = beam_new_float_array_from_pyseq(pixelsSeq, &pixelsLength);
     result = TiePointGrid_readPixels3((TiePointGrid) thisObj, x, y, w, h, pixels, pixelsLength, &resultLength);
     if (result != NULL) {
-        resultSeq = beam_new_pyseq_from_float_array(result, resultLength);
-        beam_release_primitive_array(result, resultLength);
+        resultSeq = CArray_createInstance("F", result, resultLength, beam_release_primitive_array);
         return resultSeq;
     } else {
         return Py_BuildValue("");
@@ -12010,8 +12559,7 @@ PyObject* BeamPyTiePointGrid_readPixels1(PyObject* self, PyObject* args)
     pixels = beam_new_double_array_from_pyseq(pixelsSeq, &pixelsLength);
     result = TiePointGrid_readPixels1((TiePointGrid) thisObj, x, y, w, h, pixels, pixelsLength, &resultLength);
     if (result != NULL) {
-        resultSeq = beam_new_pyseq_from_double_array(result, resultLength);
-        beam_release_primitive_array(result, resultLength);
+        resultSeq = CArray_createInstance("D", result, resultLength, beam_release_primitive_array);
         return resultSeq;
     } else {
         return Py_BuildValue("");
@@ -12095,8 +12643,7 @@ PyObject* BeamPyTiePointGrid_readValidMask(PyObject* self, PyObject* args)
     validMask = beam_new_boolean_array_from_pyseq(validMaskSeq, &validMaskLength);
     result = TiePointGrid_readValidMask((TiePointGrid) thisObj, x, y, w, h, validMask, validMaskLength, &resultLength);
     if (result != NULL) {
-        resultSeq = beam_new_pyseq_from_boolean_array(result, resultLength);
-        beam_release_primitive_array(result, resultLength);
+        resultSeq = CArray_createInstance("B", result, resultLength, beam_release_primitive_array);
         return resultSeq;
     } else {
         return Py_BuildValue("");
@@ -12463,8 +13010,7 @@ PyObject* BeamPyTiePointGrid_quantizeRasterData1(PyObject* self, PyObject* args)
     }
     result = TiePointGrid_quantizeRasterData1((TiePointGrid) thisObj, newMin, newMax, gamma, (ProgressMonitor) pm, &resultLength);
     if (result != NULL) {
-        resultSeq = beam_new_pyseq_from_byte_array(result, resultLength);
-        beam_release_primitive_array(result, resultLength);
+        resultSeq = CArray_createInstance("B", result, resultLength, beam_release_primitive_array);
         return resultSeq;
     } else {
         return Py_BuildValue("");
@@ -17318,8 +17864,7 @@ PyObject* BeamPyProductUtils_computeMinMaxY(PyObject* self, PyObject* args)
     pixelPositions = beam_new_jobject_array_from_pyseq("PixelPos", pixelPositionsSeq, &pixelPositionsLength);
     result = ProductUtils_computeMinMaxY(pixelPositions, pixelPositionsLength, &resultLength);
     if (result != NULL) {
-        resultSeq = beam_new_pyseq_from_float_array(result, resultLength);
-        beam_release_primitive_array(result, resultLength);
+        resultSeq = CArray_createInstance("F", result, resultLength, beam_release_primitive_array);
         return resultSeq;
     } else {
         return Py_BuildValue("");
@@ -17915,7 +18460,13 @@ PyObject* BeamPyMetadataAttribute_removeFromFile(PyObject* self, PyObject* args)
 }
 
 
-
+/*
+ * Creates a Python sequence (a list) from a C-array of type boolean.
+ * Code generated from template. Parameters:
+ *   typeName =       boolean
+ *   ctype =          boolean
+ *   elemToItemCall = PyBool_FromLong(elems[i])
+ */
 PyObject* beam_new_pyseq_from_boolean_array(const boolean* elems, int length)
 {
     PyObject* list;
@@ -17940,6 +18491,13 @@ PyObject* beam_new_pyseq_from_boolean_array(const boolean* elems, int length)
     return list;
 }
 
+/*
+ * Creates C-array of type boolean from a Python sequence.
+ * Code generated from template. Parameters:
+ *   typeName =       boolean
+ *   ctype =          boolean
+ *   elemToItemCall = PyBool_FromLong(elems[i])
+ */
 boolean* beam_new_boolean_array_from_pyseq(PyObject* seq, int* length)
 {
     Py_ssize_t size;
@@ -17950,7 +18508,7 @@ boolean* beam_new_boolean_array_from_pyseq(PyObject* seq, int* length)
     size = PySequence_Size(seq);
     elems = (boolean*) malloc(size * sizeof (boolean));
     if (elems == NULL) {
-        /* todo: throw Python exception */
+        /* TODO: throw Python exception */
         return NULL;
     }
     for (i = 0; i < size; i++) {
@@ -17961,11 +18519,17 @@ boolean* beam_new_boolean_array_from_pyseq(PyObject* seq, int* length)
         }
         elems[i] = (boolean)(PyLong_AsLong(item) != 0);
     }
-    /* todo: check if conversion to int is ok */
+    /* TODO: check if conversion to int is ok */
     *length = (int) size;
     return elems;
 }
-
+/*
+ * Creates a Python sequence (a list) from a C-array of type char.
+ * Code generated from template. Parameters:
+ *   typeName =       char
+ *   ctype =          char
+ *   elemToItemCall = PyUnicode_FromFormat("%c", elems[i])
+ */
 PyObject* beam_new_pyseq_from_char_array(const char* elems, int length)
 {
     PyObject* list;
@@ -17990,6 +18554,13 @@ PyObject* beam_new_pyseq_from_char_array(const char* elems, int length)
     return list;
 }
 
+/*
+ * Creates C-array of type char from a Python sequence.
+ * Code generated from template. Parameters:
+ *   typeName =       char
+ *   ctype =          char
+ *   elemToItemCall = PyUnicode_FromFormat("%c", elems[i])
+ */
 char* beam_new_char_array_from_pyseq(PyObject* seq, int* length)
 {
     Py_ssize_t size;
@@ -18000,7 +18571,7 @@ char* beam_new_char_array_from_pyseq(PyObject* seq, int* length)
     size = PySequence_Size(seq);
     elems = (char*) malloc(size * sizeof (char));
     if (elems == NULL) {
-        /* todo: throw Python exception */
+        /* TODO: throw Python exception */
         return NULL;
     }
     for (i = 0; i < size; i++) {
@@ -18011,11 +18582,17 @@ char* beam_new_char_array_from_pyseq(PyObject* seq, int* length)
         }
         elems[i] = (char) PyLong_AsLong(item);
     }
-    /* todo: check if conversion to int is ok */
+    /* TODO: check if conversion to int is ok */
     *length = (int) size;
     return elems;
 }
-
+/*
+ * Creates a Python sequence (a list) from a C-array of type byte.
+ * Code generated from template. Parameters:
+ *   typeName =       byte
+ *   ctype =          byte
+ *   elemToItemCall = PyLong_FromLong(elems[i])
+ */
 PyObject* beam_new_pyseq_from_byte_array(const byte* elems, int length)
 {
     PyObject* list;
@@ -18040,6 +18617,13 @@ PyObject* beam_new_pyseq_from_byte_array(const byte* elems, int length)
     return list;
 }
 
+/*
+ * Creates C-array of type byte from a Python sequence.
+ * Code generated from template. Parameters:
+ *   typeName =       byte
+ *   ctype =          byte
+ *   elemToItemCall = PyLong_FromLong(elems[i])
+ */
 byte* beam_new_byte_array_from_pyseq(PyObject* seq, int* length)
 {
     Py_ssize_t size;
@@ -18050,7 +18634,7 @@ byte* beam_new_byte_array_from_pyseq(PyObject* seq, int* length)
     size = PySequence_Size(seq);
     elems = (byte*) malloc(size * sizeof (byte));
     if (elems == NULL) {
-        /* todo: throw Python exception */
+        /* TODO: throw Python exception */
         return NULL;
     }
     for (i = 0; i < size; i++) {
@@ -18061,11 +18645,17 @@ byte* beam_new_byte_array_from_pyseq(PyObject* seq, int* length)
         }
         elems[i] = (byte) PyLong_AsLong(item);
     }
-    /* todo: check if conversion to int is ok */
+    /* TODO: check if conversion to int is ok */
     *length = (int) size;
     return elems;
 }
-
+/*
+ * Creates a Python sequence (a list) from a C-array of type short.
+ * Code generated from template. Parameters:
+ *   typeName =       short
+ *   ctype =          short
+ *   elemToItemCall = PyLong_FromLong(elems[i])
+ */
 PyObject* beam_new_pyseq_from_short_array(const short* elems, int length)
 {
     PyObject* list;
@@ -18090,6 +18680,13 @@ PyObject* beam_new_pyseq_from_short_array(const short* elems, int length)
     return list;
 }
 
+/*
+ * Creates C-array of type short from a Python sequence.
+ * Code generated from template. Parameters:
+ *   typeName =       short
+ *   ctype =          short
+ *   elemToItemCall = PyLong_FromLong(elems[i])
+ */
 short* beam_new_short_array_from_pyseq(PyObject* seq, int* length)
 {
     Py_ssize_t size;
@@ -18100,7 +18697,7 @@ short* beam_new_short_array_from_pyseq(PyObject* seq, int* length)
     size = PySequence_Size(seq);
     elems = (short*) malloc(size * sizeof (short));
     if (elems == NULL) {
-        /* todo: throw Python exception */
+        /* TODO: throw Python exception */
         return NULL;
     }
     for (i = 0; i < size; i++) {
@@ -18111,11 +18708,17 @@ short* beam_new_short_array_from_pyseq(PyObject* seq, int* length)
         }
         elems[i] = (short) PyLong_AsLong(item);
     }
-    /* todo: check if conversion to int is ok */
+    /* TODO: check if conversion to int is ok */
     *length = (int) size;
     return elems;
 }
-
+/*
+ * Creates a Python sequence (a list) from a C-array of type int.
+ * Code generated from template. Parameters:
+ *   typeName =       int
+ *   ctype =          int
+ *   elemToItemCall = PyLong_FromLong(elems[i])
+ */
 PyObject* beam_new_pyseq_from_int_array(const int* elems, int length)
 {
     PyObject* list;
@@ -18140,6 +18743,13 @@ PyObject* beam_new_pyseq_from_int_array(const int* elems, int length)
     return list;
 }
 
+/*
+ * Creates C-array of type int from a Python sequence.
+ * Code generated from template. Parameters:
+ *   typeName =       int
+ *   ctype =          int
+ *   elemToItemCall = PyLong_FromLong(elems[i])
+ */
 int* beam_new_int_array_from_pyseq(PyObject* seq, int* length)
 {
     Py_ssize_t size;
@@ -18150,7 +18760,7 @@ int* beam_new_int_array_from_pyseq(PyObject* seq, int* length)
     size = PySequence_Size(seq);
     elems = (int*) malloc(size * sizeof (int));
     if (elems == NULL) {
-        /* todo: throw Python exception */
+        /* TODO: throw Python exception */
         return NULL;
     }
     for (i = 0; i < size; i++) {
@@ -18161,11 +18771,17 @@ int* beam_new_int_array_from_pyseq(PyObject* seq, int* length)
         }
         elems[i] = (int) PyLong_AsLong(item);
     }
-    /* todo: check if conversion to int is ok */
+    /* TODO: check if conversion to int is ok */
     *length = (int) size;
     return elems;
 }
-
+/*
+ * Creates a Python sequence (a list) from a C-array of type dlong.
+ * Code generated from template. Parameters:
+ *   typeName =       dlong
+ *   ctype =          dlong
+ *   elemToItemCall = PyLong_FromLongLong(elems[i])
+ */
 PyObject* beam_new_pyseq_from_dlong_array(const dlong* elems, int length)
 {
     PyObject* list;
@@ -18190,6 +18806,13 @@ PyObject* beam_new_pyseq_from_dlong_array(const dlong* elems, int length)
     return list;
 }
 
+/*
+ * Creates C-array of type dlong from a Python sequence.
+ * Code generated from template. Parameters:
+ *   typeName =       dlong
+ *   ctype =          dlong
+ *   elemToItemCall = PyLong_FromLongLong(elems[i])
+ */
 dlong* beam_new_dlong_array_from_pyseq(PyObject* seq, int* length)
 {
     Py_ssize_t size;
@@ -18200,7 +18823,7 @@ dlong* beam_new_dlong_array_from_pyseq(PyObject* seq, int* length)
     size = PySequence_Size(seq);
     elems = (dlong*) malloc(size * sizeof (dlong));
     if (elems == NULL) {
-        /* todo: throw Python exception */
+        /* TODO: throw Python exception */
         return NULL;
     }
     for (i = 0; i < size; i++) {
@@ -18211,11 +18834,17 @@ dlong* beam_new_dlong_array_from_pyseq(PyObject* seq, int* length)
         }
         elems[i] = PyLong_AsLongLong(item);
     }
-    /* todo: check if conversion to int is ok */
+    /* TODO: check if conversion to int is ok */
     *length = (int) size;
     return elems;
 }
-
+/*
+ * Creates a Python sequence (a list) from a C-array of type float.
+ * Code generated from template. Parameters:
+ *   typeName =       float
+ *   ctype =          float
+ *   elemToItemCall = PyFloat_FromDouble(elems[i])
+ */
 PyObject* beam_new_pyseq_from_float_array(const float* elems, int length)
 {
     PyObject* list;
@@ -18240,6 +18869,13 @@ PyObject* beam_new_pyseq_from_float_array(const float* elems, int length)
     return list;
 }
 
+/*
+ * Creates C-array of type float from a Python sequence.
+ * Code generated from template. Parameters:
+ *   typeName =       float
+ *   ctype =          float
+ *   elemToItemCall = PyFloat_FromDouble(elems[i])
+ */
 float* beam_new_float_array_from_pyseq(PyObject* seq, int* length)
 {
     Py_ssize_t size;
@@ -18250,7 +18886,7 @@ float* beam_new_float_array_from_pyseq(PyObject* seq, int* length)
     size = PySequence_Size(seq);
     elems = (float*) malloc(size * sizeof (float));
     if (elems == NULL) {
-        /* todo: throw Python exception */
+        /* TODO: throw Python exception */
         return NULL;
     }
     for (i = 0; i < size; i++) {
@@ -18261,11 +18897,17 @@ float* beam_new_float_array_from_pyseq(PyObject* seq, int* length)
         }
         elems[i] = (float) PyFloat_AsDouble(item);
     }
-    /* todo: check if conversion to int is ok */
+    /* TODO: check if conversion to int is ok */
     *length = (int) size;
     return elems;
 }
-
+/*
+ * Creates a Python sequence (a list) from a C-array of type double.
+ * Code generated from template. Parameters:
+ *   typeName =       double
+ *   ctype =          double
+ *   elemToItemCall = PyFloat_FromDouble(elems[i])
+ */
 PyObject* beam_new_pyseq_from_double_array(const double* elems, int length)
 {
     PyObject* list;
@@ -18290,6 +18932,13 @@ PyObject* beam_new_pyseq_from_double_array(const double* elems, int length)
     return list;
 }
 
+/*
+ * Creates C-array of type double from a Python sequence.
+ * Code generated from template. Parameters:
+ *   typeName =       double
+ *   ctype =          double
+ *   elemToItemCall = PyFloat_FromDouble(elems[i])
+ */
 double* beam_new_double_array_from_pyseq(PyObject* seq, int* length)
 {
     Py_ssize_t size;
@@ -18300,7 +18949,7 @@ double* beam_new_double_array_from_pyseq(PyObject* seq, int* length)
     size = PySequence_Size(seq);
     elems = (double*) malloc(size * sizeof (double));
     if (elems == NULL) {
-        /* todo: throw Python exception */
+        /* TODO: throw Python exception */
         return NULL;
     }
     for (i = 0; i < size; i++) {
@@ -18311,11 +18960,13 @@ double* beam_new_double_array_from_pyseq(PyObject* seq, int* length)
         }
         elems[i] = PyFloat_AsDouble(item);
     }
-    /* todo: check if conversion to int is ok */
+    /* TODO: check if conversion to int is ok */
     *length = (int) size;
     return elems;
 }
-
+/*
+ * Creates a Python sequence (a list) from a C-array of Java objects (type void*).
+ */
 PyObject* beam_new_pyseq_from_jobject_array(const char* type, const void** elems, int length)
 {
     PyObject* list;
@@ -18340,10 +18991,13 @@ PyObject* beam_new_pyseq_from_jobject_array(const char* type, const void** elems
     return list;
 }
 
+/*
+ * Creates a C-array of Java objects (type void*) from a Python sequence.
+ */
 void** beam_new_jobject_array_from_pyseq(const char* type, PyObject* seq, int* length)
 {
     /*
-       todo: implement me!
+       TODO: IMPLEMENT ME!
        Use char* PyUnicode_AsUTF8AndSize(PyObject *unicode, Py_ssize_t *size)
        PyArg_ParseTuple(item, "(sK)", &itemType, &itemObj);
      */
@@ -18351,6 +19005,9 @@ void** beam_new_jobject_array_from_pyseq(const char* type, PyObject* seq, int* l
 }
 
 
+/*
+ * Creates a Python sequence (a list) from a C-array of C-strings (type const char*).
+ */
 PyObject* beam_new_pyseq_from_string_array(const char** elems, int length)
 {
     PyObject* list;
@@ -18375,9 +19032,13 @@ PyObject* beam_new_pyseq_from_string_array(const char** elems, int length)
     return list;
 }
 
+/*
+ * Creates a a C-array of C-strings from a Python sequence.
+ */
 char** beam_new_string_array_from_pyseq(PyObject* seq, int* length)
 {
-    /* todo: implement me!
+    /*
+       TODO: IMPLEMENT ME!
        Use char* PyUnicode_AsUTF8AndSize(PyObject *unicode, Py_ssize_t *size)
      */
     return NULL;
