@@ -1,9 +1,12 @@
 #include <Python.h>
+// structmember.h is part of the Python C API
 #include "structmember.h"
-
 
 extern PyTypeObject CArray_type;
 
+/*
+ * Represents an instance of the CArray_type class
+ */
 typedef struct {
     PyObject_HEAD
 	char type_code[2];
@@ -13,16 +16,10 @@ typedef struct {
 	int num_exports;
 } CArrayObj;
 
-static void CArray_dealloc(CArrayObj* self)
-{
-	printf("CArray_dealloc\n");
-	if (self->elems != NULL) {
-		free(self->elems);
-		self->elems = NULL;
-	}
-    Py_TYPE(self)->tp_free((PyObject*) self);
-}
 
+/*
+ * Implements the CArray() constructor for CArray_type
+ */
 static PyObject* CArray_new(PyTypeObject* type, PyObject* args, PyObject* kwds)
 {
     CArrayObj* self;
@@ -39,6 +36,9 @@ static PyObject* CArray_new(PyTypeObject* type, PyObject* args, PyObject* kwds)
     return (PyObject*) self;
 }
 
+/*
+ * Implements the __init__() method for CArray_type
+ */
 static int CArray_init(CArrayObj* self, PyObject* args, PyObject* kwds)
 {
 	const char* type_code = NULL;
@@ -82,24 +82,58 @@ static int CArray_init(CArrayObj* self, PyObject* args, PyObject* kwds)
     return 0;
 }
 
+/*
+ * Implements the dealloc() method for CArray_type
+ */
+static void CArray_dealloc(CArrayObj* self)
+{
+	printf("CArray_dealloc\n");
+	if (self->elems != NULL) {
+		free(self->elems);
+		self->elems = NULL;
+	}
+    Py_TYPE(self)->tp_free((PyObject*) self);
+}
+
+
+/*
+ * Implements the repr() method for CArray_type
+ */
+static PyObject* CArray_repr(CArrayObj* self)
+{
+	return PyUnicode_FromFormat("CArray('%s', %d)", self->type_code, self->length);
+}
+
+/*
+ * A test instance method of CArray_type
+ */
 static PyObject* CArray_noargs(CArrayObj* self)
 {
 	printf("CArray_noargs self=%p\n", self);
     return Py_BuildValue("");
 }
 
+/*
+ * A test instance method of CArray_type
+ */
 static PyObject* CArray_varargs(CArrayObj* self, PyObject* args)
 {
 	printf("CArray_varargs self=%p, args=%p\n", self, args);
     return Py_BuildValue("");
 }
 
+/*
+ * A test static method of CArray_type
+ */
 static PyObject* CArray_varargsstatic(CArrayObj* self, PyObject* args)
 {
 	printf("CArray_varargsstatic self=%p, args=%p\n", self, args);
     return Py_BuildValue("");
 }
 
+/*
+ * A test class method of CArray_type
+ */
 static PyObject* CArray_varargsclass(PyTypeObject* cls, PyObject* args)
 {
 	printf("CArray_varargsclass cls=%p, args=%p\n", cls, args);
@@ -107,6 +141,9 @@ static PyObject* CArray_varargsclass(PyTypeObject* cls, PyObject* args)
 }
 
 
+/*
+ * Implements all specific methods of the CArray_type (currently all methods are tests)
+ */
 static PyMethodDef CArray_methods[] = {
     {"noargs", (PyCFunction) CArray_noargs, METH_NOARGS, "METH_NOARGS test"},
     {"varargs", (PyCFunction) CArray_varargs, METH_VARARGS, "METH_VARARGS test"},
@@ -118,7 +155,10 @@ static PyMethodDef CArray_methods[] = {
 #define PRINT_FLAG(F) printf("CArray_getbufferproc: %s = %d\n", #F, (flags & F) != 0);
 #define PRINT_MEMB(F, M) printf("CArray_getbufferproc: %s = " ## F ## "\n", #M, M);
 
-int CArray_getbufferproc(CArrayObj* self, Py_buffer* view, int flags) 
+/*
+ * Implements the getbuffer() method of the <buffer> interface for CArray_type
+ */
+int CArray_getbufferproc(CArrayObj* self, Py_buffer* view, int flags)
 {
 	int ret = 0;
 
@@ -192,6 +232,9 @@ int CArray_getbufferproc(CArrayObj* self, Py_buffer* view, int flags)
 	return ret;
 }
 
+/*
+ * Implements the releasebuffer() method of the <buffer> interface for CArray_type
+ */
 void CArray_releasebufferproc(CArrayObj* self, Py_buffer* view)
 {
 	printf("CArray_releasebufferproc\n");
@@ -212,16 +255,25 @@ void CArray_releasebufferproc(CArrayObj* self, Py_buffer* view)
 	}
 }
 
+/*
+ * Implements <buffer> interface for CArray_type
+ */
 static PyBufferProcs CArray_as_buffer = {
 	(getbufferproc) CArray_getbufferproc,
 	(releasebufferproc) CArray_releasebufferproc
 };
 
+/*
+ * Implements the length method of the <sequence> interface for CArray_type
+ */
 Py_ssize_t CArray_sq_length(CArrayObj* self)
 {
 	return self->length;
 }
 
+/*
+ * Implements the item getter method of the <sequence> interface for CArray_type
+ */
 PyObject* CArray_sq_item(CArrayObj* self, Py_ssize_t index)
 {
 	if (index < 0) {
@@ -247,6 +299,9 @@ PyObject* CArray_sq_item(CArrayObj* self, Py_ssize_t index)
 	}
 }
 
+/*
+ * Implements the item assignment method of the <sequence> interface for CArray_type
+ */
 int CArray_sq_ass_item(CArrayObj* self, Py_ssize_t index, PyObject* other)
 {
 	if (index < 0) {
@@ -277,11 +332,9 @@ int CArray_sq_ass_item(CArrayObj* self, Py_ssize_t index, PyObject* other)
 	}
 }
 
-static PyObject* CArray_repr(CArrayObj* self)
-{
-	return PyUnicode_FromFormat("CArray('%s', %d)", self->type_code, self->length);
-}
-
+/*
+ * Implements the <sequence> interface for CArray_type
+ */
 static PySequenceMethods CArray_as_sequence = {
 	(lenfunc) CArray_sq_length,            /* sq_length */ 
     NULL,   /* sq_concat */
@@ -296,6 +349,9 @@ static PySequenceMethods CArray_as_sequence = {
 };
 
 
+/*
+ * Implements the new CArray_type
+ */
 static PyTypeObject CArray_type = {
     PyVarObject_HEAD_INIT(NULL, 0)
     "carray.CArray",           /* tp_name */
@@ -337,7 +393,10 @@ static PyTypeObject CArray_type = {
     CArray_new,                /* tp_new */
 };
 
-	
+
+/*
+ * Implements the 'carray' module.
+ */
 static PyModuleDef CArray_module = {
     PyModuleDef_HEAD_INIT,
     "carray",
@@ -346,7 +405,10 @@ static PyModuleDef CArray_module = {
     NULL, NULL, NULL, NULL, NULL
 };
 
-
+/*
+ * May be used for testing this CArray_type in a separate module.
+ * However, the _beampy.pyd library already registers it.
+ */
 PyMODINIT_FUNC PyInit_carray() 
 {
     PyObject* m;

@@ -1,8 +1,22 @@
+/**
+ * Represents an instance of the BeamPy_JObjectType class.
+ * Used to represent Java JNI objects.
+ *
+ * THIS TYPE IS NOT YET IN USE: we currently use
+ * (<type_string>, <pointer>) tuples to represent Java JNI objects.
+ */
 typedef struct {
     PyObject_HEAD
+    /** The pointer to the Java object obtained from JNI. */
     void* jobjectId;
 } BeamPyJObject;
 
+/**
+ * Implements the __init__() method of the BeamPy_JObjectType class.
+ *
+ * THIS TYPE IS NOT YET IN USE: we currently use
+ * (<type_string>, <pointer>) tuples to represent Java JNI objects.
+ */
 static int BeamPyJObject_init(BeamPyJObject* self, PyObject* args, PyObject* kwds)
 {
     printf("BeamPyJObject_init\n");
@@ -10,13 +24,24 @@ static int BeamPyJObject_init(BeamPyJObject* self, PyObject* args, PyObject* kwd
     return self->jobjectId != NULL ? 0 : 1;
 }
 
+/**
+ * Implements the dealloc() method of the BeamPy_JObjectType class.
+ *
+ * THIS TYPE IS NOT YET IN USE: we currently use
+ * (<type_string>, <pointer>) tuples to represent Java JNI objects.
+ */
 static void BeamPyJObject_dealloc(BeamPyJObject* self)
 {
     printf("BeamPyJObject_dealloc\n");
     beam_release_jobject(&self->jobjectId);
 }
 
-// not used yet
+/**
+ * Implements the BeamPy_JObjectType class singleton.
+ *
+ * THIS TYPE IS NOT YET IN USE: we currently use
+ * (<type_string>, <pointer>) tuples to represent Java JNI objects.
+ */
 static PyTypeObject BeamPy_JObjectTypeV = {
     PyVarObject_HEAD_INIT(NULL, 0)
     "${libName}.JObject",         /* tp_name */
@@ -58,11 +83,17 @@ static PyTypeObject BeamPy_JObjectTypeV = {
     NULL,                         /* tp_new */
 };
 
-// not used yet
+/**
+ * Implements the BeamPy_JObjectType class singleton as PyObject pointer.
+ *
+ * THIS TYPE IS NOT YET IN USE: we currently use
+ * (<type_string>, <pointer>) tuples to represent Java JNI objects.
+ */
 static PyObject* BeamPy_JObjectType = (PyObject*) &BeamPy_JObjectTypeV;
 
-/*
+/**
  * The BEAM/Python API module definition structure.
+ * The variable 'BeamPy_Methods' is defined in the generated file 'beampy.c'.
  */
 static struct PyModuleDef BeamPy_Module =
 {
@@ -73,8 +104,8 @@ static struct PyModuleDef BeamPy_Module =
    BeamPy_Methods      /* Structure containing all BEAM/Python API functions */
 };
 
-/*
- * Called by the Python interpreter once immediately after the shared lib has been loaded.
+/**
+ * Called by the Python interpreter once immediately after the shared lib _${libName}.pyk has been loaded.
  */
 PyMODINIT_FUNC PyInit__${libName}()
 {
@@ -112,12 +143,18 @@ PyMODINIT_FUNC PyInit__${libName}()
     return m;
 }
 
+/**
+ * Factory method for Java string instances.
+ *
+ * In Python, call <code>beampy.String_newString('foobar')</code>
+ * or <code>beampy.String.newString('foobar')</code>.
+ */
 PyObject* BeamPyString_newString(PyObject* self, PyObject* args)
 {
     const char* chars;
     void* result;
 
-    if (!PyArg_ParseTuple(args, "s:strToObj", &chars)) {
+    if (!PyArg_ParseTuple(args, "s:newString", &chars)) {
         return NULL;
     }
 
