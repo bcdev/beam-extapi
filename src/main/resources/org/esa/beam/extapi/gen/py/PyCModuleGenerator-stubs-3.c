@@ -1,4 +1,10 @@
-
+/*
+ * Creates a Python sequence (a list) from a C-array of type ${typeName}.
+ * Code generated from template. Parameters:
+ *   typeName =       ${typeName}
+ *   ctype =          ${ctype}
+ *   elemToItemCall = ${elemToItemCall}
+ */
 PyObject* beam_new_pyseq_from_${typeName}_array(const ${ctype}* elems, int length)
 {
     PyObject* list;
@@ -23,6 +29,13 @@ PyObject* beam_new_pyseq_from_${typeName}_array(const ${ctype}* elems, int lengt
     return list;
 }
 
+/*
+ * Creates C-array of type ${typeName} from a Python sequence.
+ * Code generated from template. Parameters:
+ *   typeName =       ${typeName}
+ *   ctype =          ${ctype}
+ *   elemToItemCall = ${elemToItemCall}
+ */
 ${ctype}* beam_new_${typeName}_array_from_pyseq(PyObject* seq, int* length)
 {
     Py_ssize_t size;
@@ -33,7 +46,7 @@ ${ctype}* beam_new_${typeName}_array_from_pyseq(PyObject* seq, int* length)
     size = PySequence_Size(seq);
     elems = (${ctype}*) malloc(size * sizeof (${ctype}));
     if (elems == NULL) {
-        /* todo: throw Python exception */
+        /* TODO: throw Python exception */
         return NULL;
     }
     for (i = 0; i < size; i++) {
@@ -44,7 +57,7 @@ ${ctype}* beam_new_${typeName}_array_from_pyseq(PyObject* seq, int* length)
         }
         elems[i] = ${itemToElemCall};
     }
-    /* todo: check if conversion to int is ok */
+    /* TODO: check if conversion to int is ok */
     *length = (int) size;
     return elems;
 }

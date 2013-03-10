@@ -1,4 +1,6 @@
-
+/*
+ * Creates a Python sequence (a list) from a C-array of Java objects (type void*).
+ */
 PyObject* beam_new_pyseq_from_jobject_array(const char* type, const void** elems, int length)
 {
     PyObject* list;
@@ -23,10 +25,13 @@ PyObject* beam_new_pyseq_from_jobject_array(const char* type, const void** elems
     return list;
 }
 
+/*
+ * Creates a C-array of Java objects (type void*) from a Python sequence.
+ */
 void** beam_new_jobject_array_from_pyseq(const char* type, PyObject* seq, int* length)
 {
     /*
-       todo: implement me!
+       TODO: IMPLEMENT ME!
        Use char* PyUnicode_AsUTF8AndSize(PyObject *unicode, Py_ssize_t *size)
        PyArg_ParseTuple(item, "(sK)", &itemType, &itemObj);
      */
@@ -34,6 +39,9 @@ void** beam_new_jobject_array_from_pyseq(const char* type, PyObject* seq, int* l
 }
 
 
+/*
+ * Creates a Python sequence (a list) from a C-array of C-strings (type const char*).
+ */
 PyObject* beam_new_pyseq_from_string_array(const char** elems, int length)
 {
     PyObject* list;
@@ -58,9 +66,13 @@ PyObject* beam_new_pyseq_from_string_array(const char** elems, int length)
     return list;
 }
 
+/*
+ * Creates a a C-array of C-strings from a Python sequence.
+ */
 char** beam_new_string_array_from_pyseq(PyObject* seq, int* length)
 {
-    /* todo: implement me!
+    /*
+       TODO: IMPLEMENT ME!
        Use char* PyUnicode_AsUTF8AndSize(PyObject *unicode, Py_ssize_t *size)
      */
     return NULL;
