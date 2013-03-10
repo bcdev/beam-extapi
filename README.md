@@ -131,6 +131,8 @@ C-Code Generation Considerations
 To-do List Code Generation
 --------------------------
 
+* Python API: For C-function names used in Python types (not BEAM API fucntions), follow convention that is used in
+  Python native code, see Python.h and other includes e.g. bytearrayobject.h.
 * Done: Use BEAM_HOME env and auto-configure JVM parameters (use Util_listDir).
 * Make sure Python classes implement correctly: __eq__, __ne__, __hash__ ...
 * Generate usable documentation (Doxgen + PyDoc).
