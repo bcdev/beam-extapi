@@ -3,3 +3,7 @@ target/
 .idea/
 *.iml
 local.txt
+CMakeCache.txt
+CMakeFiles
+Makefile
+cmake_install.cmake
