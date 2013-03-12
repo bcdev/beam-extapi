@@ -216,7 +216,7 @@ public class CModuleGenerator extends ModuleGenerator {
                 if (!constants.isEmpty()) {
                     writer.printf("/* Constants of %s */\n", getComponentCClassName(apiClass.getType()));
                     for (ApiConstant constant : constants) {
-                        writer.write(String.format("static const %s %s_%s = %s;\n",
+                        writer.write(String.format("const %s %s_%s = %s;\n",
                                                    JavadocHelpers.getCTypeName(constant.getType()),
                                                    getComponentCClassName(apiClass.getType()),
                                                    constant.getJavaName(),
