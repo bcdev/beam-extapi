@@ -34,7 +34,7 @@ jobjectArray beam_new_jobject_array(const jobject* array_elems, int array_length
     return array;
 }
 
-void beam_release_jobject(jobject object)
+void beam_release_jobject(void* object)
 {
     if (object != NULL) {
         (*jenv)->DeleteGlobalRef(jenv, object);

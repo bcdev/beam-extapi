@@ -17,7 +17,7 @@ static int api_init = 0;
 int beam_init_api();
 
 jobjectArray beam_new_jstring_array(const char** array_elems, int array_length);
-jobjectArray beam_new_jobject_array(const Object* obj_array_data, int obj_array_length, jclass comp_class);
+jobjectArray beam_new_jobject_array(const jobject* obj_array_data, int obj_array_length, jclass comp_class);
 
 void beam_copy_from_jarray(jarray array, void* elems, int array_length, int elem_size);
 void beam_copy_to_jarray(jarray array, const void* elems, int array_length, int elem_size);
@@ -131,126 +131,126 @@ static jclass classImageInputStream;
 
 
 /* Constants of IndexCoding */
-static const char* IndexCoding_PROPERTY_NAME_NAME = "name";
-static const char* IndexCoding_PROPERTY_NAME_DESCRIPTION = "description";
+const char* IndexCoding_PROPERTY_NAME_NAME = "name";
+const char* IndexCoding_PROPERTY_NAME_DESCRIPTION = "description";
 /* Constants of ProductIO */
-static const char* ProductIO_DEFAULT_FORMAT_NAME = "BEAM-DIMAP";
+const char* ProductIO_DEFAULT_FORMAT_NAME = "BEAM-DIMAP";
 /* Constants of Placemark */
-static const char* Placemark_PLACEMARK_FEATURE_TYPE_NAME = "Placemark";
-static const char* Placemark_PROPERTY_NAME_LABEL = "label";
-static const char* Placemark_PROPERTY_NAME_TEXT = "text";
-static const char* Placemark_PROPERTY_NAME_PIXELPOS = "pixelPos";
-static const char* Placemark_PROPERTY_NAME_GEOPOS = "geoPos";
-static const char* Placemark_PROPERTY_NAME_DATETIME = "dateTime";
-static const char* Placemark_PROPERTY_NAME_STYLE_CSS = "style_css";
-static const char* Placemark_PROPERTY_NAME_NAME = "name";
-static const char* Placemark_PROPERTY_NAME_DESCRIPTION = "description";
+const char* Placemark_PLACEMARK_FEATURE_TYPE_NAME = "Placemark";
+const char* Placemark_PROPERTY_NAME_LABEL = "label";
+const char* Placemark_PROPERTY_NAME_TEXT = "text";
+const char* Placemark_PROPERTY_NAME_PIXELPOS = "pixelPos";
+const char* Placemark_PROPERTY_NAME_GEOPOS = "geoPos";
+const char* Placemark_PROPERTY_NAME_DATETIME = "dateTime";
+const char* Placemark_PROPERTY_NAME_STYLE_CSS = "style_css";
+const char* Placemark_PROPERTY_NAME_NAME = "name";
+const char* Placemark_PROPERTY_NAME_DESCRIPTION = "description";
 /* Constants of MetadataElement */
-static const char* MetadataElement_PROPERTY_NAME_NAME = "name";
-static const char* MetadataElement_PROPERTY_NAME_DESCRIPTION = "description";
+const char* MetadataElement_PROPERTY_NAME_NAME = "name";
+const char* MetadataElement_PROPERTY_NAME_DESCRIPTION = "description";
 /* Constants of Product */
-static const char* Product_METADATA_ROOT_NAME = "metadata";
-static const char* Product_HISTORY_ROOT_NAME = "history";
-static const char* Product_PIN_MASK_NAME = "pins";
-static const char* Product_GCP_MASK_NAME = "ground_control_points";
-static const char* Product_PROPERTY_NAME_GEOCODING = "geoCoding";
-static const char* Product_PROPERTY_NAME_PRODUCT_TYPE = "productType";
-static const char* Product_GEOMETRY_FEATURE_TYPE_NAME = "org.esa.beam.Geometry";
-static const char* Product_PROPERTY_NAME_NAME = "name";
-static const char* Product_PROPERTY_NAME_DESCRIPTION = "description";
+const char* Product_METADATA_ROOT_NAME = "metadata";
+const char* Product_HISTORY_ROOT_NAME = "history";
+const char* Product_PIN_MASK_NAME = "pins";
+const char* Product_GCP_MASK_NAME = "ground_control_points";
+const char* Product_PROPERTY_NAME_GEOCODING = "geoCoding";
+const char* Product_PROPERTY_NAME_PRODUCT_TYPE = "productType";
+const char* Product_GEOMETRY_FEATURE_TYPE_NAME = "org.esa.beam.Geometry";
+const char* Product_PROPERTY_NAME_NAME = "name";
+const char* Product_PROPERTY_NAME_DESCRIPTION = "description";
 /* Constants of ImageInfo */
-static const Color ImageInfo_NO_COLOR = NULL;
-static const char* ImageInfo_HISTOGRAM_MATCHING_OFF = "off";
-static const char* ImageInfo_HISTOGRAM_MATCHING_EQUALIZE = "equalize";
-static const char* ImageInfo_HISTOGRAM_MATCHING_NORMALIZE = "normalize";
+const Color ImageInfo_NO_COLOR = NULL;
+const char* ImageInfo_HISTOGRAM_MATCHING_OFF = "off";
+const char* ImageInfo_HISTOGRAM_MATCHING_EQUALIZE = "equalize";
+const char* ImageInfo_HISTOGRAM_MATCHING_NORMALIZE = "normalize";
 /* Constants of Band */
-static const char* Band_PROPERTY_NAME_SAMPLE_CODING = "sampleCoding";
-static const char* Band_PROPERTY_NAME_SOLAR_FLUX = "solarFlux";
-static const char* Band_PROPERTY_NAME_SPECTRAL_BAND_INDEX = "spectralBandIndex";
-static const char* Band_PROPERTY_NAME_SPECTRAL_BANDWIDTH = "spectralBandwidth";
-static const char* Band_PROPERTY_NAME_SPECTRAL_WAVELENGTH = "spectralWavelength";
-static const char* Band_VIEW_MODE_ORTHO = "ORTHO";
-static const char* Band_VIEW_MODE_FORWARD = "FORWARD";
-static const char* Band_VIEW_MODE_NADIR = "NADIR";
-static const char* Band_PROPERTY_NAME_IMAGE_INFO = "imageInfo";
-static const char* Band_PROPERTY_NAME_LOG_10_SCALED = "log10Scaled";
-static const char* Band_PROPERTY_NAME_ROI_DEFINITION = "roiDefinition";
-static const char* Band_PROPERTY_NAME_SCALING_FACTOR = "scalingFactor";
-static const char* Band_PROPERTY_NAME_SCALING_OFFSET = "scalingOffset";
-static const char* Band_PROPERTY_NAME_NO_DATA_VALUE = "noDataValue";
-static const char* Band_PROPERTY_NAME_NO_DATA_VALUE_USED = "noDataValueUsed";
-static const char* Band_PROPERTY_NAME_VALID_PIXEL_EXPRESSION = "validPixelExpression";
-static const char* Band_PROPERTY_NAME_GEOCODING = "geoCoding";
-static const char* Band_PROPERTY_NAME_STX = "stx";
-static const char* Band_NO_DATA_TEXT = "NaN";
-static const char* Band_INVALID_POS_TEXT = "Invalid pos.";
-static const char* Band_NOT_LOADED_TEXT = "Not loaded";
-static const char* Band_IO_ERROR_TEXT = "I/O error";
-static const char* Band_PROPERTY_NAME_DATA = "data";
-static const char* Band_PROPERTY_NAME_READ_ONLY = "readOnly";
-static const char* Band_PROPERTY_NAME_SYNTHETIC = "synthetic";
-static const char* Band_PROPERTY_NAME_UNIT = "unit";
-static const char* Band_PROPERTY_NAME_NAME = "name";
-static const char* Band_PROPERTY_NAME_DESCRIPTION = "description";
+const char* Band_PROPERTY_NAME_SAMPLE_CODING = "sampleCoding";
+const char* Band_PROPERTY_NAME_SOLAR_FLUX = "solarFlux";
+const char* Band_PROPERTY_NAME_SPECTRAL_BAND_INDEX = "spectralBandIndex";
+const char* Band_PROPERTY_NAME_SPECTRAL_BANDWIDTH = "spectralBandwidth";
+const char* Band_PROPERTY_NAME_SPECTRAL_WAVELENGTH = "spectralWavelength";
+const char* Band_VIEW_MODE_ORTHO = "ORTHO";
+const char* Band_VIEW_MODE_FORWARD = "FORWARD";
+const char* Band_VIEW_MODE_NADIR = "NADIR";
+const char* Band_PROPERTY_NAME_IMAGE_INFO = "imageInfo";
+const char* Band_PROPERTY_NAME_LOG_10_SCALED = "log10Scaled";
+const char* Band_PROPERTY_NAME_ROI_DEFINITION = "roiDefinition";
+const char* Band_PROPERTY_NAME_SCALING_FACTOR = "scalingFactor";
+const char* Band_PROPERTY_NAME_SCALING_OFFSET = "scalingOffset";
+const char* Band_PROPERTY_NAME_NO_DATA_VALUE = "noDataValue";
+const char* Band_PROPERTY_NAME_NO_DATA_VALUE_USED = "noDataValueUsed";
+const char* Band_PROPERTY_NAME_VALID_PIXEL_EXPRESSION = "validPixelExpression";
+const char* Band_PROPERTY_NAME_GEOCODING = "geoCoding";
+const char* Band_PROPERTY_NAME_STX = "stx";
+const char* Band_NO_DATA_TEXT = "NaN";
+const char* Band_INVALID_POS_TEXT = "Invalid pos.";
+const char* Band_NOT_LOADED_TEXT = "Not loaded";
+const char* Band_IO_ERROR_TEXT = "I/O error";
+const char* Band_PROPERTY_NAME_DATA = "data";
+const char* Band_PROPERTY_NAME_READ_ONLY = "readOnly";
+const char* Band_PROPERTY_NAME_SYNTHETIC = "synthetic";
+const char* Band_PROPERTY_NAME_UNIT = "unit";
+const char* Band_PROPERTY_NAME_NAME = "name";
+const char* Band_PROPERTY_NAME_DESCRIPTION = "description";
 /* Constants of PlacemarkGroup */
-static const char* PlacemarkGroup_PROPERTY_NAME_NAME = "name";
-static const char* PlacemarkGroup_PROPERTY_NAME_DESCRIPTION = "description";
+const char* PlacemarkGroup_PROPERTY_NAME_NAME = "name";
+const char* PlacemarkGroup_PROPERTY_NAME_DESCRIPTION = "description";
 /* Constants of TiePointGrid */
-static const char* TiePointGrid_PROPERTY_NAME_IMAGE_INFO = "imageInfo";
-static const char* TiePointGrid_PROPERTY_NAME_LOG_10_SCALED = "log10Scaled";
-static const char* TiePointGrid_PROPERTY_NAME_ROI_DEFINITION = "roiDefinition";
-static const char* TiePointGrid_PROPERTY_NAME_SCALING_FACTOR = "scalingFactor";
-static const char* TiePointGrid_PROPERTY_NAME_SCALING_OFFSET = "scalingOffset";
-static const char* TiePointGrid_PROPERTY_NAME_NO_DATA_VALUE = "noDataValue";
-static const char* TiePointGrid_PROPERTY_NAME_NO_DATA_VALUE_USED = "noDataValueUsed";
-static const char* TiePointGrid_PROPERTY_NAME_VALID_PIXEL_EXPRESSION = "validPixelExpression";
-static const char* TiePointGrid_PROPERTY_NAME_GEOCODING = "geoCoding";
-static const char* TiePointGrid_PROPERTY_NAME_STX = "stx";
-static const char* TiePointGrid_NO_DATA_TEXT = "NaN";
-static const char* TiePointGrid_INVALID_POS_TEXT = "Invalid pos.";
-static const char* TiePointGrid_NOT_LOADED_TEXT = "Not loaded";
-static const char* TiePointGrid_IO_ERROR_TEXT = "I/O error";
-static const char* TiePointGrid_PROPERTY_NAME_DATA = "data";
-static const char* TiePointGrid_PROPERTY_NAME_READ_ONLY = "readOnly";
-static const char* TiePointGrid_PROPERTY_NAME_SYNTHETIC = "synthetic";
-static const char* TiePointGrid_PROPERTY_NAME_UNIT = "unit";
-static const char* TiePointGrid_PROPERTY_NAME_NAME = "name";
-static const char* TiePointGrid_PROPERTY_NAME_DESCRIPTION = "description";
+const char* TiePointGrid_PROPERTY_NAME_IMAGE_INFO = "imageInfo";
+const char* TiePointGrid_PROPERTY_NAME_LOG_10_SCALED = "log10Scaled";
+const char* TiePointGrid_PROPERTY_NAME_ROI_DEFINITION = "roiDefinition";
+const char* TiePointGrid_PROPERTY_NAME_SCALING_FACTOR = "scalingFactor";
+const char* TiePointGrid_PROPERTY_NAME_SCALING_OFFSET = "scalingOffset";
+const char* TiePointGrid_PROPERTY_NAME_NO_DATA_VALUE = "noDataValue";
+const char* TiePointGrid_PROPERTY_NAME_NO_DATA_VALUE_USED = "noDataValueUsed";
+const char* TiePointGrid_PROPERTY_NAME_VALID_PIXEL_EXPRESSION = "validPixelExpression";
+const char* TiePointGrid_PROPERTY_NAME_GEOCODING = "geoCoding";
+const char* TiePointGrid_PROPERTY_NAME_STX = "stx";
+const char* TiePointGrid_NO_DATA_TEXT = "NaN";
+const char* TiePointGrid_INVALID_POS_TEXT = "Invalid pos.";
+const char* TiePointGrid_NOT_LOADED_TEXT = "Not loaded";
+const char* TiePointGrid_IO_ERROR_TEXT = "I/O error";
+const char* TiePointGrid_PROPERTY_NAME_DATA = "data";
+const char* TiePointGrid_PROPERTY_NAME_READ_ONLY = "readOnly";
+const char* TiePointGrid_PROPERTY_NAME_SYNTHETIC = "synthetic";
+const char* TiePointGrid_PROPERTY_NAME_UNIT = "unit";
+const char* TiePointGrid_PROPERTY_NAME_NAME = "name";
+const char* TiePointGrid_PROPERTY_NAME_DESCRIPTION = "description";
 /* Constants of FlagCoding */
-static const char* FlagCoding_PROPERTY_NAME_NAME = "name";
-static const char* FlagCoding_PROPERTY_NAME_DESCRIPTION = "description";
+const char* FlagCoding_PROPERTY_NAME_NAME = "name";
+const char* FlagCoding_PROPERTY_NAME_DESCRIPTION = "description";
 /* Constants of ProductData */
-static const int ProductData_TYPE_UNDEFINED = 0;
-static const int ProductData_TYPE_INT8 = 10;
-static const int ProductData_TYPE_INT16 = 11;
-static const int ProductData_TYPE_INT32 = 12;
-static const int ProductData_TYPE_UINT8 = 20;
-static const int ProductData_TYPE_UINT16 = 21;
-static const int ProductData_TYPE_UINT32 = 22;
-static const int ProductData_TYPE_FLOAT32 = 30;
-static const int ProductData_TYPE_FLOAT64 = 31;
-static const int ProductData_TYPE_ASCII = 41;
-static const int ProductData_TYPE_UTC = 51;
-static const char* ProductData_TYPESTRING_INT8 = "int8";
-static const char* ProductData_TYPESTRING_INT16 = "int16";
-static const char* ProductData_TYPESTRING_INT32 = "int32";
-static const char* ProductData_TYPESTRING_UINT8 = "uint8";
-static const char* ProductData_TYPESTRING_UINT16 = "uint16";
-static const char* ProductData_TYPESTRING_UINT32 = "uint32";
-static const char* ProductData_TYPESTRING_FLOAT32 = "float32";
-static const char* ProductData_TYPESTRING_FLOAT64 = "float64";
-static const char* ProductData_TYPESTRING_ASCII = "ascii";
-static const char* ProductData_TYPESTRING_UTC = "utc";
+const int ProductData_TYPE_UNDEFINED = 0;
+const int ProductData_TYPE_INT8 = 10;
+const int ProductData_TYPE_INT16 = 11;
+const int ProductData_TYPE_INT32 = 12;
+const int ProductData_TYPE_UINT8 = 20;
+const int ProductData_TYPE_UINT16 = 21;
+const int ProductData_TYPE_UINT32 = 22;
+const int ProductData_TYPE_FLOAT32 = 30;
+const int ProductData_TYPE_FLOAT64 = 31;
+const int ProductData_TYPE_ASCII = 41;
+const int ProductData_TYPE_UTC = 51;
+const char* ProductData_TYPESTRING_INT8 = "int8";
+const char* ProductData_TYPESTRING_INT16 = "int16";
+const char* ProductData_TYPESTRING_INT32 = "int32";
+const char* ProductData_TYPESTRING_UINT8 = "uint8";
+const char* ProductData_TYPESTRING_UINT16 = "uint16";
+const char* ProductData_TYPESTRING_UINT32 = "uint32";
+const char* ProductData_TYPESTRING_FLOAT32 = "float32";
+const char* ProductData_TYPESTRING_FLOAT64 = "float64";
+const char* ProductData_TYPESTRING_ASCII = "ascii";
+const char* ProductData_TYPESTRING_UTC = "utc";
 /* Constants of ProductNodeGroup */
-static const char* ProductNodeGroup_PROPERTY_NAME_NAME = "name";
-static const char* ProductNodeGroup_PROPERTY_NAME_DESCRIPTION = "description";
+const char* ProductNodeGroup_PROPERTY_NAME_NAME = "name";
+const char* ProductNodeGroup_PROPERTY_NAME_DESCRIPTION = "description";
 /* Constants of MetadataAttribute */
-static const char* MetadataAttribute_PROPERTY_NAME_DATA = "data";
-static const char* MetadataAttribute_PROPERTY_NAME_READ_ONLY = "readOnly";
-static const char* MetadataAttribute_PROPERTY_NAME_SYNTHETIC = "synthetic";
-static const char* MetadataAttribute_PROPERTY_NAME_UNIT = "unit";
-static const char* MetadataAttribute_PROPERTY_NAME_NAME = "name";
-static const char* MetadataAttribute_PROPERTY_NAME_DESCRIPTION = "description";
+const char* MetadataAttribute_PROPERTY_NAME_DATA = "data";
+const char* MetadataAttribute_PROPERTY_NAME_READ_ONLY = "readOnly";
+const char* MetadataAttribute_PROPERTY_NAME_SYNTHETIC = "synthetic";
+const char* MetadataAttribute_PROPERTY_NAME_UNIT = "unit";
+const char* MetadataAttribute_PROPERTY_NAME_NAME = "name";
+const char* MetadataAttribute_PROPERTY_NAME_DESCRIPTION = "description";
 
 
 
@@ -289,7 +289,7 @@ jobjectArray beam_new_jobject_array(const jobject* array_elems, int array_length
     return array;
 }
 
-void beam_release_jobject(jobject object)
+void beam_release_jobject(void* object)
 {
     if (object != NULL) {
         (*jenv)->DeleteGlobalRef(jenv, object);
