@@ -30,7 +30,22 @@ if (${JNI_PLATFORM_INLCUDE} STREQUAL "")
 endif()
 
 ##
+# define operating system dependent
+# target directory
+#
+if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+  set(LIBRARY_OUTPUT_PATH target/linux)
+  set(EXECUTABLE_OUTPUT_PATH target/linux)
+endif()
+
+if (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
+  set(LIBRARY_OUTPUT_PATH target/winx86)
+  set(EXECUTABLE_OUTPUT_PATH target/winx86)
+endif()
+
+##
 # define input files
+#
 file(GLOB_RECURSE C_API_SOURCES src/main/c/beam_util.c)
 file(GLOB_RECURSE C_API_SOURCES src/main/c/gen/beam_capi.c)
 
