@@ -12,7 +12,8 @@ BEAM Python API
 * On Windows,
   1. install Visual C++ 2012 Express (http://www.microsoft.com/visualstudio/eng/products/visual-studio-express-products). Set `MSVC_HOME` (must point to `VC` inside Visual Studio's installation directory). 
   2. execute `%BEAM_EXTAPI%/mkwinall.bat`
-* On Unix, execute `$BEAM_EXTAPI/mkunixall.sh`  (not available yet)
+* On Unix,
+  1. install python development extension (sudo apt-get install python3-dev)
 
 ### How to install:
 

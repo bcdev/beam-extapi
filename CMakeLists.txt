@@ -7,9 +7,13 @@ project(beam-extapi)
 # set environment variables and check for existence
 #
 set(JDK_HOME $ENV{JDK32_HOME})
-
 if (NOT DEFINED JDK_HOME)
   message (FATAL_ERROR "JDK32_HOME is not defined")
+endif()
+
+set(PY32_HOME $ENV{PYTHON32_HOME})
+if (NOT DEFINED PY32_HOME)
+  message (FATAL_ERROR "PYTHON32_HOME is not defined")
 endif()
 
 ##
