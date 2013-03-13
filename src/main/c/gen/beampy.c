@@ -30,7 +30,7 @@ PyObject* beam_new_pyseq_from_dlong_array(const dlong* elems, int length);
 PyObject* beam_new_pyseq_from_float_array(const float* elems, int length);
 PyObject* beam_new_pyseq_from_double_array(const double* elems, int length);
 PyObject* beam_new_pyseq_from_string_array(const char** elems, int length);
-PyObject* beam_new_pyseq_from_jobject_array(const char* type, const void* elems, int length);
+PyObject* beam_new_pyseq_from_jobject_array(const char* type, const void** elems, int length);
 
 /* Extra global functions for beampy. These will also go into the module definition. */
 PyObject* BeamPyString_newString(PyObject* self, PyObject* args);
