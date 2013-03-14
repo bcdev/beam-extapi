@@ -2,6 +2,7 @@ lib
 target/
 .idea/
 *.iml
+*.N1
 local.txt
 CMakeCache.txt
 CMakeFiles
