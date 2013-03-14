@@ -77,4 +77,4 @@ add_library(beam_capi SHARED ${C_API_SOURCES})
 ##
 # build beam python-API
 #
-add_library(_beampy SHARED ${PY_API_SOURCES})
+add_library(beam-pyapi SHARED ${PY_API_SOURCES})
