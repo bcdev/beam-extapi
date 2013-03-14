@@ -1,12 +1,17 @@
-#include "beam_util.h"
-
-
 #ifdef WIN32
-#include <windows.h>
+    #include <windows.h>
+#else
+    #include <sys/types.h>
+    #include <sys/stat.h>
+    #include <dirent.h>
 #endif
+#include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+
+#include "beam_util.h"
 
 
 size_t Util_appendString(char** result, const char* s)
@@ -72,8 +77,8 @@ void Util_listDir(const char* parent_dir, Util_handleDirEntry handler, void* use
 	free(wpattern);
 #else
     DIR* dir;
-    class dirent* ent;
-    class stat st;
+    struct dirent* ent;
+    struct stat st;
 
     dir = opendir(parent_dir);
     if (dir != NULL) {
