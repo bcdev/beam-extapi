@@ -84,8 +84,6 @@ set(C_API_SOURCES src/main/c/beam_util.c src/main/c/gen/beam_capi.c)
 file(GLOB C_API_TEST_SOURCES src/main/c/beam_capi_test.c)
 file(GLOB PY_API_SOURCES src/main/c/gen/beampy.c)
 
-message(${C_API_SOURCES})
-
 include_directories(
   ${JDK_HOME}/include
   ${JDK_HOME}/include/${JNI_PLATFORM_INLCUDE}
