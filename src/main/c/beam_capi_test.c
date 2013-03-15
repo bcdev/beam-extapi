@@ -57,14 +57,14 @@ int main(int argc, char** argv)
 	}
 
 	{
-	    Band r6 = Product_getBand(product, "radiance_6");
 	    Band r7 = Product_getBand(product, "radiance_7");
+	    Band r10 = Product_getBand(product, "radiance_10");
 	    Product ndviProduct = Product_newProduct("NDVI", "NDVI", width, height);
 	    Band ndviBand = Product_addNewBand(ndviProduct, "ndvi", 30);
 	    ProductWriter writer = ProductIO_getProductWriter("BEAM-DIMAP");
 
-	    float* r6Buf = (float*) malloc(width * sizeof (float));
 	    float* r7Buf = (float*) malloc(width * sizeof (float));
+	    float* r10Buf = (float*) malloc(width * sizeof (float));
 	    float* ndviBuf = (float*) malloc(width * sizeof (float));
 	    int x, y;
 
@@ -74,16 +74,16 @@ int main(int argc, char** argv)
 	    Product_writeHeader(ndviProduct, String_newString("ndvi.dim"));
 
 		for (y = 0; y < height; y++) {
-	        Band_readPixelsFloat(r6, 0, y, width, 1, r6Buf, width, NULL);
 	        Band_readPixelsFloat(r7, 0, y, width, 1, r7Buf, width, NULL);
+	        Band_readPixelsFloat(r10, 0, y, width, 1, r10Buf, width, NULL);
     	    for (x = 0; x < width; x++) {
-				ndviBuf[x] = 0.5F * (r6Buf[x] + r7Buf[x]);
+				ndviBuf[x] = (r10Buf[x] - r7Buf[x]) / (r10Buf[x] + r7Buf[x]);
             }
 	        Band_writePixelsFloat(ndviBand, 0, y, width, 1, ndviBuf, width);
 	    }
 
-        free(r6Buf);
         free(r7Buf);
+        free(r10Buf);
         free(ndviBuf);
 
 	    Product_closeIO(ndviProduct);
