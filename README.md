@@ -15,7 +15,7 @@ BEAM Python API
 * On Unix,
   1. install python development extension (sudo apt-get install python3-dev)
   2. Set 'PYTHON32_INLUDE' to location of "Python.h", installed with the python-dev
-  3. execute 'cmake .' in project root directory
+  3. execute 'cmake .' in project root directory, execute 'cmake -DCMAKE_BUILD_TYPE:STRING=Debug ." in project root directory to build a debug target
   4. execute 'make' in project root directory
 
 ### How to install:

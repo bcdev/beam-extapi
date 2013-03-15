@@ -554,7 +554,7 @@ jboolean beam_destroy_jvm()
 #define OS_PATHSEP ";"
 #else
 #define OS_FILESEP "/"
-#define OS_PATHSEP ","
+#define OS_PATHSEP ":"
 #endif
 
 void beam_create_class_path_vm_option_handler(const char* parent_dir, const char* file_name, int is_dir, void* user_data)
