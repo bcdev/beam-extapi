@@ -370,7 +370,8 @@ jboolean beam_create_jvm_with_defaults()
     fprintf(stdout, "beam_capi: %s\n", class_path_option);
 
     jvm_options[0] = class_path_option;
-    jvm_options[1] = "-Djava.library.path=c:\\mylibs";
+    /*jvm_options[1] = "-Djava.library.path=c:\\mylibs";*/
+    jvm_options[1] = "-Djava.awt.headless=true";
     jvm_options[2] = "-Xms128M";
     jvm_options[3] = "-Xmx512M";
     jvm_options[4] = "-verbose:jni";
