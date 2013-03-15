@@ -3,6 +3,8 @@ target/
 .idea/
 *.iml
 *.N1
+*.dim
+*.data
 local.txt
 CMakeCache.txt
 CMakeFiles
