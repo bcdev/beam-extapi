@@ -8,12 +8,6 @@ from beampy import Product
 from beampy import ProductIO
 from beampy import ProductUtils
 
-def readLine(band, y, w, buf):
-    print('A')
-    buf = band.readPixelsFloat(0, y, 0, w, buf)
-    print('B')
-    return numpy.frombuffer(buf, 'float32')
-
 if len(sys.argv) != 2:
     printf("usage: %s <file>", sys.argv[0]);
     sys.exit(1)
@@ -31,7 +25,7 @@ print("Bands:   %s" % (band_names))
 r7 = product.getBand('radiance_7')
 r10 = product.getBand('radiance_10')
 ndviProduct = Product.newProduct('NDVI', 'NDVI', width, height)
-ndviBand = ndviProduct.addNewBand('ndvi', 30)
+ndviBand = ndviProduct.addNewBand('ndvi', ProductData.TYPE_FLOAT32)
 writer = ProductIO.getProductWriter('BEAM-DIMAP')
 
 ProductUtils.copyGeoCoding(product, ndviProduct)
