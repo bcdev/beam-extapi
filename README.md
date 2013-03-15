@@ -185,3 +185,6 @@ Fehler	11	error LNK1104: Datei "python32_d.lib" kann nicht geöffnet werden.	C:\
 
 --> No solution; Google does not help. Must use Release configuration
 
+Linux 32/64
+Find a way to inject the 'libmawt.so' into the runtime path using cmake.
+
