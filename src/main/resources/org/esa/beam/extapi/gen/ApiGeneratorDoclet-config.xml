@@ -91,9 +91,9 @@
         <method name="loadRasterData" sig="(Lcom/bc/ceres/core/ProgressMonitor;)V" ignore="true"/>
         <method name="quantizeRasterData" sig="(DDDLcom/bc/ceres/core/ProgressMonitor;)[B" ignore="true"/>
         <method name="quantizeRasterData" sig="(DDD[BIILcom/bc/ceres/core/ProgressMonitor;)V" ignore="true"/>
-        <method name="readPixels" sig="(IIII[I)[I" renameTo="readPixelsInt" mods="iiiir"/>
-        <method name="readPixels" sig="(IIII[F)[F" renameTo="readPixelsFloat" mods="iiiir"/>
-        <method name="readPixels" sig="(IIII[D)[D" renameTo="readPixelsDouble" mods="iiiir"/>
+        <method name="readPixels" sig="(IIII[I)[I" renameTo="readPixelsInt" mods="iiiir" retArrLen="{2}*{3}"/>
+        <method name="readPixels" sig="(IIII[F)[F" renameTo="readPixelsFloat" mods="iiiir" retArrLen="{2}*{3}"/>
+        <method name="readPixels" sig="(IIII[D)[D" renameTo="readPixelsDouble" mods="iiiir" retArrLen="{2}*{3}"/>
         <method name="readPixels" sig="(IIII[ILcom/bc/ceres/core/ProgressMonitor;)[I" ignore="true"/>
         <method name="readPixels" sig="(IIII[FLcom/bc/ceres/core/ProgressMonitor;)[F" ignore="true"/>
         <method name="readPixels" sig="(IIII[DLcom/bc/ceres/core/ProgressMonitor;)[D" ignore="true"/>
