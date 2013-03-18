@@ -19,7 +19,8 @@ import static org.esa.beam.extapi.gen.py.PyCModuleGenerator.THIS_VAR_NAME;
 public abstract class PyCFunctionGenerator implements FunctionGenerator {
     // TODO - put into ApiGeneratorDoclet-config.xml, whether a method shall return a CArray or a Python List object. (nf)
     private final static boolean USE_CARRAY = true;
-    private final static HashMap<String, String> CARRAY_TYPE_CODES = new HashMap<String, String>();
+
+    final static HashMap<String, String> CARRAY_TYPE_CODES = new HashMap<String, String>();
 
     static {
         CARRAY_TYPE_CODES.put(Byte.TYPE.getName(), "b");
@@ -27,6 +28,7 @@ public abstract class PyCFunctionGenerator implements FunctionGenerator {
         CARRAY_TYPE_CODES.put(Character.TYPE.getName(), "h");
         CARRAY_TYPE_CODES.put(Short.TYPE.getName(), "h");
         CARRAY_TYPE_CODES.put(Integer.TYPE.getName(), "i");
+        CARRAY_TYPE_CODES.put("dlong", "l");
         CARRAY_TYPE_CODES.put(Long.TYPE.getName(), "l");
         CARRAY_TYPE_CODES.put(Float.TYPE.getName(), "f");
         CARRAY_TYPE_CODES.put(Double.TYPE.getName(), "d");
@@ -368,29 +370,8 @@ public abstract class PyCFunctionGenerator implements FunctionGenerator {
         }
 
         @Override
-        public String generateLocalVarDecl0(GeneratorContext context) {
-            return format("${t}* ${res};\n" +
-                                  "int ${res}Length;\n" +
-                                  "PyObject* ${res}Seq;",
-                          kv("t", getComponentCTypeName(getReturnType())));
-        }
-
-        @Override
         protected String generateExtraArgs() {
             return format("&${res}Length");
-        }
-
-        @Override
-        public String generateCallCode(GeneratorContext context) {
-            ApiParameter arrayReturnParameter = getReturnParameter(context);
-            if (arrayReturnParameter != null) {
-                // TODO: we need to gnerate a special call here, one uses the CArray's 'elems' field.
-                return format("${res} = ${call};",
-                              kv("call", generateCApiCall(context)));
-            }  else {
-                return format("${res} = ${call};",
-                              kv("call", generateCApiCall(context)));
-            }
         }
     }
 
@@ -400,24 +381,53 @@ public abstract class PyCFunctionGenerator implements FunctionGenerator {
         }
 
         @Override
+        public String generateLocalVarDecl0(GeneratorContext context) {
+            ApiParameter returnParameter = getReturnParameter(context);
+            if (returnParameter != null) {
+                return format("${t}* ${res};\n" +
+                                      "int ${res}Length;",
+                              kv("t", getComponentCTypeName(getReturnType())));
+            } else {
+                return format("${t}* ${res};\n" +
+                                      "int ${res}Length;\n" +
+                                      "PyObject* ${res}Obj;",
+                              kv("t", getComponentCTypeName(getReturnType())));
+            }
+        }
+
+        @Override
         public String generateReturnCode(GeneratorContext context) {
             String typeName = getComponentCTypeName(getReturnType());
-            if (USE_CARRAY) {
-                String typeCode = CARRAY_TYPE_CODES.get(typeName);
-                if (typeCode == null) {
-                    throw new IllegalStateException("type " + typeName);
-                }
-                // this code uses the CArray buffer type
-                return format("if (${res} != NULL) {\n" +
-                                      "    ${res}Seq = CArray_createFromItems(\"${typeCode}\", ${res}, ${res}Length, beam_release_primitive_array);\n" +
-                                      "    return ${res}Seq;\n" +
+            String typeCode = CARRAY_TYPE_CODES.get(typeName);
+            if (typeCode == null) {
+                throw new IllegalStateException("type " + typeName);
+            }
+            ApiParameter returnParameter = getReturnParameter(context);
+            if (returnParameter != null) {
+                return format("" +
+                                      "if (${res} != NULL) {\n" +
+                                      "    Py_INCREF(${p}Obj);\n" +
+                                      "    return ${p}Obj;\n" +
+                                      "} else {\n" +
+                                      "    return Py_BuildValue(\"\");\n" +
+                                      "}\n",
+                              kv("p", returnParameter.getJavaName()),
+                              kv("type", typeName),
+                              kv("typeCode", typeCode));
+
+            } else {
+                return format("" +
+                                      "if (${res} != NULL) {\n" +
+                                      "    ${res}Obj = CArray_createFromItems(\"${typeCode}\", ${res}, ${res}Length, beam_release_primitive_array);\n" +
+                                      "    Py_INCREF(${res}Obj);\n" +
+                                      "    return ${res}Obj;\n" +
                                       "} else {\n" +
                                       "    return Py_BuildValue(\"\");\n" +
                                       "}\n",
                               kv("type", typeName),
                               kv("typeCode", typeCode));
-            } else {
-                // this code returns a python list
+            }
+/* this code returns a python list
                 return format("if (${res} != NULL) {\n" +
                                       "    ${res}Seq = beam_new_pyseq_from_${type}_array(${res}, ${res}Length);\n" +
                                       "    beam_release_primitive_array(${res}, ${res}Length);\n" +
@@ -426,13 +436,21 @@ public abstract class PyCFunctionGenerator implements FunctionGenerator {
                                       "    return Py_BuildValue(\"\");\n" +
                                       "}\n",
                               kv("type", typeName));
-            }
+*/
         }
     }
 
     static class ObjectArrayMethod extends ArrayMethod {
         ObjectArrayMethod(ApiMethod apiMethod, PyCParameterGenerator[] parameterGenerators) {
             super(apiMethod, parameterGenerators);
+        }
+
+        @Override
+        public String generateLocalVarDecl0(GeneratorContext context) {
+            return format("${t}* ${res};\n" +
+                                  "int ${res}Length;\n" +
+                                  "PyObject* ${res}Seq;",
+                          kv("t", getComponentCTypeName(getReturnType())));
         }
 
         @Override
@@ -452,6 +470,14 @@ public abstract class PyCFunctionGenerator implements FunctionGenerator {
     static class StringArrayMethod extends ArrayMethod {
         StringArrayMethod(ApiMethod apiMethod, PyCParameterGenerator[] parameterGenerators) {
             super(apiMethod, parameterGenerators);
+        }
+
+        @Override
+        public String generateLocalVarDecl0(GeneratorContext context) {
+            return format("${t}* ${res};\n" +
+                                  "int ${res}Length;\n" +
+                                  "PyObject* ${res}Seq;",
+                          kv("t", getComponentCTypeName(getReturnType())));
         }
 
         @Override

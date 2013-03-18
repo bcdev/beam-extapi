@@ -11,7 +11,7 @@ PyObject* beam_getPrimitiveArrayBuffer(PyObject* obj, Py_buffer* view, int flags
 
     if (PyObject_CheckBuffer(obj)) {
         if (PyObject_GetBuffer(obj, view, flags) == 0) {
-            if (view->ndim <= 1 && view->len / view->itemsize >= len) {
+            if (view->ndim <= 1 && (len < 0 || view->len / view->itemsize >= len)) {
                 Py_INCREF(obj);
                 return obj;
             } else {

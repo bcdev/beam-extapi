@@ -152,31 +152,54 @@ public abstract class PyCParameterGenerator implements ParameterGenerator {
         public String generateLocalVarDecl(GeneratorContext context) {
             return eval("${t}* ${p};\n" +
                                 "int ${p}Length;\n" +
+                                "PyObject* ${p}Obj;\n" +
+                                "Py_buffer ${p}Buf;\n",
+                        kv("t", getComponentCTypeName(getType())),
+                        kv("p", getName()));
+/* Sequence solution:
+            return eval("${t}* ${p};\n" +
+                                "int ${p}Length;\n" +
                                 "PyObject* ${p}Seq;",
                         kv("t", getComponentCTypeName(getType())),
                         kv("p", getName()));
+*/
         }
 
         @Override
         public String generatePreCallCode(GeneratorContext context) {
+            String typeName = getComponentCTypeName(getType());
+            String format = PyCFunctionGenerator.CARRAY_TYPE_CODES.get(typeName);
+            if (format == null) {
+                throw new IllegalStateException("format == null for typeName == " + typeName);
+            }
+            String bufferMode;
+            if (parameter.getModifier() == ApiParameter.Modifier.IN) {
+                bufferMode = "ReadOnly";
+            } else {
+                bufferMode = "Writable";
+            }
+            String lengthExpr = parameter.getLengthExpr();
+            if (lengthExpr == null) {
+                lengthExpr = "-1";
+            }
+            return eval("" +
+                                "${p}Obj = beam_getPrimitiveArrayBuffer${bm}(${p}Obj, &${p}Buf, \"${tf}\", ${le});\n" +
+                                "if (${p}Obj == NULL) {\n" +
+                                "    return NULL;\n" +
+                                "}\n" +
+                                "${p} = (${t}*) ${p}Buf.buf;\n" +
+                                "${p}Length = ${p}Buf.len / ${p}Buf.itemsize;",
+                        kv("p", getName()),
+                        kv("t", typeName),
+                        kv("le", lengthExpr),
+                        kv("bm", bufferMode),
+                        kv("tf", format));
+
+/* Sequence solution:
             return eval("${p} = beam_new_${t}_array_from_pyseq(${p}Seq, &${p}Length);",
                         kv("p", getName()),
                         kv("t", getComponentCTypeName(getType())));
-            /*
-            String typeName = getType().simpleTypeName();
-            String typeNameUC = TypeHelpers.firstCharToUpperCase(typeName);
-            if (parameter.getModifier() == ApiParameter.Modifier.IN) {
-                return eval("${p}Array = (*jenv)->New${tuc}Array(jenv, ${p}Length);\n" +
-                                    "beam_copy_to_jarray(${p}Array, ${p}Elems, ${p}Length, sizeof (${t}));",
-                            kv("t", typeName),
-                            kv("tuc", typeNameUC),
-                            kv("p", getName()));
-            } else {
-                return eval("${p}Array = (*jenv)->New${tuc}Array(jenv, ${p}Length);",
-                            kv("tuc", typeNameUC),
-                            kv("p", getName()));
-            }
-            */
+*/
         }
 
         @Override
@@ -187,33 +210,13 @@ public abstract class PyCParameterGenerator implements ParameterGenerator {
 
         @Override
         public String generatePostCallCode(GeneratorContext context) {
-            /*
-            if (parameter.getModifier() == ApiParameter.Modifier.IN) {
-                return null;
-            } else if (parameter.getModifier() == ApiParameter.Modifier.OUT) {
-                return eval("beam_copy_from_jarray(${p}Array, ${p}Elems, ${p}Length, sizeof (${t}));" +
-                                    "",
-                            kv("p", getName()),
-                            kv("t", getType().simpleTypeName()));
-            } else {
-                return eval("" +
-                                    "if (${p}Elems != NULL && (*jenv)->IsSameObject(jenv, ${p}Array, ${r}Array)) {\n" +
-                                    "    beam_copy_from_jarray(_resultArray, ${p}Elems, ${p}Length, sizeof (${t}));\n" +
-                                    "    ${r} = ${p}Elems;\n" +
-                                    "} else {\n" +
-                                    "    ${r} = beam_alloc_${t}_array(${r}Array, resultArrayLength);\n" +
-                                    "}",
-                            kv("r", CModuleGenerator.RESULT_VAR_NAME),
-                            kv("p", getName()),
-                            kv("t", getType().simpleTypeName()));
-            }
-            */
-            return null;
+            return eval("PyBuffer_Release(&${p}Buf);",
+                        kv("p", getName()));
         }
 
         @Override
         public String generateParseArgs(GeneratorContext context) {
-            return eval("&${p}Seq", kv("p", getName()));
+            return eval("&${p}Obj", kv("p", getName()));
         }
 
         @Override
