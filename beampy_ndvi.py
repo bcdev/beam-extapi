@@ -5,6 +5,7 @@ import itertools as it
 
 from beampy import String
 from beampy import Product
+from beampy import ProductData
 from beampy import ProductIO
 from beampy import ProductUtils
 
@@ -22,8 +23,8 @@ band_names = product.getBandNames()
 print("Product: %s, %d x %d pixels, %s" % (name, width, height, desc))
 print("Bands:   %s" % (band_names))
 
-r7 = product.getBand('radiance_7')
-r10 = product.getBand('radiance_10')
+b7 = product.getBand('radiance_7')
+b10 = product.getBand('radiance_10')
 ndviProduct = Product.newProduct('NDVI', 'NDVI', width, height)
 ndviBand = ndviProduct.addNewBand('ndvi', ProductData.TYPE_FLOAT32)
 writer = ProductIO.getProductWriter('BEAM-DIMAP')
@@ -33,18 +34,14 @@ ProductUtils.copyGeoCoding(product, ndviProduct)
 ndviProduct.setProductWriter(writer)
 ndviProduct.writeHeader(String.newString('ndvi.dim'))
 
-r7Buf = None
-r10Buf = None
+r7  = numpy.zeros(width, dtype=numpy.float32)
+r10 = numpy.zeros(width, dtype=numpy.float32)
 
 for y in range(height):
-    r7Buf = r7.readPixelsFloat(0, y, width, 1, r7Buf)
-    a7 = numpy.frombuffer(r7Buf, dtype='float32')
-
-    r10Buf = r10.readPixelsFloat(0, y, width, 1, r10Buf)
-    a10 = numpy.frombuffer(r10Buf, dtype='float32')
-
-    ndvi = (a10 - a7) / (a10 + a7)
+    r7  = b7.readPixelsFloat(0, y, width, 1, r7)
+    r10 = b10.readPixelsFloat(0, y, width, 1, r10)
+    print("processing line ", y, " of ", height)
+    ndvi = (r10 - r7) / (r10 + r7)
     ndviBand.writePixelsFloat(0, y, width, 1, ndvi)
-
 
 ndviProduct.closeIO()
