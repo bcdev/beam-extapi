@@ -100,8 +100,8 @@ src\main\c\beam_capi_test.c ^
 rem Building BEAM/Python API
 
 cl ^
+src\main\c\beampy_carray.c ^
 src\main\c\gen\beampy.c ^
-src\main\c\gen\beampy_carray.c ^
 src\main\c\gen\beampy.def ^
 /Fotarget\%OUT%\ ^
 /Fdtarget\%OUT%\ ^

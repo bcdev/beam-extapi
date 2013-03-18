@@ -5,6 +5,12 @@
 extern "C" {
 #endif
 
+#include "Python.h"
+
+/*
+ * CHECK: the only reason for this module is the missing Python/C API for the inbuilt array type.
+ */
+
 
 /**
  * Prototype for a function that releases the CArray's internal memory.
@@ -24,12 +30,15 @@ typedef struct {
     PyObject_HEAD
     /** must be one of "b", "B", "h", "H", "i", "I", "l", "L", "f", "d" (see Python struct module) */
 	char format[2];
-	size_t length;
+	int length;
 	size_t item_size;
     void* items;
     CArrayFree free_fn;
 	size_t num_exports;
 } CArrayObj;
+
+
+extern PyTypeObject CArray_Type;
 
 
 /**
@@ -39,7 +48,7 @@ typedef struct {
  * calling Py_INCREF(obj) in the returned obj yourself
  * @param format The item type format. Must be one of "b", "B", "h", "H", "i", "I", "l", "L", "f", "d" (see Python struct module).
  */
-PyObject* CArray_createFromItems(const char* format, void* items, size_t length, CArrayFree free_fn);
+PyObject* CArray_createFromItems(const char* format, void* items, Py_ssize_t length, CArrayFree free_fn);
 
 /**
  * Factory function for a CArray used if only the number of items is known given.
@@ -48,7 +57,7 @@ PyObject* CArray_createFromItems(const char* format, void* items, size_t length,
  * calling Py_INCREF(obj) in the returned obj yourself
  * @param format The item type format. Must be one of "b", "B", "h", "H", "i", "I", "l", "L", "f", "d" (see Python struct module).
  */
-PyObject* CArray_createFromLength(const char* format, size_t length);
+PyObject* CArray_createFromLength(const char* format, Py_ssize_t length);
 
 /**
  * Gets the size in bytes of an item in a CArray.

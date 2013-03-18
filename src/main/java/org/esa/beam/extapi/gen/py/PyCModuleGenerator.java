@@ -236,6 +236,7 @@ public class PyCModuleGenerator extends ModuleGenerator {
 
     @Override
     protected void writeCHeaderContents(PrintWriter writer) throws IOException {
+        writer.println("#include \"../beampy_carray.h\"");
     }
 
     private void writeCSource() throws IOException {

@@ -22,14 +22,14 @@ public abstract class PyCFunctionGenerator implements FunctionGenerator {
     private final static HashMap<String, String> CARRAY_TYPE_CODES = new HashMap<String, String>();
 
     static {
-        CARRAY_TYPE_CODES.put(Byte.TYPE.getName(), "B");
-        CARRAY_TYPE_CODES.put(Boolean.TYPE.getName(), "B");
-        CARRAY_TYPE_CODES.put(Character.TYPE.getName(), "S");
-        CARRAY_TYPE_CODES.put(Short.TYPE.getName(), "S");
-        CARRAY_TYPE_CODES.put(Integer.TYPE.getName(), "I");
-        CARRAY_TYPE_CODES.put(Long.TYPE.getName(), "L");
-        CARRAY_TYPE_CODES.put(Float.TYPE.getName(), "F");
-        CARRAY_TYPE_CODES.put(Double.TYPE.getName(), "D");
+        CARRAY_TYPE_CODES.put(Byte.TYPE.getName(), "b");
+        CARRAY_TYPE_CODES.put(Boolean.TYPE.getName(), "b");
+        CARRAY_TYPE_CODES.put(Character.TYPE.getName(), "h");
+        CARRAY_TYPE_CODES.put(Short.TYPE.getName(), "h");
+        CARRAY_TYPE_CODES.put(Integer.TYPE.getName(), "i");
+        CARRAY_TYPE_CODES.put(Long.TYPE.getName(), "l");
+        CARRAY_TYPE_CODES.put(Float.TYPE.getName(), "f");
+        CARRAY_TYPE_CODES.put(Double.TYPE.getName(), "d");
     }
 
     protected final ApiMethod apiMethod;
@@ -409,7 +409,7 @@ public abstract class PyCFunctionGenerator implements FunctionGenerator {
                 }
                 // this code uses the CArray buffer type
                 return format("if (${res} != NULL) {\n" +
-                                      "    ${res}Seq = CArray_createInstance(\"${typeCode}\", ${res}, ${res}Length, beam_release_primitive_array);\n" +
+                                      "    ${res}Seq = CArray_createFromItems(\"${typeCode}\", ${res}, ${res}Length, beam_release_primitive_array);\n" +
                                       "    return ${res}Seq;\n" +
                                       "} else {\n" +
                                       "    return Py_BuildValue(\"\");\n" +

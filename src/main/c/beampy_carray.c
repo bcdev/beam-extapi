@@ -15,7 +15,7 @@ void CArray_releaseElements(void* items, int length)
 /*
  * Helper for the __init__() method for CArray_Type
  */
-static void CArray_initInstance(CArrayObj* self, const char* format, void* items, int item_size, int length, CArrayFree free_fn)
+static void CArray_initInstance(CArrayObj* self, const char* format, void* items, size_t item_size, int length, CArrayFree free_fn)
 {
 	self->format[0] = format[0];
 	self->format[1] = 0;
@@ -43,7 +43,7 @@ static PyObject* CArray_new(PyTypeObject* type, PyObject* args, PyObject* kwds)
 /*
  * Helper for the __init__() method for CArray_Type
  */
-static int CArray_getItemSize(const char* format)
+static size_t CArray_getItemSize(const char* format)
 {
     if (strcmp(format, "b") == 0 || strcmp(format, "B") == 0) {
 		return sizeof (char);
@@ -71,7 +71,7 @@ static int CArray_init(CArrayObj* self, PyObject* args, PyObject* kwds)
 	const char* format = NULL;
 	void* items = NULL;
 	int length = 0;
-	int item_size = 0;
+	size_t item_size = 0;
 
 	printf("CArray_init\n");
 
@@ -79,7 +79,7 @@ static int CArray_init(CArrayObj* self, PyObject* args, PyObject* kwds)
         return 1;
 	}
 
-	item_size = CArray_getElemSize(format);
+	item_size = CArray_getItemSize(format);
 	if (item_size <= 0) {
 	    return 2;
 	}
@@ -385,7 +385,7 @@ static PySequenceMethods CArray_as_sequence = {
 /*
  * Implements the new CArray_Type
  */
-extern PyTypeObject CArray_Type = {
+PyTypeObject CArray_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
     "${libName}.CArray",       /* tp_name */
     sizeof(CArrayObj),         /* tp_basicsize */
@@ -432,7 +432,7 @@ extern PyTypeObject CArray_Type = {
  * Note that this method does not increment the reference counter. You are responsible for 
  * calling Py_INCREF(obj) in the returned obj yourself
  */
-PyObject* CArray_createFromItems(const char* format, void* items, size_t length, CArrayFree free_fn) {
+PyObject* CArray_createFromItems(const char* format, void* items, int length, CArrayFree free_fn) {
 	PyTypeObject* type = &CArray_Type;
 	CArrayObj* self;
 	size_t item_size;
@@ -463,13 +463,13 @@ PyObject* CArray_createFromItems(const char* format, void* items, size_t length,
  * Note that this method does not increment the reference counter. You are responsible for
  * calling Py_INCREF(obj) in the returned obj yourself
  */
-PyObject* CArray_createFromLength(const char* format, size_t length) {
+PyObject* CArray_createFromLength(const char* format, int length) {
 	PyTypeObject* type = &CArray_Type;
 	CArrayObj* self;
 	void* items;
 	size_t item_size;
 
-	item_size = CArray_getElemSize(format);
+	item_size = CArray_getItemSize(format);
 	if (item_size <= 0) {
 	    return NULL;
 	}
