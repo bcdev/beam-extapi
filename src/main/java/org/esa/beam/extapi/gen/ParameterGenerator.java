@@ -11,18 +11,4 @@ public interface ParameterGenerator extends CodeGenerator {
     String getName();
 
     Type getType();
-
-    @Override
-    String generateParamListDecl(GeneratorContext context);
-
-    @Override
-    String generateLocalVarDecl(GeneratorContext context);
-
-    @Override
-    String generatePreCallCode(GeneratorContext context);
-
-    String generateCallCode(GeneratorContext context);
-
-    @Override
-    String generatePostCallCode(GeneratorContext context);
 }
