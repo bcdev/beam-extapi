@@ -82,12 +82,12 @@ public abstract class PyCFunctionGenerator implements FunctionGenerator {
         if (isInstanceMethod()) {
             sb.append(generateObjectTypeDecl(PyCModuleGenerator.THIS_VAR_NAME));
         }
-        String lvd = generateLocalVarDecl0(context);
-        if (lvd != null) {
+        String localVarDecl = generateLocalVarDecl0(context);
+        if (localVarDecl != null) {
             if (sb.length() > 0) {
                 sb.append("\n");
             }
-            sb.append(lvd);
+            sb.append(localVarDecl);
         }
         return sb.toString();
     }
