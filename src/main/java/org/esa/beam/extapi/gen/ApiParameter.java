@@ -7,6 +7,7 @@ import com.sun.javadoc.Type;
  * @author Norman Fomferra
  */
 public class ApiParameter {
+
     public static enum Modifier {
         IN,
         OUT,
@@ -15,10 +16,16 @@ public class ApiParameter {
 
     private final Parameter parameter;
     private final Modifier modifier;
+    private String lengthExpr;
 
     public ApiParameter(Parameter parameter, Modifier modifier) {
+        this(parameter, modifier, null);
+    }
+
+    public ApiParameter(Parameter parameter, Modifier modifier, String lengthExpr) {
         this.parameter = parameter;
         this.modifier = modifier;
+        this.lengthExpr = lengthExpr;
     }
 
     public Parameter getParameterDoc() {
@@ -39,5 +46,9 @@ public class ApiParameter {
 
     public Modifier getModifier() {
         return modifier;
+    }
+
+    public String getLengthExpr() {
+        return lengthExpr;
     }
 }

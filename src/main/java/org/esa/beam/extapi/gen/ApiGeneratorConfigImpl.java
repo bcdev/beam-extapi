@@ -107,7 +107,8 @@ public class ApiGeneratorConfigImpl implements ApiGeneratorConfig {
             final String ignoreValue = methodChild.getAttributeValue("ignore");
             boolean ignore = ignoreValue != null && Boolean.parseBoolean(ignoreValue);
             final String renameTo = methodChild.getAttributeValue("renameTo");
-            mConfigs[i] = new MConfig(name, sig, ignore, renameTo, parseModifiers(methodChild));
+            final String lengthExpr = methodChild.getAttributeValue("lengthExpr");
+            mConfigs[i] = new MConfig(name, sig, ignore, renameTo, parseModifiers(methodChild), lengthExpr);
         }
         return mConfigs;
     }
@@ -148,6 +149,15 @@ public class ApiGeneratorConfigImpl implements ApiGeneratorConfig {
     }
 
     @Override
+    public String getFunctionName(String className, String methodName, String methodSignature) {
+        final MConfig mConfig = mConfigs.get(className).get(methodName + methodSignature);
+        if (mConfig == null) {
+            return methodName;
+        }
+        return mConfig.renameTo != null ? mConfig.renameTo : mConfig.name;
+    }
+
+    @Override
     public ApiParameter.Modifier[] getParameterModifiers(String className, String methodName, String methodSignature) {
         final MConfig mConfig = mConfigs.get(className).get(methodName + methodSignature);
         if (mConfig == null) {
@@ -157,12 +167,12 @@ public class ApiGeneratorConfigImpl implements ApiGeneratorConfig {
     }
 
     @Override
-    public String getFunctionName(String className, String methodName, String methodSignature) {
+    public String getLengthExpr(String className, String methodName, String methodSignature) {
         final MConfig mConfig = mConfigs.get(className).get(methodName + methodSignature);
         if (mConfig == null) {
-            return methodName;
+            return null;
         }
-        return mConfig.renameTo != null ? mConfig.renameTo : mConfig.name;
+        return mConfig.lengthExpr;
     }
 
     @Override
@@ -198,13 +208,19 @@ public class ApiGeneratorConfigImpl implements ApiGeneratorConfig {
         private final boolean ignore;
         private final String renameTo;
         private final ApiParameter.Modifier[] mods;
+        /**
+         * Expression that computes an expected length of an array parameter which serves as return value.
+         * :-)
+         */
+        private final String lengthExpr;
 
-        public MConfig(String name, String sig, boolean ignore, String renameTo, ApiParameter.Modifier[] mods) {
+        public MConfig(String name, String sig, boolean ignore, String renameTo, ApiParameter.Modifier[] mods, String lengthExpr) {
             this.name = name;
             this.sig = sig;
             this.ignore = ignore;
             this.renameTo = renameTo;
             this.mods = mods;
+            this.lengthExpr = lengthExpr;
         }
 
         @Override

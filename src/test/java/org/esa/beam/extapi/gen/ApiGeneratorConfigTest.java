@@ -34,6 +34,9 @@ public class ApiGeneratorConfigTest {
         assertEquals(ApiParameter.Modifier.IN, modifiers2[2]);
         assertEquals(ApiParameter.Modifier.IN, modifiers2[3]);
         assertEquals(ApiParameter.Modifier.RETURN, modifiers2[4]);
+
+        String expr = config.getLengthExpr("org.esa.beam.framework.datamodel.Band", "readPixels", "(IIII[F)[F");
+        assertEquals("w*h", expr);
     }
 
     @Test

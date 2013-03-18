@@ -68,18 +68,21 @@ public final class ApiInfo {
         ApiParameter.Modifier[] parameterModifiers = getConfig().getParameterModifiers(apiMethod.getEnclosingClass().getJavaName(),
                                                                                        apiMethod.getJavaName(),
                                                                                        apiMethod.getJavaSignature());
+        String lengthExpr = getConfig().getLengthExpr(apiMethod.getEnclosingClass().getJavaName(),
+                                                      apiMethod.getJavaName(),
+                                                      apiMethod.getJavaSignature());
 
         if (parameterModifiers != null) {
             if (parameters.length != parameterModifiers.length) {
                 throw new IllegalStateException("parameters.length != parameterModifiers.length");
             }
             for (int i = 0; i < parameters.length; i++) {
-                apiParameters[i] = new ApiParameter(parameters[i], parameterModifiers[i]);
+                apiParameters[i] = new ApiParameter(parameters[i], parameterModifiers[i], lengthExpr);
             }
             return apiParameters;
         } else {
             for (int i = 0; i < parameters.length; i++) {
-                apiParameters[i] = new ApiParameter(parameters[i], ApiParameter.Modifier.IN);
+                apiParameters[i] = new ApiParameter(parameters[i], ApiParameter.Modifier.IN, lengthExpr);
             }
             return apiParameters;
         }

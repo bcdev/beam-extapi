@@ -33,6 +33,11 @@ public class ApiGeneratorConfigMock implements ApiGeneratorConfig {
     }
 
     @Override
+    public String getLengthExpr(String className, String methodName, String methodSignature) {
+        return null;
+    }
+
+    @Override
     public String[] getSourcePaths() {
         return new String[0];
     }
