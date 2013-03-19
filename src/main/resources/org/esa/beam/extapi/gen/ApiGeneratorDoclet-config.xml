@@ -124,6 +124,89 @@
         <method name="writeRasterDataFully" sig="(Lcom/bc/ceres/core/ProgressMonitor;)V" ignore="true"/>
         <method name="getExtension" sig="(Ljava/lang/Class;)LE;" ignore="true"/>
     </class>
+    <class name="org.esa.beam.framework.datamodel.TiePointGrid">
+        <method name="createCompatibleRasterData" sig="()Lorg/esa/beam/framework/datamodel/ProductData;"
+                renameTo="createCompatibleRasterData"/>
+        <method name="createCompatibleRasterData" sig="(II)Lorg/esa/beam/framework/datamodel/ProductData;"
+                renameTo="createCompatibleRasterDataForRect"/>
+        <method name="createDefaultImageInfo"
+                sig="([DLcom/bc/ceres/core/ProgressMonitor;)Lorg/esa/beam/framework/datamodel/ImageInfo;"
+                ignore="true"/>
+        <method name="createDefaultImageInfo"
+                sig="([DLorg/esa/beam/util/math/Histogram;)Lorg/esa/beam/framework/datamodel/ImageInfo;"
+                renameTo="createDefaultImageInfo"/>
+        <method name="fireProductNodeChanged" sig="(Ljava/lang/String;)V" ignore="true"/>
+        <method name="fireProductNodeChanged" sig="(Ljava/lang/String;Ljava/lang/Object;Ljava/lang/Object;)V"
+                ignore="true"/>
+        <method name="getDiscontinuity" sig="()I" renameTo="getDiscontinuity"/>
+        <method name="getDiscontinuity" sig="([F)I" renameTo="getDiscontinuityForTiePoints"/>
+        <method name="getImageInfo" sig="()Lorg/esa/beam/framework/datamodel/ImageInfo;" renameTo="getImageInfo"/>
+        <method name="getImageInfo"
+                sig="(Lcom/bc/ceres/core/ProgressMonitor;)Lorg/esa/beam/framework/datamodel/ImageInfo;"
+                ihnore="true"/>
+        <method name="getImageInfo"
+                sig="([DLcom/bc/ceres/core/ProgressMonitor;)Lorg/esa/beam/framework/datamodel/ImageInfo;"
+                ihnore="true"/>
+        <method name="getPixelFloat" sig="(FF)F" renameTo="getPixelFloat"/>
+        <method name="getPixelFloat" sig="(II)F" ignore="true"/>
+        <method name="getPixels" sig="(IIII[D)[D" ignore="true"/>
+        <method name="getPixels" sig="(IIII[DLcom/bc/ceres/core/ProgressMonitor;)[D" ignore="true"/>
+        <method name="getPixels" sig="(IIII[F)[F" ignore="true"/>
+        <method name="getPixels" sig="(IIII[FLcom/bc/ceres/core/ProgressMonitor;)[F" ignore="true"/>
+        <method name="getPixels" sig="(IIII[I)[I" ignore="true"/>
+        <method name="getPixels" sig="(IIII[ILcom/bc/ceres/core/ProgressMonitor;)[I" ignore="true"/>
+        <method name="getRawStorageSize" sig="()J" ignore="true"/>
+        <method name="getRawStorageSize" sig="(Lorg/esa/beam/framework/dataio/ProductSubsetDef;)J"
+                ignore="true"/>
+        <method name="getStx" sig="()Lorg/esa/beam/framework/datamodel/Stx;" renameTo="getStx"/>
+        <method name="getStx" sig="(ZLcom/bc/ceres/core/ProgressMonitor;)Lorg/esa/beam/framework/datamodel/Stx;"
+                ignore="true"/>
+        <method name="isPixelValid" sig="(I)Z" ignore="true"/>
+        <method name="isPixelValid" sig="(II)Z" renameTo="isPixelValid"/>
+        <method name="isPixelValid" sig="(IILjavax/media/jai/ROI;)Z" ignore="true"/>
+        <method name="loadRasterData" sig="()V" ignore="true"/>
+        <method name="loadRasterData" sig="(Lcom/bc/ceres/core/ProgressMonitor;)V" ignore="true"/>
+        <method name="&lt;init&gt;" sig="(Ljava/lang/String;IIFFFF[F)V" renameTo="newTiePointGrid"/>
+        <method name="&lt;init&gt;" sig="(Ljava/lang/String;IIFFFF[FI)V" ignore="true"/>
+        <method name="&lt;init&gt;" sig="(Ljava/lang/String;IIFFFF[FZ)V" ignore="true"/>
+        <method name="quantizeRasterData" sig="(DDDLcom/bc/ceres/core/ProgressMonitor;)[B"
+                ignore="true"/>
+        <method name="quantizeRasterData" sig="(DDD[BIILcom/bc/ceres/core/ProgressMonitor;)V"
+                ignore="true"/>
+        <method name="readPixels" sig="(IIII[I)[I" renameTo="readPixelsInt" mods="iiiir" lengthExpr="w*h"/>
+        <method name="readPixels" sig="(IIII[F)[F" renameTo="readPixelsFloat" mods="iiiir" lengthExpr="w*h"/>
+        <method name="readPixels" sig="(IIII[D)[D" renameTo="readPixelsDouble" mods="iiiir" lengthExpr="w*h"/>
+        <method name="readPixels" sig="(IIII[ILcom/bc/ceres/core/ProgressMonitor;)[I" ignore="true"/>
+        <method name="readPixels" sig="(IIII[FLcom/bc/ceres/core/ProgressMonitor;)[F" ignore="true"/>
+        <method name="readPixels" sig="(IIII[DLcom/bc/ceres/core/ProgressMonitor;)[D" ignore="true"/>
+        <method name="readRasterData" sig="(IIIILorg/esa/beam/framework/datamodel/ProductData;)V"
+                ignore="true"/>
+        <method name="readRasterData"
+                sig="(IIIILorg/esa/beam/framework/datamodel/ProductData;Lcom/bc/ceres/core/ProgressMonitor;)V"
+                ignore="true"/>
+        <method name="readRasterDataFully" sig="()V" ignore="true"/>
+        <method name="readRasterDataFully" sig="(Lcom/bc/ceres/core/ProgressMonitor;)V"
+                ignore="true"/>
+        <method name="setPixels" sig="(IIII[D)V" ignore="true"/>
+        <method name="setPixels" sig="(IIII[F)V" ignore="true"/>
+        <method name="setPixels" sig="(IIII[I)V" ignore="true"/>
+        <method name="setSourceImage" sig="(Lcom/bc/ceres/glevel/MultiLevelImage;)V" ignore="true"/>
+        <method name="setSourceImage" sig="(Ljava/awt/image/RenderedImage;)V" ignore="true"/>
+        <method name="writePixels" sig="(IIII[I)V" renameTo="writePixelsInt"/>
+        <method name="writePixels" sig="(IIII[F)V" renameTo="writePixelsFloat"/>
+        <method name="writePixels" sig="(IIII[D)V" renameTo="writePixelsDouble"/>
+        <method name="writePixels" sig="(IIII[ILcom/bc/ceres/core/ProgressMonitor;)V" ignore="true"/>
+        <method name="writePixels" sig="(IIII[FLcom/bc/ceres/core/ProgressMonitor;)V" ignore="true"/>
+        <method name="writePixels" sig="(IIII[DLcom/bc/ceres/core/ProgressMonitor;)V" ignore="true"/>
+        <method name="writeRasterData" sig="(IIIILorg/esa/beam/framework/datamodel/ProductData;)V"
+                ignore="true"/>
+        <method name="writeRasterData"
+                sig="(IIIILorg/esa/beam/framework/datamodel/ProductData;Lcom/bc/ceres/core/ProgressMonitor;)V"
+                ignore="true"/>
+        <method name="writeRasterDataFully" sig="()V" ignore="true"/>
+        <method name="writeRasterDataFully" sig="(Lcom/bc/ceres/core/ProgressMonitor;)V"
+                ignore="true"/>
+    </class>
     <class name="org.esa.beam.framework.datamodel.ColorPaletteDef">
         <method name="&lt;init&gt;" sig="(DD)V" renameTo="newColorPaletteDefFromRange"/>
         <method name="&lt;init&gt;" sig="([Lorg/esa/beam/framework/datamodel/ColorPaletteDef/Point;I)V"
