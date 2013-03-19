@@ -20,6 +20,13 @@
           o  rename a method (renameTo="newAngularDirection")
           o  to expose all methods which have overloaded names
     -->
+
+    <!--
+       ##########################################################################
+       #                            BEAM Product I/O                            #
+       ##########################################################################
+    -->
+
     <class name="org.esa.beam.framework.dataio.ProductIO">
 
         <method name="readProduct"
@@ -47,6 +54,14 @@
     </class>
     <class name="org.esa.beam.framework.dataio.ProductReader"/>
     <class name="org.esa.beam.framework.dataio.ProductWriter"/>
+
+    <!--
+       ##########################################################################
+       #                        BEAM Product Data Model                         #
+       ##########################################################################
+    -->
+
+
     <class name="org.esa.beam.framework.datamodel.AngularDirection">
         <method name="&lt;init&gt;" sig="()V" ignore="true"/>
         <method name="&lt;init&gt;" sig="(DD)V" renameTo="newAngularDirection"/>
@@ -98,11 +113,11 @@
         <method name="readPixels" sig="(IIII[FLcom/bc/ceres/core/ProgressMonitor;)[F" ignore="true"/>
         <method name="readPixels" sig="(IIII[DLcom/bc/ceres/core/ProgressMonitor;)[D" ignore="true"/>
         <method name="readRasterData" sig="(IIIILorg/esa/beam/framework/datamodel/ProductData;)V"
-                ignore="false"/>
+                ignore="true"/>
         <method name="readRasterData"
                 sig="(IIIILorg/esa/beam/framework/datamodel/ProductData;Lcom/bc/ceres/core/ProgressMonitor;)V"
                 ignore="true"/>
-        <method name="readRasterDataFully" sig="()V" ignore="false"/>
+        <method name="readRasterDataFully" sig="()V" ignore="true"/>
         <method name="readRasterDataFully" sig="(Lcom/bc/ceres/core/ProgressMonitor;)V" ignore="true"/>
         <method name="setPixels" sig="(IIII[I)V" renameTo="setPixelsInt"/>
         <method name="setPixels" sig="(IIII[F)V" renameTo="setPixelsFloat"/>
@@ -147,7 +162,7 @@
         <method name="getImageInfo"
                 sig="([DLcom/bc/ceres/core/ProgressMonitor;)Lorg/esa/beam/framework/datamodel/ImageInfo;"
                 ihnore="true"/>
-        <method name="getPixelFloat" sig="(FF)F" renameTo="getPixelFloat"/>
+        <method name="getPixelFloat" sig="(FF)F" ignore="true"/>
         <method name="getPixelFloat" sig="(II)F" ignore="true"/>
         <method name="getPixels" sig="(IIII[D)[D" ignore="true"/>
         <method name="getPixels" sig="(IIII[DLcom/bc/ceres/core/ProgressMonitor;)[D" ignore="true"/>
@@ -383,6 +398,44 @@
     </class>
     <class name="org.esa.beam.util.ProductUtils"/>
 
-    <!--<class name="java.awt.Rectangle" ignore="true" renameTo="Rect" />-->
+
+
+    <!--
+       ##########################################################################
+       #                              BEAM GPF                                  #
+       ##########################################################################
+    -->
+
+    <class name="org.esa.beam.framework.gpf.GPF">
+        <method name="createProduct" sig="(Ljava/lang/String;Ljava/util/Map;)Lorg/esa/beam/framework/datamodel/Product;"
+                renameTo="createProductFromNoSourceProducts"/>
+        <method name="createProduct" sig="(Ljava/lang/String;Ljava/util/Map;Ljava/util/Map;)Lorg/esa/beam/framework/datamodel/Product;"
+                renameTo="createProductFromNamedSourceProducts"/>
+        <method name="createProduct" sig="(Ljava/lang/String;Ljava/util/Map;Lorg/esa/beam/framework/datamodel/Product;)Lorg/esa/beam/framework/datamodel/Product;"
+                renameTo="createProductFromSourceProduct"/>
+        <method name="createProduct" sig="(Ljava/lang/String;Ljava/util/Map;[Lorg/esa/beam/framework/datamodel/Product;)Lorg/esa/beam/framework/datamodel/Product;"
+                renameTo="createProductFromSourceProducts"/>
+
+        <method name="createProduct" sig="(Ljava/lang/String;Ljava/util/Map;Ljava/awt/RenderingHints;)Lorg/esa/beam/framework/datamodel/Product;"
+                ignore="true"/>
+        <method name="createProduct" sig="(Ljava/lang/String;Ljava/util/Map;Ljava/util/Map;Ljava/awt/RenderingHints;)Lorg/esa/beam/framework/datamodel/Product;"
+                ignore="true"/>
+        <method name="createProduct" sig="(Ljava/lang/String;Ljava/util/Map;Lorg/esa/beam/framework/datamodel/Product;Ljava/awt/RenderingHints;)Lorg/esa/beam/framework/datamodel/Product;"
+                ignore="true"/>
+        <method name="createProduct" sig="(Ljava/lang/String;Ljava/util/Map;[Lorg/esa/beam/framework/datamodel/Product;Ljava/awt/RenderingHints;)Lorg/esa/beam/framework/datamodel/Product;"
+                ignore="true"/>
+    </class>
+
+    <!--
+       ##########################################################################
+       #                              Java Core                                 #
+       ##########################################################################
+    -->
+
+    <!--
+    <class name="java.util.List" renameTo="JList" />
+    <class name="java.util.Map" renameTo="JMap" />
+    <class name="java.awt.Rectangle" renameTo="JRectangle" />
+    -->
 
 </config>
