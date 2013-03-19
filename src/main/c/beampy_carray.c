@@ -7,32 +7,32 @@
  */
 void CArray_releaseElements(void* items, int length)
 {
-	if (items != NULL) {
-	    free(items);
-	}
+    if (items != NULL) {
+        free(items);
+    }
 }
 
 /*
  * Helper for the __init__() method for CArray_Type
  */
-static void CArray_initInstance(CArrayObj* self, const char* format, void* items, size_t item_size, int length, CArrayFree free_fn)
+void CArray_initInstance(CArrayObj* self, const char* format, void* items, size_t item_size, int length, CArrayFree free_fn)
 {
-	self->format[0] = format[0];
-	self->format[1] = 0;
-	self->items = items;
-	self->item_size = item_size;
-	self->length = length;
-	self->free_fn = free_fn;
-	self->num_exports = 0;
+    self->format[0] = format[0];
+    self->format[1] = 0;
+    self->items = items;
+    self->item_size = item_size;
+    self->length = length;
+    self->free_fn = free_fn;
+    self->num_exports = 0;
 }
 
 /*
  * Implements the CArray() constructor for CArray_Type
  */
-static PyObject* CArray_new(PyTypeObject* type, PyObject* args, PyObject* kwds)
+PyObject* CArray_new(PyTypeObject* type, PyObject* args, PyObject* kwds)
 {
     CArrayObj* self;
-	printf("CArray_new\n");
+    printf("CArray_new\n");
     self = (CArrayObj*) type->tp_alloc(type, 0);
     if (self != NULL) {
         CArray_initInstance(self, "\0", 0, 0, 0, 0);
@@ -43,20 +43,20 @@ static PyObject* CArray_new(PyTypeObject* type, PyObject* args, PyObject* kwds)
 /*
  * Helper for the __init__() method for CArray_Type
  */
-static size_t CArray_getItemSize(const char* format)
+size_t CArray_getItemSize(const char* format)
 {
     if (strcmp(format, "b") == 0 || strcmp(format, "B") == 0) {
-		return sizeof (char);
+        return sizeof (char);
     } else if (strcmp(format, "h") == 0 || strcmp(format, "H") == 0) {
-		return sizeof (short);
+        return sizeof (short);
     } else if (strcmp(format, "i") == 0 || strcmp(format, "I") == 0) {
-		return sizeof (int);
+        return sizeof (int);
     } else if (strcmp(format, "l") == 0 || strcmp(format, "L") == 0) {
-		return sizeof (long);
+        return sizeof (long);
     } else if (strcmp(format, "f") == 0) {
-		return sizeof (float);
+        return sizeof (float);
     } else if (strcmp(format, "d") == 0) {
-		return sizeof (double);
+        return sizeof (double);
     } else {
         PyErr_SetString(PyExc_ValueError, "format must be one of (b, B, h, H, i, I, l, L, f, d)");
         return 0;
@@ -66,28 +66,28 @@ static size_t CArray_getItemSize(const char* format)
 /*
  * Implements the __init__() method for CArray_Type
  */
-static int CArray_init(CArrayObj* self, PyObject* args, PyObject* kwds)
+int CArray_init(CArrayObj* self, PyObject* args, PyObject* kwds)
 {
-	const char* format = NULL;
-	void* items = NULL;
-	int length = 0;
-	size_t item_size = 0;
+    const char* format = NULL;
+    void* items = NULL;
+    int length = 0;
+    size_t item_size = 0;
 
-	printf("CArray_init\n");
+    printf("CArray_init\n");
 
     if (!PyArg_ParseTuple(args, "si", &format, &length)) {
         return 1;
-	}
+    }
 
-	item_size = CArray_getItemSize(format);
-	if (item_size <= 0) {
-	    return 2;
-	}
+    item_size = CArray_getItemSize(format);
+    if (item_size <= 0) {
+        return 2;
+    }
 
-	if (length <= 0) {
+    if (length <= 0) {
         PyErr_SetString(PyExc_ValueError, "length must be > 0");
         return 3;
-	}
+    }
 
     items = calloc(item_size, length);
     if (items == NULL) {
@@ -102,13 +102,13 @@ static int CArray_init(CArrayObj* self, PyObject* args, PyObject* kwds)
 /*
  * Implements the dealloc() method for CArray_Type
  */
-static void CArray_dealloc(CArrayObj* self)
+void CArray_dealloc(CArrayObj* self)
 {
-	printf("CArray_dealloc\n");
-	if (self->items != NULL && self->free_fn != NULL) {
-		self->free_fn(self->items, self->length);
-		self->items = NULL;
-	}
+    printf("CArray_dealloc\n");
+    if (self->items != NULL && self->free_fn != NULL) {
+        self->free_fn(self->items, self->length);
+        self->items = NULL;
+    }
     Py_TYPE(self)->tp_free((PyObject*) self);
 }
 
@@ -116,44 +116,44 @@ static void CArray_dealloc(CArrayObj* self)
 /*
  * Implements the repr() method for CArray_Type
  */
-static PyObject* CArray_repr(CArrayObj* self)
+PyObject* CArray_repr(CArrayObj* self)
 {
-	return PyUnicode_FromFormat("CArray('%s', %d)", self->format, self->length);
+    return PyUnicode_FromFormat("CArray('%s', %d)", self->format, self->length);
 }
 
 /*
  * A test instance method of CArray_Type
  */
-static PyObject* CArray_noargs(CArrayObj* self)
+PyObject* CArray_noargs(CArrayObj* self)
 {
-	printf("CArray_noargs self=%p\n", self);
+    printf("CArray_noargs self=%p\n", self);
     return Py_BuildValue("");
 }
 
 /*
  * A test instance method of CArray_Type
  */
-static PyObject* CArray_varargs(CArrayObj* self, PyObject* args)
+PyObject* CArray_varargs(CArrayObj* self, PyObject* args)
 {
-	printf("CArray_varargs self=%p, args=%p\n", self, args);
+    printf("CArray_varargs self=%p, args=%p\n", self, args);
     return Py_BuildValue("");
 }
 
 /*
  * A test static method of CArray_Type
  */
-static PyObject* CArray_varargsstatic(CArrayObj* self, PyObject* args)
+PyObject* CArray_varargsstatic(CArrayObj* self, PyObject* args)
 {
-	printf("CArray_varargsstatic self=%p, args=%p\n", self, args);
+    printf("CArray_varargsstatic self=%p, args=%p\n", self, args);
     return Py_BuildValue("");
 }
 
 /*
  * A test class method of CArray_Type
  */
-static PyObject* CArray_varargsclass(PyTypeObject* cls, PyObject* args)
+PyObject* CArray_varargsclass(PyTypeObject* cls, PyObject* args)
 {
-	printf("CArray_varargsclass cls=%p, args=%p\n", cls, args);
+    printf("CArray_varargsclass cls=%p, args=%p\n", cls, args);
     return Py_BuildValue("");
 }
 
@@ -177,83 +177,83 @@ static PyMethodDef CArray_methods[] = {
  */
 int CArray_getbufferproc(CArrayObj* self, Py_buffer* view, int flags)
 {
-	int ret = 0;
+    int ret = 0;
 
-	/*
+    /*
     printf("CArray_getbufferproc\n");
-	PRINT_FLAG(PyBUF_ANY_CONTIGUOUS);
-	PRINT_FLAG(PyBUF_CONTIG);
-	PRINT_FLAG(PyBUF_CONTIG_RO);
-	PRINT_FLAG(PyBUF_C_CONTIGUOUS);
-	PRINT_FLAG(PyBUF_FORMAT);
-	PRINT_FLAG(PyBUF_FULL);
-	PRINT_FLAG(PyBUF_FULL_RO);
-	PRINT_FLAG(PyBUF_F_CONTIGUOUS);
-	PRINT_FLAG(PyBUF_INDIRECT);
-	PRINT_FLAG(PyBUF_ND);
-	PRINT_FLAG(PyBUF_READ);
-	PRINT_FLAG(PyBUF_RECORDS);
-	PRINT_FLAG(PyBUF_RECORDS_RO);
-	PRINT_FLAG(PyBUF_SIMPLE);
-	PRINT_FLAG(PyBUF_STRIDED);
-	PRINT_FLAG(PyBUF_STRIDED_RO);
-	PRINT_FLAG(PyBUF_STRIDES);
-	PRINT_FLAG(PyBUF_WRITE);
-	PRINT_FLAG(PyBUF_WRITEABLE);
-	*/
+    PRINT_FLAG(PyBUF_ANY_CONTIGUOUS);
+    PRINT_FLAG(PyBUF_CONTIG);
+    PRINT_FLAG(PyBUF_CONTIG_RO);
+    PRINT_FLAG(PyBUF_C_CONTIGUOUS);
+    PRINT_FLAG(PyBUF_FORMAT);
+    PRINT_FLAG(PyBUF_FULL);
+    PRINT_FLAG(PyBUF_FULL_RO);
+    PRINT_FLAG(PyBUF_F_CONTIGUOUS);
+    PRINT_FLAG(PyBUF_INDIRECT);
+    PRINT_FLAG(PyBUF_ND);
+    PRINT_FLAG(PyBUF_READ);
+    PRINT_FLAG(PyBUF_RECORDS);
+    PRINT_FLAG(PyBUF_RECORDS_RO);
+    PRINT_FLAG(PyBUF_SIMPLE);
+    PRINT_FLAG(PyBUF_STRIDED);
+    PRINT_FLAG(PyBUF_STRIDED_RO);
+    PRINT_FLAG(PyBUF_STRIDES);
+    PRINT_FLAG(PyBUF_WRITE);
+    PRINT_FLAG(PyBUF_WRITEABLE);
+    */
 
-	// According to Python documentation,
-	// buffer allocation shall be done in the 5 following steps;
+    // According to Python documentation,
+    // buffer allocation shall be done in the 5 following steps;
 
-	// Step 1/5
-	if (self->items == NULL) {
-		view->obj = NULL;
-		PyErr_SetString(PyExc_BufferError, "invalid CArray, items == NULL");
-		return -1;
-	}
+    // Step 1/5
+    if (self->items == NULL) {
+        view->obj = NULL;
+        PyErr_SetString(PyExc_BufferError, "invalid CArray, items == NULL");
+        return -1;
+    }
 
-	// Step 2/5
-	view->buf = self->items;
-	view->len = self->length * self->item_size;
-	view->itemsize = self->item_size;
-	view->readonly = 0;
-	view->ndim = 1;
-	view->shape = (Py_ssize_t*) malloc(view->ndim* sizeof (Py_ssize_t));
-	view->shape[0] = self->length;
-	view->strides = (Py_ssize_t*) malloc(view->ndim* sizeof (Py_ssize_t));
-	view->strides[0] = self->item_size;
-	view->suboffsets = NULL;
-	if ((flags & PyBUF_FORMAT) != 0) {
-		view->format = self->format;
-	} else {
-		view->format = NULL;
-	}
-	/*
-	PRINT_MEMB("%d", view->len);
-	PRINT_MEMB("%d", view->ndim);
-	PRINT_MEMB("%s", view->format);
-	PRINT_MEMB("%d", view->itemsize);
-	PRINT_MEMB("%d", view->readonly);
-	PRINT_MEMB("%p", view->shape);
-	if (view->shape != NULL)
-		PRINT_MEMB("%d", view->shape[0]);
-	PRINT_MEMB("%p", view->strides);
-	if (view->strides != NULL)
-		PRINT_MEMB("%d", view->strides[0]);
-	PRINT_MEMB("%p", view->suboffsets);
-	if (view->suboffsets != NULL)
-		PRINT_MEMB("%d", view->suboffsets[0]);
-	*/
+    // Step 2/5
+    view->buf = self->items;
+    view->len = self->length * self->item_size;
+    view->itemsize = self->item_size;
+    view->readonly = 0;
+    view->ndim = 1;
+    view->shape = (Py_ssize_t*) malloc(view->ndim* sizeof (Py_ssize_t));
+    view->shape[0] = self->length;
+    view->strides = (Py_ssize_t*) malloc(view->ndim* sizeof (Py_ssize_t));
+    view->strides[0] = self->item_size;
+    view->suboffsets = NULL;
+    if ((flags & PyBUF_FORMAT) != 0) {
+        view->format = self->format;
+    } else {
+        view->format = NULL;
+    }
+    /*
+    PRINT_MEMB("%d", view->len);
+    PRINT_MEMB("%d", view->ndim);
+    PRINT_MEMB("%s", view->format);
+    PRINT_MEMB("%d", view->itemsize);
+    PRINT_MEMB("%d", view->readonly);
+    PRINT_MEMB("%p", view->shape);
+    if (view->shape != NULL)
+        PRINT_MEMB("%d", view->shape[0]);
+    PRINT_MEMB("%p", view->strides);
+    if (view->strides != NULL)
+        PRINT_MEMB("%d", view->strides[0]);
+    PRINT_MEMB("%p", view->suboffsets);
+    if (view->suboffsets != NULL)
+        PRINT_MEMB("%d", view->suboffsets[0]);
+    */
 
-	// Step 3/5
-	self->num_exports++;
+    // Step 3/5
+    self->num_exports++;
 
-	// Step 4/5
-	view->obj = (PyObject*) self;
-	Py_INCREF(view->obj);
+    // Step 4/5
+    view->obj = (PyObject*) self;
+    Py_INCREF(view->obj);
 
-	// Step 5/5
-	return ret;
+    // Step 5/5
+    return ret;
 }
 
 /*
@@ -261,30 +261,30 @@ int CArray_getbufferproc(CArrayObj* self, Py_buffer* view, int flags)
  */
 void CArray_releasebufferproc(CArrayObj* self, Py_buffer* view)
 {
-	printf("CArray_releasebufferproc\n");
-	// Step 1
-	self->num_exports--;
-	// Step 2
-	if (self->num_exports == 0) {
-		view->buf = NULL;
-		if (view->strides != NULL) {
-			free(view->strides);
-			view->strides = NULL;
-		}
-		if (view->strides != NULL) {
-			free(view->strides);
-			view->shape = NULL;
-		}
-		// todo: release resources...
-	}
+    printf("CArray_releasebufferproc\n");
+    // Step 1
+    self->num_exports--;
+    // Step 2
+    if (self->num_exports == 0) {
+        view->buf = NULL;
+        if (view->strides != NULL) {
+            free(view->strides);
+            view->strides = NULL;
+        }
+        if (view->strides != NULL) {
+            free(view->strides);
+            view->shape = NULL;
+        }
+        // todo: release resources...
+    }
 }
 
 /*
  * Implements <buffer> interface for CArray_Type
  */
 static PyBufferProcs CArray_as_buffer = {
-	(getbufferproc) CArray_getbufferproc,
-	(releasebufferproc) CArray_releasebufferproc
+    (getbufferproc) CArray_getbufferproc,
+    (releasebufferproc) CArray_releasebufferproc
 };
 
 /*
@@ -292,7 +292,7 @@ static PyBufferProcs CArray_as_buffer = {
  */
 Py_ssize_t CArray_sq_length(CArrayObj* self)
 {
-	return self->length;
+    return self->length;
 }
 
 /*
@@ -300,31 +300,31 @@ Py_ssize_t CArray_sq_length(CArrayObj* self)
  */
 PyObject* CArray_sq_item(CArrayObj* self, Py_ssize_t index)
 {
-	if (index < 0) {
-		index += self->length;
-	}
-	if (index < 0 || index >= self->length) {
-	    PyErr_SetString(PyExc_IndexError, "CArray index out of bounds");
-		return NULL;
-	}
-	switch (*self->format) {
-	case 'b':
-	case 'B':
-		return  PyLong_FromLong(((char*) self->items)[index]);
-	case 'h':
-	case 'H':
-		return  PyLong_FromLong(((short*) self->items)[index]);
-	case 'i':
-	case 'I':
-		return  PyLong_FromLong(((int*) self->items)[index]);
-	case 'f':
-		return  PyFloat_FromDouble(((float*) self->items)[index]);
-	case 'd':
-		return  PyFloat_FromDouble(((double*) self->items)[index]);
-	default:
+    if (index < 0) {
+        index += self->length;
+    }
+    if (index < 0 || index >= self->length) {
+        PyErr_SetString(PyExc_IndexError, "CArray index out of bounds");
+        return NULL;
+    }
+    switch (*self->format) {
+    case 'b':
+    case 'B':
+        return  PyLong_FromLong(((char*) self->items)[index]);
+    case 'h':
+    case 'H':
+        return  PyLong_FromLong(((short*) self->items)[index]);
+    case 'i':
+    case 'I':
+        return  PyLong_FromLong(((int*) self->items)[index]);
+    case 'f':
+        return  PyFloat_FromDouble(((float*) self->items)[index]);
+    case 'd':
+        return  PyFloat_FromDouble(((double*) self->items)[index]);
+    default:
         PyErr_SetString(PyExc_ValueError, "format must be one of (b, B, h, H, i, I, l, L, f, d)");
-		return NULL;
-	}
+        return NULL;
+    }
 }
 
 /*
@@ -332,43 +332,43 @@ PyObject* CArray_sq_item(CArrayObj* self, Py_ssize_t index)
  */
 int CArray_sq_ass_item(CArrayObj* self, Py_ssize_t index, PyObject* other)
 {
-	if (index < 0) {
-		index += self->length;
-	}
-	if (index < 0 || index >= self->length) {
-	    PyErr_SetString(PyExc_IndexError, "CArray index out of bounds");
-		return -1;
-	}
-	switch (*self->format) {
-	case 'b':
-	case 'B':
-		((char*) self->items)[index] = (char) PyLong_AsLong(other);
-		return 0;
-	case 'h':
-	case 'H':
-		((short*) self->items)[index] = (short) PyLong_AsLong(other);
-		return 0;
-	case 'i':
-	case 'I':
-		((int*) self->items)[index] = (int) PyLong_AsLong(other);
-		return 0;
-	case 'f':
-		((float*) self->items)[index] = (float) PyFloat_AsDouble(other);
-		return 0;
-	case 'd':
-		((double*) self->items)[index] = PyFloat_AsDouble(other);
-		return 0;
-	default:
+    if (index < 0) {
+        index += self->length;
+    }
+    if (index < 0 || index >= self->length) {
+        PyErr_SetString(PyExc_IndexError, "CArray index out of bounds");
+        return -1;
+    }
+    switch (*self->format) {
+    case 'b':
+    case 'B':
+        ((char*) self->items)[index] = (char) PyLong_AsLong(other);
+        return 0;
+    case 'h':
+    case 'H':
+        ((short*) self->items)[index] = (short) PyLong_AsLong(other);
+        return 0;
+    case 'i':
+    case 'I':
+        ((int*) self->items)[index] = (int) PyLong_AsLong(other);
+        return 0;
+    case 'f':
+        ((float*) self->items)[index] = (float) PyFloat_AsDouble(other);
+        return 0;
+    case 'd':
+        ((double*) self->items)[index] = PyFloat_AsDouble(other);
+        return 0;
+    default:
         PyErr_SetString(PyExc_ValueError, "format must be one of (b, B, h, H, i, I, l, L, f, d)");
-		return -1;
-	}
+        return -1;
+    }
 }
 
 /*
  * Implements the <sequence> interface for CArray_Type
  */
-static PySequenceMethods CArray_as_sequence = {
-	(lenfunc) CArray_sq_length,            /* sq_length */ 
+PySequenceMethods CArray_as_sequence = {
+    (lenfunc) CArray_sq_length,            /* sq_length */ 
     NULL,   /* sq_concat */
     NULL,   /* sq_repeat */
     (ssizeargfunc) CArray_sq_item,         /* sq_item */
@@ -407,7 +407,7 @@ PyTypeObject CArray_Type = {
     &CArray_as_buffer,         /* tp_as_buffer */
     Py_TPFLAGS_DEFAULT,        /* tp_flags */
     CARRAY_DOC,                /* tp_doc */
-	0,                         /* tp_traverse */
+    0,                         /* tp_traverse */
     0,                         /* tp_clear */
     0,                         /* tp_richcompare */
     0,                         /* tp_weaklistoffset */
@@ -433,24 +433,24 @@ PyTypeObject CArray_Type = {
  * calling Py_INCREF(obj) in the returned obj yourself
  */
 PyObject* CArray_createFromItems(const char* format, void* items, int length, CArrayFree free_fn) {
-	PyTypeObject* type = &CArray_Type;
-	CArrayObj* self;
-	size_t item_size;
+    PyTypeObject* type = &CArray_Type;
+    CArrayObj* self;
+    size_t item_size;
 
-	item_size = CArray_getItemSize(format);
-	if (item_size <= 0) {
-	    return NULL;
-	}
+    item_size = CArray_getItemSize(format);
+    if (item_size <= 0) {
+        return NULL;
+    }
 
     if (items == NULL) {
         PyErr_SetString(PyExc_MemoryError, "no element data given");
         return NULL;
     }
 
-	if (length <= 0) {
+    if (length <= 0) {
         PyErr_SetString(PyExc_ValueError, "length must be > 0");
         return NULL;
-	}
+    }
 
     self = (CArrayObj*) type->tp_alloc(type, 0);
     CArray_initInstance(self, format, items, item_size, length, free_fn);
@@ -464,15 +464,15 @@ PyObject* CArray_createFromItems(const char* format, void* items, int length, CA
  * calling Py_INCREF(obj) in the returned obj yourself
  */
 PyObject* CArray_createFromLength(const char* format, int length) {
-	PyTypeObject* type = &CArray_Type;
-	CArrayObj* self;
-	void* items;
-	size_t item_size;
+    PyTypeObject* type = &CArray_Type;
+    CArrayObj* self;
+    void* items;
+    size_t item_size;
 
-	item_size = CArray_getItemSize(format);
-	if (item_size <= 0) {
-	    return NULL;
-	}
+    item_size = CArray_getItemSize(format);
+    if (item_size <= 0) {
+        return NULL;
+    }
 
     items = calloc(item_size, length);
     if (items == NULL) {
@@ -480,10 +480,10 @@ PyObject* CArray_createFromLength(const char* format, int length) {
         return NULL;
     }
 
-	if (length <= 0) {
+    if (length <= 0) {
         PyErr_SetString(PyExc_ValueError, "length must be > 0");
         return NULL;
-	}
+    }
 
     self = (CArrayObj*) type->tp_alloc(type, 0);
     CArray_initInstance(self, format, items, item_size, length, CArray_releaseElements);
@@ -516,12 +516,12 @@ PyMODINIT_FUNC PyInit_carray()
 
     if (PyType_Ready(&CArray_Type) < 0) {
         return NULL;
-	}
+    }
 
     m = PyModule_Create(&CArray_Module);
     if (m == NULL) {
         return NULL;
-	}
+    }
 
     Py_INCREF(&CArray_Type);
     PyModule_AddObject(m, "CArray", (PyObject*) &CArray_Type);
