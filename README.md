@@ -20,13 +20,14 @@ BEAM Python API
 
 ### How to install:
 
-* Install BEAM 4.10.3. Set `BEAM_HOME`.
-* On Windows, 
-  1. copy `beampy.pyd` and `beam_capi.dll` from `%BEAM_EXTAPI%/target/win32` to `%PYTHON32_HOME%/DLLs`
-  2. Set `PATH=%PATH%;%BEAM_HOME%/jre/bin/client` (todo: avoid this step)
+* On Windows,
+  1. Install BEAM 4.10.3 32 bit. Set `BEAM_HOME`.
+  2. copy `beampy.pyd` and `beam_capi.dll` from `%BEAM_EXTAPI%/target/win32` to `%PYTHON32_HOME%/DLLs`
+  3. Set `PATH=%PATH%;%BEAM_HOME%/jre/bin/client` (todo: avoid this step)
 * On Unix,
-  1. copy `beampy.pyd` and `beam_capi.sh` from `$BEAM_EXTAPI/target/unix32` to `$PYTHON32_HOME/DLLs` (not available yet)
-  2. Set `PATH=$PATH%;$BEAM_HOME/jre/bin/client`  (todo: avoid this step and what about Mac OS?)
+  1. Install BEAM 4.10.3 32/64 bit, appropriate for your OS. Set `BEAM_HOME`.
+  2. copy `beampy.pyd` and `beam_capi.sh` from `$BEAM_EXTAPI/target/unix32` to `$PYTHON32_HOME/DLLs` (not available yet)
+  3. Set `PATH=$PATH%;$BEAM_HOME/jre/bin/client`  (todo: avoid this step and what about Mac OS?)
 
 ### How to run:
 
