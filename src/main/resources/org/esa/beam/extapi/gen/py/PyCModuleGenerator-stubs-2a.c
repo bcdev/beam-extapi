@@ -2,9 +2,13 @@
 PyObject* beam_getPrimitiveArrayBuffer(PyObject* obj, Py_buffer* view, int flags, const char* format, int len)
 {
     if (obj == NULL || obj == Py_None) {
+        if (len <= 0) {
+            PyErr_SetString(PyExc_ValueError, "no buffer length specified");
+            return NULL;
+        }
         obj = CArray_createFromLength(format, len);
         if (obj == NULL) {
-    	    PyErr_SetString(PyExc_MemoryError, "out of memory");
+            PyErr_SetString(PyExc_MemoryError, "out of memory");
             return NULL;
         }
     }
@@ -17,11 +21,11 @@ PyObject* beam_getPrimitiveArrayBuffer(PyObject* obj, Py_buffer* view, int flags
             } else {
                 //printf("ndim=%d, len=%d, itemsize=%d, expected len=%d\n", view->ndim, view->len, view->itemsize, len);
                 PyBuffer_Release(view);
-        	    PyErr_SetString(PyExc_TypeError, "illegal buffer configuration");
+                PyErr_SetString(PyExc_ValueError, "illegal buffer configuration");
                 return NULL;
             }
         }  else {
-        	PyErr_SetString(PyExc_TypeError, "failed to access buffer");
+            PyErr_SetString(PyExc_TypeError, "failed to access buffer");
             return NULL;
         }
     } else {
