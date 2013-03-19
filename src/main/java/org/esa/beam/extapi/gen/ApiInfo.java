@@ -101,19 +101,19 @@ public final class ApiInfo {
         Map<ApiClass, ApiMembers> apiClasses = new HashMap<ApiClass, ApiMembers>(1000);
 
         for (ClassDoc classDoc : rootDoc.classes()) {
-            final boolean isPublic = classDoc.isPublic();
-            final boolean isApiClass = config.isApiClass(classDoc.qualifiedName());
-            if (isPublic && isApiClass) {
+            String classRejectReason = getRejectReason(config, classDoc);
+            if (classRejectReason == null) {
                 ApiClass apiClass = new ApiClass(classDoc);
                 ArrayList<ApiConstant> apiConstants = new ArrayList<ApiConstant>();
                 ArrayList<ApiMethod> apiMethods = new ArrayList<ApiMethod>();
 
                 for (ConstructorDoc constructorDoc : classDoc.constructors()) {
                     ApiMethod apiMethod = new ApiMethod(apiClass, constructorDoc);
-                    if (isApiMethod(config, apiMethod)) {
+                    String rejectReason = getRejectReason(config, apiMethod);
+                    if (rejectReason == null) {
                         apiMethods.add(apiMethod);
                     } else {
-                        System.out.printf("Filtered out: constructor %s#%s()\n", classDoc.qualifiedTypeName(), constructorDoc.name());
+                        System.out.printf("Rejected: constructor %s#%s() - reason: %s\n", classDoc.qualifiedTypeName(), constructorDoc.name(), rejectReason);
                     }
                 }
 
@@ -127,12 +127,13 @@ public final class ApiInfo {
 
                     for (MethodDoc methodDoc : classDoc0.methods()) {
                         ApiMethod apiMethod = new ApiMethod(apiClass, methodDoc);
-                        if (isApiMethod(config, apiMethod)) {
+                        String rejectReason = getRejectReason(config, apiMethod);
+                        if (rejectReason == null) {
                             if (classDoc0 == classDoc || !apiMethods.contains(apiMethod)) {
                                 apiMethods.add(apiMethod);
                             }
                         } else {
-                            System.out.printf("Filtered out: method %s#%s()\n", classDoc.qualifiedTypeName(), methodDoc.name());
+                            System.out.printf("Rejected: method %s#%s() - reason: %s\n", classDoc.qualifiedTypeName(), methodDoc.name(), rejectReason);
                         }
                     }
                     classDoc0 = classDoc0.superclass();
@@ -140,19 +141,36 @@ public final class ApiInfo {
 
                 apiClasses.put(apiClass, new ApiMembers(apiConstants, apiMethods));
             } else {
-                System.out.printf("Filtered out: class %s\n", classDoc.qualifiedTypeName());
+                System.out.printf("Rejected: class %s - reason: %s\n", classDoc.qualifiedTypeName(), classRejectReason);
             }
         }
 
         return apiClasses;
     }
 
-    private static boolean isApiMethod(ApiGeneratorConfig config, ApiMethod apiMethod) {
-        return apiMethod.getMemberDoc().isPublic()
-                && apiMethod.getMemberDoc().tags("deprecated").length == 0
-                && config.isApiMethod(apiMethod.getEnclosingClass().getJavaName(),
+    private static String getRejectReason(ApiGeneratorConfig config, ClassDoc classDoc) {
+        if (!classDoc.isPublic()) {
+            return "not public";
+        }
+        if (!config.isApiClass(classDoc.qualifiedName())) {
+            return "not specified in API config";
+        }
+        return null;
+    }
+
+    private static String getRejectReason(ApiGeneratorConfig config, ApiMethod apiMethod) {
+        if (!apiMethod.getMemberDoc().isPublic()) {
+            return "not public";
+        }
+        if (apiMethod.getMemberDoc().tags("deprecated").length > 0) {
+            return "deprecated";
+        }
+        if (!config.isApiMethod(apiMethod.getEnclosingClass().getJavaName(),
                                       apiMethod.getJavaName(),
-                                      apiMethod.getJavaSignature());
+                                      apiMethod.getJavaSignature())) {
+            return "not specified in API config";
+        }
+        return null;
     }
 
     private static boolean isObjectClass(Type type) {
@@ -205,9 +223,10 @@ public final class ApiInfo {
 
     private static Set<ApiClass> getUsedNonApiClasses(Map<ApiClass, ApiMembers> apiClasses,
                                                       Map<ApiClass, ApiMembers> allClasses) {
-        HashSet<ApiClass> usedClasses = new HashSet<ApiClass>();
-        for (ApiClass apiClass : allClasses.keySet()) {
+        TreeSet<ApiClass> usedClasses = new TreeSet<ApiClass>();
+        for (ApiClass apiClass : new TreeSet<ApiClass>(allClasses.keySet())) {
             if (!apiClasses.containsKey(apiClass)) {
+                System.out.printf("Used non-API class: %s\n", apiClass.getType().qualifiedTypeName());
                 usedClasses.add(apiClass);
             }
         }
