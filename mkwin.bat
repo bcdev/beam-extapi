@@ -42,7 +42,7 @@ src\main\c\gen\beam_capi.def ^
 /MDd ^
 /Zi /Zc:wchar_t /Zc:forScope ^
 /EHsc /fp:precise /analyze- ^
-/nologo /W3 /Wp64 /WX- /GL ^
+/nologo /W3 /WX- /GL ^
 /D "WIN32" ^
 /D "NDEBUG" ^
 /D "_WINDOWS" ^
@@ -75,7 +75,7 @@ src\main\c\beam_capi_test.c ^
 /Gm- /GS /Gy /Gd ^
 /Zi /Zc:wchar_t /Zc:forScope ^
 /EHsc /fp:precise /analyze- ^
-/nologo /W3 /Wp64 /WX- /GL ^
+/nologo /W3 /WX- /GL ^
 /D "WIN32" ^
 /D "NDEBUG" ^
 /D "_WINDOWS" ^
@@ -111,7 +111,7 @@ src\main\c\gen\beampy.def ^
 /Gm- /GS /Gy /Gd ^
 /Zi /Zc:wchar_t /Zc:forScope ^
 /EHsc /fp:precise /analyze- ^
-/nologo /W3 /Wp64 /WX- /GL ^
+/nologo /W3 /WX- /GL ^
 /D "WIN32" ^
 /D "NDEBUG" ^
 /D "_WINDOWS" ^

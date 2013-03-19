@@ -2089,508 +2089,48 @@ static PyMethodDef BeamPy_Methods[] = {
 };
 
 
-typedef void (*CArrayFree)(void* array_elems, int array_length);
 
-
-/*
- * Represents an instance of the CArray_Type class
- */
-typedef struct {
-    PyObject_HEAD
-	char type_code[2];
-	int length;
-	int elem_size;
-    void* elems;
-    CArrayFree free_fn;
-	size_t num_exports;
-} CArrayObj;
-
-/*
- * Default implementation for the 'free_fn' field.
- */
-static void CArray_releaseElements(void* elems, int length)
+PyObject* beam_getPrimitiveArrayBuffer(PyObject* obj, Py_buffer* view, int flags, const char* format, int len)
 {
-	if (elems != NULL) {
-	    free(elems);
-	}
-}
-
-/*
- * Helper for the __init__() method for CArray_Type
- */
-static void CArray_initInstance(CArrayObj* self, const char* type_code, void* elems, int elem_size, int length, CArrayFree free_fn)
-{
-	self->type_code[0] = type_code[0];
-	self->type_code[1] = 0;
-	self->elems = elems;
-	self->elem_size = elem_size;
-	self->length = length;
-	self->free_fn = free_fn;
-	self->num_exports = 0;
-}
-
-/*
- * Implements the CArray() constructor for CArray_Type
- */
-static PyObject* CArray_new(PyTypeObject* type, PyObject* args, PyObject* kwds)
-{
-    CArrayObj* self;
-	printf("CArray_new\n");
-    self = (CArrayObj*) type->tp_alloc(type, 0);
-    if (self != NULL) {
-        CArray_initInstance(self, "\0", 0, 0, 0, 0);
+    if (obj == NULL || obj == Py_None) {
+        obj = CArray_createFromLength(format, len);
+        if (obj == NULL) {
+    	    PyErr_SetString(PyExc_MemoryError, "out of memory");
+            return NULL;
+        }
     }
-    return (PyObject*) self;
-}
 
-/*
- * Helper for the __init__() method for CArray_Type
- */
-static int CArray_getElemSize(const char* type_code)
-{
-    if (strcmp(type_code, "B") == 0) {
-		return sizeof (char);
-    } else if (strcmp(type_code, "S") == 0) {
-		return sizeof (short);
-    } else if (strcmp(type_code, "I") == 0) {
-		return sizeof (int);
-    } else if (strcmp(type_code, "F") == 0) {
-		return sizeof (float);
-    } else if (strcmp(type_code, "D") == 0) {
-		return sizeof (double);
+    if (PyObject_CheckBuffer(obj)) {
+        if (PyObject_GetBuffer(obj, view, flags) == 0) {
+            if (view->ndim <= 1 && (len < 0 || view->len / view->itemsize >= len)) {
+                Py_INCREF(obj);
+                return obj;
+            } else {
+                //printf("ndim=%d, len=%d, itemsize=%d, expected len=%d\n", view->ndim, view->len, view->itemsize, len);
+                PyBuffer_Release(view);
+        	    PyErr_SetString(PyExc_TypeError, "illegal buffer configuration");
+                return NULL;
+            }
+        }  else {
+        	PyErr_SetString(PyExc_TypeError, "failed to access buffer");
+            return NULL;
+        }
     } else {
-        PyErr_SetString(PyExc_ValueError, "type_code must be one of 'B', 'S', 'I', 'F', 'D'");
-        return 0;
-    }
-}
-
-/*
- * Implements the __init__() method for CArray_Type
- */
-static int CArray_init(CArrayObj* self, PyObject* args, PyObject* kwds)
-{
-	const char* type_code = NULL;
-	void* elems = NULL;
-	int length = 0;
-	int elem_size = 0;
-
-	printf("CArray_init\n");
-
-    if (!PyArg_ParseTuple(args, "si", &type_code, &length)) {
-        return 1;
-	}
-
-	elem_size = CArray_getElemSize(type_code);
-	if (elem_size <= 0) {
-	    return 2;
-	}
-
-	if (length <= 0) {
-        PyErr_SetString(PyExc_ValueError, "length must be > 0");
-        return 3;
-	}
-
-    elems = calloc(elem_size, length);
-    if (elems == NULL) {
-        PyErr_SetString(PyExc_MemoryError, "failed to allocate memory for CArray");
-        return 4;
-    }
-
-    CArray_initInstance(self, type_code, elems, elem_size, length, CArray_releaseElements);
-    return 0;
-}
-
-/*
- * Implements the dealloc() method for CArray_Type
- */
-static void CArray_dealloc(CArrayObj* self)
-{
-	printf("CArray_dealloc\n");
-	if (self->elems != NULL && self->free_fn != NULL) {
-		self->free_fn(self->elems, self->length);
-		self->elems = NULL;
-	}
-    Py_TYPE(self)->tp_free((PyObject*) self);
-}
-
-
-/*
- * Implements the repr() method for CArray_Type
- */
-static PyObject* CArray_repr(CArrayObj* self)
-{
-	return PyUnicode_FromFormat("CArray('%s', %d)", self->type_code, self->length);
-}
-
-/*
- * A test instance method of CArray_Type
- */
-static PyObject* CArray_noargs(CArrayObj* self)
-{
-	printf("CArray_noargs self=%p\n", self);
-    return Py_BuildValue("");
-}
-
-/*
- * A test instance method of CArray_Type
- */
-static PyObject* CArray_varargs(CArrayObj* self, PyObject* args)
-{
-	printf("CArray_varargs self=%p, args=%p\n", self, args);
-    return Py_BuildValue("");
-}
-
-/*
- * A test static method of CArray_Type
- */
-static PyObject* CArray_varargsstatic(CArrayObj* self, PyObject* args)
-{
-	printf("CArray_varargsstatic self=%p, args=%p\n", self, args);
-    return Py_BuildValue("");
-}
-
-/*
- * A test class method of CArray_Type
- */
-static PyObject* CArray_varargsclass(PyTypeObject* cls, PyObject* args)
-{
-	printf("CArray_varargsclass cls=%p, args=%p\n", cls, args);
-    return Py_BuildValue("");
-}
-
-
-/*
- * Implements all specific methods of the CArray_Type (currently all methods are tests)
- */
-static PyMethodDef CArray_methods[] = {
-    {"noargs", (PyCFunction) CArray_noargs, METH_NOARGS, "METH_NOARGS test"},
-    {"varargs", (PyCFunction) CArray_varargs, METH_VARARGS, "METH_VARARGS test"},
-    {"varargsstatic", (PyCFunction) CArray_varargsstatic, METH_VARARGS | METH_STATIC, "METH_VARARGS | METH_STATIC test"},
-    {"varargsclass", (PyCFunction) CArray_varargsclass, METH_VARARGS | METH_CLASS, "METH_VARARGS | METH_CLASS test"},
-    {NULL}  /* Sentinel */
-};
-
-#define PRINT_FLAG(F) printf("CArray_getbufferproc: %s = %d\n", #F, (flags & F) != 0);
-#define PRINT_MEMB(F, M) printf("CArray_getbufferproc: %s = " ## F ## "\n", #M, M);
-
-/*
- * Implements the getbuffer() method of the <buffer> interface for CArray_Type
- */
-int CArray_getbufferproc(CArrayObj* self, Py_buffer* view, int flags)
-{
-	int ret = 0;
-
-	/*
-    printf("CArray_getbufferproc\n");
-	PRINT_FLAG(PyBUF_ANY_CONTIGUOUS);
-	PRINT_FLAG(PyBUF_CONTIG);
-	PRINT_FLAG(PyBUF_CONTIG_RO);
-	PRINT_FLAG(PyBUF_C_CONTIGUOUS);
-	PRINT_FLAG(PyBUF_FORMAT);
-	PRINT_FLAG(PyBUF_FULL);
-	PRINT_FLAG(PyBUF_FULL_RO);
-	PRINT_FLAG(PyBUF_F_CONTIGUOUS);
-	PRINT_FLAG(PyBUF_INDIRECT);
-	PRINT_FLAG(PyBUF_ND);
-	PRINT_FLAG(PyBUF_READ);
-	PRINT_FLAG(PyBUF_RECORDS);
-	PRINT_FLAG(PyBUF_RECORDS_RO);
-	PRINT_FLAG(PyBUF_SIMPLE);
-	PRINT_FLAG(PyBUF_STRIDED);
-	PRINT_FLAG(PyBUF_STRIDED_RO);
-	PRINT_FLAG(PyBUF_STRIDES);
-	PRINT_FLAG(PyBUF_WRITE);
-	PRINT_FLAG(PyBUF_WRITEABLE);
-	*/
-
-	// According to Python documentation,
-	// buffer allocation shall be done in the 5 following steps;
-
-	// Step 1/5
-	if (self->elems == NULL) {
-		view->obj = NULL;
-		PyErr_SetString(PyExc_BufferError, "invalid CArray, elems == NULL");
-		return -1;
-	}
-
-	// Step 2/5
-	view->buf = self->elems;
-	view->len = self->length * self->elem_size;
-	view->itemsize = self->elem_size;
-	view->readonly = 0;
-	view->ndim = 1;
-	view->shape = (Py_ssize_t*) malloc(view->ndim* sizeof (Py_ssize_t));
-	view->shape[0] = self->length;
-	view->strides = (Py_ssize_t*) malloc(view->ndim* sizeof (Py_ssize_t));
-	view->strides[0] = self->elem_size;
-	view->suboffsets = NULL;
-	if ((flags & PyBUF_FORMAT) != 0) {
-		view->format = self->type_code;
-	} else {
-		view->format = NULL;
-	}
-	/*
-	PRINT_MEMB("%d", view->len);
-	PRINT_MEMB("%d", view->ndim);
-	PRINT_MEMB("%s", view->format);
-	PRINT_MEMB("%d", view->itemsize);
-	PRINT_MEMB("%d", view->readonly);
-	PRINT_MEMB("%p", view->shape);
-	if (view->shape != NULL)
-		PRINT_MEMB("%d", view->shape[0]);
-	PRINT_MEMB("%p", view->strides);
-	if (view->strides != NULL)
-		PRINT_MEMB("%d", view->strides[0]);
-	PRINT_MEMB("%p", view->suboffsets);
-	if (view->suboffsets != NULL)
-		PRINT_MEMB("%d", view->suboffsets[0]);
-	*/
-
-	// Step 3/5
-	self->num_exports++;
-
-	// Step 4/5
-	view->obj = (PyObject*) self;
-	Py_INCREF(view->obj);
-
-	// Step 5/5
-	return ret;
-}
-
-/*
- * Implements the releasebuffer() method of the <buffer> interface for CArray_Type
- */
-void CArray_releasebufferproc(CArrayObj* self, Py_buffer* view)
-{
-	printf("CArray_releasebufferproc\n");
-	// Step 1
-	self->num_exports--;
-	// Step 2
-	if (self->num_exports == 0) {
-		view->buf = NULL;
-		if (view->strides != NULL) {
-			free(view->strides);
-			view->strides = NULL;
-		}
-		if (view->strides != NULL) {
-			free(view->strides);
-			view->shape = NULL;
-		}
-		// todo: release resources...
-	}
-}
-
-/*
- * Implements <buffer> interface for CArray_Type
- */
-static PyBufferProcs CArray_as_buffer = {
-	(getbufferproc) CArray_getbufferproc,
-	(releasebufferproc) CArray_releasebufferproc
-};
-
-/*
- * Implements the length method of the <sequence> interface for CArray_Type
- */
-Py_ssize_t CArray_sq_length(CArrayObj* self)
-{
-	return self->length;
-}
-
-/*
- * Implements the item getter method of the <sequence> interface for CArray_Type
- */
-PyObject* CArray_sq_item(CArrayObj* self, Py_ssize_t index)
-{
-	if (index < 0) {
-		index += self->length;
-	}
-	if (index < 0 || index >= self->length) {
-	    PyErr_SetString(PyExc_IndexError, "CArray index out of bounds");
-		return NULL;
-	}
-	switch (*self->type_code) {
-	case 'B':
-		return  PyLong_FromLong(((char*) self->elems)[index]);
-	case 'S':
-		return  PyLong_FromLong(((short*) self->elems)[index]);
-	case 'I':
-		return  PyLong_FromLong(((int*) self->elems)[index]);
-	case 'F':
-		return  PyFloat_FromDouble(((float*) self->elems)[index]);
-	case 'D':
-		return  PyFloat_FromDouble(((double*) self->elems)[index]);
-	default:
-		PyErr_SetString(PyExc_ValueError, "CArray type_code must be one of 'B', 'S', 'I', 'F', 'D'");
-		return NULL;
-	}
-}
-
-/*
- * Implements the item assignment method of the <sequence> interface for CArray_Type
- */
-int CArray_sq_ass_item(CArrayObj* self, Py_ssize_t index, PyObject* other)
-{
-	if (index < 0) {
-		index += self->length;
-	}
-	if (index < 0 || index >= self->length) {
-	    PyErr_SetString(PyExc_IndexError, "CArray index out of bounds");
-		return -1;
-	}
-	switch (*self->type_code) {
-	case 'B':
-		((char*) self->elems)[index] = (char) PyLong_AsLong(other);
-		return 0;
-	case 'S':
-		((short*) self->elems)[index] = (short) PyLong_AsLong(other);
-		return 0;
-	case 'I':
-		((int*) self->elems)[index] = (int) PyLong_AsLong(other);
-		return 0;
-	case 'F':
-		((float*) self->elems)[index] = (float) PyFloat_AsDouble(other);
-		return 0;
-	case 'D':
-		((double*) self->elems)[index] = PyFloat_AsDouble(other);
-		return 0;
-	default:
-		PyErr_SetString(PyExc_ValueError, "CArray type_code must be one of 'B', 'S', 'I', 'F', 'D'");
-		return -1;
-	}
-}
-
-/*
- * Implements the <sequence> interface for CArray_Type
- */
-static PySequenceMethods CArray_as_sequence = {
-	(lenfunc) CArray_sq_length,            /* sq_length */ 
-    NULL,   /* sq_concat */
-    NULL,   /* sq_repeat */
-    (ssizeargfunc) CArray_sq_item,         /* sq_item */
-    NULL,   /* was_sq_slice */
-    (ssizeobjargproc) CArray_sq_ass_item,  /* sq_ass_item */
-    NULL,   /* was_sq_ass_slice */
-    NULL,   /* sq_contains */
-    NULL,   /* sq_inplace_concat */
-    NULL,   /* sq_inplace_repeat */
-};
-
-#define CARRAY_DOC  "C-array object, a light-weight wrapper around one-dimensional C-arrays."
-
-/*
- * Implements the new CArray_Type
- */
-extern PyTypeObject CArray_Type = {
-    PyVarObject_HEAD_INIT(NULL, 0)
-    "beampy.CArray",       /* tp_name */
-    sizeof(CArrayObj),         /* tp_basicsize */
-    0,                         /* tp_itemsize */
-    (destructor)CArray_dealloc,/* tp_dealloc */
-    0,                         /* tp_print */
-    0,                         /* tp_getattr */
-    0,                         /* tp_setattr */
-    0,                         /* tp_reserved */
-    (reprfunc)CArray_repr,     /* tp_repr */
-    0,                         /* tp_as_number */
-    &CArray_as_sequence,       /* tp_as_sequence */
-    0,                         /* tp_as_mapping */
-    0,                         /* tp_hash  */
-    0,                         /* tp_call */
-    0,                         /* tp_str */
-    0,                         /* tp_getattro */
-    0,                         /* tp_setattro */
-    &CArray_as_buffer,         /* tp_as_buffer */
-    Py_TPFLAGS_DEFAULT,        /* tp_flags */
-    CARRAY_DOC,                /* tp_doc */
-	0,                         /* tp_traverse */
-    0,                         /* tp_clear */
-    0,                         /* tp_richcompare */
-    0,                         /* tp_weaklistoffset */
-    0,                         /* tp_iter */
-    0,                         /* tp_iternext */
-    CArray_methods,            /* tp_methods */
-    0,                         /* tp_members */
-    0,                         /* tp_getset */
-    0,                         /* tp_base */
-    0,                         /* tp_dict */
-    0,                         /* tp_descr_get */
-    0,                         /* tp_descr_set */
-    0,                         /* tp_dictoffset */
-    (initproc)CArray_init,     /* tp_init */
-    0,                         /* tp_alloc */
-    CArray_new,                /* tp_new */
-};
-
-/*
- * The following CArray factory function will be used whenever a new C-Array
- * is created by the BEAM C-API and returned to Python.
- *
- * Note that this method already increment the reference counter on the returned object.
- */
-PyObject* CArray_createInstance(const char* type_code, void* elems, int length, CArrayFree free_fn) {
-	PyTypeObject* type = &CArray_Type;
-	CArrayObj* self;
-	int elem_size;
-
-	elem_size = CArray_getElemSize(type_code);
-	if (elem_size <= 0) {
-	    return NULL;
-	}
-
-    if (elems == NULL) {
-        PyErr_SetString(PyExc_MemoryError, "no element data given");
+        PyErr_SetString(PyExc_TypeError, "buffer type expected");
         return NULL;
     }
-
-	if (length <= 0) {
-        PyErr_SetString(PyExc_ValueError, "length must be > 0");
-        return NULL;
-	}
-
-    self = (CArrayObj*) type->tp_alloc(type, 0);
-    CArray_initInstance(self, type_code, elems, elem_size, length, free_fn);
-    Py_INCREF(self);
-    return (PyObject*) self;
 }
 
-/*
- * Implements the 'carray' module.
- * May be used for testing this CArray_Type in a separate module.
- * However, the _beampy.pyd library already registers it.
- */
-/*
-static PyModuleDef CArray_Module = {
-    PyModuleDef_HEAD_INIT,
-    "carray",
-    "Provides a light-weight wrapper around one-dimensional C-arrays.",
-    -1,
-    NULL, NULL, NULL, NULL, NULL
-};
-*/
-
-/*
- * May be used for testing this CArray_Type in a separate module.
- * However, the _beampy.pyd library already registers it.
- */
-/*
-PyMODINIT_FUNC PyInit_carray()
+PyObject* beam_getPrimitiveArrayBufferReadOnly(PyObject* obj, Py_buffer* view, const char* format, int len)
 {
-    PyObject* m;
-
-    if (PyType_Ready(&CArray_Type) < 0) {
-        return NULL;
-	}
-
-    m = PyModule_Create(&CArray_Module);
-    if (m == NULL) {
-        return NULL;
-	}
-
-    Py_INCREF(&CArray_Type);
-    PyModule_AddObject(m, "CArray", (PyObject*) &CArray_Type);
-    return m;
+    return beam_getPrimitiveArrayBuffer(obj, view, PyBUF_SIMPLE, format, len);
 }
-*/
+
+
+PyObject* beam_getPrimitiveArrayBufferWritable(PyObject* obj, Py_buffer* view, const char* format, int len)
+{
+    return beam_getPrimitiveArrayBuffer(obj, view, PyBUF_WRITABLE, format, len);
+}
 /**
  * Represents an instance of the BeamPy_JObjectType class.
  * Used to represent Java JNI objects.
@@ -8734,14 +8274,21 @@ PyObject* BeamPyBand_setPixelsInt(PyObject* self, PyObject* args)
     int h;
     int* pixels;
     int pixelsLength;
-    PyObject* pixelsSeq;
+    PyObject* pixelsObj;
+    Py_buffer pixelsBuf;
     const char* thisObjType;
     unsigned PY_LONG_LONG thisObj;
-    if (!PyArg_ParseTuple(args, "(sK)iiiiO:Band_setPixelsInt", &thisObjType, &thisObj, &x, &y, &w, &h, &pixelsSeq)) {
+    if (!PyArg_ParseTuple(args, "(sK)iiiiO:Band_setPixelsInt", &thisObjType, &thisObj, &x, &y, &w, &h, &pixelsObj)) {
         return NULL;
     }
-    pixels = beam_new_int_array_from_pyseq(pixelsSeq, &pixelsLength);
+    pixelsObj = beam_getPrimitiveArrayBufferReadOnly(pixelsObj, &pixelsBuf, "i", -1);
+    if (pixelsObj == NULL) {
+        return NULL;
+    }
+    pixels = (int*) pixelsBuf.buf;
+    pixelsLength = pixelsBuf.len / pixelsBuf.itemsize;
     Band_setPixelsInt((Band) thisObj, x, y, w, h, pixels, pixelsLength);
+    PyBuffer_Release(&pixelsBuf);
     return Py_BuildValue("");
 }
 
@@ -8753,14 +8300,21 @@ PyObject* BeamPyBand_setPixelsFloat(PyObject* self, PyObject* args)
     int h;
     float* pixels;
     int pixelsLength;
-    PyObject* pixelsSeq;
+    PyObject* pixelsObj;
+    Py_buffer pixelsBuf;
     const char* thisObjType;
     unsigned PY_LONG_LONG thisObj;
-    if (!PyArg_ParseTuple(args, "(sK)iiiiO:Band_setPixelsFloat", &thisObjType, &thisObj, &x, &y, &w, &h, &pixelsSeq)) {
+    if (!PyArg_ParseTuple(args, "(sK)iiiiO:Band_setPixelsFloat", &thisObjType, &thisObj, &x, &y, &w, &h, &pixelsObj)) {
         return NULL;
     }
-    pixels = beam_new_float_array_from_pyseq(pixelsSeq, &pixelsLength);
+    pixelsObj = beam_getPrimitiveArrayBufferReadOnly(pixelsObj, &pixelsBuf, "f", -1);
+    if (pixelsObj == NULL) {
+        return NULL;
+    }
+    pixels = (float*) pixelsBuf.buf;
+    pixelsLength = pixelsBuf.len / pixelsBuf.itemsize;
     Band_setPixelsFloat((Band) thisObj, x, y, w, h, pixels, pixelsLength);
+    PyBuffer_Release(&pixelsBuf);
     return Py_BuildValue("");
 }
 
@@ -8772,14 +8326,21 @@ PyObject* BeamPyBand_setPixelsDouble(PyObject* self, PyObject* args)
     int h;
     double* pixels;
     int pixelsLength;
-    PyObject* pixelsSeq;
+    PyObject* pixelsObj;
+    Py_buffer pixelsBuf;
     const char* thisObjType;
     unsigned PY_LONG_LONG thisObj;
-    if (!PyArg_ParseTuple(args, "(sK)iiiiO:Band_setPixelsDouble", &thisObjType, &thisObj, &x, &y, &w, &h, &pixelsSeq)) {
+    if (!PyArg_ParseTuple(args, "(sK)iiiiO:Band_setPixelsDouble", &thisObjType, &thisObj, &x, &y, &w, &h, &pixelsObj)) {
         return NULL;
     }
-    pixels = beam_new_double_array_from_pyseq(pixelsSeq, &pixelsLength);
+    pixelsObj = beam_getPrimitiveArrayBufferReadOnly(pixelsObj, &pixelsBuf, "d", -1);
+    if (pixelsObj == NULL) {
+        return NULL;
+    }
+    pixels = (double*) pixelsBuf.buf;
+    pixelsLength = pixelsBuf.len / pixelsBuf.itemsize;
     Band_setPixelsDouble((Band) thisObj, x, y, w, h, pixels, pixelsLength);
+    PyBuffer_Release(&pixelsBuf);
     return Py_BuildValue("");
 }
 
@@ -9344,20 +8905,28 @@ PyObject* BeamPyBand_getPixelsInt(PyObject* self, PyObject* args)
     int h;
     int* pixels;
     int pixelsLength;
-    PyObject* pixelsSeq;
+    PyObject* pixelsObj;
+    Py_buffer pixelsBuf;
     const char* thisObjType;
     unsigned PY_LONG_LONG thisObj;
     int* result;
     int resultLength;
-    PyObject* resultSeq;
-    if (!PyArg_ParseTuple(args, "(sK)iiiiO:Band_getPixelsInt", &thisObjType, &thisObj, &x, &y, &w, &h, &pixelsSeq)) {
+    PyObject* resultObj;
+    if (!PyArg_ParseTuple(args, "(sK)iiiiO:Band_getPixelsInt", &thisObjType, &thisObj, &x, &y, &w, &h, &pixelsObj)) {
         return NULL;
     }
-    pixels = beam_new_int_array_from_pyseq(pixelsSeq, &pixelsLength);
+    pixelsObj = beam_getPrimitiveArrayBufferReadOnly(pixelsObj, &pixelsBuf, "i", -1);
+    if (pixelsObj == NULL) {
+        return NULL;
+    }
+    pixels = (int*) pixelsBuf.buf;
+    pixelsLength = pixelsBuf.len / pixelsBuf.itemsize;
     result = Band_getPixelsInt((Band) thisObj, x, y, w, h, pixels, pixelsLength, &resultLength);
+    PyBuffer_Release(&pixelsBuf);
     if (result != NULL) {
-        resultSeq = CArray_createInstance("I", result, resultLength, beam_release_primitive_array);
-        return resultSeq;
+        resultObj = CArray_createFromItems("i", result, resultLength, beam_release_primitive_array);
+        Py_INCREF(resultObj);
+        return resultObj;
     } else {
         return Py_BuildValue("");
     }
@@ -9371,20 +8940,28 @@ PyObject* BeamPyBand_getPixelsFloat(PyObject* self, PyObject* args)
     int h;
     float* pixels;
     int pixelsLength;
-    PyObject* pixelsSeq;
+    PyObject* pixelsObj;
+    Py_buffer pixelsBuf;
     const char* thisObjType;
     unsigned PY_LONG_LONG thisObj;
     float* result;
     int resultLength;
-    PyObject* resultSeq;
-    if (!PyArg_ParseTuple(args, "(sK)iiiiO:Band_getPixelsFloat", &thisObjType, &thisObj, &x, &y, &w, &h, &pixelsSeq)) {
+    PyObject* resultObj;
+    if (!PyArg_ParseTuple(args, "(sK)iiiiO:Band_getPixelsFloat", &thisObjType, &thisObj, &x, &y, &w, &h, &pixelsObj)) {
         return NULL;
     }
-    pixels = beam_new_float_array_from_pyseq(pixelsSeq, &pixelsLength);
+    pixelsObj = beam_getPrimitiveArrayBufferReadOnly(pixelsObj, &pixelsBuf, "f", -1);
+    if (pixelsObj == NULL) {
+        return NULL;
+    }
+    pixels = (float*) pixelsBuf.buf;
+    pixelsLength = pixelsBuf.len / pixelsBuf.itemsize;
     result = Band_getPixelsFloat((Band) thisObj, x, y, w, h, pixels, pixelsLength, &resultLength);
+    PyBuffer_Release(&pixelsBuf);
     if (result != NULL) {
-        resultSeq = CArray_createInstance("F", result, resultLength, beam_release_primitive_array);
-        return resultSeq;
+        resultObj = CArray_createFromItems("f", result, resultLength, beam_release_primitive_array);
+        Py_INCREF(resultObj);
+        return resultObj;
     } else {
         return Py_BuildValue("");
     }
@@ -9398,20 +8975,28 @@ PyObject* BeamPyBand_getPixelsDouble(PyObject* self, PyObject* args)
     int h;
     double* pixels;
     int pixelsLength;
-    PyObject* pixelsSeq;
+    PyObject* pixelsObj;
+    Py_buffer pixelsBuf;
     const char* thisObjType;
     unsigned PY_LONG_LONG thisObj;
     double* result;
     int resultLength;
-    PyObject* resultSeq;
-    if (!PyArg_ParseTuple(args, "(sK)iiiiO:Band_getPixelsDouble", &thisObjType, &thisObj, &x, &y, &w, &h, &pixelsSeq)) {
+    PyObject* resultObj;
+    if (!PyArg_ParseTuple(args, "(sK)iiiiO:Band_getPixelsDouble", &thisObjType, &thisObj, &x, &y, &w, &h, &pixelsObj)) {
         return NULL;
     }
-    pixels = beam_new_double_array_from_pyseq(pixelsSeq, &pixelsLength);
+    pixelsObj = beam_getPrimitiveArrayBufferReadOnly(pixelsObj, &pixelsBuf, "d", -1);
+    if (pixelsObj == NULL) {
+        return NULL;
+    }
+    pixels = (double*) pixelsBuf.buf;
+    pixelsLength = pixelsBuf.len / pixelsBuf.itemsize;
     result = Band_getPixelsDouble((Band) thisObj, x, y, w, h, pixels, pixelsLength, &resultLength);
+    PyBuffer_Release(&pixelsBuf);
     if (result != NULL) {
-        resultSeq = CArray_createInstance("D", result, resultLength, beam_release_primitive_array);
-        return resultSeq;
+        resultObj = CArray_createFromItems("d", result, resultLength, beam_release_primitive_array);
+        Py_INCREF(resultObj);
+        return resultObj;
     } else {
         return Py_BuildValue("");
     }
@@ -9425,20 +9010,26 @@ PyObject* BeamPyBand_readPixelsInt(PyObject* self, PyObject* args)
     int h;
     int* pixels;
     int pixelsLength;
-    PyObject* pixelsSeq;
+    PyObject* pixelsObj;
+    Py_buffer pixelsBuf;
     const char* thisObjType;
     unsigned PY_LONG_LONG thisObj;
     int* result;
     int resultLength;
-    PyObject* resultSeq;
-    if (!PyArg_ParseTuple(args, "(sK)iiiiO:Band_readPixelsInt", &thisObjType, &thisObj, &x, &y, &w, &h, &pixelsSeq)) {
+    if (!PyArg_ParseTuple(args, "(sK)iiiiO:Band_readPixelsInt", &thisObjType, &thisObj, &x, &y, &w, &h, &pixelsObj)) {
         return NULL;
     }
-    pixels = beam_new_int_array_from_pyseq(pixelsSeq, &pixelsLength);
+    pixelsObj = beam_getPrimitiveArrayBufferWritable(pixelsObj, &pixelsBuf, "i", w*h);
+    if (pixelsObj == NULL) {
+        return NULL;
+    }
+    pixels = (int*) pixelsBuf.buf;
+    pixelsLength = pixelsBuf.len / pixelsBuf.itemsize;
     result = Band_readPixelsInt((Band) thisObj, x, y, w, h, pixels, pixelsLength, &resultLength);
+    PyBuffer_Release(&pixelsBuf);
     if (result != NULL) {
-        resultSeq = CArray_createInstance("I", result, resultLength, beam_release_primitive_array);
-        return resultSeq;
+        Py_INCREF(pixelsObj);
+        return pixelsObj;
     } else {
         return Py_BuildValue("");
     }
@@ -9452,20 +9043,26 @@ PyObject* BeamPyBand_readPixelsFloat(PyObject* self, PyObject* args)
     int h;
     float* pixels;
     int pixelsLength;
-    PyObject* pixelsSeq;
+    PyObject* pixelsObj;
+    Py_buffer pixelsBuf;
     const char* thisObjType;
     unsigned PY_LONG_LONG thisObj;
     float* result;
     int resultLength;
-    PyObject* resultSeq;
-    if (!PyArg_ParseTuple(args, "(sK)iiiiO:Band_readPixelsFloat", &thisObjType, &thisObj, &x, &y, &w, &h, &pixelsSeq)) {
+    if (!PyArg_ParseTuple(args, "(sK)iiiiO:Band_readPixelsFloat", &thisObjType, &thisObj, &x, &y, &w, &h, &pixelsObj)) {
         return NULL;
     }
-    pixels = beam_new_float_array_from_pyseq(pixelsSeq, &pixelsLength);
+    pixelsObj = beam_getPrimitiveArrayBufferWritable(pixelsObj, &pixelsBuf, "f", w*h);
+    if (pixelsObj == NULL) {
+        return NULL;
+    }
+    pixels = (float*) pixelsBuf.buf;
+    pixelsLength = pixelsBuf.len / pixelsBuf.itemsize;
     result = Band_readPixelsFloat((Band) thisObj, x, y, w, h, pixels, pixelsLength, &resultLength);
+    PyBuffer_Release(&pixelsBuf);
     if (result != NULL) {
-        resultSeq = CArray_createInstance("F", result, resultLength, beam_release_primitive_array);
-        return resultSeq;
+        Py_INCREF(pixelsObj);
+        return pixelsObj;
     } else {
         return Py_BuildValue("");
     }
@@ -9479,20 +9076,26 @@ PyObject* BeamPyBand_readPixelsDouble(PyObject* self, PyObject* args)
     int h;
     double* pixels;
     int pixelsLength;
-    PyObject* pixelsSeq;
+    PyObject* pixelsObj;
+    Py_buffer pixelsBuf;
     const char* thisObjType;
     unsigned PY_LONG_LONG thisObj;
     double* result;
     int resultLength;
-    PyObject* resultSeq;
-    if (!PyArg_ParseTuple(args, "(sK)iiiiO:Band_readPixelsDouble", &thisObjType, &thisObj, &x, &y, &w, &h, &pixelsSeq)) {
+    if (!PyArg_ParseTuple(args, "(sK)iiiiO:Band_readPixelsDouble", &thisObjType, &thisObj, &x, &y, &w, &h, &pixelsObj)) {
         return NULL;
     }
-    pixels = beam_new_double_array_from_pyseq(pixelsSeq, &pixelsLength);
+    pixelsObj = beam_getPrimitiveArrayBufferWritable(pixelsObj, &pixelsBuf, "d", w*h);
+    if (pixelsObj == NULL) {
+        return NULL;
+    }
+    pixels = (double*) pixelsBuf.buf;
+    pixelsLength = pixelsBuf.len / pixelsBuf.itemsize;
     result = Band_readPixelsDouble((Band) thisObj, x, y, w, h, pixels, pixelsLength, &resultLength);
+    PyBuffer_Release(&pixelsBuf);
     if (result != NULL) {
-        resultSeq = CArray_createInstance("D", result, resultLength, beam_release_primitive_array);
-        return resultSeq;
+        Py_INCREF(pixelsObj);
+        return pixelsObj;
     } else {
         return Py_BuildValue("");
     }
@@ -9506,14 +9109,21 @@ PyObject* BeamPyBand_writePixelsInt(PyObject* self, PyObject* args)
     int h;
     int* pixels;
     int pixelsLength;
-    PyObject* pixelsSeq;
+    PyObject* pixelsObj;
+    Py_buffer pixelsBuf;
     const char* thisObjType;
     unsigned PY_LONG_LONG thisObj;
-    if (!PyArg_ParseTuple(args, "(sK)iiiiO:Band_writePixelsInt", &thisObjType, &thisObj, &x, &y, &w, &h, &pixelsSeq)) {
+    if (!PyArg_ParseTuple(args, "(sK)iiiiO:Band_writePixelsInt", &thisObjType, &thisObj, &x, &y, &w, &h, &pixelsObj)) {
         return NULL;
     }
-    pixels = beam_new_int_array_from_pyseq(pixelsSeq, &pixelsLength);
+    pixelsObj = beam_getPrimitiveArrayBufferReadOnly(pixelsObj, &pixelsBuf, "i", -1);
+    if (pixelsObj == NULL) {
+        return NULL;
+    }
+    pixels = (int*) pixelsBuf.buf;
+    pixelsLength = pixelsBuf.len / pixelsBuf.itemsize;
     Band_writePixelsInt((Band) thisObj, x, y, w, h, pixels, pixelsLength);
+    PyBuffer_Release(&pixelsBuf);
     return Py_BuildValue("");
 }
 
@@ -9525,14 +9135,21 @@ PyObject* BeamPyBand_writePixelsFloat(PyObject* self, PyObject* args)
     int h;
     float* pixels;
     int pixelsLength;
-    PyObject* pixelsSeq;
+    PyObject* pixelsObj;
+    Py_buffer pixelsBuf;
     const char* thisObjType;
     unsigned PY_LONG_LONG thisObj;
-    if (!PyArg_ParseTuple(args, "(sK)iiiiO:Band_writePixelsFloat", &thisObjType, &thisObj, &x, &y, &w, &h, &pixelsSeq)) {
+    if (!PyArg_ParseTuple(args, "(sK)iiiiO:Band_writePixelsFloat", &thisObjType, &thisObj, &x, &y, &w, &h, &pixelsObj)) {
         return NULL;
     }
-    pixels = beam_new_float_array_from_pyseq(pixelsSeq, &pixelsLength);
+    pixelsObj = beam_getPrimitiveArrayBufferReadOnly(pixelsObj, &pixelsBuf, "f", -1);
+    if (pixelsObj == NULL) {
+        return NULL;
+    }
+    pixels = (float*) pixelsBuf.buf;
+    pixelsLength = pixelsBuf.len / pixelsBuf.itemsize;
     Band_writePixelsFloat((Band) thisObj, x, y, w, h, pixels, pixelsLength);
+    PyBuffer_Release(&pixelsBuf);
     return Py_BuildValue("");
 }
 
@@ -9544,14 +9161,21 @@ PyObject* BeamPyBand_writePixelsDouble(PyObject* self, PyObject* args)
     int h;
     double* pixels;
     int pixelsLength;
-    PyObject* pixelsSeq;
+    PyObject* pixelsObj;
+    Py_buffer pixelsBuf;
     const char* thisObjType;
     unsigned PY_LONG_LONG thisObj;
-    if (!PyArg_ParseTuple(args, "(sK)iiiiO:Band_writePixelsDouble", &thisObjType, &thisObj, &x, &y, &w, &h, &pixelsSeq)) {
+    if (!PyArg_ParseTuple(args, "(sK)iiiiO:Band_writePixelsDouble", &thisObjType, &thisObj, &x, &y, &w, &h, &pixelsObj)) {
         return NULL;
     }
-    pixels = beam_new_double_array_from_pyseq(pixelsSeq, &pixelsLength);
+    pixelsObj = beam_getPrimitiveArrayBufferReadOnly(pixelsObj, &pixelsBuf, "d", -1);
+    if (pixelsObj == NULL) {
+        return NULL;
+    }
+    pixels = (double*) pixelsBuf.buf;
+    pixelsLength = pixelsBuf.len / pixelsBuf.itemsize;
     Band_writePixelsDouble((Band) thisObj, x, y, w, h, pixels, pixelsLength);
+    PyBuffer_Release(&pixelsBuf);
     return Py_BuildValue("");
 }
 
@@ -9563,20 +9187,28 @@ PyObject* BeamPyBand_readValidMask(PyObject* self, PyObject* args)
     int h;
     boolean* validMask;
     int validMaskLength;
-    PyObject* validMaskSeq;
+    PyObject* validMaskObj;
+    Py_buffer validMaskBuf;
     const char* thisObjType;
     unsigned PY_LONG_LONG thisObj;
     boolean* result;
     int resultLength;
-    PyObject* resultSeq;
-    if (!PyArg_ParseTuple(args, "(sK)iiiiO:Band_readValidMask", &thisObjType, &thisObj, &x, &y, &w, &h, &validMaskSeq)) {
+    PyObject* resultObj;
+    if (!PyArg_ParseTuple(args, "(sK)iiiiO:Band_readValidMask", &thisObjType, &thisObj, &x, &y, &w, &h, &validMaskObj)) {
         return NULL;
     }
-    validMask = beam_new_boolean_array_from_pyseq(validMaskSeq, &validMaskLength);
+    validMaskObj = beam_getPrimitiveArrayBufferReadOnly(validMaskObj, &validMaskBuf, "b", -1);
+    if (validMaskObj == NULL) {
+        return NULL;
+    }
+    validMask = (boolean*) validMaskBuf.buf;
+    validMaskLength = validMaskBuf.len / validMaskBuf.itemsize;
     result = Band_readValidMask((Band) thisObj, x, y, w, h, validMask, validMaskLength, &resultLength);
+    PyBuffer_Release(&validMaskBuf);
     if (result != NULL) {
-        resultSeq = CArray_createInstance("B", result, resultLength, beam_release_primitive_array);
-        return resultSeq;
+        resultObj = CArray_createFromItems("b", result, resultLength, beam_release_primitive_array);
+        Py_INCREF(resultObj);
+        return resultObj;
     } else {
         return Py_BuildValue("");
     }
@@ -9793,17 +9425,24 @@ PyObject* BeamPyBand_createDefaultImageInfo(PyObject* self, PyObject* args)
 {
     double* histoSkipAreas;
     int histoSkipAreasLength;
-    PyObject* histoSkipAreasSeq;
+    PyObject* histoSkipAreasObj;
+    Py_buffer histoSkipAreasBuf;
     const char* histogramType;
     unsigned PY_LONG_LONG histogram;
     const char* thisObjType;
     unsigned PY_LONG_LONG thisObj;
     void* result;
-    if (!PyArg_ParseTuple(args, "(sK)O(sK):Band_createDefaultImageInfo", &thisObjType, &thisObj, &histoSkipAreasSeq, &histogramType, &histogram)) {
+    if (!PyArg_ParseTuple(args, "(sK)O(sK):Band_createDefaultImageInfo", &thisObjType, &thisObj, &histoSkipAreasObj, &histogramType, &histogram)) {
         return NULL;
     }
-    histoSkipAreas = beam_new_double_array_from_pyseq(histoSkipAreasSeq, &histoSkipAreasLength);
+    histoSkipAreasObj = beam_getPrimitiveArrayBufferReadOnly(histoSkipAreasObj, &histoSkipAreasBuf, "d", -1);
+    if (histoSkipAreasObj == NULL) {
+        return NULL;
+    }
+    histoSkipAreas = (double*) histoSkipAreasBuf.buf;
+    histoSkipAreasLength = histoSkipAreasBuf.len / histoSkipAreasBuf.itemsize;
     result = Band_createDefaultImageInfo((Band) thisObj, histoSkipAreas, histoSkipAreasLength, (Histogram) histogram);
+    PyBuffer_Release(&histoSkipAreasBuf);
     if (result != NULL) {
         return Py_BuildValue("(sK)", "ImageInfo", (unsigned PY_LONG_LONG) result);
     } else {
@@ -11123,13 +10762,20 @@ PyObject* BeamPyTiePointGrid_newTiePointGrid1(PyObject* self, PyObject* args)
     float subSamplingY;
     float* tiePoints;
     int tiePointsLength;
-    PyObject* tiePointsSeq;
+    PyObject* tiePointsObj;
+    Py_buffer tiePointsBuf;
     void* result;
-    if (!PyArg_ParseTuple(args, "siiffffO:TiePointGrid_newTiePointGrid1", &name, &gridWidth, &gridHeight, &offsetX, &offsetY, &subSamplingX, &subSamplingY, &tiePointsSeq)) {
+    if (!PyArg_ParseTuple(args, "siiffffO:TiePointGrid_newTiePointGrid1", &name, &gridWidth, &gridHeight, &offsetX, &offsetY, &subSamplingX, &subSamplingY, &tiePointsObj)) {
         return NULL;
     }
-    tiePoints = beam_new_float_array_from_pyseq(tiePointsSeq, &tiePointsLength);
+    tiePointsObj = beam_getPrimitiveArrayBufferReadOnly(tiePointsObj, &tiePointsBuf, "f", -1);
+    if (tiePointsObj == NULL) {
+        return NULL;
+    }
+    tiePoints = (float*) tiePointsBuf.buf;
+    tiePointsLength = tiePointsBuf.len / tiePointsBuf.itemsize;
     result = TiePointGrid_newTiePointGrid1(name, gridWidth, gridHeight, offsetX, offsetY, subSamplingX, subSamplingY, tiePoints, tiePointsLength);
+    PyBuffer_Release(&tiePointsBuf);
     if (result != NULL) {
         return Py_BuildValue("(sK)", "TiePointGrid", (unsigned PY_LONG_LONG) result);
     } else {
@@ -11148,14 +10794,21 @@ PyObject* BeamPyTiePointGrid_newTiePointGrid2(PyObject* self, PyObject* args)
     float subSamplingY;
     float* tiePoints;
     int tiePointsLength;
-    PyObject* tiePointsSeq;
+    PyObject* tiePointsObj;
+    Py_buffer tiePointsBuf;
     int discontinuity;
     void* result;
-    if (!PyArg_ParseTuple(args, "siiffffOi:TiePointGrid_newTiePointGrid2", &name, &gridWidth, &gridHeight, &offsetX, &offsetY, &subSamplingX, &subSamplingY, &tiePointsSeq, &discontinuity)) {
+    if (!PyArg_ParseTuple(args, "siiffffOi:TiePointGrid_newTiePointGrid2", &name, &gridWidth, &gridHeight, &offsetX, &offsetY, &subSamplingX, &subSamplingY, &tiePointsObj, &discontinuity)) {
         return NULL;
     }
-    tiePoints = beam_new_float_array_from_pyseq(tiePointsSeq, &tiePointsLength);
+    tiePointsObj = beam_getPrimitiveArrayBufferReadOnly(tiePointsObj, &tiePointsBuf, "f", -1);
+    if (tiePointsObj == NULL) {
+        return NULL;
+    }
+    tiePoints = (float*) tiePointsBuf.buf;
+    tiePointsLength = tiePointsBuf.len / tiePointsBuf.itemsize;
     result = TiePointGrid_newTiePointGrid2(name, gridWidth, gridHeight, offsetX, offsetY, subSamplingX, subSamplingY, tiePoints, tiePointsLength, discontinuity);
+    PyBuffer_Release(&tiePointsBuf);
     if (result != NULL) {
         return Py_BuildValue("(sK)", "TiePointGrid", (unsigned PY_LONG_LONG) result);
     } else {
@@ -11174,14 +10827,21 @@ PyObject* BeamPyTiePointGrid_newTiePointGrid3(PyObject* self, PyObject* args)
     float subSamplingY;
     float* tiePoints;
     int tiePointsLength;
-    PyObject* tiePointsSeq;
+    PyObject* tiePointsObj;
+    Py_buffer tiePointsBuf;
     boolean containsAngles;
     void* result;
-    if (!PyArg_ParseTuple(args, "siiffffOp:TiePointGrid_newTiePointGrid3", &name, &gridWidth, &gridHeight, &offsetX, &offsetY, &subSamplingX, &subSamplingY, &tiePointsSeq, &containsAngles)) {
+    if (!PyArg_ParseTuple(args, "siiffffOp:TiePointGrid_newTiePointGrid3", &name, &gridWidth, &gridHeight, &offsetX, &offsetY, &subSamplingX, &subSamplingY, &tiePointsObj, &containsAngles)) {
         return NULL;
     }
-    tiePoints = beam_new_float_array_from_pyseq(tiePointsSeq, &tiePointsLength);
+    tiePointsObj = beam_getPrimitiveArrayBufferReadOnly(tiePointsObj, &tiePointsBuf, "f", -1);
+    if (tiePointsObj == NULL) {
+        return NULL;
+    }
+    tiePoints = (float*) tiePointsBuf.buf;
+    tiePointsLength = tiePointsBuf.len / tiePointsBuf.itemsize;
     result = TiePointGrid_newTiePointGrid3(name, gridWidth, gridHeight, offsetX, offsetY, subSamplingX, subSamplingY, tiePoints, tiePointsLength, containsAngles);
+    PyBuffer_Release(&tiePointsBuf);
     if (result != NULL) {
         return Py_BuildValue("(sK)", "TiePointGrid", (unsigned PY_LONG_LONG) result);
     } else {
@@ -11193,13 +10853,20 @@ PyObject* BeamPyTiePointGrid_getDiscontinuity2(PyObject* self, PyObject* args)
 {
     float* tiePoints;
     int tiePointsLength;
-    PyObject* tiePointsSeq;
+    PyObject* tiePointsObj;
+    Py_buffer tiePointsBuf;
     int result;
-    if (!PyArg_ParseTuple(args, "O:TiePointGrid_getDiscontinuity2", &tiePointsSeq)) {
+    if (!PyArg_ParseTuple(args, "O:TiePointGrid_getDiscontinuity2", &tiePointsObj)) {
         return NULL;
     }
-    tiePoints = beam_new_float_array_from_pyseq(tiePointsSeq, &tiePointsLength);
+    tiePointsObj = beam_getPrimitiveArrayBufferReadOnly(tiePointsObj, &tiePointsBuf, "f", -1);
+    if (tiePointsObj == NULL) {
+        return NULL;
+    }
+    tiePoints = (float*) tiePointsBuf.buf;
+    tiePointsLength = tiePointsBuf.len / tiePointsBuf.itemsize;
     result = TiePointGrid_getDiscontinuity2(tiePoints, tiePointsLength);
+    PyBuffer_Release(&tiePointsBuf);
     return PyLong_FromLong(result);
 }
 
@@ -11345,14 +11012,15 @@ PyObject* BeamPyTiePointGrid_getTiePoints(PyObject* self, PyObject* args)
     unsigned PY_LONG_LONG thisObj;
     float* result;
     int resultLength;
-    PyObject* resultSeq;
+    PyObject* resultObj;
     if (!PyArg_ParseTuple(args, "(sK):TiePointGrid_getTiePoints", &thisObjType, &thisObj)) {
         return NULL;
     }
     result = TiePointGrid_getTiePoints((TiePointGrid) thisObj, &resultLength);
     if (result != NULL) {
-        resultSeq = CArray_createInstance("F", result, resultLength, beam_release_primitive_array);
-        return resultSeq;
+        resultObj = CArray_createFromItems("f", result, resultLength, beam_release_primitive_array);
+        Py_INCREF(resultObj);
+        return resultObj;
     } else {
         return Py_BuildValue("");
     }
@@ -11475,22 +11143,30 @@ PyObject* BeamPyTiePointGrid_getPixels6(PyObject* self, PyObject* args)
     int h;
     int* pixels;
     int pixelsLength;
-    PyObject* pixelsSeq;
+    PyObject* pixelsObj;
+    Py_buffer pixelsBuf;
     const char* pmType;
     unsigned PY_LONG_LONG pm;
     const char* thisObjType;
     unsigned PY_LONG_LONG thisObj;
     int* result;
     int resultLength;
-    PyObject* resultSeq;
-    if (!PyArg_ParseTuple(args, "(sK)iiiiO(sK):TiePointGrid_getPixels6", &thisObjType, &thisObj, &x, &y, &w, &h, &pixelsSeq, &pmType, &pm)) {
+    PyObject* resultObj;
+    if (!PyArg_ParseTuple(args, "(sK)iiiiO(sK):TiePointGrid_getPixels6", &thisObjType, &thisObj, &x, &y, &w, &h, &pixelsObj, &pmType, &pm)) {
         return NULL;
     }
-    pixels = beam_new_int_array_from_pyseq(pixelsSeq, &pixelsLength);
+    pixelsObj = beam_getPrimitiveArrayBufferReadOnly(pixelsObj, &pixelsBuf, "i", -1);
+    if (pixelsObj == NULL) {
+        return NULL;
+    }
+    pixels = (int*) pixelsBuf.buf;
+    pixelsLength = pixelsBuf.len / pixelsBuf.itemsize;
     result = TiePointGrid_getPixels6((TiePointGrid) thisObj, x, y, w, h, pixels, pixelsLength, (ProgressMonitor) pm, &resultLength);
+    PyBuffer_Release(&pixelsBuf);
     if (result != NULL) {
-        resultSeq = CArray_createInstance("I", result, resultLength, beam_release_primitive_array);
-        return resultSeq;
+        resultObj = CArray_createFromItems("i", result, resultLength, beam_release_primitive_array);
+        Py_INCREF(resultObj);
+        return resultObj;
     } else {
         return Py_BuildValue("");
     }
@@ -11504,22 +11180,30 @@ PyObject* BeamPyTiePointGrid_getPixels4(PyObject* self, PyObject* args)
     int h;
     float* pixels;
     int pixelsLength;
-    PyObject* pixelsSeq;
+    PyObject* pixelsObj;
+    Py_buffer pixelsBuf;
     const char* pmType;
     unsigned PY_LONG_LONG pm;
     const char* thisObjType;
     unsigned PY_LONG_LONG thisObj;
     float* result;
     int resultLength;
-    PyObject* resultSeq;
-    if (!PyArg_ParseTuple(args, "(sK)iiiiO(sK):TiePointGrid_getPixels4", &thisObjType, &thisObj, &x, &y, &w, &h, &pixelsSeq, &pmType, &pm)) {
+    PyObject* resultObj;
+    if (!PyArg_ParseTuple(args, "(sK)iiiiO(sK):TiePointGrid_getPixels4", &thisObjType, &thisObj, &x, &y, &w, &h, &pixelsObj, &pmType, &pm)) {
         return NULL;
     }
-    pixels = beam_new_float_array_from_pyseq(pixelsSeq, &pixelsLength);
+    pixelsObj = beam_getPrimitiveArrayBufferReadOnly(pixelsObj, &pixelsBuf, "f", -1);
+    if (pixelsObj == NULL) {
+        return NULL;
+    }
+    pixels = (float*) pixelsBuf.buf;
+    pixelsLength = pixelsBuf.len / pixelsBuf.itemsize;
     result = TiePointGrid_getPixels4((TiePointGrid) thisObj, x, y, w, h, pixels, pixelsLength, (ProgressMonitor) pm, &resultLength);
+    PyBuffer_Release(&pixelsBuf);
     if (result != NULL) {
-        resultSeq = CArray_createInstance("F", result, resultLength, beam_release_primitive_array);
-        return resultSeq;
+        resultObj = CArray_createFromItems("f", result, resultLength, beam_release_primitive_array);
+        Py_INCREF(resultObj);
+        return resultObj;
     } else {
         return Py_BuildValue("");
     }
@@ -11533,22 +11217,30 @@ PyObject* BeamPyTiePointGrid_getPixels2(PyObject* self, PyObject* args)
     int h;
     double* pixels;
     int pixelsLength;
-    PyObject* pixelsSeq;
+    PyObject* pixelsObj;
+    Py_buffer pixelsBuf;
     const char* pmType;
     unsigned PY_LONG_LONG pm;
     const char* thisObjType;
     unsigned PY_LONG_LONG thisObj;
     double* result;
     int resultLength;
-    PyObject* resultSeq;
-    if (!PyArg_ParseTuple(args, "(sK)iiiiO(sK):TiePointGrid_getPixels2", &thisObjType, &thisObj, &x, &y, &w, &h, &pixelsSeq, &pmType, &pm)) {
+    PyObject* resultObj;
+    if (!PyArg_ParseTuple(args, "(sK)iiiiO(sK):TiePointGrid_getPixels2", &thisObjType, &thisObj, &x, &y, &w, &h, &pixelsObj, &pmType, &pm)) {
         return NULL;
     }
-    pixels = beam_new_double_array_from_pyseq(pixelsSeq, &pixelsLength);
+    pixelsObj = beam_getPrimitiveArrayBufferReadOnly(pixelsObj, &pixelsBuf, "d", -1);
+    if (pixelsObj == NULL) {
+        return NULL;
+    }
+    pixels = (double*) pixelsBuf.buf;
+    pixelsLength = pixelsBuf.len / pixelsBuf.itemsize;
     result = TiePointGrid_getPixels2((TiePointGrid) thisObj, x, y, w, h, pixels, pixelsLength, (ProgressMonitor) pm, &resultLength);
+    PyBuffer_Release(&pixelsBuf);
     if (result != NULL) {
-        resultSeq = CArray_createInstance("D", result, resultLength, beam_release_primitive_array);
-        return resultSeq;
+        resultObj = CArray_createFromItems("d", result, resultLength, beam_release_primitive_array);
+        Py_INCREF(resultObj);
+        return resultObj;
     } else {
         return Py_BuildValue("");
     }
@@ -11562,14 +11254,21 @@ PyObject* BeamPyTiePointGrid_setPixels3(PyObject* self, PyObject* args)
     int h;
     int* pixels;
     int pixelsLength;
-    PyObject* pixelsSeq;
+    PyObject* pixelsObj;
+    Py_buffer pixelsBuf;
     const char* thisObjType;
     unsigned PY_LONG_LONG thisObj;
-    if (!PyArg_ParseTuple(args, "(sK)iiiiO:TiePointGrid_setPixels3", &thisObjType, &thisObj, &x, &y, &w, &h, &pixelsSeq)) {
+    if (!PyArg_ParseTuple(args, "(sK)iiiiO:TiePointGrid_setPixels3", &thisObjType, &thisObj, &x, &y, &w, &h, &pixelsObj)) {
         return NULL;
     }
-    pixels = beam_new_int_array_from_pyseq(pixelsSeq, &pixelsLength);
+    pixelsObj = beam_getPrimitiveArrayBufferReadOnly(pixelsObj, &pixelsBuf, "i", -1);
+    if (pixelsObj == NULL) {
+        return NULL;
+    }
+    pixels = (int*) pixelsBuf.buf;
+    pixelsLength = pixelsBuf.len / pixelsBuf.itemsize;
     TiePointGrid_setPixels3((TiePointGrid) thisObj, x, y, w, h, pixels, pixelsLength);
+    PyBuffer_Release(&pixelsBuf);
     return Py_BuildValue("");
 }
 
@@ -11581,14 +11280,21 @@ PyObject* BeamPyTiePointGrid_setPixels2(PyObject* self, PyObject* args)
     int h;
     float* pixels;
     int pixelsLength;
-    PyObject* pixelsSeq;
+    PyObject* pixelsObj;
+    Py_buffer pixelsBuf;
     const char* thisObjType;
     unsigned PY_LONG_LONG thisObj;
-    if (!PyArg_ParseTuple(args, "(sK)iiiiO:TiePointGrid_setPixels2", &thisObjType, &thisObj, &x, &y, &w, &h, &pixelsSeq)) {
+    if (!PyArg_ParseTuple(args, "(sK)iiiiO:TiePointGrid_setPixels2", &thisObjType, &thisObj, &x, &y, &w, &h, &pixelsObj)) {
         return NULL;
     }
-    pixels = beam_new_float_array_from_pyseq(pixelsSeq, &pixelsLength);
+    pixelsObj = beam_getPrimitiveArrayBufferReadOnly(pixelsObj, &pixelsBuf, "f", -1);
+    if (pixelsObj == NULL) {
+        return NULL;
+    }
+    pixels = (float*) pixelsBuf.buf;
+    pixelsLength = pixelsBuf.len / pixelsBuf.itemsize;
     TiePointGrid_setPixels2((TiePointGrid) thisObj, x, y, w, h, pixels, pixelsLength);
+    PyBuffer_Release(&pixelsBuf);
     return Py_BuildValue("");
 }
 
@@ -11600,14 +11306,21 @@ PyObject* BeamPyTiePointGrid_setPixels1(PyObject* self, PyObject* args)
     int h;
     double* pixels;
     int pixelsLength;
-    PyObject* pixelsSeq;
+    PyObject* pixelsObj;
+    Py_buffer pixelsBuf;
     const char* thisObjType;
     unsigned PY_LONG_LONG thisObj;
-    if (!PyArg_ParseTuple(args, "(sK)iiiiO:TiePointGrid_setPixels1", &thisObjType, &thisObj, &x, &y, &w, &h, &pixelsSeq)) {
+    if (!PyArg_ParseTuple(args, "(sK)iiiiO:TiePointGrid_setPixels1", &thisObjType, &thisObj, &x, &y, &w, &h, &pixelsObj)) {
         return NULL;
     }
-    pixels = beam_new_double_array_from_pyseq(pixelsSeq, &pixelsLength);
+    pixelsObj = beam_getPrimitiveArrayBufferReadOnly(pixelsObj, &pixelsBuf, "d", -1);
+    if (pixelsObj == NULL) {
+        return NULL;
+    }
+    pixels = (double*) pixelsBuf.buf;
+    pixelsLength = pixelsBuf.len / pixelsBuf.itemsize;
     TiePointGrid_setPixels1((TiePointGrid) thisObj, x, y, w, h, pixels, pixelsLength);
+    PyBuffer_Release(&pixelsBuf);
     return Py_BuildValue("");
 }
 
@@ -11619,22 +11332,30 @@ PyObject* BeamPyTiePointGrid_readPixels6(PyObject* self, PyObject* args)
     int h;
     int* pixels;
     int pixelsLength;
-    PyObject* pixelsSeq;
+    PyObject* pixelsObj;
+    Py_buffer pixelsBuf;
     const char* pmType;
     unsigned PY_LONG_LONG pm;
     const char* thisObjType;
     unsigned PY_LONG_LONG thisObj;
     int* result;
     int resultLength;
-    PyObject* resultSeq;
-    if (!PyArg_ParseTuple(args, "(sK)iiiiO(sK):TiePointGrid_readPixels6", &thisObjType, &thisObj, &x, &y, &w, &h, &pixelsSeq, &pmType, &pm)) {
+    PyObject* resultObj;
+    if (!PyArg_ParseTuple(args, "(sK)iiiiO(sK):TiePointGrid_readPixels6", &thisObjType, &thisObj, &x, &y, &w, &h, &pixelsObj, &pmType, &pm)) {
         return NULL;
     }
-    pixels = beam_new_int_array_from_pyseq(pixelsSeq, &pixelsLength);
+    pixelsObj = beam_getPrimitiveArrayBufferReadOnly(pixelsObj, &pixelsBuf, "i", -1);
+    if (pixelsObj == NULL) {
+        return NULL;
+    }
+    pixels = (int*) pixelsBuf.buf;
+    pixelsLength = pixelsBuf.len / pixelsBuf.itemsize;
     result = TiePointGrid_readPixels6((TiePointGrid) thisObj, x, y, w, h, pixels, pixelsLength, (ProgressMonitor) pm, &resultLength);
+    PyBuffer_Release(&pixelsBuf);
     if (result != NULL) {
-        resultSeq = CArray_createInstance("I", result, resultLength, beam_release_primitive_array);
-        return resultSeq;
+        resultObj = CArray_createFromItems("i", result, resultLength, beam_release_primitive_array);
+        Py_INCREF(resultObj);
+        return resultObj;
     } else {
         return Py_BuildValue("");
     }
@@ -11648,22 +11369,30 @@ PyObject* BeamPyTiePointGrid_readPixels4(PyObject* self, PyObject* args)
     int h;
     float* pixels;
     int pixelsLength;
-    PyObject* pixelsSeq;
+    PyObject* pixelsObj;
+    Py_buffer pixelsBuf;
     const char* pmType;
     unsigned PY_LONG_LONG pm;
     const char* thisObjType;
     unsigned PY_LONG_LONG thisObj;
     float* result;
     int resultLength;
-    PyObject* resultSeq;
-    if (!PyArg_ParseTuple(args, "(sK)iiiiO(sK):TiePointGrid_readPixels4", &thisObjType, &thisObj, &x, &y, &w, &h, &pixelsSeq, &pmType, &pm)) {
+    PyObject* resultObj;
+    if (!PyArg_ParseTuple(args, "(sK)iiiiO(sK):TiePointGrid_readPixels4", &thisObjType, &thisObj, &x, &y, &w, &h, &pixelsObj, &pmType, &pm)) {
         return NULL;
     }
-    pixels = beam_new_float_array_from_pyseq(pixelsSeq, &pixelsLength);
+    pixelsObj = beam_getPrimitiveArrayBufferReadOnly(pixelsObj, &pixelsBuf, "f", -1);
+    if (pixelsObj == NULL) {
+        return NULL;
+    }
+    pixels = (float*) pixelsBuf.buf;
+    pixelsLength = pixelsBuf.len / pixelsBuf.itemsize;
     result = TiePointGrid_readPixels4((TiePointGrid) thisObj, x, y, w, h, pixels, pixelsLength, (ProgressMonitor) pm, &resultLength);
+    PyBuffer_Release(&pixelsBuf);
     if (result != NULL) {
-        resultSeq = CArray_createInstance("F", result, resultLength, beam_release_primitive_array);
-        return resultSeq;
+        resultObj = CArray_createFromItems("f", result, resultLength, beam_release_primitive_array);
+        Py_INCREF(resultObj);
+        return resultObj;
     } else {
         return Py_BuildValue("");
     }
@@ -11677,22 +11406,30 @@ PyObject* BeamPyTiePointGrid_readPixels2(PyObject* self, PyObject* args)
     int h;
     double* pixels;
     int pixelsLength;
-    PyObject* pixelsSeq;
+    PyObject* pixelsObj;
+    Py_buffer pixelsBuf;
     const char* pmType;
     unsigned PY_LONG_LONG pm;
     const char* thisObjType;
     unsigned PY_LONG_LONG thisObj;
     double* result;
     int resultLength;
-    PyObject* resultSeq;
-    if (!PyArg_ParseTuple(args, "(sK)iiiiO(sK):TiePointGrid_readPixels2", &thisObjType, &thisObj, &x, &y, &w, &h, &pixelsSeq, &pmType, &pm)) {
+    PyObject* resultObj;
+    if (!PyArg_ParseTuple(args, "(sK)iiiiO(sK):TiePointGrid_readPixels2", &thisObjType, &thisObj, &x, &y, &w, &h, &pixelsObj, &pmType, &pm)) {
         return NULL;
     }
-    pixels = beam_new_double_array_from_pyseq(pixelsSeq, &pixelsLength);
+    pixelsObj = beam_getPrimitiveArrayBufferReadOnly(pixelsObj, &pixelsBuf, "d", -1);
+    if (pixelsObj == NULL) {
+        return NULL;
+    }
+    pixels = (double*) pixelsBuf.buf;
+    pixelsLength = pixelsBuf.len / pixelsBuf.itemsize;
     result = TiePointGrid_readPixels2((TiePointGrid) thisObj, x, y, w, h, pixels, pixelsLength, (ProgressMonitor) pm, &resultLength);
+    PyBuffer_Release(&pixelsBuf);
     if (result != NULL) {
-        resultSeq = CArray_createInstance("D", result, resultLength, beam_release_primitive_array);
-        return resultSeq;
+        resultObj = CArray_createFromItems("d", result, resultLength, beam_release_primitive_array);
+        Py_INCREF(resultObj);
+        return resultObj;
     } else {
         return Py_BuildValue("");
     }
@@ -11706,16 +11443,23 @@ PyObject* BeamPyTiePointGrid_writePixels6(PyObject* self, PyObject* args)
     int h;
     int* pixels;
     int pixelsLength;
-    PyObject* pixelsSeq;
+    PyObject* pixelsObj;
+    Py_buffer pixelsBuf;
     const char* pmType;
     unsigned PY_LONG_LONG pm;
     const char* thisObjType;
     unsigned PY_LONG_LONG thisObj;
-    if (!PyArg_ParseTuple(args, "(sK)iiiiO(sK):TiePointGrid_writePixels6", &thisObjType, &thisObj, &x, &y, &w, &h, &pixelsSeq, &pmType, &pm)) {
+    if (!PyArg_ParseTuple(args, "(sK)iiiiO(sK):TiePointGrid_writePixels6", &thisObjType, &thisObj, &x, &y, &w, &h, &pixelsObj, &pmType, &pm)) {
         return NULL;
     }
-    pixels = beam_new_int_array_from_pyseq(pixelsSeq, &pixelsLength);
+    pixelsObj = beam_getPrimitiveArrayBufferReadOnly(pixelsObj, &pixelsBuf, "i", -1);
+    if (pixelsObj == NULL) {
+        return NULL;
+    }
+    pixels = (int*) pixelsBuf.buf;
+    pixelsLength = pixelsBuf.len / pixelsBuf.itemsize;
     TiePointGrid_writePixels6((TiePointGrid) thisObj, x, y, w, h, pixels, pixelsLength, (ProgressMonitor) pm);
+    PyBuffer_Release(&pixelsBuf);
     return Py_BuildValue("");
 }
 
@@ -11727,16 +11471,23 @@ PyObject* BeamPyTiePointGrid_writePixels4(PyObject* self, PyObject* args)
     int h;
     float* pixels;
     int pixelsLength;
-    PyObject* pixelsSeq;
+    PyObject* pixelsObj;
+    Py_buffer pixelsBuf;
     const char* pmType;
     unsigned PY_LONG_LONG pm;
     const char* thisObjType;
     unsigned PY_LONG_LONG thisObj;
-    if (!PyArg_ParseTuple(args, "(sK)iiiiO(sK):TiePointGrid_writePixels4", &thisObjType, &thisObj, &x, &y, &w, &h, &pixelsSeq, &pmType, &pm)) {
+    if (!PyArg_ParseTuple(args, "(sK)iiiiO(sK):TiePointGrid_writePixels4", &thisObjType, &thisObj, &x, &y, &w, &h, &pixelsObj, &pmType, &pm)) {
         return NULL;
     }
-    pixels = beam_new_float_array_from_pyseq(pixelsSeq, &pixelsLength);
+    pixelsObj = beam_getPrimitiveArrayBufferReadOnly(pixelsObj, &pixelsBuf, "f", -1);
+    if (pixelsObj == NULL) {
+        return NULL;
+    }
+    pixels = (float*) pixelsBuf.buf;
+    pixelsLength = pixelsBuf.len / pixelsBuf.itemsize;
     TiePointGrid_writePixels4((TiePointGrid) thisObj, x, y, w, h, pixels, pixelsLength, (ProgressMonitor) pm);
+    PyBuffer_Release(&pixelsBuf);
     return Py_BuildValue("");
 }
 
@@ -11748,16 +11499,23 @@ PyObject* BeamPyTiePointGrid_writePixels2(PyObject* self, PyObject* args)
     int h;
     double* pixels;
     int pixelsLength;
-    PyObject* pixelsSeq;
+    PyObject* pixelsObj;
+    Py_buffer pixelsBuf;
     const char* pmType;
     unsigned PY_LONG_LONG pm;
     const char* thisObjType;
     unsigned PY_LONG_LONG thisObj;
-    if (!PyArg_ParseTuple(args, "(sK)iiiiO(sK):TiePointGrid_writePixels2", &thisObjType, &thisObj, &x, &y, &w, &h, &pixelsSeq, &pmType, &pm)) {
+    if (!PyArg_ParseTuple(args, "(sK)iiiiO(sK):TiePointGrid_writePixels2", &thisObjType, &thisObj, &x, &y, &w, &h, &pixelsObj, &pmType, &pm)) {
         return NULL;
     }
-    pixels = beam_new_double_array_from_pyseq(pixelsSeq, &pixelsLength);
+    pixelsObj = beam_getPrimitiveArrayBufferReadOnly(pixelsObj, &pixelsBuf, "d", -1);
+    if (pixelsObj == NULL) {
+        return NULL;
+    }
+    pixels = (double*) pixelsBuf.buf;
+    pixelsLength = pixelsBuf.len / pixelsBuf.itemsize;
     TiePointGrid_writePixels2((TiePointGrid) thisObj, x, y, w, h, pixels, pixelsLength, (ProgressMonitor) pm);
+    PyBuffer_Release(&pixelsBuf);
     return Py_BuildValue("");
 }
 
@@ -12412,20 +12170,28 @@ PyObject* BeamPyTiePointGrid_getPixels5(PyObject* self, PyObject* args)
     int h;
     int* pixels;
     int pixelsLength;
-    PyObject* pixelsSeq;
+    PyObject* pixelsObj;
+    Py_buffer pixelsBuf;
     const char* thisObjType;
     unsigned PY_LONG_LONG thisObj;
     int* result;
     int resultLength;
-    PyObject* resultSeq;
-    if (!PyArg_ParseTuple(args, "(sK)iiiiO:TiePointGrid_getPixels5", &thisObjType, &thisObj, &x, &y, &w, &h, &pixelsSeq)) {
+    PyObject* resultObj;
+    if (!PyArg_ParseTuple(args, "(sK)iiiiO:TiePointGrid_getPixels5", &thisObjType, &thisObj, &x, &y, &w, &h, &pixelsObj)) {
         return NULL;
     }
-    pixels = beam_new_int_array_from_pyseq(pixelsSeq, &pixelsLength);
+    pixelsObj = beam_getPrimitiveArrayBufferReadOnly(pixelsObj, &pixelsBuf, "i", -1);
+    if (pixelsObj == NULL) {
+        return NULL;
+    }
+    pixels = (int*) pixelsBuf.buf;
+    pixelsLength = pixelsBuf.len / pixelsBuf.itemsize;
     result = TiePointGrid_getPixels5((TiePointGrid) thisObj, x, y, w, h, pixels, pixelsLength, &resultLength);
+    PyBuffer_Release(&pixelsBuf);
     if (result != NULL) {
-        resultSeq = CArray_createInstance("I", result, resultLength, beam_release_primitive_array);
-        return resultSeq;
+        resultObj = CArray_createFromItems("i", result, resultLength, beam_release_primitive_array);
+        Py_INCREF(resultObj);
+        return resultObj;
     } else {
         return Py_BuildValue("");
     }
@@ -12439,20 +12205,28 @@ PyObject* BeamPyTiePointGrid_getPixels3(PyObject* self, PyObject* args)
     int h;
     float* pixels;
     int pixelsLength;
-    PyObject* pixelsSeq;
+    PyObject* pixelsObj;
+    Py_buffer pixelsBuf;
     const char* thisObjType;
     unsigned PY_LONG_LONG thisObj;
     float* result;
     int resultLength;
-    PyObject* resultSeq;
-    if (!PyArg_ParseTuple(args, "(sK)iiiiO:TiePointGrid_getPixels3", &thisObjType, &thisObj, &x, &y, &w, &h, &pixelsSeq)) {
+    PyObject* resultObj;
+    if (!PyArg_ParseTuple(args, "(sK)iiiiO:TiePointGrid_getPixels3", &thisObjType, &thisObj, &x, &y, &w, &h, &pixelsObj)) {
         return NULL;
     }
-    pixels = beam_new_float_array_from_pyseq(pixelsSeq, &pixelsLength);
+    pixelsObj = beam_getPrimitiveArrayBufferReadOnly(pixelsObj, &pixelsBuf, "f", -1);
+    if (pixelsObj == NULL) {
+        return NULL;
+    }
+    pixels = (float*) pixelsBuf.buf;
+    pixelsLength = pixelsBuf.len / pixelsBuf.itemsize;
     result = TiePointGrid_getPixels3((TiePointGrid) thisObj, x, y, w, h, pixels, pixelsLength, &resultLength);
+    PyBuffer_Release(&pixelsBuf);
     if (result != NULL) {
-        resultSeq = CArray_createInstance("F", result, resultLength, beam_release_primitive_array);
-        return resultSeq;
+        resultObj = CArray_createFromItems("f", result, resultLength, beam_release_primitive_array);
+        Py_INCREF(resultObj);
+        return resultObj;
     } else {
         return Py_BuildValue("");
     }
@@ -12466,20 +12240,28 @@ PyObject* BeamPyTiePointGrid_getPixels1(PyObject* self, PyObject* args)
     int h;
     double* pixels;
     int pixelsLength;
-    PyObject* pixelsSeq;
+    PyObject* pixelsObj;
+    Py_buffer pixelsBuf;
     const char* thisObjType;
     unsigned PY_LONG_LONG thisObj;
     double* result;
     int resultLength;
-    PyObject* resultSeq;
-    if (!PyArg_ParseTuple(args, "(sK)iiiiO:TiePointGrid_getPixels1", &thisObjType, &thisObj, &x, &y, &w, &h, &pixelsSeq)) {
+    PyObject* resultObj;
+    if (!PyArg_ParseTuple(args, "(sK)iiiiO:TiePointGrid_getPixels1", &thisObjType, &thisObj, &x, &y, &w, &h, &pixelsObj)) {
         return NULL;
     }
-    pixels = beam_new_double_array_from_pyseq(pixelsSeq, &pixelsLength);
+    pixelsObj = beam_getPrimitiveArrayBufferReadOnly(pixelsObj, &pixelsBuf, "d", -1);
+    if (pixelsObj == NULL) {
+        return NULL;
+    }
+    pixels = (double*) pixelsBuf.buf;
+    pixelsLength = pixelsBuf.len / pixelsBuf.itemsize;
     result = TiePointGrid_getPixels1((TiePointGrid) thisObj, x, y, w, h, pixels, pixelsLength, &resultLength);
+    PyBuffer_Release(&pixelsBuf);
     if (result != NULL) {
-        resultSeq = CArray_createInstance("D", result, resultLength, beam_release_primitive_array);
-        return resultSeq;
+        resultObj = CArray_createFromItems("d", result, resultLength, beam_release_primitive_array);
+        Py_INCREF(resultObj);
+        return resultObj;
     } else {
         return Py_BuildValue("");
     }
@@ -12493,20 +12275,28 @@ PyObject* BeamPyTiePointGrid_readPixels5(PyObject* self, PyObject* args)
     int h;
     int* pixels;
     int pixelsLength;
-    PyObject* pixelsSeq;
+    PyObject* pixelsObj;
+    Py_buffer pixelsBuf;
     const char* thisObjType;
     unsigned PY_LONG_LONG thisObj;
     int* result;
     int resultLength;
-    PyObject* resultSeq;
-    if (!PyArg_ParseTuple(args, "(sK)iiiiO:TiePointGrid_readPixels5", &thisObjType, &thisObj, &x, &y, &w, &h, &pixelsSeq)) {
+    PyObject* resultObj;
+    if (!PyArg_ParseTuple(args, "(sK)iiiiO:TiePointGrid_readPixels5", &thisObjType, &thisObj, &x, &y, &w, &h, &pixelsObj)) {
         return NULL;
     }
-    pixels = beam_new_int_array_from_pyseq(pixelsSeq, &pixelsLength);
+    pixelsObj = beam_getPrimitiveArrayBufferReadOnly(pixelsObj, &pixelsBuf, "i", -1);
+    if (pixelsObj == NULL) {
+        return NULL;
+    }
+    pixels = (int*) pixelsBuf.buf;
+    pixelsLength = pixelsBuf.len / pixelsBuf.itemsize;
     result = TiePointGrid_readPixels5((TiePointGrid) thisObj, x, y, w, h, pixels, pixelsLength, &resultLength);
+    PyBuffer_Release(&pixelsBuf);
     if (result != NULL) {
-        resultSeq = CArray_createInstance("I", result, resultLength, beam_release_primitive_array);
-        return resultSeq;
+        resultObj = CArray_createFromItems("i", result, resultLength, beam_release_primitive_array);
+        Py_INCREF(resultObj);
+        return resultObj;
     } else {
         return Py_BuildValue("");
     }
@@ -12520,20 +12310,28 @@ PyObject* BeamPyTiePointGrid_readPixels3(PyObject* self, PyObject* args)
     int h;
     float* pixels;
     int pixelsLength;
-    PyObject* pixelsSeq;
+    PyObject* pixelsObj;
+    Py_buffer pixelsBuf;
     const char* thisObjType;
     unsigned PY_LONG_LONG thisObj;
     float* result;
     int resultLength;
-    PyObject* resultSeq;
-    if (!PyArg_ParseTuple(args, "(sK)iiiiO:TiePointGrid_readPixels3", &thisObjType, &thisObj, &x, &y, &w, &h, &pixelsSeq)) {
+    PyObject* resultObj;
+    if (!PyArg_ParseTuple(args, "(sK)iiiiO:TiePointGrid_readPixels3", &thisObjType, &thisObj, &x, &y, &w, &h, &pixelsObj)) {
         return NULL;
     }
-    pixels = beam_new_float_array_from_pyseq(pixelsSeq, &pixelsLength);
+    pixelsObj = beam_getPrimitiveArrayBufferReadOnly(pixelsObj, &pixelsBuf, "f", -1);
+    if (pixelsObj == NULL) {
+        return NULL;
+    }
+    pixels = (float*) pixelsBuf.buf;
+    pixelsLength = pixelsBuf.len / pixelsBuf.itemsize;
     result = TiePointGrid_readPixels3((TiePointGrid) thisObj, x, y, w, h, pixels, pixelsLength, &resultLength);
+    PyBuffer_Release(&pixelsBuf);
     if (result != NULL) {
-        resultSeq = CArray_createInstance("F", result, resultLength, beam_release_primitive_array);
-        return resultSeq;
+        resultObj = CArray_createFromItems("f", result, resultLength, beam_release_primitive_array);
+        Py_INCREF(resultObj);
+        return resultObj;
     } else {
         return Py_BuildValue("");
     }
@@ -12547,20 +12345,28 @@ PyObject* BeamPyTiePointGrid_readPixels1(PyObject* self, PyObject* args)
     int h;
     double* pixels;
     int pixelsLength;
-    PyObject* pixelsSeq;
+    PyObject* pixelsObj;
+    Py_buffer pixelsBuf;
     const char* thisObjType;
     unsigned PY_LONG_LONG thisObj;
     double* result;
     int resultLength;
-    PyObject* resultSeq;
-    if (!PyArg_ParseTuple(args, "(sK)iiiiO:TiePointGrid_readPixels1", &thisObjType, &thisObj, &x, &y, &w, &h, &pixelsSeq)) {
+    PyObject* resultObj;
+    if (!PyArg_ParseTuple(args, "(sK)iiiiO:TiePointGrid_readPixels1", &thisObjType, &thisObj, &x, &y, &w, &h, &pixelsObj)) {
         return NULL;
     }
-    pixels = beam_new_double_array_from_pyseq(pixelsSeq, &pixelsLength);
+    pixelsObj = beam_getPrimitiveArrayBufferReadOnly(pixelsObj, &pixelsBuf, "d", -1);
+    if (pixelsObj == NULL) {
+        return NULL;
+    }
+    pixels = (double*) pixelsBuf.buf;
+    pixelsLength = pixelsBuf.len / pixelsBuf.itemsize;
     result = TiePointGrid_readPixels1((TiePointGrid) thisObj, x, y, w, h, pixels, pixelsLength, &resultLength);
+    PyBuffer_Release(&pixelsBuf);
     if (result != NULL) {
-        resultSeq = CArray_createInstance("D", result, resultLength, beam_release_primitive_array);
-        return resultSeq;
+        resultObj = CArray_createFromItems("d", result, resultLength, beam_release_primitive_array);
+        Py_INCREF(resultObj);
+        return resultObj;
     } else {
         return Py_BuildValue("");
     }
@@ -12574,14 +12380,21 @@ PyObject* BeamPyTiePointGrid_writePixels5(PyObject* self, PyObject* args)
     int h;
     int* pixels;
     int pixelsLength;
-    PyObject* pixelsSeq;
+    PyObject* pixelsObj;
+    Py_buffer pixelsBuf;
     const char* thisObjType;
     unsigned PY_LONG_LONG thisObj;
-    if (!PyArg_ParseTuple(args, "(sK)iiiiO:TiePointGrid_writePixels5", &thisObjType, &thisObj, &x, &y, &w, &h, &pixelsSeq)) {
+    if (!PyArg_ParseTuple(args, "(sK)iiiiO:TiePointGrid_writePixels5", &thisObjType, &thisObj, &x, &y, &w, &h, &pixelsObj)) {
         return NULL;
     }
-    pixels = beam_new_int_array_from_pyseq(pixelsSeq, &pixelsLength);
+    pixelsObj = beam_getPrimitiveArrayBufferReadOnly(pixelsObj, &pixelsBuf, "i", -1);
+    if (pixelsObj == NULL) {
+        return NULL;
+    }
+    pixels = (int*) pixelsBuf.buf;
+    pixelsLength = pixelsBuf.len / pixelsBuf.itemsize;
     TiePointGrid_writePixels5((TiePointGrid) thisObj, x, y, w, h, pixels, pixelsLength);
+    PyBuffer_Release(&pixelsBuf);
     return Py_BuildValue("");
 }
 
@@ -12593,14 +12406,21 @@ PyObject* BeamPyTiePointGrid_writePixels3(PyObject* self, PyObject* args)
     int h;
     float* pixels;
     int pixelsLength;
-    PyObject* pixelsSeq;
+    PyObject* pixelsObj;
+    Py_buffer pixelsBuf;
     const char* thisObjType;
     unsigned PY_LONG_LONG thisObj;
-    if (!PyArg_ParseTuple(args, "(sK)iiiiO:TiePointGrid_writePixels3", &thisObjType, &thisObj, &x, &y, &w, &h, &pixelsSeq)) {
+    if (!PyArg_ParseTuple(args, "(sK)iiiiO:TiePointGrid_writePixels3", &thisObjType, &thisObj, &x, &y, &w, &h, &pixelsObj)) {
         return NULL;
     }
-    pixels = beam_new_float_array_from_pyseq(pixelsSeq, &pixelsLength);
+    pixelsObj = beam_getPrimitiveArrayBufferReadOnly(pixelsObj, &pixelsBuf, "f", -1);
+    if (pixelsObj == NULL) {
+        return NULL;
+    }
+    pixels = (float*) pixelsBuf.buf;
+    pixelsLength = pixelsBuf.len / pixelsBuf.itemsize;
     TiePointGrid_writePixels3((TiePointGrid) thisObj, x, y, w, h, pixels, pixelsLength);
+    PyBuffer_Release(&pixelsBuf);
     return Py_BuildValue("");
 }
 
@@ -12612,14 +12432,21 @@ PyObject* BeamPyTiePointGrid_writePixels1(PyObject* self, PyObject* args)
     int h;
     double* pixels;
     int pixelsLength;
-    PyObject* pixelsSeq;
+    PyObject* pixelsObj;
+    Py_buffer pixelsBuf;
     const char* thisObjType;
     unsigned PY_LONG_LONG thisObj;
-    if (!PyArg_ParseTuple(args, "(sK)iiiiO:TiePointGrid_writePixels1", &thisObjType, &thisObj, &x, &y, &w, &h, &pixelsSeq)) {
+    if (!PyArg_ParseTuple(args, "(sK)iiiiO:TiePointGrid_writePixels1", &thisObjType, &thisObj, &x, &y, &w, &h, &pixelsObj)) {
         return NULL;
     }
-    pixels = beam_new_double_array_from_pyseq(pixelsSeq, &pixelsLength);
+    pixelsObj = beam_getPrimitiveArrayBufferReadOnly(pixelsObj, &pixelsBuf, "d", -1);
+    if (pixelsObj == NULL) {
+        return NULL;
+    }
+    pixels = (double*) pixelsBuf.buf;
+    pixelsLength = pixelsBuf.len / pixelsBuf.itemsize;
     TiePointGrid_writePixels1((TiePointGrid) thisObj, x, y, w, h, pixels, pixelsLength);
+    PyBuffer_Release(&pixelsBuf);
     return Py_BuildValue("");
 }
 
@@ -12631,20 +12458,28 @@ PyObject* BeamPyTiePointGrid_readValidMask(PyObject* self, PyObject* args)
     int h;
     boolean* validMask;
     int validMaskLength;
-    PyObject* validMaskSeq;
+    PyObject* validMaskObj;
+    Py_buffer validMaskBuf;
     const char* thisObjType;
     unsigned PY_LONG_LONG thisObj;
     boolean* result;
     int resultLength;
-    PyObject* resultSeq;
-    if (!PyArg_ParseTuple(args, "(sK)iiiiO:TiePointGrid_readValidMask", &thisObjType, &thisObj, &x, &y, &w, &h, &validMaskSeq)) {
+    PyObject* resultObj;
+    if (!PyArg_ParseTuple(args, "(sK)iiiiO:TiePointGrid_readValidMask", &thisObjType, &thisObj, &x, &y, &w, &h, &validMaskObj)) {
         return NULL;
     }
-    validMask = beam_new_boolean_array_from_pyseq(validMaskSeq, &validMaskLength);
+    validMaskObj = beam_getPrimitiveArrayBufferReadOnly(validMaskObj, &validMaskBuf, "b", -1);
+    if (validMaskObj == NULL) {
+        return NULL;
+    }
+    validMask = (boolean*) validMaskBuf.buf;
+    validMaskLength = validMaskBuf.len / validMaskBuf.itemsize;
     result = TiePointGrid_readValidMask((TiePointGrid) thisObj, x, y, w, h, validMask, validMaskLength, &resultLength);
+    PyBuffer_Release(&validMaskBuf);
     if (result != NULL) {
-        resultSeq = CArray_createInstance("B", result, resultLength, beam_release_primitive_array);
-        return resultSeq;
+        resultObj = CArray_createFromItems("b", result, resultLength, beam_release_primitive_array);
+        Py_INCREF(resultObj);
+        return resultObj;
     } else {
         return Py_BuildValue("");
     }
@@ -12879,17 +12714,24 @@ PyObject* BeamPyTiePointGrid_getImageInfo3(PyObject* self, PyObject* args)
 {
     double* histoSkipAreas;
     int histoSkipAreasLength;
-    PyObject* histoSkipAreasSeq;
+    PyObject* histoSkipAreasObj;
+    Py_buffer histoSkipAreasBuf;
     const char* pmType;
     unsigned PY_LONG_LONG pm;
     const char* thisObjType;
     unsigned PY_LONG_LONG thisObj;
     void* result;
-    if (!PyArg_ParseTuple(args, "(sK)O(sK):TiePointGrid_getImageInfo3", &thisObjType, &thisObj, &histoSkipAreasSeq, &pmType, &pm)) {
+    if (!PyArg_ParseTuple(args, "(sK)O(sK):TiePointGrid_getImageInfo3", &thisObjType, &thisObj, &histoSkipAreasObj, &pmType, &pm)) {
         return NULL;
     }
-    histoSkipAreas = beam_new_double_array_from_pyseq(histoSkipAreasSeq, &histoSkipAreasLength);
+    histoSkipAreasObj = beam_getPrimitiveArrayBufferReadOnly(histoSkipAreasObj, &histoSkipAreasBuf, "d", -1);
+    if (histoSkipAreasObj == NULL) {
+        return NULL;
+    }
+    histoSkipAreas = (double*) histoSkipAreasBuf.buf;
+    histoSkipAreasLength = histoSkipAreasBuf.len / histoSkipAreasBuf.itemsize;
     result = TiePointGrid_getImageInfo3((TiePointGrid) thisObj, histoSkipAreas, histoSkipAreasLength, (ProgressMonitor) pm);
+    PyBuffer_Release(&histoSkipAreasBuf);
     if (result != NULL) {
         return Py_BuildValue("(sK)", "ImageInfo", (unsigned PY_LONG_LONG) result);
     } else {
@@ -12901,17 +12743,24 @@ PyObject* BeamPyTiePointGrid_createDefaultImageInfo1(PyObject* self, PyObject* a
 {
     double* histoSkipAreas;
     int histoSkipAreasLength;
-    PyObject* histoSkipAreasSeq;
+    PyObject* histoSkipAreasObj;
+    Py_buffer histoSkipAreasBuf;
     const char* pmType;
     unsigned PY_LONG_LONG pm;
     const char* thisObjType;
     unsigned PY_LONG_LONG thisObj;
     void* result;
-    if (!PyArg_ParseTuple(args, "(sK)O(sK):TiePointGrid_createDefaultImageInfo1", &thisObjType, &thisObj, &histoSkipAreasSeq, &pmType, &pm)) {
+    if (!PyArg_ParseTuple(args, "(sK)O(sK):TiePointGrid_createDefaultImageInfo1", &thisObjType, &thisObj, &histoSkipAreasObj, &pmType, &pm)) {
         return NULL;
     }
-    histoSkipAreas = beam_new_double_array_from_pyseq(histoSkipAreasSeq, &histoSkipAreasLength);
+    histoSkipAreasObj = beam_getPrimitiveArrayBufferReadOnly(histoSkipAreasObj, &histoSkipAreasBuf, "d", -1);
+    if (histoSkipAreasObj == NULL) {
+        return NULL;
+    }
+    histoSkipAreas = (double*) histoSkipAreasBuf.buf;
+    histoSkipAreasLength = histoSkipAreasBuf.len / histoSkipAreasBuf.itemsize;
     result = TiePointGrid_createDefaultImageInfo1((TiePointGrid) thisObj, histoSkipAreas, histoSkipAreasLength, (ProgressMonitor) pm);
+    PyBuffer_Release(&histoSkipAreasBuf);
     if (result != NULL) {
         return Py_BuildValue("(sK)", "ImageInfo", (unsigned PY_LONG_LONG) result);
     } else {
@@ -12923,17 +12772,24 @@ PyObject* BeamPyTiePointGrid_createDefaultImageInfo2(PyObject* self, PyObject* a
 {
     double* histoSkipAreas;
     int histoSkipAreasLength;
-    PyObject* histoSkipAreasSeq;
+    PyObject* histoSkipAreasObj;
+    Py_buffer histoSkipAreasBuf;
     const char* histogramType;
     unsigned PY_LONG_LONG histogram;
     const char* thisObjType;
     unsigned PY_LONG_LONG thisObj;
     void* result;
-    if (!PyArg_ParseTuple(args, "(sK)O(sK):TiePointGrid_createDefaultImageInfo2", &thisObjType, &thisObj, &histoSkipAreasSeq, &histogramType, &histogram)) {
+    if (!PyArg_ParseTuple(args, "(sK)O(sK):TiePointGrid_createDefaultImageInfo2", &thisObjType, &thisObj, &histoSkipAreasObj, &histogramType, &histogram)) {
         return NULL;
     }
-    histoSkipAreas = beam_new_double_array_from_pyseq(histoSkipAreasSeq, &histoSkipAreasLength);
+    histoSkipAreasObj = beam_getPrimitiveArrayBufferReadOnly(histoSkipAreasObj, &histoSkipAreasBuf, "d", -1);
+    if (histoSkipAreasObj == NULL) {
+        return NULL;
+    }
+    histoSkipAreas = (double*) histoSkipAreasBuf.buf;
+    histoSkipAreasLength = histoSkipAreasBuf.len / histoSkipAreasBuf.itemsize;
     result = TiePointGrid_createDefaultImageInfo2((TiePointGrid) thisObj, histoSkipAreas, histoSkipAreasLength, (Histogram) histogram);
+    PyBuffer_Release(&histoSkipAreasBuf);
     if (result != NULL) {
         return Py_BuildValue("(sK)", "ImageInfo", (unsigned PY_LONG_LONG) result);
     } else {
@@ -13004,14 +12860,15 @@ PyObject* BeamPyTiePointGrid_quantizeRasterData1(PyObject* self, PyObject* args)
     unsigned PY_LONG_LONG thisObj;
     byte* result;
     int resultLength;
-    PyObject* resultSeq;
+    PyObject* resultObj;
     if (!PyArg_ParseTuple(args, "(sK)ddd(sK):TiePointGrid_quantizeRasterData1", &thisObjType, &thisObj, &newMin, &newMax, &gamma, &pmType, &pm)) {
         return NULL;
     }
     result = TiePointGrid_quantizeRasterData1((TiePointGrid) thisObj, newMin, newMax, gamma, (ProgressMonitor) pm, &resultLength);
     if (result != NULL) {
-        resultSeq = CArray_createInstance("B", result, resultLength, beam_release_primitive_array);
-        return resultSeq;
+        resultObj = CArray_createFromItems("b", result, resultLength, beam_release_primitive_array);
+        Py_INCREF(resultObj);
+        return resultObj;
     } else {
         return Py_BuildValue("");
     }
@@ -13024,18 +12881,25 @@ PyObject* BeamPyTiePointGrid_quantizeRasterData2(PyObject* self, PyObject* args)
     double gamma;
     byte* samples;
     int samplesLength;
-    PyObject* samplesSeq;
+    PyObject* samplesObj;
+    Py_buffer samplesBuf;
     int offset;
     int stride;
     const char* pmType;
     unsigned PY_LONG_LONG pm;
     const char* thisObjType;
     unsigned PY_LONG_LONG thisObj;
-    if (!PyArg_ParseTuple(args, "(sK)dddOii(sK):TiePointGrid_quantizeRasterData2", &thisObjType, &thisObj, &newMin, &newMax, &gamma, &samplesSeq, &offset, &stride, &pmType, &pm)) {
+    if (!PyArg_ParseTuple(args, "(sK)dddOii(sK):TiePointGrid_quantizeRasterData2", &thisObjType, &thisObj, &newMin, &newMax, &gamma, &samplesObj, &offset, &stride, &pmType, &pm)) {
         return NULL;
     }
-    samples = beam_new_byte_array_from_pyseq(samplesSeq, &samplesLength);
+    samplesObj = beam_getPrimitiveArrayBufferReadOnly(samplesObj, &samplesBuf, "b", -1);
+    if (samplesObj == NULL) {
+        return NULL;
+    }
+    samples = (byte*) samplesBuf.buf;
+    samplesLength = samplesBuf.len / samplesBuf.itemsize;
     TiePointGrid_quantizeRasterData2((TiePointGrid) thisObj, newMin, newMax, gamma, samples, samplesLength, offset, stride, (ProgressMonitor) pm);
+    PyBuffer_Release(&samplesBuf);
     return Py_BuildValue("");
 }
 
@@ -15006,13 +14870,20 @@ PyObject* BeamPyProductData_createInstance5(PyObject* self, PyObject* args)
 {
     byte* elems;
     int elemsLength;
-    PyObject* elemsSeq;
+    PyObject* elemsObj;
+    Py_buffer elemsBuf;
     void* result;
-    if (!PyArg_ParseTuple(args, "O:ProductData_createInstance5", &elemsSeq)) {
+    if (!PyArg_ParseTuple(args, "O:ProductData_createInstance5", &elemsObj)) {
         return NULL;
     }
-    elems = beam_new_byte_array_from_pyseq(elemsSeq, &elemsLength);
+    elemsObj = beam_getPrimitiveArrayBufferReadOnly(elemsObj, &elemsBuf, "b", -1);
+    if (elemsObj == NULL) {
+        return NULL;
+    }
+    elems = (byte*) elemsBuf.buf;
+    elemsLength = elemsBuf.len / elemsBuf.itemsize;
     result = ProductData_createInstance5(elems, elemsLength);
+    PyBuffer_Release(&elemsBuf);
     if (result != NULL) {
         return Py_BuildValue("(sK)", "ProductData", (unsigned PY_LONG_LONG) result);
     } else {
@@ -15024,13 +14895,20 @@ PyObject* BeamPyProductData_createUnsignedInstance1(PyObject* self, PyObject* ar
 {
     byte* elems;
     int elemsLength;
-    PyObject* elemsSeq;
+    PyObject* elemsObj;
+    Py_buffer elemsBuf;
     void* result;
-    if (!PyArg_ParseTuple(args, "O:ProductData_createUnsignedInstance1", &elemsSeq)) {
+    if (!PyArg_ParseTuple(args, "O:ProductData_createUnsignedInstance1", &elemsObj)) {
         return NULL;
     }
-    elems = beam_new_byte_array_from_pyseq(elemsSeq, &elemsLength);
+    elemsObj = beam_getPrimitiveArrayBufferReadOnly(elemsObj, &elemsBuf, "b", -1);
+    if (elemsObj == NULL) {
+        return NULL;
+    }
+    elems = (byte*) elemsBuf.buf;
+    elemsLength = elemsBuf.len / elemsBuf.itemsize;
     result = ProductData_createUnsignedInstance1(elems, elemsLength);
+    PyBuffer_Release(&elemsBuf);
     if (result != NULL) {
         return Py_BuildValue("(sK)", "ProductData", (unsigned PY_LONG_LONG) result);
     } else {
@@ -15042,13 +14920,20 @@ PyObject* BeamPyProductData_createInstance10(PyObject* self, PyObject* args)
 {
     short* elems;
     int elemsLength;
-    PyObject* elemsSeq;
+    PyObject* elemsObj;
+    Py_buffer elemsBuf;
     void* result;
-    if (!PyArg_ParseTuple(args, "O:ProductData_createInstance10", &elemsSeq)) {
+    if (!PyArg_ParseTuple(args, "O:ProductData_createInstance10", &elemsObj)) {
         return NULL;
     }
-    elems = beam_new_short_array_from_pyseq(elemsSeq, &elemsLength);
+    elemsObj = beam_getPrimitiveArrayBufferReadOnly(elemsObj, &elemsBuf, "h", -1);
+    if (elemsObj == NULL) {
+        return NULL;
+    }
+    elems = (short*) elemsBuf.buf;
+    elemsLength = elemsBuf.len / elemsBuf.itemsize;
     result = ProductData_createInstance10(elems, elemsLength);
+    PyBuffer_Release(&elemsBuf);
     if (result != NULL) {
         return Py_BuildValue("(sK)", "ProductData", (unsigned PY_LONG_LONG) result);
     } else {
@@ -15060,13 +14945,20 @@ PyObject* BeamPyProductData_createUnsignedInstance3(PyObject* self, PyObject* ar
 {
     short* elems;
     int elemsLength;
-    PyObject* elemsSeq;
+    PyObject* elemsObj;
+    Py_buffer elemsBuf;
     void* result;
-    if (!PyArg_ParseTuple(args, "O:ProductData_createUnsignedInstance3", &elemsSeq)) {
+    if (!PyArg_ParseTuple(args, "O:ProductData_createUnsignedInstance3", &elemsObj)) {
         return NULL;
     }
-    elems = beam_new_short_array_from_pyseq(elemsSeq, &elemsLength);
+    elemsObj = beam_getPrimitiveArrayBufferReadOnly(elemsObj, &elemsBuf, "h", -1);
+    if (elemsObj == NULL) {
+        return NULL;
+    }
+    elems = (short*) elemsBuf.buf;
+    elemsLength = elemsBuf.len / elemsBuf.itemsize;
     result = ProductData_createUnsignedInstance3(elems, elemsLength);
+    PyBuffer_Release(&elemsBuf);
     if (result != NULL) {
         return Py_BuildValue("(sK)", "ProductData", (unsigned PY_LONG_LONG) result);
     } else {
@@ -15078,13 +14970,20 @@ PyObject* BeamPyProductData_createInstance8(PyObject* self, PyObject* args)
 {
     int* elems;
     int elemsLength;
-    PyObject* elemsSeq;
+    PyObject* elemsObj;
+    Py_buffer elemsBuf;
     void* result;
-    if (!PyArg_ParseTuple(args, "O:ProductData_createInstance8", &elemsSeq)) {
+    if (!PyArg_ParseTuple(args, "O:ProductData_createInstance8", &elemsObj)) {
         return NULL;
     }
-    elems = beam_new_int_array_from_pyseq(elemsSeq, &elemsLength);
+    elemsObj = beam_getPrimitiveArrayBufferReadOnly(elemsObj, &elemsBuf, "i", -1);
+    if (elemsObj == NULL) {
+        return NULL;
+    }
+    elems = (int*) elemsBuf.buf;
+    elemsLength = elemsBuf.len / elemsBuf.itemsize;
     result = ProductData_createInstance8(elems, elemsLength);
+    PyBuffer_Release(&elemsBuf);
     if (result != NULL) {
         return Py_BuildValue("(sK)", "ProductData", (unsigned PY_LONG_LONG) result);
     } else {
@@ -15096,13 +14995,20 @@ PyObject* BeamPyProductData_createUnsignedInstance2(PyObject* self, PyObject* ar
 {
     int* elems;
     int elemsLength;
-    PyObject* elemsSeq;
+    PyObject* elemsObj;
+    Py_buffer elemsBuf;
     void* result;
-    if (!PyArg_ParseTuple(args, "O:ProductData_createUnsignedInstance2", &elemsSeq)) {
+    if (!PyArg_ParseTuple(args, "O:ProductData_createUnsignedInstance2", &elemsObj)) {
         return NULL;
     }
-    elems = beam_new_int_array_from_pyseq(elemsSeq, &elemsLength);
+    elemsObj = beam_getPrimitiveArrayBufferReadOnly(elemsObj, &elemsBuf, "i", -1);
+    if (elemsObj == NULL) {
+        return NULL;
+    }
+    elems = (int*) elemsBuf.buf;
+    elemsLength = elemsBuf.len / elemsBuf.itemsize;
     result = ProductData_createUnsignedInstance2(elems, elemsLength);
+    PyBuffer_Release(&elemsBuf);
     if (result != NULL) {
         return Py_BuildValue("(sK)", "ProductData", (unsigned PY_LONG_LONG) result);
     } else {
@@ -15114,13 +15020,20 @@ PyObject* BeamPyProductData_createInstance9(PyObject* self, PyObject* args)
 {
     dlong* elems;
     int elemsLength;
-    PyObject* elemsSeq;
+    PyObject* elemsObj;
+    Py_buffer elemsBuf;
     void* result;
-    if (!PyArg_ParseTuple(args, "O:ProductData_createInstance9", &elemsSeq)) {
+    if (!PyArg_ParseTuple(args, "O:ProductData_createInstance9", &elemsObj)) {
         return NULL;
     }
-    elems = beam_new_dlong_array_from_pyseq(elemsSeq, &elemsLength);
+    elemsObj = beam_getPrimitiveArrayBufferReadOnly(elemsObj, &elemsBuf, "l", -1);
+    if (elemsObj == NULL) {
+        return NULL;
+    }
+    elems = (dlong*) elemsBuf.buf;
+    elemsLength = elemsBuf.len / elemsBuf.itemsize;
     result = ProductData_createInstance9(elems, elemsLength);
+    PyBuffer_Release(&elemsBuf);
     if (result != NULL) {
         return Py_BuildValue("(sK)", "ProductData", (unsigned PY_LONG_LONG) result);
     } else {
@@ -15147,13 +15060,20 @@ PyObject* BeamPyProductData_createInstance7(PyObject* self, PyObject* args)
 {
     float* elems;
     int elemsLength;
-    PyObject* elemsSeq;
+    PyObject* elemsObj;
+    Py_buffer elemsBuf;
     void* result;
-    if (!PyArg_ParseTuple(args, "O:ProductData_createInstance7", &elemsSeq)) {
+    if (!PyArg_ParseTuple(args, "O:ProductData_createInstance7", &elemsObj)) {
         return NULL;
     }
-    elems = beam_new_float_array_from_pyseq(elemsSeq, &elemsLength);
+    elemsObj = beam_getPrimitiveArrayBufferReadOnly(elemsObj, &elemsBuf, "f", -1);
+    if (elemsObj == NULL) {
+        return NULL;
+    }
+    elems = (float*) elemsBuf.buf;
+    elemsLength = elemsBuf.len / elemsBuf.itemsize;
     result = ProductData_createInstance7(elems, elemsLength);
+    PyBuffer_Release(&elemsBuf);
     if (result != NULL) {
         return Py_BuildValue("(sK)", "ProductData", (unsigned PY_LONG_LONG) result);
     } else {
@@ -15165,13 +15085,20 @@ PyObject* BeamPyProductData_createInstance6(PyObject* self, PyObject* args)
 {
     double* elems;
     int elemsLength;
-    PyObject* elemsSeq;
+    PyObject* elemsObj;
+    Py_buffer elemsBuf;
     void* result;
-    if (!PyArg_ParseTuple(args, "O:ProductData_createInstance6", &elemsSeq)) {
+    if (!PyArg_ParseTuple(args, "O:ProductData_createInstance6", &elemsObj)) {
         return NULL;
     }
-    elems = beam_new_double_array_from_pyseq(elemsSeq, &elemsLength);
+    elemsObj = beam_getPrimitiveArrayBufferReadOnly(elemsObj, &elemsBuf, "d", -1);
+    if (elemsObj == NULL) {
+        return NULL;
+    }
+    elems = (double*) elemsBuf.buf;
+    elemsLength = elemsBuf.len / elemsBuf.itemsize;
     result = ProductData_createInstance6(elems, elemsLength);
+    PyBuffer_Release(&elemsBuf);
     if (result != NULL) {
         return Py_BuildValue("(sK)", "ProductData", (unsigned PY_LONG_LONG) result);
     } else {
@@ -17857,15 +17784,16 @@ PyObject* BeamPyProductUtils_computeMinMaxY(PyObject* self, PyObject* args)
     PyObject* pixelPositionsSeq;
     float* result;
     int resultLength;
-    PyObject* resultSeq;
+    PyObject* resultObj;
     if (!PyArg_ParseTuple(args, "O:ProductUtils_computeMinMaxY", &pixelPositionsSeq)) {
         return NULL;
     }
     pixelPositions = beam_new_jobject_array_from_pyseq("PixelPos", pixelPositionsSeq, &pixelPositionsLength);
     result = ProductUtils_computeMinMaxY(pixelPositions, pixelPositionsLength, &resultLength);
     if (result != NULL) {
-        resultSeq = CArray_createInstance("F", result, resultLength, beam_release_primitive_array);
-        return resultSeq;
+        resultObj = CArray_createFromItems("f", result, resultLength, beam_release_primitive_array);
+        Py_INCREF(resultObj);
+        return resultObj;
     } else {
         return Py_BuildValue("");
     }

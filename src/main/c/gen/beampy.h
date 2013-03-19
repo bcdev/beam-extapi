@@ -10,6 +10,7 @@
 extern "C" {
 #endif
 
+#include "../beampy_carray.h"
 
 #ifdef __cplusplus
 } /* extern "C" */

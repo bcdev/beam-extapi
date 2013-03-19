@@ -7,10 +7,6 @@ class Shape:
         self._obj = obj
 
 
-""" Provides a parameterized, mathematical algorithm for a map transformation.
-
-@deprecated since BEAM 4.7, use geotools {@link org.geotools.referencing.operation.projection.MapProjection} instead.
-"""
 class MapTransform:
     def __init__(self, obj):
         if obj == None:
@@ -150,11 +146,6 @@ class GeoCoding:
         return MathTransform(GeoCoding_getImageToMapTransform(self._obj))
 
 
-""" Instances of the <code>Parser</code> interface are used to convert a code
-string representing an arithmetic expression in a tree of terms
-which can then be executed by using one of the evaluation methods of
-the <code>{@link Term}</code> class.
-"""
 class Parser:
     def __init__(self, obj):
         if obj == None:
@@ -1311,17 +1302,6 @@ class IndexCoding:
         return
 
 
-""" The abstract <code>Term</code> class is an in-memory representation of an
-element within an arbitrary expression tree. The class defines a number of
-concrete <code>Term</code> implementations each representing either an
-an atomic leave (number constant, symbol reference) or a node
-(e.g. binary operator, function call) within an expression tree.
-
- Instances of this class are normally created using an expression parser
-which implements the <code>{@link com.bc.jexp.Parser}</code> interface.
-The <code>{@link com.bc.jexp.impl.ParserImpl}</code> class provides a default
-implementation of such a parser.
-"""
 class Term:
     def __init__(self, obj):
         if obj == None:
@@ -3395,10 +3375,6 @@ class Placemark:
         return
 
 
-""" An interface used as parameter to several methods which perform some actions on data arrays.
-It is used to decide whether or not an array value shall be taken into account for a particular
-computation.
-"""
 class IndexValidator:
     def __init__(self, obj):
         if obj == None:
@@ -3889,11 +3865,6 @@ class ProductNodeGroup:
         return
 
 
-""" A map projection is a mathematical model for the transformation of locations from a three-dimensional earth surface
-to a two-dimensional map representation.
-
-@deprecated since BEAM 4.7, use geotools {@link org.geotools.referencing.operation.projection.MapProjection} instead.
-"""
 class MapProjection:
     def __init__(self, obj):
         if obj == None:
@@ -7259,11 +7230,6 @@ class ColorPaletteDef:
         return Color(ColorPaletteDef_computeColor(self._obj, scaling._obj, sample))
 
 
-""" The <code>MapInfo</code> class holds information required to bring the cartographic map co-ordinate system to a
-raster co-ordinate system and back.
-
-@deprecated since BEAM 4.7, use geotools and {@link CrsGeoCoding} instead.
-"""
 class MapInfo:
     def __init__(self, obj):
         if obj == None:
@@ -7408,8 +7374,6 @@ class ImageInfo:
         return ImageInfo_HistogramMatching(ImageInfo_getHistogramMatching(mode))
 
 
-""" Instances of the <code>Histogram</code> class store histogram data.
-"""
 class Histogram:
     def __init__(self, obj):
         if obj == None:
