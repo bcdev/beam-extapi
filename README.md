@@ -10,7 +10,7 @@ BEAM Python API
 * Checkout sources from GitHub (https://github.com/bcdev/beam-extapi). In the following, the checkout directory is named `BEAM_EXTAPI`.
 * On Windows,
   1. Install Python 3 32-bit. Set `PYTHON32_HOME`.
-  2. install Visual C++ 2012 Express (http://www.microsoft.com/visualstudio/eng/products/visual-studio-express-products). Set `MSVC_HOME` (must point to `VC` inside Visual Studio's installation directory).
+  2. install Visual C++ 2010 Express (http://www.microsoft.com/visualstudio/eng/products/visual-studio-express-products). Set `MSVC_HOME` (must point to `VC` inside Visual Studio's installation directory).
   3. execute `%BEAM_EXTAPI%/mkwinall.bat`
 * On Unix,
   1. install python development extension (sudo apt-get install python3-dev)
@@ -188,4 +188,24 @@ Fehler	11	error LNK1104: Datei "python32_d.lib" kann nicht geöffnet werden.	C:\
 
 Linux 32/64
 Find a way to inject the 'libmawt.so' into the runtime path using cmake.
+
+
+distutils on Windows
+====================
+
+From http://stackoverflow.com/questions/6551724/how-do-i-point-easy-install-to-vcvarsall-bat
+
+For Windows installations:
+
+While running setup.py for for package installations Python 2.7 searches for an installed Visual Studio 2008. You can trick Python to use newer Visual Studio by setting correct path in VS90COMNTOOLS environment variable before calling setup.py.
+
+If you have Visual Studio 2010 installed, execute
+
+    >>> SET VS90COMNTOOLS=%VS100COMNTOOLS%
+
+or with Visual Studio 2012 installed
+
+    >>> SET VS90COMNTOOLS=%VS110COMNTOOLS%
+
+
 

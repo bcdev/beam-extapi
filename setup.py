@@ -1,9 +1,14 @@
 #!/usr/bin/env python3
 
+import os
 from distutils.core import setup
 from distutils.extension import Extension
 
-JDK_HOME = '/home/marta/jdk1.6.0_35'
+# JDK_HOME = '/home/marta/jdk1.6.0_35'
+JDK_HOME = os.environ.get('JDK_HOME', None)
+if JDK_HOME == None:
+    print('Error: environment variable "JDK_HOME" must be set to a JDK (>= v1.6) installation directory')
+    exit(1)
 
 setup(name             = 'beampy', 
       description      = 'BEAM Python API',
@@ -17,7 +22,7 @@ setup(name             = 'beampy',
       license          = 'GPL 3',
       url              = 'http://www.brockmann-consult.de/beam/',
       download_url     = 'http://www.brockmann-consult.de/beam/',
-      py_modules       = ['beampy'],
+      py_modules       = ['src/main/c/gen/beampy'],
       ext_modules      = [Extension('_beampy', 
                                     ['src/main/c/beam_util.c',
                                      'src/main/c/beampy_carray.c',
@@ -26,9 +31,11 @@ setup(name             = 'beampy',
                                     ],                                 
                                     include_dirs=['src/main/c/gen',
                                                   JDK_HOME + '/include',
-                                                  JDK_HOME + '/include/linux'],
-                                    library_dirs=[JDK_HOME + '/jre/lib/i386/server'],
+                                                  JDK_HOME + '/include/linux',
+                                                  JDK_HOME + '/include/win32'],
+                                    library_dirs=[JDK_HOME + '/jre/lib/i386/server',
+                                                  JDK_HOME + '/lib'],
                                     libraries=['jvm'],
-                                    define_macros=[('_DEBUG', '1')]
+                                    define_macros=[('WIN32','1')]
                           )]
 )
