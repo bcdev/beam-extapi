@@ -106,6 +106,7 @@
         <method name="loadRasterData" sig="(Lcom/bc/ceres/core/ProgressMonitor;)V" ignore="true"/>
         <method name="quantizeRasterData" sig="(DDDLcom/bc/ceres/core/ProgressMonitor;)[B" ignore="true"/>
         <method name="quantizeRasterData" sig="(DDD[BIILcom/bc/ceres/core/ProgressMonitor;)V" ignore="true"/>
+        <method name="readValidMask" sig="(IIII[Z)[Z" mods="iiiir" lengthExpr="w*h"/>
         <method name="readPixels" sig="(IIII[I)[I" renameTo="readPixelsInt" mods="iiiir" lengthExpr="w*h"/>
         <method name="readPixels" sig="(IIII[F)[F" renameTo="readPixelsFloat" mods="iiiir" lengthExpr="w*h"/>
         <method name="readPixels" sig="(IIII[D)[D" renameTo="readPixelsDouble" mods="iiiir" lengthExpr="w*h"/>
