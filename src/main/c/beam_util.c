@@ -49,32 +49,39 @@ void Util_listDir(const char* parent_dir, Util_handleDirEntry handler, void* use
 #ifdef WIN32
     HANDLE dir;
     WIN32_FIND_DATA file_data;
+    PVOID oldRedirectionValue = NULL;
     char* pattern;
-    char file_name[MAX_PATH];
-    wchar_t* wpattern;
+    char file_name[MAX_PATH + 1];
     size_t n;
 
-    pattern = NULL;
-	n = Util_appendString(&pattern, parent_dir);
-    n = Util_appendString(&pattern, "\\*");
-
-    wpattern = (wchar_t*) malloc((n + 1) * sizeof(wchar_t));
-    mbstowcs(wpattern, pattern, n);
-	wpattern[n] = 0;
-
-	free(pattern);
-
-    if ((dir = FindFirstFile(wpattern, &file_data)) != INVALID_HANDLE_VALUE) {
-        do {
-			n = wcslen(file_data.cFileName);
-            wcstombs(file_name,  file_data.cFileName, n);
-			file_name[n] = 0;
-            handler(parent_dir, file_name, (file_data.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) != 0, user_data);        
-        } while (FindNextFile(dir, &file_data));
-        FindClose(dir);
+    // Disables file system redirection for the calling thread. File system redirection is enabled by default.
+    // MS says, this should be done for 32bit apps on 64bit systems.
+    if (!Wow64DisableWow64FsRedirection(&oldRedirectionValue)) {
+        oldRedirectionValue = NULL;
     }
 
-	free(wpattern);
+    pattern = NULL;
+    n = Util_appendString(&pattern, parent_dir);
+    n = Util_appendString(&pattern, "\\*");
+
+    if ((dir = FindFirstFile(pattern, &file_data)) != INVALID_HANDLE_VALUE) {
+        do {
+            n = strlen(file_data.cFileName);
+            strncpy(file_name, file_data.cFileName, min(n, MAX_PATH));
+            file_name[min(n, MAX_PATH)] = 0;
+            handler(parent_dir, file_name, (file_data.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) != 0, user_data);
+        } while (FindNextFile(dir, &file_data));
+        FindClose(dir);
+    } else {
+        DWORD err_code = GetLastError();
+    }
+
+    free(pattern);
+
+    if (oldRedirectionValue != NULL) {
+        Wow64RevertWow64FsRedirection(oldRedirectionValue);
+    }
+
 #else
     DIR* dir;
     struct dirent* ent;
