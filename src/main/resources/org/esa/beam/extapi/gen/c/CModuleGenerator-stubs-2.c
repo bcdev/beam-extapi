@@ -362,8 +362,8 @@ jboolean beam_create_jvm_with_defaults()
     jboolean result;
 
     class_path_option = beam_create_class_path_vm_option();
-
     if (class_path_option == NULL) {
+        fprintf(stderr, "beam_capi: class_path_option == NULL\n");
         return JNI_FALSE;
     }
 
