@@ -53,12 +53,12 @@ void CArray_releaseElements(void* elems, int length);
 typedef struct {
     PyObject_HEAD
     /** must be one of "b", "B", "h", "H", "i", "I", "l", "L", "f", "d" (see Python struct module) */
-	char format[2];
-	int length;
-	size_t item_size;
+    char format[2];
+    int length;
+    size_t item_size;
     void* items;
     CArrayFree free_fn;
-	size_t num_exports;
+    size_t num_exports;
 } CArrayObj;
 
 
