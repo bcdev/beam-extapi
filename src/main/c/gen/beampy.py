@@ -7,6 +7,10 @@ class Shape:
         self._obj = obj
 
 
+""" Provides a parameterized, mathematical algorithm for a map transformation.
+
+@deprecated since BEAM 4.7, use geotools {@link org.geotools.referencing.operation.projection.MapProjection} instead.
+"""
 class MapTransform:
     def __init__(self, obj):
         if obj == None:
@@ -56,6 +60,18 @@ class ImageGeometry:
     @staticmethod
     def createValidRect(product):
         return Rectangle2D(ImageGeometry_createValidRect(product._obj))
+
+
+""" Instances of the <code>Parser</code> interface are used to convert a code
+string representing an arithmetic expression in a tree of terms
+which can then be executed by using one of the evaluation methods of
+the <code>{@link Term}</code> class.
+"""
+class Parser:
+    def __init__(self, obj):
+        if obj == None:
+            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
+        self._obj = obj
 
 
 """ The <code>GeoCoding</code> interface provides geo-spatial latitude and longitude information for a given X/Y position
@@ -144,13 +160,6 @@ class GeoCoding:
            @return The math transformation used to convert image coordinates to map coordinates.
         """
         return MathTransform(GeoCoding_getImageToMapTransform(self._obj))
-
-
-class Parser:
-    def __init__(self, obj):
-        if obj == None:
-            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
-        self._obj = obj
 
 
 """ The abstract <code>ProductData</code> class represents a generic data buffer used to hold the actual data values
@@ -806,6 +815,148 @@ class Double:
         self._obj = obj
 
 
+""" The facade for the Graph Processing Framework.
+The Graph Processing Framework makes extensive use of Java Advanced Imaging (JAI).
+Therefore, configuring the JAI {@link javax.media.jai.TileCache TileCache} and
+{@link javax.media.jai.TileScheduler TileScheduler} will also affect the overall performance of
+the Graph Processing Framework.
+This class may be overridden in order to alter product creation behaviour of the static
+{@code createProduct} methods of the GPF instance.
+The current instance can be set by {@link #setDefaultInstance(GPF)}.
+"""
+class GPF:
+
+    DISABLE_TILE_CACHE_PROPERTY = 'beam.gpf.disableTileCache'
+    USE_FILE_TILE_CACHE_PROPERTY = 'beam.gpf.useFileTileCache'
+    TILE_COMPUTATION_OBSERVER_PROPERTY = 'beam.gpf.tileComputationObserver'
+    SOURCE_PRODUCT_FIELD_NAME = 'sourceProduct'
+    TARGET_PRODUCT_FIELD_NAME = 'targetProduct'
+    KEY_TILE_SIZE = None
+    NO_PARAMS = None
+    NO_SOURCES = None
+
+    def __init__(self, obj):
+        if obj == None:
+            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
+        self._obj = obj
+
+    @staticmethod
+    def createProductFromNoSourceProducts(operatorName, parameters):
+        """
+           Creates a product by using the operator specified by the given name.
+           The resulting product can be used as input product for a further call to {@code createProduct()}.
+           By concatenating multiple calls it is possible to set up a processing graph.
+           @param operatorName the name of the operator to use.
+           @param parameters   the named parameters needed by the operator.
+           @return the product created by the operator.
+           @throws OperatorException if the product could not be created.
+        """
+        return Product(GPF_createProductFromNoSourceProducts(operatorName, parameters._obj))
+
+    @staticmethod
+    def createProductFromSourceProduct(operatorName, parameters, sourceProduct):
+        """
+           Creates a product by using the operator specified by the given name.
+           The resulting product can be used as input product for a further call to {@code createProduct()}.
+           By concatenating multiple calls it is possible to set up a processing graph.
+           @param operatorName  the name of the operator to use.
+           @param parameters    the named parameters needed by the operator.
+           @param sourceProduct a source product.
+           @return the product created by the operator.
+           @throws OperatorException if the product could not be created.
+        """
+        return Product(GPF_createProductFromSourceProduct(operatorName, parameters._obj, sourceProduct._obj))
+
+    @staticmethod
+    def createProductFromSourceProducts(operatorName, parameters, sourceProducts):
+        """
+           Creates a product by using the operator specified by the given name.
+           The resulting product can be used as input product for a further call to {@code createProduct()}.
+           By concatenating multiple calls it is possible to set up a processing graph.
+           @param operatorName   the name of the operator to use.
+           @param parameters     the named parameters needed by the operator.
+           @param sourceProducts the source products.
+           @return the product created by the operator.
+           @throws OperatorException if the product could not be created.
+        """
+        return Product(GPF_createProductFromSourceProducts(operatorName, parameters._obj, sourceProducts._obj))
+
+    @staticmethod
+    def createProductFromNamedSourceProducts(operatorName, parameters, sourceProducts):
+        """
+           Creates a product by using the operator specified by the given name.
+           The resulting product can be used as input product for a further call to {@code createProduct()}.
+           By concatenating multiple calls it is possible to set up a processing graph.
+           @param operatorName   the name of the operator to use.
+           @param parameters     the named parameters needed by the operator.
+           @param sourceProducts the map of named source products.
+           @return the product created by the operator.
+           @throws OperatorException if the product could not be created.
+        """
+        return Product(GPF_createProductFromNamedSourceProducts(operatorName, parameters._obj, sourceProducts._obj))
+
+    def createProductNS(self, operatorName, parameters, sourceProducts, renderingHints):
+        """
+           Creates a product by using the operator specified by the given name.
+           The resulting product can be used as input product for a further call to {@code createProduct()}.
+           By concatenating multiple calls it is possible to set up a processing graph.
+           All static {@code createProduct} methods delegate to this non-static (= NS) version.
+           It can be overriden by clients in order to alter product creation behaviour of the static
+           {@code createProduct} methods of the current GPF instance.
+           @param operatorName   the name of the operator to use.
+           @param parameters     the named parameters needed by the operator.
+           @param sourceProducts the map of named source products.
+           @param renderingHints the rendering hints, may be {@code null}.
+           @return the product created by the operator.
+           @throws OperatorException if the product could not be created.
+        """
+        return Product(GPF_createProductNS(self._obj, operatorName, parameters._obj, sourceProducts._obj, renderingHints._obj))
+
+    def createOperator(self, operatorName, parameters, sourceProducts, renderingHints):
+        """
+           Creates an operator instance by using the given operator (alias) name.
+           @param operatorName   the name of the operator to use.
+           @param parameters     the named parameters needed by the operator.
+           @param sourceProducts the map of named source products.
+           @param renderingHints the rendering hints, may be {@code null}.
+           @return the product created by the operator.
+           @throws OperatorException if the product could not be created.
+        """
+        return Operator(GPF_createOperator(self._obj, operatorName, parameters._obj, sourceProducts._obj, renderingHints._obj))
+
+    def getOperatorSpiRegistry(self):
+        """
+           Gets the registry for operator SPIs.
+           @return the registry for operator SPIs.
+        """
+        return OperatorSpiRegistry(GPF_getOperatorSpiRegistry(self._obj))
+
+    def setOperatorSpiRegistry(self, spiRegistry):
+        """
+           Sets the registry for operator SPIs.
+           @param spiRegistry the registry for operator SPIs.
+        """
+        GPF_setOperatorSpiRegistry(self._obj, spiRegistry._obj)
+        return
+
+    @staticmethod
+    def getDefaultInstance():
+        """
+           Gets the default GPF instance.
+           @return the singelton instance.
+        """
+        return GPF(GPF_getDefaultInstance())
+
+    @staticmethod
+    def setDefaultInstance(defaultInstance):
+        """
+           Sets the default GPF instance.
+           @param defaultInstance the GPF default instance.
+        """
+        GPF_setDefaultInstance(defaultInstance._obj)
+        return
+
+
 """ Provides the information required to decode integer sample values that
 represent index values (e.g. types, classes, categories).
 """
@@ -1302,6 +1453,17 @@ class IndexCoding:
         return
 
 
+""" The abstract <code>Term</code> class is an in-memory representation of an
+element within an arbitrary expression tree. The class defines a number of
+concrete <code>Term</code> implementations each representing either an
+an atomic leave (number constant, symbol reference) or a node
+(e.g. binary operator, function call) within an expression tree.
+
+ Instances of this class are normally created using an expression parser
+which implements the <code>{@link com.bc.jexp.Parser}</code> interface.
+The <code>{@link com.bc.jexp.impl.ParserImpl}</code> class provides a default
+implementation of such a parser.
+"""
 class Term:
     def __init__(self, obj):
         if obj == None:
@@ -1322,6 +1484,16 @@ node can scale its raw raster data samples in order to return geophysically mean
 @see #getScalingOffset()
 """
 class RasterDataNode:
+    def __init__(self, obj):
+        if obj == None:
+            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
+        self._obj = obj
+
+
+""" AutoGrouping can be used by an application to auto-group a long list of product nodes (e.g. bands)
+as a tree of product nodes.
+"""
+class Product_AutoGrouping:
     def __init__(self, obj):
         if obj == None:
             raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
@@ -1417,16 +1589,6 @@ class PixelPos:
         return PixelPos_equals(self._obj, arg0._obj)
 
 
-""" AutoGrouping can be used by an application to auto-group a long list of product nodes (e.g. bands)
-as a tree of product nodes.
-"""
-class Product_AutoGrouping:
-    def __init__(self, obj):
-        if obj == None:
-            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
-        self._obj = obj
-
-
 class ImageOutputStream:
     def __init__(self, obj):
         if obj == None:
@@ -1451,6 +1613,13 @@ class Stx:
 
 
 class Rectangle:
+    def __init__(self, obj):
+        if obj == None:
+            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
+        self._obj = obj
+
+
+class Dimension:
     def __init__(self, obj):
         if obj == None:
             raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
@@ -1562,13 +1731,6 @@ class ProductIO:
 product itself.
 """
 class ProductNode:
-    def __init__(self, obj):
-        if obj == None:
-            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
-        self._obj = obj
-
-
-class Dimension:
     def __init__(self, obj):
         if obj == None:
             raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
@@ -2595,32 +2757,6 @@ class Band:
     def readValidMask(self, x, y, w, h, validMask):
         return Band_readValidMask(self._obj, x, y, w, h, validMask)
 
-    def readRasterDataFully(self):
-        """
-           @throws java.io.IOException if an I/O error occurs
-           @see #readRasterDataFully(ProgressMonitor)
-        """
-        Band_readRasterDataFully(self._obj)
-        return
-
-    def readRasterData(self, offsetX, offsetY, width, height, rasterData):
-        """
-           Reads raster data from the node's associated data source into the given data
-           buffer.
-           @param offsetX    the X-offset in the raster co-ordinates where reading starts
-           @param offsetY    the Y-offset in the raster co-ordinates where reading starts
-           @param width      the width of the raster data buffer
-           @param height     the height of the raster data buffer
-           @param rasterData a raster data buffer receiving the pixels to be read
-           @throws java.io.IOException      if an I/O error occurs
-           @throws IllegalArgumentException if the raster is null
-           @throws IllegalStateException    if this product raster was not added to a product so far, or if the product to
-           which this product raster belongs to, has no associated product reader
-           @see ProductReader#readBandRasterData(Band, int, int, int, int, ProductData, com.bc.ceres.core.ProgressMonitor)
-        """
-        Band_readRasterData(self._obj, offsetX, offsetY, width, height, rasterData._obj)
-        return
-
     def writeRasterDataFully(self):
         Band_writeRasterDataFully(self._obj)
         return
@@ -3375,6 +3511,10 @@ class Placemark:
         return
 
 
+""" An interface used as parameter to several methods which perform some actions on data arrays.
+It is used to decide whether or not an array value shall be taken into account for a particular
+computation.
+"""
 class IndexValidator:
     def __init__(self, obj):
         if obj == None:
@@ -3865,6 +4005,11 @@ class ProductNodeGroup:
         return
 
 
+""" A map projection is a mathematical model for the transformation of locations from a three-dimensional earth surface
+to a two-dimensional map representation.
+
+@deprecated since BEAM 4.7, use geotools {@link org.geotools.referencing.operation.projection.MapProjection} instead.
+"""
 class MapProjection:
     def __init__(self, obj):
         if obj == None:
@@ -4509,6 +4654,62 @@ class IndexColorModel:
         self._obj = obj
 
 
+""" The abstract base class for all operators intended to be extended by clients.
+The following methods are intended to be implemented or overridden:
+<ld>
+<li>{@link #initialize()}: must be implemented in order to initialise the operator and create the target
+product.</li>
+<li>{@link #computeTile(Band, Tile, com.bc.ceres.core.ProgressMonitor) computeTile()}: implemented to compute the tile
+for a single band.</li>
+<li>{@link #computeTileStack(java.util.Map, java.awt.Rectangle, com.bc.ceres.core.ProgressMonitor)}: implemented to compute the tiles
+for multiple bands.</li>
+<li>{@link #dispose()}: can be overridden in order to free all resources previously allocated by the operator.</li>
+</ld>
+
+Generally, only one {@code computeTile} method needs to be implemented. It depends on the type of algorithm which
+of both operations is most advantageous to implement:
+<ol>
+<li>If bands can be computed independently of each other, then it is
+beneficial to implement the {@code computeTile()} method. This is the case for sub-sampling, map-projections,
+band arithmetic, band filtering and statistic analyses.</li>
+<li>{@code computeTileStack()} should be overridden in cases where the bands of a product cannot be computed independently, e.g.
+because they are a simultaneous output. This is often the case for algorithms based on neural network, cluster analyses,
+model inversion methods or spectral unmixing.</li>
+</ol>
+
+The framework execute either the {@code computeTile()} or the {@code computeTileStack()} method
+based on the current use case or request.
+If tiles for single bands are requested, e.g. for image display, it will always prefer an implementation of
+the {@code computeTile()} method and call it.
+If all tiles are requested at once, e.g. writing a product to disk, it will attempt to use the {@code computeTileStack()}
+method. If the framework cannot use its preferred operation, it will use the one implemented by the operator.
+
+todo - Explain the role of operator annotations (nf - 15.10.2007)
+todo - Explain the role of the SPI (nf - 15.10.2007)
+@see OperatorSpi
+@see annotations.OperatorMetadata
+@see annotations.Parameter
+@see annotations.TargetProduct
+@see annotations.TargetProperty
+@see annotations.SourceProduct
+@see annotations.SourceProducts
+"""
+class Operator:
+    def __init__(self, obj):
+        if obj == None:
+            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
+        self._obj = obj
+
+
+""" A registry for operator SPI instances.
+"""
+class OperatorSpiRegistry:
+    def __init__(self, obj):
+        if obj == None:
+            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
+        self._obj = obj
+
+
 """ Enumerates the possible histogram matching modes.
 """
 class ImageInfo_HistogramMatching:
@@ -4521,13 +4722,6 @@ class ImageInfo_HistogramMatching:
 """ A listener which listens to internal data product changes.
 """
 class ProductNodeListener:
-    def __init__(self, obj):
-        if obj == None:
-            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
-        self._obj = obj
-
-
-class Map:
     def __init__(self, obj):
         if obj == None:
             raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
@@ -5734,6 +5928,13 @@ class MetadataElement:
         """
         MetadataElement_removeFromFile(self._obj, productWriter._obj)
         return
+
+
+class Map:
+    def __init__(self, obj):
+        if obj == None:
+            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
+        self._obj = obj
 
 
 """ The interface <code>Pointing</code> wraps a {@link GeoCoding} and optionally provides more geometry
@@ -7052,6 +7253,13 @@ class ROI:
         self._obj = obj
 
 
+class RenderingHints_Key:
+    def __init__(self, obj):
+        if obj == None:
+            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
+        self._obj = obj
+
+
 class Collection:
     def __init__(self, obj):
         if obj == None:
@@ -7230,6 +7438,11 @@ class ColorPaletteDef:
         return Color(ColorPaletteDef_computeColor(self._obj, scaling._obj, sample))
 
 
+""" The <code>MapInfo</code> class holds information required to bring the cartographic map co-ordinate system to a
+raster co-ordinate system and back.
+
+@deprecated since BEAM 4.7, use geotools and {@link CrsGeoCoding} instead.
+"""
 class MapInfo:
     def __init__(self, obj):
         if obj == None:
@@ -7374,6 +7587,8 @@ class ImageInfo:
         return ImageInfo_HistogramMatching(ImageInfo_getHistogramMatching(mode))
 
 
+""" Instances of the <code>Histogram</code> class store histogram data.
+"""
 class Histogram:
     def __init__(self, obj):
         if obj == None:
@@ -9419,6 +9634,13 @@ class GeneralPath:
 
 
 class ImageInputStream:
+    def __init__(self, obj):
+        if obj == None:
+            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
+        self._obj = obj
+
+
+class RenderingHints:
     def __init__(self, obj):
         if obj == None:
             raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')

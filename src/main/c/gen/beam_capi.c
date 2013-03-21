@@ -41,6 +41,7 @@ double* beam_alloc_double_array(jarray array, int* array_length);
 /* Java API classes. */
 static jclass classGeoCoding;
 static jclass classProductWriter;
+static jclass classGPF;
 static jclass classIndexCoding;
 static jclass classPixelPos;
 static jclass classProductIO;
@@ -67,69 +68,82 @@ static jclass classMetadataAttribute;
 
 /* Other Java classes used in the API. */
 static jclass classString;
-static jclass classShape;
-static jclass classMapTransform;
-static jclass classParser;
-static jclass classAffineTransform;
-static jclass classMask;
-static jclass classDouble;
-static jclass classTerm;
-static jclass classRasterDataNode;
-static jclass classProduct_AutoGrouping;
-static jclass classDimension;
-static jclass classImageOutputStream;
-static jclass classStx;
-static jclass classRectangle;
-static jclass classProductNode;
-static jclass classSimpleFeatureType;
-static jclass classSampleCoding;
-static jclass classObject;
-static jclass classProductData_UTC;
-static jclass classInteger;
-static jclass classProductReaderPlugIn;
-static jclass classColorPaletteDef_Point;
-static jclass classRenderedImage;
-static jclass classIndexValidator;
-static jclass classArea;
-static jclass classComponentColorModel;
-static jclass classIterator;
-static jclass classMathTransform;
-static jclass classCoordinateReferenceSystem;
-static jclass classProductWriterPlugIn;
-static jclass classRectangle2D;
-static jclass classFile;
-static jclass classMapProjection;
-static jclass classIndexColorModel;
-static jclass classImageInfo_HistogramMatching;
-static jclass classProductNodeListener;
-static jclass classMap;
-static jclass classPointing;
-static jclass classColor;
-static jclass classPlacemarkDescriptor;
-static jclass classPointingFactory;
-static jclass classTransectProfileData;
-static jclass classPoint2D;
 static jclass classT;
-static jclass classProductVisitor;
-static jclass classScaling;
-static jclass classWritableNamespace;
-static jclass classMultiLevelImage;
-static jclass classROI;
-static jclass classCollection;
-static jclass classProductManager_Listener;
-static jclass classGeoTIFFMetadata;
-static jclass classMapInfo;
-static jclass classString;
-static jclass classHistogram;
-static jclass classBufferedImage;
-static jclass classSimpleFeature;
-static jclass classProductSubsetDef;
 static jclass classProgressMonitor;
-static jclass classVectorDataNode;
+static jclass classMultiLevelImage;
+static jclass classParser;
+static jclass classTerm;
+static jclass classWritableNamespace;
+static jclass classColor;
+static jclass classDimension;
+static jclass classRectangle;
+static jclass classRenderingHints;
+static jclass classRenderingHints_Key;
+static jclass classShape;
+static jclass classAffineTransform;
+static jclass classArea;
 static jclass classGeneralPath;
+static jclass classPoint2D;
+static jclass classRectangle2D;
+static jclass classBufferedImage;
+static jclass classComponentColorModel;
+static jclass classIndexColorModel;
+static jclass classRenderedImage;
+static jclass classFile;
+static jclass classDouble;
+static jclass classInteger;
+static jclass classObject;
+static jclass classString;
+static jclass classCollection;
+static jclass classIterator;
+static jclass classMap;
 static jclass classImageInputStream;
+static jclass classImageOutputStream;
+static jclass classROI;
+static jclass classProductReaderPlugIn;
+static jclass classProductSubsetDef;
+static jclass classProductWriterPlugIn;
+static jclass classColorPaletteDef_Point;
+static jclass classImageInfo_HistogramMatching;
+static jclass classMask;
+static jclass classPlacemarkDescriptor;
+static jclass classPointing;
+static jclass classPointingFactory;
+static jclass classProduct_AutoGrouping;
+static jclass classProductData_UTC;
+static jclass classProductManager_Listener;
+static jclass classProductNode;
+static jclass classProductNodeListener;
+static jclass classProductVisitor;
+static jclass classRasterDataNode;
+static jclass classSampleCoding;
+static jclass classScaling;
+static jclass classStx;
+static jclass classTransectProfileData;
+static jclass classVectorDataNode;
+static jclass classMapInfo;
+static jclass classMapProjection;
+static jclass classMapTransform;
+static jclass classOperator;
+static jclass classOperatorSpiRegistry;
+static jclass classGeoTIFFMetadata;
+static jclass classHistogram;
+static jclass classIndexValidator;
+static jclass classSimpleFeature;
+static jclass classSimpleFeatureType;
+static jclass classCoordinateReferenceSystem;
+static jclass classMathTransform;
 
 
+/* Constants of GPF */
+const char* GPF_DISABLE_TILE_CACHE_PROPERTY = "beam.gpf.disableTileCache";
+const char* GPF_USE_FILE_TILE_CACHE_PROPERTY = "beam.gpf.useFileTileCache";
+const char* GPF_TILE_COMPUTATION_OBSERVER_PROPERTY = "beam.gpf.tileComputationObserver";
+const char* GPF_SOURCE_PRODUCT_FIELD_NAME = "sourceProduct";
+const char* GPF_TARGET_PRODUCT_FIELD_NAME = "targetProduct";
+const RenderingHints_Key GPF_KEY_TILE_SIZE = NULL;
+const Map GPF_NO_PARAMS = NULL;
+const Map GPF_NO_SOURCES = NULL;
 /* Constants of IndexCoding */
 const char* IndexCoding_PROPERTY_NAME_NAME = "name";
 const char* IndexCoding_PROPERTY_NAME_DESCRIPTION = "description";
@@ -617,8 +631,8 @@ jboolean beam_create_jvm_with_defaults()
     jboolean result;
 
     class_path_option = beam_create_class_path_vm_option();
-
     if (class_path_option == NULL) {
+        fprintf(stderr, "beam_capi: class_path_option == NULL\n");
         return JNI_FALSE;
     }
 
@@ -657,71 +671,74 @@ int beam_init_api()
     classProductWriter = (*jenv)->FindClass(jenv, "org/esa/beam/framework/dataio/ProductWriter");
     if (classProductWriter == NULL) return 1002;
 
+    classGPF = (*jenv)->FindClass(jenv, "org/esa/beam/framework/gpf/GPF");
+    if (classGPF == NULL) return 1003;
+
     classIndexCoding = (*jenv)->FindClass(jenv, "org/esa/beam/framework/datamodel/IndexCoding");
-    if (classIndexCoding == NULL) return 1003;
+    if (classIndexCoding == NULL) return 1004;
 
     classPixelPos = (*jenv)->FindClass(jenv, "org/esa/beam/framework/datamodel/PixelPos");
-    if (classPixelPos == NULL) return 1004;
+    if (classPixelPos == NULL) return 1005;
 
     classProductIO = (*jenv)->FindClass(jenv, "org/esa/beam/framework/dataio/ProductIO");
-    if (classProductIO == NULL) return 1005;
+    if (classProductIO == NULL) return 1006;
 
     classPlacemark = (*jenv)->FindClass(jenv, "org/esa/beam/framework/datamodel/Placemark");
-    if (classPlacemark == NULL) return 1006;
+    if (classPlacemark == NULL) return 1007;
 
     classMetadataElement = (*jenv)->FindClass(jenv, "org/esa/beam/framework/datamodel/MetadataElement");
-    if (classMetadataElement == NULL) return 1007;
+    if (classMetadataElement == NULL) return 1008;
 
     classProduct = (*jenv)->FindClass(jenv, "org/esa/beam/framework/datamodel/Product");
-    if (classProduct == NULL) return 1008;
+    if (classProduct == NULL) return 1009;
 
     classColorPaletteDef = (*jenv)->FindClass(jenv, "org/esa/beam/framework/datamodel/ColorPaletteDef");
-    if (classColorPaletteDef == NULL) return 1009;
+    if (classColorPaletteDef == NULL) return 1010;
 
     classImageInfo = (*jenv)->FindClass(jenv, "org/esa/beam/framework/datamodel/ImageInfo");
-    if (classImageInfo == NULL) return 1010;
+    if (classImageInfo == NULL) return 1011;
 
     classProductManager = (*jenv)->FindClass(jenv, "org/esa/beam/framework/datamodel/ProductManager");
-    if (classProductManager == NULL) return 1011;
+    if (classProductManager == NULL) return 1012;
 
     classImageGeometry = (*jenv)->FindClass(jenv, "org/esa/beam/framework/datamodel/ImageGeometry");
-    if (classImageGeometry == NULL) return 1012;
+    if (classImageGeometry == NULL) return 1013;
 
     classBand = (*jenv)->FindClass(jenv, "org/esa/beam/framework/datamodel/Band");
-    if (classBand == NULL) return 1013;
+    if (classBand == NULL) return 1014;
 
     classPlacemarkGroup = (*jenv)->FindClass(jenv, "org/esa/beam/framework/datamodel/PlacemarkGroup");
-    if (classPlacemarkGroup == NULL) return 1014;
+    if (classPlacemarkGroup == NULL) return 1015;
 
     classTiePointGrid = (*jenv)->FindClass(jenv, "org/esa/beam/framework/datamodel/TiePointGrid");
-    if (classTiePointGrid == NULL) return 1015;
+    if (classTiePointGrid == NULL) return 1016;
 
     classAngularDirection = (*jenv)->FindClass(jenv, "org/esa/beam/framework/datamodel/AngularDirection");
-    if (classAngularDirection == NULL) return 1016;
+    if (classAngularDirection == NULL) return 1017;
 
     classFlagCoding = (*jenv)->FindClass(jenv, "org/esa/beam/framework/datamodel/FlagCoding");
-    if (classFlagCoding == NULL) return 1017;
+    if (classFlagCoding == NULL) return 1018;
 
     classProductReader = (*jenv)->FindClass(jenv, "org/esa/beam/framework/dataio/ProductReader");
-    if (classProductReader == NULL) return 1018;
+    if (classProductReader == NULL) return 1019;
 
     classRGBChannelDef = (*jenv)->FindClass(jenv, "org/esa/beam/framework/datamodel/RGBChannelDef");
-    if (classRGBChannelDef == NULL) return 1019;
+    if (classRGBChannelDef == NULL) return 1020;
 
     classProductData = (*jenv)->FindClass(jenv, "org/esa/beam/framework/datamodel/ProductData");
-    if (classProductData == NULL) return 1020;
+    if (classProductData == NULL) return 1021;
 
     classGeoPos = (*jenv)->FindClass(jenv, "org/esa/beam/framework/datamodel/GeoPos");
-    if (classGeoPos == NULL) return 1021;
+    if (classGeoPos == NULL) return 1022;
 
     classProductNodeGroup = (*jenv)->FindClass(jenv, "org/esa/beam/framework/datamodel/ProductNodeGroup");
-    if (classProductNodeGroup == NULL) return 1022;
+    if (classProductNodeGroup == NULL) return 1023;
 
     classProductUtils = (*jenv)->FindClass(jenv, "org/esa/beam/util/ProductUtils");
-    if (classProductUtils == NULL) return 1023;
+    if (classProductUtils == NULL) return 1024;
 
     classMetadataAttribute = (*jenv)->FindClass(jenv, "org/esa/beam/framework/datamodel/MetadataAttribute");
-    if (classMetadataAttribute == NULL) return 1024;
+    if (classMetadataAttribute == NULL) return 1025;
 
     api_init = 1;
     return 0;
@@ -1029,6 +1046,176 @@ void ProductWriter_removeBand(ProductWriter _this, Band band)
     }
 
     (*jenv)->CallVoidMethod(jenv, _this, _method, band);
+}
+
+Product GPF_createProductFromNoSourceProducts(const char* operatorName, Map parameters)
+{
+    static jmethodID _method = NULL;
+    jstring operatorNameString = NULL;
+    Product _result = (Product) 0;
+
+    if (beam_init_api() != 0) return _result;
+
+    if (_method == NULL) {
+        _method = (*jenv)->GetStaticMethodID(jenv, classGPF, "createProduct", "(Ljava/lang/String;Ljava/util/Map;)Lorg/esa/beam/framework/datamodel/Product;");
+        if (_method == NULL) return _result;
+    }
+
+    operatorNameString = (*jenv)->NewStringUTF(jenv, operatorName);
+    _result = (*jenv)->CallStaticObjectMethod(jenv, classGPF, _method, operatorNameString, parameters);
+    return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
+}
+
+Product GPF_createProductFromSourceProduct(const char* operatorName, Map parameters, Product sourceProduct)
+{
+    static jmethodID _method = NULL;
+    jstring operatorNameString = NULL;
+    Product _result = (Product) 0;
+
+    if (beam_init_api() != 0) return _result;
+
+    if (_method == NULL) {
+        _method = (*jenv)->GetStaticMethodID(jenv, classGPF, "createProduct", "(Ljava/lang/String;Ljava/util/Map;Lorg/esa/beam/framework/datamodel/Product;)Lorg/esa/beam/framework/datamodel/Product;");
+        if (_method == NULL) return _result;
+    }
+
+    operatorNameString = (*jenv)->NewStringUTF(jenv, operatorName);
+    _result = (*jenv)->CallStaticObjectMethod(jenv, classGPF, _method, operatorNameString, parameters, sourceProduct);
+    return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
+}
+
+Product GPF_createProductFromSourceProducts(const char* operatorName, Map parameters, const Product sourceProductsElems, int sourceProductsLength)
+{
+    static jmethodID _method = NULL;
+    jstring operatorNameString = NULL;
+    jarray sourceProductsArray = NULL;
+    Product _result = (Product) 0;
+
+    if (beam_init_api() != 0) return _result;
+
+    if (_method == NULL) {
+        _method = (*jenv)->GetStaticMethodID(jenv, classGPF, "createProduct", "(Ljava/lang/String;Ljava/util/Map;[Lorg/esa/beam/framework/datamodel/Product;)Lorg/esa/beam/framework/datamodel/Product;");
+        if (_method == NULL) return _result;
+    }
+
+    operatorNameString = (*jenv)->NewStringUTF(jenv, operatorName);
+    sourceProductsArray = beam_new_jobject_array(sourceProductsElems, sourceProductsLength, classProduct);
+    _result = (*jenv)->CallStaticObjectMethod(jenv, classGPF, _method, operatorNameString, parameters, sourceProductsArray);
+    return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
+}
+
+Product GPF_createProductFromNamedSourceProducts(const char* operatorName, Map parameters, Map sourceProducts)
+{
+    static jmethodID _method = NULL;
+    jstring operatorNameString = NULL;
+    Product _result = (Product) 0;
+
+    if (beam_init_api() != 0) return _result;
+
+    if (_method == NULL) {
+        _method = (*jenv)->GetStaticMethodID(jenv, classGPF, "createProduct", "(Ljava/lang/String;Ljava/util/Map;Ljava/util/Map;)Lorg/esa/beam/framework/datamodel/Product;");
+        if (_method == NULL) return _result;
+    }
+
+    operatorNameString = (*jenv)->NewStringUTF(jenv, operatorName);
+    _result = (*jenv)->CallStaticObjectMethod(jenv, classGPF, _method, operatorNameString, parameters, sourceProducts);
+    return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
+}
+
+Product GPF_createProductNS(GPF _this, const char* operatorName, Map parameters, Map sourceProducts, RenderingHints renderingHints)
+{
+    static jmethodID _method = NULL;
+    jstring operatorNameString = NULL;
+    Product _result = (Product) 0;
+
+    if (beam_init_api() != 0) return _result;
+
+    if (_method == NULL) {
+        _method = (*jenv)->GetMethodID(jenv, classGPF, "createProductNS", "(Ljava/lang/String;Ljava/util/Map;Ljava/util/Map;Ljava/awt/RenderingHints;)Lorg/esa/beam/framework/datamodel/Product;");
+        if (_method == NULL) return _result;
+    }
+
+    operatorNameString = (*jenv)->NewStringUTF(jenv, operatorName);
+    _result = (*jenv)->CallObjectMethod(jenv, _this, _method, operatorNameString, parameters, sourceProducts, renderingHints);
+    return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
+}
+
+Operator GPF_createOperator(GPF _this, const char* operatorName, Map parameters, Map sourceProducts, RenderingHints renderingHints)
+{
+    static jmethodID _method = NULL;
+    jstring operatorNameString = NULL;
+    Operator _result = (Operator) 0;
+
+    if (beam_init_api() != 0) return _result;
+
+    if (_method == NULL) {
+        _method = (*jenv)->GetMethodID(jenv, classGPF, "createOperator", "(Ljava/lang/String;Ljava/util/Map;Ljava/util/Map;Ljava/awt/RenderingHints;)Lorg/esa/beam/framework/gpf/Operator;");
+        if (_method == NULL) return _result;
+    }
+
+    operatorNameString = (*jenv)->NewStringUTF(jenv, operatorName);
+    _result = (*jenv)->CallObjectMethod(jenv, _this, _method, operatorNameString, parameters, sourceProducts, renderingHints);
+    return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
+}
+
+OperatorSpiRegistry GPF_getOperatorSpiRegistry(GPF _this)
+{
+    static jmethodID _method = NULL;
+    OperatorSpiRegistry _result = (OperatorSpiRegistry) 0;
+
+    if (beam_init_api() != 0) return _result;
+
+    if (_method == NULL) {
+        _method = (*jenv)->GetMethodID(jenv, classGPF, "getOperatorSpiRegistry", "()Lorg/esa/beam/framework/gpf/OperatorSpiRegistry;");
+        if (_method == NULL) return _result;
+    }
+
+    _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
+    return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
+}
+
+void GPF_setOperatorSpiRegistry(GPF _this, OperatorSpiRegistry spiRegistry)
+{
+    static jmethodID _method = NULL;
+
+    if (beam_init_api() != 0) return;
+
+    if (_method == NULL) {
+        _method = (*jenv)->GetMethodID(jenv, classGPF, "setOperatorSpiRegistry", "(Lorg/esa/beam/framework/gpf/OperatorSpiRegistry;)V");
+        if (_method == NULL) return;
+    }
+
+    (*jenv)->CallVoidMethod(jenv, _this, _method, spiRegistry);
+}
+
+GPF GPF_getDefaultInstance()
+{
+    static jmethodID _method = NULL;
+    GPF _result = (GPF) 0;
+
+    if (beam_init_api() != 0) return _result;
+
+    if (_method == NULL) {
+        _method = (*jenv)->GetStaticMethodID(jenv, classGPF, "getDefaultInstance", "()Lorg/esa/beam/framework/gpf/GPF;");
+        if (_method == NULL) return _result;
+    }
+
+    _result = (*jenv)->CallStaticObjectMethod(jenv, classGPF, _method);
+    return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
+}
+
+void GPF_setDefaultInstance(GPF defaultInstance)
+{
+    static jmethodID _method = NULL;
+
+    if (beam_init_api() != 0) return;
+
+    if (_method == NULL) {
+        _method = (*jenv)->GetStaticMethodID(jenv, classGPF, "setDefaultInstance", "(Lorg/esa/beam/framework/gpf/GPF;)V");
+        if (_method == NULL) return;
+    }
+
+    (*jenv)->CallStaticVoidMethod(jenv, classGPF, _method, defaultInstance);
 }
 
 IndexCoding IndexCoding_newIndexCoding(const char* name)
@@ -8062,34 +8249,6 @@ boolean* Band_readValidMask(Band _this, int x, int y, int w, int h, const boolea
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method, x, y, w, h, validMaskArray);
     _result = beam_alloc_boolean_array(_resultArray, resultArrayLength);
     return _result;
-}
-
-void Band_readRasterDataFully(Band _this)
-{
-    static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
-    if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "readRasterDataFully", "()V");
-        if (_method == NULL) return;
-    }
-
-    (*jenv)->CallVoidMethod(jenv, _this, _method);
-}
-
-void Band_readRasterData(Band _this, int offsetX, int offsetY, int width, int height, ProductData rasterData)
-{
-    static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
-    if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "readRasterData", "(IIIILorg/esa/beam/framework/datamodel/ProductData;)V");
-        if (_method == NULL) return;
-    }
-
-    (*jenv)->CallVoidMethod(jenv, _this, _method, offsetX, offsetY, width, height, rasterData);
 }
 
 void Band_writeRasterDataFully(Band _this)

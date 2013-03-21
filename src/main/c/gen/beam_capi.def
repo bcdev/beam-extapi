@@ -33,6 +33,16 @@ EXPORTS
 	ProductWriter_setIncrementalMode
 	ProductWriter_deleteOutput
 	ProductWriter_removeBand
+	GPF_createProductFromNoSourceProducts
+	GPF_createProductFromSourceProduct
+	GPF_createProductFromSourceProducts
+	GPF_createProductFromNamedSourceProducts
+	GPF_createProductNS
+	GPF_createOperator
+	GPF_getOperatorSpiRegistry
+	GPF_setOperatorSpiRegistry
+	GPF_getDefaultInstance
+	GPF_setDefaultInstance
 	IndexCoding_newIndexCoding
 	IndexCoding_getIndex
 	IndexCoding_getIndexNames
@@ -463,8 +473,6 @@ EXPORTS
 	Band_writePixelsFloat
 	Band_writePixelsDouble
 	Band_readValidMask
-	Band_readRasterDataFully
-	Band_readRasterData
 	Band_writeRasterDataFully
 	Band_writeRasterData
 	Band_createCompatibleRasterData

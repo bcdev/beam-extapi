@@ -57,6 +57,16 @@ PyObject* BeamPyProductWriter_isIncrementalMode(PyObject* self, PyObject* args);
 PyObject* BeamPyProductWriter_setIncrementalMode(PyObject* self, PyObject* args);
 PyObject* BeamPyProductWriter_deleteOutput(PyObject* self, PyObject* args);
 PyObject* BeamPyProductWriter_removeBand(PyObject* self, PyObject* args);
+PyObject* BeamPyGPF_createProductFromNoSourceProducts(PyObject* self, PyObject* args);
+PyObject* BeamPyGPF_createProductFromSourceProduct(PyObject* self, PyObject* args);
+PyObject* BeamPyGPF_createProductFromSourceProducts(PyObject* self, PyObject* args);
+PyObject* BeamPyGPF_createProductFromNamedSourceProducts(PyObject* self, PyObject* args);
+PyObject* BeamPyGPF_createProductNS(PyObject* self, PyObject* args);
+PyObject* BeamPyGPF_createOperator(PyObject* self, PyObject* args);
+PyObject* BeamPyGPF_getOperatorSpiRegistry(PyObject* self, PyObject* args);
+PyObject* BeamPyGPF_setOperatorSpiRegistry(PyObject* self, PyObject* args);
+PyObject* BeamPyGPF_getDefaultInstance(PyObject* self, PyObject* args);
+PyObject* BeamPyGPF_setDefaultInstance(PyObject* self, PyObject* args);
 PyObject* BeamPyIndexCoding_newIndexCoding(PyObject* self, PyObject* args);
 PyObject* BeamPyIndexCoding_getIndex(PyObject* self, PyObject* args);
 PyObject* BeamPyIndexCoding_getIndexNames(PyObject* self, PyObject* args);
@@ -487,8 +497,6 @@ PyObject* BeamPyBand_writePixelsInt(PyObject* self, PyObject* args);
 PyObject* BeamPyBand_writePixelsFloat(PyObject* self, PyObject* args);
 PyObject* BeamPyBand_writePixelsDouble(PyObject* self, PyObject* args);
 PyObject* BeamPyBand_readValidMask(PyObject* self, PyObject* args);
-PyObject* BeamPyBand_readRasterDataFully(PyObject* self, PyObject* args);
-PyObject* BeamPyBand_readRasterData(PyObject* self, PyObject* args);
 PyObject* BeamPyBand_writeRasterDataFully(PyObject* self, PyObject* args);
 PyObject* BeamPyBand_writeRasterData(PyObject* self, PyObject* args);
 PyObject* BeamPyBand_createCompatibleRasterData(PyObject* self, PyObject* args);
@@ -1082,6 +1090,16 @@ static PyMethodDef BeamPy_Methods[] = {
     {"ProductWriter_setIncrementalMode", BeamPyProductWriter_setIncrementalMode, METH_VARARGS, " Enables resp. disables incremental writing of this product writer. By default, a reader should enable progress\n listening.\n\n \n@param this The ProductWriter object.\n@param enabled enables or disables progress listening.\n"},
     {"ProductWriter_deleteOutput", BeamPyProductWriter_deleteOutput, METH_VARARGS, " Complete deletes the physical representation of the given product from the file system.\n\n @throws IOException if an I/O error occurs\n\n@param this The ProductWriter object."},
     {"ProductWriter_removeBand", BeamPyProductWriter_removeBand, METH_VARARGS, " Physically deletes a <code>Band</code> in a product writer's output.\n\n \n@param this The ProductWriter object.\n@param band The band to delete.\n"},
+    {"GPF_createProductFromNoSourceProducts", BeamPyGPF_createProductFromNoSourceProducts, METH_VARARGS, " Creates a product by using the operator specified by the given name.\n The resulting product can be used as input product for a further call to {@code createProduct()}.\n By concatenating multiple calls it is possible to set up a processing graph.\n\n @param operatorName the name of the operator to use.\n @param parameters   the named parameters needed by the operator.\n @return the product created by the operator.\n @throws OperatorException if the product could not be created.\n"},
+    {"GPF_createProductFromSourceProduct", BeamPyGPF_createProductFromSourceProduct, METH_VARARGS, " Creates a product by using the operator specified by the given name.\n The resulting product can be used as input product for a further call to {@code createProduct()}.\n By concatenating multiple calls it is possible to set up a processing graph.\n\n @param operatorName  the name of the operator to use.\n @param parameters    the named parameters needed by the operator.\n @param sourceProduct a source product.\n @return the product created by the operator.\n @throws OperatorException if the product could not be created.\n"},
+    {"GPF_createProductFromSourceProducts", BeamPyGPF_createProductFromSourceProducts, METH_VARARGS, " Creates a product by using the operator specified by the given name.\n The resulting product can be used as input product for a further call to {@code createProduct()}.\n By concatenating multiple calls it is possible to set up a processing graph.\n\n @param operatorName   the name of the operator to use.\n @param parameters     the named parameters needed by the operator.\n @param sourceProducts the source products.\n @return the product created by the operator.\n @throws OperatorException if the product could not be created.\n"},
+    {"GPF_createProductFromNamedSourceProducts", BeamPyGPF_createProductFromNamedSourceProducts, METH_VARARGS, " Creates a product by using the operator specified by the given name.\n The resulting product can be used as input product for a further call to {@code createProduct()}.\n By concatenating multiple calls it is possible to set up a processing graph.\n\n @param operatorName   the name of the operator to use.\n @param parameters     the named parameters needed by the operator.\n @param sourceProducts the map of named source products.\n @return the product created by the operator.\n @throws OperatorException if the product could not be created.\n"},
+    {"GPF_createProductNS", BeamPyGPF_createProductNS, METH_VARARGS, " Creates a product by using the operator specified by the given name.\n The resulting product can be used as input product for a further call to {@code createProduct()}.\n By concatenating multiple calls it is possible to set up a processing graph.\n <p>All static {@code createProduct} methods delegate to this non-static (= NS) version.\n It can be overriden by clients in order to alter product creation behaviour of the static\n {@code createProduct} methods of the current GPF instance.</p>\n\n \n@param this The GPF object.\n@param operatorName   the name of the operator to use.\n @param parameters     the named parameters needed by the operator.\n @param sourceProducts the map of named source products.\n @param renderingHints the rendering hints, may be {@code null}.\n @return the product created by the operator.\n @throws OperatorException if the product could not be created.\n"},
+    {"GPF_createOperator", BeamPyGPF_createOperator, METH_VARARGS, " Creates an operator instance by using the given operator (alias) name.\n\n \n@param this The GPF object.\n@param operatorName   the name of the operator to use.\n @param parameters     the named parameters needed by the operator.\n @param sourceProducts the map of named source products.\n @param renderingHints the rendering hints, may be {@code null}.\n @return the product created by the operator.\n @throws OperatorException if the product could not be created.\n @since BEAM 4.9\n"},
+    {"GPF_getOperatorSpiRegistry", BeamPyGPF_getOperatorSpiRegistry, METH_VARARGS, " Gets the registry for operator SPIs.\n\n @return the registry for operator SPIs.\n\n@param this The GPF object."},
+    {"GPF_setOperatorSpiRegistry", BeamPyGPF_setOperatorSpiRegistry, METH_VARARGS, " Sets the registry for operator SPIs.\n\n \n@param this The GPF object.\n@param spiRegistry the registry for operator SPIs.\n"},
+    {"GPF_getDefaultInstance", BeamPyGPF_getDefaultInstance, METH_VARARGS, " Gets the default GPF instance.\n\n @return the singelton instance.\n"},
+    {"GPF_setDefaultInstance", BeamPyGPF_setDefaultInstance, METH_VARARGS, " Sets the default GPF instance.\n\n @param defaultInstance the GPF default instance.\n"},
     {"IndexCoding_newIndexCoding", BeamPyIndexCoding_newIndexCoding, METH_VARARGS, " Constructs a new index coding object with the given name.\n\n @param name the name\n"},
     {"IndexCoding_getIndex", BeamPyIndexCoding_getIndex, METH_VARARGS, " Returns a metadata attribute wich is the representation of the index with the given name. This method delegates to\n getPropertyValue(String).\n\n \n@param this The IndexCoding object.\n@param name the flag name\n @return a metadata attribute wich is the representation of the flag with the given name\n"},
     {"IndexCoding_getIndexNames", BeamPyIndexCoding_getIndexNames, METH_VARARGS, " Returns a string array which contains the names of all indexes contained in this <code>IndexCoding</code> object.\n\n @return a string array which contains all names of this <code>FlagCoding</code>.<br> If this\n         <code>FlagCoding</code> does not contain any flag, <code>null</code> is returned\n\n@param this The IndexCoding object."},
@@ -1512,8 +1530,6 @@ static PyMethodDef BeamPy_Methods[] = {
     {"Band_writePixelsFloat", BeamPyBand_writePixelsFloat, METH_VARARGS, " @see #writePixels(int, int, int, int, float[], ProgressMonitor)\n\n@param this The Band object."},
     {"Band_writePixelsDouble", BeamPyBand_writePixelsDouble, METH_VARARGS, " @see #writePixels(int, int, int, int, double[], ProgressMonitor)\n\n@param this The Band object."},
     {"Band_readValidMask", BeamPyBand_readValidMask, METH_VARARGS, "\n@param this The Band object."},
-    {"Band_readRasterDataFully", BeamPyBand_readRasterDataFully, METH_VARARGS, " @throws java.io.IOException if an I/O error occurs\n @see #readRasterDataFully(ProgressMonitor)\n\n@param this The Band object."},
-    {"Band_readRasterData", BeamPyBand_readRasterData, METH_VARARGS, " Reads raster data from the node's associated data source into the given data\n buffer.\n\n \n@param this The Band object.\n@param offsetX    the X-offset in the raster co-ordinates where reading starts\n @param offsetY    the Y-offset in the raster co-ordinates where reading starts\n @param width      the width of the raster data buffer\n @param height     the height of the raster data buffer\n @param rasterData a raster data buffer receiving the pixels to be read\n @throws java.io.IOException      if an I/O error occurs\n @throws IllegalArgumentException if the raster is null\n @throws IllegalStateException    if this product raster was not added to a product so far, or if the product to\n                                  which this product raster belongs to, has no associated product reader\n @see org.esa.beam.framework.dataio.ProductReader#readBandRasterData(Band, int, int, int, int, ProductData, com.bc.ceres.core.ProgressMonitor)\n"},
     {"Band_writeRasterDataFully", BeamPyBand_writeRasterDataFully, METH_VARARGS, "\n@param this The Band object."},
     {"Band_writeRasterData", BeamPyBand_writeRasterData, METH_VARARGS, "\n@param this The Band object."},
     {"Band_createCompatibleRasterData", BeamPyBand_createCompatibleRasterData, METH_VARARGS, " Creates raster data that is compatible to this dataset's data type. The data buffer returned contains exactly\n <code>getRasterWidth()*getRasterHeight()</code> elements of a compatible data type.\n\n @return raster data compatible with this product raster\n @see #createCompatibleSceneRasterData\n\n@param this The Band object."},
@@ -2093,9 +2109,13 @@ static PyMethodDef BeamPy_Methods[] = {
 PyObject* beam_getPrimitiveArrayBuffer(PyObject* obj, Py_buffer* view, int flags, const char* format, int len)
 {
     if (obj == NULL || obj == Py_None) {
+        if (len <= 0) {
+            PyErr_SetString(PyExc_ValueError, "no buffer length specified");
+            return NULL;
+        }
         obj = CArray_createFromLength(format, len);
         if (obj == NULL) {
-    	    PyErr_SetString(PyExc_MemoryError, "out of memory");
+            PyErr_SetString(PyExc_MemoryError, "out of memory");
             return NULL;
         }
     }
@@ -2108,11 +2128,11 @@ PyObject* beam_getPrimitiveArrayBuffer(PyObject* obj, Py_buffer* view, int flags
             } else {
                 //printf("ndim=%d, len=%d, itemsize=%d, expected len=%d\n", view->ndim, view->len, view->itemsize, len);
                 PyBuffer_Release(view);
-        	    PyErr_SetString(PyExc_TypeError, "illegal buffer configuration");
+                PyErr_SetString(PyExc_ValueError, "illegal buffer configuration");
                 return NULL;
             }
         }  else {
-        	PyErr_SetString(PyExc_TypeError, "failed to access buffer");
+            PyErr_SetString(PyExc_TypeError, "failed to access buffer");
             return NULL;
         }
     } else {
@@ -2618,6 +2638,179 @@ PyObject* BeamPyProductWriter_removeBand(PyObject* self, PyObject* args)
         return NULL;
     }
     ProductWriter_removeBand((ProductWriter) thisObj, (Band) band);
+    return Py_BuildValue("");
+}
+
+PyObject* BeamPyGPF_createProductFromNoSourceProducts(PyObject* self, PyObject* args)
+{
+    const char* operatorName;
+    const char* parametersType;
+    unsigned PY_LONG_LONG parameters;
+    void* result;
+    if (!PyArg_ParseTuple(args, "s(sK):GPF_createProductFromNoSourceProducts", &operatorName, &parametersType, &parameters)) {
+        return NULL;
+    }
+    result = GPF_createProductFromNoSourceProducts(operatorName, (Map) parameters);
+    if (result != NULL) {
+        return Py_BuildValue("(sK)", "Product", (unsigned PY_LONG_LONG) result);
+    } else {
+        return Py_BuildValue("");
+    }
+}
+
+PyObject* BeamPyGPF_createProductFromSourceProduct(PyObject* self, PyObject* args)
+{
+    const char* operatorName;
+    const char* parametersType;
+    unsigned PY_LONG_LONG parameters;
+    const char* sourceProductType;
+    unsigned PY_LONG_LONG sourceProduct;
+    void* result;
+    if (!PyArg_ParseTuple(args, "s(sK)(sK):GPF_createProductFromSourceProduct", &operatorName, &parametersType, &parameters, &sourceProductType, &sourceProduct)) {
+        return NULL;
+    }
+    result = GPF_createProductFromSourceProduct(operatorName, (Map) parameters, (Product) sourceProduct);
+    if (result != NULL) {
+        return Py_BuildValue("(sK)", "Product", (unsigned PY_LONG_LONG) result);
+    } else {
+        return Py_BuildValue("");
+    }
+}
+
+PyObject* BeamPyGPF_createProductFromSourceProducts(PyObject* self, PyObject* args)
+{
+    const char* operatorName;
+    const char* parametersType;
+    unsigned PY_LONG_LONG parameters;
+    Product sourceProducts;
+    int sourceProductsLength;
+    PyObject* sourceProductsSeq;
+    void* result;
+    if (!PyArg_ParseTuple(args, "s(sK)O:GPF_createProductFromSourceProducts", &operatorName, &parametersType, &parameters, &sourceProductsSeq)) {
+        return NULL;
+    }
+    sourceProducts = beam_new_jobject_array_from_pyseq("Product", sourceProductsSeq, &sourceProductsLength);
+    result = GPF_createProductFromSourceProducts(operatorName, (Map) parameters, sourceProducts, sourceProductsLength);
+    if (result != NULL) {
+        return Py_BuildValue("(sK)", "Product", (unsigned PY_LONG_LONG) result);
+    } else {
+        return Py_BuildValue("");
+    }
+}
+
+PyObject* BeamPyGPF_createProductFromNamedSourceProducts(PyObject* self, PyObject* args)
+{
+    const char* operatorName;
+    const char* parametersType;
+    unsigned PY_LONG_LONG parameters;
+    const char* sourceProductsType;
+    unsigned PY_LONG_LONG sourceProducts;
+    void* result;
+    if (!PyArg_ParseTuple(args, "s(sK)(sK):GPF_createProductFromNamedSourceProducts", &operatorName, &parametersType, &parameters, &sourceProductsType, &sourceProducts)) {
+        return NULL;
+    }
+    result = GPF_createProductFromNamedSourceProducts(operatorName, (Map) parameters, (Map) sourceProducts);
+    if (result != NULL) {
+        return Py_BuildValue("(sK)", "Product", (unsigned PY_LONG_LONG) result);
+    } else {
+        return Py_BuildValue("");
+    }
+}
+
+PyObject* BeamPyGPF_createProductNS(PyObject* self, PyObject* args)
+{
+    const char* operatorName;
+    const char* parametersType;
+    unsigned PY_LONG_LONG parameters;
+    const char* sourceProductsType;
+    unsigned PY_LONG_LONG sourceProducts;
+    const char* renderingHintsType;
+    unsigned PY_LONG_LONG renderingHints;
+    const char* thisObjType;
+    unsigned PY_LONG_LONG thisObj;
+    void* result;
+    if (!PyArg_ParseTuple(args, "(sK)s(sK)(sK)(sK):GPF_createProductNS", &thisObjType, &thisObj, &operatorName, &parametersType, &parameters, &sourceProductsType, &sourceProducts, &renderingHintsType, &renderingHints)) {
+        return NULL;
+    }
+    result = GPF_createProductNS((GPF) thisObj, operatorName, (Map) parameters, (Map) sourceProducts, (RenderingHints) renderingHints);
+    if (result != NULL) {
+        return Py_BuildValue("(sK)", "Product", (unsigned PY_LONG_LONG) result);
+    } else {
+        return Py_BuildValue("");
+    }
+}
+
+PyObject* BeamPyGPF_createOperator(PyObject* self, PyObject* args)
+{
+    const char* operatorName;
+    const char* parametersType;
+    unsigned PY_LONG_LONG parameters;
+    const char* sourceProductsType;
+    unsigned PY_LONG_LONG sourceProducts;
+    const char* renderingHintsType;
+    unsigned PY_LONG_LONG renderingHints;
+    const char* thisObjType;
+    unsigned PY_LONG_LONG thisObj;
+    void* result;
+    if (!PyArg_ParseTuple(args, "(sK)s(sK)(sK)(sK):GPF_createOperator", &thisObjType, &thisObj, &operatorName, &parametersType, &parameters, &sourceProductsType, &sourceProducts, &renderingHintsType, &renderingHints)) {
+        return NULL;
+    }
+    result = GPF_createOperator((GPF) thisObj, operatorName, (Map) parameters, (Map) sourceProducts, (RenderingHints) renderingHints);
+    if (result != NULL) {
+        return Py_BuildValue("(sK)", "Operator", (unsigned PY_LONG_LONG) result);
+    } else {
+        return Py_BuildValue("");
+    }
+}
+
+PyObject* BeamPyGPF_getOperatorSpiRegistry(PyObject* self, PyObject* args)
+{
+    const char* thisObjType;
+    unsigned PY_LONG_LONG thisObj;
+    void* result;
+    if (!PyArg_ParseTuple(args, "(sK):GPF_getOperatorSpiRegistry", &thisObjType, &thisObj)) {
+        return NULL;
+    }
+    result = GPF_getOperatorSpiRegistry((GPF) thisObj);
+    if (result != NULL) {
+        return Py_BuildValue("(sK)", "OperatorSpiRegistry", (unsigned PY_LONG_LONG) result);
+    } else {
+        return Py_BuildValue("");
+    }
+}
+
+PyObject* BeamPyGPF_setOperatorSpiRegistry(PyObject* self, PyObject* args)
+{
+    const char* spiRegistryType;
+    unsigned PY_LONG_LONG spiRegistry;
+    const char* thisObjType;
+    unsigned PY_LONG_LONG thisObj;
+    if (!PyArg_ParseTuple(args, "(sK)(sK):GPF_setOperatorSpiRegistry", &thisObjType, &thisObj, &spiRegistryType, &spiRegistry)) {
+        return NULL;
+    }
+    GPF_setOperatorSpiRegistry((GPF) thisObj, (OperatorSpiRegistry) spiRegistry);
+    return Py_BuildValue("");
+}
+
+PyObject* BeamPyGPF_getDefaultInstance(PyObject* self, PyObject* args)
+{
+    void* result;
+    result = GPF_getDefaultInstance();
+    if (result != NULL) {
+        return Py_BuildValue("(sK)", "GPF", (unsigned PY_LONG_LONG) result);
+    } else {
+        return Py_BuildValue("");
+    }
+}
+
+PyObject* BeamPyGPF_setDefaultInstance(PyObject* self, PyObject* args)
+{
+    const char* defaultInstanceType;
+    unsigned PY_LONG_LONG defaultInstance;
+    if (!PyArg_ParseTuple(args, "(sK):GPF_setDefaultInstance", &defaultInstanceType, &defaultInstance)) {
+        return NULL;
+    }
+    GPF_setDefaultInstance((GPF) defaultInstance);
     return Py_BuildValue("");
 }
 
@@ -9212,34 +9405,6 @@ PyObject* BeamPyBand_readValidMask(PyObject* self, PyObject* args)
     } else {
         return Py_BuildValue("");
     }
-}
-
-PyObject* BeamPyBand_readRasterDataFully(PyObject* self, PyObject* args)
-{
-    const char* thisObjType;
-    unsigned PY_LONG_LONG thisObj;
-    if (!PyArg_ParseTuple(args, "(sK):Band_readRasterDataFully", &thisObjType, &thisObj)) {
-        return NULL;
-    }
-    Band_readRasterDataFully((Band) thisObj);
-    return Py_BuildValue("");
-}
-
-PyObject* BeamPyBand_readRasterData(PyObject* self, PyObject* args)
-{
-    int offsetX;
-    int offsetY;
-    int width;
-    int height;
-    const char* rasterDataType;
-    unsigned PY_LONG_LONG rasterData;
-    const char* thisObjType;
-    unsigned PY_LONG_LONG thisObj;
-    if (!PyArg_ParseTuple(args, "(sK)iiii(sK):Band_readRasterData", &thisObjType, &thisObj, &offsetX, &offsetY, &width, &height, &rasterDataType, &rasterData)) {
-        return NULL;
-    }
-    Band_readRasterData((Band) thisObj, offsetX, offsetY, width, height, (ProductData) rasterData);
-    return Py_BuildValue("");
 }
 
 PyObject* BeamPyBand_writeRasterDataFully(PyObject* self, PyObject* args)
