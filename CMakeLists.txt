@@ -32,6 +32,11 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
   set(EXECUTABLE_OUTPUT_PATH target/winx86)
 endif()
 
+if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+  set(LIBRARY_OUTPUT_PATH target/macos)
+  set(EXECUTABLE_OUTPUT_PATH target/macos)
+endif()
+
 ##
 # define input files
 #
