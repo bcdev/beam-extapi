@@ -76,7 +76,7 @@ public class CFunctionGeneratorFactory implements FunctionGeneratorFactory {
             if (scalar) {
                 if (parameterType.isPrimitive()) {
                     parameterGenerator = new CParameterGenerator.PrimitiveScalar(parameter);
-                } else if (parameterType.qualifiedTypeName().equals("java.lang.String")) {
+                } else if (JavadocHelpers.isString(parameterType)) {
                     parameterGenerator = new CParameterGenerator.StringScalar(parameter);
                 } else {
                     parameterGenerator = new CParameterGenerator.ObjectScalar(parameter);

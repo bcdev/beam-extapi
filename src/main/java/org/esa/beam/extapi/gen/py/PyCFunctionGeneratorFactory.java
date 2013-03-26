@@ -75,7 +75,7 @@ public class PyCFunctionGeneratorFactory implements FunctionGeneratorFactory {
             if (scalar) {
                 if (parameterType.isPrimitive()) {
                     parameterGenerator = new PyCParameterGenerator.PrimitiveScalar(parameter);
-                } else if (parameterType.qualifiedTypeName().equals("java.lang.String")) {
+                } else if (JavadocHelpers.isString(parameterType)) {
                     parameterGenerator = new PyCParameterGenerator.StringScalar(parameter);
                 } else {
                     parameterGenerator = new PyCParameterGenerator.ObjectScalar(parameter);
