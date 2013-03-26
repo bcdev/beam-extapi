@@ -15,6 +15,7 @@ if JDK_HOME is None:
 IS64 = sys.maxsize > 2 ** 32
 WIN32 = platform.system() == 'Windows'
 LINUX = platform.system() == 'Linux'
+DARWIN = platform.system() == 'Darwin'
 
 if WIN32 and os.environ.get('VS90COMNTOOLS', None) is None:
     print('Note: If you get an error saying "Unable to find vcvarsall.bat",')
@@ -31,26 +32,30 @@ sources = ['src/main/c/beam_util.c',
            'src/main/c/beampy_carray.c',
            'src/main/c/gen/beam_capi.c',
            'src/main/c/gen/beampy.c']
-
 include_dirs = ['src/main/c',
-                'src/main/c/gen',
-                JDK_HOME + '/include']
-
-library_dirs = [JDK_HOME + '/jre/lib/i386/server',
-                JDK_HOME + '/lib']
-
+                'src/main/c/gen']
+library_dirs = []
 libraries = []
-
 define_macros = []
 
 if WIN32:
-    include_dirs += [JDK_HOME + '/include/win32']
-    libraries=['jvm']
     define_macros += [('WIN32', '1')]
+    include_dirs += [JDK_HOME + '/include', JDK_HOME + '/include/win32']
+    libraries=['jvm']
+    library_dirs = [JDK_HOME + '/jre/lib/i386/server',
+                    JDK_HOME + '/lib']
 
 if LINUX:
-    include_dirs += [JDK_HOME + '/include/linux']
+    include_dirs += [JDK_HOME + '/include', JDK_HOME + '/include/linux']
     libraries=['jvm']
+    library_dirs = [JDK_HOME + '/jre/lib/i386/server',
+                    JDK_HOME + '/lib']
+
+if DARWIN:
+    # todo - adapt settings for Mac OS X, SDK_HOME dir seems to have different structure
+    # see http://docs.python.org/3.2/distutils/setupscript.html
+    # see http://docs.python.org/3.2/distutils/apiref.html?highlight=setup#distutils.core.setup
+    pass
 
 setup(name='beampy',
     description='BEAM Python API',
