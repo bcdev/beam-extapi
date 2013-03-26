@@ -93,7 +93,35 @@ public final class ApiInfo {
         Map<ApiClass, ApiMembers> apiClasses = getApiMembers(rootDoc, config);
         Map<ApiClass, ApiMembers> allClasses = getAllClasses(apiClasses);
         Set<ApiClass> usedNonApiClasses = getUsedNonApiClasses(apiClasses, allClasses);
+        reportProbablyUnusableMethods(apiClasses, usedNonApiClasses);
         return new ApiInfo(config, apiClasses, allClasses, usedNonApiClasses);
+    }
+
+    private static void reportProbablyUnusableMethods(Map<ApiClass, ApiMembers> apiClasses, Set<ApiClass> usedNonApiClasses) {
+        Set<String> usedNonApiTypeNames = new HashSet<String>();
+        for (ApiClass usedNonApiClass : usedNonApiClasses) {
+            usedNonApiTypeNames.add(usedNonApiClass.getType().qualifiedTypeName());
+        }
+        for (ApiClass apiClass : apiClasses.keySet()) {
+            ApiMembers apiMembers = apiClasses.get(apiClass);
+            List<ApiMethod> apiMethods = apiMembers.apiMethods;
+            for (ApiMethod apiMethod : apiMethods) {
+                Parameter[] parameters = apiMethod.getMemberDoc().parameters();
+                for (Parameter parameter : parameters) {
+                    if (!JavadocHelpers.isString(parameter.type())) {
+                        String paramTypeName = parameter.type().qualifiedTypeName();
+                        if (usedNonApiTypeNames.contains(paramTypeName)) {
+                            System.out.printf("%s.%s: parameter %s has the non-API type %s (method may be unusable)\n",
+                                              apiClass.getJavaName(),
+                                              apiMethod.getJavaName(),
+                                              parameter.name(),
+                                              paramTypeName);
+                        }
+                    }
+                }
+
+            }
+        }
     }
 
     private static Map<ApiClass, ApiMembers> getApiMembers(RootDoc rootDoc, ApiGeneratorConfig config) {
@@ -166,8 +194,8 @@ public final class ApiInfo {
             return "deprecated";
         }
         if (!config.isApiMethod(apiMethod.getEnclosingClass().getJavaName(),
-                                      apiMethod.getJavaName(),
-                                      apiMethod.getJavaSignature())) {
+                                apiMethod.getJavaName(),
+                                apiMethod.getJavaSignature())) {
             return "not specified in API config";
         }
         return null;
