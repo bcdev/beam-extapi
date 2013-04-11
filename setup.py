@@ -23,7 +23,7 @@ if WIN32 and os.environ.get('VS90COMNTOOLS', None) is None:
     print('      If you use Visual Studio 10, then: SET VS90COMNTOOLS=%VS100COMNTOOLS%,')
     print('      if you use Visual Studio 12, then: SET VS90COMNTOOLS=%VS110COMNTOOLS%.')
 
-if sys.argv[1] == 'install':
+if len(sys.argv) > 1 and sys.argv[1] == 'install':
     print('Note: In order to use the "beampy" module, you need to set BEAM_HOME')
     print('      to a valid BEAM (>= v4.10) installation directory.')
     print('      Currently, BEAM_HOME =', os.environ.get('BEAM_HOME', None))
