@@ -15,7 +15,7 @@ void CArray_releaseElements(void* items, int length)
 /*
  * Helper for the __init__() method for CArray_Type
  */
-void CArray_initInstance(CArrayObj* self, const char* format, void* items, size_t item_size, int length, CArrayFree free_fn)
+static void CArray_initInstance(CArrayObj* self, const char* format, void* items, size_t item_size, int length, CArrayFree free_fn)
 {
     self->format[0] = format[0];
     self->format[1] = 0;
@@ -29,7 +29,7 @@ void CArray_initInstance(CArrayObj* self, const char* format, void* items, size_
 /*
  * Implements the CArray() constructor for CArray_Type
  */
-PyObject* CArray_new(PyTypeObject* type, PyObject* args, PyObject* kwds)
+static PyObject* CArray_new(PyTypeObject* type, PyObject* args, PyObject* kwds)
 {
     CArrayObj* self;
     printf("CArray_new\n");
@@ -66,7 +66,7 @@ size_t CArray_getItemSize(const char* format)
 /*
  * Implements the __init__() method for CArray_Type
  */
-int CArray_init(CArrayObj* self, PyObject* args, PyObject* kwds)
+static int CArray_init(CArrayObj* self, PyObject* args, PyObject* kwds)
 {
     const char* format = NULL;
     void* items = NULL;
@@ -102,7 +102,7 @@ int CArray_init(CArrayObj* self, PyObject* args, PyObject* kwds)
 /*
  * Implements the dealloc() method for CArray_Type
  */
-void CArray_dealloc(CArrayObj* self)
+static void CArray_dealloc(CArrayObj* self)
 {
     printf("CArray_dealloc\n");
     if (self->items != NULL && self->free_fn != NULL) {
@@ -116,7 +116,7 @@ void CArray_dealloc(CArrayObj* self)
 /*
  * Implements the repr() method for CArray_Type
  */
-PyObject* CArray_repr(CArrayObj* self)
+static PyObject* CArray_repr(CArrayObj* self)
 {
     return PyUnicode_FromFormat("CArray('%s', %d)", self->format, self->length);
 }
@@ -124,7 +124,7 @@ PyObject* CArray_repr(CArrayObj* self)
 /*
  * A test instance method of CArray_Type
  */
-PyObject* CArray_noargs(CArrayObj* self)
+static PyObject* CArray_noargs(CArrayObj* self)
 {
     printf("CArray_noargs self=%p\n", self);
     return Py_BuildValue("");
@@ -133,7 +133,7 @@ PyObject* CArray_noargs(CArrayObj* self)
 /*
  * A test instance method of CArray_Type
  */
-PyObject* CArray_varargs(CArrayObj* self, PyObject* args)
+static PyObject* CArray_varargs(CArrayObj* self, PyObject* args)
 {
     printf("CArray_varargs self=%p, args=%p\n", self, args);
     return Py_BuildValue("");
@@ -142,7 +142,7 @@ PyObject* CArray_varargs(CArrayObj* self, PyObject* args)
 /*
  * A test static method of CArray_Type
  */
-PyObject* CArray_varargsstatic(CArrayObj* self, PyObject* args)
+static PyObject* CArray_varargsstatic(CArrayObj* self, PyObject* args)
 {
     printf("CArray_varargsstatic self=%p, args=%p\n", self, args);
     return Py_BuildValue("");
@@ -151,7 +151,7 @@ PyObject* CArray_varargsstatic(CArrayObj* self, PyObject* args)
 /*
  * A test class method of CArray_Type
  */
-PyObject* CArray_varargsclass(PyTypeObject* cls, PyObject* args)
+static PyObject* CArray_varargsclass(PyTypeObject* cls, PyObject* args)
 {
     printf("CArray_varargsclass cls=%p, args=%p\n", cls, args);
     return Py_BuildValue("");
@@ -367,7 +367,7 @@ int CArray_sq_ass_item(CArrayObj* self, Py_ssize_t index, PyObject* other)
 /*
  * Implements the <sequence> interface for CArray_Type
  */
-PySequenceMethods CArray_as_sequence = {
+static PySequenceMethods CArray_as_sequence = {
     (lenfunc) CArray_sq_length,            /* sq_length */ 
     NULL,   /* sq_concat */
     NULL,   /* sq_repeat */

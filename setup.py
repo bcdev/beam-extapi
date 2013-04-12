@@ -6,13 +6,16 @@ import platform
 from distutils.core import setup
 from distutils.extension import Extension
 
-# JDK_HOME = '/home/marta/jdk1.6.0_35'
 JDK_HOME = os.environ.get('JDK_HOME', None)
 if JDK_HOME is None:
     print('Error: Environment variable "JDK_HOME" must be set to a JDK (>= v1.6) installation directory')
     exit(1)
 
+
 IS64 = sys.maxsize > 2 ** 32
+# print(IS64)
+# sys.exit(1)
+
 WIN32 = platform.system() == 'Windows'
 LINUX = platform.system() == 'Linux'
 DARWIN = platform.system() == 'Darwin'
@@ -37,6 +40,8 @@ include_dirs = ['src/main/c',
 library_dirs = []
 libraries = []
 define_macros = []
+extra_link_args = []
+extra_compile_args = []
 
 if WIN32:
     define_macros += [('WIN32', '1')]
@@ -52,10 +57,18 @@ if LINUX:
                     JDK_HOME + '/lib']
 
 if DARWIN:
-    # todo - adapt settings for Mac OS X, SDK_HOME dir seems to have different structure
+    include_dirs += [JDK_HOME + '/Headers']
+    libraries=['server']
+    library_dirs = [JDK_HOME + '/Libraries']
+    extra_link_args += ['-framework JavaVM']
+    extra_compile_args += ['-framework JavaVM']
+    JDK_HOME = '/System/Library/Frameworks/JavaVM.framework'
+    BEAM_HOME = '/Applications/beam-4.11'
+    # todo - adapt settings for Mac OS X, JDK_HOME dir seems to have different structure
     # see http://docs.python.org/3.2/distutils/setupscript.html
     # see http://docs.python.org/3.2/distutils/apiref.html?highlight=setup#distutils.core.setup
-    pass
+    # sudo ln -s /System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Libraries/libclient64.dylib /usr/lib/libclient.dylib
+    
 
 setup(name='beampy',
     description='BEAM Python API',
@@ -75,6 +88,8 @@ setup(name='beampy',
         include_dirs=include_dirs,
         library_dirs=library_dirs,
         libraries=libraries,
+        extra_link_args=extra_link_args,
+        extra_compile_args=extra_compile_args,
         define_macros=define_macros
     )]
 )
