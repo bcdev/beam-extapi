@@ -197,7 +197,7 @@ public class CModuleGenerator extends ModuleGenerator {
                                        String.format(CLASS_VAR_NAME_PATTERN, "String")));
             for (ApiClass usedApiClass : getApiInfo().getUsedNonApiClasses()) {
                 if (usedApiClass.getType().asClassDoc().isEnum()) {
-                    System.out.println("Warning: unhandled enumpupumi detected: enum " + usedApiClass);
+                    System.out.println("Warning: unhandled enum detected: enum " + usedApiClass);
                     System.out.printf("enum %s {\n", usedApiClass.getType().simpleTypeName());
                     final FieldDoc[] fieldDocs = usedApiClass.getType().asClassDoc().enumConstants();
                     for (FieldDoc fieldDoc : fieldDocs) {
