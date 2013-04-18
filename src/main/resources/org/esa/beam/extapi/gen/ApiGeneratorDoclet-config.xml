@@ -15,7 +15,7 @@
     <!--
         By default, all public methods of a class will be translated.
         Particular methods are listed here in order to
-          o  explicitely exclude them (e.g. ignore="true")
+          o  explicitly exclude them (e.g. ignore="true")
           o  add modifiers (i=input, o=output, r=return) to method parameters (e.g. mods="iiiir")
           o  rename a method (renameTo="newAngularDirection")
           o  to expose all methods which have overloaded names
