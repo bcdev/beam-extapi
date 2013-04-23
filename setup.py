@@ -6,19 +6,17 @@ import platform
 from distutils.core import setup
 from distutils.extension import Extension
 
+# e.g. JDK_HOME = '/home/marta/jdk1.7.0_15'
 JDK_HOME = os.environ.get('JDK_HOME', None)
 if JDK_HOME is None:
     print('Error: Environment variable "JDK_HOME" must be set to a JDK (>= v1.6) installation directory')
     exit(1)
 
-
 IS64 = sys.maxsize > 2 ** 32
-# print(IS64)
-# sys.exit(1)
-
 WIN32 = platform.system() == 'Windows'
 LINUX = platform.system() == 'Linux'
 DARWIN = platform.system() == 'Darwin'
+print('Building a %s-bit library for a %s system' % ('64' if IS64 else '32', platform.system()))
 
 if WIN32 and os.environ.get('VS90COMNTOOLS', None) is None:
     print('Note: If you get an error saying "Unable to find vcvarsall.bat",')
