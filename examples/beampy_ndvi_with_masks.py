@@ -27,6 +27,9 @@ b7 = product.getBand('radiance_7')
 b10 = product.getBand('radiance_10')
 ndviProduct = Product.newProduct('NDVI', 'NDVI', width, height)
 ndviBand = ndviProduct.addNewBand('ndvi', ProductData.TYPE_FLOAT32)
+ndviBand.setNoDataValue(numpy.nan)
+ndviBand.setNoDataValueUsed(True)
+
 writer = ProductIO.getProductWriter('BEAM-DIMAP')
 
 ProductUtils.copyGeoCoding(product, ndviProduct)
@@ -52,6 +55,6 @@ for y in range(height):
 
     print("processing line ", y, " of ", height)
     ndvi = (ma10 - ma7) / (ma10 + ma7)
-    ndviBand.writePixelsFloat(0, y, width, 1, ndvi.data)
+    ndviBand.writePixelsFloat(0, y, width, 1, ndvi.filled(numpy.nan))
 
 ndviProduct.closeIO()

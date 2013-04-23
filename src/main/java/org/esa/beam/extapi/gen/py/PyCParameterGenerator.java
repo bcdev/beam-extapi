@@ -69,7 +69,7 @@ public abstract class PyCParameterGenerator implements ParameterGenerator {
         public String generateParseFormat(GeneratorContext context) {
             String s = getType().typeName();
             if (s.equals("boolean")) {
-                return "p";
+                return "b";
             } else if (s.equals("char")) {
                 return "C";
             } else if (s.equals("byte")) {

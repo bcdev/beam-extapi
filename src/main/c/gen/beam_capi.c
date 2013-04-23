@@ -8230,7 +8230,7 @@ void Band_writePixelsDouble(Band _this, int x, int y, int w, int h, const double
     (*jenv)->CallVoidMethod(jenv, _this, _method, x, y, w, h, pixelsArray);
 }
 
-boolean* Band_readValidMask(Band _this, int x, int y, int w, int h, const boolean* validMaskElems, int validMaskLength, int* resultArrayLength)
+boolean* Band_readValidMask(Band _this, int x, int y, int w, int h, boolean* validMaskElems, int validMaskLength, int* resultArrayLength)
 {
     static jmethodID _method = NULL;
     jarray validMaskArray = NULL;
@@ -8245,9 +8245,15 @@ boolean* Band_readValidMask(Band _this, int x, int y, int w, int h, const boolea
     }
 
     validMaskArray = (*jenv)->NewBooleanArray(jenv, validMaskLength);
-    beam_copy_to_jarray(validMaskArray, validMaskElems, validMaskLength, sizeof (boolean));
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method, x, y, w, h, validMaskArray);
-    _result = beam_alloc_boolean_array(_resultArray, resultArrayLength);
+    if (validMaskElems != NULL && (*jenv)->IsSameObject(jenv, validMaskArray, _resultArray)) {
+        beam_copy_from_jarray(_resultArray, validMaskElems, validMaskLength, sizeof (boolean));
+        _result = validMaskElems;
+        if (resultArrayLength != NULL)
+            *resultArrayLength = validMaskLength;
+    } else {
+        _result = beam_alloc_boolean_array(_resultArray, resultArrayLength);
+    }
     return _result;
 }
 

@@ -718,7 +718,7 @@ double* Band_readPixelsDouble(Band _this, int x, int y, int w, int h, double* pi
 void Band_writePixelsInt(Band _this, int x, int y, int w, int h, const int* pixelsElems, int pixelsLength);
 void Band_writePixelsFloat(Band _this, int x, int y, int w, int h, const float* pixelsElems, int pixelsLength);
 void Band_writePixelsDouble(Band _this, int x, int y, int w, int h, const double* pixelsElems, int pixelsLength);
-boolean* Band_readValidMask(Band _this, int x, int y, int w, int h, const boolean* validMaskElems, int validMaskLength, int* resultArrayLength);
+boolean* Band_readValidMask(Band _this, int x, int y, int w, int h, boolean* validMaskElems, int validMaskLength, int* resultArrayLength);
 void Band_writeRasterDataFully(Band _this);
 void Band_writeRasterData(Band _this, int offsetX, int offsetY, int width, int height, ProductData rasterData);
 ProductData Band_createCompatibleRasterData(Band _this);

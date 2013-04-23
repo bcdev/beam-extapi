@@ -1423,21 +1423,21 @@ static PyMethodDef BeamPy_Methods[] = {
     {"ImageInfo_getHistogramMatching", BeamPyImageInfo_getHistogramMatching, METH_VARARGS, " Converts a string to a histogram matching.\n\n @param mode the histogram matching string\n @return the histogram matching. {@link ImageInfo.HistogramMatching#None} if {@code maode} is not \"Equalize\" or \"Normalize\".\n"},
     {"ProductManager_newProductManager", BeamPyProductManager_newProductManager, METH_VARARGS, " Constructs an product manager with an empty list of products.\n"},
     {"ProductManager_getProductCount", BeamPyProductManager_getProductCount, METH_VARARGS, " @return The number of products in this product manager.\n\n@param this The ProductManager object."},
-    {"ProductManager_getProduct", BeamPyProductManager_getProduct, METH_VARARGS, " Gets the product at the given index.\n\n \n@param this The ProductManager object.\n@param index the index\n @return The product at the given index.\n"},
-    {"ProductManager_getProductDisplayNames", BeamPyProductManager_getProductDisplayNames, METH_VARARGS, " Returns the display names of all products currently managed.\n\n @return an array containing the display names, never <code>null</code>, but the array can have zero length\n @see ProductNode#getDisplayName()\n\n@param this The ProductManager object."},
+    {"ProductManager_getProduct", BeamPyProductManager_getProduct, METH_VARARGS, " Gets the product at the given index.\n\n \n@param this The ProductManager object.\n@param index the index\n\n @return The product at the given index.\n"},
+    {"ProductManager_getProductDisplayNames", BeamPyProductManager_getProductDisplayNames, METH_VARARGS, " Returns the display names of all products currently managed.\n\n @return an array containing the display names, never <code>null</code>, but the array can have zero length\n\n @see ProductNode#getDisplayName()\n\n@param this The ProductManager object."},
     {"ProductManager_getProductNames", BeamPyProductManager_getProductNames, METH_VARARGS, " Returns the names of all products currently managed.\n\n @return an array containing the names, never <code>null</code>, but the array can have zero length\n\n@param this The ProductManager object."},
     {"ProductManager_getProducts", BeamPyProductManager_getProducts, METH_VARARGS, " Returns an array of all products currently managed.\n\n @return an array containing the products, never <code>null</code>, but the array can have zero length\n\n@param this The ProductManager object."},
-    {"ProductManager_getProductByDisplayName", BeamPyProductManager_getProductByDisplayName, METH_VARARGS, " \n@param this The ProductManager object.\n@param displayName The product's display name.\n @return The product with the given display name.\n"},
-    {"ProductManager_getProductByRefNo", BeamPyProductManager_getProductByRefNo, METH_VARARGS, " \n@param this The ProductManager object.\n@param refNo The reference number.\n @return The product with the given reference number.\n"},
-    {"ProductManager_getProductByName", BeamPyProductManager_getProductByName, METH_VARARGS, " \n@param this The ProductManager object.\n@param name The product name.\n @return The product with the given name.\n"},
+    {"ProductManager_getProductByDisplayName", BeamPyProductManager_getProductByDisplayName, METH_VARARGS, " \n@param this The ProductManager object.\n@param displayName The product's display name.\n\n @return The product with the given display name.\n"},
+    {"ProductManager_getProductByRefNo", BeamPyProductManager_getProductByRefNo, METH_VARARGS, " \n@param this The ProductManager object.\n@param refNo The reference number.\n\n @return The product with the given reference number.\n"},
+    {"ProductManager_getProductByName", BeamPyProductManager_getProductByName, METH_VARARGS, " \n@param this The ProductManager object.\n@param name The product name.\n\n @return The product with the given name.\n"},
     {"ProductManager_getProductIndex", BeamPyProductManager_getProductIndex, METH_VARARGS, "\n@param this The ProductManager object."},
-    {"ProductManager_containsProduct", BeamPyProductManager_containsProduct, METH_VARARGS, " Tests whether a product with the given name is contained in this list.\n\n \n@param this The ProductManager object.\n@param name the product name\n @return true, if so\n"},
-    {"ProductManager_contains", BeamPyProductManager_contains, METH_VARARGS, " Tests whether the given product is contained in this list.\n\n \n@param this The ProductManager object.\n@param product The product.\n @return {@code true} if so.\n"},
+    {"ProductManager_containsProduct", BeamPyProductManager_containsProduct, METH_VARARGS, " Tests whether a product with the given name is contained in this list.\n\n \n@param this The ProductManager object.\n@param name the product name\n\n @return true, if so\n"},
+    {"ProductManager_contains", BeamPyProductManager_contains, METH_VARARGS, " Tests whether the given product is contained in this list.\n\n \n@param this The ProductManager object.\n@param product The product.\n\n @return {@code true} if so.\n"},
     {"ProductManager_addProduct", BeamPyProductManager_addProduct, METH_VARARGS, " Adds the given product to this product manager if it does not already exists and sets it's reference number one\n biger than the greatest reference number in this product manager.\n\n \n@param this The ProductManager object.\n@param product the product to be added, ignored if <code>null</code>\n"},
-    {"ProductManager_removeProduct", BeamPyProductManager_removeProduct, METH_VARARGS, " Removes the given product from this product manager if it exists.\n\n \n@param this The ProductManager object.\n@param product the product to be removed, ignored if <code>null</code>\n @return true, if the product was removed\n"},
+    {"ProductManager_removeProduct", BeamPyProductManager_removeProduct, METH_VARARGS, " Removes the given product from this product manager if it exists.\n\n \n@param this The ProductManager object.\n@param product the product to be removed, ignored if <code>null</code>\n\n @return true, if the product was removed\n"},
     {"ProductManager_removeAllProducts", BeamPyProductManager_removeAllProducts, METH_VARARGS, " Removes all product from this list.\n\n@param this The ProductManager object."},
-    {"ProductManager_addListener", BeamPyProductManager_addListener, METH_VARARGS, " Adds a <code>ProductManagerListener</code> to this product manager. The <code>ProductManagerListener</code> is\n informed each time a product was added or removed.\n\n \n@param this The ProductManager object.\n@param listener the listener to be added.\n @return true if the listener was added, otherwise false.\n"},
-    {"ProductManager_removeListener", BeamPyProductManager_removeListener, METH_VARARGS, " Removes a <code>ProductManagerListener</code> from this product manager.\n\n \n@param this The ProductManager object.\n@param listener The listener.\n @return true, if the listener was removed, otherwise false.\n"},
+    {"ProductManager_addListener", BeamPyProductManager_addListener, METH_VARARGS, " Adds a <code>ProductManagerListener</code> to this product manager. The <code>ProductManagerListener</code> is\n informed each time a product was added or removed.\n\n \n@param this The ProductManager object.\n@param listener the listener to be added.\n\n @return true if the listener was added, otherwise false.\n"},
+    {"ProductManager_removeListener", BeamPyProductManager_removeListener, METH_VARARGS, " Removes a <code>ProductManagerListener</code> from this product manager.\n\n \n@param this The ProductManager object.\n@param listener The listener.\n\n @return true, if the listener was removed, otherwise false.\n"},
     {"ImageGeometry_newImageGeometry", BeamPyImageGeometry_newImageGeometry, METH_VARARGS, ""},
     {"ImageGeometry_getImage2MapTransform", BeamPyImageGeometry_getImage2MapTransform, METH_VARARGS, "\n@param this The ImageGeometry object."},
     {"ImageGeometry_getImageRect", BeamPyImageGeometry_getImageRect, METH_VARARGS, "\n@param this The ImageGeometry object."},
@@ -2610,7 +2610,7 @@ PyObject* BeamPyProductWriter_setIncrementalMode(PyObject* self, PyObject* args)
     boolean enabled;
     const char* thisObjType;
     unsigned PY_LONG_LONG thisObj;
-    if (!PyArg_ParseTuple(args, "(sK)p:ProductWriter_setIncrementalMode", &thisObjType, &thisObj, &enabled)) {
+    if (!PyArg_ParseTuple(args, "(sK)b:ProductWriter_setIncrementalMode", &thisObjType, &thisObj, &enabled)) {
         return NULL;
     }
     ProductWriter_setIncrementalMode((ProductWriter) thisObj, enabled);
@@ -3427,7 +3427,7 @@ PyObject* BeamPyIndexCoding_setModified(PyObject* self, PyObject* args)
     boolean modified;
     const char* thisObjType;
     unsigned PY_LONG_LONG thisObj;
-    if (!PyArg_ParseTuple(args, "(sK)p:IndexCoding_setModified", &thisObjType, &thisObj, &modified)) {
+    if (!PyArg_ParseTuple(args, "(sK)b:IndexCoding_setModified", &thisObjType, &thisObj, &modified)) {
         return NULL;
     }
     IndexCoding_setModified((IndexCoding) thisObj, modified);
@@ -4468,7 +4468,7 @@ PyObject* BeamPyPlacemark_setModified(PyObject* self, PyObject* args)
     boolean modified;
     const char* thisObjType;
     unsigned PY_LONG_LONG thisObj;
-    if (!PyArg_ParseTuple(args, "(sK)p:Placemark_setModified", &thisObjType, &thisObj, &modified)) {
+    if (!PyArg_ParseTuple(args, "(sK)b:Placemark_setModified", &thisObjType, &thisObj, &modified)) {
         return NULL;
     }
     Placemark_setModified((Placemark) thisObj, modified);
@@ -5095,7 +5095,7 @@ PyObject* BeamPyMetadataElement_setModified(PyObject* self, PyObject* args)
     boolean modified;
     const char* thisObjType;
     unsigned PY_LONG_LONG thisObj;
-    if (!PyArg_ParseTuple(args, "(sK)p:MetadataElement_setModified", &thisObjType, &thisObj, &modified)) {
+    if (!PyArg_ParseTuple(args, "(sK)b:MetadataElement_setModified", &thisObjType, &thisObj, &modified)) {
         return NULL;
     }
     MetadataElement_setModified((MetadataElement) thisObj, modified);
@@ -6520,7 +6520,7 @@ PyObject* BeamPyProduct_setModified(PyObject* self, PyObject* args)
     boolean modified;
     const char* thisObjType;
     unsigned PY_LONG_LONG thisObj;
-    if (!PyArg_ParseTuple(args, "(sK)p:Product_setModified", &thisObjType, &thisObj, &modified)) {
+    if (!PyArg_ParseTuple(args, "(sK)b:Product_setModified", &thisObjType, &thisObj, &modified)) {
         return NULL;
     }
     Product_setModified((Product) thisObj, modified);
@@ -6962,7 +6962,7 @@ PyObject* BeamPyColorPaletteDef_setDiscrete(PyObject* self, PyObject* args)
     boolean discrete;
     const char* thisObjType;
     unsigned PY_LONG_LONG thisObj;
-    if (!PyArg_ParseTuple(args, "(sK)p:ColorPaletteDef_setDiscrete", &thisObjType, &thisObj, &discrete)) {
+    if (!PyArg_ParseTuple(args, "(sK)b:ColorPaletteDef_setDiscrete", &thisObjType, &thisObj, &discrete)) {
         return NULL;
     }
     ColorPaletteDef_setDiscrete((ColorPaletteDef) thisObj, discrete);
@@ -7034,7 +7034,7 @@ PyObject* BeamPyColorPaletteDef_setAutoDistribute(PyObject* self, PyObject* args
     boolean autoDistribute;
     const char* thisObjType;
     unsigned PY_LONG_LONG thisObj;
-    if (!PyArg_ParseTuple(args, "(sK)p:ColorPaletteDef_setAutoDistribute", &thisObjType, &thisObj, &autoDistribute)) {
+    if (!PyArg_ParseTuple(args, "(sK)b:ColorPaletteDef_setAutoDistribute", &thisObjType, &thisObj, &autoDistribute)) {
         return NULL;
     }
     ColorPaletteDef_setAutoDistribute((ColorPaletteDef) thisObj, autoDistribute);
@@ -7493,7 +7493,7 @@ PyObject* BeamPyImageInfo_setLogScaled(PyObject* self, PyObject* args)
     boolean logScaled;
     const char* thisObjType;
     unsigned PY_LONG_LONG thisObj;
-    if (!PyArg_ParseTuple(args, "(sK)p:ImageInfo_setLogScaled", &thisObjType, &thisObj, &logScaled)) {
+    if (!PyArg_ParseTuple(args, "(sK)b:ImageInfo_setLogScaled", &thisObjType, &thisObj, &logScaled)) {
         return NULL;
     }
     ImageInfo_setLogScaled((ImageInfo) thisObj, logScaled);
@@ -7633,7 +7633,7 @@ PyObject* BeamPyImageInfo_setColorPaletteDef(PyObject* self, PyObject* args)
     boolean autoDistribute;
     const char* thisObjType;
     unsigned PY_LONG_LONG thisObj;
-    if (!PyArg_ParseTuple(args, "(sK)(sK)ddp:ImageInfo_setColorPaletteDef", &thisObjType, &thisObj, &colorPaletteDefType, &colorPaletteDef, &minSample, &maxSample, &autoDistribute)) {
+    if (!PyArg_ParseTuple(args, "(sK)(sK)ddb:ImageInfo_setColorPaletteDef", &thisObjType, &thisObj, &colorPaletteDefType, &colorPaletteDef, &minSample, &maxSample, &autoDistribute)) {
         return NULL;
     }
     ImageInfo_setColorPaletteDef((ImageInfo) thisObj, (ColorPaletteDef) colorPaletteDef, minSample, maxSample, autoDistribute);
@@ -8632,7 +8632,7 @@ PyObject* BeamPyBand_setModified(PyObject* self, PyObject* args)
     boolean modified;
     const char* thisObjType;
     unsigned PY_LONG_LONG thisObj;
-    if (!PyArg_ParseTuple(args, "(sK)p:Band_setModified", &thisObjType, &thisObj, &modified)) {
+    if (!PyArg_ParseTuple(args, "(sK)b:Band_setModified", &thisObjType, &thisObj, &modified)) {
         return NULL;
     }
     Band_setModified((Band) thisObj, modified);
@@ -8785,7 +8785,7 @@ PyObject* BeamPyBand_setLog10Scaled(PyObject* self, PyObject* args)
     boolean log10Scaled;
     const char* thisObjType;
     unsigned PY_LONG_LONG thisObj;
-    if (!PyArg_ParseTuple(args, "(sK)p:Band_setLog10Scaled", &thisObjType, &thisObj, &log10Scaled)) {
+    if (!PyArg_ParseTuple(args, "(sK)b:Band_setLog10Scaled", &thisObjType, &thisObj, &log10Scaled)) {
         return NULL;
     }
     Band_setLog10Scaled((Band) thisObj, log10Scaled);
@@ -8855,7 +8855,7 @@ PyObject* BeamPyBand_setNoDataValueUsed(PyObject* self, PyObject* args)
     boolean noDataValueUsed;
     const char* thisObjType;
     unsigned PY_LONG_LONG thisObj;
-    if (!PyArg_ParseTuple(args, "(sK)p:Band_setNoDataValueUsed", &thisObjType, &thisObj, &noDataValueUsed)) {
+    if (!PyArg_ParseTuple(args, "(sK)b:Band_setNoDataValueUsed", &thisObjType, &thisObj, &noDataValueUsed)) {
         return NULL;
     }
     Band_setNoDataValueUsed((Band) thisObj, noDataValueUsed);
@@ -9386,11 +9386,10 @@ PyObject* BeamPyBand_readValidMask(PyObject* self, PyObject* args)
     unsigned PY_LONG_LONG thisObj;
     boolean* result;
     int resultLength;
-    PyObject* resultObj;
     if (!PyArg_ParseTuple(args, "(sK)iiiiO:Band_readValidMask", &thisObjType, &thisObj, &x, &y, &w, &h, &validMaskObj)) {
         return NULL;
     }
-    validMaskObj = beam_getPrimitiveArrayBufferReadOnly(validMaskObj, &validMaskBuf, "b", -1);
+    validMaskObj = beam_getPrimitiveArrayBufferWritable(validMaskObj, &validMaskBuf, "b", w*h);
     if (validMaskObj == NULL) {
         return NULL;
     }
@@ -9399,9 +9398,8 @@ PyObject* BeamPyBand_readValidMask(PyObject* self, PyObject* args)
     result = Band_readValidMask((Band) thisObj, x, y, w, h, validMask, validMaskLength, &resultLength);
     PyBuffer_Release(&validMaskBuf);
     if (result != NULL) {
-        resultObj = CArray_createFromItems("b", result, resultLength, beam_release_primitive_array);
-        Py_INCREF(resultObj);
-        return resultObj;
+        Py_INCREF(validMaskObj);
+        return validMaskObj;
     } else {
         return Py_BuildValue("");
     }
@@ -9960,7 +9958,7 @@ PyObject* BeamPyBand_setReadOnly(PyObject* self, PyObject* args)
     boolean readOnly;
     const char* thisObjType;
     unsigned PY_LONG_LONG thisObj;
-    if (!PyArg_ParseTuple(args, "(sK)p:Band_setReadOnly", &thisObjType, &thisObj, &readOnly)) {
+    if (!PyArg_ParseTuple(args, "(sK)b:Band_setReadOnly", &thisObjType, &thisObj, &readOnly)) {
         return NULL;
     }
     Band_setReadOnly((Band) thisObj, readOnly);
@@ -10624,7 +10622,7 @@ PyObject* BeamPyPlacemarkGroup_setModified(PyObject* self, PyObject* args)
     boolean modified;
     const char* thisObjType;
     unsigned PY_LONG_LONG thisObj;
-    if (!PyArg_ParseTuple(args, "(sK)p:PlacemarkGroup_setModified", &thisObjType, &thisObj, &modified)) {
+    if (!PyArg_ParseTuple(args, "(sK)b:PlacemarkGroup_setModified", &thisObjType, &thisObj, &modified)) {
         return NULL;
     }
     PlacemarkGroup_setModified((PlacemarkGroup) thisObj, modified);
@@ -10996,7 +10994,7 @@ PyObject* BeamPyTiePointGrid_newTiePointGrid3(PyObject* self, PyObject* args)
     Py_buffer tiePointsBuf;
     boolean containsAngles;
     void* result;
-    if (!PyArg_ParseTuple(args, "siiffffOp:TiePointGrid_newTiePointGrid3", &name, &gridWidth, &gridHeight, &offsetX, &offsetY, &subSamplingX, &subSamplingY, &tiePointsObj, &containsAngles)) {
+    if (!PyArg_ParseTuple(args, "siiffffOb:TiePointGrid_newTiePointGrid3", &name, &gridWidth, &gridHeight, &offsetX, &offsetY, &subSamplingX, &subSamplingY, &tiePointsObj, &containsAngles)) {
         return NULL;
     }
     tiePointsObj = beam_getPrimitiveArrayBufferReadOnly(tiePointsObj, &tiePointsBuf, "f", -1);
@@ -11840,7 +11838,7 @@ PyObject* BeamPyTiePointGrid_setModified(PyObject* self, PyObject* args)
     boolean modified;
     const char* thisObjType;
     unsigned PY_LONG_LONG thisObj;
-    if (!PyArg_ParseTuple(args, "(sK)p:TiePointGrid_setModified", &thisObjType, &thisObj, &modified)) {
+    if (!PyArg_ParseTuple(args, "(sK)b:TiePointGrid_setModified", &thisObjType, &thisObj, &modified)) {
         return NULL;
     }
     TiePointGrid_setModified((TiePointGrid) thisObj, modified);
@@ -11969,7 +11967,7 @@ PyObject* BeamPyTiePointGrid_setLog10Scaled(PyObject* self, PyObject* args)
     boolean log10Scaled;
     const char* thisObjType;
     unsigned PY_LONG_LONG thisObj;
-    if (!PyArg_ParseTuple(args, "(sK)p:TiePointGrid_setLog10Scaled", &thisObjType, &thisObj, &log10Scaled)) {
+    if (!PyArg_ParseTuple(args, "(sK)b:TiePointGrid_setLog10Scaled", &thisObjType, &thisObj, &log10Scaled)) {
         return NULL;
     }
     TiePointGrid_setLog10Scaled((TiePointGrid) thisObj, log10Scaled);
@@ -12039,7 +12037,7 @@ PyObject* BeamPyTiePointGrid_setNoDataValueUsed(PyObject* self, PyObject* args)
     boolean noDataValueUsed;
     const char* thisObjType;
     unsigned PY_LONG_LONG thisObj;
-    if (!PyArg_ParseTuple(args, "(sK)p:TiePointGrid_setNoDataValueUsed", &thisObjType, &thisObj, &noDataValueUsed)) {
+    if (!PyArg_ParseTuple(args, "(sK)b:TiePointGrid_setNoDataValueUsed", &thisObjType, &thisObj, &noDataValueUsed)) {
         return NULL;
     }
     TiePointGrid_setNoDataValueUsed((TiePointGrid) thisObj, noDataValueUsed);
@@ -13280,7 +13278,7 @@ PyObject* BeamPyTiePointGrid_getStx2(PyObject* self, PyObject* args)
     const char* thisObjType;
     unsigned PY_LONG_LONG thisObj;
     void* result;
-    if (!PyArg_ParseTuple(args, "(sK)p(sK):TiePointGrid_getStx2", &thisObjType, &thisObj, &accurate, &pmType, &pm)) {
+    if (!PyArg_ParseTuple(args, "(sK)b(sK):TiePointGrid_getStx2", &thisObjType, &thisObj, &accurate, &pmType, &pm)) {
         return NULL;
     }
     result = TiePointGrid_getStx2((TiePointGrid) thisObj, accurate, (ProgressMonitor) pm);
@@ -13406,7 +13404,7 @@ PyObject* BeamPyTiePointGrid_setReadOnly(PyObject* self, PyObject* args)
     boolean readOnly;
     const char* thisObjType;
     unsigned PY_LONG_LONG thisObj;
-    if (!PyArg_ParseTuple(args, "(sK)p:TiePointGrid_setReadOnly", &thisObjType, &thisObj, &readOnly)) {
+    if (!PyArg_ParseTuple(args, "(sK)b:TiePointGrid_setReadOnly", &thisObjType, &thisObj, &readOnly)) {
         return NULL;
     }
     TiePointGrid_setReadOnly((TiePointGrid) thisObj, readOnly);
@@ -14419,7 +14417,7 @@ PyObject* BeamPyFlagCoding_setModified(PyObject* self, PyObject* args)
     boolean modified;
     const char* thisObjType;
     unsigned PY_LONG_LONG thisObj;
-    if (!PyArg_ParseTuple(args, "(sK)p:FlagCoding_setModified", &thisObjType, &thisObj, &modified)) {
+    if (!PyArg_ParseTuple(args, "(sK)b:FlagCoding_setModified", &thisObjType, &thisObj, &modified)) {
         return NULL;
     }
     FlagCoding_setModified((FlagCoding) thisObj, modified);
@@ -15676,7 +15674,7 @@ PyObject* BeamPyProductData_setElemBoolean(PyObject* self, PyObject* args)
     boolean value;
     const char* thisObjType;
     unsigned PY_LONG_LONG thisObj;
-    if (!PyArg_ParseTuple(args, "(sK)p:ProductData_setElemBoolean", &thisObjType, &thisObj, &value)) {
+    if (!PyArg_ParseTuple(args, "(sK)b:ProductData_setElemBoolean", &thisObjType, &thisObj, &value)) {
         return NULL;
     }
     ProductData_setElemBoolean((ProductData) thisObj, value);
@@ -15754,7 +15752,7 @@ PyObject* BeamPyProductData_setElemBooleanAt(PyObject* self, PyObject* args)
     boolean value;
     const char* thisObjType;
     unsigned PY_LONG_LONG thisObj;
-    if (!PyArg_ParseTuple(args, "(sK)ip:ProductData_setElemBooleanAt", &thisObjType, &thisObj, &index, &value)) {
+    if (!PyArg_ParseTuple(args, "(sK)ib:ProductData_setElemBooleanAt", &thisObjType, &thisObj, &index, &value)) {
         return NULL;
     }
     ProductData_setElemBooleanAt((ProductData) thisObj, index, value);
@@ -16193,7 +16191,7 @@ PyObject* BeamPyProductNodeGroup_newProductNodeGroup2(PyObject* self, PyObject* 
     const char* name;
     boolean takingOverNodeOwnership;
     void* result;
-    if (!PyArg_ParseTuple(args, "(sK)sp:ProductNodeGroup_newProductNodeGroup2", &ownerType, &owner, &name, &takingOverNodeOwnership)) {
+    if (!PyArg_ParseTuple(args, "(sK)sb:ProductNodeGroup_newProductNodeGroup2", &ownerType, &owner, &name, &takingOverNodeOwnership)) {
         return NULL;
     }
     result = ProductNodeGroup_newProductNodeGroup2((ProductNode) owner, name, takingOverNodeOwnership);
@@ -16516,7 +16514,7 @@ PyObject* BeamPyProductNodeGroup_setModified(PyObject* self, PyObject* args)
     boolean modified;
     const char* thisObjType;
     unsigned PY_LONG_LONG thisObj;
-    if (!PyArg_ParseTuple(args, "(sK)p:ProductNodeGroup_setModified", &thisObjType, &thisObj, &modified)) {
+    if (!PyArg_ParseTuple(args, "(sK)b:ProductNodeGroup_setModified", &thisObjType, &thisObj, &modified)) {
         return NULL;
     }
     ProductNodeGroup_setModified((ProductNodeGroup) thisObj, modified);
@@ -16839,7 +16837,7 @@ PyObject* BeamPyProductUtils_createImageInfo(PyObject* self, PyObject* args)
     const char* pmType;
     unsigned PY_LONG_LONG pm;
     void* result;
-    if (!PyArg_ParseTuple(args, "Op(sK):ProductUtils_createImageInfo", &rastersSeq, &assignMissingImageInfos, &pmType, &pm)) {
+    if (!PyArg_ParseTuple(args, "Ob(sK):ProductUtils_createImageInfo", &rastersSeq, &assignMissingImageInfos, &pmType, &pm)) {
         return NULL;
     }
     rasters = beam_new_jobject_array_from_pyseq("RasterDataNode", rastersSeq, &rastersLength);
@@ -17104,7 +17102,7 @@ PyObject* BeamPyProductUtils_createGeoBoundary3(PyObject* self, PyObject* args)
     GeoPos* result;
     int resultLength;
     PyObject* resultSeq;
-    if (!PyArg_ParseTuple(args, "(sK)(sK)ip:ProductUtils_createGeoBoundary3", &productType, &product, &regionType, &region, &step, &usePixelCenter)) {
+    if (!PyArg_ParseTuple(args, "(sK)(sK)ib:ProductUtils_createGeoBoundary3", &productType, &product, &regionType, &region, &step, &usePixelCenter)) {
         return NULL;
     }
     result = ProductUtils_createGeoBoundary3((Product) product, (Rectangle) region, step, usePixelCenter, &resultLength);
@@ -17215,7 +17213,7 @@ PyObject* BeamPyProductUtils_createGeoBoundaryPaths3(PyObject* self, PyObject* a
     GeneralPath* result;
     int resultLength;
     PyObject* resultSeq;
-    if (!PyArg_ParseTuple(args, "(sK)(sK)ip:ProductUtils_createGeoBoundaryPaths3", &productType, &product, &regionType, &region, &step, &usePixelCenter)) {
+    if (!PyArg_ParseTuple(args, "(sK)(sK)ib:ProductUtils_createGeoBoundaryPaths3", &productType, &product, &regionType, &region, &step, &usePixelCenter)) {
         return NULL;
     }
     result = ProductUtils_createGeoBoundaryPaths3((Product) product, (Rectangle) region, step, usePixelCenter, &resultLength);
@@ -17262,7 +17260,7 @@ PyObject* BeamPyProductUtils_createPixelBoundary2(PyObject* self, PyObject* args
     PixelPos* result;
     int resultLength;
     PyObject* resultSeq;
-    if (!PyArg_ParseTuple(args, "(sK)(sK)ip:ProductUtils_createPixelBoundary2", &productType, &product, &rectType, &rect, &step, &usePixelCenter)) {
+    if (!PyArg_ParseTuple(args, "(sK)(sK)ib:ProductUtils_createPixelBoundary2", &productType, &product, &rectType, &rect, &step, &usePixelCenter)) {
         return NULL;
     }
     result = ProductUtils_createPixelBoundary2((Product) product, (Rectangle) rect, step, usePixelCenter, &resultLength);
@@ -17328,7 +17326,7 @@ PyObject* BeamPyProductUtils_createRectBoundary2(PyObject* self, PyObject* args)
     PixelPos* result;
     int resultLength;
     PyObject* resultSeq;
-    if (!PyArg_ParseTuple(args, "(sK)ip:ProductUtils_createRectBoundary2", &rectType, &rect, &step, &usePixelCenter)) {
+    if (!PyArg_ParseTuple(args, "(sK)ib:ProductUtils_createRectBoundary2", &rectType, &rect, &step, &usePixelCenter)) {
         return NULL;
     }
     result = ProductUtils_createRectBoundary2((Rectangle) rect, step, usePixelCenter, &resultLength);
@@ -17423,7 +17421,7 @@ PyObject* BeamPyProductUtils_copyFlagBands(PyObject* self, PyObject* args)
     const char* targetProductType;
     unsigned PY_LONG_LONG targetProduct;
     boolean copySourceImage;
-    if (!PyArg_ParseTuple(args, "(sK)(sK)p:ProductUtils_copyFlagBands", &sourceProductType, &sourceProduct, &targetProductType, &targetProduct, &copySourceImage)) {
+    if (!PyArg_ParseTuple(args, "(sK)(sK)b:ProductUtils_copyFlagBands", &sourceProductType, &sourceProduct, &targetProductType, &targetProduct, &copySourceImage)) {
         return NULL;
     }
     ProductUtils_copyFlagBands((Product) sourceProduct, (Product) targetProduct, copySourceImage);
@@ -17458,7 +17456,7 @@ PyObject* BeamPyProductUtils_copyBand2(PyObject* self, PyObject* args)
     unsigned PY_LONG_LONG targetProduct;
     boolean copySourceImage;
     void* result;
-    if (!PyArg_ParseTuple(args, "s(sK)(sK)p:ProductUtils_copyBand2", &sourceBandName, &sourceProductType, &sourceProduct, &targetProductType, &targetProduct, &copySourceImage)) {
+    if (!PyArg_ParseTuple(args, "s(sK)(sK)b:ProductUtils_copyBand2", &sourceBandName, &sourceProductType, &sourceProduct, &targetProductType, &targetProduct, &copySourceImage)) {
         return NULL;
     }
     result = ProductUtils_copyBand2(sourceBandName, (Product) sourceProduct, (Product) targetProduct, copySourceImage);
@@ -17479,7 +17477,7 @@ PyObject* BeamPyProductUtils_copyBand1(PyObject* self, PyObject* args)
     unsigned PY_LONG_LONG targetProduct;
     boolean copySourceImage;
     void* result;
-    if (!PyArg_ParseTuple(args, "s(sK)s(sK)p:ProductUtils_copyBand1", &sourceBandName, &sourceProductType, &sourceProduct, &targetBandName, &targetProductType, &targetProduct, &copySourceImage)) {
+    if (!PyArg_ParseTuple(args, "s(sK)s(sK)b:ProductUtils_copyBand1", &sourceBandName, &sourceProductType, &sourceProduct, &targetBandName, &targetProductType, &targetProduct, &copySourceImage)) {
         return NULL;
     }
     result = ProductUtils_copyBand1(sourceBandName, (Product) sourceProduct, targetBandName, (Product) targetProduct, copySourceImage);
@@ -17990,7 +17988,7 @@ PyObject* BeamPyProductUtils_copyBandsForGeomTransform2(PyObject* self, PyObject
     double defaultNoDataValue;
     const char* targetToSourceMapType;
     unsigned PY_LONG_LONG targetToSourceMap;
-    if (!PyArg_ParseTuple(args, "(sK)(sK)pd(sK):ProductUtils_copyBandsForGeomTransform2", &sourceProductType, &sourceProduct, &targetProductType, &targetProduct, &includeTiePointGrids, &defaultNoDataValue, &targetToSourceMapType, &targetToSourceMap)) {
+    if (!PyArg_ParseTuple(args, "(sK)(sK)bd(sK):ProductUtils_copyBandsForGeomTransform2", &sourceProductType, &sourceProduct, &targetProductType, &targetProduct, &includeTiePointGrids, &defaultNoDataValue, &targetToSourceMapType, &targetToSourceMap)) {
         return NULL;
     }
     ProductUtils_copyBandsForGeomTransform2((Product) sourceProduct, (Product) targetProduct, includeTiePointGrids, defaultNoDataValue, (Map) targetToSourceMap);
@@ -18051,7 +18049,7 @@ PyObject* BeamPyMetadataAttribute_newMetadataAttribute(PyObject* self, PyObject*
     unsigned PY_LONG_LONG data;
     boolean readOnly;
     void* result;
-    if (!PyArg_ParseTuple(args, "s(sK)p:MetadataAttribute_newMetadataAttribute", &name, &dataType, &data, &readOnly)) {
+    if (!PyArg_ParseTuple(args, "s(sK)b:MetadataAttribute_newMetadataAttribute", &name, &dataType, &data, &readOnly)) {
         return NULL;
     }
     result = MetadataAttribute_newMetadataAttribute(name, (ProductData) data, readOnly);
@@ -18219,7 +18217,7 @@ PyObject* BeamPyMetadataAttribute_setReadOnly(PyObject* self, PyObject* args)
     boolean readOnly;
     const char* thisObjType;
     unsigned PY_LONG_LONG thisObj;
-    if (!PyArg_ParseTuple(args, "(sK)p:MetadataAttribute_setReadOnly", &thisObjType, &thisObj, &readOnly)) {
+    if (!PyArg_ParseTuple(args, "(sK)b:MetadataAttribute_setReadOnly", &thisObjType, &thisObj, &readOnly)) {
         return NULL;
     }
     MetadataAttribute_setReadOnly((MetadataAttribute) thisObj, readOnly);
@@ -18403,7 +18401,7 @@ PyObject* BeamPyMetadataAttribute_setModified(PyObject* self, PyObject* args)
     boolean modified;
     const char* thisObjType;
     unsigned PY_LONG_LONG thisObj;
-    if (!PyArg_ParseTuple(args, "(sK)p:MetadataAttribute_setModified", &thisObjType, &thisObj, &modified)) {
+    if (!PyArg_ParseTuple(args, "(sK)b:MetadataAttribute_setModified", &thisObjType, &thisObj, &modified)) {
         return NULL;
     }
     MetadataAttribute_setModified((MetadataAttribute) thisObj, modified);
