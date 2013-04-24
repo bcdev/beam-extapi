@@ -6,8 +6,23 @@ External APIs for BEAM
 How to build the Python API
 ---------------------------
 
+
 Install ´´beampy´´ into your local Python installation:
     >>> python setup.py install
+
+The setup.py script depends on the JDK_HOME environment variable.
+
+For Windows installations only: This must be set to a 32-bit Java JDK (1.6 or 1.7).
+    >>> SET JDK_HOME=%JDK32_HOME%
+
+To use the BEAM Python API you need to set BEAM_HOME environment variable.
+On Windows, the path needs to be modified, so the Java 32-bit JVM can be found by the Python interpreter.
+Example python scripts can be found in the examples directory. So, on Windows try something like:
+    >>> SET BEAM_HOME=C:\Users\Norman\beam-4.11.1
+    >>> SET PATH=%JDK_HOME%\jre\bin\server;%PATH%
+    >>> cd examples
+    >>> python beampy_ndvi.py <file>
+
 
 For Windows installations only: While running setup.py for for package installations Python 2.7 (and 3.3, Norman) searches for an installed Visual Studio 2008.
 You can trick Python to use newer Visual Studio by setting correct path in VS90COMNTOOLS environment variable before calling setup.py.
