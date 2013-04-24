@@ -1,61 +1,30 @@
 beam-extapi
 ===========
 
-BEAM Python API
----------------
+External APIs for BEAM
 
-### How to build:
+How to build the Python API
+---------------------------
 
-* Install JDK 1.6 32-bit. Set `JDK32_HOME`.
-* Checkout sources from GitHub (https://github.com/bcdev/beam-extapi). In the following, the checkout directory is named `BEAM_EXTAPI`.
-* On Windows,
-  1. Install Python 3 32-bit. Set `PYTHON32_HOME`.
-  2. install Visual C++ 2010 Express (http://www.microsoft.com/visualstudio/eng/products/visual-studio-express-products). Set `MSVC_HOME` (must point to `VC` inside Visual Studio's installation directory).
-  3. execute `%BEAM_EXTAPI%/mkwinall.bat`
-* On Unix,
-  1. install python development extension (sudo apt-get install python3-dev)
-  2. Set 'PYTHON32_INLUDE' to location of "Python.h", installed with the python-dev
-  3. execute 'cmake .' in project root directory, execute 'cmake -DCMAKE_BUILD_TYPE:STRING=Debug ." in project root directory to build a debug target
-  4. execute 'make' in project root directory
+Install ´´beampy´´ into your local Python installation:
+    >>> python setup.py install
 
-### How to install:
+For Windows installations only: While running setup.py for for package installations Python 2.7 (and 3.3, Norman) searches for an installed Visual Studio 2008.
+You can trick Python to use newer Visual Studio by setting correct path in VS90COMNTOOLS environment variable before calling setup.py.
+(from http://stackoverflow.com/questions/6551724/how-do-i-point-easy-install-to-vcvarsall-bat)
 
-* On Windows,
-  1. Install BEAM 4.10.3 32 bit. Set `BEAM_HOME`.
-  2. copy `beampy.pyd` and `beam_capi.dll` from `%BEAM_EXTAPI%/target/win32` to `%PYTHON32_HOME%/DLLs`
-  3. Set `PATH=%PATH%;%BEAM_HOME%/jre/bin/client` (todo: avoid this step)
-* On Unix,
-  1. Install BEAM 4.10.3 32/64 bit, appropriate for your OS. Set `BEAM_HOME`.
-  2. copy `beampy.pyd` and `beam_capi.sh` from `$BEAM_EXTAPI/target/unix32` to `$PYTHON32_HOME/DLLs` (not available yet)
-  3. Set `PATH=$PATH%;$BEAM_HOME/jre/bin/client`  (todo: avoid this step and what about Mac OS?)
+If you have Visual Studio 2010 installed, execute
+    >>> SET VS90COMNTOOLS=%VS100COMNTOOLS%
 
-### How to run:
+or with Visual Studio 2012 installed
+    >>> SET VS90COMNTOOLS=%VS110COMNTOOLS%
 
-Start Python, then type
-
-    >>> import _beampy
-    >>> dir(_beampy)
-    >>> help(_beampy)
-    >>> 
-    >>> from _beampy import *
-    >>> p = ProductIO_readProduct('testdata/MER_RR__1PPBCM20110809_093213_000001383105_00223_49375_0022.N1')
-    >>> p
-    >>> Product_getBandNames(p)
-    >>> b13 = Product_getBand(p, 'radiance_13')
-    >>> Band_getSpectralWavelength(b13)
-    >>> Product_dispose(p)
-    >>> 
-    >>> import beampy
-    >>> p = ProductIO_readProduct('testdata/MER_RR__1PPBCM20110809_093213_000001383105_00223_49375_0022.N1')
-    >>> p.getBandNames()
-    >>> b13 = p.getBand('radiance_13')
-    >>> b13.getSpectralWavelength()
-    >>> p.dispose()
+Build Windows native installer:
+    >>> python setup.py bdist_wininst
 
 
-
-Developer Links
----------------
+Very helpful Developer Links
+----------------------------
 beam-extapi code repository  
 
 * Project on Github: https://github.com/bcdev/beam-extapi
@@ -188,24 +157,4 @@ Fehler	11	error LNK1104: Datei "python32_d.lib" kann nicht geöffnet werden.	C:\
 
 Linux 32/64
 Find a way to inject the 'libmawt.so' into the runtime path using cmake.
-
-
-distutils on Windows
-====================
-
-From http://stackoverflow.com/questions/6551724/how-do-i-point-easy-install-to-vcvarsall-bat
-
-For Windows installations:
-
-While running setup.py for for package installations Python 2.7 searches for an installed Visual Studio 2008. You can trick Python to use newer Visual Studio by setting correct path in VS90COMNTOOLS environment variable before calling setup.py.
-
-If you have Visual Studio 2010 installed, execute
-
-    >>> SET VS90COMNTOOLS=%VS100COMNTOOLS%
-
-or with Visual Studio 2012 installed
-
-    >>> SET VS90COMNTOOLS=%VS110COMNTOOLS%
-
-
 
