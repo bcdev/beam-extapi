@@ -84,7 +84,6 @@ static jclass classAffineTransform;
 static jclass classArea;
 static jclass classGeneralPath;
 static jclass classPoint2D;
-static jclass classRectangle2D;
 static jclass classBufferedImage;
 static jclass classComponentColorModel;
 static jclass classIndexColorModel;
@@ -198,7 +197,6 @@ const char* Band_PROPERTY_NAME_GEOCODING = "geoCoding";
 const char* Band_PROPERTY_NAME_STX = "stx";
 const char* Band_NO_DATA_TEXT = "NaN";
 const char* Band_INVALID_POS_TEXT = "Invalid pos.";
-const char* Band_NOT_LOADED_TEXT = "Not loaded";
 const char* Band_IO_ERROR_TEXT = "I/O error";
 const char* Band_PROPERTY_NAME_DATA = "data";
 const char* Band_PROPERTY_NAME_READ_ONLY = "readOnly";
@@ -222,7 +220,6 @@ const char* TiePointGrid_PROPERTY_NAME_GEOCODING = "geoCoding";
 const char* TiePointGrid_PROPERTY_NAME_STX = "stx";
 const char* TiePointGrid_NO_DATA_TEXT = "NaN";
 const char* TiePointGrid_INVALID_POS_TEXT = "Invalid pos.";
-const char* TiePointGrid_NOT_LOADED_TEXT = "Not loaded";
 const char* TiePointGrid_IO_ERROR_TEXT = "I/O error";
 const char* TiePointGrid_PROPERTY_NAME_DATA = "data";
 const char* TiePointGrid_PROPERTY_NAME_READ_ONLY = "readOnly";
@@ -744,6 +741,22 @@ int beam_init_api()
     return 0;
 }
 
+boolean GeoCoding_isCrossingMeridianAt180(GeoCoding _this)
+{
+    static jmethodID _method = NULL;
+    boolean _result = (boolean) 0;
+
+    if (beam_init_api() != 0) return _result;
+
+    if (_method == NULL) {
+        _method = (*jenv)->GetMethodID(jenv, classGeoCoding, "isCrossingMeridianAt180", "()Z");
+        if (_method == NULL) return _result;
+    }
+
+    _result = (*jenv)->CallBooleanMethod(jenv, _this, _method);
+    return _result;
+}
+
 boolean GeoCoding_canGetPixelPos(GeoCoding _this)
 {
     static jmethodID _method = NULL;
@@ -1216,6 +1229,22 @@ void GPF_setDefaultInstance(GPF defaultInstance)
     }
 
     (*jenv)->CallStaticVoidMethod(jenv, classGPF, _method, defaultInstance);
+}
+
+void GPF_writeProduct(Product product, File file, const char* formatName, boolean incremental, ProgressMonitor pm)
+{
+    static jmethodID _method = NULL;
+    jstring formatNameString = NULL;
+
+    if (beam_init_api() != 0) return;
+
+    if (_method == NULL) {
+        _method = (*jenv)->GetStaticMethodID(jenv, classGPF, "writeProduct", "(Lorg/esa/beam/framework/datamodel/Product;Ljava/io/File;Ljava/lang/String;ZLcom/bc/ceres/core/ProgressMonitor;)V");
+        if (_method == NULL) return;
+    }
+
+    formatNameString = (*jenv)->NewStringUTF(jenv, formatName);
+    (*jenv)->CallStaticVoidMethod(jenv, classGPF, _method, product, file, formatNameString, incremental, pm);
 }
 
 IndexCoding IndexCoding_newIndexCoding(const char* name)
@@ -4454,7 +4483,7 @@ MetadataElement Product_getMetadataRoot(Product _this)
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
-ProductNodeGroup Product_getGroups(Product _this)
+ProductNodeGroup Product_getBandGroup(Product _this)
 {
     static jmethodID _method = NULL;
     ProductNodeGroup _result = (ProductNodeGroup) 0;
@@ -4462,29 +4491,11 @@ ProductNodeGroup Product_getGroups(Product _this)
     if (beam_init_api() != 0) return _result;
 
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProduct, "getGroups", "()Lorg/esa/beam/framework/datamodel/ProductNodeGroup;");
+        _method = (*jenv)->GetMethodID(jenv, classProduct, "getBandGroup", "()Lorg/esa/beam/framework/datamodel/ProductNodeGroup;");
         if (_method == NULL) return _result;
     }
 
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
-    return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
-}
-
-ProductNodeGroup Product_getGroup(Product _this, const char* name)
-{
-    static jmethodID _method = NULL;
-    jstring nameString = NULL;
-    ProductNodeGroup _result = (ProductNodeGroup) 0;
-
-    if (beam_init_api() != 0) return _result;
-
-    if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProduct, "getGroup", "(Ljava/lang/String;)Lorg/esa/beam/framework/datamodel/ProductNodeGroup;");
-        if (_method == NULL) return _result;
-    }
-
-    nameString = (*jenv)->NewStringUTF(jenv, name);
-    _result = (*jenv)->CallObjectMethod(jenv, _this, _method, nameString);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
@@ -4636,22 +4647,6 @@ boolean Product_containsTiePointGrid(Product _this, const char* name)
     nameString = (*jenv)->NewStringUTF(jenv, name);
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method, nameString);
     return _result;
-}
-
-ProductNodeGroup Product_getBandGroup(Product _this)
-{
-    static jmethodID _method = NULL;
-    ProductNodeGroup _result = (ProductNodeGroup) 0;
-
-    if (beam_init_api() != 0) return _result;
-
-    if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProduct, "getBandGroup", "()Lorg/esa/beam/framework/datamodel/ProductNodeGroup;");
-        if (_method == NULL) return _result;
-    }
-
-    _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
-    return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
 void Product_addBand(Product _this, Band band)
@@ -4992,36 +4987,6 @@ PlacemarkGroup Product_getPinGroup(Product _this)
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
-int Product_getNumResolutionsMax(Product _this)
-{
-    static jmethodID _method = NULL;
-    int _result = (int) 0;
-
-    if (beam_init_api() != 0) return _result;
-
-    if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProduct, "getNumResolutionsMax", "()I");
-        if (_method == NULL) return _result;
-    }
-
-    _result = (*jenv)->CallIntMethod(jenv, _this, _method);
-    return _result;
-}
-
-void Product_setNumResolutionsMax(Product _this, int numResolutionsMax)
-{
-    static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
-    if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProduct, "setNumResolutionsMax", "(I)V");
-        if (_method == NULL) return;
-    }
-
-    (*jenv)->CallVoidMethod(jenv, _this, _method, numResolutionsMax);
-}
-
 boolean Product_isCompatibleProduct(Product _this, Product product, float eps)
 {
     static jmethodID _method = NULL;
@@ -5227,26 +5192,6 @@ Product Product_createSubset(Product _this, ProductSubsetDef subsetDef, const ch
     nameString = (*jenv)->NewStringUTF(jenv, name);
     descString = (*jenv)->NewStringUTF(jenv, desc);
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, subsetDef, nameString, descString);
-    return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
-}
-
-Product Product_createProjectedProduct(Product _this, MapInfo mapInfo, const char* name, const char* desc)
-{
-    static jmethodID _method = NULL;
-    jstring nameString = NULL;
-    jstring descString = NULL;
-    Product _result = (Product) 0;
-
-    if (beam_init_api() != 0) return _result;
-
-    if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProduct, "createProjectedProduct", "(Lorg/esa/beam/framework/dataop/maptransf/MapInfo;Ljava/lang/String;Ljava/lang/String;)Lorg/esa/beam/framework/datamodel/Product;");
-        if (_method == NULL) return _result;
-    }
-
-    nameString = (*jenv)->NewStringUTF(jenv, name);
-    descString = (*jenv)->NewStringUTF(jenv, desc);
-    _result = (*jenv)->CallObjectMethod(jenv, _this, _method, mapInfo, nameString, descString);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
@@ -6898,22 +6843,6 @@ ImageGeometry ImageGeometry_createCollocationTargetGeometry(Product targetProduc
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
-Rectangle2D ImageGeometry_createValidRect(Product product)
-{
-    static jmethodID _method = NULL;
-    Rectangle2D _result = (Rectangle2D) 0;
-
-    if (beam_init_api() != 0) return _result;
-
-    if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classImageGeometry, "createValidRect", "(Lorg/esa/beam/framework/datamodel/Product;)Ljava/awt/geom/Rectangle2D;");
-        if (_method == NULL) return _result;
-    }
-
-    _result = (*jenv)->CallStaticObjectMethod(jenv, classImageGeometry, _method, product);
-    return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
-}
-
 Band Band_newBand(const char* name, int dataType, int width, int height)
 {
     static jmethodID _method = NULL;
@@ -7200,191 +7129,6 @@ void Band_dispose(Band _this)
 
     if (_method == NULL) {
         _method = (*jenv)->GetMethodID(jenv, classBand, "dispose", "()V");
-        if (_method == NULL) return;
-    }
-
-    (*jenv)->CallVoidMethod(jenv, _this, _method);
-}
-
-ProductData Band_getSceneRasterData(Band _this)
-{
-    static jmethodID _method = NULL;
-    ProductData _result = (ProductData) 0;
-
-    if (beam_init_api() != 0) return _result;
-
-    if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "getSceneRasterData", "()Lorg/esa/beam/framework/datamodel/ProductData;");
-        if (_method == NULL) return _result;
-    }
-
-    _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
-    return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
-}
-
-int Band_getPixelInt(Band _this, int x, int y)
-{
-    static jmethodID _method = NULL;
-    int _result = (int) 0;
-
-    if (beam_init_api() != 0) return _result;
-
-    if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "getPixelInt", "(II)I");
-        if (_method == NULL) return _result;
-    }
-
-    _result = (*jenv)->CallIntMethod(jenv, _this, _method, x, y);
-    return _result;
-}
-
-float Band_getPixelFloat(Band _this, int x, int y)
-{
-    static jmethodID _method = NULL;
-    float _result = (float) 0;
-
-    if (beam_init_api() != 0) return _result;
-
-    if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "getPixelFloat", "(II)F");
-        if (_method == NULL) return _result;
-    }
-
-    _result = (*jenv)->CallFloatMethod(jenv, _this, _method, x, y);
-    return _result;
-}
-
-double Band_getPixelDouble(Band _this, int x, int y)
-{
-    static jmethodID _method = NULL;
-    double _result = (double) 0;
-
-    if (beam_init_api() != 0) return _result;
-
-    if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "getPixelDouble", "(II)D");
-        if (_method == NULL) return _result;
-    }
-
-    _result = (*jenv)->CallDoubleMethod(jenv, _this, _method, x, y);
-    return _result;
-}
-
-void Band_setPixelInt(Band _this, int x, int y, int pixelValue)
-{
-    static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
-    if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "setPixelInt", "(III)V");
-        if (_method == NULL) return;
-    }
-
-    (*jenv)->CallVoidMethod(jenv, _this, _method, x, y, pixelValue);
-}
-
-void Band_setPixelFloat(Band _this, int x, int y, float pixelValue)
-{
-    static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
-    if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "setPixelFloat", "(IIF)V");
-        if (_method == NULL) return;
-    }
-
-    (*jenv)->CallVoidMethod(jenv, _this, _method, x, y, pixelValue);
-}
-
-void Band_setPixelDouble(Band _this, int x, int y, double pixelValue)
-{
-    static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
-    if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "setPixelDouble", "(IID)V");
-        if (_method == NULL) return;
-    }
-
-    (*jenv)->CallVoidMethod(jenv, _this, _method, x, y, pixelValue);
-}
-
-void Band_setPixelsInt(Band _this, int x, int y, int w, int h, const int* pixelsElems, int pixelsLength)
-{
-    static jmethodID _method = NULL;
-    jarray pixelsArray = NULL;
-
-    if (beam_init_api() != 0) return;
-
-    if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "setPixels", "(IIII[I)V");
-        if (_method == NULL) return;
-    }
-
-    pixelsArray = (*jenv)->NewIntArray(jenv, pixelsLength);
-    beam_copy_to_jarray(pixelsArray, pixelsElems, pixelsLength, sizeof (int));
-    (*jenv)->CallVoidMethod(jenv, _this, _method, x, y, w, h, pixelsArray);
-}
-
-void Band_setPixelsFloat(Band _this, int x, int y, int w, int h, const float* pixelsElems, int pixelsLength)
-{
-    static jmethodID _method = NULL;
-    jarray pixelsArray = NULL;
-
-    if (beam_init_api() != 0) return;
-
-    if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "setPixels", "(IIII[F)V");
-        if (_method == NULL) return;
-    }
-
-    pixelsArray = (*jenv)->NewFloatArray(jenv, pixelsLength);
-    beam_copy_to_jarray(pixelsArray, pixelsElems, pixelsLength, sizeof (float));
-    (*jenv)->CallVoidMethod(jenv, _this, _method, x, y, w, h, pixelsArray);
-}
-
-void Band_setPixelsDouble(Band _this, int x, int y, int w, int h, const double* pixelsElems, int pixelsLength)
-{
-    static jmethodID _method = NULL;
-    jarray pixelsArray = NULL;
-
-    if (beam_init_api() != 0) return;
-
-    if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "setPixels", "(IIII[D)V");
-        if (_method == NULL) return;
-    }
-
-    pixelsArray = (*jenv)->NewDoubleArray(jenv, pixelsLength);
-    beam_copy_to_jarray(pixelsArray, pixelsElems, pixelsLength, sizeof (double));
-    (*jenv)->CallVoidMethod(jenv, _this, _method, x, y, w, h, pixelsArray);
-}
-
-void Band_ensureRasterData(Band _this)
-{
-    static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
-    if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "ensureRasterData", "()V");
-        if (_method == NULL) return;
-    }
-
-    (*jenv)->CallVoidMethod(jenv, _this, _method);
-}
-
-void Band_unloadRasterData(Band _this)
-{
-    static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
-    if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "unloadRasterData", "()V");
         if (_method == NULL) return;
     }
 
@@ -7927,66 +7671,6 @@ void Band_updateExpression(Band _this, const char* oldExternalName, const char* 
     (*jenv)->CallVoidMethod(jenv, _this, _method, oldExternalNameString, newExternalNameString);
 }
 
-boolean Band_hasRasterData(Band _this)
-{
-    static jmethodID _method = NULL;
-    boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
-    if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "hasRasterData", "()Z");
-        if (_method == NULL) return _result;
-    }
-
-    _result = (*jenv)->CallBooleanMethod(jenv, _this, _method);
-    return _result;
-}
-
-ProductData Band_getRasterData(Band _this)
-{
-    static jmethodID _method = NULL;
-    ProductData _result = (ProductData) 0;
-
-    if (beam_init_api() != 0) return _result;
-
-    if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "getRasterData", "()Lorg/esa/beam/framework/datamodel/ProductData;");
-        if (_method == NULL) return _result;
-    }
-
-    _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
-    return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
-}
-
-void Band_setRasterData(Band _this, ProductData rasterData)
-{
-    static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
-    if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "setRasterData", "(Lorg/esa/beam/framework/datamodel/ProductData;)V");
-        if (_method == NULL) return;
-    }
-
-    (*jenv)->CallVoidMethod(jenv, _this, _method, rasterData);
-}
-
-void Band_loadRasterData(Band _this)
-{
-    static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
-    if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "loadRasterData", "()V");
-        if (_method == NULL) return;
-    }
-
-    (*jenv)->CallVoidMethod(jenv, _this, _method);
-}
-
 boolean Band_isPixelValid(Band _this, int x, int y)
 {
     static jmethodID _method = NULL;
@@ -8035,69 +7719,6 @@ float Band_getSampleFloat(Band _this, int x, int y)
     return _result;
 }
 
-int* Band_getPixelsInt(Band _this, int x, int y, int w, int h, const int* pixelsElems, int pixelsLength, int* resultArrayLength)
-{
-    static jmethodID _method = NULL;
-    jarray pixelsArray = NULL;
-    int* _result = (int*) 0;
-    jarray _resultArray = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
-    if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "getPixels", "(IIII[I)[I");
-        if (_method == NULL) return _result;
-    }
-
-    pixelsArray = (*jenv)->NewIntArray(jenv, pixelsLength);
-    beam_copy_to_jarray(pixelsArray, pixelsElems, pixelsLength, sizeof (int));
-    _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method, x, y, w, h, pixelsArray);
-    _result = beam_alloc_int_array(_resultArray, resultArrayLength);
-    return _result;
-}
-
-float* Band_getPixelsFloat(Band _this, int x, int y, int w, int h, const float* pixelsElems, int pixelsLength, int* resultArrayLength)
-{
-    static jmethodID _method = NULL;
-    jarray pixelsArray = NULL;
-    float* _result = (float*) 0;
-    jarray _resultArray = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
-    if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "getPixels", "(IIII[F)[F");
-        if (_method == NULL) return _result;
-    }
-
-    pixelsArray = (*jenv)->NewFloatArray(jenv, pixelsLength);
-    beam_copy_to_jarray(pixelsArray, pixelsElems, pixelsLength, sizeof (float));
-    _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method, x, y, w, h, pixelsArray);
-    _result = beam_alloc_float_array(_resultArray, resultArrayLength);
-    return _result;
-}
-
-double* Band_getPixelsDouble(Band _this, int x, int y, int w, int h, const double* pixelsElems, int pixelsLength, int* resultArrayLength)
-{
-    static jmethodID _method = NULL;
-    jarray pixelsArray = NULL;
-    double* _result = (double*) 0;
-    jarray _resultArray = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
-    if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "getPixels", "(IIII[D)[D");
-        if (_method == NULL) return _result;
-    }
-
-    pixelsArray = (*jenv)->NewDoubleArray(jenv, pixelsLength);
-    beam_copy_to_jarray(pixelsArray, pixelsElems, pixelsLength, sizeof (double));
-    _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method, x, y, w, h, pixelsArray);
-    _result = beam_alloc_double_array(_resultArray, resultArrayLength);
-    return _result;
-}
-
 int* Band_readPixelsInt(Band _this, int x, int y, int w, int h, int* pixelsElems, int pixelsLength, int* resultArrayLength)
 {
     static jmethodID _method = NULL;
@@ -8121,60 +7742,6 @@ int* Band_readPixelsInt(Band _this, int x, int y, int w, int h, int* pixelsElems
             *resultArrayLength = pixelsLength;
     } else {
         _result = beam_alloc_int_array(_resultArray, resultArrayLength);
-    }
-    return _result;
-}
-
-float* Band_readPixelsFloat(Band _this, int x, int y, int w, int h, float* pixelsElems, int pixelsLength, int* resultArrayLength)
-{
-    static jmethodID _method = NULL;
-    jarray pixelsArray = NULL;
-    float* _result = (float*) 0;
-    jarray _resultArray = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
-    if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "readPixels", "(IIII[F)[F");
-        if (_method == NULL) return _result;
-    }
-
-    pixelsArray = (*jenv)->NewFloatArray(jenv, pixelsLength);
-    _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method, x, y, w, h, pixelsArray);
-    if (pixelsElems != NULL && (*jenv)->IsSameObject(jenv, pixelsArray, _resultArray)) {
-        beam_copy_from_jarray(_resultArray, pixelsElems, pixelsLength, sizeof (float));
-        _result = pixelsElems;
-        if (resultArrayLength != NULL)
-            *resultArrayLength = pixelsLength;
-    } else {
-        _result = beam_alloc_float_array(_resultArray, resultArrayLength);
-    }
-    return _result;
-}
-
-double* Band_readPixelsDouble(Band _this, int x, int y, int w, int h, double* pixelsElems, int pixelsLength, int* resultArrayLength)
-{
-    static jmethodID _method = NULL;
-    jarray pixelsArray = NULL;
-    double* _result = (double*) 0;
-    jarray _resultArray = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
-    if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "readPixels", "(IIII[D)[D");
-        if (_method == NULL) return _result;
-    }
-
-    pixelsArray = (*jenv)->NewDoubleArray(jenv, pixelsLength);
-    _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method, x, y, w, h, pixelsArray);
-    if (pixelsElems != NULL && (*jenv)->IsSameObject(jenv, pixelsArray, _resultArray)) {
-        beam_copy_from_jarray(_resultArray, pixelsElems, pixelsLength, sizeof (double));
-        _result = pixelsElems;
-        if (resultArrayLength != NULL)
-            *resultArrayLength = pixelsLength;
-    } else {
-        _result = beam_alloc_double_array(_resultArray, resultArrayLength);
     }
     return _result;
 }
@@ -8271,20 +7838,6 @@ void Band_writeRasterDataFully(Band _this)
     (*jenv)->CallVoidMethod(jenv, _this, _method);
 }
 
-void Band_writeRasterData(Band _this, int offsetX, int offsetY, int width, int height, ProductData rasterData)
-{
-    static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
-    if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "writeRasterData", "(IIIILorg/esa/beam/framework/datamodel/ProductData;)V");
-        if (_method == NULL) return;
-    }
-
-    (*jenv)->CallVoidMethod(jenv, _this, _method, offsetX, offsetY, width, height, rasterData);
-}
-
 ProductData Band_createCompatibleRasterData(Band _this)
 {
     static jmethodID _method = NULL;
@@ -8331,36 +7884,6 @@ ProductData Band_createCompatibleRasterDataForRect(Band _this, int width, int he
 
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, width, height);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
-}
-
-boolean Band_isCompatibleRasterData(Band _this, ProductData rasterData, int w, int h)
-{
-    static jmethodID _method = NULL;
-    boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
-    if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "isCompatibleRasterData", "(Lorg/esa/beam/framework/datamodel/ProductData;II)Z");
-        if (_method == NULL) return _result;
-    }
-
-    _result = (*jenv)->CallBooleanMethod(jenv, _this, _method, rasterData, w, h);
-    return _result;
-}
-
-void Band_checkCompatibleRasterData(Band _this, ProductData rasterData, int w, int h)
-{
-    static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
-    if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "checkCompatibleRasterData", "(Lorg/esa/beam/framework/datamodel/ProductData;II)V");
-        if (_method == NULL) return;
-    }
-
-    (*jenv)->CallVoidMethod(jenv, _this, _method, rasterData, w, h);
 }
 
 boolean Band_hasIntPixels(Band _this)
@@ -8790,6 +8313,20 @@ ProductData Band_getData(Band _this)
 
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
+}
+
+void Band_setDataElems(Band _this, Object elems)
+{
+    static jmethodID _method = NULL;
+
+    if (beam_init_api() != 0) return;
+
+    if (_method == NULL) {
+        _method = (*jenv)->GetMethodID(jenv, classBand, "setDataElems", "(Ljava/lang/Object;)V");
+        if (_method == NULL) return;
+    }
+
+    (*jenv)->CallVoidMethod(jenv, _this, _method, elems);
 }
 
 Object Band_getDataElems(Band _this)
@@ -10266,7 +9803,7 @@ void TiePointGrid_setPixelDouble(TiePointGrid _this, int x, int y, double pixelV
     (*jenv)->CallVoidMethod(jenv, _this, _method, x, y, pixelValue);
 }
 
-int* TiePointGrid_getPixels6(TiePointGrid _this, int x, int y, int w, int h, const int* pixelsElems, int pixelsLength, ProgressMonitor pm, int* resultArrayLength)
+int* TiePointGrid_getPixels3(TiePointGrid _this, int x, int y, int w, int h, const int* pixelsElems, int pixelsLength, ProgressMonitor pm, int* resultArrayLength)
 {
     static jmethodID _method = NULL;
     jarray pixelsArray = NULL;
@@ -10287,7 +9824,7 @@ int* TiePointGrid_getPixels6(TiePointGrid _this, int x, int y, int w, int h, con
     return _result;
 }
 
-float* TiePointGrid_getPixels4(TiePointGrid _this, int x, int y, int w, int h, const float* pixelsElems, int pixelsLength, ProgressMonitor pm, int* resultArrayLength)
+float* TiePointGrid_getPixels2(TiePointGrid _this, int x, int y, int w, int h, const float* pixelsElems, int pixelsLength, ProgressMonitor pm, int* resultArrayLength)
 {
     static jmethodID _method = NULL;
     jarray pixelsArray = NULL;
@@ -10308,7 +9845,7 @@ float* TiePointGrid_getPixels4(TiePointGrid _this, int x, int y, int w, int h, c
     return _result;
 }
 
-double* TiePointGrid_getPixels2(TiePointGrid _this, int x, int y, int w, int h, const double* pixelsElems, int pixelsLength, ProgressMonitor pm, int* resultArrayLength)
+double* TiePointGrid_getPixels1(TiePointGrid _this, int x, int y, int w, int h, const double* pixelsElems, int pixelsLength, ProgressMonitor pm, int* resultArrayLength)
 {
     static jmethodID _method = NULL;
     jarray pixelsArray = NULL;
@@ -10380,7 +9917,7 @@ void TiePointGrid_setPixels1(TiePointGrid _this, int x, int y, int w, int h, con
     (*jenv)->CallVoidMethod(jenv, _this, _method, x, y, w, h, pixelsArray);
 }
 
-int* TiePointGrid_readPixels6(TiePointGrid _this, int x, int y, int w, int h, const int* pixelsElems, int pixelsLength, ProgressMonitor pm, int* resultArrayLength)
+int* TiePointGrid_readPixels4(TiePointGrid _this, int x, int y, int w, int h, const int* pixelsElems, int pixelsLength, ProgressMonitor pm, int* resultArrayLength)
 {
     static jmethodID _method = NULL;
     jarray pixelsArray = NULL;
@@ -10401,7 +9938,7 @@ int* TiePointGrid_readPixels6(TiePointGrid _this, int x, int y, int w, int h, co
     return _result;
 }
 
-float* TiePointGrid_readPixels4(TiePointGrid _this, int x, int y, int w, int h, const float* pixelsElems, int pixelsLength, ProgressMonitor pm, int* resultArrayLength)
+float* TiePointGrid_readPixels2(TiePointGrid _this, int x, int y, int w, int h, const float* pixelsElems, int pixelsLength, ProgressMonitor pm, int* resultArrayLength)
 {
     static jmethodID _method = NULL;
     jarray pixelsArray = NULL;
@@ -10422,7 +9959,7 @@ float* TiePointGrid_readPixels4(TiePointGrid _this, int x, int y, int w, int h, 
     return _result;
 }
 
-double* TiePointGrid_readPixels2(TiePointGrid _this, int x, int y, int w, int h, const double* pixelsElems, int pixelsLength, ProgressMonitor pm, int* resultArrayLength)
+double* TiePointGrid_readPixels1(TiePointGrid _this, int x, int y, int w, int h, const double* pixelsElems, int pixelsLength, ProgressMonitor pm, int* resultArrayLength)
 {
     static jmethodID _method = NULL;
     jarray pixelsArray = NULL;
@@ -10494,7 +10031,7 @@ void TiePointGrid_writePixels2(TiePointGrid _this, int x, int y, int w, int h, c
     (*jenv)->CallVoidMethod(jenv, _this, _method, x, y, w, h, pixelsArray, pm);
 }
 
-void TiePointGrid_readRasterData2(TiePointGrid _this, int offsetX, int offsetY, int width, int height, ProductData rasterData, ProgressMonitor pm)
+void TiePointGrid_readRasterData(TiePointGrid _this, int offsetX, int offsetY, int width, int height, ProductData rasterData, ProgressMonitor pm)
 {
     static jmethodID _method = NULL;
 
@@ -10508,7 +10045,7 @@ void TiePointGrid_readRasterData2(TiePointGrid _this, int offsetX, int offsetY, 
     (*jenv)->CallVoidMethod(jenv, _this, _method, offsetX, offsetY, width, height, rasterData, pm);
 }
 
-void TiePointGrid_readRasterDataFully2(TiePointGrid _this, ProgressMonitor pm)
+void TiePointGrid_readRasterDataFully(TiePointGrid _this, ProgressMonitor pm)
 {
     static jmethodID _method = NULL;
 
@@ -10522,7 +10059,7 @@ void TiePointGrid_readRasterDataFully2(TiePointGrid _this, ProgressMonitor pm)
     (*jenv)->CallVoidMethod(jenv, _this, _method, pm);
 }
 
-void TiePointGrid_writeRasterData2(TiePointGrid _this, int offsetX, int offsetY, int width, int height, ProductData rasterData, ProgressMonitor pm)
+void TiePointGrid_writeRasterData(TiePointGrid _this, int offsetX, int offsetY, int width, int height, ProductData rasterData, ProgressMonitor pm)
 {
     static jmethodID _method = NULL;
 
@@ -11064,94 +10601,6 @@ void TiePointGrid_updateExpression(TiePointGrid _this, const char* oldExternalNa
     (*jenv)->CallVoidMethod(jenv, _this, _method, oldExternalNameString, newExternalNameString);
 }
 
-boolean TiePointGrid_hasRasterData(TiePointGrid _this)
-{
-    static jmethodID _method = NULL;
-    boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
-    if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "hasRasterData", "()Z");
-        if (_method == NULL) return _result;
-    }
-
-    _result = (*jenv)->CallBooleanMethod(jenv, _this, _method);
-    return _result;
-}
-
-ProductData TiePointGrid_getRasterData(TiePointGrid _this)
-{
-    static jmethodID _method = NULL;
-    ProductData _result = (ProductData) 0;
-
-    if (beam_init_api() != 0) return _result;
-
-    if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "getRasterData", "()Lorg/esa/beam/framework/datamodel/ProductData;");
-        if (_method == NULL) return _result;
-    }
-
-    _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
-    return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
-}
-
-void TiePointGrid_setRasterData(TiePointGrid _this, ProductData rasterData)
-{
-    static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
-    if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "setRasterData", "(Lorg/esa/beam/framework/datamodel/ProductData;)V");
-        if (_method == NULL) return;
-    }
-
-    (*jenv)->CallVoidMethod(jenv, _this, _method, rasterData);
-}
-
-void TiePointGrid_loadRasterData1(TiePointGrid _this)
-{
-    static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
-    if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "loadRasterData", "()V");
-        if (_method == NULL) return;
-    }
-
-    (*jenv)->CallVoidMethod(jenv, _this, _method);
-}
-
-void TiePointGrid_loadRasterData2(TiePointGrid _this, ProgressMonitor pm)
-{
-    static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
-    if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "loadRasterData", "(Lcom/bc/ceres/core/ProgressMonitor;)V");
-        if (_method == NULL) return;
-    }
-
-    (*jenv)->CallVoidMethod(jenv, _this, _method, pm);
-}
-
-void TiePointGrid_unloadRasterData(TiePointGrid _this)
-{
-    static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
-    if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "unloadRasterData", "()V");
-        if (_method == NULL) return;
-    }
-
-    (*jenv)->CallVoidMethod(jenv, _this, _method);
-}
-
 boolean TiePointGrid_isPixelValid2(TiePointGrid _this, int x, int y)
 {
     static jmethodID _method = NULL;
@@ -11232,70 +10681,7 @@ boolean TiePointGrid_isPixelValid3(TiePointGrid _this, int x, int y, ROI roi)
     return _result;
 }
 
-int* TiePointGrid_getPixels5(TiePointGrid _this, int x, int y, int w, int h, const int* pixelsElems, int pixelsLength, int* resultArrayLength)
-{
-    static jmethodID _method = NULL;
-    jarray pixelsArray = NULL;
-    int* _result = (int*) 0;
-    jarray _resultArray = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
-    if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "getPixels", "(IIII[I)[I");
-        if (_method == NULL) return _result;
-    }
-
-    pixelsArray = (*jenv)->NewIntArray(jenv, pixelsLength);
-    beam_copy_to_jarray(pixelsArray, pixelsElems, pixelsLength, sizeof (int));
-    _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method, x, y, w, h, pixelsArray);
-    _result = beam_alloc_int_array(_resultArray, resultArrayLength);
-    return _result;
-}
-
-float* TiePointGrid_getPixels3(TiePointGrid _this, int x, int y, int w, int h, const float* pixelsElems, int pixelsLength, int* resultArrayLength)
-{
-    static jmethodID _method = NULL;
-    jarray pixelsArray = NULL;
-    float* _result = (float*) 0;
-    jarray _resultArray = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
-    if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "getPixels", "(IIII[F)[F");
-        if (_method == NULL) return _result;
-    }
-
-    pixelsArray = (*jenv)->NewFloatArray(jenv, pixelsLength);
-    beam_copy_to_jarray(pixelsArray, pixelsElems, pixelsLength, sizeof (float));
-    _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method, x, y, w, h, pixelsArray);
-    _result = beam_alloc_float_array(_resultArray, resultArrayLength);
-    return _result;
-}
-
-double* TiePointGrid_getPixels1(TiePointGrid _this, int x, int y, int w, int h, const double* pixelsElems, int pixelsLength, int* resultArrayLength)
-{
-    static jmethodID _method = NULL;
-    jarray pixelsArray = NULL;
-    double* _result = (double*) 0;
-    jarray _resultArray = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
-    if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "getPixels", "(IIII[D)[D");
-        if (_method == NULL) return _result;
-    }
-
-    pixelsArray = (*jenv)->NewDoubleArray(jenv, pixelsLength);
-    beam_copy_to_jarray(pixelsArray, pixelsElems, pixelsLength, sizeof (double));
-    _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method, x, y, w, h, pixelsArray);
-    _result = beam_alloc_double_array(_resultArray, resultArrayLength);
-    return _result;
-}
-
-int* TiePointGrid_readPixels5(TiePointGrid _this, int x, int y, int w, int h, const int* pixelsElems, int pixelsLength, int* resultArrayLength)
+int* TiePointGrid_readPixels3(TiePointGrid _this, int x, int y, int w, int h, const int* pixelsElems, int pixelsLength, int* resultArrayLength)
 {
     static jmethodID _method = NULL;
     jarray pixelsArray = NULL;
@@ -11313,48 +10699,6 @@ int* TiePointGrid_readPixels5(TiePointGrid _this, int x, int y, int w, int h, co
     beam_copy_to_jarray(pixelsArray, pixelsElems, pixelsLength, sizeof (int));
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method, x, y, w, h, pixelsArray);
     _result = beam_alloc_int_array(_resultArray, resultArrayLength);
-    return _result;
-}
-
-float* TiePointGrid_readPixels3(TiePointGrid _this, int x, int y, int w, int h, const float* pixelsElems, int pixelsLength, int* resultArrayLength)
-{
-    static jmethodID _method = NULL;
-    jarray pixelsArray = NULL;
-    float* _result = (float*) 0;
-    jarray _resultArray = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
-    if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "readPixels", "(IIII[F)[F");
-        if (_method == NULL) return _result;
-    }
-
-    pixelsArray = (*jenv)->NewFloatArray(jenv, pixelsLength);
-    beam_copy_to_jarray(pixelsArray, pixelsElems, pixelsLength, sizeof (float));
-    _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method, x, y, w, h, pixelsArray);
-    _result = beam_alloc_float_array(_resultArray, resultArrayLength);
-    return _result;
-}
-
-double* TiePointGrid_readPixels1(TiePointGrid _this, int x, int y, int w, int h, const double* pixelsElems, int pixelsLength, int* resultArrayLength)
-{
-    static jmethodID _method = NULL;
-    jarray pixelsArray = NULL;
-    double* _result = (double*) 0;
-    jarray _resultArray = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
-    if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "readPixels", "(IIII[D)[D");
-        if (_method == NULL) return _result;
-    }
-
-    pixelsArray = (*jenv)->NewDoubleArray(jenv, pixelsLength);
-    beam_copy_to_jarray(pixelsArray, pixelsElems, pixelsLength, sizeof (double));
-    _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method, x, y, w, h, pixelsArray);
-    _result = beam_alloc_double_array(_resultArray, resultArrayLength);
     return _result;
 }
 
@@ -11430,34 +10774,6 @@ boolean* TiePointGrid_readValidMask(TiePointGrid _this, int x, int y, int w, int
     return _result;
 }
 
-void TiePointGrid_readRasterDataFully1(TiePointGrid _this)
-{
-    static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
-    if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "readRasterDataFully", "()V");
-        if (_method == NULL) return;
-    }
-
-    (*jenv)->CallVoidMethod(jenv, _this, _method);
-}
-
-void TiePointGrid_readRasterData1(TiePointGrid _this, int offsetX, int offsetY, int width, int height, ProductData rasterData)
-{
-    static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
-    if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "readRasterData", "(IIIILorg/esa/beam/framework/datamodel/ProductData;)V");
-        if (_method == NULL) return;
-    }
-
-    (*jenv)->CallVoidMethod(jenv, _this, _method, offsetX, offsetY, width, height, rasterData);
-}
-
 void TiePointGrid_writeRasterDataFully1(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
@@ -11470,20 +10786,6 @@ void TiePointGrid_writeRasterDataFully1(TiePointGrid _this)
     }
 
     (*jenv)->CallVoidMethod(jenv, _this, _method);
-}
-
-void TiePointGrid_writeRasterData1(TiePointGrid _this, int offsetX, int offsetY, int width, int height, ProductData rasterData)
-{
-    static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
-    if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "writeRasterData", "(IIIILorg/esa/beam/framework/datamodel/ProductData;)V");
-        if (_method == NULL) return;
-    }
-
-    (*jenv)->CallVoidMethod(jenv, _this, _method, offsetX, offsetY, width, height, rasterData);
 }
 
 ProductData TiePointGrid_createCompatibleRasterData1(TiePointGrid _this)
@@ -11532,36 +10834,6 @@ ProductData TiePointGrid_createCompatibleRasterData2(TiePointGrid _this, int wid
 
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, width, height);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
-}
-
-boolean TiePointGrid_isCompatibleRasterData(TiePointGrid _this, ProductData rasterData, int w, int h)
-{
-    static jmethodID _method = NULL;
-    boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
-    if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "isCompatibleRasterData", "(Lorg/esa/beam/framework/datamodel/ProductData;II)Z");
-        if (_method == NULL) return _result;
-    }
-
-    _result = (*jenv)->CallBooleanMethod(jenv, _this, _method, rasterData, w, h);
-    return _result;
-}
-
-void TiePointGrid_checkCompatibleRasterData(TiePointGrid _this, ProductData rasterData, int w, int h)
-{
-    static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
-    if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "checkCompatibleRasterData", "(Lorg/esa/beam/framework/datamodel/ProductData;II)V");
-        if (_method == NULL) return;
-    }
-
-    (*jenv)->CallVoidMethod(jenv, _this, _method, rasterData, w, h);
 }
 
 boolean TiePointGrid_hasIntPixels(TiePointGrid _this)
@@ -12124,6 +11396,20 @@ ProductData TiePointGrid_getData(TiePointGrid _this)
 
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
+}
+
+void TiePointGrid_setDataElems(TiePointGrid _this, Object elems)
+{
+    static jmethodID _method = NULL;
+
+    if (beam_init_api() != 0) return;
+
+    if (_method == NULL) {
+        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "setDataElems", "(Ljava/lang/Object;)V");
+        if (_method == NULL) return;
+    }
+
+    (*jenv)->CallVoidMethod(jenv, _this, _method, elems);
 }
 
 Object TiePointGrid_getDataElems(TiePointGrid _this)
@@ -16111,22 +15397,6 @@ GeoPos* ProductUtils_createGeoBoundary3(Product product, Rectangle region, int s
     return _result;
 }
 
-GeoPos ProductUtils_getClosestGeoPos(GeoCoding gc, PixelPos origPos, Rectangle region, int step)
-{
-    static jmethodID _method = NULL;
-    GeoPos _result = (GeoPos) 0;
-
-    if (beam_init_api() != 0) return _result;
-
-    if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "getClosestGeoPos", "(Lorg/esa/beam/framework/datamodel/GeoCoding;Lorg/esa/beam/framework/datamodel/PixelPos;Ljava/awt/Rectangle;I)Lorg/esa/beam/framework/datamodel/GeoPos;");
-        if (_method == NULL) return _result;
-    }
-
-    _result = (*jenv)->CallStaticObjectMethod(jenv, classProductUtils, _method, gc, origPos, region, step);
-    return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
-}
-
 GeoPos* ProductUtils_createGeoBoundary4(RasterDataNode raster, Rectangle region, int step, int* resultArrayLength)
 {
     static jmethodID _method = NULL;
@@ -17141,6 +16411,20 @@ ProductData MetadataAttribute_getData(MetadataAttribute _this)
 
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
+}
+
+void MetadataAttribute_setDataElems(MetadataAttribute _this, Object elems)
+{
+    static jmethodID _method = NULL;
+
+    if (beam_init_api() != 0) return;
+
+    if (_method == NULL) {
+        _method = (*jenv)->GetMethodID(jenv, classMetadataAttribute, "setDataElems", "(Ljava/lang/Object;)V");
+        if (_method == NULL) return;
+    }
+
+    (*jenv)->CallVoidMethod(jenv, _this, _method, elems);
 }
 
 Object MetadataAttribute_getDataElems(MetadataAttribute _this)

@@ -17,13 +17,21 @@
 package org.esa.beam.extapi.gen.py;
 
 import com.sun.javadoc.Type;
-import org.esa.beam.extapi.gen.*;
+import org.esa.beam.extapi.gen.ApiClass;
+import org.esa.beam.extapi.gen.ApiConstant;
+import org.esa.beam.extapi.gen.ApiGeneratorDoclet;
+import org.esa.beam.extapi.gen.ApiMethod;
+import org.esa.beam.extapi.gen.FunctionGenerator;
+import org.esa.beam.extapi.gen.JavadocHelpers;
+import org.esa.beam.extapi.gen.ModuleGenerator;
+import org.esa.beam.extapi.gen.ParameterGenerator;
 import org.esa.beam.extapi.gen.c.CModuleGenerator;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Date;
 import java.util.List;
 
 import static org.esa.beam.extapi.gen.TemplateEval.kv;
@@ -34,7 +42,8 @@ import static org.esa.beam.extapi.gen.TemplateEval.kv;
 public class PyCModuleGenerator extends ModuleGenerator {
 
     // TODO: move the following constants into ApiGeneratorDoclet-config.xml
-    public static final String BEAM_PYAPI_SRCDIR = "src/main/c/gen";
+    public static final String BEAM_PYAPI_C_SRCDIR = "src/main/c/gen";
+    public static final String BEAM_PYAPI_PY_SRCDIR = ".";
     public static final String BEAM_PYAPI_NAME = "beampy";
     public static final String BEAM_PYAPI_VARNAMEPREFIX = "BeamPy";
     public static final String THIS_VAR_NAME = "thisObj";
@@ -72,8 +81,12 @@ public class PyCModuleGenerator extends ModuleGenerator {
     }
 
     private void writePythonSource() throws IOException {
-        final PrintWriter writer = new PrintWriter(new FileWriter(new File(BEAM_PYAPI_SRCDIR, BEAM_PYAPI_NAME + ".py")));
+        final PrintWriter writer = new PrintWriter(new FileWriter(new File(BEAM_PYAPI_PY_SRCDIR, BEAM_PYAPI_NAME + ".py")));
         try {
+            writer.printf("# Please note: This file is machine generated. DO NOT EDIT!\n");
+            writer.printf("# It will be regenerated every time you run 'java %s <beam-src-dir>'.\n", ApiGeneratorDoclet.class.getName());
+            writer.printf("# Last updated on %s.\n", new Date());
+            writer.printf("\n");
             writer.printf("from _%s import *\n", BEAM_PYAPI_NAME);
             writer.printf("\n");
             for (ApiClass apiClass : getApiInfo().getAllClasses()) {
@@ -181,8 +194,8 @@ public class PyCModuleGenerator extends ModuleGenerator {
                                  "        self._obj = obj\n" +
                                  "    \n" +
                                  "    @staticmethod\n" +
-                                 "    def newString(s):\n" +
-                                 "        return String(String_newString(s))\n" +
+                                 "    def newString(str):\n" +
+                                 "        return String(String_newString(str))\n" +
                                  "\n");
         } finally {
             writer.close();
@@ -217,7 +230,7 @@ public class PyCModuleGenerator extends ModuleGenerator {
     }
 
     private void writeWinDef() throws IOException {
-        PrintWriter writer = new PrintWriter(new FileWriter(new File(BEAM_PYAPI_SRCDIR, BEAM_PYAPI_NAME + ".def")));
+        PrintWriter writer = new PrintWriter(new FileWriter(new File(BEAM_PYAPI_C_SRCDIR, BEAM_PYAPI_NAME + ".def")));
         try {
             writeResource(writer, "PyCModuleGenerator-stubs.def");
         } finally {
@@ -226,7 +239,7 @@ public class PyCModuleGenerator extends ModuleGenerator {
     }
 
     private void writeCHeader() throws IOException {
-        final FileWriter fileWriter = new FileWriter(new File(BEAM_PYAPI_SRCDIR, BEAM_PYAPI_NAME + ".h"));
+        final FileWriter fileWriter = new FileWriter(new File(BEAM_PYAPI_C_SRCDIR, BEAM_PYAPI_NAME + ".h"));
         try {
             writeCHeader(fileWriter);
         } finally {
@@ -240,7 +253,7 @@ public class PyCModuleGenerator extends ModuleGenerator {
     }
 
     private void writeCSource() throws IOException {
-        PrintWriter writer = new PrintWriter(new FileWriter(new File(BEAM_PYAPI_SRCDIR, BEAM_PYAPI_NAME + ".c")));
+        PrintWriter writer = new PrintWriter(new FileWriter(new File(BEAM_PYAPI_C_SRCDIR, BEAM_PYAPI_NAME + ".c")));
         try {
             writeFileInfo(writer);
             writer.printf("#include \"%s\"\n", BEAM_PYAPI_NAME + ".h");

@@ -13,6 +13,7 @@ EXPORTS
 	Util_appendString
 	Util_listDir
 	String_newString
+	GeoCoding_isCrossingMeridianAt180
 	GeoCoding_canGetPixelPos
 	GeoCoding_canGetGeoPos
 	GeoCoding_getPixelPos
@@ -43,6 +44,7 @@ EXPORTS
 	GPF_setOperatorSpiRegistry
 	GPF_getDefaultInstance
 	GPF_setDefaultInstance
+	GPF_writeProduct
 	IndexCoding_newIndexCoding
 	IndexCoding_getIndex
 	IndexCoding_getIndexNames
@@ -240,8 +242,7 @@ EXPORTS
 	Product_getEndTime
 	Product_setEndTime
 	Product_getMetadataRoot
-	Product_getGroups
-	Product_getGroup
+	Product_getBandGroup
 	Product_getTiePointGridGroup
 	Product_addTiePointGrid
 	Product_removeTiePointGrid
@@ -251,7 +252,6 @@ EXPORTS
 	Product_getTiePointGrids
 	Product_getTiePointGrid
 	Product_containsTiePointGrid
-	Product_getBandGroup
 	Product_addBand
 	Product_addNewBand
 	Product_addComputedBand
@@ -272,8 +272,6 @@ EXPORTS
 	Product_containsPixel
 	Product_getGcpGroup
 	Product_getPinGroup
-	Product_getNumResolutionsMax
-	Product_setNumResolutionsMax
 	Product_isCompatibleProduct
 	Product_parseExpression
 	Product_acceptVisitor
@@ -287,7 +285,6 @@ EXPORTS
 	Product_createBandArithmeticParser
 	Product_createBandArithmeticDefaultNamespace
 	Product_createSubset
-	Product_createProjectedProduct
 	Product_createFlippedProduct
 	Product_setModified
 	Product_getQuicklookBandName
@@ -390,7 +387,6 @@ EXPORTS
 	ImageGeometry_calculateProductSize
 	ImageGeometry_createTargetGeometry
 	ImageGeometry_createCollocationTargetGeometry
-	ImageGeometry_createValidRect
 	Band_newBand
 	Band_getFlagCoding
 	Band_isFlagBand
@@ -410,18 +406,6 @@ EXPORTS
 	Band_toString
 	Band_removeFromFile
 	Band_dispose
-	Band_getSceneRasterData
-	Band_getPixelInt
-	Band_getPixelFloat
-	Band_getPixelDouble
-	Band_setPixelInt
-	Band_setPixelFloat
-	Band_setPixelDouble
-	Band_setPixelsInt
-	Band_setPixelsFloat
-	Band_setPixelsDouble
-	Band_ensureRasterData
-	Band_unloadRasterData
 	Band_getViewModeId
 	Band_getSceneRasterWidth
 	Band_getSceneRasterHeight
@@ -456,30 +440,18 @@ EXPORTS
 	Band_resetValidMask
 	Band_getValidMaskExpression
 	Band_updateExpression
-	Band_hasRasterData
-	Band_getRasterData
-	Band_setRasterData
-	Band_loadRasterData
 	Band_isPixelValid
 	Band_getSampleInt
 	Band_getSampleFloat
-	Band_getPixelsInt
-	Band_getPixelsFloat
-	Band_getPixelsDouble
 	Band_readPixelsInt
-	Band_readPixelsFloat
-	Band_readPixelsDouble
 	Band_writePixelsInt
 	Band_writePixelsFloat
 	Band_writePixelsDouble
 	Band_readValidMask
 	Band_writeRasterDataFully
-	Band_writeRasterData
 	Band_createCompatibleRasterData
 	Band_createCompatibleSceneRasterData
 	Band_createCompatibleRasterDataForRect
-	Band_isCompatibleRasterData
-	Band_checkCompatibleRasterData
 	Band_hasIntPixels
 	Band_createTransectProfileData
 	Band_getImageInfo
@@ -507,6 +479,7 @@ EXPORTS
 	Band_getNumDataElems
 	Band_setData
 	Band_getData
+	Band_setDataElems
 	Band_getDataElems
 	Band_getDataElemSize
 	Band_setReadOnly
@@ -597,21 +570,21 @@ EXPORTS
 	TiePointGrid_setPixelInt
 	TiePointGrid_setPixelFloat
 	TiePointGrid_setPixelDouble
-	TiePointGrid_getPixels6
-	TiePointGrid_getPixels4
+	TiePointGrid_getPixels3
 	TiePointGrid_getPixels2
+	TiePointGrid_getPixels1
 	TiePointGrid_setPixels3
 	TiePointGrid_setPixels2
 	TiePointGrid_setPixels1
-	TiePointGrid_readPixels6
 	TiePointGrid_readPixels4
 	TiePointGrid_readPixels2
+	TiePointGrid_readPixels1
 	TiePointGrid_writePixels6
 	TiePointGrid_writePixels4
 	TiePointGrid_writePixels2
-	TiePointGrid_readRasterData2
-	TiePointGrid_readRasterDataFully2
-	TiePointGrid_writeRasterData2
+	TiePointGrid_readRasterData
+	TiePointGrid_readRasterDataFully
+	TiePointGrid_writeRasterData
 	TiePointGrid_writeRasterDataFully2
 	TiePointGrid_acceptVisitor
 	TiePointGrid_cloneTiePointGrid
@@ -646,36 +619,20 @@ EXPORTS
 	TiePointGrid_resetValidMask
 	TiePointGrid_getValidMaskExpression
 	TiePointGrid_updateExpression
-	TiePointGrid_hasRasterData
-	TiePointGrid_getRasterData
-	TiePointGrid_setRasterData
-	TiePointGrid_loadRasterData1
-	TiePointGrid_loadRasterData2
-	TiePointGrid_unloadRasterData
 	TiePointGrid_isPixelValid2
 	TiePointGrid_getSampleInt
 	TiePointGrid_getSampleFloat
 	TiePointGrid_isPixelValid1
 	TiePointGrid_isPixelValid3
-	TiePointGrid_getPixels5
-	TiePointGrid_getPixels3
-	TiePointGrid_getPixels1
-	TiePointGrid_readPixels5
 	TiePointGrid_readPixels3
-	TiePointGrid_readPixels1
 	TiePointGrid_writePixels5
 	TiePointGrid_writePixels3
 	TiePointGrid_writePixels1
 	TiePointGrid_readValidMask
-	TiePointGrid_readRasterDataFully1
-	TiePointGrid_readRasterData1
 	TiePointGrid_writeRasterDataFully1
-	TiePointGrid_writeRasterData1
 	TiePointGrid_createCompatibleRasterData1
 	TiePointGrid_createCompatibleSceneRasterData
 	TiePointGrid_createCompatibleRasterData2
-	TiePointGrid_isCompatibleRasterData
-	TiePointGrid_checkCompatibleRasterData
 	TiePointGrid_hasIntPixels
 	TiePointGrid_createTransectProfileData
 	TiePointGrid_getImageInfo1
@@ -711,6 +668,7 @@ EXPORTS
 	TiePointGrid_getNumDataElems
 	TiePointGrid_setData
 	TiePointGrid_getData
+	TiePointGrid_setDataElems
 	TiePointGrid_getDataElems
 	TiePointGrid_getDataElemSize
 	TiePointGrid_setReadOnly
@@ -954,7 +912,6 @@ EXPORTS
 	ProductUtils_createGeoBoundary1
 	ProductUtils_createGeoBoundary2
 	ProductUtils_createGeoBoundary3
-	ProductUtils_getClosestGeoPos
 	ProductUtils_createGeoBoundary4
 	ProductUtils_createGeoBoundaryPaths1
 	ProductUtils_createGeoBoundaryPaths2
@@ -1018,6 +975,7 @@ EXPORTS
 	MetadataAttribute_getNumDataElems
 	MetadataAttribute_setData
 	MetadataAttribute_getData
+	MetadataAttribute_setDataElems
 	MetadataAttribute_getDataElems
 	MetadataAttribute_getDataElemSize
 	MetadataAttribute_setReadOnly
