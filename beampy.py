@@ -1,6 +1,6 @@
 # Please note: This file is machine generated. DO NOT EDIT!
 # It will be regenerated every time you run 'java org.esa.beam.extapi.gen.ApiGeneratorDoclet <beam-src-dir>'.
-# Last update: Tue Apr 23 13:31:34 CEST 2013.
+# Last updated on Mon Apr 29 22:31:01 CEST 2013.
 
 from _beampy import *
 
@@ -60,6 +60,10 @@ class ImageGeometry:
     @staticmethod
     def createCollocationTargetGeometry(targetProduct, collocationProduct):
         return ImageGeometry(ImageGeometry_createCollocationTargetGeometry(targetProduct._obj, collocationProduct._obj))
+
+    @staticmethod
+    def createValidRect(product):
+        return Rectangle2D(ImageGeometry_createValidRect(product._obj))
 
 
 """ Instances of the <code>Parser</code> interface are used to convert a code
@@ -2833,14 +2837,6 @@ class Band:
         """
         return ProductData(Band_getData(self._obj))
 
-    def setDataElems(self, elems):
-        """
-           Sets the data elements of this data node.
-           @see ProductData#setElems(Object)
-        """
-        Band_setDataElems(self._obj, elems._obj)
-        return
-
     def getDataElems(self):
         """
            Gets the data elements of this data node.
@@ -3362,6 +3358,13 @@ a classpath scan.
 @see ProductReaderPlugIn
 """
 class ProductWriterPlugIn:
+    def __init__(self, obj):
+        if obj == None:
+            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
+        self._obj = obj
+
+
+class Rectangle2D:
     def __init__(self, obj):
         if obj == None:
             raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
@@ -4682,6 +4685,21 @@ class ProductUtils:
            @see #createPixelBoundary(Product, java.awt.Rectangle, int, boolean)
         """
         return GeoPos(ProductUtils_createGeoBoundary3(product._obj, region._obj, step, usePixelCenter))
+
+    @staticmethod
+    def getClosestGeoPos(gc, origPos, region, step):
+        """
+           Searches for a valid GeoPos by considering the vicinity of a {@link PixelPos}. It does not check
+           the original pixel position, but uses it for determining which pixel positions to examine.
+           @param gc      the GeoCoding, must not be null
+           @param origPos the original pixel position, must not be null
+           @param region  the rectangle which determines the valid pixel positions, must not be null
+           @param step    determines the step size between pixels which is used in the search process. Small step
+           sizes will increase the accuracy, but need more computational time
+           @return a {@link GeoPos}. This will be valid if the search was successful. If not, a {@link GeoPos} with
+           NaN-values for latitude and longitude will be returned.
+        """
+        return GeoPos(ProductUtils_getClosestGeoPos(gc._obj, origPos._obj, region._obj, step))
 
     @staticmethod
     def createGeoBoundary4(raster, region, step):
@@ -6352,12 +6370,18 @@ class Product:
         """
         return MetadataElement(Product_getMetadataRoot(self._obj))
 
-    def getBandGroup(self):
+    def getGroups(self):
         """
-           Gets the band group of this product.
-           @return The group of all bands.
+           @return The group which contains all other product node groups.
         """
-        return ProductNodeGroup(Product_getBandGroup(self._obj))
+        return ProductNodeGroup(Product_getGroups(self._obj))
+
+    def getGroup(self, name):
+        """
+           @param name The group name.
+           @return The group with the given name, or {@code null} if no such group exists.
+        """
+        return ProductNodeGroup(Product_getGroup(self._obj, name))
 
     def getTiePointGridGroup(self):
         """
@@ -6431,6 +6455,13 @@ class Product:
            <code>false</code> otherwise
         """
         return Product_containsTiePointGrid(self._obj, name)
+
+    def getBandGroup(self):
+        """
+           Gets the band group of this product.
+           @return The group of all bands.
+        """
+        return ProductNodeGroup(Product_getBandGroup(self._obj))
 
     def addBand(self, band):
         """
@@ -6585,6 +6616,21 @@ class Product:
            @return the pin group.
         """
         return PlacemarkGroup(Product_getPinGroup(self._obj))
+
+    def getNumResolutionsMax(self):
+        """
+           @return The maximum number of resolution levels common to all band images.
+           If less than or equal to zero, the  number of resolution levels is considered to be unknown.
+        """
+        return Product_getNumResolutionsMax(self._obj)
+
+    def setNumResolutionsMax(self, numResolutionsMax):
+        """
+           @param numResolutionsMax The maximum number of resolution levels common to all band images.
+           If less than or equal to zero, the  number of resolution levels is considered to be unknown.
+        """
+        Product_setNumResolutionsMax(self._obj, numResolutionsMax)
+        return
 
     def isCompatibleProduct(self, product, eps):
         """
@@ -8605,14 +8651,6 @@ class TiePointGrid:
         """
         return ProductData(TiePointGrid_getData(self._obj))
 
-    def setDataElems(self, elems):
-        """
-           Sets the data elements of this data node.
-           @see ProductData#setElems(Object)
-        """
-        TiePointGrid_setDataElems(self._obj, elems._obj)
-        return
-
     def getDataElems(self):
         """
            Gets the data elements of this data node.
@@ -9014,14 +9052,6 @@ class MetadataAttribute:
         """
         return ProductData(MetadataAttribute_getData(self._obj))
 
-    def setDataElems(self, elems):
-        """
-           Sets the data elements of this data node.
-           @see ProductData#setElems(Object)
-        """
-        MetadataAttribute_setDataElems(self._obj, elems._obj)
-        return
-
     def getDataElems(self):
         """
            Gets the data elements of this data node.
@@ -9258,6 +9288,16 @@ class String:
         self._obj = obj
     
     @staticmethod
-    def newString(s):
-        return String(String_newString(s))
+    def newString(str):
+        return String(String_newString(str))
+
+class Map:
+    def __init__(self, obj):
+        if obj == None:
+            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
+        self._obj = obj
+    
+    @staticmethod
+    def newHashMap(dict):
+        return Map(Map_newHashMap(dict))
 

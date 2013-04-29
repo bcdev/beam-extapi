@@ -6,15 +6,118 @@
 #include <stdlib.h>
 #include <string.h>
 #include "beam_capi.h"
-#include "jni.h"
+#include "beam_capi_j.h"
+/* java.lang classes. */
+jclass classBoolean;
+jclass classByte;
+jclass classCharacter;
+jclass classShort;
+jclass classInteger;
+jclass classLong;
+jclass classFloat;
+jclass classDouble;
+jclass classString;
+
+/* java.util classes. */
+jclass classHashMap;
+jclass classHashSet;
+
+/* API classes. */
+jclass classGeoCoding;
+jclass classProductWriter;
+jclass classGPF;
+jclass classIndexCoding;
+jclass classPixelPos;
+jclass classProductIO;
+jclass classPlacemark;
+jclass classMetadataElement;
+jclass classProduct;
+jclass classColorPaletteDef;
+jclass classImageInfo;
+jclass classProductManager;
+jclass classImageGeometry;
+jclass classBand;
+jclass classPlacemarkGroup;
+jclass classTiePointGrid;
+jclass classAngularDirection;
+jclass classFlagCoding;
+jclass classProductReader;
+jclass classRGBChannelDef;
+jclass classProductData;
+jclass classGeoPos;
+jclass classProductNodeGroup;
+jclass classProductUtils;
+jclass classMetadataAttribute;
+
+/* Used non-API classes. */
+jclass classT;
+jclass classProgressMonitor;
+jclass classMultiLevelImage;
+jclass classParser;
+jclass classTerm;
+jclass classWritableNamespace;
+jclass classColor;
+jclass classDimension;
+jclass classRectangle;
+jclass classRenderingHints;
+jclass classRenderingHints_Key;
+jclass classShape;
+jclass classAffineTransform;
+jclass classArea;
+jclass classGeneralPath;
+jclass classPoint2D;
+jclass classRectangle2D;
+jclass classBufferedImage;
+jclass classComponentColorModel;
+jclass classIndexColorModel;
+jclass classRenderedImage;
+jclass classFile;
+jclass classObject;
+jclass classCollection;
+jclass classIterator;
+jclass classMap;
+jclass classImageInputStream;
+jclass classImageOutputStream;
+jclass classROI;
+jclass classProductReaderPlugIn;
+jclass classProductSubsetDef;
+jclass classProductWriterPlugIn;
+jclass classColorPaletteDef_Point;
+jclass classImageInfo_HistogramMatching;
+jclass classMask;
+jclass classPlacemarkDescriptor;
+jclass classPointing;
+jclass classPointingFactory;
+jclass classProduct_AutoGrouping;
+jclass classProductData_UTC;
+jclass classProductManager_Listener;
+jclass classProductNode;
+jclass classProductNodeListener;
+jclass classProductVisitor;
+jclass classRasterDataNode;
+jclass classSampleCoding;
+jclass classScaling;
+jclass classStx;
+jclass classTransectProfileData;
+jclass classVectorDataNode;
+jclass classMapInfo;
+jclass classMapProjection;
+jclass classMapTransform;
+jclass classOperator;
+jclass classOperatorSpiRegistry;
+jclass classGeoTIFFMetadata;
+jclass classHistogram;
+jclass classIndexValidator;
+jclass classSimpleFeature;
+jclass classSimpleFeatureType;
+jclass classCoordinateReferenceSystem;
+jclass classMathTransform;
+
 
 #include "../beam_util.h"
 
 static JavaVM* jvm = NULL;
 static JNIEnv* jenv = NULL;
-static int api_init = 0;
-
-int beam_init_api();
 
 jobjectArray beam_new_jstring_array(const char** array_elems, int array_length);
 jobjectArray beam_new_jobject_array(const jobject* obj_array_data, int obj_array_length, jclass comp_class);
@@ -34,104 +137,6 @@ int* beam_alloc_int_array(jarray array, int* array_length);
 dlong* beam_alloc_long_array(jarray array, int* array_length);
 float* beam_alloc_float_array(jarray array, int* array_length);
 double* beam_alloc_double_array(jarray array, int* array_length);
-
-
-
-
-/* Java API classes. */
-static jclass classGeoCoding;
-static jclass classProductWriter;
-static jclass classGPF;
-static jclass classIndexCoding;
-static jclass classPixelPos;
-static jclass classProductIO;
-static jclass classPlacemark;
-static jclass classMetadataElement;
-static jclass classProduct;
-static jclass classColorPaletteDef;
-static jclass classImageInfo;
-static jclass classProductManager;
-static jclass classImageGeometry;
-static jclass classBand;
-static jclass classPlacemarkGroup;
-static jclass classTiePointGrid;
-static jclass classAngularDirection;
-static jclass classFlagCoding;
-static jclass classProductReader;
-static jclass classRGBChannelDef;
-static jclass classProductData;
-static jclass classGeoPos;
-static jclass classProductNodeGroup;
-static jclass classProductUtils;
-static jclass classMetadataAttribute;
-
-
-/* Other Java classes used in the API. */
-static jclass classString;
-static jclass classT;
-static jclass classProgressMonitor;
-static jclass classMultiLevelImage;
-static jclass classParser;
-static jclass classTerm;
-static jclass classWritableNamespace;
-static jclass classColor;
-static jclass classDimension;
-static jclass classRectangle;
-static jclass classRenderingHints;
-static jclass classRenderingHints_Key;
-static jclass classShape;
-static jclass classAffineTransform;
-static jclass classArea;
-static jclass classGeneralPath;
-static jclass classPoint2D;
-static jclass classBufferedImage;
-static jclass classComponentColorModel;
-static jclass classIndexColorModel;
-static jclass classRenderedImage;
-static jclass classFile;
-static jclass classDouble;
-static jclass classInteger;
-static jclass classObject;
-static jclass classString;
-static jclass classCollection;
-static jclass classIterator;
-static jclass classMap;
-static jclass classImageInputStream;
-static jclass classImageOutputStream;
-static jclass classROI;
-static jclass classProductReaderPlugIn;
-static jclass classProductSubsetDef;
-static jclass classProductWriterPlugIn;
-static jclass classColorPaletteDef_Point;
-static jclass classImageInfo_HistogramMatching;
-static jclass classMask;
-static jclass classPlacemarkDescriptor;
-static jclass classPointing;
-static jclass classPointingFactory;
-static jclass classProduct_AutoGrouping;
-static jclass classProductData_UTC;
-static jclass classProductManager_Listener;
-static jclass classProductNode;
-static jclass classProductNodeListener;
-static jclass classProductVisitor;
-static jclass classRasterDataNode;
-static jclass classSampleCoding;
-static jclass classScaling;
-static jclass classStx;
-static jclass classTransectProfileData;
-static jclass classVectorDataNode;
-static jclass classMapInfo;
-static jclass classMapProjection;
-static jclass classMapTransform;
-static jclass classOperator;
-static jclass classOperatorSpiRegistry;
-static jclass classGeoTIFFMetadata;
-static jclass classHistogram;
-static jclass classIndexValidator;
-static jclass classSimpleFeature;
-static jclass classSimpleFeatureType;
-static jclass classCoordinateReferenceSystem;
-static jclass classMathTransform;
 
 
 /* Constants of GPF */
@@ -264,6 +269,15 @@ const char* MetadataAttribute_PROPERTY_NAME_NAME = "name";
 const char* MetadataAttribute_PROPERTY_NAME_DESCRIPTION = "description";
 
 
+JavaVM* beam_getJavaVM()
+{
+    return jvm;
+}
+
+JNIEnv* beam_getJNIEnv()
+{
+    return jenv;
+}
 
 String String_newString(const char* chars)
 {
@@ -282,8 +296,7 @@ jobjectArray beam_new_jstring_array(const char** array_elems, int array_length)
         (*jenv)->SetObjectArrayElement(jenv, array, i, str);
     }
 
-    // TODO: check if we must return (*jenv)->NewGlobalRef(jenv, array);
-    return array;
+    return (*jenv)->NewGlobalRef(jenv, array);
 }
 
 jobjectArray beam_new_jobject_array(const jobject* array_elems, int array_length, jclass comp_class)
@@ -296,8 +309,7 @@ jobjectArray beam_new_jobject_array(const jobject* array_elems, int array_length
         (*jenv)->SetObjectArrayElement(jenv, array, i, array_elems[i]);
     }
 
-     // TODO: check if we must return (*jenv)->NewGlobalRef(jenv, obj_array);
-    return array;
+    return (*jenv)->NewGlobalRef(jenv, array);
 }
 
 void beam_release_jobject(void* object)
@@ -386,8 +398,8 @@ Object* beam_alloc_object_array(jarray array, int* array_length)
 
     array_elems = (Object*) malloc(n * sizeof (char*));
     for (i = 0; i < n; i++) {
-        // TODO: check if we must increment a global reference here!
-        array_elems[i] = (*jenv)->GetObjectArrayElement(jenv, array, i);
+        jobject elem = (*jenv)->GetObjectArrayElement(jenv, array, i);
+        array_elems[i] = (*jenv)->NewGlobalRef(jenv, elem);
     }
 
     if (array_length != NULL) {
@@ -464,7 +476,7 @@ void beam_release_object_array(void** array_elems, int array_length)
         int i;
         for (i = 0; i < array_length; i++) {
              object = array_elems[i];
-             // TODO: check if we must increment a global object reference here!
+             (*jenv)->DeleteGlobalRef(jenv, object);
         }
         free(array_elems);
     }
@@ -651,94 +663,134 @@ jboolean beam_create_jvm_with_defaults()
 
 
 
+jclass beam_find_class(const char* classResourceName)
+{
+    jclass c = (*jenv)->FindClass(jenv, classResourceName);
+    if (c == NULL) {
+        fprintf(stderr, "error: Java class not found: %s\n", classResourceName);
+    }
+    return c;
+}
 int beam_init_api()
 {
-    if (api_init != 0) {
-        return 0;
+    static int exitCode = -1;
+    if (exitCode >= 0) {
+        return exitCode;
     }
     if (!beam_is_jvm_created() && !beam_create_jvm_with_defaults()) {
-        return 1;
+        exitCode = 1;
+        return exitCode;
     }
-    classString = (*jenv)->FindClass(jenv, "java/lang/String");
-    if (classString == NULL) return 1000;
+    classBoolean = beam_find_class("java/lang/Boolean");
+    if (classBoolean == NULL) { exitCode = 1000; return exitCode; }
 
-    classGeoCoding = (*jenv)->FindClass(jenv, "org/esa/beam/framework/datamodel/GeoCoding");
-    if (classGeoCoding == NULL) return 1001;
+    classByte = beam_find_class("java/lang/Byte");
+    if (classByte == NULL) { exitCode = 1001; return exitCode; }
 
-    classProductWriter = (*jenv)->FindClass(jenv, "org/esa/beam/framework/dataio/ProductWriter");
-    if (classProductWriter == NULL) return 1002;
+    classCharacter = beam_find_class("java/lang/Character");
+    if (classCharacter == NULL) { exitCode = 1002; return exitCode; }
 
-    classGPF = (*jenv)->FindClass(jenv, "org/esa/beam/framework/gpf/GPF");
-    if (classGPF == NULL) return 1003;
+    classShort = beam_find_class("java/lang/Short");
+    if (classShort == NULL) { exitCode = 1003; return exitCode; }
 
-    classIndexCoding = (*jenv)->FindClass(jenv, "org/esa/beam/framework/datamodel/IndexCoding");
-    if (classIndexCoding == NULL) return 1004;
+    classInteger = beam_find_class("java/lang/Integer");
+    if (classInteger == NULL) { exitCode = 1004; return exitCode; }
 
-    classPixelPos = (*jenv)->FindClass(jenv, "org/esa/beam/framework/datamodel/PixelPos");
-    if (classPixelPos == NULL) return 1005;
+    classLong = beam_find_class("java/lang/Long");
+    if (classLong == NULL) { exitCode = 1005; return exitCode; }
 
-    classProductIO = (*jenv)->FindClass(jenv, "org/esa/beam/framework/dataio/ProductIO");
-    if (classProductIO == NULL) return 1006;
+    classFloat = beam_find_class("java/lang/Float");
+    if (classFloat == NULL) { exitCode = 1006; return exitCode; }
 
-    classPlacemark = (*jenv)->FindClass(jenv, "org/esa/beam/framework/datamodel/Placemark");
-    if (classPlacemark == NULL) return 1007;
+    classDouble = beam_find_class("java/lang/Double");
+    if (classDouble == NULL) { exitCode = 1007; return exitCode; }
 
-    classMetadataElement = (*jenv)->FindClass(jenv, "org/esa/beam/framework/datamodel/MetadataElement");
-    if (classMetadataElement == NULL) return 1008;
+    classString = beam_find_class("java/lang/String");
+    if (classString == NULL) { exitCode = 1008; return exitCode; }
 
-    classProduct = (*jenv)->FindClass(jenv, "org/esa/beam/framework/datamodel/Product");
-    if (classProduct == NULL) return 1009;
+    classHashMap = beam_find_class("java/util/HashMap");
+    if (classHashMap == NULL) { exitCode = 1009; return exitCode; }
 
-    classColorPaletteDef = (*jenv)->FindClass(jenv, "org/esa/beam/framework/datamodel/ColorPaletteDef");
-    if (classColorPaletteDef == NULL) return 1010;
+    classHashSet = beam_find_class("java/util/HashSet");
+    if (classHashSet == NULL) { exitCode = 1010; return exitCode; }
 
-    classImageInfo = (*jenv)->FindClass(jenv, "org/esa/beam/framework/datamodel/ImageInfo");
-    if (classImageInfo == NULL) return 1011;
+    classGeoCoding = beam_find_class("org/esa/beam/framework/datamodel/GeoCoding");
+    if (classGeoCoding == NULL) { exitCode = 2000; return exitCode; }
 
-    classProductManager = (*jenv)->FindClass(jenv, "org/esa/beam/framework/datamodel/ProductManager");
-    if (classProductManager == NULL) return 1012;
+    classProductWriter = beam_find_class("org/esa/beam/framework/dataio/ProductWriter");
+    if (classProductWriter == NULL) { exitCode = 2001; return exitCode; }
 
-    classImageGeometry = (*jenv)->FindClass(jenv, "org/esa/beam/framework/datamodel/ImageGeometry");
-    if (classImageGeometry == NULL) return 1013;
+    classGPF = beam_find_class("org/esa/beam/framework/gpf/GPF");
+    if (classGPF == NULL) { exitCode = 2002; return exitCode; }
 
-    classBand = (*jenv)->FindClass(jenv, "org/esa/beam/framework/datamodel/Band");
-    if (classBand == NULL) return 1014;
+    classIndexCoding = beam_find_class("org/esa/beam/framework/datamodel/IndexCoding");
+    if (classIndexCoding == NULL) { exitCode = 2003; return exitCode; }
 
-    classPlacemarkGroup = (*jenv)->FindClass(jenv, "org/esa/beam/framework/datamodel/PlacemarkGroup");
-    if (classPlacemarkGroup == NULL) return 1015;
+    classPixelPos = beam_find_class("org/esa/beam/framework/datamodel/PixelPos");
+    if (classPixelPos == NULL) { exitCode = 2004; return exitCode; }
 
-    classTiePointGrid = (*jenv)->FindClass(jenv, "org/esa/beam/framework/datamodel/TiePointGrid");
-    if (classTiePointGrid == NULL) return 1016;
+    classProductIO = beam_find_class("org/esa/beam/framework/dataio/ProductIO");
+    if (classProductIO == NULL) { exitCode = 2005; return exitCode; }
 
-    classAngularDirection = (*jenv)->FindClass(jenv, "org/esa/beam/framework/datamodel/AngularDirection");
-    if (classAngularDirection == NULL) return 1017;
+    classPlacemark = beam_find_class("org/esa/beam/framework/datamodel/Placemark");
+    if (classPlacemark == NULL) { exitCode = 2006; return exitCode; }
 
-    classFlagCoding = (*jenv)->FindClass(jenv, "org/esa/beam/framework/datamodel/FlagCoding");
-    if (classFlagCoding == NULL) return 1018;
+    classMetadataElement = beam_find_class("org/esa/beam/framework/datamodel/MetadataElement");
+    if (classMetadataElement == NULL) { exitCode = 2007; return exitCode; }
 
-    classProductReader = (*jenv)->FindClass(jenv, "org/esa/beam/framework/dataio/ProductReader");
-    if (classProductReader == NULL) return 1019;
+    classProduct = beam_find_class("org/esa/beam/framework/datamodel/Product");
+    if (classProduct == NULL) { exitCode = 2008; return exitCode; }
 
-    classRGBChannelDef = (*jenv)->FindClass(jenv, "org/esa/beam/framework/datamodel/RGBChannelDef");
-    if (classRGBChannelDef == NULL) return 1020;
+    classColorPaletteDef = beam_find_class("org/esa/beam/framework/datamodel/ColorPaletteDef");
+    if (classColorPaletteDef == NULL) { exitCode = 2009; return exitCode; }
 
-    classProductData = (*jenv)->FindClass(jenv, "org/esa/beam/framework/datamodel/ProductData");
-    if (classProductData == NULL) return 1021;
+    classImageInfo = beam_find_class("org/esa/beam/framework/datamodel/ImageInfo");
+    if (classImageInfo == NULL) { exitCode = 2010; return exitCode; }
 
-    classGeoPos = (*jenv)->FindClass(jenv, "org/esa/beam/framework/datamodel/GeoPos");
-    if (classGeoPos == NULL) return 1022;
+    classProductManager = beam_find_class("org/esa/beam/framework/datamodel/ProductManager");
+    if (classProductManager == NULL) { exitCode = 2011; return exitCode; }
 
-    classProductNodeGroup = (*jenv)->FindClass(jenv, "org/esa/beam/framework/datamodel/ProductNodeGroup");
-    if (classProductNodeGroup == NULL) return 1023;
+    classImageGeometry = beam_find_class("org/esa/beam/framework/datamodel/ImageGeometry");
+    if (classImageGeometry == NULL) { exitCode = 2012; return exitCode; }
 
-    classProductUtils = (*jenv)->FindClass(jenv, "org/esa/beam/util/ProductUtils");
-    if (classProductUtils == NULL) return 1024;
+    classBand = beam_find_class("org/esa/beam/framework/datamodel/Band");
+    if (classBand == NULL) { exitCode = 2013; return exitCode; }
 
-    classMetadataAttribute = (*jenv)->FindClass(jenv, "org/esa/beam/framework/datamodel/MetadataAttribute");
-    if (classMetadataAttribute == NULL) return 1025;
+    classPlacemarkGroup = beam_find_class("org/esa/beam/framework/datamodel/PlacemarkGroup");
+    if (classPlacemarkGroup == NULL) { exitCode = 2014; return exitCode; }
 
-    api_init = 1;
-    return 0;
+    classTiePointGrid = beam_find_class("org/esa/beam/framework/datamodel/TiePointGrid");
+    if (classTiePointGrid == NULL) { exitCode = 2015; return exitCode; }
+
+    classAngularDirection = beam_find_class("org/esa/beam/framework/datamodel/AngularDirection");
+    if (classAngularDirection == NULL) { exitCode = 2016; return exitCode; }
+
+    classFlagCoding = beam_find_class("org/esa/beam/framework/datamodel/FlagCoding");
+    if (classFlagCoding == NULL) { exitCode = 2017; return exitCode; }
+
+    classProductReader = beam_find_class("org/esa/beam/framework/dataio/ProductReader");
+    if (classProductReader == NULL) { exitCode = 2018; return exitCode; }
+
+    classRGBChannelDef = beam_find_class("org/esa/beam/framework/datamodel/RGBChannelDef");
+    if (classRGBChannelDef == NULL) { exitCode = 2019; return exitCode; }
+
+    classProductData = beam_find_class("org/esa/beam/framework/datamodel/ProductData");
+    if (classProductData == NULL) { exitCode = 2020; return exitCode; }
+
+    classGeoPos = beam_find_class("org/esa/beam/framework/datamodel/GeoPos");
+    if (classGeoPos == NULL) { exitCode = 2021; return exitCode; }
+
+    classProductNodeGroup = beam_find_class("org/esa/beam/framework/datamodel/ProductNodeGroup");
+    if (classProductNodeGroup == NULL) { exitCode = 2022; return exitCode; }
+
+    classProductUtils = beam_find_class("org/esa/beam/util/ProductUtils");
+    if (classProductUtils == NULL) { exitCode = 2023; return exitCode; }
+
+    classMetadataAttribute = beam_find_class("org/esa/beam/framework/datamodel/MetadataAttribute");
+    if (classMetadataAttribute == NULL) { exitCode = 2024; return exitCode; }
+
+    exitCode = 0;
+    return exitCode;
 }
 
 boolean GeoCoding_isCrossingMeridianAt180(GeoCoding _this)
@@ -4483,7 +4535,7 @@ MetadataElement Product_getMetadataRoot(Product _this)
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
-ProductNodeGroup Product_getBandGroup(Product _this)
+ProductNodeGroup Product_getGroups(Product _this)
 {
     static jmethodID _method = NULL;
     ProductNodeGroup _result = (ProductNodeGroup) 0;
@@ -4491,11 +4543,29 @@ ProductNodeGroup Product_getBandGroup(Product _this)
     if (beam_init_api() != 0) return _result;
 
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProduct, "getBandGroup", "()Lorg/esa/beam/framework/datamodel/ProductNodeGroup;");
+        _method = (*jenv)->GetMethodID(jenv, classProduct, "getGroups", "()Lorg/esa/beam/framework/datamodel/ProductNodeGroup;");
         if (_method == NULL) return _result;
     }
 
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
+    return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
+}
+
+ProductNodeGroup Product_getGroup(Product _this, const char* name)
+{
+    static jmethodID _method = NULL;
+    jstring nameString = NULL;
+    ProductNodeGroup _result = (ProductNodeGroup) 0;
+
+    if (beam_init_api() != 0) return _result;
+
+    if (_method == NULL) {
+        _method = (*jenv)->GetMethodID(jenv, classProduct, "getGroup", "(Ljava/lang/String;)Lorg/esa/beam/framework/datamodel/ProductNodeGroup;");
+        if (_method == NULL) return _result;
+    }
+
+    nameString = (*jenv)->NewStringUTF(jenv, name);
+    _result = (*jenv)->CallObjectMethod(jenv, _this, _method, nameString);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
@@ -4647,6 +4717,22 @@ boolean Product_containsTiePointGrid(Product _this, const char* name)
     nameString = (*jenv)->NewStringUTF(jenv, name);
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method, nameString);
     return _result;
+}
+
+ProductNodeGroup Product_getBandGroup(Product _this)
+{
+    static jmethodID _method = NULL;
+    ProductNodeGroup _result = (ProductNodeGroup) 0;
+
+    if (beam_init_api() != 0) return _result;
+
+    if (_method == NULL) {
+        _method = (*jenv)->GetMethodID(jenv, classProduct, "getBandGroup", "()Lorg/esa/beam/framework/datamodel/ProductNodeGroup;");
+        if (_method == NULL) return _result;
+    }
+
+    _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
+    return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
 void Product_addBand(Product _this, Band band)
@@ -4985,6 +5071,36 @@ PlacemarkGroup Product_getPinGroup(Product _this)
 
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
+}
+
+int Product_getNumResolutionsMax(Product _this)
+{
+    static jmethodID _method = NULL;
+    int _result = (int) 0;
+
+    if (beam_init_api() != 0) return _result;
+
+    if (_method == NULL) {
+        _method = (*jenv)->GetMethodID(jenv, classProduct, "getNumResolutionsMax", "()I");
+        if (_method == NULL) return _result;
+    }
+
+    _result = (*jenv)->CallIntMethod(jenv, _this, _method);
+    return _result;
+}
+
+void Product_setNumResolutionsMax(Product _this, int numResolutionsMax)
+{
+    static jmethodID _method = NULL;
+
+    if (beam_init_api() != 0) return;
+
+    if (_method == NULL) {
+        _method = (*jenv)->GetMethodID(jenv, classProduct, "setNumResolutionsMax", "(I)V");
+        if (_method == NULL) return;
+    }
+
+    (*jenv)->CallVoidMethod(jenv, _this, _method, numResolutionsMax);
 }
 
 boolean Product_isCompatibleProduct(Product _this, Product product, float eps)
@@ -6843,6 +6959,22 @@ ImageGeometry ImageGeometry_createCollocationTargetGeometry(Product targetProduc
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
+Rectangle2D ImageGeometry_createValidRect(Product product)
+{
+    static jmethodID _method = NULL;
+    Rectangle2D _result = (Rectangle2D) 0;
+
+    if (beam_init_api() != 0) return _result;
+
+    if (_method == NULL) {
+        _method = (*jenv)->GetStaticMethodID(jenv, classImageGeometry, "createValidRect", "(Lorg/esa/beam/framework/datamodel/Product;)Ljava/awt/geom/Rectangle2D;");
+        if (_method == NULL) return _result;
+    }
+
+    _result = (*jenv)->CallStaticObjectMethod(jenv, classImageGeometry, _method, product);
+    return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
+}
+
 Band Band_newBand(const char* name, int dataType, int width, int height)
 {
     static jmethodID _method = NULL;
@@ -8313,20 +8445,6 @@ ProductData Band_getData(Band _this)
 
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
-}
-
-void Band_setDataElems(Band _this, Object elems)
-{
-    static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
-    if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "setDataElems", "(Ljava/lang/Object;)V");
-        if (_method == NULL) return;
-    }
-
-    (*jenv)->CallVoidMethod(jenv, _this, _method, elems);
 }
 
 Object Band_getDataElems(Band _this)
@@ -11396,20 +11514,6 @@ ProductData TiePointGrid_getData(TiePointGrid _this)
 
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
-}
-
-void TiePointGrid_setDataElems(TiePointGrid _this, Object elems)
-{
-    static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
-    if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "setDataElems", "(Ljava/lang/Object;)V");
-        if (_method == NULL) return;
-    }
-
-    (*jenv)->CallVoidMethod(jenv, _this, _method, elems);
 }
 
 Object TiePointGrid_getDataElems(TiePointGrid _this)
@@ -15397,6 +15501,22 @@ GeoPos* ProductUtils_createGeoBoundary3(Product product, Rectangle region, int s
     return _result;
 }
 
+GeoPos ProductUtils_getClosestGeoPos(GeoCoding gc, PixelPos origPos, Rectangle region, int step)
+{
+    static jmethodID _method = NULL;
+    GeoPos _result = (GeoPos) 0;
+
+    if (beam_init_api() != 0) return _result;
+
+    if (_method == NULL) {
+        _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "getClosestGeoPos", "(Lorg/esa/beam/framework/datamodel/GeoCoding;Lorg/esa/beam/framework/datamodel/PixelPos;Ljava/awt/Rectangle;I)Lorg/esa/beam/framework/datamodel/GeoPos;");
+        if (_method == NULL) return _result;
+    }
+
+    _result = (*jenv)->CallStaticObjectMethod(jenv, classProductUtils, _method, gc, origPos, region, step);
+    return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
+}
+
 GeoPos* ProductUtils_createGeoBoundary4(RasterDataNode raster, Rectangle region, int step, int* resultArrayLength)
 {
     static jmethodID _method = NULL;
@@ -16411,20 +16531,6 @@ ProductData MetadataAttribute_getData(MetadataAttribute _this)
 
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
-}
-
-void MetadataAttribute_setDataElems(MetadataAttribute _this, Object elems)
-{
-    static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
-    if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classMetadataAttribute, "setDataElems", "(Ljava/lang/Object;)V");
-        if (_method == NULL) return;
-    }
-
-    (*jenv)->CallVoidMethod(jenv, _this, _method, elems);
 }
 
 Object MetadataAttribute_getDataElems(MetadataAttribute _this)
