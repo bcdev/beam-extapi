@@ -175,22 +175,140 @@ PyMODINIT_FUNC PyInit__${libName}()
 /**
  * Factory method for Java string instances.
  *
- * In Python, call <code>beampy_module.String_newString('foobar')</code>
- * or <code>beampy_module.String.newString('foobar')</code>.
+ * In Python, call <code>beampy.String_newString('foobar')</code>
+ * or <code>beampy.String.newString('foobar')</code>.
  */
 PyObject* BeamPyString_newString(PyObject* self, PyObject* args)
 {
-    const char* chars;
+    const char* str;
     void* result;
 
-    if (!PyArg_ParseTuple(args, "s:newString", &chars)) {
+    if (!PyArg_ParseTuple(args, "s:newString", &str)) {
         return NULL;
     }
 
-    result = String_newString(chars);
+    result = String_newString(str);
 
     if (result != NULL) {
         return Py_BuildValue("(sK)", "String", (unsigned PY_LONG_LONG) result);
+    } else {
+        return Py_BuildValue("");
+    }
+}
+
+static jclass hashMapClass = NULL;
+static jclass booleanClass = NULL;
+static jclass integerClass = NULL;
+static jclass doubleClass = NULL;
+
+static jmethod hashMapConstr = NULL;
+static jmethod hashMapPutMethod = NULL;
+static jmethod booleanConstr = NULL;
+static jmethod integerConstr = NULL;
+static jmethod doubleConstr = NULL;
+
+// todo - move to beam_init_api
+void beam_init_java_core() {
+    static init = 0;
+    if (init == 0) {
+        JNIEnv* jenv = beam_getJNIEnv();
+        init = 1;
+
+        booleanClass = (*jenv)->FindClass(jenv, "java/lang/Boolean");
+        integerClass = (*jenv)->FindClass(jenv, "java/lang/Integer");
+        doubleClass = (*jenv)->FindClass(jenv, "java/lang/Double");
+        hashMapClass = (*jenv)->FindClass(jenv, "java/util/HashMap");
+
+        booleanConstr = (*jenv)->GetMethodID(jenv, booleanClass, "<init>", "(Z)V");
+        integerConstr = (*jenv)->GetMethodID(jenv, integerClass, "<init>", "(I)V");
+        doubleConstr = (*jenv)->GetMethodID(jenv, doubleClass, "<init>", "(D)V");
+        hashMapConstr = (*jenv)->GetMethodID(jenv, hashMapClass, "<init>", "(V)V");
+        hashMapPutMethod = (*jenv)->GetMethodID(jenv, hashMapClass, "put", "(Ljava.lang.Object;Ljava.lang.Object;)Ljava.lang.Object;");
+    }
+}
+
+jobject py2j(PyObject* pyObj)
+{
+    JNIEnv* jenv = beam_getJNIEnv();
+    static int init = 0;
+    jobject result = NULL;
+
+    beam_init_java_core();
+
+    if (PyBool_Check(pyObj)) {
+        int v = (pyObj == Py_True);
+        result = (*jenv)->NewObject(jenv, booleanClass, booleanConstr, v);
+    } else if (PyLong_Check(pyObj)) {
+        long v = PyLong_AsLong(pyObj);
+        result = (*jenv)->NewObject(jenv, integerClass, integerConstr, v);
+    } else if (PyFloat_Check(pyObj)) {
+        double v = PyFloat_AsDouble(pyObj);
+        result = (*jenv)->NewObject(jenv, doubleClass, doubleConstr, v);
+    } else if (PyUnicode_Check(pyObj)) {
+        char* utf8 = PyUnicode_AsUTF8(pyObj);
+        result = (*jenv)->NewStringUTF(jenv, utf8);
+    } else {
+        PyErr_SetString(PyExc_ValueError, "Expected a boolean, number or string");
+    }
+
+    return result != NULL ? (*jenv)->NewGlobalRef(jenv, result) : NULL;
+}
+
+void* Map_newMap(PyObject* dict)
+{
+    JNIEnv* jenv = beam_getJNIEnv();
+    PyObject* dictKey;
+    PyObject* dictValue;
+    Py_ssize_t dictPos = 0;
+    jobject map = NULL;
+
+    if (beam_init_api() != 0) {
+        return _result;
+    }
+
+    beam_init_java_core();
+
+    map = (*jenv)->NewObject(jenv, hashMapClass, mapConstr);
+    if (map == NULL) {
+        return NULL;
+    }
+
+    while (PyDict_Next(dict, &dictPos, &dictKey, &dictValue)) {
+        jobject mapKey = py2j(dictKey);
+        jobject mapValue = py2j(dictValue);
+        if (mapKey != NULL && mapValue != NULL) {
+            (*jenv)->CallObjectMethod(jenv, map, hashMapPutMethod, mapKey, mapValue);
+        }
+    }
+
+    return map;
+}
+
+
+/**
+ * Factory method for Java HashMap instances.
+ *
+ * In Python, call <code>beampy.Map_newString({'a': 5.4, 'b': True})</code>
+ * or <code>beampy.Map.newMap({'a': 5.4, 'b': True})</code>.
+ */
+PyObject* BeamPyMap_newMap(PyObject* self, PyObject* args)
+{
+    PyObject* dict;
+    void* result;
+
+    if (!PyArg_ParseTuple(args, "O:newMap", &dict)) {
+        return NULL;
+    }
+
+    if (!PyDict_Check(dict)) {
+        PyErr_SetString(PyExc_ValueError, "Dictionary expected");
+        return NULL;
+    }
+
+    result = Map_newMap(dict);
+
+    if (result != NULL) {
+        return Py_BuildValue("(sK)", "Map", (unsigned PY_LONG_LONG) result);
     } else {
         return Py_BuildValue("");
     }

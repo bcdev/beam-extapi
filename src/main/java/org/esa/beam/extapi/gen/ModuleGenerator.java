@@ -24,11 +24,16 @@ import java.io.Writer;
 import java.util.*;
 
 import static org.esa.beam.extapi.gen.TemplateEval.KV;
+import static org.esa.beam.extapi.gen.TemplateEval.kv;
 
 /**
  * @author Norman Fomferra
  */
 public abstract class ModuleGenerator implements GeneratorContext {
+
+    public interface ContentWriter {
+        void writeContent(PrintWriter writer) throws IOException;
+    }
 
     private final ApiInfo apiInfo;
     private final Map<ApiClass, List<FunctionGenerator>> functionGenerators;
@@ -73,28 +78,28 @@ public abstract class ModuleGenerator implements GeneratorContext {
         getTemplateEval().add("libNameUC", getModuleName().toUpperCase().replace("-", "_"));
     }
 
-    protected void writeCHeader(Writer writer) throws IOException {
-        PrintWriter pw = new PrintWriter(writer);
-        writeFileInfo(pw);
-        pw.write(format("#ifndef ${libNameUC}_H\n" +
-                                    "#define ${libNameUC}_H\n" +
-                                    "\n" +
-                                    "#ifdef __cplusplus\n" +
-                                    "extern \"C\" {\n" +
-                                    "#endif\n"));
+    protected void writeCHeader(PrintWriter writer, String headerName, ContentWriter contentWriter) throws IOException {
+        String headerNameUC = headerName.toUpperCase().replace('.', '_');
+        writeFileInfo(writer);
+        writer.write(format("#ifndef ${headerNameUC}\n" +
+                                "#define ${headerNameUC}\n" +
+                                "\n" +
+                                "#ifdef __cplusplus\n" +
+                                "extern \"C\" {\n" +
+                                "#endif\n",
+                            kv("headerNameUC", headerNameUC)));
 
-        pw.write("\n");
-        writeCHeaderContents(pw);
-        pw.write("\n");
+        writer.write("\n");
+        //writeCHeaderContents(writer);
+        contentWriter.writeContent(writer);
+        writer.write("\n");
 
-        pw.write(format("#ifdef __cplusplus\n" +
-                                    "} /* extern \"C\" */\n" +
-                                    "#endif\n" +
-                                    "#endif /* !${libNameUC}_H */"));
+        writer.write(format("#ifdef __cplusplus\n" +
+                                "} /* extern \"C\" */\n" +
+                                "#endif\n" +
+                                "#endif /* !${headerNameUC} */",
+                            kv("headerNameUC", headerNameUC)));
     }
-
-    protected abstract void writeCHeaderContents(PrintWriter writer) throws IOException;
-
 
     protected void writeFunctionDeclaration(PrintWriter writer, FunctionGenerator generator) {
         writer.printf("%s;\n", generator.generateFunctionSignature(this));

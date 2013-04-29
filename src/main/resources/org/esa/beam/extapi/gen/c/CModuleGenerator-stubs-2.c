@@ -1,3 +1,12 @@
+JavaVM* beam_getJavaVM()
+{
+    return jvm;
+}
+
+JNIEnv* beam_getJNIEnv()
+{
+    return jvm;
+}
 
 String String_newString(const char* chars)
 {

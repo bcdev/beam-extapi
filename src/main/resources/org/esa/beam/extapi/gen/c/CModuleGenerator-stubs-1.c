@@ -25,5 +25,3 @@ dlong* beam_alloc_long_array(jarray array, int* array_length);
 float* beam_alloc_float_array(jarray array, int* array_length);
 double* beam_alloc_double_array(jarray array, int* array_length);
 
-
-

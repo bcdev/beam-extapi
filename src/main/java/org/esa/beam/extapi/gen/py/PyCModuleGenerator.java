@@ -197,6 +197,17 @@ public class PyCModuleGenerator extends ModuleGenerator {
                                  "    def newString(str):\n" +
                                  "        return String(String_newString(str))\n" +
                                  "\n");
+
+            writer.write("class Map:\n" +
+                                 "    def __init__(self, obj):\n" +
+                                 "        if obj == None:\n" +
+                                 "            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')\n" +
+                                 "        self._obj = obj\n" +
+                                 "    \n" +
+                                 "    @staticmethod\n" +
+                                 "    def newString(dict):\n" +
+                                 "        return Map(Map_newMap(dict))\n" +
+                                 "\n");
         } finally {
             writer.close();
         }
@@ -239,17 +250,18 @@ public class PyCModuleGenerator extends ModuleGenerator {
     }
 
     private void writeCHeader() throws IOException {
-        final FileWriter fileWriter = new FileWriter(new File(BEAM_PYAPI_C_SRCDIR, BEAM_PYAPI_NAME + ".h"));
+        final String fileName = BEAM_PYAPI_NAME + ".h";
+        final PrintWriter writer = new PrintWriter(new FileWriter(new File(BEAM_PYAPI_C_SRCDIR, fileName)));
         try {
-            writeCHeader(fileWriter);
+            writeCHeader(writer, fileName, new ContentWriter() {
+                @Override
+                public void writeContent(PrintWriter writer) throws IOException {
+                    writer.println("#include \"../beampy_carray.h\"");
+                }
+            });
         } finally {
-            fileWriter.close();
+            writer.close();
         }
-    }
-
-    @Override
-    protected void writeCHeaderContents(PrintWriter writer) throws IOException {
-        writer.println("#include \"../beampy_carray.h\"");
     }
 
     private void writeCSource() throws IOException {
@@ -286,7 +298,8 @@ public class PyCModuleGenerator extends ModuleGenerator {
                                   generator.generateDocText(this));
                 }
             }
-            writer.printf("    {\"String_newString\", BeamPyString_newString, METH_VARARGS, \"Converts a Python unicode string into a Java object\"},\n");
+            writer.printf("    {\"String_newString\", BeamPyString_newString, METH_VARARGS, \"Converts a Python unicode string into a Java java.lang.String object\"},\n");
+            writer.printf("    {\"Map_newMap\", BeamPyMap_newMap, METH_VARARGS, \"Converts a Python dictionary into a Java java.utils.Map object\"},\n");
             writer.printf("    {NULL, NULL, 0, NULL}  /* Sentinel */\n");
             writer.printf("};\n");
             writer.printf("\n");
