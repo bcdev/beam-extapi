@@ -43,7 +43,7 @@ import java.util.TreeSet;
  */
 public class CModuleGenerator extends ModuleGenerator {
 
-    // todo: move to config
+    // TODO: move the following constants into ApiGeneratorDoclet-config.xml (nf, 29.04.2013)
     public static final String BEAM_CAPI_SRCDIR = "src/main/c/gen";
     public static final String BEAM_CAPI_NAME = "beam_capi";
     public static final String THIS_VAR_NAME = "_this";
@@ -150,6 +150,7 @@ public class CModuleGenerator extends ModuleGenerator {
                     writer.print("#include \"jni.h\"\n");
                     writer.printf("\n");
 
+                    writer.printf("int beam_init_api();\n");
                     writer.printf("JavaVM* beam_getJavaVM();\n");
                     writer.printf("JNIEnv* beam_getJNIEnv();\n");
                     writer.printf("\n");
@@ -303,15 +304,28 @@ public class CModuleGenerator extends ModuleGenerator {
             /////////////////////////////////////////////////////////////////////////////////////
             // beam_init_api()
             //
+            writer.write("" +
+                                 "jclass beam_find_class(const char* classResourceName)\n" +
+                                 "{\n" +
+                                 "    jclass c = (*jenv)->FindClass(jenv, classResourceName);\n" +
+                                 "    if (c == NULL) {\n" +
+                                 "        fprintf(stderr, \"error: Java class not found: %s\\n\", classResourceName);\n" +
+                                 "    }\n" +
+                                 "    return c;\n" +
+                                 "}\n");
+
             writer.write("int beam_init_api()\n");
             writer.write("{\n");
+
             writer.printf("" +
-                                  "    if (api_init != 0) {\n" +
-                                  "        return 0;\n" +
+                                  "    static int exitCode = -1;\n" +
+                                  "    if (exitCode >= 0) {\n" +
+                                  "        return exitCode;\n" +
                                   "    }\n");
             writer.printf("" +
                                   "    if (!beam_is_jvm_created() && !beam_create_jvm_with_defaults()) {\n" +
-                                  "        return 1;\n" +
+                                  "        exitCode = 1;\n" +
+                                  "        return exitCode;\n" +
                                   "    }\n");
 
             int errCode = 1000;
@@ -327,18 +341,18 @@ public class CModuleGenerator extends ModuleGenerator {
                               "java/util/" + javaUtilClass,
                               errCode++);
             }
+            errCode = 2000;
             final Set<String> coreJavaClassNames = getCoreJavaClassNames();
             for (ApiClass apiClass : getApiClasses()) {
                 if (!coreJavaClassNames.contains(apiClass.getJavaName())) {
                     writeClassDef(writer,
                                   getComponentCClassVarName(apiClass.getType()),
                                   apiClass.getResourceName(),
-                                  errCode);
-                    errCode++;
+                                  errCode++);
                 }
             }
-            writer.write("    api_init = 1;\n");
-            writer.write("    return 0;\n");
+            writer.write("    exitCode = 0;\n");
+            writer.write("    return exitCode;\n");
             writer.write("}\n\n");
 
             /////////////////////////////////////////////////////////////////////////////////////
@@ -365,9 +379,9 @@ public class CModuleGenerator extends ModuleGenerator {
     }
 
     private static void writeClassDef(PrintWriter writer, String classVarName, String classResourceName, int errCode) {
-        writer.write(String.format("    %s = (*jenv)->FindClass(jenv, \"%s\");\n",
+        writer.write(String.format("    %s = beam_find_class(\"%s\");\n",
                                    classVarName, classResourceName));
-        writer.write(String.format("    if (%s == NULL) return %d;\n",
+        writer.write(String.format("    if (%s == NULL) { exitCode = %d; return exitCode; }\n",
                                    classVarName, errCode));
         writer.write("\n");
     }

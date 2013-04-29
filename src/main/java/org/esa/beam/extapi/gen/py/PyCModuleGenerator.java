@@ -41,7 +41,7 @@ import static org.esa.beam.extapi.gen.TemplateEval.kv;
  */
 public class PyCModuleGenerator extends ModuleGenerator {
 
-    // TODO: move the following constants into ApiGeneratorDoclet-config.xml
+    // TODO: move the following constants into ApiGeneratorDoclet-config.xml (nf, 29.04.2013)
     public static final String BEAM_PYAPI_C_SRCDIR = "src/main/c/gen";
     public static final String BEAM_PYAPI_PY_SRCDIR = ".";
     public static final String BEAM_PYAPI_NAME = "beampy";
@@ -205,9 +205,10 @@ public class PyCModuleGenerator extends ModuleGenerator {
                                  "        self._obj = obj\n" +
                                  "    \n" +
                                  "    @staticmethod\n" +
-                                 "    def newString(dict):\n" +
-                                 "        return Map(Map_newMap(dict))\n" +
+                                 "    def newHashMap(dict):\n" +
+                                 "        return Map(Map_newHashMap(dict))\n" +
                                  "\n");
+
         } finally {
             writer.close();
         }
@@ -270,6 +271,7 @@ public class PyCModuleGenerator extends ModuleGenerator {
             writeFileInfo(writer);
             writer.printf("#include \"%s\"\n", BEAM_PYAPI_NAME + ".h");
             writer.printf("#include \"%s\"\n", CModuleGenerator.BEAM_CAPI_NAME + ".h");
+            writer.printf("#include \"%s\"\n", CModuleGenerator.BEAM_CAPI_NAME + "_j.h");
             writer.printf("#include \"Python.h\"\n");
             writer.printf("#include \"structmember.h\"\n");
 
@@ -299,7 +301,7 @@ public class PyCModuleGenerator extends ModuleGenerator {
                 }
             }
             writer.printf("    {\"String_newString\", BeamPyString_newString, METH_VARARGS, \"Converts a Python unicode string into a Java java.lang.String object\"},\n");
-            writer.printf("    {\"Map_newMap\", BeamPyMap_newMap, METH_VARARGS, \"Converts a Python dictionary into a Java java.utils.Map object\"},\n");
+            writer.printf("    {\"Map_newHashMap\", BeamPyMap_newHashMap, METH_VARARGS, \"Converts a Python dictionary into a Java java.utils.Map object\"},\n");
             writer.printf("    {NULL, NULL, 0, NULL}  /* Sentinel */\n");
             writer.printf("};\n");
             writer.printf("\n");

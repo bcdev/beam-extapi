@@ -2,9 +2,6 @@
 
 static JavaVM* jvm = NULL;
 static JNIEnv* jenv = NULL;
-static int api_init = 0;
-
-int beam_init_api();
 
 jobjectArray beam_new_jstring_array(const char** array_elems, int array_length);
 jobjectArray beam_new_jobject_array(const jobject* obj_array_data, int obj_array_length, jclass comp_class);

@@ -44,11 +44,21 @@ ${ctype}* beam_new_${typeName}_array_from_pyseq(PyObject* seq, int* length)
     PyObject* item;
 
     size = PySequence_Size(seq);
-    elems = (${ctype}*) malloc(size * sizeof (${ctype}));
-    if (elems == NULL) {
-        /* TODO: throw Python exception */
+    if (size < 0 || size >= (1 << 31)) {
+        char msg[80];
+        sprintf(msg, "invalid sequence size: %d", size);
+        PyErr_SetString(PyExc_ValueError, msg);
         return NULL;
     }
+
+    elems = (${ctype}*) malloc(size * sizeof (${ctype}));
+    if (elems == NULL) {
+        char msg[80];
+        sprintf(msg, "out of memory while allocating ${ctype}[%s]", size);
+        PyErr_SetString(PyExc_MemoryError, msg);
+        return NULL;
+    }
+
     for (i = 0; i < size; i++) {
         item = PySequence_GetItem(seq, i);
         if (item == NULL) {
@@ -57,7 +67,7 @@ ${ctype}* beam_new_${typeName}_array_from_pyseq(PyObject* seq, int* length)
         }
         elems[i] = ${itemToElemCall};
     }
-    /* TODO: check if conversion to int is ok */
+
     *length = (int) size;
     return elems;
 }

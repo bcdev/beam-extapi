@@ -5,7 +5,7 @@ JavaVM* beam_getJavaVM()
 
 JNIEnv* beam_getJNIEnv()
 {
-    return jvm;
+    return jenv;
 }
 
 String String_newString(const char* chars)
@@ -25,8 +25,7 @@ jobjectArray beam_new_jstring_array(const char** array_elems, int array_length)
         (*jenv)->SetObjectArrayElement(jenv, array, i, str);
     }
 
-    // TODO: check if we must return (*jenv)->NewGlobalRef(jenv, array);
-    return array;
+    return (*jenv)->NewGlobalRef(jenv, array);
 }
 
 jobjectArray beam_new_jobject_array(const jobject* array_elems, int array_length, jclass comp_class)
@@ -39,8 +38,7 @@ jobjectArray beam_new_jobject_array(const jobject* array_elems, int array_length
         (*jenv)->SetObjectArrayElement(jenv, array, i, array_elems[i]);
     }
 
-     // TODO: check if we must return (*jenv)->NewGlobalRef(jenv, obj_array);
-    return array;
+    return (*jenv)->NewGlobalRef(jenv, array);
 }
 
 void beam_release_jobject(void* object)
@@ -129,8 +127,8 @@ Object* beam_alloc_object_array(jarray array, int* array_length)
 
     array_elems = (Object*) malloc(n * sizeof (char*));
     for (i = 0; i < n; i++) {
-        // TODO: check if we must increment a global reference here!
-        array_elems[i] = (*jenv)->GetObjectArrayElement(jenv, array, i);
+        jobject elem = (*jenv)->GetObjectArrayElement(jenv, array, i);
+        array_elems[i] = (*jenv)->NewGlobalRef(jenv, elem);
     }
 
     if (array_length != NULL) {
@@ -207,7 +205,7 @@ void beam_release_object_array(void** array_elems, int array_length)
         int i;
         for (i = 0; i < array_length; i++) {
              object = array_elems[i];
-             // TODO: check if we must increment a global object reference here!
+             (*jenv)->DeleteGlobalRef(jenv, object);
         }
         free(array_elems);
     }
