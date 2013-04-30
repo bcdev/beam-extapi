@@ -51,84 +51,47 @@ Build Windows native installer:
 Translation Rules
 -----------------
 
+### Class definitions
 
-
-<table align="left"   valign="top">
-
-<tr>
-    <th>Java</th>
-    <th>C</th>
-    <th>Python</th>
-</tr>
-
-<!-- Classes -->
-
-<tr>
-<td>
-Class definitions:
-<pre>
-package org.esa.beam.framework.datamodel;
-public class Product {
+*Java:*
+    package org.esa.beam.framework.datamodel;
     ...
-}
-</pre>
-</td>
-
-<td>
-Package names are omitted for simplicity (as long as we don't run into naming clashes):
-<pre>
-class Product:
-    ...
-</pre>
-</td>
-</tr>
-
-<td>
-We currently use void pointers to represent Java classes in C:
-<pre>
-typedef void* Product;
-</pre>
-...knowing that this is not the best option since we have neither compile- nor runtime type checking this way.
-</td>
-
-<!-- Methods -->
-
-<tr>
-<td>
-Method definitions:
-<pre>
-public class Product {
-    public String getName() {
+    public class Product {
         ...
     }
-    ...
-}
-</pre>
-</td>
 
-<td>
-First a global function definition is generated
-<pre>
-def Product_getName(product):
-    ...
-</pre>
-which is then used by a corresponding Python method:
-<pre>
-class Product:
-    def getName(self):
+*Python translation:*
+A class definition is created in module `beampy`. The Java package path is ignored, as long as we don't encounter any naming clashes.
+    class Product:
         ...
-</pre>
-</td>
-</tr>
 
-<td>
-Simple class name used as prefix, again Java package path omitted for simplicity:
-<pre>
-char* Product_getName();
-</pre>
-</td>
+*C translation:*
+We currently use void pointers to represent Java classes in C:
+    typedef void* Product;    
+...knowing that this is not the best option since we have neither compile- nor runtime type checking this way.
 
-</table>
+### Method definitions
+
+*Java:*
+    public class Product {
+        public String getName() {
+            ...
+        }
+        ...
+    }
+
+*Python translation:*
+First a global function definition is generated
+    def Product_getName(product):
+        ...
+which is then used by a corresponding Python method:
+    class Product:
+        def getName(self):
+            ...
+
+*C translation:*
+The simple class name is used as prefix, again Java package path omitted for simplicity:
+    char* Product_getName();
 
 
 
