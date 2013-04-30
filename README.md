@@ -61,31 +61,42 @@ Translation Rules
     <th>Python</th>
 </tr>
 
+<!-- Classes -->
+
 <tr>
-    <td>
+<td>
 <pre>
+Class definitions, such as
 package org.esa.beam.framework.datamodel;
 public class Product {
     ...
 }
 </pre>
-    </td>
-    <td>
+</td>
+
+<td>
 <pre>
-typedef void* Product;
-</pre>
-    </td>
-    <td>
-<pre>
+Package names are omitted for simplicity (as long as we don't run into naming clashes):
 class Product:
     ...
 </pre>
-    </td>
+</td>
 </tr>
-<tr>
-    <td>
+
+<td>
+We currently use void pointers to represent Java classes in C:
 <pre>
-package org.esa.beam.framework.datamodel;
+typedef void* Product;
+</pre>
+...knowing that this is not the best option since we have neither compile- nor runtime type checking this way.
+</td>
+
+<!-- Methods -->
+
+<tr>
+<td>
+<pre>
+Method definitions, such as
 public class Product {
     public String getName() {
         ...
@@ -93,25 +104,29 @@ public class Product {
     ...
 }
 </pre>
-    </td>
-    <td>
+</td>
+
+<td>
+First a global function definition is generated
+<pre>
+def Product_getName(product):
+    ...
+</pre>
+which is then used by a corresponding Python method:
+<pre>
+class Product:
+    def getName(self):
+        ...
+</pre>
+</td>
+</tr>
+
+<td>
+Simple class name used as prefix, again Java package path omitted for simplicity:
 <pre>
 char* Product_getName();
 </pre>
-    </td>
-    <td>
-<pre>
-class Product:
-    def getName():
-        ...
-</pre>
-and
-<pre>
-def Product_getName():
-    ...
-</pre>
-    </td>
-</tr>
+</td>
 
 </table>
 
