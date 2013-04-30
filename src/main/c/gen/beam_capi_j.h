@@ -75,7 +75,6 @@ extern jclass classAffineTransform;
 extern jclass classArea;
 extern jclass classGeneralPath;
 extern jclass classPoint2D;
-extern jclass classRectangle2D;
 extern jclass classBufferedImage;
 extern jclass classComponentColorModel;
 extern jclass classIndexColorModel;
