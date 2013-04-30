@@ -65,8 +65,8 @@ Translation Rules
 
 <tr>
 <td>
+Class definitions:
 <pre>
-Class definitions, such as
 package org.esa.beam.framework.datamodel;
 public class Product {
     ...
@@ -75,8 +75,8 @@ public class Product {
 </td>
 
 <td>
-<pre>
 Package names are omitted for simplicity (as long as we don't run into naming clashes):
+<pre>
 class Product:
     ...
 </pre>
@@ -95,8 +95,8 @@ typedef void* Product;
 
 <tr>
 <td>
+Method definitions:
 <pre>
-Method definitions, such as
 public class Product {
     public String getName() {
         ...
