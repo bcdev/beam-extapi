@@ -7,21 +7,26 @@ How to build the Python API
 ---------------------------
 
 
-Install ´´beampy´´ into your local Python installation:
-    >>> python setup.py install
+Install `beampy` into your local Python installation:
+
+    python setup.py install
+
 
 The setup.py script depends on the JDK_HOME environment variable.
 
 For Windows installations only: This must be set to a 32-bit Java JDK (1.6 or 1.7).
-    >>> SET JDK_HOME=%JDK32_HOME%
+
+    SET JDK_HOME=%JDK32_HOME%
+
 
 To use the BEAM Python API you need to set BEAM_HOME environment variable.
 On Windows, the path needs to be modified, so the Java 32-bit JVM can be found by the Python interpreter.
 Example python scripts can be found in the examples directory. So, on Windows try something like:
-    >>> SET BEAM_HOME=C:\Users\Norman\beam-4.11.1
-    >>> SET PATH=%JDK_HOME%\jre\bin\server;%PATH%
-    >>> cd examples
-    >>> python beampy_ndvi.py <file>
+
+    SET BEAM_HOME=C:\Users\Norman\beam-4.11.1
+    SET PATH=%JDK_HOME%\jre\bin\server;%PATH%
+    cd examples
+    python beampy_ndvi.py <file>
 
 
 For Windows installations only: While running setup.py for for package installations Python 2.7 (and 3.3, Norman) searches for an installed Visual Studio 2008.
@@ -29,18 +34,91 @@ You can trick Python to use newer Visual Studio by setting correct path in VS90C
 (from http://stackoverflow.com/questions/6551724/how-do-i-point-easy-install-to-vcvarsall-bat)
 
 If you have Visual Studio 2010 installed, execute
-    >>> SET VS90COMNTOOLS=%VS100COMNTOOLS%
+
+    SET VS90COMNTOOLS=%VS100COMNTOOLS%
+
 
 or with Visual Studio 2012 installed
-    >>> SET VS90COMNTOOLS=%VS110COMNTOOLS%
+
+    SET VS90COMNTOOLS=%VS110COMNTOOLS%
+
 
 Build Windows native installer:
-    >>> python setup.py bdist_wininst
+
+    python setup.py bdist_wininst
+
+
+Translation Rules
+-----------------
+
+
+
+<table>
+
+<tr>
+    <th>Java</th>
+    <th>C</th>
+    <th>Python</th>
+</tr>
+
+<tr>
+    <td>
+        <pre>
+        package org.esa.beam.framework.datamodel;
+        public class Product {
+            ...
+        }
+        </pre>
+    </td>
+    <td>
+        <pre>
+        typedef void* Product;
+        </pre>
+    </td>
+    <td>
+        <pre>
+        class Product:
+            ...
+        </pre>
+    </td>
+</tr>
+<tr>
+    <td>
+        <pre>
+        package org.esa.beam.framework.datamodel;
+        public class Product {
+            public String getName() {
+                ...
+            }
+            ...
+        }
+        </pre>
+    </td>
+    <td>
+        <pre>
+        char* Product_getName();
+        </pre>
+    </td>
+    <td>
+        <pre>
+        class Product:
+            def getName():
+                ...
+        </pre>
+        and
+        <pre>
+        def Product_getName():
+            ...
+        </pre>
+    </td>
+</tr>
+
+</table>
+
 
 
 Very helpful Developer Links
 ----------------------------
-beam-extapi code repository  
 
 * Project on Github: https://github.com/bcdev/beam-extapi
 * Java Native Interface (JNI) website: http://docs.oracle.com/javase/7/docs/technotes/guides/jni/
