@@ -53,7 +53,7 @@ Translation Rules
 
 
 
-<table>
+<table align="left"   valign="top">
 
 <tr>
     <th>Java</th>
