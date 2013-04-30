@@ -54,6 +54,7 @@ Translation Rules
 ### Class definitions
 
 *Java:*
+
     package org.esa.beam.framework.datamodel;
     ...
     public class Product {
@@ -62,17 +63,21 @@ Translation Rules
 
 *Python translation:*
 A class definition is created in module `beampy`. The Java package path is ignored, as long as we don't encounter any naming clashes.
+
     class Product:
         ...
 
 *C translation:*
 We currently use void pointers to represent Java classes in C:
+
     typedef void* Product;    
+
 ...knowing that this is not the best option since we have neither compile- nor runtime type checking this way.
 
 ### Method definitions
 
 *Java:*
+
     public class Product {
         public String getName() {
             ...
@@ -82,15 +87,19 @@ We currently use void pointers to represent Java classes in C:
 
 *Python translation:*
 First a global function definition is generated
+    
     def Product_getName(product):
         ...
+
 which is then used by a corresponding Python method:
+
     class Product:
         def getName(self):
             ...
 
 *C translation:*
 The simple class name is used as prefix, again Java package path omitted for simplicity:
+
     char* Product_getName();
 
 
