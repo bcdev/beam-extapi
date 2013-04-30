@@ -63,53 +63,53 @@ Translation Rules
 
 <tr>
     <td>
-        <pre>
-        package org.esa.beam.framework.datamodel;
-        public class Product {
-            ...
-        }
-        </pre>
+<pre>
+package org.esa.beam.framework.datamodel;
+public class Product {
+    ...
+}
+</pre>
     </td>
     <td>
-        <pre>
-        typedef void* Product;
-        </pre>
+<pre>
+typedef void* Product;
+</pre>
     </td>
     <td>
-        <pre>
-        class Product:
-            ...
-        </pre>
+<pre>
+class Product:
+    ...
+</pre>
     </td>
 </tr>
 <tr>
     <td>
-        <pre>
-        package org.esa.beam.framework.datamodel;
-        public class Product {
-            public String getName() {
-                ...
-            }
-            ...
-        }
-        </pre>
+<pre>
+package org.esa.beam.framework.datamodel;
+public class Product {
+    public String getName() {
+        ...
+    }
+    ...
+}
+</pre>
     </td>
     <td>
-        <pre>
-        char* Product_getName();
-        </pre>
+<pre>
+char* Product_getName();
+</pre>
     </td>
     <td>
-        <pre>
-        class Product:
-            def getName():
-                ...
-        </pre>
-        and
-        <pre>
-        def Product_getName():
-            ...
-        </pre>
+<pre>
+class Product:
+    def getName():
+        ...
+</pre>
+and
+<pre>
+def Product_getName():
+    ...
+</pre>
     </td>
 </tr>
 
