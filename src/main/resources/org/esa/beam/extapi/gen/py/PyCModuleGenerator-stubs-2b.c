@@ -43,7 +43,7 @@ static void BeamPyJObject_dealloc(BeamPyJObject* self)
  * THIS TYPE IS NOT YET IN USE: we currently use
  * (<type_string>, <pointer>) tuples to represent Java JNI objects.
  */
-static PyTypeObject BeamPy_JObjectTypeV = {
+static PyTypeObject BeamPyJObject_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
     "${libName}.JObject",         /* tp_name */
     sizeof (BeamPyJObject),       /* tp_basicsize */
@@ -85,14 +85,6 @@ static PyTypeObject BeamPy_JObjectTypeV = {
 };
 
 /**
- * Implements the BeamPy_JObjectType class singleton as PyObject pointer.
- *
- * THIS TYPE IS NOT YET IN USE: we currently use
- * (<type_string>, <pointer>) tuples to represent Java JNI objects.
- */
-static PyObject* BeamPy_JObjectType = (PyObject*) &BeamPy_JObjectTypeV;
-
-/**
  * The BEAM/Python API module definition structure.
  * The variable 'BeamPy_Methods' is defined in the generated file 'beampy_module.c'.
  */
@@ -123,26 +115,25 @@ PyMODINIT_FUNC PyInit__${libName}()
     }
 
     /////////////////////////////////////////////////////////////////////////
-    // CArray_type / CArray_module
+    // Register CArray_Type / CArray_module
 
     // In some forum I (nf) found one should use: CArray_type.tp_new = PyType_GenericNew;
     if (PyType_Ready(&CArray_Type) < 0) {
         return NULL;
     }
-
     Py_INCREF(&CArray_Type);
     PyModule_AddObject(beampy_module, "CArray", (PyObject*) &CArray_Type);
    
 
     /////////////////////////////////////////////////////////////////////////
-    // Register BeamPy_JObjectType ('JObject')
+    // Register BeamPyJObject_Type ('JObject')
     //
-    //if (PyType_Ready(&BeamPy_JObjectType) < 0) {
-    //    return NULL;
-    //}
-    //Py_INCREF(BeamPy_JObjectType);
-    //PyModule_AddObject(beampy_module, "JObject", BeamPy_JObjectType);
-    //
+    if (PyType_Ready(&BeamPyJObject_Type) < 0) {
+        return NULL;
+    }
+    Py_INCREF(&BeamPyJObject_Type);
+    PyModule_AddObject(beampy_module, "JObject", (PyObject*) &BeamPyJObject_Type);
+
     // TODO - use the new BeamPy_JObjectType object instead of the currently used (sK) tuples. (nf, 29.04.2013)
     // // JObject instances shall be created using the following pattern:
     // PyObject* arg = PyLong_FromVoidPtr(ptr); // ptr is the JNI Java object
