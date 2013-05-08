@@ -33,4 +33,5 @@ public class ApiClassTest {
         Assert.assertEquals("java.awt.geom.Point2D$Double", apiClass.getJavaName());
         Assert.assertEquals("java/awt/geom/Point2D$Double", apiClass.getResourceName());
     }
+
 }

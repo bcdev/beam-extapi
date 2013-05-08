@@ -11,10 +11,17 @@ import static org.junit.Assert.assertEquals;
  */
 public class TemplateEvalTest {
     @Test
-    public void testIt() {
+    public void testStatic() {
         assertEquals("oha", eval("${name}", kv("name", "oha")));
         assertEquals("oha, oha!", eval("${name}, ${name}!", kv("name", "oha")));
         assertEquals("Bibo is now 50", eval("${name} is now ${x}", kv("name", "Bibo"), kv("x", 50)));
+        assertEquals("Bibo is now 50", eval("${name} is now ${x}", kv("name", "Bibo"), kv("x", 50)));
     }
 
+    @Test
+    public void testObject() {
+        TemplateEval templateEval = new TemplateEval(kv("name", "oha"));
+        templateEval.add(kv("x", 50));
+        assertEquals("Bibo is now 50", templateEval.eval("${name} is now ${x}"));
+    }
 }
