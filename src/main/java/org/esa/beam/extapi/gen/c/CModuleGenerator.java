@@ -18,13 +18,7 @@ package org.esa.beam.extapi.gen.c;
 
 import com.sun.javadoc.FieldDoc;
 import com.sun.javadoc.Type;
-import org.esa.beam.extapi.gen.ApiClass;
-import org.esa.beam.extapi.gen.ApiConstant;
-import org.esa.beam.extapi.gen.ApiInfo;
-import org.esa.beam.extapi.gen.ApiMethod;
-import org.esa.beam.extapi.gen.FunctionGenerator;
-import org.esa.beam.extapi.gen.JavadocHelpers;
-import org.esa.beam.extapi.gen.ModuleGenerator;
+import org.esa.beam.extapi.gen.*;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -118,7 +112,7 @@ public class CModuleGenerator extends ModuleGenerator {
         final String fileName = BEAM_CAPI_NAME + ".h";
         PrintWriter writer = openPrintWriter(fileName);
         try {
-            writeCHeader(writer, fileName, new ContentWriter() {
+            CodeGenHelpers.writeCHeader(writer, fileName, new ContentWriter() {
                 @Override
                 public void writeContent(PrintWriter writer) throws IOException {
                     CModuleGenerator.this.writeCHeaderContents(writer);
@@ -144,7 +138,7 @@ public class CModuleGenerator extends ModuleGenerator {
         final String fileName = BEAM_CAPI_NAME + "_j.h";
         PrintWriter writer = openPrintWriter(fileName);
         try {
-            writeCHeader(writer, fileName, new ContentWriter() {
+            CodeGenHelpers.writeCHeader(writer, fileName, new ContentWriter() {
                 @Override
                 public void writeContent(PrintWriter writer) throws IOException {
                     writer.print("#include \"jni.h\"\n");
@@ -270,7 +264,7 @@ public class CModuleGenerator extends ModuleGenerator {
     private void writeCSource() throws IOException {
         PrintWriter writer = openPrintWriter(BEAM_CAPI_NAME + ".c");
         try {
-            writeFileInfo(writer);
+            CodeGenHelpers.writeCFileInfo(writer);
             writer.printf("#include <stdlib.h>\n");
             writer.printf("#include <string.h>\n");
             writer.printf("#include \"%s\"\n", BEAM_CAPI_NAME + ".h");

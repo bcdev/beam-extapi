@@ -20,7 +20,7 @@ public class TemplateEvalTest {
 
     @Test
     public void testObject() {
-        TemplateEval templateEval = new TemplateEval(kv("name", "oha"));
+        TemplateEval templateEval = new TemplateEval(kv("name", "Bibo"));
         templateEval.add(kv("x", 50));
         assertEquals("Bibo is now 50", templateEval.eval("${name} is now ${x}"));
     }

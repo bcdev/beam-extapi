@@ -17,14 +17,7 @@
 package org.esa.beam.extapi.gen.py;
 
 import com.sun.javadoc.Type;
-import org.esa.beam.extapi.gen.ApiClass;
-import org.esa.beam.extapi.gen.ApiConstant;
-import org.esa.beam.extapi.gen.ApiGeneratorDoclet;
-import org.esa.beam.extapi.gen.ApiMethod;
-import org.esa.beam.extapi.gen.FunctionGenerator;
-import org.esa.beam.extapi.gen.JavadocHelpers;
-import org.esa.beam.extapi.gen.ModuleGenerator;
-import org.esa.beam.extapi.gen.ParameterGenerator;
+import org.esa.beam.extapi.gen.*;
 import org.esa.beam.extapi.gen.c.CModuleGenerator;
 
 import java.io.File;
@@ -254,7 +247,7 @@ public class PyCModuleGenerator extends ModuleGenerator {
         final String fileName = BEAM_PYAPI_NAME + ".h";
         final PrintWriter writer = new PrintWriter(new FileWriter(new File(BEAM_PYAPI_C_SRCDIR, fileName)));
         try {
-            writeCHeader(writer, fileName, new ContentWriter() {
+            CodeGenHelpers.writeCHeader(writer, fileName, new ContentWriter() {
                 @Override
                 public void writeContent(PrintWriter writer) throws IOException {
                     writer.println("#include \"../beampy_carray.h\"");
@@ -268,7 +261,7 @@ public class PyCModuleGenerator extends ModuleGenerator {
     private void writeCSource() throws IOException {
         PrintWriter writer = new PrintWriter(new FileWriter(new File(BEAM_PYAPI_C_SRCDIR, BEAM_PYAPI_NAME + ".c")));
         try {
-            writeFileInfo(writer);
+            CodeGenHelpers.writeCFileInfo(writer);
             writer.printf("#include \"%s\"\n", BEAM_PYAPI_NAME + ".h");
             writer.printf("#include \"%s\"\n", CModuleGenerator.BEAM_CAPI_NAME + ".h");
             writer.printf("#include \"%s\"\n", CModuleGenerator.BEAM_CAPI_NAME + "_j.h");
