@@ -93,32 +93,43 @@ public class CModuleGenerator extends ModuleGenerator {
     }
 
     private void writeWinDef() throws IOException {
-        PrintWriter writer = newFile(BEAM_CAPI_NAME + ".def");
-        try {
-            writeResource(writer, "CModuleGenerator-stubs.def");
-            for (ApiClass apiClass : getApiClasses()) {
-                for (FunctionGenerator generator : getFunctionGenerators(apiClass)) {
-                    writer.printf("\t%s\n", getFunctionNameFor(generator.getApiMethod()));
+        new TargetFile(BEAM_CAPI_SRCDIR, BEAM_CAPI_NAME + ".def") {
+            @Override
+            protected void writeContent() throws IOException {
+                writeResource(writer, "CModuleGenerator-stubs.def");
+                for (ApiClass apiClass : getApiClasses()) {
+                    for (FunctionGenerator generator : getFunctionGenerators(apiClass)) {
+                        writer.printf("\t%s\n", getFunctionNameFor(generator.getApiMethod()));
+                    }
                 }
             }
-        } finally {
-            writer.close();
-        }
+        }.create();
     }
 
     private void writeCHeader() throws IOException {
-        final String fileName = BEAM_CAPI_NAME + ".h";
-        PrintWriter writer = newFile(fileName);
-        try {
-            CodeGenHelpers.writeCHeader(writer, fileName, new ContentWriter() {
-                @Override
-                public void writeContent(PrintWriter writer) throws IOException {
-                    CModuleGenerator.this.writeCHeaderContents(writer);
-                }
-            });
-        } finally {
-            writer.close();
-        }
+        new TargetCHeaderFile(BEAM_CAPI_SRCDIR, BEAM_CAPI_NAME + ".h") {
+            @Override
+            protected void writeContent() throws IOException {
+                CModuleGenerator.this.writeCHeaderContents(writer);
+            }
+        }.create();
+    }
+
+    private void writeCHeaderJ() throws IOException {
+        new TargetCHeaderFile(BEAM_CAPI_SRCDIR, BEAM_CAPI_NAME + "_j.h") {
+            @Override
+            protected void writeContent() throws IOException {
+                writer.print("#include \"jni.h\"\n");
+                writer.printf("\n");
+
+                writer.printf("int beam_init_api();\n");
+                writer.printf("JavaVM* beam_getJavaVM();\n");
+                writer.printf("JNIEnv* beam_getJNIEnv();\n");
+                writer.printf("\n");
+
+                writeClassDefinitions(writer, true);
+            }
+        }.create();
     }
 
     Set<String> getCoreJavaClassNames() {
@@ -130,29 +141,6 @@ public class CModuleGenerator extends ModuleGenerator {
             coreJavaClassNames.add("java.util." + simpleClassName);
         }
         return coreJavaClassNames;
-    }
-
-    private void writeCHeaderJ() throws IOException {
-        final String fileName = BEAM_CAPI_NAME + "_j.h";
-        PrintWriter writer = newFile(fileName);
-        try {
-            CodeGenHelpers.writeCHeader(writer, fileName, new ContentWriter() {
-                @Override
-                public void writeContent(PrintWriter writer) throws IOException {
-                    writer.print("#include \"jni.h\"\n");
-                    writer.printf("\n");
-
-                    writer.printf("int beam_init_api();\n");
-                    writer.printf("JavaVM* beam_getJavaVM();\n");
-                    writer.printf("JNIEnv* beam_getJNIEnv();\n");
-                    writer.printf("\n");
-
-                    writeClassDefinitions(writer, true);
-                }
-            });
-        } finally {
-            writer.close();
-        }
     }
 
     private void writeClassDefinitions(PrintWriter writer, boolean header) {
@@ -260,109 +248,104 @@ public class CModuleGenerator extends ModuleGenerator {
     }
 
     private void writeCSource() throws IOException {
-        PrintWriter writer = newFile(BEAM_CAPI_NAME + ".c");
-        try {
-            CodeGenHelpers.writeCFileInfo(writer);
-            writer.printf("#include <stdlib.h>\n");
-            writer.printf("#include <string.h>\n");
-            writer.printf("#include \"%s\"\n", BEAM_CAPI_NAME + ".h");
-            writer.printf("#include \"%s\"\n", BEAM_CAPI_NAME + "_j.h");
+        new TargetCHeaderFile(BEAM_CAPI_SRCDIR, BEAM_CAPI_NAME + ".c") {
+            @Override
+            protected void writeContent() throws IOException {
+                writer.printf("#include <stdlib.h>\n");
+                writer.printf("#include <string.h>\n");
+                writer.printf("#include \"%s\"\n", BEAM_CAPI_NAME + ".h");
+                writer.printf("#include \"%s\"\n", BEAM_CAPI_NAME + "_j.h");
 
-            writeClassDefinitions(writer, false);
+                writeClassDefinitions(writer, false);
 
-            writer.printf("\n");
-            writeResource(writer, "CModuleGenerator-stubs-1.c");
-            writer.printf("\n");
+                writer.printf("\n");
+                writeResource(writer, "CModuleGenerator-stubs-1.c");
+                writer.printf("\n");
 
-            for (ApiClass apiClass : getApiClasses()) {
-                List<ApiConstant> constants = getApiInfo().getConstantsOf(apiClass);
-                if (!constants.isEmpty()) {
-                    writer.printf("/* Constants of %s */\n", getComponentCClassName(apiClass.getType()));
-                    for (ApiConstant constant : constants) {
-                        writer.write(String.format("const %s %s_%s = %s;\n",
-                                                   JavadocHelpers.getCTypeName(constant.getType()),
-                                                   getComponentCClassName(apiClass.getType()),
-                                                   constant.getJavaName(),
-                                                   getConstantCValue(constant)));
+                for (ApiClass apiClass : getApiClasses()) {
+                    List<ApiConstant> constants = getApiInfo().getConstantsOf(apiClass);
+                    if (!constants.isEmpty()) {
+                        writer.printf("/* Constants of %s */\n", getComponentCClassName(apiClass.getType()));
+                        for (ApiConstant constant : constants) {
+                            writer.write(String.format("const %s %s_%s = %s;\n",
+                                                       JavadocHelpers.getCTypeName(constant.getType()),
+                                                       getComponentCClassName(apiClass.getType()),
+                                                       constant.getJavaName(),
+                                                       getConstantCValue(constant)));
+                        }
+                    }
+                }
+                writer.write("\n");
+
+                writer.printf("\n");
+                writeResource(writer, "CModuleGenerator-stubs-2.c");
+                writer.printf("\n");
+
+                /////////////////////////////////////////////////////////////////////////////////////
+                // beam_init_api()
+                //
+                writer.write("" +
+                                     "jclass beam_find_class(const char* classResourceName)\n" +
+                                     "{\n" +
+                                     "    jclass c = (*jenv)->FindClass(jenv, classResourceName);\n" +
+                                     "    if (c == NULL) {\n" +
+                                     "        fprintf(stderr, \"error: Java class not found: %s\\n\", classResourceName);\n" +
+                                     "    }\n" +
+                                     "    return c;\n" +
+                                     "}\n");
+
+                writer.write("int beam_init_api()\n");
+                writer.write("{\n");
+
+                writer.printf("" +
+                                      "    static int exitCode = -1;\n" +
+                                      "    if (exitCode >= 0) {\n" +
+                                      "        return exitCode;\n" +
+                                      "    }\n");
+                writer.printf("" +
+                                      "    if (!beam_is_jvm_created() && !beam_create_jvm_with_defaults()) {\n" +
+                                      "        exitCode = 1;\n" +
+                                      "        return exitCode;\n" +
+                                      "    }\n");
+
+                int errCode = 1000;
+                for (String javaLangClass : JAVA_LANG_CLASSES) {
+                    writeClassDef(writer,
+                                  String.format(CLASS_VAR_NAME_PATTERN, javaLangClass),
+                                  "java/lang/" + javaLangClass,
+                                  errCode++);
+                }
+                for (String javaUtilClass : JAVA_UTIL_CLASSES) {
+                    writeClassDef(writer,
+                                  String.format(CLASS_VAR_NAME_PATTERN, javaUtilClass),
+                                  "java/util/" + javaUtilClass,
+                                  errCode++);
+                }
+                errCode = 2000;
+                final Set<String> coreJavaClassNames = getCoreJavaClassNames();
+                for (ApiClass apiClass : getApiClasses()) {
+                    if (!coreJavaClassNames.contains(apiClass.getJavaName())) {
+                        writeClassDef(writer,
+                                      getComponentCClassVarName(apiClass.getType()),
+                                      apiClass.getResourceName(),
+                                      errCode++);
+                    }
+                }
+                writer.write("    exitCode = 0;\n");
+                writer.write("    return exitCode;\n");
+                writer.write("}\n\n");
+
+                /////////////////////////////////////////////////////////////////////////////////////
+                // Generate function code
+                //
+                for (ApiClass apiClass : getApiClasses()) {
+                    for (FunctionGenerator generator : getFunctionGenerators(apiClass)) {
+                        writeFunctionDefinition(generator, writer);
+                        writer.println();
                     }
                 }
             }
-            writer.write("\n");
-
-            writer.printf("\n");
-            writeResource(writer, "CModuleGenerator-stubs-2.c");
-            writer.printf("\n");
-
-            /////////////////////////////////////////////////////////////////////////////////////
-            // beam_init_api()
-            //
-            writer.write("" +
-                                 "jclass beam_find_class(const char* classResourceName)\n" +
-                                 "{\n" +
-                                 "    jclass c = (*jenv)->FindClass(jenv, classResourceName);\n" +
-                                 "    if (c == NULL) {\n" +
-                                 "        fprintf(stderr, \"error: Java class not found: %s\\n\", classResourceName);\n" +
-                                 "    }\n" +
-                                 "    return c;\n" +
-                                 "}\n");
-
-            writer.write("int beam_init_api()\n");
-            writer.write("{\n");
-
-            writer.printf("" +
-                                  "    static int exitCode = -1;\n" +
-                                  "    if (exitCode >= 0) {\n" +
-                                  "        return exitCode;\n" +
-                                  "    }\n");
-            writer.printf("" +
-                                  "    if (!beam_is_jvm_created() && !beam_create_jvm_with_defaults()) {\n" +
-                                  "        exitCode = 1;\n" +
-                                  "        return exitCode;\n" +
-                                  "    }\n");
-
-            int errCode = 1000;
-            for (String javaLangClass : JAVA_LANG_CLASSES) {
-                writeClassDef(writer,
-                              String.format(CLASS_VAR_NAME_PATTERN, javaLangClass),
-                              "java/lang/" + javaLangClass,
-                              errCode++);
-            }
-            for (String javaUtilClass : JAVA_UTIL_CLASSES) {
-                writeClassDef(writer,
-                              String.format(CLASS_VAR_NAME_PATTERN, javaUtilClass),
-                              "java/util/" + javaUtilClass,
-                              errCode++);
-            }
-            errCode = 2000;
-            final Set<String> coreJavaClassNames = getCoreJavaClassNames();
-            for (ApiClass apiClass : getApiClasses()) {
-                if (!coreJavaClassNames.contains(apiClass.getJavaName())) {
-                    writeClassDef(writer,
-                                  getComponentCClassVarName(apiClass.getType()),
-                                  apiClass.getResourceName(),
-                                  errCode++);
-                }
-            }
-            writer.write("    exitCode = 0;\n");
-            writer.write("    return exitCode;\n");
-            writer.write("}\n\n");
-
-            /////////////////////////////////////////////////////////////////////////////////////
-            // Generate function code
-            //
-            for (ApiClass apiClass : getApiClasses()) {
-                for (FunctionGenerator generator : getFunctionGenerators(apiClass)) {
-                    writeFunctionDefinition(generator, writer);
-                    writer.println();
-                }
-            }
-        } finally {
-            writer.close();
-        }
-    }
-
-    private static PrintWriter newFile(String child) throws IOException {
-        return CodeGenHelpers.newFile(BEAM_CAPI_SRCDIR, child);
+        }.create();
     }
 
     private String getConstantCValue(ApiConstant constant) {

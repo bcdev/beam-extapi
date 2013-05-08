@@ -23,7 +23,6 @@ import java.io.PrintWriter;
 import java.io.Writer;
 import java.util.*;
 
-import static org.esa.beam.extapi.gen.CodeGenHelpers.writeCode;
 import static org.esa.beam.extapi.gen.TemplateEval.KV;
 
 /**
@@ -39,6 +38,20 @@ public abstract class ModuleGenerator implements GeneratorContext {
         this.apiInfo = apiInfo;
         functionGenerators = createFunctionGenerators(apiInfo, factory);
         templateEval = TemplateEval.create();
+    }
+
+    public static void writeCode(PrintWriter writer, String code) throws IOException {
+        String[] callCode = generateLines(code);
+        for (String line : callCode) {
+            writer.printf("    %s\n", line);
+        }
+    }
+
+    public static String[] generateLines(String code) {
+        if (code == null || code.length() == 0) {
+            return new String[0];
+        }
+        return code.split("\n");
     }
 
     public ApiInfo getApiInfo() {
