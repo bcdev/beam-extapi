@@ -20,13 +20,13 @@ import com.sun.javadoc.Type;
 import org.esa.beam.extapi.gen.*;
 import org.esa.beam.extapi.gen.c.CModuleGenerator;
 
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Date;
 import java.util.List;
 
+import static org.esa.beam.extapi.gen.CodeGenHelpers.newFile;
+import static org.esa.beam.extapi.gen.CodeGenHelpers.writeCFileInfo;
 import static org.esa.beam.extapi.gen.TemplateEval.kv;
 
 /**
@@ -74,7 +74,7 @@ public class PyCModuleGenerator extends ModuleGenerator {
     }
 
     private void writePythonSource() throws IOException {
-        final PrintWriter writer = new PrintWriter(new FileWriter(new File(BEAM_PYAPI_PY_SRCDIR, BEAM_PYAPI_NAME + ".py")));
+        final PrintWriter writer = newFile(BEAM_PYAPI_PY_SRCDIR, BEAM_PYAPI_NAME + ".py");
         try {
             writer.printf("# Please note: This file is machine generated. DO NOT EDIT!\n");
             writer.printf("# It will be regenerated every time you run 'java %s <beam-src-dir>'.\n", ApiGeneratorDoclet.class.getName());
@@ -235,7 +235,7 @@ public class PyCModuleGenerator extends ModuleGenerator {
     }
 
     private void writeWinDef() throws IOException {
-        PrintWriter writer = new PrintWriter(new FileWriter(new File(BEAM_PYAPI_C_SRCDIR, BEAM_PYAPI_NAME + ".def")));
+        PrintWriter writer = newFile(BEAM_PYAPI_C_SRCDIR, BEAM_PYAPI_NAME + ".def");
         try {
             writeResource(writer, "PyCModuleGenerator-stubs.def");
         } finally {
@@ -245,7 +245,7 @@ public class PyCModuleGenerator extends ModuleGenerator {
 
     private void writeCHeader() throws IOException {
         final String fileName = BEAM_PYAPI_NAME + ".h";
-        final PrintWriter writer = new PrintWriter(new FileWriter(new File(BEAM_PYAPI_C_SRCDIR, fileName)));
+        final PrintWriter writer = newFile(BEAM_PYAPI_C_SRCDIR, fileName);
         try {
             CodeGenHelpers.writeCHeader(writer, fileName, new ContentWriter() {
                 @Override
@@ -259,9 +259,9 @@ public class PyCModuleGenerator extends ModuleGenerator {
     }
 
     private void writeCSource() throws IOException {
-        PrintWriter writer = new PrintWriter(new FileWriter(new File(BEAM_PYAPI_C_SRCDIR, BEAM_PYAPI_NAME + ".c")));
+        PrintWriter writer = newFile(BEAM_PYAPI_C_SRCDIR, BEAM_PYAPI_NAME + ".c");
         try {
-            CodeGenHelpers.writeCFileInfo(writer);
+            writeCFileInfo(writer);
             writer.printf("#include \"%s\"\n", BEAM_PYAPI_NAME + ".h");
             writer.printf("#include \"%s\"\n", CModuleGenerator.BEAM_CAPI_NAME + ".h");
             writer.printf("#include \"%s\"\n", CModuleGenerator.BEAM_CAPI_NAME + "_j.h");

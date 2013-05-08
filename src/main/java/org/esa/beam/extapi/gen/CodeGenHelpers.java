@@ -1,5 +1,7 @@
 package org.esa.beam.extapi.gen;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 
@@ -61,5 +63,9 @@ public class CodeGenHelpers {
             return new String[0];
         }
         return code.split("\n");
+    }
+
+    public static PrintWriter newFile(String parent, String child) throws IOException {
+        return new PrintWriter(new FileWriter(new File(parent, child)));
     }
 }

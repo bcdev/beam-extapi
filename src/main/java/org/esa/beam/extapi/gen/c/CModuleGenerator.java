@@ -20,8 +20,6 @@ import com.sun.javadoc.FieldDoc;
 import com.sun.javadoc.Type;
 import org.esa.beam.extapi.gen.*;
 
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Arrays;
@@ -95,7 +93,7 @@ public class CModuleGenerator extends ModuleGenerator {
     }
 
     private void writeWinDef() throws IOException {
-        PrintWriter writer = openPrintWriter(BEAM_CAPI_NAME + ".def");
+        PrintWriter writer = newFile(BEAM_CAPI_NAME + ".def");
         try {
             writeResource(writer, "CModuleGenerator-stubs.def");
             for (ApiClass apiClass : getApiClasses()) {
@@ -110,7 +108,7 @@ public class CModuleGenerator extends ModuleGenerator {
 
     private void writeCHeader() throws IOException {
         final String fileName = BEAM_CAPI_NAME + ".h";
-        PrintWriter writer = openPrintWriter(fileName);
+        PrintWriter writer = newFile(fileName);
         try {
             CodeGenHelpers.writeCHeader(writer, fileName, new ContentWriter() {
                 @Override
@@ -136,7 +134,7 @@ public class CModuleGenerator extends ModuleGenerator {
 
     private void writeCHeaderJ() throws IOException {
         final String fileName = BEAM_CAPI_NAME + "_j.h";
-        PrintWriter writer = openPrintWriter(fileName);
+        PrintWriter writer = newFile(fileName);
         try {
             CodeGenHelpers.writeCHeader(writer, fileName, new ContentWriter() {
                 @Override
@@ -262,7 +260,7 @@ public class CModuleGenerator extends ModuleGenerator {
     }
 
     private void writeCSource() throws IOException {
-        PrintWriter writer = openPrintWriter(BEAM_CAPI_NAME + ".c");
+        PrintWriter writer = newFile(BEAM_CAPI_NAME + ".c");
         try {
             CodeGenHelpers.writeCFileInfo(writer);
             writer.printf("#include <stdlib.h>\n");
@@ -363,8 +361,8 @@ public class CModuleGenerator extends ModuleGenerator {
         }
     }
 
-    private PrintWriter openPrintWriter(String child) throws IOException {
-        return new PrintWriter(new FileWriter(new File(BEAM_CAPI_SRCDIR, child)));
+    private static PrintWriter newFile(String child) throws IOException {
+        return CodeGenHelpers.newFile(BEAM_CAPI_SRCDIR, child);
     }
 
     private String getConstantCValue(ApiConstant constant) {
