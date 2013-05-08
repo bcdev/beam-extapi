@@ -23,6 +23,7 @@ public class ApiClassTest {
         ApiClass apiClass = new ApiClass(DocMock.createType(Date.class));
         Assert.assertEquals("java.util.Date", apiClass.getJavaName());
         Assert.assertEquals("java/util/Date", apiClass.getResourceName());
+        Assert.assertEquals("java.util.Date", apiClass.toString());
     }
 
     @Test
