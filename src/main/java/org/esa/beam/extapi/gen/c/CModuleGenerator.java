@@ -96,7 +96,7 @@ public class CModuleGenerator extends ModuleGenerator {
         new TargetFile(BEAM_CAPI_SRCDIR, BEAM_CAPI_NAME + ".def") {
             @Override
             protected void writeContent() throws IOException {
-                writeResource(writer, "CModuleGenerator-stubs.def");
+                writeTemplateResource(writer, "CModuleGenerator-stubs.def");
                 for (ApiClass apiClass : getApiClasses()) {
                     for (FunctionGenerator generator : getFunctionGenerators(apiClass)) {
                         writer.printf("\t%s\n", getFunctionNameFor(generator.getApiMethod()));
@@ -198,7 +198,7 @@ public class CModuleGenerator extends ModuleGenerator {
     protected void writeCHeaderContents(PrintWriter writer) throws IOException {
 
         writer.write("\n");
-        writeResource(writer, "CModuleGenerator-stubs-1.h");
+        writeTemplateResource(writer, "CModuleGenerator-stubs-1.h");
         writer.write("\n");
 
         writer.write("\n");
@@ -219,7 +219,7 @@ public class CModuleGenerator extends ModuleGenerator {
         writer.write("\n");
 
         writer.write("\n");
-        writeResource(writer, "CModuleGenerator-stubs-2.h");
+        writeTemplateResource(writer, "CModuleGenerator-stubs-2.h");
         writer.write("\n");
 
         /////////////////////////////////////////////////////////////////////////////////////
@@ -259,7 +259,7 @@ public class CModuleGenerator extends ModuleGenerator {
                 writeClassDefinitions(writer, false);
 
                 writer.printf("\n");
-                writeResource(writer, "CModuleGenerator-stubs-1.c");
+                writeTemplateResource(writer, "CModuleGenerator-stubs-1.c");
                 writer.printf("\n");
 
                 for (ApiClass apiClass : getApiClasses()) {
@@ -278,7 +278,7 @@ public class CModuleGenerator extends ModuleGenerator {
                 writer.write("\n");
 
                 writer.printf("\n");
-                writeResource(writer, "CModuleGenerator-stubs-2.c");
+                writeTemplateResource(writer, "CModuleGenerator-stubs-2.c");
                 writer.printf("\n");
 
                 /////////////////////////////////////////////////////////////////////////////////////

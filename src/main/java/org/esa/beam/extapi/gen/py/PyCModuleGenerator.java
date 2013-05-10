@@ -240,7 +240,7 @@ public class PyCModuleGenerator extends ModuleGenerator {
         new TargetFile(BEAM_PYAPI_C_SRCDIR, BEAM_PYAPI_NAME + ".def") {
             @Override
             protected void writeContent() throws IOException {
-                writeResource(writer, "PyCModuleGenerator-stubs.def");
+                writeTemplateResource(writer, "PyCModuleGenerator-stubs.def");
             }
         }.create();
     }
@@ -265,7 +265,7 @@ public class PyCModuleGenerator extends ModuleGenerator {
                 writer.printf("#include \"structmember.h\"\n");
 
                 writer.printf("\n");
-                writeResource(writer, "PyCModuleGenerator-stubs-1.c");
+                writeTemplateResource(writer, "PyCModuleGenerator-stubs-1.c");
                 writer.printf("\n");
 
                 writer.write("\n");
@@ -296,8 +296,8 @@ public class PyCModuleGenerator extends ModuleGenerator {
                 writer.printf("\n");
 
                 writer.printf("\n");
-                writeResource(writer, "PyCModuleGenerator-stubs-2a.c");
-                writeResource(writer, "PyCModuleGenerator-stubs-2b.c");
+                writeTemplateResource(writer, "PyCModuleGenerator-stubs-2a.c");
+                writeTemplateResource(writer, "PyCModuleGenerator-stubs-2b.c");
                 writer.printf("\n");
 
                 for (ApiClass apiClass : getApiClasses()) {
@@ -316,7 +316,7 @@ public class PyCModuleGenerator extends ModuleGenerator {
                 writeArrayConverters(writer, "dlong", "dlong", "PyLong_FromLongLong(elems[i])", "PyLong_AsLongLong(item)");
                 writeArrayConverters(writer, "float", "float", "PyFloat_FromDouble(elems[i])", "(float) PyFloat_AsDouble(item)");
                 writeArrayConverters(writer, "double", "double", "PyFloat_FromDouble(elems[i])", "PyFloat_AsDouble(item)");
-                writeResource(writer, "PyCModuleGenerator-stubs-4.c");
+                writeTemplateResource(writer, "PyCModuleGenerator-stubs-4.c");
                 writer.printf("\n");
 
             }
@@ -324,11 +324,11 @@ public class PyCModuleGenerator extends ModuleGenerator {
     }
 
     void writeArrayConverters(PrintWriter writer, String typeName, String ctype, String elemToItemCall, String itemToElemCall) throws IOException {
-        writeResource(writer, "PyCModuleGenerator-stubs-3.c",
-                      kv("typeName", typeName),
-                      kv("ctype", ctype),
-                      kv("elemToItemCall", elemToItemCall),
-                      kv("itemToElemCall", itemToElemCall));
+        writeTemplateResource(writer, "PyCModuleGenerator-stubs-3.c",
+                              kv("typeName", typeName),
+                              kv("ctype", ctype),
+                              kv("elemToItemCall", elemToItemCall),
+                              kv("itemToElemCall", itemToElemCall));
     }
 
     @Override
