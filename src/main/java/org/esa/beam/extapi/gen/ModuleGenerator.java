@@ -40,20 +40,6 @@ public abstract class ModuleGenerator implements GeneratorContext {
         templateEval = TemplateEval.create();
     }
 
-    public static void writeCode(PrintWriter writer, String code) throws IOException {
-        String[] callCode = generateLines(code);
-        for (String line : callCode) {
-            writer.printf("    %s\n", line);
-        }
-    }
-
-    public static String[] generateLines(String code) {
-        if (code == null || code.length() == 0) {
-            return new String[0];
-        }
-        return code.split("\n");
-    }
-
     public ApiInfo getApiInfo() {
         return apiInfo;
     }
@@ -118,7 +104,7 @@ public abstract class ModuleGenerator implements GeneratorContext {
 
     protected abstract void writeInitCode(PrintWriter writer, FunctionGenerator functionGenerator) throws IOException;
 
-    protected void writeResource(Writer writer, String resourceName, KV ... pairs) throws IOException {
+    protected void writeTemplateResource(Writer writer, String resourceName, KV... pairs) throws IOException {
         final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(resourceName)));
         try {
             templateEval.add(pairs).eval(bufferedReader, writer);
@@ -144,6 +130,20 @@ public abstract class ModuleGenerator implements GeneratorContext {
             map.put(apiClass, functionGenerators);
         }
         return map;
+    }
+
+    private static void writeCode(PrintWriter writer, String code) throws IOException {
+        String[] callCode = generateLines(code);
+        for (String line : callCode) {
+            writer.printf("    %s\n", line);
+        }
+    }
+
+    private static String[] generateLines(String code) {
+        if (code == null || code.length() == 0) {
+            return new String[0];
+        }
+        return code.split("\n");
     }
 
 
