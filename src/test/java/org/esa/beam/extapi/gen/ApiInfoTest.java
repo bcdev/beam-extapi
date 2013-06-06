@@ -4,6 +4,7 @@ import com.sun.javadoc.RootDoc;
 import org.esa.beam.extapi.gen.test.TestClass2;
 import org.junit.Test;
 
+import java.awt.geom.Rectangle2D;
 import java.io.File;
 import java.util.Date;
 import java.util.List;
@@ -11,9 +12,6 @@ import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 /**
  * @author Norman Fomferra
@@ -38,7 +36,7 @@ public class ApiInfoTest {
 
         List<ApiMethod> apiMethods = apiInfo.getMethodsOf(apiClass1);
         assertNotNull(apiMethods);
-        assertEquals(7, apiMethods.size());
+        assertEquals(9, apiMethods.size());
 
         testMethod(apiMethods, "<init>", "()V");
         testMethod(apiMethods, "getPixel", "(II)F");
@@ -47,6 +45,8 @@ public class ApiInfoTest {
         testMethod(apiMethods, "getName", "()Ljava/lang/String;");
         testMethod(apiMethods, "getTimestamp", "()Ljava/util/Date;");
         testMethod(apiMethods, "getFiles", "(Ljava/lang/String;)[Ljava/io/File;");
+        testMethod(apiMethods, "getPixelsForType", "(Ljava/lang/Class;)Ljava/lang/Object;");
+        testMethod(apiMethods, "getPixelsForRect", "(Ljava/awt/geom/Rectangle2D;)[F");
 
         List<ApiConstant> apiConstants = apiInfo.getConstantsOf(apiClass1);
         assertEquals(3, apiConstants.size());
@@ -55,17 +55,20 @@ public class ApiInfoTest {
         testConstant(apiConstants, "NOW", "Ljava/util/Date;");
 
         Set<ApiClass> allClasses = apiInfo.getAllClasses();
-        assertEquals(4, allClasses.size());
+        assertEquals(7, allClasses.size());
         assertNotNull(getApiClass(allClasses, testClass2Name));
         assertNotNull(getApiClass(allClasses, String.class.getName()));
         assertNotNull(getApiClass(allClasses, Date.class.getName()));
         assertNotNull(getApiClass(allClasses, File.class.getName()));
 
         Set<ApiClass> usedNonApiClasses = apiInfo.getUsedNonApiClasses();
-        assertEquals(3, usedNonApiClasses.size());
+        assertEquals(6, usedNonApiClasses.size());
         assertNotNull(getApiClass(usedNonApiClasses, String.class.getName()));
         assertNotNull(getApiClass(usedNonApiClasses, Date.class.getName()));
         assertNotNull(getApiClass(usedNonApiClasses, File.class.getName()));
+        assertNotNull(getApiClass(usedNonApiClasses, Rectangle2D.class.getName()));
+        assertNotNull(getApiClass(usedNonApiClasses, Class.class.getName()));
+        assertNotNull(getApiClass(usedNonApiClasses, Object.class.getName()));
 
         List<ApiMethod> methodsUsingString = apiInfo.getMethodsUsing(getApiClass(usedNonApiClasses, String.class.getName()));
         assertNotNull(methodsUsingString);
@@ -79,11 +82,11 @@ public class ApiInfoTest {
         assertNotNull("Not found: " + javaName, apiConstant);
     }
 
-    private void testMethod(List<ApiMethod> apiMethods, String javaName, String javaSignature) {
+    private ApiMethod testMethod(List<ApiMethod> apiMethods, String javaName, String javaSignature) {
         ApiMethod apiMethod = getApiMethod(apiMethods, javaName, javaSignature);
         assertNotNull("Not found: " + javaName + javaSignature, apiMethod);
+        return apiMethod;
     }
-
 
     public static ApiClass getApiClass(Set<ApiClass> set, String javaName) {
         for (ApiClass elem : set) {
