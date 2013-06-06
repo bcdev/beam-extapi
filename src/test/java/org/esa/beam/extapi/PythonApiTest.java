@@ -1,6 +1,7 @@
 package org.esa.beam.extapi;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -9,6 +10,7 @@ import org.junit.Test;
  *
  * @author Norman Fomferra
  */
+@Ignore
 public class PythonApiTest {
     /**
      * Should print to stdout:
