@@ -22,13 +22,7 @@ import org.esa.beam.extapi.gen.*;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 /**
  * @author Norman Fomferra
@@ -248,13 +242,15 @@ public class CModuleGenerator extends ModuleGenerator {
     }
 
     private void writeCSource() throws IOException {
-        new TargetCHeaderFile(BEAM_CAPI_SRCDIR, BEAM_CAPI_NAME + ".c") {
+        new TargetCFile(BEAM_CAPI_SRCDIR, BEAM_CAPI_NAME + ".c") {
             @Override
             protected void writeContent() throws IOException {
                 writer.printf("#include <stdlib.h>\n");
                 writer.printf("#include <string.h>\n");
+                writer.printf("#include \"../beam_util.h\"\n");
                 writer.printf("#include \"%s\"\n", BEAM_CAPI_NAME + ".h");
                 writer.printf("#include \"%s\"\n", BEAM_CAPI_NAME + "_j.h");
+                writer.printf("\n");
 
                 writeClassDefinitions(writer, false);
 

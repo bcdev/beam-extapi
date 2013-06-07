@@ -4,6 +4,10 @@ package org.esa.beam.extapi.gen;
  * @author Norman Fomferra
  */
 public interface ApiGeneratorConfig {
+    boolean getIncludeDeprecatedClasses();
+
+    boolean getIncludeDeprecatedMethods();
+
     boolean isApiClass(String className);
 
     boolean isApiMethod(String className, String methodName, String methodSignature);

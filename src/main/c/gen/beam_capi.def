@@ -20,6 +20,7 @@ EXPORTS
 	GeoCoding_canGetGeoPos
 	GeoCoding_getPixelPos
 	GeoCoding_getGeoPos
+	GeoCoding_getDatum
 	GeoCoding_dispose
 	GeoCoding_getImageCRS
 	GeoCoding_getMapCRS
@@ -104,6 +105,7 @@ EXPORTS
 	IndexCoding_getProductRefString
 	IndexCoding_updateExpression
 	IndexCoding_removeFromFile
+	IndexCoding_getExtension
 	PixelPos_newPixelPos1
 	PixelPos_newPixelPos2
 	PixelPos_isValid
@@ -127,6 +129,7 @@ EXPORTS
 	ProductIO_getProductWriterExtensions
 	ProductIO_getProductWriter
 	ProductIO_readProduct
+	ProductIO_getProductReaderForFile
 	ProductIO_getProductReaderForInput
 	ProductIO_writeProduct
 	Placemark_newPlacemark
@@ -168,6 +171,7 @@ EXPORTS
 	Placemark_getProductRefString
 	Placemark_updateExpression
 	Placemark_removeFromFile
+	Placemark_getExtension
 	MetadataElement_newMetadataElement
 	MetadataElement_getElementGroup
 	MetadataElement_getParentElement
@@ -217,6 +221,7 @@ EXPORTS
 	MetadataElement_getProductRefString
 	MetadataElement_updateExpression
 	MetadataElement_removeFromFile
+	MetadataElement_getExtension
 	Product_newProduct
 	Product_getFileLocation
 	Product_setFileLocation
@@ -244,7 +249,8 @@ EXPORTS
 	Product_getEndTime
 	Product_setEndTime
 	Product_getMetadataRoot
-	Product_getBandGroup
+	Product_getGroups
+	Product_getGroup
 	Product_getTiePointGridGroup
 	Product_addTiePointGrid
 	Product_removeTiePointGrid
@@ -254,6 +260,7 @@ EXPORTS
 	Product_getTiePointGrids
 	Product_getTiePointGrid
 	Product_containsTiePointGrid
+	Product_getBandGroup
 	Product_addBand
 	Product_addNewBand
 	Product_addComputedBand
@@ -274,6 +281,8 @@ EXPORTS
 	Product_containsPixel
 	Product_getGcpGroup
 	Product_getPinGroup
+	Product_getNumResolutionsMax
+	Product_setNumResolutionsMax
 	Product_isCompatibleProduct
 	Product_parseExpression
 	Product_acceptVisitor
@@ -300,6 +309,15 @@ EXPORTS
 	Product_getAutoGrouping
 	Product_setAutoGrouping
 	Product_addComputedMask
+	Product_addBitmaskDef
+	Product_getBitmaskDefNames
+	Product_getBitmaskDef
+	Product_getValidMask
+	Product_setValidMask
+	Product_createValidMask2
+	Product_createValidMask1
+	Product_readBitmask2
+	Product_readBitmask1
 	Product_getOwner
 	Product_getName
 	Product_setName
@@ -313,6 +331,7 @@ EXPORTS
 	Product_getProductRefString
 	Product_updateExpression
 	Product_removeFromFile
+	Product_getExtension
 	ColorPaletteDef_newColorPaletteDefFromRange
 	ColorPaletteDef_newColorPaletteDefFromPoints
 	ColorPaletteDef_isDiscrete
@@ -389,6 +408,7 @@ EXPORTS
 	ImageGeometry_calculateProductSize
 	ImageGeometry_createTargetGeometry
 	ImageGeometry_createCollocationTargetGeometry
+	ImageGeometry_createValidRect
 	Band_newBand
 	Band_getFlagCoding
 	Band_isFlagBand
@@ -409,6 +429,19 @@ EXPORTS
 	Band_removeFromFile
 	Band_dispose
 	Band_getViewModeId
+	Band_computeBand
+	Band_getSceneRasterData
+	Band_getPixelInt
+	Band_getPixelFloat
+	Band_getPixelDouble
+	Band_setPixelInt
+	Band_setPixelFloat
+	Band_setPixelDouble
+	Band_setPixelsInt
+	Band_setPixelsFloat
+	Band_setPixelsDouble
+	Band_ensureRasterData
+	Band_unloadRasterData
 	Band_getSceneRasterWidth
 	Band_getSceneRasterHeight
 	Band_getRasterWidth
@@ -442,18 +475,30 @@ EXPORTS
 	Band_resetValidMask
 	Band_getValidMaskExpression
 	Band_updateExpression
+	Band_hasRasterData
+	Band_getRasterData
+	Band_setRasterData
+	Band_loadRasterData
 	Band_isPixelValid
 	Band_getSampleInt
 	Band_getSampleFloat
+	Band_getPixelsInt
+	Band_getPixelsFloat
+	Band_getPixelsDouble
 	Band_readPixelsInt
+	Band_readPixelsFloat
+	Band_readPixelsDouble
 	Band_writePixelsInt
 	Band_writePixelsFloat
 	Band_writePixelsDouble
 	Band_readValidMask
 	Band_writeRasterDataFully
+	Band_writeRasterData
 	Band_createCompatibleRasterData
 	Band_createCompatibleSceneRasterData
 	Band_createCompatibleRasterDataForRect
+	Band_isCompatibleRasterData
+	Band_checkCompatibleRasterData
 	Band_hasIntPixels
 	Band_createTransectProfileData
 	Band_getImageInfo
@@ -477,6 +522,7 @@ EXPORTS
 	Band_getStx
 	Band_setStx
 	Band_getValidShape
+	Band_getRoiMaskGroup
 	Band_getDataType
 	Band_getNumDataElems
 	Band_setData
@@ -488,6 +534,8 @@ EXPORTS
 	Band_isReadOnly
 	Band_setUnit
 	Band_getUnit
+	Band_isSynthetic
+	Band_setSynthetic
 	Band_fireProductNodeDataChanged
 	Band_createCompatibleProductData
 	Band_getOwner
@@ -502,11 +550,12 @@ EXPORTS
 	Band_getProductWriter
 	Band_getDisplayName
 	Band_getProductRefString
+	Band_getExtension
 	PlacemarkGroup_getVectorDataNode
 	PlacemarkGroup_getPlacemark
-	PlacemarkGroup_add4
-	PlacemarkGroup_add2
-	PlacemarkGroup_remove2
+	PlacemarkGroup_add3
+	PlacemarkGroup_add1
+	PlacemarkGroup_remove1
 	PlacemarkGroup_dispose
 	PlacemarkGroup_isTakingOverNodeOwnership
 	PlacemarkGroup_getNodeCount
@@ -515,15 +564,15 @@ EXPORTS
 	PlacemarkGroup_getNodeNames
 	PlacemarkGroup_toArray1
 	PlacemarkGroup_toArray2
-	PlacemarkGroup_indexOf2
 	PlacemarkGroup_indexOf1
+	PlacemarkGroup_indexOf2
 	PlacemarkGroup_getByDisplayName
 	PlacemarkGroup_get2
-	PlacemarkGroup_contains2
 	PlacemarkGroup_contains1
-	PlacemarkGroup_add3
-	PlacemarkGroup_add1
-	PlacemarkGroup_remove1
+	PlacemarkGroup_contains2
+	PlacemarkGroup_add4
+	PlacemarkGroup_add2
+	PlacemarkGroup_remove2
 	PlacemarkGroup_removeAll
 	PlacemarkGroup_clearRemovedList
 	PlacemarkGroup_getRemovedNodes
@@ -548,6 +597,7 @@ EXPORTS
 	PlacemarkGroup_fireProductNodeChanged1
 	PlacemarkGroup_fireProductNodeChanged2
 	PlacemarkGroup_removeFromFile
+	PlacemarkGroup_getExtension
 	TiePointGrid_newTiePointGrid1
 	TiePointGrid_newTiePointGrid2
 	TiePointGrid_newTiePointGrid3
@@ -572,21 +622,21 @@ EXPORTS
 	TiePointGrid_setPixelInt
 	TiePointGrid_setPixelFloat
 	TiePointGrid_setPixelDouble
-	TiePointGrid_getPixels3
+	TiePointGrid_getPixels6
+	TiePointGrid_getPixels4
 	TiePointGrid_getPixels2
-	TiePointGrid_getPixels1
 	TiePointGrid_setPixels3
 	TiePointGrid_setPixels2
 	TiePointGrid_setPixels1
+	TiePointGrid_readPixels6
 	TiePointGrid_readPixels4
 	TiePointGrid_readPixels2
-	TiePointGrid_readPixels1
 	TiePointGrid_writePixels6
 	TiePointGrid_writePixels4
 	TiePointGrid_writePixels2
-	TiePointGrid_readRasterData
-	TiePointGrid_readRasterDataFully
-	TiePointGrid_writeRasterData
+	TiePointGrid_readRasterData2
+	TiePointGrid_readRasterDataFully2
+	TiePointGrid_writeRasterData2
 	TiePointGrid_writeRasterDataFully2
 	TiePointGrid_acceptVisitor
 	TiePointGrid_cloneTiePointGrid
@@ -621,20 +671,36 @@ EXPORTS
 	TiePointGrid_resetValidMask
 	TiePointGrid_getValidMaskExpression
 	TiePointGrid_updateExpression
+	TiePointGrid_hasRasterData
+	TiePointGrid_getRasterData
+	TiePointGrid_setRasterData
+	TiePointGrid_loadRasterData1
+	TiePointGrid_loadRasterData2
+	TiePointGrid_unloadRasterData
 	TiePointGrid_isPixelValid2
 	TiePointGrid_getSampleInt
 	TiePointGrid_getSampleFloat
 	TiePointGrid_isPixelValid1
 	TiePointGrid_isPixelValid3
+	TiePointGrid_getPixels5
+	TiePointGrid_getPixels3
+	TiePointGrid_getPixels1
+	TiePointGrid_readPixels5
 	TiePointGrid_readPixels3
+	TiePointGrid_readPixels1
 	TiePointGrid_writePixels5
 	TiePointGrid_writePixels3
 	TiePointGrid_writePixels1
 	TiePointGrid_readValidMask
+	TiePointGrid_readRasterDataFully1
+	TiePointGrid_readRasterData1
 	TiePointGrid_writeRasterDataFully1
+	TiePointGrid_writeRasterData1
 	TiePointGrid_createCompatibleRasterData1
 	TiePointGrid_createCompatibleSceneRasterData
 	TiePointGrid_createCompatibleRasterData2
+	TiePointGrid_isCompatibleRasterData
+	TiePointGrid_checkCompatibleRasterData
 	TiePointGrid_hasIntPixels
 	TiePointGrid_createTransectProfileData
 	TiePointGrid_getImageInfo1
@@ -666,6 +732,7 @@ EXPORTS
 	TiePointGrid_getStx2
 	TiePointGrid_setStx
 	TiePointGrid_getValidShape
+	TiePointGrid_getRoiMaskGroup
 	TiePointGrid_getDataType
 	TiePointGrid_getNumDataElems
 	TiePointGrid_setData
@@ -677,6 +744,8 @@ EXPORTS
 	TiePointGrid_isReadOnly
 	TiePointGrid_setUnit
 	TiePointGrid_getUnit
+	TiePointGrid_isSynthetic
+	TiePointGrid_setSynthetic
 	TiePointGrid_fireProductNodeDataChanged
 	TiePointGrid_getRawStorageSize2
 	TiePointGrid_createCompatibleProductData
@@ -697,6 +766,7 @@ EXPORTS
 	TiePointGrid_fireProductNodeChanged1
 	TiePointGrid_fireProductNodeChanged2
 	TiePointGrid_removeFromFile
+	TiePointGrid_getExtension
 	AngularDirection_newAngularDirection
 	AngularDirection_equals
 	AngularDirection_toString
@@ -757,6 +827,7 @@ EXPORTS
 	FlagCoding_getProductRefString
 	FlagCoding_updateExpression
 	FlagCoding_removeFromFile
+	FlagCoding_getExtension
 	ProductReader_getReaderPlugIn
 	ProductReader_getInput
 	ProductReader_getSubsetDef
@@ -857,28 +928,24 @@ EXPORTS
 	GeoPos_normalizeLon
 	GeoPos_getLatString
 	GeoPos_getLonString
-	ProductNodeGroup_newProductNodeGroup1
-	ProductNodeGroup_newProductNodeGroup2
+	ProductNodeGroup_newProductNodeGroup
 	ProductNodeGroup_isTakingOverNodeOwnership
 	ProductNodeGroup_getNodeCount
-	ProductNodeGroup_get1
+	ProductNodeGroup_getAt
 	ProductNodeGroup_getNodeDisplayNames
 	ProductNodeGroup_getNodeNames
-	ProductNodeGroup_toArray1
-	ProductNodeGroup_toArray2
-	ProductNodeGroup_indexOf2
-	ProductNodeGroup_indexOf1
+	ProductNodeGroup_indexOfName
+	ProductNodeGroup_indexOf
 	ProductNodeGroup_getByDisplayName
-	ProductNodeGroup_get2
-	ProductNodeGroup_contains2
-	ProductNodeGroup_contains1
-	ProductNodeGroup_add2
-	ProductNodeGroup_add1
+	ProductNodeGroup_get
+	ProductNodeGroup_containsName
+	ProductNodeGroup_contains
+	ProductNodeGroup_add
+	ProductNodeGroup_addAt
 	ProductNodeGroup_remove
 	ProductNodeGroup_removeAll
 	ProductNodeGroup_clearRemovedList
 	ProductNodeGroup_getRemovedNodes
-	ProductNodeGroup_getRawStorageSize2
 	ProductNodeGroup_setModified
 	ProductNodeGroup_acceptVisitor
 	ProductNodeGroup_dispose
@@ -896,10 +963,8 @@ EXPORTS
 	ProductNodeGroup_getProductWriter
 	ProductNodeGroup_getDisplayName
 	ProductNodeGroup_getProductRefString
-	ProductNodeGroup_getRawStorageSize1
-	ProductNodeGroup_fireProductNodeChanged1
-	ProductNodeGroup_fireProductNodeChanged2
 	ProductNodeGroup_removeFromFile
+	ProductNodeGroup_getExtension
 	ProductUtils_newProductUtils
 	ProductUtils_createImageInfo
 	ProductUtils_createRgbImage
@@ -914,6 +979,7 @@ EXPORTS
 	ProductUtils_createGeoBoundary1
 	ProductUtils_createGeoBoundary2
 	ProductUtils_createGeoBoundary3
+	ProductUtils_getClosestGeoPos
 	ProductUtils_createGeoBoundary4
 	ProductUtils_createGeoBoundaryPaths1
 	ProductUtils_createGeoBoundaryPaths2
@@ -928,11 +994,15 @@ EXPORTS
 	ProductUtils_copyIndexCoding
 	ProductUtils_copyMasks
 	ProductUtils_copyOverlayMasks
-	ProductUtils_copyFlagBands
+	ProductUtils_copyRoiMasks
+	ProductUtils_copyFlagBands2
+	ProductUtils_copyFlagBands1
 	ProductUtils_copyTiePointGrid
+	ProductUtils_copyBand4
 	ProductUtils_copyBand2
-	ProductUtils_copyBand1
 	ProductUtils_copyRasterDataNodeProperties
+	ProductUtils_copyBand3
+	ProductUtils_copyBand1
 	ProductUtils_copySpectralBandProperties
 	ProductUtils_copyGeoCoding
 	ProductUtils_copyTiePointGrids
@@ -984,6 +1054,8 @@ EXPORTS
 	MetadataAttribute_isReadOnly
 	MetadataAttribute_setUnit
 	MetadataAttribute_getUnit
+	MetadataAttribute_isSynthetic
+	MetadataAttribute_setSynthetic
 	MetadataAttribute_fireProductNodeDataChanged
 	MetadataAttribute_dispose
 	MetadataAttribute_createCompatibleProductData
@@ -1003,3 +1075,4 @@ EXPORTS
 	MetadataAttribute_getProductRefString
 	MetadataAttribute_updateExpression
 	MetadataAttribute_removeFromFile
+	MetadataAttribute_getExtension

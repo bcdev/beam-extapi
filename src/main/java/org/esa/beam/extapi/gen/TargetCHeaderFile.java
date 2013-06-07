@@ -15,8 +15,8 @@ public abstract class TargetCHeaderFile extends TargetFile{
 
     protected void writeHeader() throws IOException {
         super.writeHeader();
-        writer.write(TemplateEval.eval("#ifndef ${baseName}\n" +
-                                               "#define ${baseName}\n" +
+        writer.write(TemplateEval.eval("#ifndef ${baseName}_H\n" +
+                                               "#define ${baseName}_H\n" +
                                                "\n" +
                                                "#ifdef __cplusplus\n" +
                                                "extern \"C\" {\n" +
@@ -30,7 +30,7 @@ public abstract class TargetCHeaderFile extends TargetFile{
         writer.write(TemplateEval.eval("#ifdef __cplusplus\n" +
                                                "} /* extern \"C\" */\n" +
                                                "#endif\n" +
-                                               "#endif /* !${baseName} */",
+                                               "#endif /* !${baseName}_H */",
                                        kv("baseName", baseName.toUpperCase())));
     }
 }

@@ -143,10 +143,12 @@ public class ApiGeneratorDoclet extends Doclet {
                 ApiInfo apiInfo = ApiInfo.create(config, root);
                 final CModuleGenerator cModuleGenerator = new CModuleGenerator(apiInfo);
                 final PyCModuleGenerator pyCModuleGenerator = new PyCModuleGenerator(cModuleGenerator);
-                //final PyCModuleGenerator2 pyCModuleGenerator2 = new PyCModuleGenerator2(apiInfo);
                 cModuleGenerator.run();
                 pyCModuleGenerator.run();
-                //pyCModuleGenerator2.run();
+
+                final PyCModuleGenerator2 pyCModuleGenerator2 = new PyCModuleGenerator2(apiInfo);
+                pyCModuleGenerator2.run();
+
                 return true;
             } catch (IOException e) {
                 e.printStackTrace();

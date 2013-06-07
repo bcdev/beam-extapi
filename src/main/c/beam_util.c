@@ -52,7 +52,6 @@ void Util_listDir(const char* parent_dir, Util_handleDirEntry handler, void* use
     PVOID oldRedirectionValue = NULL;
     char* pattern;
     char file_name[MAX_PATH + 1];
-    size_t n;
 
     // Disables file system redirection for the calling thread. File system redirection is enabled by default.
     // MS says, this should be done for 32bit apps on 64bit systems.
@@ -61,14 +60,18 @@ void Util_listDir(const char* parent_dir, Util_handleDirEntry handler, void* use
     }
 
     pattern = NULL;
-    n = Util_appendString(&pattern, parent_dir);
-    n = Util_appendString(&pattern, "\\*");
+    Util_appendString(&pattern, parent_dir);
+    Util_appendString(&pattern, "\\*");
+
+    fprintf(stdout, "beam_capi: iiiiih!");
+    fprintf(stdout, "beam_capi: collecting from %s\n", pattern);
 
     if ((dir = FindFirstFile(pattern, &file_data)) != INVALID_HANDLE_VALUE) {
         do {
-            n = strlen(file_data.cFileName);
+            size_t n = strlen(file_data.cFileName);
             strncpy(file_name, file_data.cFileName, min(n, MAX_PATH));
             file_name[min(n, MAX_PATH)] = 0;
+            fprintf(stdout, "beam_capi: filename %s\n", file_name);
             handler(parent_dir, file_name, (file_data.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) != 0, user_data);
         } while (FindNextFile(dir, &file_data));
         FindClose(dir);

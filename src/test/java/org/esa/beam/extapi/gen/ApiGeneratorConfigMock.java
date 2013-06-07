@@ -13,6 +13,16 @@ public class ApiGeneratorConfigMock implements ApiGeneratorConfig {
     }
 
     @Override
+    public boolean getIncludeDeprecatedClasses() {
+        return false;
+    }
+
+    @Override
+    public boolean getIncludeDeprecatedMethods() {
+        return false;
+    }
+
+    @Override
     public boolean isApiClass(String className) {
         return aClass.getName().equals(className);
     }

@@ -1,6 +1,7 @@
 package org.esa.beam.extapi.gen.c;
 
 import com.sun.javadoc.Type;
+import org.esa.beam.extapi.gen.ApiInfo;
 import org.esa.beam.extapi.gen.ApiParameter;
 import org.esa.beam.extapi.gen.GeneratorContext;
 import org.esa.beam.extapi.gen.ParameterGenerator;
@@ -26,7 +27,7 @@ public abstract class CParameterGenerator implements ParameterGenerator {
 
     @Override
     public Type getType() {
-        return parameter.getParameterDoc().type();
+        return ApiInfo.unfoldType(parameter.getParameterDoc().type());
     }
 
     @Override

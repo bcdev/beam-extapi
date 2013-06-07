@@ -6,6 +6,9 @@ import org.junit.Test;
 
 import java.awt.geom.Rectangle2D;
 import java.io.File;
+import java.lang.reflect.Method;
+import java.lang.reflect.Type;
+import java.lang.reflect.TypeVariable;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -17,6 +20,48 @@ import static org.junit.Assert.assertNotNull;
  * @author Norman Fomferra
  */
 public class ApiInfoTest {
+    // Not really a test: NF wants to know how generics are represented in the Reflection API.
+    @Test
+    public void testClass2() throws Exception {
+
+        Class<TestClass2> c = TestClass2.class;
+
+        Method[] methods = c.getDeclaredMethods();
+        for (Method method : methods) {
+            String name = method.getName();
+            System.out.println();
+            System.out.println("method.name = " + name);
+
+            Class returnType = method.getReturnType();
+            System.out.println("method.returnType = " + returnType);
+
+            Class[] parameterTypes = method.getParameterTypes();
+            for (Class parameterType : parameterTypes) {
+                System.out.println("method.parameterType = " + parameterType);
+            }
+
+            TypeVariable<Method>[] typeParameters = method.getTypeParameters();
+            if (typeParameters.length > 0) {
+                for (TypeVariable<Method> typeParameter : typeParameters) {
+                    String name1 = typeParameter.getName();
+                    System.out.println("method.typeParameter.name = " + name1);
+                    Type[] bounds = typeParameter.getBounds();
+                    for (Type bound : bounds) {
+                        System.out.println("method.typeParameter.bound = " + bound);
+                    }
+                }
+
+                Type genericReturnType = method.getGenericReturnType();
+                System.out.println("method.genericReturnType = " + genericReturnType);
+
+                Type[] genericParameterTypes = method.getGenericParameterTypes();
+                for (Type genericParameterType : genericParameterTypes) {
+                    System.out.println("method.genericParameterType = " + genericParameterType);
+                }
+            }
+        }
+
+    }
 
     @Test
     public void testApiInfo() {

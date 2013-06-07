@@ -6,6 +6,8 @@ import com.sun.javadoc.Parameter;
 import com.sun.javadoc.Type;
 import com.sun.javadoc.TypeVariable;
 
+import static org.esa.beam.extapi.gen.ApiInfo.unfoldType;
+
 /**
  * Represents a callable element of the Java API. May be a constructor or method.
  * Immutable object.
@@ -34,16 +36,7 @@ public final class ApiMethod implements Comparable<ApiMethod> {
         }
         else {
             final Type type = ((MethodDoc) memberDoc).returnType();
-            final TypeVariable typeVariable = type.asTypeVariable();
-            if (typeVariable == null) {
-                return type;
-            }
-            final Type[] bounds = typeVariable.bounds();
-            if (bounds.length == 1) {
-                return bounds[0];
-            } else {
-                return null; // == java.lang.Object
-            }
+            return unfoldType(type);
         }
     }
 
@@ -145,17 +138,8 @@ public final class ApiMethod implements Comparable<ApiMethod> {
                 throw new IllegalStateException();
             }
         } else {
-            final TypeVariable typeVariable = type.asTypeVariable();
-            if (typeVariable == null) {
-                comp = "L" + type.qualifiedTypeName().replace('.', '/') + ";";
-            } else {
-                final Type[] bounds = typeVariable.bounds();
-                if (bounds.length == 1) {
-                    comp = "L" + bounds[0].qualifiedTypeName().replace('.', '/') + ";";
-                } else {
-                    comp = "Ljava/lang/Object;";
-                }
-            }
+            Type unfoldType = unfoldType(type);
+            comp = "L" + unfoldType.qualifiedTypeName().replace('.', '/') + ";";
         }
         if (!type.dimension().isEmpty()) {
             return type.dimension().replace("]", "") + comp;

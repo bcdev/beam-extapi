@@ -1,6 +1,6 @@
 # Please note: This file is machine generated. DO NOT EDIT!
 # It will be regenerated every time you run 'java org.esa.beam.extapi.gen.ApiGeneratorDoclet <beam-src-dir>'.
-# Last updated on Tue Apr 30 15:31:27 CEST 2013.
+# Last updated on Fri Jun 07 12:41:22 CEST 2013.
 
 from _beampy import *
 
@@ -60,6 +60,10 @@ class ImageGeometry:
     @staticmethod
     def createCollocationTargetGeometry(targetProduct, collocationProduct):
         return ImageGeometry(ImageGeometry_createCollocationTargetGeometry(targetProduct._obj, collocationProduct._obj))
+
+    @staticmethod
+    def createValidRect(product):
+        return Rectangle2D(ImageGeometry_createValidRect(product._obj))
 
 
 """ Instances of the <code>Parser</code> interface are used to convert a code
@@ -129,6 +133,14 @@ class GeoCoding:
            @return the geographical position as lat/lon in the coodinate system determined by {@link #getDatum()}
         """
         return GeoPos(GeoCoding_getGeoPos(self._obj, pixelPos._obj, geoPos._obj))
+
+    def getDatum(self):
+        """
+           Gets the datum, the reference point or surface against which {@link GeoPos} measurements are made.
+           @return the datum
+           @deprecated use the datum of the associated {@link #getMapCRS() map CRS}.
+        """
+        return Datum(GeoCoding_getDatum(self._obj))
 
     def dispose(self):
         """
@@ -1473,6 +1485,9 @@ class IndexCoding:
         IndexCoding_removeFromFile(self._obj, productWriter._obj)
         return
 
+    def getExtension(self, arg0):
+        return Object(IndexCoding_getExtension(self._obj, arg0._obj))
+
 
 """ The abstract <code>Term</code> class is an in-memory representation of an
 element within an arbitrary expression tree. The class defines a number of
@@ -1505,6 +1520,13 @@ node can scale its raw raster data samples in order to return geophysically mean
 @see #getScalingOffset()
 """
 class RasterDataNode:
+    def __init__(self, obj):
+        if obj == None:
+            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
+        self._obj = obj
+
+
+class Class:
     def __init__(self, obj):
         if obj == None:
             raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
@@ -1610,6 +1632,16 @@ class PixelPos:
         return PixelPos_equals(self._obj, arg0._obj)
 
 
+""" A pixel mask provides a boolean value for a given pixel position.
+It is used to identify valid pixels in a raster.
+"""
+class BitRaster:
+    def __init__(self, obj):
+        if obj == None:
+            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
+        self._obj = obj
+
+
 class ImageOutputStream:
     def __init__(self, obj):
         if obj == None:
@@ -1711,6 +1743,16 @@ class ProductIO:
            @see #readProduct(File)
         """
         return Product(ProductIO_readProduct(filePath))
+
+    @staticmethod
+    def getProductReaderForFile(file):
+        """
+           Returns a product reader instance for the given file if any registered product reader can decode the given file.
+           @param file the file to decode.
+           @return a product reader for the given file or <code>null</code> if the file cannot be decoded.
+           @deprecated Since BEAM 4.10. Use {@link #getProductReaderForInput(Object)} instead.
+        """
+        return ProductReader(ProductIO_getProductReaderForFile(file._obj))
 
     @staticmethod
     def getProductReaderForInput(input):
@@ -2160,6 +2202,184 @@ class Band:
     def getViewModeId(self, bandName):
         return Band_getViewModeId(self._obj, bandName)
 
+    def computeBand(self, expression, validMaskExpression, sourceProducts, defaultProductIndex, checkInvalids, useInvalidValue, noDataValue, pm):
+        """
+           (Re-)Computes this band's data using the given arithmetic expression.
+           @param expression          the arithmetic expression string, e.g. "1 + log(radiance_5 / radiance_13)"
+           @param validMaskExpression the arithmetic expression identifying valid source pixels, e.g. "radiance_5 > 0.0 && radiance_13 > 0.0"
+           @param sourceProducts      the list of source products possibly referenced in the expression
+           @param defaultProductIndex the index of the product for which also symbols without the
+           product prefix <code>$<i>ref-no</i></code> are registered in the namespace
+           @param checkInvalids       if true, the method recognizes numerically invalid values (NaN, Infinity)
+           @param useInvalidValue     if true, numerically invalid values (NaN, Infinity) are set to <code>invalidValue</code>,
+           ignored if <code>checkInvalids = false</code>
+           @param noDataValue         the value used in place of  numerically invalid values if <code>useInvalidValue =
+           true</code>, ignored if  <code>checkInvalids = false</code>
+           @param pm                  a monitor to inform the user about progress
+           @return the number of invalid pixels, zero if  <code>checkInvalids = false</code>
+           @throws IOException    if an I/O error occurs
+           @throws ParseException if the expression syntax is invalid
+           @deprecated Since BEAM 4.10. Use {@link VirtualBand} or {@link org.esa.beam.jai.VirtualBandOpImage}.
+        """
+        return Band_computeBand(self._obj, expression, validMaskExpression, sourceProducts._obj, defaultProductIndex, checkInvalids, useInvalidValue, noDataValue, pm._obj)
+
+    def getSceneRasterData(self):
+        """
+           Gets a raster data holding this band's pixel data for an entire product scene. If the data has'nt been loaded so
+           far the method returns <code>null</code>.
+           
+           In opposite to the <code>getRasterData</code> method, this method returns raster data that has at least
+           <code>getBandOutputRasterWidth()*getBandOutputRasterHeight()</code> elements of the given data type to store the
+           scene's pixels.
+           @return raster data covering the pixels for a complete scene
+           @see #getRasterData
+           @see RasterDataNode#getSceneRasterWidth
+           @see RasterDataNode#getSceneRasterHeight
+           @deprecated since BEAM 4.11, use {@link #getSourceImage()} instead.
+        """
+        return ProductData(Band_getSceneRasterData(self._obj))
+
+    def getPixelInt(self, x, y):
+        """
+           Gets the sample for the pixel located at (x,y) as an integer value.
+           @param x The X co-ordinate of the pixel location
+           @param y The Y co-ordinate of the pixel location
+           @throws NullPointerException if this band has no raster data
+           @throws java.lang.ArrayIndexOutOfBoundsException
+           if the co-ordinates are not in bounds
+           @deprecated since BEAM 4.11, use {@link #getSampleInt(int, int)} instead.
+        """
+        return Band_getPixelInt(self._obj, x, y)
+
+    def getPixelFloat(self, x, y):
+        """
+           Gets the sample for the pixel located at (x,y) as a float value.
+           @param x The X co-ordinate of the pixel location
+           @param y The Y co-ordinate of the pixel location
+           @throws NullPointerException if this band has no raster data
+           @throws java.lang.ArrayIndexOutOfBoundsException
+           if the co-ordinates are not in bounds
+           @deprecated since BEAM 4.11, use {@link #getSampleFloat(int, int)} instead.
+        """
+        return Band_getPixelFloat(self._obj, x, y)
+
+    def getPixelDouble(self, x, y):
+        """
+           Gets the sample for the pixel located at (x,y) as a double value.
+           @param x The X co-ordinate of the pixel location
+           @param y The Y co-ordinate of the pixel location
+           @throws NullPointerException if this band has no raster data
+           @throws java.lang.ArrayIndexOutOfBoundsException
+           if the co-ordinates are not in bounds
+           @deprecated since BEAM 4.11, use {@link #getSampleFloat(int, int)} instead.
+        """
+        return Band_getPixelDouble(self._obj, x, y)
+
+    def setPixelInt(self, x, y, pixelValue):
+        """
+           Sets the pixel at the given pixel co-ordinate to the given pixel value.
+           @param x          The X co-ordinate of the pixel location
+           @param y          The Y co-ordinate of the pixel location
+           @param pixelValue the new pixel value
+           @throws NullPointerException if this band has no raster data
+           @deprecated since BEAM 4.11. No replacement.
+        """
+        Band_setPixelInt(self._obj, x, y, pixelValue)
+        return
+
+    def setPixelFloat(self, x, y, pixelValue):
+        """
+           Sets the pixel at the given pixel coordinate to the given pixel value.
+           @param x          The X co-ordinate of the pixel location
+           @param y          The Y co-ordinate of the pixel location
+           @param pixelValue the new pixel value
+           @throws NullPointerException if this band has no raster data
+           @deprecated since BEAM 4.11. No replacement.
+        """
+        Band_setPixelFloat(self._obj, x, y, pixelValue)
+        return
+
+    def setPixelDouble(self, x, y, pixelValue):
+        """
+           Sets the pixel value at the given pixel coordinate to the given pixel value.
+           @param x          The X co-ordinate of the pixel location
+           @param y          The Y co-ordinate of the pixel location
+           @param pixelValue the new pixel value
+           @throws NullPointerException if this band has no raster data
+           @deprecated since BEAM 4.11. No replacement.
+        """
+        Band_setPixelDouble(self._obj, x, y, pixelValue)
+        return
+
+    def setPixelsInt(self, x, y, w, h, pixels):
+        """
+           Sets a range of pixels specified by the coordinates as integer array. Copies the data to the memory buffer of
+           data at the specified location. Throws exception when the target buffer is not in memory.
+           @param x      x offset into the band
+           @param y      y offset into the band
+           @param w      width of the pixel array to be written
+           @param h      height of the pixel array to be written.
+           @param pixels integer array to be written
+           @throws NullPointerException if this band has no raster data
+           @deprecated since BEAM 4.11. Use {@link #setSourceImage setSourceImage()} or the various {@link #writePixels readPixels()}
+           method variants to set or write raster data.
+        """
+        Band_setPixelsInt(self._obj, x, y, w, h, pixels)
+        return
+
+    def setPixelsFloat(self, x, y, w, h, pixels):
+        """
+           Sets a range of pixels specified by the coordinates as float array. Copies the data to the memory buffer of data
+           at the specified location. Throws exception when the target buffer is not in memory.
+           @param x      x offset into the band
+           @param y      y offset into the band
+           @param w      width of the pixel array to be written
+           @param h      height of the pixel array to be written.
+           @param pixels float array to be written
+           @throws NullPointerException if this band has no raster data
+           @deprecated since BEAM 4.11. Use {@link #setSourceImage setSourceImage()} or the various {@link #writePixels readPixels()}
+           method variants to set or write raster data.
+        """
+        Band_setPixelsFloat(self._obj, x, y, w, h, pixels)
+        return
+
+    def setPixelsDouble(self, x, y, w, h, pixels):
+        """
+           Sets a range of pixels specified by the coordinates as double array. Copies the data to the memory buffer of data
+           at the specified location. Throws exception when the target buffer is not in memory.
+           @param x      x offset into the band
+           @param y      y offset into the band
+           @param w      width of the pixel array to be written
+           @param h      height of the pixel array to be written.
+           @param pixels double array to be written
+           @throws NullPointerException if this band has no raster data
+           @deprecated since BEAM 4.11. Use {@link #setSourceImage setSourceImage()} or the various {@link #writePixels readPixels()}
+           method variants to set or write raster data.
+        """
+        Band_setPixelsDouble(self._obj, x, y, w, h, pixels)
+        return
+
+    def ensureRasterData(self):
+        """
+           Ensures that raster data exists
+           @deprecated since BEAM 4.11. No replacement.
+        """
+        Band_ensureRasterData(self._obj)
+        return
+
+    def unloadRasterData(self):
+        """
+           Un-loads the raster data for this band.
+           
+           After this method has been called successfully, the <code>hasRasterData()</code> method returns
+           <code>false</code> and <code>getRasterData()</code> returns <code>null</code>.
+           
+           @see #loadRasterData()
+           @deprecated since BEAM 4.11. No replacement.
+        """
+        Band_unloadRasterData(self._obj)
+        return
+
     def getSceneRasterWidth(self):
         """
            Returns the width in pixels of the scene represented by this product raster. By default, the method simply
@@ -2494,6 +2714,49 @@ class Band:
         Band_updateExpression(self._obj, oldExternalName, newExternalName)
         return
 
+    def hasRasterData(self):
+        """
+           Returns true if the raster data of this <code>RasterDataNode</code> is loaded or elsewhere available, otherwise
+           false.
+           @return true, if so.
+           @deprecated since BEAM 4.11. No replacement.
+        """
+        return Band_hasRasterData(self._obj)
+
+    def getRasterData(self):
+        """
+           Gets the raster data for this dataset. If the data hasn't been loaded so far the method returns
+           <code>null</code>.
+           @return the raster data for this band, or <code>null</code> if data has not been loaded
+           @deprecated Since BEAM 4.11. Use {@link #getSourceImage()} or the various {@link #readPixels readPixels()}
+           method variants to retrieve or read raster data.
+        """
+        return ProductData(Band_getRasterData(self._obj))
+
+    def setRasterData(self, rasterData):
+        """
+           Sets the raster data of this dataset.
+           
+            Note that this method does not copy data at all. If the supplied raster data is compatible with this product
+           raster, then simply its reference is stored. Modifications in the supplied raster data will also affect this
+           dataset's data!
+           @param rasterData the raster data for this dataset
+           @see #getRasterData()
+           @deprecated Since BEAM 4.11. Use {@link #setSourceImage setSourceImage()} or the various {@link #writePixels readPixels()}
+           method variants to set or write raster data.
+        """
+        Band_setRasterData(self._obj, rasterData._obj)
+        return
+
+    def loadRasterData(self):
+        """
+           @throws java.io.IOException if an I/O error occurs
+           @see #loadRasterData(com.bc.ceres.core.ProgressMonitor)
+           @deprecated since BEAM 4.11. No replacement.
+        """
+        Band_loadRasterData(self._obj)
+        return
+
     def isPixelValid(self, x, y):
         """
            Checks whether or not the pixel located at (x,y) is valid.
@@ -2538,11 +2801,46 @@ class Band:
         """
         return Band_getSampleFloat(self._obj, x, y)
 
+    def getPixelsInt(self, x, y, w, h, pixels):
+        """
+           @see #getPixels(int, int, int, int, int[], ProgressMonitor)
+           @deprecated since BEAM 4.11. Use {@link #getSourceImage()} instead.
+        """
+        return Band_getPixelsInt(self._obj, x, y, w, h, pixels)
+
+    def getPixelsFloat(self, x, y, w, h, pixels):
+        """
+           @see #getPixels(int, int, int, int, float[], ProgressMonitor)
+           @deprecated since BEAM 4.11. Use {@link #getSourceImage()} instead.
+        """
+        return Band_getPixelsFloat(self._obj, x, y, w, h, pixels)
+
+    def getPixelsDouble(self, x, y, w, h, pixels):
+        """
+           @see #getPixels(int, int, int, int, double[], ProgressMonitor)
+           @deprecated since BEAM 4.11. Use {@link #getSourceImage()} instead.
+        """
+        return Band_getPixelsDouble(self._obj, x, y, w, h, pixels)
+
     def readPixelsInt(self, x, y, w, h, pixels):
         """
            @see #readPixels(int, int, int, int, int[], ProgressMonitor)
         """
         return Band_readPixelsInt(self._obj, x, y, w, h, pixels)
+
+    def readPixelsFloat(self, x, y, w, h, pixels):
+        """
+           @see #readPixels(int, int, int, int, float[], ProgressMonitor)
+           @deprecated since BEAM 4.11. Use {@link #getSourceImage()} instead.
+        """
+        return Band_readPixelsFloat(self._obj, x, y, w, h, pixels)
+
+    def readPixelsDouble(self, x, y, w, h, pixels):
+        """
+           @see #readPixels(int, int, int, int, double[], ProgressMonitor)
+           @deprecated since BEAM 4.11. Use {@link #getSourceImage()} instead.
+        """
+        return Band_readPixelsDouble(self._obj, x, y, w, h, pixels)
 
     def writePixelsInt(self, x, y, w, h, pixels):
         """
@@ -2570,6 +2868,14 @@ class Band:
 
     def writeRasterDataFully(self):
         Band_writeRasterDataFully(self._obj)
+        return
+
+    def writeRasterData(self, offsetX, offsetY, width, height, rasterData):
+        """
+           @deprecated since BEAM 4.11. Use {@link #setSourceImage setSourceImage()} or the various {@link #writePixels
+           readPixels()} method variants to set or write raster data.
+        """
+        Band_writeRasterData(self._obj, offsetX, offsetY, width, height, rasterData._obj)
         return
 
     def createCompatibleRasterData(self):
@@ -2601,6 +2907,28 @@ class Band:
            @see #createCompatibleSceneRasterData
         """
         return ProductData(Band_createCompatibleRasterDataForRect(self._obj, width, height))
+
+    def isCompatibleRasterData(self, rasterData, w, h):
+        """
+           Tests whether the given parameters specify a compatible raster or not.
+           @param rasterData the raster data
+           @param w          the raster width
+           @param h          the raster height
+           @return {@code true} if so
+           @deprecated since BEAM 4.11. No replacement.
+        """
+        return Band_isCompatibleRasterData(self._obj, rasterData._obj, w, h)
+
+    def checkCompatibleRasterData(self, rasterData, w, h):
+        """
+           Throws an <code>IllegalArgumentException</code> if the given parameters dont specify a compatible raster.
+           @param rasterData the raster data
+           @param w          the raster width
+           @param h          the raster height
+           @deprecated since BEAM 4.11. No replacement.
+        """
+        Band_checkCompatibleRasterData(self._obj, rasterData._obj, w, h)
+        return
 
     def hasIntPixels(self):
         """
@@ -2807,6 +3135,13 @@ class Band:
         """
         return Shape(Band_getValidShape(self._obj))
 
+    def getRoiMaskGroup(self):
+        """
+           @return The roi mask group.
+           @deprecated since BEAM 4.10 (no replacement)
+        """
+        return ProductNodeGroup(Band_getRoiMaskGroup(self._obj))
+
     def getDataType(self):
         """
            Gets the data type of this data node.
@@ -2836,6 +3171,7 @@ class Band:
     def setDataElems(self, elems):
         """
            Sets the data elements of this data node.
+           @deprecated since 5.0
            @see ProductData#setElems(Object)
         """
         Band_setDataElems(self._obj, elems._obj)
@@ -2868,6 +3204,19 @@ class Band:
 
     def getUnit(self):
         return Band_getUnit(self._obj)
+
+    def isSynthetic(self):
+        """
+           @deprecated since BEAM 4.10 (not used, no replacement)
+        """
+        return Band_isSynthetic(self._obj)
+
+    def setSynthetic(self, synthetic):
+        """
+           @deprecated since BEAM 4.10 (not used, no replacement)
+        """
+        Band_setSynthetic(self._obj, synthetic)
+        return
 
     def fireProductNodeDataChanged(self):
         """
@@ -2980,6 +3329,9 @@ class Band:
            <code>null</code> if its product reference number was inactive
         """
         return Band_getProductRefString(self._obj)
+
+    def getExtension(self, arg0):
+        return Object(Band_getExtension(self._obj, arg0._obj))
 
 
 class ColorPaletteDef_Point:
@@ -3305,6 +3657,9 @@ class Placemark:
         Placemark_removeFromFile(self._obj, productWriter._obj)
         return
 
+    def getExtension(self, arg0):
+        return Object(Placemark_getExtension(self._obj, arg0._obj))
+
 
 """ An interface used as parameter to several methods which perform some actions on data arrays.
 It is used to decide whether or not an array value shall be taken into account for a particular
@@ -3362,6 +3717,13 @@ a classpath scan.
 @see ProductReaderPlugIn
 """
 class ProductWriterPlugIn:
+    def __init__(self, obj):
+        if obj == None:
+            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
+        self._obj = obj
+
+
+class Rectangle2D:
     def __init__(self, obj):
         if obj == None:
             raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
@@ -3510,17 +3872,7 @@ class ProductNodeGroup:
            Constructs a node group with no owner and which will not take ownership of added children.
            @param name The group name.
         """
-        return ProductNodeGroup(ProductNodeGroup_newProductNodeGroup1(name))
-
-    @staticmethod
-    def newProductNodeGroup(owner, name, takingOverNodeOwnership):
-        """
-           Constructs a node group for the given owner.
-           @param owner                   The owner of the group.
-           @param name                    The group name.
-           @param takingOverNodeOwnership If {@code true}, child nodes will have this group as owner after adding.
-        """
-        return ProductNodeGroup(ProductNodeGroup_newProductNodeGroup2(owner._obj, name, takingOverNodeOwnership))
+        return ProductNodeGroup(ProductNodeGroup_newProductNodeGroup(name))
 
     def isTakingOverNodeOwnership(self):
         """
@@ -3534,12 +3886,12 @@ class ProductNodeGroup:
         """
         return ProductNodeGroup_getNodeCount(self._obj)
 
-    def get1(self, index):
+    def getAt(self, index):
         """
            @param index The node index.
            @return The product node at the given index.
         """
-        return T(ProductNodeGroup_get1(self._obj, index))
+        return ProductNode(ProductNodeGroup_getAt(self._obj, index))
 
     def getNodeDisplayNames(self):
         """
@@ -3556,72 +3908,57 @@ class ProductNodeGroup:
         """
         return ProductNodeGroup_getNodeNames(self._obj)
 
-    def toArray1(self):
-        """
-           Returns an array of all products currently managed.
-           @return an array containing the products, never <code>null</code>, but the array can have zero length
-        """
-        return ProductNode(ProductNodeGroup_toArray1(self._obj))
+    def indexOfName(self, name):
+        return ProductNodeGroup_indexOfName(self._obj, name)
 
-    def toArray2(self, array):
-        """
-           @param array the array into which the elements of the list are to be stored, if it is big enough; otherwise, a
-           new array of the same runtime type is allocated for this purpose.
-           @return an array containing the product nodes, never <code>null</code>, but the array can have zero length
-        """
-        return T(ProductNodeGroup_toArray2(self._obj, array._obj))
-
-    def indexOf2(self, name):
-        return ProductNodeGroup_indexOf2(self._obj, name)
-
-    def indexOf1(self, element):
-        return ProductNodeGroup_indexOf1(self._obj, element._obj)
+    def indexOf(self, element):
+        return ProductNodeGroup_indexOf(self._obj, element._obj)
 
     def getByDisplayName(self, displayName):
         """
            @param displayName the display name
            @return the product node with the given display name.
         """
-        return T(ProductNodeGroup_getByDisplayName(self._obj, displayName))
+        return ProductNode(ProductNodeGroup_getByDisplayName(self._obj, displayName))
 
-    def get2(self, name):
+    def get(self, name):
         """
            @param name the name
            @return the product node with the given name.
         """
-        return T(ProductNodeGroup_get2(self._obj, name))
+        return ProductNode(ProductNodeGroup_get(self._obj, name))
 
-    def contains2(self, name):
+    def containsName(self, name):
         """
            Tests whether a node with the given name is contained in this group.
            @param name the name
            @return true, if so
         """
-        return ProductNodeGroup_contains2(self._obj, name)
+        return ProductNodeGroup_containsName(self._obj, name)
 
-    def contains1(self, node):
+    def contains(self, node):
         """
            Tests whether the given product is contained in this list.
            @param node the node
            @return true, if so
         """
-        return ProductNodeGroup_contains1(self._obj, node._obj)
+        return ProductNodeGroup_contains(self._obj, node._obj)
 
-    def add2(self, node):
+    def add(self, node):
         """
            Adds the given node to this group.
            @param node the node to be added, ignored if <code>null</code>
            @return true, if the node has been added
         """
-        return ProductNodeGroup_add2(self._obj, node._obj)
+        return ProductNodeGroup_add(self._obj, node._obj)
 
-    def add1(self, index, node):
+    def addAt(self, index, node):
         """
            Adds the given node to this group.
            @param index the index.
            @param node  the node to be added, ignored if <code>null</code>
         """
-        ProductNodeGroup_add1(self._obj, index, node._obj)
+        ProductNodeGroup_addAt(self._obj, index, node._obj)
         return
 
     def remove(self, node):
@@ -3649,9 +3986,6 @@ class ProductNodeGroup:
            @return a collection of all removed node nodes.
         """
         return Collection(ProductNodeGroup_getRemovedNodes(self._obj))
-
-    def getRawStorageSize2(self, subsetDef):
-        return ProductNodeGroup_getRawStorageSize2(self._obj, subsetDef._obj)
 
     def setModified(self, modified):
         ProductNodeGroup_setModified(self._obj, modified)
@@ -3768,21 +4102,6 @@ class ProductNodeGroup:
         """
         return ProductNodeGroup_getProductRefString(self._obj)
 
-    def getRawStorageSize1(self):
-        """
-           Gets an estimated, raw storage size in bytes of this product node.
-           @return the size in bytes.
-        """
-        return ProductNodeGroup_getRawStorageSize1(self._obj)
-
-    def fireProductNodeChanged1(self, propertyName):
-        ProductNodeGroup_fireProductNodeChanged1(self._obj, propertyName)
-        return
-
-    def fireProductNodeChanged2(self, propertyName, oldValue, newValue):
-        ProductNodeGroup_fireProductNodeChanged2(self._obj, propertyName, oldValue._obj, newValue._obj)
-        return
-
     def removeFromFile(self, productWriter):
         """
            Physically remove this node from the file associated with the given product writer. The default implementation
@@ -3791,6 +4110,9 @@ class ProductNodeGroup:
         """
         ProductNodeGroup_removeFromFile(self._obj, productWriter._obj)
         return
+
+    def getExtension(self, arg0):
+        return Object(ProductNodeGroup_getExtension(self._obj, arg0._obj))
 
 
 """ A map projection is a mathematical model for the transformation of locations from a three-dimensional earth surface
@@ -4434,6 +4756,9 @@ class FlagCoding:
         FlagCoding_removeFromFile(self._obj, productWriter._obj)
         return
 
+    def getExtension(self, arg0):
+        return Object(FlagCoding_getExtension(self._obj, arg0._obj))
+
 
 class IndexColorModel:
     def __init__(self, obj):
@@ -4501,6 +4826,17 @@ class OperatorSpiRegistry:
 """ Enumerates the possible histogram matching modes.
 """
 class ImageInfo_HistogramMatching:
+    def __init__(self, obj):
+        if obj == None:
+            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
+        self._obj = obj
+
+
+""" Represents a bitmask definition comprising the bitmask properties name, description, flag expression color and
+transparancy.
+@deprecated since BEAM 4.7, use {@code Mask} with {@code Mask.BandMathType} instead.
+"""
+class BitmaskDef:
     def __init__(self, obj):
         if obj == None:
             raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
@@ -4682,6 +5018,21 @@ class ProductUtils:
            @see #createPixelBoundary(Product, java.awt.Rectangle, int, boolean)
         """
         return GeoPos(ProductUtils_createGeoBoundary3(product._obj, region._obj, step, usePixelCenter))
+
+    @staticmethod
+    def getClosestGeoPos(gc, origPos, region, step):
+        """
+           Searches for a valid GeoPos by considering the vicinity of a {@link PixelPos}. It does not check
+           the original pixel position, but uses it for determining which pixel positions to examine.
+           @param gc      the GeoCoding, must not be null
+           @param origPos the original pixel position, must not be null
+           @param region  the rectangle which determines the valid pixel positions, must not be null
+           @param step    determines the step size between pixels which is used in the search process. Small step
+           sizes will increase the accuracy, but need more computational time
+           @return a {@link GeoPos}. This will be valid if the search was successful. If not, a {@link GeoPos} with
+           NaN-values for latitude and longitude will be returned.
+        """
+        return GeoPos(ProductUtils_getClosestGeoPos(gc._obj, origPos._obj, region._obj, step))
 
     @staticmethod
     def createGeoBoundary4(raster, region, step):
@@ -4899,14 +5250,42 @@ class ProductUtils:
         return
 
     @staticmethod
-    def copyFlagBands(sourceProduct, targetProduct, copySourceImage):
+    def copyRoiMasks(sourceProduct, targetProduct):
+        """
+           Copies the ROI {@link Mask}s from the source product's raster data nodes to
+           the target product's raster data nodes.
+           
+           IMPORTANT NOTE: This method should only be used, if it is known that all masks
+           in the source product will also be valid in the target product. This method does
+           <em>not</em> copy ROI masks, which are not contained in the target product's
+           mask group.
+           @param sourceProduct the source product
+           @param targetProduct the target product
+           @deprecated since BEAM 4.10 (no replacement)
+        """
+        ProductUtils_copyRoiMasks(sourceProduct._obj, targetProduct._obj)
+        return
+
+    @staticmethod
+    def copyFlagBands2(sourceProduct, targetProduct, copySourceImage):
         """
            Copies all bands which contain a flagcoding from the source product to the target product.
            @param sourceProduct   the source product
            @param targetProduct   the target product
            @param copySourceImage whether the source image of the source band should be copied.
         """
-        ProductUtils_copyFlagBands(sourceProduct._obj, targetProduct._obj, copySourceImage)
+        ProductUtils_copyFlagBands2(sourceProduct._obj, targetProduct._obj, copySourceImage)
+        return
+
+    @staticmethod
+    def copyFlagBands1(sourceProduct, targetProduct):
+        """
+           Copies all bands which contain a flagcoding from the source product to the target product.
+           @param sourceProduct the source product
+           @param targetProduct the target product
+           @deprecated since BEAM 4.10, use {@link #copyFlagBands(Product, Product, boolean)} instead.
+        """
+        ProductUtils_copyFlagBands1(sourceProduct._obj, targetProduct._obj)
         return
 
     @staticmethod
@@ -4921,7 +5300,7 @@ class ProductUtils:
         return TiePointGrid(ProductUtils_copyTiePointGrid(gridName, sourceProduct._obj, targetProduct._obj))
 
     @staticmethod
-    def copyBand2(sourceBandName, sourceProduct, targetProduct, copySourceImage):
+    def copyBand4(sourceBandName, sourceProduct, targetProduct, copySourceImage):
         """
            Copies the named band from the source product to the target product.
            @param sourceBandName  the name of the band to be copied.
@@ -4930,10 +5309,10 @@ class ProductUtils:
            @param copySourceImage whether the source image of the source band should be copied.
            @return the copy of the band, or <code>null</code> if the sourceProduct does not contain a band with the given name.
         """
-        return Band(ProductUtils_copyBand2(sourceBandName, sourceProduct._obj, targetProduct._obj, copySourceImage))
+        return Band(ProductUtils_copyBand4(sourceBandName, sourceProduct._obj, targetProduct._obj, copySourceImage))
 
     @staticmethod
-    def copyBand1(sourceBandName, sourceProduct, targetBandName, targetProduct, copySourceImage):
+    def copyBand2(sourceBandName, sourceProduct, targetBandName, targetProduct, copySourceImage):
         """
            Copies the named band from the source product to the target product.
            @param sourceBandName  the name of the band to be copied.
@@ -4943,7 +5322,7 @@ class ProductUtils:
            @param copySourceImage whether the source image of the source band should be copied.
            @return the copy of the band, or <code>null</code> if the sourceProduct does not contain a band with the given name.
         """
-        return Band(ProductUtils_copyBand1(sourceBandName, sourceProduct._obj, targetBandName, targetProduct._obj, copySourceImage))
+        return Band(ProductUtils_copyBand2(sourceBandName, sourceProduct._obj, targetBandName, targetProduct._obj, copySourceImage))
 
     @staticmethod
     def copyRasterDataNodeProperties(sourceRaster, targetRaster):
@@ -4955,6 +5334,31 @@ class ProductUtils:
         """
         ProductUtils_copyRasterDataNodeProperties(sourceRaster._obj, targetRaster._obj)
         return
+
+    @staticmethod
+    def copyBand3(sourceBandName, sourceProduct, targetProduct):
+        """
+           Copies the named band from the source product to the target product.
+           @param sourceBandName the name of the band to be copied.
+           @param sourceProduct  the source product.
+           @param targetProduct  the target product.
+           @return the copy of the band, or <code>null</code> if the sourceProduct does not contain a band with the given name.
+           @deprecated since BEAM 4.10, use {@link #copyBand(String, Product, Product, boolean)} instead.
+        """
+        return Band(ProductUtils_copyBand3(sourceBandName, sourceProduct._obj, targetProduct._obj))
+
+    @staticmethod
+    def copyBand1(sourceBandName, sourceProduct, targetBandName, targetProduct):
+        """
+           Copies the named band from the source product to the target product.
+           @param sourceBandName the name of the band to be copied.
+           @param sourceProduct  the source product.
+           @param targetBandName the name of the band copied.
+           @param targetProduct  the target product.
+           @return the copy of the band, or <code>null</code> if the sourceProduct does not contain a band with the given name.
+           @deprecated since BEAM 4.10, use {@link #copyBand(String, Product, String, Product, boolean)} instead.
+        """
+        return Band(ProductUtils_copyBand1(sourceBandName, sourceProduct._obj, targetBandName, targetProduct._obj))
 
     @staticmethod
     def copySpectralBandProperties(sourceBand, targetBand):
@@ -5702,6 +6106,21 @@ class MetadataElement:
         MetadataElement_removeFromFile(self._obj, productWriter._obj)
         return
 
+    def getExtension(self, arg0):
+        return Object(MetadataElement_getExtension(self._obj, arg0._obj))
+
+
+""" Represents a geodetic datum. Geodetic datums define the size and shape of the earth and the origin and orientation of
+the coordinate systems used to map the earth.
+
+@deprecated since BEAM 4.7, use {@link org.opengis.referencing.datum.GeodeticDatum} instead.
+"""
+class Datum:
+    def __init__(self, obj):
+        if obj == None:
+            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
+        self._obj = obj
+
 
 class Map:
     def __init__(self, obj):
@@ -5781,15 +6200,15 @@ class PlacemarkGroup:
     def getPlacemark(self, feature):
         return Placemark(PlacemarkGroup_getPlacemark(self._obj, feature._obj))
 
-    def add4(self, placemark):
-        return PlacemarkGroup_add4(self._obj, placemark._obj)
+    def add3(self, placemark):
+        return PlacemarkGroup_add3(self._obj, placemark._obj)
 
-    def add2(self, index, placemark):
-        PlacemarkGroup_add2(self._obj, index, placemark._obj)
+    def add1(self, index, placemark):
+        PlacemarkGroup_add1(self._obj, index, placemark._obj)
         return
 
-    def remove2(self, placemark):
-        return PlacemarkGroup_remove2(self._obj, placemark._obj)
+    def remove1(self, placemark):
+        return PlacemarkGroup_remove1(self._obj, placemark._obj)
 
     def dispose(self):
         PlacemarkGroup_dispose(self._obj)
@@ -5812,7 +6231,7 @@ class PlacemarkGroup:
            @param index The node index.
            @return The product node at the given index.
         """
-        return T(PlacemarkGroup_get1(self._obj, index))
+        return ProductNode(PlacemarkGroup_get1(self._obj, index))
 
     def getNodeDisplayNames(self):
         """
@@ -5842,68 +6261,68 @@ class PlacemarkGroup:
            new array of the same runtime type is allocated for this purpose.
            @return an array containing the product nodes, never <code>null</code>, but the array can have zero length
         """
-        return T(PlacemarkGroup_toArray2(self._obj, array._obj))
+        return ProductNode(PlacemarkGroup_toArray2(self._obj, array._obj))
 
-    def indexOf2(self, name):
-        return PlacemarkGroup_indexOf2(self._obj, name)
+    def indexOf1(self, name):
+        return PlacemarkGroup_indexOf1(self._obj, name)
 
-    def indexOf1(self, element):
-        return PlacemarkGroup_indexOf1(self._obj, element._obj)
+    def indexOf2(self, element):
+        return PlacemarkGroup_indexOf2(self._obj, element._obj)
 
     def getByDisplayName(self, displayName):
         """
            @param displayName the display name
            @return the product node with the given display name.
         """
-        return T(PlacemarkGroup_getByDisplayName(self._obj, displayName))
+        return ProductNode(PlacemarkGroup_getByDisplayName(self._obj, displayName))
 
     def get2(self, name):
         """
            @param name the name
            @return the product node with the given name.
         """
-        return T(PlacemarkGroup_get2(self._obj, name))
+        return ProductNode(PlacemarkGroup_get2(self._obj, name))
 
-    def contains2(self, name):
+    def contains1(self, name):
         """
            Tests whether a node with the given name is contained in this group.
            @param name the name
            @return true, if so
         """
-        return PlacemarkGroup_contains2(self._obj, name)
+        return PlacemarkGroup_contains1(self._obj, name)
 
-    def contains1(self, node):
+    def contains2(self, node):
         """
            Tests whether the given product is contained in this list.
            @param node the node
            @return true, if so
         """
-        return PlacemarkGroup_contains1(self._obj, node._obj)
+        return PlacemarkGroup_contains2(self._obj, node._obj)
 
-    def add3(self, node):
+    def add4(self, node):
         """
            Adds the given node to this group.
            @param node the node to be added, ignored if <code>null</code>
            @return true, if the node has been added
         """
-        return PlacemarkGroup_add3(self._obj, node._obj)
+        return PlacemarkGroup_add4(self._obj, node._obj)
 
-    def add1(self, index, node):
+    def add2(self, index, node):
         """
            Adds the given node to this group.
            @param index the index.
            @param node  the node to be added, ignored if <code>null</code>
         """
-        PlacemarkGroup_add1(self._obj, index, node._obj)
+        PlacemarkGroup_add2(self._obj, index, node._obj)
         return
 
-    def remove1(self, node):
+    def remove2(self, node):
         """
            Removes the given node from this group.
            @param node the node to be removed
            @return true, if the node was removed
         """
-        return PlacemarkGroup_remove1(self._obj, node._obj)
+        return PlacemarkGroup_remove2(self._obj, node._obj)
 
     def removeAll(self):
         """
@@ -6060,6 +6479,9 @@ class PlacemarkGroup:
         """
         PlacemarkGroup_removeFromFile(self._obj, productWriter._obj)
         return
+
+    def getExtension(self, arg0):
+        return Object(PlacemarkGroup_getExtension(self._obj, arg0._obj))
 
 
 """ <code>Product</code> instances are an in-memory representation of a remote sensing data product. The product is more
@@ -6352,12 +6774,18 @@ class Product:
         """
         return MetadataElement(Product_getMetadataRoot(self._obj))
 
-    def getBandGroup(self):
+    def getGroups(self):
         """
-           Gets the band group of this product.
-           @return The group of all bands.
+           @return The group which contains all other product node groups.
         """
-        return ProductNodeGroup(Product_getBandGroup(self._obj))
+        return ProductNodeGroup(Product_getGroups(self._obj))
+
+    def getGroup(self, name):
+        """
+           @param name The group name.
+           @return The group with the given name, or {@code null} if no such group exists.
+        """
+        return ProductNodeGroup(Product_getGroup(self._obj, name))
 
     def getTiePointGridGroup(self):
         """
@@ -6431,6 +6859,13 @@ class Product:
            <code>false</code> otherwise
         """
         return Product_containsTiePointGrid(self._obj, name)
+
+    def getBandGroup(self):
+        """
+           Gets the band group of this product.
+           @return The group of all bands.
+        """
+        return ProductNodeGroup(Product_getBandGroup(self._obj))
 
     def addBand(self, band):
         """
@@ -6585,6 +7020,21 @@ class Product:
            @return the pin group.
         """
         return PlacemarkGroup(Product_getPinGroup(self._obj))
+
+    def getNumResolutionsMax(self):
+        """
+           @return The maximum number of resolution levels common to all band images.
+           If less than or equal to zero, the  number of resolution levels is considered to be unknown.
+        """
+        return Product_getNumResolutionsMax(self._obj)
+
+    def setNumResolutionsMax(self, numResolutionsMax):
+        """
+           @param numResolutionsMax The maximum number of resolution levels common to all band images.
+           If less than or equal to zero, the  number of resolution levels is considered to be unknown.
+        """
+        Product_setNumResolutionsMax(self._obj, numResolutionsMax)
+        return
 
     def isCompatibleProduct(self, product, eps):
         """
@@ -6821,6 +7271,145 @@ class Product:
         """
         return Mask(Product_addComputedMask(self._obj, maskName, expression, description, color._obj, transparency))
 
+    def addBitmaskDef(self, bitmaskDef):
+        """
+           Adds the given bitmask definition to this product.
+           @param bitmaskDef the bitmask definition to added, ignored if <code>null</code>
+           @deprecated since BEAM 4.7, use {@link #getMaskGroup()} instead
+        """
+        Product_addBitmaskDef(self._obj, bitmaskDef._obj)
+        return
+
+    def getBitmaskDefNames(self):
+        """
+           Returns a string array containing the names of the bitmask definitions contained in this product.
+           @return a string array containing the names of the bitmask definitions contained in this product. If this product
+           has no bitmask definitions a zero-length-array is returned.
+           @deprecated since BEAM 4.7, use {@link #getMaskGroup()} instead
+        """
+        return Product_getBitmaskDefNames(self._obj)
+
+    def getBitmaskDef(self, name):
+        """
+           Returns the bitmask definition with the given name.
+           @param name the bitmask definition name
+           @return the bitmask definition with the given name or <code>null</code> if a bitmask definition with the given
+           name is not contained in this product.
+           @deprecated since BEAM 4.7, use {@link #getMaskGroup()} instead
+        """
+        return BitmaskDef(Product_getBitmaskDef(self._obj, name))
+
+    def getValidMask(self, id):
+        """
+           Gets a valid-mask for the given ID.
+           @param id the ID
+           @return a cached valid mask for the given ID or null
+           @see #createValidMask(String, com.bc.ceres.core.ProgressMonitor)
+           @deprecated since BEAM 4.7, use {@link #getMaskGroup()} instead
+        """
+        return BitRaster(Product_getValidMask(self._obj, id))
+
+    def setValidMask(self, id, validMask):
+        """
+           Sets a valid-mask for the given ID.
+           @param id        the ID
+           @param validMask the pixel mask
+           @see #createValidMask(String, com.bc.ceres.core.ProgressMonitor)
+           @deprecated since BEAM 4.7, use {@link #getMaskGroup()} instead
+        """
+        Product_setValidMask(self._obj, id, validMask._obj)
+        return
+
+    def createValidMask2(self, expression, pm):
+        """
+           Creates a bit-packed valid-mask for all pixels of the scene covered by this product.
+           The given expression is considered to be boolean, if it evaluates to <code>true</code>
+           the related bit in the mask is set.
+           @param expression the boolean expression, e.g. "l2_flags.LAND && reflec_10 >= 0.0"
+           @param pm         a progress monitor
+           @return a bit-packed mask for all pixels of the scene, never null
+           @throws IOException if an I/O error occurs
+           @see #parseExpression(String)
+           @deprecated since BEAM 4.7, use {@link #getMaskGroup()} instead
+        """
+        return BitRaster(Product_createValidMask2(self._obj, expression, pm._obj))
+
+    def createValidMask1(self, term, pm):
+        """
+           Creates a bit-packed mask for all pixels of the scene covered by this product.
+           The given term is considered to be boolean, if it evaluates to <code>true</code>
+           the related bit in the mask is set.
+           @param term the boolean term, e.g. "l2_flags.LAND && reflec_10 >= 0.0"
+           @param pm   a progress monitor
+           @return a bit-packed mask for all pixels of the scene, never null
+           @throws IOException if an I/O error occurs
+           @see #createValidMask(String, com.bc.ceres.core.ProgressMonitor)
+           @deprecated since BEAM 4.7, use {@link #getMaskGroup()} instead
+        """
+        return BitRaster(Product_createValidMask1(self._obj, term._obj, pm._obj))
+
+    def readBitmask2(self, offsetX, offsetY, width, height, bitmaskTerm, bitmask, pm):
+        """
+           Creates a bit-mask by evaluating the given bit-mask term.
+            The method first creates an evaluation context for the given bit-mask term and the specified region and then
+           evaluates the term for each pixel in the subset (line-by-line, X varies fastest). The result of each evaluation -
+           the resulting bitmask - is stored in the given boolean array buffer <code>bitmask</code> in the same order as
+           pixels appear in the given region. The buffer must at least have a length equal to <code>width * height</code>
+           elements.
+           
+            If flag providing datasets are referenced in the given bit-mask expression which are currently not completely
+           loaded, the method reloads the spatial subset from the data source in order to create the evaluation context.
+           
+            The {@link #parseExpression(String)} method can be used to create a bit-mask
+           term from a textual bit-mask expression.
+           
+           @param offsetX     the X-offset of the spatial subset in pixel co-ordinates
+           @param offsetY     the Y-offset of the spatial subset in pixel co-ordinates
+           @param width       the width of the spatial subset in pixel co-ordinates
+           @param height      the height of the spatial subset in pixel co-ordinates
+           @param bitmaskTerm a bit-mask term, as returned by the {@link #parseExpression(String)} method
+           @param bitmask     a buffer used to hold the results of the bit-mask evaluations for each pixel in the given
+           spatial subset
+           @param pm          a monitor to inform the user about progress
+           @throws IOException if an I/O error occurs, when referenced flag datasets are reloaded
+           @see #parseExpression(String)
+           @deprecated since BEAM 4.7, use {@link #getMaskGroup()} instead
+        """
+        Product_readBitmask2(self._obj, offsetX, offsetY, width, height, bitmaskTerm._obj, bitmask, pm._obj)
+        return
+
+    def readBitmask1(self, offsetX, offsetY, width, height, bitmaskTerm, bitmask, trueValue, falseValue, pm):
+        """
+           Creates a bit-mask by evaluating the given bit-mask term.
+           
+            The method first creates an evaluation context for the given bit-mask term and the specified region and then
+           evaluates the term for each pixel in the subset (line-by-line, X varies fastest). The result of each evaluation -
+           the resulting bitmask - is stored in the given boolean array buffer <code>bitmask</code> in the same order as
+           pixels appear in the given region. The buffer must at least have a length equal to <code>width * height</code>
+           elements.
+           
+            If flag providing datasets are referenced in the given bit-mask expression which are currently not completely
+           loaded, the method reloads the spatial subset from the data source in order to create the evaluation context.
+           
+            The {@link #parseExpression(String)} method can be used to create a bit-mask
+           term from a textual bit-mask expression.
+           @param offsetX     the X-offset of the spatial subset in pixel co-ordinates
+           @param offsetY     the Y-offset of the spatial subset in pixel co-ordinates
+           @param width       the width of the spatial subset in pixel co-ordinates
+           @param height      the height of the spatial subset in pixel co-ordinates
+           @param bitmaskTerm a bit-mask term, as returned by the {@link #parseExpression(String)}
+           method
+           @param bitmask     a byte buffer used to hold the results of the bit-mask evaluations for each pixel in the given
+           spatial subset
+           @param trueValue   the byte value to be set if the bitmask-term evauates to <code>true</code>
+           @param falseValue  the byte value to be set if the bitmask-term evauates to <code>false</code>
+           @throws IOException if an I/O error occurs, when referenced flag datasets are reloaded
+           @see #parseExpression(String)
+           @deprecated since BEAM 4.7, use {@link #getMaskGroup()} instead
+        """
+        Product_readBitmask1(self._obj, offsetX, offsetY, width, height, bitmaskTerm._obj, bitmask, trueValue, falseValue, pm._obj)
+        return
+
     def getOwner(self):
         """
            @return The owner node of this node.
@@ -6926,18 +7515,11 @@ class Product:
         Product_removeFromFile(self._obj, productWriter._obj)
         return
 
+    def getExtension(self, arg0):
+        return Object(Product_getExtension(self._obj, arg0._obj))
+
 
 class Point2D:
-    def __init__(self, obj):
-        if obj == None:
-            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
-        self._obj = obj
-
-
-""" The <code>ProductNode</code> is the base class for all nodes within a remote sensing data product and even the data
-product itself.
-"""
-class T:
     def __init__(self, obj):
         if obj == None:
             raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
@@ -7670,7 +8252,7 @@ class TiePointGrid:
         TiePointGrid_setPixelDouble(self._obj, x, y, pixelValue)
         return
 
-    def getPixels3(self, x, y, w, h, pixels, pm):
+    def getPixels6(self, x, y, w, h, pixels, pm):
         """
            Retrieves an array of tie point data interpolated to the product with and height as integer array. If the given
            array is <code>null</code> a new one was created and returned.
@@ -7682,9 +8264,9 @@ class TiePointGrid:
            @param pm     a monitor to inform the user about progress
            @throws IllegalArgumentException if the length of the given array is less than <code>w*h</code>.
         """
-        return TiePointGrid_getPixels3(self._obj, x, y, w, h, pixels, pm._obj)
+        return TiePointGrid_getPixels6(self._obj, x, y, w, h, pixels, pm._obj)
 
-    def getPixels2(self, x, y, w, h, pixels, pm):
+    def getPixels4(self, x, y, w, h, pixels, pm):
         """
            Retrieves an array of tie point data interpolated to the product width and height as float array. If the given
            array is <code>null</code> a new one is created and returned.
@@ -7696,9 +8278,9 @@ class TiePointGrid:
            @param pm     a monitor to inform the user about progress
            @throws IllegalArgumentException if the length of the given array is less than <code>w*h</code>.
         """
-        return TiePointGrid_getPixels2(self._obj, x, y, w, h, pixels, pm._obj)
+        return TiePointGrid_getPixels4(self._obj, x, y, w, h, pixels, pm._obj)
 
-    def getPixels1(self, x, y, w, h, pixels, pm):
+    def getPixels2(self, x, y, w, h, pixels, pm):
         """
            Retrieves an array of tie point data interpolated to the product with and height as double array. If the given
            array is <code>null</code> a new one was created and returned.
@@ -7709,7 +8291,7 @@ class TiePointGrid:
            @param pixels the double array to be filled with data
            @throws IllegalArgumentException if the length of the given array is less than <code>w*h</code>.
         """
-        return TiePointGrid_getPixels1(self._obj, x, y, w, h, pixels, pm._obj)
+        return TiePointGrid_getPixels2(self._obj, x, y, w, h, pixels, pm._obj)
 
     def setPixels3(self, x, y, w, h, pixels):
         """
@@ -7732,7 +8314,7 @@ class TiePointGrid:
         TiePointGrid_setPixels1(self._obj, x, y, w, h, pixels)
         return
 
-    def readPixels4(self, x, y, w, h, pixels, pm):
+    def readPixels6(self, x, y, w, h, pixels, pm):
         """
            Retrieves an array of tie point data interpolated to the product with and height as float array. If the given
            array is <code>null</code> a new one was created and returned.
@@ -7743,9 +8325,9 @@ class TiePointGrid:
            @param pixels the integer array to be filled with data
            @throws IllegalArgumentException if the length of the given array is less than <code>w*h</code>.
         """
-        return TiePointGrid_readPixels4(self._obj, x, y, w, h, pixels, pm._obj)
+        return TiePointGrid_readPixels6(self._obj, x, y, w, h, pixels, pm._obj)
 
-    def readPixels2(self, x, y, w, h, pixels, pm):
+    def readPixels4(self, x, y, w, h, pixels, pm):
         """
            Retrieves an array of tie point data interpolated to the product with and height as float array. If the given
            array is <code>null</code> a new one was created and returned. *
@@ -7757,9 +8339,9 @@ class TiePointGrid:
            @param pm     a monitor to inform the user about progress
            @throws IllegalArgumentException if the length of the given array is less than <code>w*h</code>.
         """
-        return TiePointGrid_readPixels2(self._obj, x, y, w, h, pixels, pm._obj)
+        return TiePointGrid_readPixels4(self._obj, x, y, w, h, pixels, pm._obj)
 
-    def readPixels1(self, x, y, w, h, pixels, pm):
+    def readPixels2(self, x, y, w, h, pixels, pm):
         """
            Retrieves an array of tie point data interpolated to the product with and height as double array. If the given
            array is <code>null</code> a new one was created and returned.
@@ -7771,7 +8353,7 @@ class TiePointGrid:
            @param pm     a monitor to inform the user about progress
            @throws IllegalArgumentException if the length of the given array is less than <code>w*h</code>.
         """
-        return TiePointGrid_readPixels1(self._obj, x, y, w, h, pixels, pm._obj)
+        return TiePointGrid_readPixels2(self._obj, x, y, w, h, pixels, pm._obj)
 
     def writePixels6(self, x, y, w, h, pixels, pm):
         """
@@ -7794,7 +8376,7 @@ class TiePointGrid:
         TiePointGrid_writePixels2(self._obj, x, y, w, h, pixels, pm._obj)
         return
 
-    def readRasterData(self, offsetX, offsetY, width, height, rasterData, pm):
+    def readRasterData2(self, offsetX, offsetY, width, height, rasterData, pm):
         """
            Reads raster data from this dataset into the user-supplied raster data buffer. 
            
@@ -7812,21 +8394,21 @@ class TiePointGrid:
            which this product raster belongs to, has no associated product reader
            @see ProductReader#readBandRasterData(Band, int, int, int, int, ProductData, com.bc.ceres.core.ProgressMonitor)
         """
-        TiePointGrid_readRasterData(self._obj, offsetX, offsetY, width, height, rasterData._obj, pm._obj)
+        TiePointGrid_readRasterData2(self._obj, offsetX, offsetY, width, height, rasterData._obj, pm._obj)
         return
 
-    def readRasterDataFully(self, pm):
+    def readRasterDataFully2(self, pm):
         """
            {@inheritDoc}
         """
-        TiePointGrid_readRasterDataFully(self._obj, pm._obj)
+        TiePointGrid_readRasterDataFully2(self._obj, pm._obj)
         return
 
-    def writeRasterData(self, offsetX, offsetY, width, height, rasterData, pm):
+    def writeRasterData2(self, offsetX, offsetY, width, height, rasterData, pm):
         """
            {@inheritDoc}
         """
-        TiePointGrid_writeRasterData(self._obj, offsetX, offsetY, width, height, rasterData._obj, pm._obj)
+        TiePointGrid_writeRasterData2(self._obj, offsetX, offsetY, width, height, rasterData._obj, pm._obj)
         return
 
     def writeRasterDataFully2(self, pm):
@@ -8160,6 +8742,79 @@ class TiePointGrid:
         TiePointGrid_updateExpression(self._obj, oldExternalName, newExternalName)
         return
 
+    def hasRasterData(self):
+        """
+           Returns true if the raster data of this <code>RasterDataNode</code> is loaded or elsewhere available, otherwise
+           false.
+           @return true, if so.
+           @deprecated since BEAM 4.11. No replacement.
+        """
+        return TiePointGrid_hasRasterData(self._obj)
+
+    def getRasterData(self):
+        """
+           Gets the raster data for this dataset. If the data hasn't been loaded so far the method returns
+           <code>null</code>.
+           @return the raster data for this band, or <code>null</code> if data has not been loaded
+           @deprecated Since BEAM 4.11. Use {@link #getSourceImage()} or the various {@link #readPixels readPixels()}
+           method variants to retrieve or read raster data.
+        """
+        return ProductData(TiePointGrid_getRasterData(self._obj))
+
+    def setRasterData(self, rasterData):
+        """
+           Sets the raster data of this dataset.
+           
+            Note that this method does not copy data at all. If the supplied raster data is compatible with this product
+           raster, then simply its reference is stored. Modifications in the supplied raster data will also affect this
+           dataset's data!
+           @param rasterData the raster data for this dataset
+           @see #getRasterData()
+           @deprecated Since BEAM 4.11. Use {@link #setSourceImage setSourceImage()} or the various {@link #writePixels readPixels()}
+           method variants to set or write raster data.
+        """
+        TiePointGrid_setRasterData(self._obj, rasterData._obj)
+        return
+
+    def loadRasterData1(self):
+        """
+           @throws java.io.IOException if an I/O error occurs
+           @see #loadRasterData(com.bc.ceres.core.ProgressMonitor)
+           @deprecated since BEAM 4.11. No replacement.
+        """
+        TiePointGrid_loadRasterData1(self._obj)
+        return
+
+    def loadRasterData2(self, pm):
+        """
+           Loads the raster data for this <code>RasterDataNode</code>. After this method has been called successfully,
+           <code>hasRasterData()</code> should always return <code>true</code> and <code>getRasterData()</code> should
+           always return a valid <code>ProductData</code> instance with at least <code>getRasterWidth()*getRasterHeight()</code>
+           elements (samples).
+           
+           The default implementation of this method does nothing.
+           @param pm a monitor to inform the user about progress
+           @throws IOException if an I/O error occurs
+           @see #unloadRasterData()
+           @deprecated since BEAM 4.11. No replacement.
+        """
+        TiePointGrid_loadRasterData2(self._obj, pm._obj)
+        return
+
+    def unloadRasterData(self):
+        """
+           Un-loads the raster data for this <code>RasterDataNode</code>.
+           
+           It is up to the implementation whether after this method has been called successfully, the
+           <code>hasRasterData()</code> method returns <code>false</code> or <code>true</code>.
+           
+           The default implementation of this method does nothing.
+           @see #loadRasterData()
+           @deprecated since BEAM 4.11. No replacement.
+        """
+        TiePointGrid_unloadRasterData(self._obj)
+        return
+
     def isPixelValid2(self, x, y):
         """
            Checks whether or not the pixel located at (x,y) is valid.
@@ -8236,11 +8891,46 @@ class TiePointGrid:
         """
         return TiePointGrid_isPixelValid3(self._obj, x, y, roi._obj)
 
-    def readPixels3(self, x, y, w, h, pixels):
+    def getPixels5(self, x, y, w, h, pixels):
+        """
+           @see #getPixels(int, int, int, int, int[], ProgressMonitor)
+           @deprecated since BEAM 4.11. Use {@link #getSourceImage()} instead.
+        """
+        return TiePointGrid_getPixels5(self._obj, x, y, w, h, pixels)
+
+    def getPixels3(self, x, y, w, h, pixels):
+        """
+           @see #getPixels(int, int, int, int, float[], ProgressMonitor)
+           @deprecated since BEAM 4.11. Use {@link #getSourceImage()} instead.
+        """
+        return TiePointGrid_getPixels3(self._obj, x, y, w, h, pixels)
+
+    def getPixels1(self, x, y, w, h, pixels):
+        """
+           @see #getPixels(int, int, int, int, double[], ProgressMonitor)
+           @deprecated since BEAM 4.11. Use {@link #getSourceImage()} instead.
+        """
+        return TiePointGrid_getPixels1(self._obj, x, y, w, h, pixels)
+
+    def readPixels5(self, x, y, w, h, pixels):
         """
            @see #readPixels(int, int, int, int, int[], ProgressMonitor)
         """
+        return TiePointGrid_readPixels5(self._obj, x, y, w, h, pixels)
+
+    def readPixels3(self, x, y, w, h, pixels):
+        """
+           @see #readPixels(int, int, int, int, float[], ProgressMonitor)
+           @deprecated since BEAM 4.11. Use {@link #getSourceImage()} instead.
+        """
         return TiePointGrid_readPixels3(self._obj, x, y, w, h, pixels)
+
+    def readPixels1(self, x, y, w, h, pixels):
+        """
+           @see #readPixels(int, int, int, int, double[], ProgressMonitor)
+           @deprecated since BEAM 4.11. Use {@link #getSourceImage()} instead.
+        """
+        return TiePointGrid_readPixels1(self._obj, x, y, w, h, pixels)
 
     def writePixels5(self, x, y, w, h, pixels):
         """
@@ -8266,8 +8956,44 @@ class TiePointGrid:
     def readValidMask(self, x, y, w, h, validMask):
         return TiePointGrid_readValidMask(self._obj, x, y, w, h, validMask)
 
+    def readRasterDataFully1(self):
+        """
+           @throws java.io.IOException if an I/O error occurs
+           @see #readRasterDataFully(ProgressMonitor)
+           @deprecated since BEAM 4.11. Use {@link #getSourceImage()} instead.
+        """
+        TiePointGrid_readRasterDataFully1(self._obj)
+        return
+
+    def readRasterData1(self, offsetX, offsetY, width, height, rasterData):
+        """
+           Reads raster data from the node's associated data source into the given data
+           buffer.
+           @param offsetX    the X-offset in the raster co-ordinates where reading starts
+           @param offsetY    the Y-offset in the raster co-ordinates where reading starts
+           @param width      the width of the raster data buffer
+           @param height     the height of the raster data buffer
+           @param rasterData a raster data buffer receiving the pixels to be read
+           @throws java.io.IOException      if an I/O error occurs
+           @throws IllegalArgumentException if the raster is null
+           @throws IllegalStateException    if this product raster was not added to a product so far, or if the product to
+           which this product raster belongs to, has no associated product reader
+           @see ProductReader#readBandRasterData(Band, int, int, int, int, ProductData, com.bc.ceres.core.ProgressMonitor)
+           @deprecated since BEAM 4.11. Use {@link #getSourceImage()} instead.
+        """
+        TiePointGrid_readRasterData1(self._obj, offsetX, offsetY, width, height, rasterData._obj)
+        return
+
     def writeRasterDataFully1(self):
         TiePointGrid_writeRasterDataFully1(self._obj)
+        return
+
+    def writeRasterData1(self, offsetX, offsetY, width, height, rasterData):
+        """
+           @deprecated since BEAM 4.11. Use {@link #setSourceImage setSourceImage()} or the various {@link #writePixels
+           readPixels()} method variants to set or write raster data.
+        """
+        TiePointGrid_writeRasterData1(self._obj, offsetX, offsetY, width, height, rasterData._obj)
         return
 
     def createCompatibleRasterData1(self):
@@ -8299,6 +9025,28 @@ class TiePointGrid:
            @see #createCompatibleSceneRasterData
         """
         return ProductData(TiePointGrid_createCompatibleRasterData2(self._obj, width, height))
+
+    def isCompatibleRasterData(self, rasterData, w, h):
+        """
+           Tests whether the given parameters specify a compatible raster or not.
+           @param rasterData the raster data
+           @param w          the raster width
+           @param h          the raster height
+           @return {@code true} if so
+           @deprecated since BEAM 4.11. No replacement.
+        """
+        return TiePointGrid_isCompatibleRasterData(self._obj, rasterData._obj, w, h)
+
+    def checkCompatibleRasterData(self, rasterData, w, h):
+        """
+           Throws an <code>IllegalArgumentException</code> if the given parameters dont specify a compatible raster.
+           @param rasterData the raster data
+           @param w          the raster width
+           @param h          the raster height
+           @deprecated since BEAM 4.11. No replacement.
+        """
+        TiePointGrid_checkCompatibleRasterData(self._obj, rasterData._obj, w, h)
+        return
 
     def hasIntPixels(self):
         """
@@ -8579,6 +9327,13 @@ class TiePointGrid:
         """
         return Shape(TiePointGrid_getValidShape(self._obj))
 
+    def getRoiMaskGroup(self):
+        """
+           @return The roi mask group.
+           @deprecated since BEAM 4.10 (no replacement)
+        """
+        return ProductNodeGroup(TiePointGrid_getRoiMaskGroup(self._obj))
+
     def getDataType(self):
         """
            Gets the data type of this data node.
@@ -8608,6 +9363,7 @@ class TiePointGrid:
     def setDataElems(self, elems):
         """
            Sets the data elements of this data node.
+           @deprecated since 5.0
            @see ProductData#setElems(Object)
         """
         TiePointGrid_setDataElems(self._obj, elems._obj)
@@ -8640,6 +9396,19 @@ class TiePointGrid:
 
     def getUnit(self):
         return TiePointGrid_getUnit(self._obj)
+
+    def isSynthetic(self):
+        """
+           @deprecated since BEAM 4.10 (not used, no replacement)
+        """
+        return TiePointGrid_isSynthetic(self._obj)
+
+    def setSynthetic(self, synthetic):
+        """
+           @deprecated since BEAM 4.10 (not used, no replacement)
+        """
+        TiePointGrid_setSynthetic(self._obj, synthetic)
+        return
 
     def fireProductNodeDataChanged(self):
         """
@@ -8787,6 +9556,9 @@ class TiePointGrid:
         """
         TiePointGrid_removeFromFile(self._obj, productWriter._obj)
         return
+
+    def getExtension(self, arg0):
+        return Object(TiePointGrid_getExtension(self._obj, arg0._obj))
 
 
 class SimpleFeature:
@@ -9017,6 +9789,7 @@ class MetadataAttribute:
     def setDataElems(self, elems):
         """
            Sets the data elements of this data node.
+           @deprecated since 5.0
            @see ProductData#setElems(Object)
         """
         MetadataAttribute_setDataElems(self._obj, elems._obj)
@@ -9049,6 +9822,19 @@ class MetadataAttribute:
 
     def getUnit(self):
         return MetadataAttribute_getUnit(self._obj)
+
+    def isSynthetic(self):
+        """
+           @deprecated since BEAM 4.10 (not used, no replacement)
+        """
+        return MetadataAttribute_isSynthetic(self._obj)
+
+    def setSynthetic(self, synthetic):
+        """
+           @deprecated since BEAM 4.10 (not used, no replacement)
+        """
+        MetadataAttribute_setSynthetic(self._obj, synthetic)
+        return
 
     def fireProductNodeDataChanged(self):
         """
@@ -9209,6 +9995,9 @@ class MetadataAttribute:
         """
         MetadataAttribute_removeFromFile(self._obj, productWriter._obj)
         return
+
+    def getExtension(self, arg0):
+        return Object(MetadataAttribute_getExtension(self._obj, arg0._obj))
 
 
 class ProgressMonitor:

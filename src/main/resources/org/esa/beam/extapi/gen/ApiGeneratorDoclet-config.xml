@@ -1,4 +1,5 @@
-<config>
+<config deprecatedClasses="false"
+        deprecatedMethods="true">
 
     <sourcePaths>
         <path>${beamSourceDir}/beam-core/src/main/java</path>
@@ -389,6 +390,22 @@
     </class>
     <class name="org.esa.beam.framework.datamodel.ProductNodeGroup">
         <method name="getExtension" sig="(Ljava/lang/Class;)LE;" ignore="true"/>
+        <method name="add" sig="(ILorg/esa/beam/framework/datamodel/ProductNode;)V" renameTo="addAt"/>
+        <method name="add" sig="(Lorg/esa/beam/framework/datamodel/ProductNode;)Z" renameTo="add"/>
+        <method name="contains" sig="(Ljava/lang/String;)Z" renameTo="containsName"/>
+        <method name="contains" sig="(Lorg/esa/beam/framework/datamodel/ProductNode;)Z" renameTo="contains"/>
+        <method name="fireProductNodeChanged" sig="(Ljava/lang/String;)V" ignore="true"/>
+        <method name="fireProductNodeChanged" sig="(Ljava/lang/String;Ljava/lang/Object;Ljava/lang/Object;)V" ignore="true"/>
+        <method name="get" sig="(I)Lorg/esa/beam/framework/datamodel/ProductNode;" renameTo="getAt"/>
+        <method name="get" sig="(Ljava/lang/String;)Lorg/esa/beam/framework/datamodel/ProductNode;" renameTo="get"/>
+        <method name="getRawStorageSize" sig="()J" ignore="true"/>
+        <method name="getRawStorageSize" sig="(Lorg/esa/beam/framework/dataio/ProductSubsetDef;)J" ignore="true"/>
+        <method name="indexOf" sig="(Ljava/lang/String;)I" renameTo="indexOfName"/>
+        <method name="indexOf" sig="(Lorg/esa/beam/framework/datamodel/ProductNode;)I" renameTo="indexOf"/>
+        <method name="&lt;init&gt;" sig="(Ljava/lang/String;)V" renameTo="newProductNodeGroup"/>
+        <method name="&lt;init&gt;" sig="(Lorg/esa/beam/framework/datamodel/ProductNode;Ljava/lang/String;Z)V" ignore="true"/>
+        <method name="toArray" sig="()[Lorg/esa/beam/framework/datamodel/ProductNode;" ignore="true"/>
+        <method name="toArray" sig="([Lorg/esa/beam/framework/datamodel/ProductNode;)[Lorg/esa/beam/framework/datamodel/ProductNode;" ignore="true"/>
     </class>
     <class name="org.esa.beam.framework.datamodel.RGBChannelDef">
         <method name="&lt;init&gt;" sig="()V" renameTo="newRGBChannelDef"/>

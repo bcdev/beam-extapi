@@ -336,7 +336,8 @@ char* beam_create_class_path_vm_option()
 
     beam_home = getenv("BEAM_HOME");
     if (beam_home == NULL) {
-        fprintf(stderr, "error: environment variable 'BEAM_HOME' not set\n");
+        fprintf(stderr, "beam_capi: missing environment variable 'BEAM_HOME',\n");
+        fprintf(stderr, "           please make sure 'BEAM_HOME' points to a valid BEAM installation directory.\n");
         return NULL;
     }
 
@@ -370,7 +371,12 @@ jboolean beam_create_jvm_with_defaults()
 
     class_path_option = beam_create_class_path_vm_option();
     if (class_path_option == NULL) {
-        fprintf(stderr, "beam_capi: class_path_option == NULL\n");
+        const char* beam_home = getenv("BEAM_HOME");
+        fprintf(stderr, "beam_capi: failed to construct Java classpath\n");
+        if (beam_home != NULL) {
+            fprintf(stderr, "           please make sure 'BEAM_HOME' points to a valid BEAM installation directory.\n");
+            fprintf(stderr, "           Currently BEAM_HOME = %s\n", beam_home);
+        }
         return JNI_FALSE;
     }
 

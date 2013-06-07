@@ -147,7 +147,7 @@ C-Code Generation Considerations
          int beam_strlen(String s);
          void beam_strcpy(String s, char* buf, int max_len);
 * How to treat generics?
-  --> Nothing done so far, maybe <T> --> <Object> and <T extends C> --> C
+  --> Fixed. Now <T> --> <Object> and <T extends C> --> C
 * How to treat (primitive, string & object) arrays parameters?
   --> IN:   float[] a --> const float* aElems, int aLength
   --> OUT:  float[] a --> float* aElems, int aLength

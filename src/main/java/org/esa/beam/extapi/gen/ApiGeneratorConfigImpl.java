@@ -18,11 +18,25 @@ public class ApiGeneratorConfigImpl implements ApiGeneratorConfig {
     private final String[] sourcePaths;
     private final String[] packages;
     private final Map<String, Map<String, MConfig>> mConfigs;
+    private final  boolean includeDeprecatedClasses;
+    private final  boolean includeDeprecatedMethods;
 
-    public ApiGeneratorConfigImpl(String[] sourcePaths, String[] packages, CConfig[] cConfigs) {
+    public ApiGeneratorConfigImpl(String[] sourcePaths, String[] packages, CConfig[] cConfigs, boolean includeDeprecatedClasses, boolean includeDeprecatedMethods) {
         this.sourcePaths = sourcePaths;
         this.packages = packages;
         this.mConfigs = createMConfigMap(cConfigs);
+        this.includeDeprecatedClasses = includeDeprecatedClasses;
+        this.includeDeprecatedMethods = includeDeprecatedMethods;
+    }
+
+    @Override
+    public boolean getIncludeDeprecatedClasses() {
+        return includeDeprecatedClasses;
+    }
+
+    @Override
+    public boolean getIncludeDeprecatedMethods() {
+        return includeDeprecatedMethods;
     }
 
     private static Map<String, Map<String, MConfig>> createMConfigMap(CConfig[] cConfigs) {
@@ -46,7 +60,11 @@ public class ApiGeneratorConfigImpl implements ApiGeneratorConfig {
         final String[] sourcePaths = getSourcePaths(rootElement, templateEval);
         final String[] packages = getPackages(rootElement, templateEval);
         CConfig[] cConfigs = getCConfigs(rootElement);
-        return new ApiGeneratorConfigImpl(sourcePaths, packages, cConfigs);
+        String deprecatedClasses = rootElement.getAttributeValue("deprecatedClasses");
+        String deprecatedMethods = rootElement.getAttributeValue("deprecatedMethods");
+        return new ApiGeneratorConfigImpl(sourcePaths, packages, cConfigs,
+                                          deprecatedClasses != null && deprecatedClasses.equals("true"),
+                                          deprecatedMethods != null && deprecatedMethods.equals("true"));
     }
 
     private static String[] getSourcePaths(Element rootElement, TemplateEval templateEval) {

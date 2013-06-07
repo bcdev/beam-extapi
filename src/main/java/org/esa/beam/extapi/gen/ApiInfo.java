@@ -11,6 +11,8 @@ import java.util.*;
  * @author Norman Fomferra
  */
 public final class ApiInfo {
+    private static ClassDoc OBJECT_DOC;
+
     private final ApiGeneratorConfig config;
     private final Map<ApiClass, ApiMembers> apiClasses;
     private final Map<ApiClass, ApiMembers> allClasses;
@@ -24,6 +26,26 @@ public final class ApiInfo {
         this.apiClasses = apiClasses;
         this.allClasses = allClasses;
         this.usedNonApiClasses = usedNonApiClasses;
+    }
+
+    public static ClassDoc getObjectDoc() {
+        if (OBJECT_DOC == null) {
+            throw new IllegalStateException("OBJECT_DOC == null");
+        }
+        return OBJECT_DOC;
+    }
+
+    public static Type unfoldType(Type type) {
+        final TypeVariable typeVariable = type.asTypeVariable();
+        if (typeVariable == null) {
+            return type;
+        }
+        final Type[] bounds = typeVariable.bounds();
+        if (bounds.length == 1) {
+            return unfoldType(bounds[0]);
+        } else {
+            return getObjectDoc();
+        }
     }
 
     public ApiGeneratorConfig getConfig() {
@@ -88,8 +110,11 @@ public final class ApiInfo {
         }
     }
 
-
     public static ApiInfo create(ApiGeneratorConfig config, RootDoc rootDoc) {
+        OBJECT_DOC = findObjectDoc(rootDoc);
+        if (OBJECT_DOC == null) {
+            throw new IllegalStateException("Can't determine global OBJECT_DOC");
+        }
         Map<ApiClass, ApiMembers> apiClasses = getApiMembers(rootDoc, config);
         Map<ApiClass, ApiMembers> allClasses = getAllClasses(apiClasses);
         Set<ApiClass> usedNonApiClasses = getUsedNonApiClasses(apiClasses, allClasses);
@@ -119,7 +144,6 @@ public final class ApiInfo {
                         }
                     }
                 }
-
             }
         }
     }
@@ -183,6 +207,9 @@ public final class ApiInfo {
         if (!config.isApiClass(classDoc.qualifiedName())) {
             return "not specified in API config";
         }
+        if (classDoc.tags("deprecated").length > 0 && !config.getIncludeDeprecatedClasses()) {
+            return "deprecated";
+        }
         return null;
     }
 
@@ -190,7 +217,7 @@ public final class ApiInfo {
         if (!apiMethod.getMemberDoc().isPublic()) {
             return "not public";
         }
-        if (apiMethod.getMemberDoc().tags("deprecated").length > 0) {
+        if (apiMethod.getMemberDoc().tags("deprecated").length > 0 && !config.getIncludeDeprecatedMethods()) {
             return "deprecated";
         }
         if (!config.isApiMethod(apiMethod.getEnclosingClass().getJavaName(),
@@ -201,10 +228,6 @@ public final class ApiInfo {
         return null;
     }
 
-    private static boolean isObjectClass(Type type) {
-        return type.qualifiedTypeName().equalsIgnoreCase("java.lang.Object");
-    }
-
     private static Map<ApiClass, ApiMembers> getAllClasses(Map<ApiClass, ApiMembers> apiClasses) {
         Map<ApiClass, ApiMembers> allClasses = new HashMap<ApiClass, ApiMembers>();
         for (Map.Entry<ApiClass, ApiMembers> entry : apiClasses.entrySet()) {
@@ -213,12 +236,12 @@ public final class ApiInfo {
         for (Map.Entry<ApiClass, ApiMembers> entry : apiClasses.entrySet()) {
             ApiMembers apiMembers = entry.getValue();
             for (ApiConstant apiConstant : apiMembers.apiConstants) {
-                collectAllClasses(apiConstant.getType(), apiConstant, allClasses);
+                collectAllClasses(unfoldType(apiConstant.getType()), apiConstant, allClasses);
             }
             for (ApiMethod apiMethod : apiMembers.apiMethods) {
-                collectAllClasses(apiMethod.getReturnType(), apiMethod, allClasses);
+                collectAllClasses(unfoldType(apiMethod.getReturnType()), apiMethod, allClasses);
                 for (Parameter parameter : apiMethod.getMemberDoc().parameters()) {
-                    collectAllClasses(parameter.type(), apiMethod, allClasses);
+                    collectAllClasses(unfoldType(parameter.type()), apiMethod, allClasses);
                 }
             }
         }
@@ -275,5 +298,32 @@ public final class ApiInfo {
             this.apiMethods = apiMethods;
         }
     }
+
+
+    private static ClassDoc findObjectDoc(RootDoc rootDoc) {
+        for (ClassDoc classDoc : rootDoc.classes()) {
+            ClassDoc objectDoc = findObjectDoc(classDoc);
+            if (objectDoc != null) {
+                return objectDoc;
+            }
+        }
+        return null;
+    }
+
+    private static ClassDoc findObjectDoc(ClassDoc classDoc) {
+        do {
+            if (isObjectClass(classDoc)) {
+                return classDoc;
+            }
+            classDoc = classDoc.superclass();
+        } while (classDoc != null);
+        return null;
+    }
+
+
+    private static boolean isObjectClass(Type type) {
+        return type.qualifiedTypeName().equals("java.lang.Object");
+    }
+
 
 }

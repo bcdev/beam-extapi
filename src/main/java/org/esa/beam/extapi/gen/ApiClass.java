@@ -15,7 +15,10 @@ public final class ApiClass implements Comparable<ApiClass> {
 
     public ApiClass(Type type) {
         if (type.isPrimitive()) {
-            throw new IllegalArgumentException("type");
+            throw new IllegalArgumentException("type.isPrimitive()");
+        }
+        if (type.asTypeVariable() != null) {
+            throw new IllegalArgumentException("type.asTypeVariable() != null");
         }
 
         this.type = type;
