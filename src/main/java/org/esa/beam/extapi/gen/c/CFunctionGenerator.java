@@ -46,7 +46,7 @@ public abstract class CFunctionGenerator implements FunctionGenerator {
     }
 
     @Override
-    public String getFunctionName(GeneratorContext context) {
+    public String generateFunctionName(GeneratorContext context) {
         return context.getFunctionNameFor(getApiMethod());
     }
 
@@ -58,7 +58,7 @@ public abstract class CFunctionGenerator implements FunctionGenerator {
     @Override
     public String generateFunctionSignature(GeneratorContext context) {
         String returnTypeName = JavadocHelpers.getCTypeName(getReturnType());
-        String functionName = getFunctionName(context);
+        String functionName = generateFunctionName(context);
         String parameterList = generateParameterList(context);
         if (parameterList.isEmpty()) {
             return String.format("%s %s()",

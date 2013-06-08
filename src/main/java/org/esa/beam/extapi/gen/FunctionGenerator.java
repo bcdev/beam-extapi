@@ -8,6 +8,8 @@ public interface FunctionGenerator {
 
     ParameterGenerator[] getParameterGenerators();
 
+    String generateFunctionName(GeneratorContext context);
+
     String generateParamListDecl(GeneratorContext context);
 
     String generateLocalVarDecl(GeneratorContext context);
@@ -17,8 +19,6 @@ public interface FunctionGenerator {
     String generateCallCode(GeneratorContext context);
 
     String generatePostCallCode(GeneratorContext context);
-
-    String getFunctionName(GeneratorContext context);
 
     String generateInitCode(GeneratorContext context);
 

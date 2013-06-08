@@ -284,8 +284,8 @@ public class PyCModuleGenerator extends ModuleGenerator {
                 for (ApiClass apiClass : getApiClasses()) {
                     for (FunctionGenerator generator : getFunctionGenerators(apiClass)) {
                         writer.printf("    {\"%s\", %s, METH_VARARGS, \"%s\"},\n",
-                                      generator.getFunctionName(cModuleGenerator),
-                                      generator.getFunctionName(PyCModuleGenerator.this),
+                                      generator.generateFunctionName(cModuleGenerator),
+                                      generator.generateFunctionName(PyCModuleGenerator.this),
                                       generator.generateDocText(PyCModuleGenerator.this));
                     }
                 }

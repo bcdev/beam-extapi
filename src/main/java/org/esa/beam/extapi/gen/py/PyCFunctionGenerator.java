@@ -63,7 +63,7 @@ public abstract class PyCFunctionGenerator implements FunctionGenerator {
     }
 
     @Override
-    public String getFunctionName(GeneratorContext context) {
+    public String generateFunctionName(GeneratorContext context) {
         return context.getFunctionNameFor(getApiMethod());
     }
 
