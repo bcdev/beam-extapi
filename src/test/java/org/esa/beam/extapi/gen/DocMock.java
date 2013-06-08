@@ -39,6 +39,8 @@ public class DocMock {
         when(classDoc.simpleTypeName()).thenReturn(clazz.getSimpleName());
         when(classDoc.typeName()).thenReturn(typeName);
         when(classDoc.dimension()).thenReturn("");
+        when(classDoc.tags()).thenReturn(new Tag[0]);
+        when(classDoc.tags("deprecated")).thenReturn(new Tag[0]);
         when(classDoc.isPrimitive()).thenReturn(clazz.isPrimitive());
         when(classDoc.isInterface()).thenReturn(clazz.isInterface());
         when(classDoc.isPublic()).thenReturn(Modifier.isPublic(clazz.getModifiers()));
