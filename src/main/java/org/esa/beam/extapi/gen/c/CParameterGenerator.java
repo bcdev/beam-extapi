@@ -31,7 +31,12 @@ public abstract class CParameterGenerator implements ParameterGenerator {
     }
 
     @Override
-    public String generateLocalVarDecl(GeneratorContext context) {
+    public String generateJniArgDecl(GeneratorContext context) {
+        return null;
+    }
+
+    @Override
+    public String generateTargetArgDecl(GeneratorContext context) {
         return null;
     }
 
@@ -96,8 +101,13 @@ public abstract class CParameterGenerator implements ParameterGenerator {
         }
 
         @Override
-        public String generateLocalVarDecl(GeneratorContext context) {
+        public String generateJniArgDecl(GeneratorContext context) {
             return String.format("jstring %sString = NULL;", getName());
+        }
+
+        @Override
+        public String generateTargetArgDecl(GeneratorContext context) {
+            return null;
         }
 
         @Override
@@ -126,10 +136,15 @@ public abstract class CParameterGenerator implements ParameterGenerator {
                         kv("p", getName()));
         }
 
-        @Override
-        public String generateLocalVarDecl(GeneratorContext context) {
-            return eval("jarray ${p}Array = NULL;",
-                        kv("p", getName()));
+         @Override
+         public String generateJniArgDecl(GeneratorContext context) {
+             return eval("jarray ${p}Array = NULL;",
+                         kv("p", getName()));
+         }
+
+         @Override
+        public String generateTargetArgDecl(GeneratorContext context) {
+            return null;
         }
 
         @Override
@@ -198,9 +213,14 @@ public abstract class CParameterGenerator implements ParameterGenerator {
         }
 
         @Override
-        public String generateLocalVarDecl(GeneratorContext context) {
+        public String generateJniArgDecl(GeneratorContext context) {
             return eval("jarray ${p}Array = NULL;",
                         kv("p", getName()));
+        }
+
+        @Override
+        public String generateTargetArgDecl(GeneratorContext context) {
+            return null;
         }
 
         @Override
@@ -236,9 +256,14 @@ public abstract class CParameterGenerator implements ParameterGenerator {
         }
 
         @Override
-        public String generateLocalVarDecl(GeneratorContext context) {
+        public String generateJniArgDecl(GeneratorContext context) {
             return eval("jobjectArray ${p}Array = NULL;",
                         kv("p", getName()));
+        }
+
+        @Override
+        public String generateTargetArgDecl(GeneratorContext context) {
+            return null;
         }
 
         @Override

@@ -221,7 +221,7 @@ public class PyCParameterGeneratorTest {
                                 String callArgExpr, String postCallCode) {
         // We don't generate parameters because the Python API uses PyObject* args
         assertEquals(null, parameterGenerator.generateParamListDecl(context));
-        assertEquals(localVarDecl, parameterGenerator.generateLocalVarDecl(context));
+        assertEquals(localVarDecl, parameterGenerator.generateTargetArgDecl(context));
         assertEquals(preCallCode, parameterGenerator.generatePreCallCode(context));
         assertEquals(callArgExpr, parameterGenerator.generateCallCode(context));
         assertEquals(postCallCode, parameterGenerator.generatePostCallCode(context));

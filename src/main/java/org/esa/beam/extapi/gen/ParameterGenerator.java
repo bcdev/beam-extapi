@@ -12,7 +12,9 @@ public interface ParameterGenerator {
 
     String generateParamListDecl(GeneratorContext context);
 
-    String generateLocalVarDecl(GeneratorContext context);
+    String generateJniArgDecl(GeneratorContext context);
+
+    String generateTargetArgDecl(GeneratorContext context);
 
     String generatePreCallCode(GeneratorContext context);
 

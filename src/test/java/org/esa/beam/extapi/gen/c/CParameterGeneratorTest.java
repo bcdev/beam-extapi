@@ -59,6 +59,7 @@ public class CParameterGeneratorTest {
     public void test_CodeGenParameter_StringScalar() {
         testGenerators(new CParameterGenerator.StringScalar(createParam("name", String.class, Modifier.IN)),
                        "const char* name",
+                       null,
                        "jstring nameString = NULL;",
                        "nameString = (*jenv)->NewStringUTF(jenv, name);",
                        "nameString",
@@ -69,6 +70,7 @@ public class CParameterGeneratorTest {
     public void test_CodeGenParameter_PrimitiveArray() {
         testPrimitiveArray("data", boolean[].class, Modifier.IN,
                            "const boolean* dataElems, int dataLength",
+                           null,
                            "jarray dataArray = NULL;",
                            "dataArray = (*jenv)->NewBooleanArray(jenv, dataLength);\n" +
                                    "beam_copy_to_jarray(dataArray, dataElems, dataLength, sizeof (boolean));",
@@ -77,6 +79,7 @@ public class CParameterGeneratorTest {
 
         testPrimitiveArray("data", int[].class, Modifier.OUT,
                            "int* dataElems, int dataLength",
+                           null,
                            "jarray dataArray = NULL;",
                            "dataArray = (*jenv)->NewIntArray(jenv, dataLength);",
                            "dataArray",
@@ -84,6 +87,7 @@ public class CParameterGeneratorTest {
 
         testPrimitiveArray("data", float[].class, Modifier.RETURN,
                            "float* dataElems, int dataLength",
+                           null,
                            "jarray dataArray = NULL;",
                            "dataArray = (*jenv)->NewFloatArray(jenv, dataLength);",
                            "dataArray",
@@ -101,6 +105,7 @@ public class CParameterGeneratorTest {
     public void test_CodeGenParameter_ObjectArray() {
         testObjectArray("bands", Band[].class, Modifier.IN,
                         "const Band bandsElems, int bandsLength",
+                        null,
                         "jarray bandsArray = NULL;",
                         "bandsArray = beam_new_jobject_array(bandsElems, bandsLength, classBand);",
                         "bandsArray",
@@ -108,6 +113,7 @@ public class CParameterGeneratorTest {
 
         testObjectArray("bands", Band[].class, Modifier.OUT,
                         "Band bandsElems, int bandsLength",
+                        null,
                         "jarray bandsArray = NULL;",
                         "bandsArray = beam_new_jobject_array(bandsElems, bandsLength, classBand);",
                         "bandsArray",
@@ -115,6 +121,7 @@ public class CParameterGeneratorTest {
 
         testObjectArray("bands", Band[].class, Modifier.RETURN,
                         "Band bandsElems, int bandsLength",
+                        null,
                         "jarray bandsArray = NULL;",
                         "bandsArray = beam_new_jobject_array(bandsElems, bandsLength, classBand);",
                         "bandsArray",
@@ -125,6 +132,7 @@ public class CParameterGeneratorTest {
     public void test_CodeGenParameter_StringArray() {
         testStringArray("names", String[].class, Modifier.IN,
                         "const char** namesElems, int namesLength",
+                        null,
                         "jobjectArray namesArray = NULL;",
                         "namesArray = beam_new_jstring_array(namesElems, namesLength);",
                         "namesArray",
@@ -132,6 +140,7 @@ public class CParameterGeneratorTest {
 
         testStringArray("names", String[].class, Modifier.OUT,
                         "char** namesElems, int namesLength",
+                        null,
                         "jobjectArray namesArray = NULL;",
                         "namesArray = beam_new_jstring_array(namesElems, namesLength);",
                         "namesArray",
@@ -139,6 +148,7 @@ public class CParameterGeneratorTest {
 
         testStringArray("names", String[].class, Modifier.RETURN,
                         "char** namesElems, int namesLength",
+                        null,
                         "jobjectArray namesArray = NULL;",
                         "namesArray = beam_new_jstring_array(namesElems, namesLength);",
                         "namesArray",
@@ -149,15 +159,20 @@ public class CParameterGeneratorTest {
         testGenerators(new CParameterGenerator.PrimitiveScalar(createParam(name, type, modifier)),
                        paramListDecl,
                        null,
-                       null,
+                       null, null,
                        callArgExpr,
                        null);
     }
 
-    private void testPrimitiveArray(String name, Class<?> type, Modifier modifier, String paramListDecl, String localVarDecl, String preCallCode, String callArgExpr, String postCallCode) {
+    private void testPrimitiveArray(String name, Class<?> type, Modifier modifier,
+                                    String paramListDecl,
+                                    String targetArgDecl,
+                                    String jniArgDecl,
+                                    String preCallCode, String callArgExpr, String postCallCode) {
         testGenerators(new CParameterGenerator.PrimitiveArray(createParam(name, type, modifier)),
                        paramListDecl,
-                       localVarDecl,
+                       targetArgDecl,
+                       jniArgDecl,
                        preCallCode,
                        callArgExpr,
                        postCallCode);
@@ -165,13 +180,15 @@ public class CParameterGeneratorTest {
 
     private void testStringArray(String name, Class<?> type, Modifier modifier,
                                  String paramListDecl,
-                                 String localVarDecl,
+                                 String targetArgDecl,
+                                 String jniArgDecl,
                                  String preCallCode,
                                  String callArgExpr,
                                  String postCallCode) {
         testGenerators(new CParameterGenerator.StringArray(createParam(name, type, modifier)),
                        paramListDecl,
-                       localVarDecl,
+                       targetArgDecl,
+                       jniArgDecl,
                        preCallCode,
                        callArgExpr,
                        postCallCode);
@@ -179,13 +196,15 @@ public class CParameterGeneratorTest {
 
     private void testObjectArray(String name, Class<?> type, Modifier modifier,
                                  String paramListDecl,
-                                 String localVarDecl,
+                                 String targetArgDecl,
+                                 String jniArgDecl,
                                  String preCallCode,
                                  String callArgExpr,
                                  String postCallCode) {
         testGenerators(new CParameterGenerator.ObjectArray(createParam(name, type, modifier)),
                        paramListDecl,
-                       localVarDecl,
+                       targetArgDecl,
+                       jniArgDecl,
                        preCallCode,
                        callArgExpr,
                        postCallCode);
@@ -193,17 +212,19 @@ public class CParameterGeneratorTest {
 
     private void testObjectScalar(String name, Class<?> type, String paramListDecl, String callArgExpr) {
         testGenerators(new CParameterGenerator.ObjectScalar(createParam(name, type, Modifier.IN)),
-                       paramListDecl, null, null, callArgExpr, null);
+                       paramListDecl, null, null, null, callArgExpr, null);
     }
 
     private void testGenerators(ParameterGenerator parameterGenerator,
                                 String paramListDecl,
-                                String localVarDecl,
+                                String targetArgDecl,
+                                String jniArgDecl,
                                 String preCallCode,
                                 String callArgExpr,
                                 String postCallCode) {
         assertEquals(paramListDecl, parameterGenerator.generateParamListDecl(context));
-        assertEquals(localVarDecl, parameterGenerator.generateLocalVarDecl(context));
+        assertEquals(targetArgDecl, parameterGenerator.generateTargetArgDecl(context));
+        assertEquals(jniArgDecl, parameterGenerator.generateJniArgDecl(context));
         assertEquals(preCallCode, parameterGenerator.generatePreCallCode(context));
         assertEquals(callArgExpr, parameterGenerator.generateCallCode(context));
         assertEquals(postCallCode, parameterGenerator.generatePostCallCode(context));

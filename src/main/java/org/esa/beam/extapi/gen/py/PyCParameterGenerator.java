@@ -32,7 +32,12 @@ public abstract class PyCParameterGenerator implements ParameterGenerator {
     }
 
     @Override
-    public String generateLocalVarDecl(GeneratorContext context) {
+    public String generateJniArgDecl(GeneratorContext context) {
+        return null;
+    }
+
+    @Override
+    public String generateTargetArgDecl(GeneratorContext context) {
         String typeName = getComponentCTypeName(getType());
         return String.format("%s %s;", typeName, getName());
     }
@@ -102,7 +107,7 @@ public abstract class PyCParameterGenerator implements ParameterGenerator {
         }
 
         @Override
-        public String generateLocalVarDecl(GeneratorContext context) {
+        public String generateTargetArgDecl(GeneratorContext context) {
             return PyCFunctionGenerator.generateObjectTypeDecl(getName());
         }
 
@@ -128,7 +133,7 @@ public abstract class PyCParameterGenerator implements ParameterGenerator {
         }
 
         @Override
-        public String generateLocalVarDecl(GeneratorContext context) {
+        public String generateTargetArgDecl(GeneratorContext context) {
             return String.format("const char* %s;", getName());
         }
 
@@ -150,7 +155,7 @@ public abstract class PyCParameterGenerator implements ParameterGenerator {
         }
 
         @Override
-        public String generateLocalVarDecl(GeneratorContext context) {
+        public String generateTargetArgDecl(GeneratorContext context) {
             return eval("${t}* ${p};\n" +
                                 "int ${p}Length;\n" +
                                 "PyObject* ${p}Obj;\n" +
@@ -234,7 +239,7 @@ public abstract class PyCParameterGenerator implements ParameterGenerator {
         }
 
         @Override
-        public String generateLocalVarDecl(GeneratorContext context) {
+        public String generateTargetArgDecl(GeneratorContext context) {
             return eval("${t} ${p};\n" +
                                 "int ${p}Length;\n" +
                                 "PyObject* ${p}Seq;",
@@ -273,7 +278,7 @@ public abstract class PyCParameterGenerator implements ParameterGenerator {
         }
 
         @Override
-        public String generateLocalVarDecl(GeneratorContext context) {
+        public String generateTargetArgDecl(GeneratorContext context) {
             return eval("char** ${p};\n" +
                                 "int ${p}Length;\n" +
                                 "PyObject* ${p}Seq;",
