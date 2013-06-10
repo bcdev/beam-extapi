@@ -79,12 +79,12 @@ public abstract class PyCFunctionGenerator implements FunctionGenerator {
     }
 
     @Override
-    public final String generateLocalVarDecl(GeneratorContext context) {
+    public final String generateTargetResultDeclaration(GeneratorContext context) {
         StringBuilder sb = new StringBuilder();
         if (isInstanceMethod()) {
             sb.append(generateObjectTypeDecl(PyCModuleGenerator.THIS_VAR_NAME));
         }
-        String localVarDecl = generateLocalVarDecl0(context);
+        String localVarDecl = generateTargetResultDeclaration0(context);
         if (localVarDecl != null) {
             if (sb.length() > 0) {
                 sb.append("\n");
@@ -94,7 +94,12 @@ public abstract class PyCFunctionGenerator implements FunctionGenerator {
         return sb.toString();
     }
 
-    protected abstract String generateLocalVarDecl0(GeneratorContext context);
+    @Override
+    public String generateJniResultDeclaration(GeneratorContext context) {
+        return null;
+    }
+
+    protected abstract String generateTargetResultDeclaration0(GeneratorContext context);
 
     String format(String pattern, TemplateEval.KV... pairs) {
         return templateEval.add(pairs).eval(pattern);
@@ -107,12 +112,12 @@ public abstract class PyCFunctionGenerator implements FunctionGenerator {
     }
 
     @Override
-    public String generateParamListDecl(GeneratorContext context) {
+    public String generateExtraFunctionParamDeclaration(GeneratorContext context) {
         return null;
     }
 
     @Override
-    public String generateInitCode(GeneratorContext context) {
+    public String generateTargetArgsFromParsedParamsAssignment(GeneratorContext context) {
         StringBuilder formatString = new StringBuilder();
         StringBuilder argumentsStrings = new StringBuilder();
         if (isInstanceMethod()) {
@@ -144,12 +149,20 @@ public abstract class PyCFunctionGenerator implements FunctionGenerator {
     }
 
     @Override
-    public String generatePreCallCode(GeneratorContext context) {
+    public String generateTargetResultFromTransformedJniResultAssignment(GeneratorContext context) {
+        // todo - Python-C code shall directly call JNI, but we still call the C-API here
         return null;
     }
 
     @Override
-    public String generatePostCallCode(GeneratorContext context) {
+    public String generateJniResultDeref(GeneratorContext context) {
+        // todo - Python-C code shall directly call JNI, but we still call the C-API here
+        return null;
+    }
+
+    @Override
+    public String generateLocalVarDeclarations(ModuleGenerator moduleGenerator) {
+        // todo - Python-C code shall directly call JNI, but we still call the C-API here
         return null;
     }
 
@@ -180,7 +193,7 @@ public abstract class PyCFunctionGenerator implements FunctionGenerator {
             if (argumentList.length() > 0) {
                 argumentList.append(", ");
             }
-            argumentList.append(parameterGenerator.generateCallCode(context));
+            argumentList.append(parameterGenerator.generateJniCallArgs(context));
         }
 
         String extraArgs = generateExtraArgs();
@@ -232,18 +245,18 @@ public abstract class PyCFunctionGenerator implements FunctionGenerator {
         }
 
         @Override
-        public String generateLocalVarDecl0(GeneratorContext context) {
+        public String generateTargetResultDeclaration0(GeneratorContext context) {
             return null;
         }
 
         @Override
-        public String generateCallCode(GeneratorContext context) {
+        public String generateJniResultFromJniCallAssignment(GeneratorContext context) {
             return format("${call};",
                           kv("call", generateCApiCall(context)));
         }
 
         @Override
-        public String generateReturnCode(GeneratorContext context) {
+        public String generateReturnStatement(GeneratorContext context) {
             return "return Py_BuildValue(\"\");";
         }
     }
@@ -254,19 +267,19 @@ public abstract class PyCFunctionGenerator implements FunctionGenerator {
         }
 
         @Override
-        public String generateLocalVarDecl0(GeneratorContext context) {
+        public String generateTargetResultDeclaration0(GeneratorContext context) {
             return format("${type} ${res};",
                           kv("type", JavadocHelpers.getCTypeName(getReturnType())));
         }
 
         @Override
-        public String generateCallCode(GeneratorContext context) {
+        public String generateJniResultFromJniCallAssignment(GeneratorContext context) {
             return format("${res} = ${call};",
                           kv("call", generateCApiCall(context)));
         }
 
         @Override
-        public String generateReturnCode(GeneratorContext context) {
+        public String generateReturnStatement(GeneratorContext context) {
             return format("return ${res};");
         }
     }
@@ -283,7 +296,7 @@ public abstract class PyCFunctionGenerator implements FunctionGenerator {
         }
 
         @Override
-        public String generateReturnCode(GeneratorContext context) {
+        public String generateReturnStatement(GeneratorContext context) {
 
             String s = getReturnType().typeName();
             if (s.equals("boolean")) {
@@ -314,18 +327,18 @@ public abstract class PyCFunctionGenerator implements FunctionGenerator {
         }
 
         @Override
-        public String generateLocalVarDecl0(GeneratorContext context) {
+        public String generateTargetResultDeclaration0(GeneratorContext context) {
             return format("void* ${res};");
         }
 
         @Override
-        public String generateCallCode(GeneratorContext context) {
+        public String generateJniResultFromJniCallAssignment(GeneratorContext context) {
             return format("${res} = ${call};",
                           kv("call", generateCApiCall(context)));
         }
 
         @Override
-        public String generateReturnCode(GeneratorContext context) {
+        public String generateReturnStatement(GeneratorContext context) {
             return format("if (${res} != NULL) {\n" +
                                   "    return Py_BuildValue(\"(sK)\", \"${type}\", (unsigned PY_LONG_LONG) ${res});\n" +
                                   "} else {\n" +
@@ -341,19 +354,19 @@ public abstract class PyCFunctionGenerator implements FunctionGenerator {
         }
 
         @Override
-        public String generateLocalVarDecl0(GeneratorContext context) {
+        public String generateTargetResultDeclaration0(GeneratorContext context) {
             return format("char* ${res};\n" +
                                   "PyObject* ${res}Str;");
         }
 
         @Override
-        public String generateCallCode(GeneratorContext context) {
+        public String generateJniResultFromJniCallAssignment(GeneratorContext context) {
             return format("${res} = ${call};",
                           kv("call", generateCApiCall(context)));
         }
 
         @Override
-        public String generateReturnCode(GeneratorContext context) {
+        public String generateReturnStatement(GeneratorContext context) {
             return format("if (${res} != NULL) {\n" +
                                   "    ${res}Str = PyUnicode_FromString(${res});\n" +
                                   "    beam_release_string(${res});\n" +
@@ -381,7 +394,7 @@ public abstract class PyCFunctionGenerator implements FunctionGenerator {
         }
 
         @Override
-        public String generateLocalVarDecl0(GeneratorContext context) {
+        public String generateTargetResultDeclaration0(GeneratorContext context) {
             ApiParameter returnParameter = getReturnParameter(context);
             if (returnParameter != null) {
                 return format("${t}* ${res};\n" +
@@ -396,7 +409,7 @@ public abstract class PyCFunctionGenerator implements FunctionGenerator {
         }
 
         @Override
-        public String generateReturnCode(GeneratorContext context) {
+        public String generateReturnStatement(GeneratorContext context) {
             String typeName = getComponentCTypeName(getReturnType());
             String typeCode = CARRAY_TYPE_CODES.get(typeName);
             if (typeCode == null) {
@@ -446,7 +459,7 @@ public abstract class PyCFunctionGenerator implements FunctionGenerator {
         }
 
         @Override
-        public String generateLocalVarDecl0(GeneratorContext context) {
+        public String generateTargetResultDeclaration0(GeneratorContext context) {
             return format("${t}* ${res};\n" +
                                   "int ${res}Length;\n" +
                                   "PyObject* ${res}Seq;",
@@ -454,7 +467,7 @@ public abstract class PyCFunctionGenerator implements FunctionGenerator {
         }
 
         @Override
-        public String generateReturnCode(GeneratorContext context) {
+        public String generateReturnStatement(GeneratorContext context) {
             String typeName = getComponentCTypeName(getReturnType());
             return format("if (${res} != NULL) {\n" +
                                   "    ${res}Seq = beam_new_pyseq_from_jobject_array(\"${type}\", ${res}, ${res}Length);\n" +
@@ -473,7 +486,7 @@ public abstract class PyCFunctionGenerator implements FunctionGenerator {
         }
 
         @Override
-        public String generateLocalVarDecl0(GeneratorContext context) {
+        public String generateTargetResultDeclaration0(GeneratorContext context) {
             return format("${t}* ${res};\n" +
                                   "int ${res}Length;\n" +
                                   "PyObject* ${res}Seq;",
@@ -481,7 +494,7 @@ public abstract class PyCFunctionGenerator implements FunctionGenerator {
         }
 
         @Override
-        public String generateReturnCode(GeneratorContext context) {
+        public String generateReturnStatement(GeneratorContext context) {
             return format("if (${res} != NULL) {\n" +
                                   "    ${res}Seq = beam_new_pyseq_from_string_array(${res}, ${res}Length);\n" +
                                   "    beam_release_string_array(${res}, ${res}Length);\n" +

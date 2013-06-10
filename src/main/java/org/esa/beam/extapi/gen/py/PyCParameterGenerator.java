@@ -32,33 +32,40 @@ public abstract class PyCParameterGenerator implements ParameterGenerator {
     }
 
     @Override
-    public String generateJniArgDecl(GeneratorContext context) {
+    public String generateJniArgDeclaration(GeneratorContext context) {
         return null;
     }
 
     @Override
-    public String generateTargetArgDecl(GeneratorContext context) {
+    public String generateTargetArgDeclaration(GeneratorContext context) {
         String typeName = getComponentCTypeName(getType());
         return String.format("%s %s;", typeName, getName());
     }
 
     @Override
-    public String generateCallCode(GeneratorContext context) {
+    public String generateJniCallArgs(GeneratorContext context) {
+        // todo - Python-C code shall directly call JNI, but we still call the C-API here
         return getName();
     }
 
     @Override
-    public String generateParamListDecl(GeneratorContext context) {
+    public String generateJniArgDeref(GeneratorContext context) {
+        // todo - Python-C code shall directly call JNI, but we still call the C-API here
         return null;
     }
 
     @Override
-    public String generatePreCallCode(GeneratorContext context) {
+    public String generateFunctionParamDeclaration(GeneratorContext context) {
         return null;
     }
 
     @Override
-    public String generatePostCallCode(GeneratorContext context) {
+    public String generateJniArgFromTransformedTargetArgAssignment(GeneratorContext context) {
+        return null;
+    }
+
+    @Override
+    public String generateTargetResultFromTransformedJniResultAssignment(GeneratorContext context) {
         return null;
     }
 
@@ -107,12 +114,12 @@ public abstract class PyCParameterGenerator implements ParameterGenerator {
         }
 
         @Override
-        public String generateTargetArgDecl(GeneratorContext context) {
+        public String generateTargetArgDeclaration(GeneratorContext context) {
             return PyCFunctionGenerator.generateObjectTypeDecl(getName());
         }
 
         @Override
-        public String generateCallCode(GeneratorContext context) {
+        public String generateJniCallArgs(GeneratorContext context) {
             return String.format("(%s) %s", CModuleGenerator.getComponentCClassName(getType()), getName());
         }
 
@@ -133,7 +140,7 @@ public abstract class PyCParameterGenerator implements ParameterGenerator {
         }
 
         @Override
-        public String generateTargetArgDecl(GeneratorContext context) {
+        public String generateTargetArgDeclaration(GeneratorContext context) {
             return String.format("const char* %s;", getName());
         }
 
@@ -155,7 +162,7 @@ public abstract class PyCParameterGenerator implements ParameterGenerator {
         }
 
         @Override
-        public String generateTargetArgDecl(GeneratorContext context) {
+        public String generateTargetArgDeclaration(GeneratorContext context) {
             return eval("${t}* ${p};\n" +
                                 "int ${p}Length;\n" +
                                 "PyObject* ${p}Obj;\n" +
@@ -172,7 +179,7 @@ public abstract class PyCParameterGenerator implements ParameterGenerator {
         }
 
         @Override
-        public String generatePreCallCode(GeneratorContext context) {
+        public String generateJniArgFromTransformedTargetArgAssignment(GeneratorContext context) {
             String typeName = getComponentCTypeName(getType());
             String format = PyCFunctionGenerator.CARRAY_TYPE_CODES.get(typeName);
             if (format == null) {
@@ -209,13 +216,13 @@ public abstract class PyCParameterGenerator implements ParameterGenerator {
         }
 
         @Override
-        public String generateCallCode(GeneratorContext context) {
+        public String generateJniCallArgs(GeneratorContext context) {
             return eval("${p}, ${p}Length",
                         kv("p", getName()));
         }
 
         @Override
-        public String generatePostCallCode(GeneratorContext context) {
+        public String generateTargetResultFromTransformedJniResultAssignment(GeneratorContext context) {
             return eval("PyBuffer_Release(&${p}Buf);",
                         kv("p", getName()));
         }
@@ -239,7 +246,7 @@ public abstract class PyCParameterGenerator implements ParameterGenerator {
         }
 
         @Override
-        public String generateTargetArgDecl(GeneratorContext context) {
+        public String generateTargetArgDeclaration(GeneratorContext context) {
             return eval("${t} ${p};\n" +
                                 "int ${p}Length;\n" +
                                 "PyObject* ${p}Seq;",
@@ -248,16 +255,16 @@ public abstract class PyCParameterGenerator implements ParameterGenerator {
         }
 
         @Override
-        public String generatePreCallCode(GeneratorContext context) {
-            return eval("${p} = beam_new_jobject_array_from_pyseq(\"${t}\", ${p}Seq, &${p}Length);",
-                        kv("p", getName()),
-                        kv("t", getComponentCTypeName(getType())));
+        public String generateJniCallArgs(GeneratorContext context) {
+            return eval("${p}, ${p}Length",
+                        kv("p", getName()));
         }
 
         @Override
-        public String generateCallCode(GeneratorContext context) {
-            return eval("${p}, ${p}Length",
-                        kv("p", getName()));
+        public String generateJniArgFromTransformedTargetArgAssignment(GeneratorContext context) {
+            return eval("${p} = beam_new_jobject_array_from_pyseq(\"${t}\", ${p}Seq, &${p}Length);",
+                        kv("p", getName()),
+                        kv("t", getComponentCTypeName(getType())));
         }
 
         @Override
@@ -278,7 +285,7 @@ public abstract class PyCParameterGenerator implements ParameterGenerator {
         }
 
         @Override
-        public String generateTargetArgDecl(GeneratorContext context) {
+        public String generateTargetArgDeclaration(GeneratorContext context) {
             return eval("char** ${p};\n" +
                                 "int ${p}Length;\n" +
                                 "PyObject* ${p}Seq;",
@@ -286,14 +293,14 @@ public abstract class PyCParameterGenerator implements ParameterGenerator {
         }
 
         @Override
-        public String generatePreCallCode(GeneratorContext context) {
+        public String generateJniArgFromTransformedTargetArgAssignment(GeneratorContext context) {
             return eval("${p} = beam_new_string_array_from_pyseq(${p}Seq, &${p}Length);",
                         kv("p", getName()),
                         kv("c", CModuleGenerator.getComponentCClassVarName(getType())));
         }
 
         @Override
-        public String generateCallCode(GeneratorContext context) {
+        public String generateJniCallArgs(GeneratorContext context) {
             return eval("${p}, ${p}Length",
                         kv("p", getName()));
         }

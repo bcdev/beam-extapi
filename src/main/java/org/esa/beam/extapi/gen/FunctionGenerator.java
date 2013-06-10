@@ -8,23 +8,27 @@ public interface FunctionGenerator {
 
     ParameterGenerator[] getParameterGenerators();
 
+    String generateDocText(GeneratorContext context);
+
     String generateFunctionName(GeneratorContext context);
-
-    String generateParamListDecl(GeneratorContext context);
-
-    String generateLocalVarDecl(GeneratorContext context);
-
-    String generatePreCallCode(GeneratorContext context);
-
-    String generateCallCode(GeneratorContext context);
-
-    String generatePostCallCode(GeneratorContext context);
-
-    String generateInitCode(GeneratorContext context);
 
     String generateFunctionSignature(GeneratorContext context);
 
-    String generateReturnCode(GeneratorContext context);
+    String generateExtraFunctionParamDeclaration(GeneratorContext context);
 
-    String generateDocText(GeneratorContext context);
+    String generateLocalVarDeclarations(ModuleGenerator moduleGenerator);
+
+    String generateTargetResultDeclaration(GeneratorContext context);
+
+    String generateJniResultDeclaration(GeneratorContext context);
+
+    String generateTargetArgsFromParsedParamsAssignment(GeneratorContext context);
+
+    String generateJniResultFromJniCallAssignment(GeneratorContext context);
+
+    String generateTargetResultFromTransformedJniResultAssignment(GeneratorContext context);
+
+    String generateJniResultDeref(GeneratorContext context);
+
+    String generateReturnStatement(GeneratorContext context);
 }

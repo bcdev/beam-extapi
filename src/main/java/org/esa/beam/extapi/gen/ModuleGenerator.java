@@ -80,30 +80,28 @@ public abstract class ModuleGenerator implements GeneratorContext {
     public void writeFunctionDefinition(FunctionGenerator functionGenerator, PrintWriter writer) throws IOException {
         writer.printf("%s\n", functionGenerator.generateFunctionSignature(this));
         writer.print("{\n");
-        writeLocalMethodVarDecl(writer);
+        writeFunctionBodyCode(writer, functionGenerator.generateLocalVarDeclarations(this));
         for (ParameterGenerator parameterGenerator : functionGenerator.getParameterGenerators()) {
-            writeCode(writer, parameterGenerator.generateTargetArgDecl(this));
+            writeFunctionBodyCode(writer, parameterGenerator.generateTargetArgDeclaration(this));
+            writeFunctionBodyCode(writer, parameterGenerator.generateJniArgDeclaration(this));
         }
-        for (ParameterGenerator parameterGenerator : functionGenerator.getParameterGenerators()) {
-            writeCode(writer, parameterGenerator.generateJniArgDecl(this));
-        }
-        writeCode(writer, functionGenerator.generateLocalVarDecl(this));
-        writeCode(writer, functionGenerator.generateInitCode(this));
+        writeFunctionBodyCode(writer, functionGenerator.generateTargetResultDeclaration(this));
+        writeFunctionBodyCode(writer, functionGenerator.generateJniResultDeclaration(this));
+        writeFunctionBodyCode(writer, functionGenerator.generateTargetArgsFromParsedParamsAssignment(this));
         writeInitCode(writer, functionGenerator);
         for (ParameterGenerator parameterGenerator : functionGenerator.getParameterGenerators()) {
-            writeCode(writer, parameterGenerator.generatePreCallCode(this));
+            writeFunctionBodyCode(writer, parameterGenerator.generateJniArgFromTransformedTargetArgAssignment(this));
         }
-        writeCode(writer, functionGenerator.generatePreCallCode(this));
-        writeCode(writer, functionGenerator.generateCallCode(this));
-        writeCode(writer, functionGenerator.generatePostCallCode(this));
+        writeFunctionBodyCode(writer, functionGenerator.generateJniResultFromJniCallAssignment(this));
+        writeFunctionBodyCode(writer, functionGenerator.generateTargetResultFromTransformedJniResultAssignment(this));
         for (ParameterGenerator parameterGenerator : functionGenerator.getParameterGenerators()) {
-            writeCode(writer, parameterGenerator.generatePostCallCode(this));
+            writeFunctionBodyCode(writer, parameterGenerator.generateTargetResultFromTransformedJniResultAssignment(this));
+            writeFunctionBodyCode(writer, parameterGenerator.generateJniArgDeref(this));
         }
-        writeCode(writer, functionGenerator.generateReturnCode(this));
+        writeFunctionBodyCode(writer, functionGenerator.generateJniResultDeref(this));
+        writeFunctionBodyCode(writer, functionGenerator.generateReturnStatement(this));
         writer.print("}\n");
     }
-
-    protected abstract void writeLocalMethodVarDecl(PrintWriter writer) throws IOException;
 
     protected abstract void writeInitCode(PrintWriter writer, FunctionGenerator functionGenerator) throws IOException;
 
@@ -135,7 +133,7 @@ public abstract class ModuleGenerator implements GeneratorContext {
         return map;
     }
 
-    private static void writeCode(PrintWriter writer, String code) throws IOException {
+    private static void writeFunctionBodyCode(PrintWriter writer, String code) throws IOException {
         String[] callCode = generateLines(code);
         for (String line : callCode) {
             writer.printf("    %s\n", line);

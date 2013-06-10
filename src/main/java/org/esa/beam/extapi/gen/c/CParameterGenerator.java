@@ -31,45 +31,52 @@ public abstract class CParameterGenerator implements ParameterGenerator {
     }
 
     @Override
-    public String generateJniArgDecl(GeneratorContext context) {
+    public String generateJniArgDeclaration(GeneratorContext context) {
         return null;
     }
 
     @Override
-    public String generateTargetArgDecl(GeneratorContext context) {
+    public String generateTargetArgDeclaration(GeneratorContext context) {
         return null;
     }
 
     @Override
-    public String generatePreCallCode(GeneratorContext context) {
+    public String generateJniArgFromTransformedTargetArgAssignment(GeneratorContext context) {
         return null;
     }
 
     @Override
-    public String generatePostCallCode(GeneratorContext context) {
+    public String generateJniArgDeref(GeneratorContext context) {
         return null;
     }
 
-    static class PrimitiveScalar extends CParameterGenerator {
-        PrimitiveScalar(ApiParameter parameter) {
-            super(parameter);
-        }
-
-        @Override
-        public String generateParamListDecl(GeneratorContext context) {
-            String typeName = getComponentCTypeName(getType());
-            return String.format("%s %s", typeName, getName());
-        }
-
-        @Override
-        public String generateCallCode(GeneratorContext context) {
-            return getName();
-        }
+    @Override
+    public String generateTargetResultFromTransformedJniResultAssignment(GeneratorContext context) {
+        return null;
     }
 
     private static String firstCharToUpperCase(String typeName) {
         typeName = Character.toUpperCase(typeName.charAt(0)) + typeName.substring(1);
         return typeName;
+    }
+
+    static class PrimitiveScalar extends CParameterGenerator {
+
+        PrimitiveScalar(ApiParameter parameter) {
+            super(parameter);
+        }
+
+        @Override
+        public String generateFunctionParamDeclaration(GeneratorContext context) {
+            String typeName = getComponentCTypeName(getType());
+            return String.format("%s %s", typeName, getName());
+        }
+
+        @Override
+        public String generateJniCallArgs(GeneratorContext context) {
+            return getName();
+        }
+
     }
 
     static class ObjectScalar extends CParameterGenerator {
@@ -78,13 +85,13 @@ public abstract class CParameterGenerator implements ParameterGenerator {
         }
 
         @Override
-        public String generateParamListDecl(GeneratorContext context) {
+        public String generateFunctionParamDeclaration(GeneratorContext context) {
             String typeName = CModuleGenerator.getComponentCClassName(getType());
             return String.format("%s %s", typeName, getName());
         }
 
         @Override
-        public String generateCallCode(GeneratorContext context) {
+        public String generateJniCallArgs(GeneratorContext context) {
             return getName();
         }
     }
@@ -96,29 +103,24 @@ public abstract class CParameterGenerator implements ParameterGenerator {
         }
 
         @Override
-        public String generateParamListDecl(GeneratorContext context) {
+        public String generateFunctionParamDeclaration(GeneratorContext context) {
             return String.format("const char* %s", getName());
         }
 
         @Override
-        public String generateJniArgDecl(GeneratorContext context) {
+        public String generateJniArgDeclaration(GeneratorContext context) {
             return String.format("jstring %sString = NULL;", getName());
         }
 
         @Override
-        public String generateTargetArgDecl(GeneratorContext context) {
-            return null;
+        public String generateJniCallArgs(GeneratorContext context) {
+            return String.format("%sString", getName());
         }
 
         @Override
-        public String generatePreCallCode(GeneratorContext context) {
+        public String generateJniArgFromTransformedTargetArgAssignment(GeneratorContext context) {
             return String.format("%sString = (*jenv)->NewStringUTF(jenv, %s);",
                                  getName(), getName());
-        }
-
-        @Override
-        public String generateCallCode(GeneratorContext context) {
-            return String.format("%sString", getName());
         }
     }
 
@@ -129,7 +131,7 @@ public abstract class CParameterGenerator implements ParameterGenerator {
         }
 
         @Override
-        public String generateParamListDecl(GeneratorContext context) {
+        public String generateFunctionParamDeclaration(GeneratorContext context) {
             return eval("${c}${t}* ${p}Elems, int ${p}Length",
                         kv("c", parameter.getModifier() == ApiParameter.Modifier.IN ? "const " : ""),
                         kv("t", getComponentCTypeName(getType())),
@@ -137,18 +139,13 @@ public abstract class CParameterGenerator implements ParameterGenerator {
         }
 
          @Override
-         public String generateJniArgDecl(GeneratorContext context) {
+         public String generateJniArgDeclaration(GeneratorContext context) {
              return eval("jarray ${p}Array = NULL;",
                          kv("p", getName()));
          }
 
-         @Override
-        public String generateTargetArgDecl(GeneratorContext context) {
-            return null;
-        }
-
         @Override
-        public String generatePreCallCode(GeneratorContext context) {
+        public String generateJniArgFromTransformedTargetArgAssignment(GeneratorContext context) {
             String typeName = getType().simpleTypeName();
             String typeNameUC = firstCharToUpperCase(typeName);
             if (parameter.getModifier() == ApiParameter.Modifier.IN) {
@@ -165,12 +162,12 @@ public abstract class CParameterGenerator implements ParameterGenerator {
         }
 
         @Override
-        public String generateCallCode(GeneratorContext context) {
+        public String generateJniCallArgs(GeneratorContext context) {
             return eval("${p}Array", kv("p", getName()));
         }
 
         @Override
-        public String generatePostCallCode(GeneratorContext context) {
+        public String generateTargetResultFromTransformedJniResultAssignment(GeneratorContext context) {
             if (parameter.getModifier() == ApiParameter.Modifier.IN) {
                 return null;
             } else if (parameter.getModifier() == ApiParameter.Modifier.OUT) {
@@ -195,7 +192,13 @@ public abstract class CParameterGenerator implements ParameterGenerator {
                 throw new IllegalStateException("Unknown modifier: " + parameter.getModifier());
             }
         }
-    }
+
+         @Override
+         public String generateJniArgDeref(GeneratorContext context) {
+             // todo - deref ${p}Array ?
+             return null;
+         }
+     }
 
 
     static class ObjectArray extends CParameterGenerator {
@@ -205,7 +208,7 @@ public abstract class CParameterGenerator implements ParameterGenerator {
         }
 
         @Override
-        public String generateParamListDecl(GeneratorContext context) {
+        public String generateFunctionParamDeclaration(GeneratorContext context) {
             return eval("${m}${t} ${p}Elems, int ${p}Length",
                         kv("m", parameter.getModifier() == ApiParameter.Modifier.IN ? "const " : ""),
                         kv("t", CModuleGenerator.getComponentCClassName(getType())),
@@ -213,31 +216,27 @@ public abstract class CParameterGenerator implements ParameterGenerator {
         }
 
         @Override
-        public String generateJniArgDecl(GeneratorContext context) {
+        public String generateJniArgDeclaration(GeneratorContext context) {
             return eval("jarray ${p}Array = NULL;",
                         kv("p", getName()));
         }
 
         @Override
-        public String generateTargetArgDecl(GeneratorContext context) {
-            return null;
-        }
-
-        @Override
-        public String generatePreCallCode(GeneratorContext context) {
+        public String generateJniArgFromTransformedTargetArgAssignment(GeneratorContext context) {
             return eval("${p}Array = beam_new_jobject_array(${p}Elems, ${p}Length, ${c});",
                         kv("p", getName()),
                         kv("c", CModuleGenerator.getComponentCClassVarName(getType())));
         }
 
         @Override
-        public String generateCallCode(GeneratorContext context) {
+        public String generateJniCallArgs(GeneratorContext context) {
             return eval("${p}Array",
                         kv("p", getName()));
         }
 
         @Override
-        public String generatePostCallCode(GeneratorContext context) {
+        public String generateJniArgDeref(GeneratorContext context) {
+            // todo - deref ${p}Array ?
             return null;
         }
     }
@@ -249,35 +248,40 @@ public abstract class CParameterGenerator implements ParameterGenerator {
         }
 
         @Override
-        public String generateParamListDecl(GeneratorContext context) {
+        public String generateFunctionParamDeclaration(GeneratorContext context) {
             return eval("${m}char** ${p}Elems, int ${p}Length",
                         kv("m", parameter.getModifier() == ApiParameter.Modifier.IN ? "const " : ""),
                         kv("p", getName()));
         }
 
         @Override
-        public String generateJniArgDecl(GeneratorContext context) {
+        public String generateJniArgDeclaration(GeneratorContext context) {
             return eval("jobjectArray ${p}Array = NULL;",
                         kv("p", getName()));
         }
 
         @Override
-        public String generateTargetArgDecl(GeneratorContext context) {
+        public String generateTargetArgDeclaration(GeneratorContext context) {
             return null;
         }
 
         @Override
-        public String generatePreCallCode(GeneratorContext context) {
+        public String generateJniArgFromTransformedTargetArgAssignment(GeneratorContext context) {
             return eval("${p}Array = beam_new_jstring_array(${p}Elems, ${p}Length);",
                         kv("p", getName()));
         }
 
         @Override
-        public String generateCallCode(GeneratorContext context) {
+        public String generateJniCallArgs(GeneratorContext context) {
             return eval("${p}Array",
                         kv("p", getName()));
         }
 
+        @Override
+        public String generateJniArgDeref(GeneratorContext context) {
+            // todo - deref ${p}Array ?
+            return null;
+        }
     }
 
 }

@@ -10,15 +10,23 @@ public interface ParameterGenerator {
 
     Type getType();
 
-    String generateParamListDecl(GeneratorContext context);
+    String generateFunctionParamDeclaration(GeneratorContext context);
 
-    String generateJniArgDecl(GeneratorContext context);
+    String generateJniArgDeclaration(GeneratorContext context);
 
-    String generateTargetArgDecl(GeneratorContext context);
+    String generateTargetArgDeclaration(GeneratorContext context);
 
-    String generatePreCallCode(GeneratorContext context);
+    String generateJniArgFromTransformedTargetArgAssignment(GeneratorContext context);
 
-    String generateCallCode(GeneratorContext context);
+    /**
+     * Contribution of this parameter to the JNI call arguments list.
+     */
+    String generateJniCallArgs(GeneratorContext context);
 
-    String generatePostCallCode(GeneratorContext context);
+    String generateJniArgDeref(GeneratorContext context);
+
+    /**
+     * Parameters may be return values
+     */
+    String generateTargetResultFromTransformedJniResultAssignment(GeneratorContext context);
 }

@@ -220,11 +220,11 @@ public class PyCParameterGeneratorTest {
                                 String preCallCode,
                                 String callArgExpr, String postCallCode) {
         // We don't generate parameters because the Python API uses PyObject* args
-        assertEquals(null, parameterGenerator.generateParamListDecl(context));
-        assertEquals(localVarDecl, parameterGenerator.generateTargetArgDecl(context));
-        assertEquals(preCallCode, parameterGenerator.generatePreCallCode(context));
-        assertEquals(callArgExpr, parameterGenerator.generateCallCode(context));
-        assertEquals(postCallCode, parameterGenerator.generatePostCallCode(context));
+        assertEquals(null, parameterGenerator.generateFunctionParamDeclaration(context));
+        assertEquals(localVarDecl, parameterGenerator.generateTargetArgDeclaration(context));
+        assertEquals(preCallCode, parameterGenerator.generateJniArgFromTransformedTargetArgAssignment(context));
+        assertEquals(callArgExpr, parameterGenerator.generateJniCallArgs(context));
+        assertEquals(postCallCode, parameterGenerator.generateTargetResultFromTransformedJniResultAssignment(context));
     }
 
     private ApiParameter createParam(String name, Class<?> type, Modifier modifier) {

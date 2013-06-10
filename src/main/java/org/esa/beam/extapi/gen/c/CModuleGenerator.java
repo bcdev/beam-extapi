@@ -373,11 +373,6 @@ public class CModuleGenerator extends ModuleGenerator {
         writer.printf("\n");
     }
 
-    @Override
-    protected void writeLocalMethodVarDecl(PrintWriter writer) {
-        writer.printf("    static jmethodID %s = NULL;\n", METHOD_VAR_NAME);
-    }
-
     private void writeInitMethodCode(PrintWriter writer, FunctionGenerator functionGenerator) {
         final ApiMethod apiMethod = functionGenerator.getApiMethod();
 

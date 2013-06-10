@@ -332,10 +332,6 @@ public class PyCModuleGenerator extends ModuleGenerator {
     }
 
     @Override
-    protected void writeLocalMethodVarDecl(PrintWriter writer) throws IOException {
-    }
-
-    @Override
     protected void writeInitCode(PrintWriter writer, FunctionGenerator functionGenerator) throws IOException {
     }
 }

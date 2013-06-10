@@ -222,12 +222,12 @@ public class CParameterGeneratorTest {
                                 String preCallCode,
                                 String callArgExpr,
                                 String postCallCode) {
-        assertEquals(paramListDecl, parameterGenerator.generateParamListDecl(context));
-        assertEquals(targetArgDecl, parameterGenerator.generateTargetArgDecl(context));
-        assertEquals(jniArgDecl, parameterGenerator.generateJniArgDecl(context));
-        assertEquals(preCallCode, parameterGenerator.generatePreCallCode(context));
-        assertEquals(callArgExpr, parameterGenerator.generateCallCode(context));
-        assertEquals(postCallCode, parameterGenerator.generatePostCallCode(context));
+        assertEquals(paramListDecl, parameterGenerator.generateFunctionParamDeclaration(context));
+        assertEquals(targetArgDecl, parameterGenerator.generateTargetArgDeclaration(context));
+        assertEquals(jniArgDecl, parameterGenerator.generateJniArgDeclaration(context));
+        assertEquals(preCallCode, parameterGenerator.generateJniArgFromTransformedTargetArgAssignment(context));
+        assertEquals(callArgExpr, parameterGenerator.generateJniCallArgs(context));
+        assertEquals(postCallCode, parameterGenerator.generateTargetResultFromTransformedJniResultAssignment(context));
     }
 
     private ApiParameter createParam(String name, Class<?> type, Modifier modifier) {
