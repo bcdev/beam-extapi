@@ -25,6 +25,7 @@ import java.io.PrintWriter;
 import java.util.Date;
 import java.util.List;
 
+import static org.esa.beam.extapi.gen.TemplateEval.eval;
 import static org.esa.beam.extapi.gen.TemplateEval.kv;
 
 /**
@@ -85,12 +86,30 @@ public class PyCModuleGenerator extends ModuleGenerator {
             protected void writeContent() throws IOException {
                 writer.printf("from _%s import *\n", BEAM_PYAPI_NAME);
                 writer.printf("\n");
+                writer.printf(eval(""
+                                      + "class JObject:\n"
+                                      + "    def __init__(self, obj):\n"
+                                      + "        try:\n"
+                                      + "            assert obj is not None\n"
+                                      + "            assert len(obj) == 2\n"
+                                      + "            assert type(obj[0]) == str\n"
+                                      + "            assert type(obj[1]) == int\n"
+                                      + "        except (TypeError, AssertionError):\n"
+                                      + "            raise TypeError('A tuple (<java-type-name>, <java-obj-pointer>) is required, but got:', obj)\n"
+                                      + "        self.${obj} = obj\n"
+                                      + "\n"
+                                      + "    def __del__(self):\n"
+                                      + "        if self.${obj} != None:\n"
+                                      + "            Object_deleteGlobalRef(self.${obj})\n"
+                                      + "\n",
+                                   kv("obj", SELF_OBJ_NAME)));
                 for (ApiClass apiClass : getApiInfo().getAllClasses()) {
+                    writer.printf("class %s(JObject):\n", getClassName(apiClass.getType()));
+
                     final String commentText = JavadocHelpers.convertToPythonDoc(getApiInfo(), apiClass.getType().asClassDoc(), "", false);
                     if (!commentText.isEmpty()) {
-                        writer.printf("\"\"\" %s\n\"\"\"\n", commentText);
+                        writer.printf("    \"\"\" %s\n\"\"\"\n", commentText);
                     }
-                    writer.printf("class %s:\n", getClassName(apiClass.getType()));
 
                     List<ApiConstant> constants = getApiInfo().getConstantsOf(apiClass);
                     if (!constants.isEmpty()) {
@@ -108,11 +127,15 @@ public class PyCModuleGenerator extends ModuleGenerator {
                         writer.printf("\n");
                     }
 
-                    writer.printf("    def __init__(self, obj):\n");
-                    writer.printf("        if obj == None:\n");
-                    writer.printf("            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')\n");
-                    writer.printf("        self.%s = obj\n", SELF_OBJ_NAME);
-                    writer.printf("\n");
+                    writer.print(eval(""
+                                              + "    def __init__(self, obj):\n"
+                                              + "        JObject.__init__(self, obj)\n"
+                                              + "\n"
+                                              + "    def __del__(self):\n"
+                                              + "        JObject.__del__(self)\n"
+                                              + "\n",
+                                      kv("obj", SELF_OBJ_NAME)));
+
                     for (FunctionGenerator generator : getFunctionGenerators(apiClass)) {
                         String staticFName = getCModuleGenerator().getFunctionNameFor(generator.getApiMethod());
                         String javaFName = generator.getApiMethod().getJavaName();
@@ -291,6 +314,7 @@ public class PyCModuleGenerator extends ModuleGenerator {
                 }
                 writer.printf("    {\"String_newString\", BeamPyString_newString, METH_VARARGS, \"Converts a Python unicode string into a Java java.lang.String object\"},\n");
                 writer.printf("    {\"Map_newHashMap\", BeamPyMap_newHashMap, METH_VARARGS, \"Converts a Python dictionary into a Java java.utils.Map object\"},\n");
+                writer.printf("    {\"Object_deleteGlobalRef\", BeamPyObject_deleteGlobalRef, METH_VARARGS, \"Deletes global references to Java objects held by Python objects\"},\n");
                 writer.printf("    {NULL, NULL, 0, NULL}  /* Sentinel */\n");
                 writer.printf("};\n");
                 writer.printf("\n");

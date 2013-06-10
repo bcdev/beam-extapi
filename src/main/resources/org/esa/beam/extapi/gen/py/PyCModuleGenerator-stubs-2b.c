@@ -307,3 +307,14 @@ PyObject* BeamPyMap_newHashMap(PyObject* self, PyObject* args)
     return Py_BuildValue("(sK)", "Map", (unsigned PY_LONG_LONG) result);
 }
 
+PyObject* BeamPyObject_deleteGlobalRef(PyObject* self, PyObject* args)
+{
+    const char* thisObjType;
+    unsigned PY_LONG_LONG thisObj;
+    if (!PyArg_ParseTuple(args, "(sK):Object_deleteGlobalRef", &thisObjType, &thisObj)) {
+        return NULL;
+    }
+    beam_release_jobject((void *) thisObj);
+    return Py_BuildValue("");
+}
+

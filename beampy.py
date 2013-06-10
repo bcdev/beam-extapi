@@ -1,32 +1,50 @@
 # Please note: This file is machine generated. DO NOT EDIT!
 # It will be regenerated every time you run 'java org.esa.beam.extapi.gen.ApiGeneratorDoclet <beam-src-dir>'.
-# Last updated on Mon Jun 10 14:27:07 CEST 2013.
+# Last updated on Mon Jun 10 21:27:15 CEST 2013.
 
 from _beampy import *
 
-class Shape:
+class JObject:
     def __init__(self, obj):
-        if obj == None:
-            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
+        try:
+            assert obj is not None
+            assert len(obj) == 2
+            assert type(obj[0]) == str
+            assert type(obj[1]) == int
+        except (TypeError, AssertionError):
+            raise TypeError('A tuple (<java-type-name>, <java-obj-pointer>) is required, but got:', obj)
         self._obj = obj
 
+    def __del__(self):
+        if self._obj != None:
+            Object_deleteGlobalRef(self._obj)
 
-""" Provides a parameterized, mathematical algorithm for a map transformation.
+class Shape(JObject):
+    def __init__(self, obj):
+        JObject.__init__(self, obj)
+
+    def __del__(self):
+        JObject.__del__(self)
+
+
+class MapTransform(JObject):
+    """ Provides a parameterized, mathematical algorithm for a map transformation.
 
 @deprecated since BEAM 4.7, use geotools {@link org.geotools.referencing.operation.projection.MapProjection} instead.
 """
-class MapTransform:
     def __init__(self, obj):
-        if obj == None:
-            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
-        self._obj = obj
+        JObject.__init__(self, obj)
+
+    def __del__(self):
+        JObject.__del__(self)
 
 
-class ImageGeometry:
+class ImageGeometry(JObject):
     def __init__(self, obj):
-        if obj == None:
-            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
-        self._obj = obj
+        JObject.__init__(self, obj)
+
+    def __del__(self):
+        JObject.__del__(self)
 
     @staticmethod
     def newImageGeometry(bounds, mapCrs, image2map):
@@ -61,20 +79,26 @@ class ImageGeometry:
     def createCollocationTargetGeometry(targetProduct, collocationProduct):
         return ImageGeometry(ImageGeometry_createCollocationTargetGeometry(targetProduct._obj, collocationProduct._obj))
 
+    @staticmethod
+    def createValidRect(product):
+        return Rectangle2D(ImageGeometry_createValidRect(product._obj))
 
-""" Instances of the <code>Parser</code> interface are used to convert a code
+
+class Parser(JObject):
+    """ Instances of the <code>Parser</code> interface are used to convert a code
 string representing an arithmetic expression in a tree of terms
 which can then be executed by using one of the evaluation methods of
 the <code>{@link Term}</code> class.
 """
-class Parser:
     def __init__(self, obj):
-        if obj == None:
-            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
-        self._obj = obj
+        JObject.__init__(self, obj)
+
+    def __del__(self):
+        JObject.__del__(self)
 
 
-""" The <code>GeoCoding</code> interface provides geo-spatial latitude and longitude information for a given X/Y position
+class GeoCoding(JObject):
+    """ The <code>GeoCoding</code> interface provides geo-spatial latitude and longitude information for a given X/Y position
 of any (two-dimensional) raster.
  <b> Note: New geo-coding implementations shall implement the abstract class {@link AbstractGeoCoding},
 instead of implementing this interface.</b>
@@ -83,11 +107,11 @@ instead of implementing this interface.</b>
 All <code>GeoCoding</code> implementations should override
 the {@link Object#equals(Object) equals()} and  {@link Object#hashCode() hashCode()} methods.
 """
-class GeoCoding:
     def __init__(self, obj):
-        if obj == None:
-            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
-        self._obj = obj
+        JObject.__init__(self, obj)
+
+    def __del__(self):
+        JObject.__del__(self)
 
     def isCrossingMeridianAt180(self):
         """
@@ -177,7 +201,8 @@ class GeoCoding:
         return MathTransform(GeoCoding_getImageToMapTransform(self._obj))
 
 
-""" The abstract <code>ProductData</code> class represents a generic data buffer used to hold the actual data values
+class ProductData(JObject):
+    """ The abstract <code>ProductData</code> class represents a generic data buffer used to hold the actual data values
 stored in remote sensing data products.
 
  A single <code>ProductData</code> instance can have one or more elements of a primitive type. The primitive types
@@ -205,7 +230,6 @@ void setElem<b>Type</b>At(int index, <b>Type</b> elem);
 Where the transfer data type <code><b>Type</b></code> is one of <code>int</code>, <code>long</code>,
 <code>float</code>, <code>double</code> and <code>String</code>.
 """
-class ProductData:
 
     TYPE_UNDEFINED = 0
     TYPE_INT8 = 10
@@ -230,9 +254,10 @@ class ProductData:
     TYPESTRING_UTC = 'utc'
 
     def __init__(self, obj):
-        if obj == None:
-            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
-        self._obj = obj
+        JObject.__init__(self, obj)
+
+    def __del__(self):
+        JObject.__del__(self)
 
     @staticmethod
     def createInstance1(type):
@@ -805,32 +830,36 @@ class ProductData:
         return
 
 
-class AffineTransform:
+class AffineTransform(JObject):
     def __init__(self, obj):
-        if obj == None:
-            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
-        self._obj = obj
+        JObject.__init__(self, obj)
+
+    def __del__(self):
+        JObject.__del__(self)
 
 
-""" A {@code Mask} is used to mask image pixels of other raster data nodes.
+class Mask(JObject):
+    """ A {@code Mask} is used to mask image pixels of other raster data nodes.
 
 This is a preliminary API under construction for BEAM 4.7. Not intended for public use.
 """
-class Mask:
     def __init__(self, obj):
-        if obj == None:
-            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
-        self._obj = obj
+        JObject.__init__(self, obj)
+
+    def __del__(self):
+        JObject.__del__(self)
 
 
-class Double:
+class Double(JObject):
     def __init__(self, obj):
-        if obj == None:
-            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
-        self._obj = obj
+        JObject.__init__(self, obj)
+
+    def __del__(self):
+        JObject.__del__(self)
 
 
-""" The facade for the Graph Processing Framework.
+class GPF(JObject):
+    """ The facade for the Graph Processing Framework.
 The Graph Processing Framework makes extensive use of Java Advanced Imaging (JAI).
 Therefore, configuring the JAI {@link javax.media.jai.TileCache TileCache} and
 {@link javax.media.jai.TileScheduler TileScheduler} will also affect the overall performance of
@@ -839,7 +868,6 @@ This class may be overridden in order to alter product creation behaviour of the
 {@code createProduct} methods of the GPF instance.
 The current instance can be set by {@link #setDefaultInstance(GPF)}.
 """
-class GPF:
 
     DISABLE_TILE_CACHE_PROPERTY = 'beam.gpf.disableTileCache'
     USE_FILE_TILE_CACHE_PROPERTY = 'beam.gpf.useFileTileCache'
@@ -851,9 +879,10 @@ class GPF:
     NO_SOURCES = None
 
     def __init__(self, obj):
-        if obj == None:
-            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
-        self._obj = obj
+        JObject.__init__(self, obj)
+
+    def __del__(self):
+        JObject.__del__(self)
 
     @staticmethod
     def createProductFromNoSourceProducts(operatorName, parameters):
@@ -986,18 +1015,19 @@ class GPF:
         return
 
 
-""" Provides the information required to decode integer sample values that
+class IndexCoding(JObject):
+    """ Provides the information required to decode integer sample values that
 represent index values (e.g. types, classes, categories).
 """
-class IndexCoding:
 
     PROPERTY_NAME_NAME = 'name'
     PROPERTY_NAME_DESCRIPTION = 'description'
 
     def __init__(self, obj):
-        if obj == None:
-            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
-        self._obj = obj
+        JObject.__init__(self, obj)
+
+    def __del__(self):
+        JObject.__del__(self)
 
     @staticmethod
     def newIndexCoding(name):
@@ -1485,7 +1515,8 @@ class IndexCoding:
         return Object(IndexCoding_getExtension(self._obj, arg0._obj))
 
 
-""" The abstract <code>Term</code> class is an in-memory representation of an
+class Term(JObject):
+    """ The abstract <code>Term</code> class is an in-memory representation of an
 element within an arbitrary expression tree. The class defines a number of
 concrete <code>Term</code> implementations each representing either an
 an atomic leave (number constant, symbol reference) or a node
@@ -1496,14 +1527,15 @@ which implements the <code>{@link com.bc.jexp.Parser}</code> interface.
 The <code>{@link com.bc.jexp.impl.ParserImpl}</code> class provides a default
 implementation of such a parser.
 """
-class Term:
     def __init__(self, obj):
-        if obj == None:
-            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
-        self._obj = obj
+        JObject.__init__(self, obj)
+
+    def __del__(self):
+        JObject.__del__(self)
 
 
-""" The <code>RasterDataNode</code> class ist the abstract base class for all objects in the product package that contain
+class RasterDataNode(JObject):
+    """ The <code>RasterDataNode</code> class ist the abstract base class for all objects in the product package that contain
 rasterized data. i.e. <code>Band</code> and <code>TiePointGrid</code>. It unifies the access to raster data in the
 product model. A raster is considered as a rectangular raw data array with a fixed width and height. A raster data
 node can scale its raw raster data samples in order to return geophysically meaningful pixel values.
@@ -1515,37 +1547,40 @@ node can scale its raw raster data samples in order to return geophysically mean
 @see #getScalingFactor()
 @see #getScalingOffset()
 """
-class RasterDataNode:
     def __init__(self, obj):
-        if obj == None:
-            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
-        self._obj = obj
+        JObject.__init__(self, obj)
+
+    def __del__(self):
+        JObject.__del__(self)
 
 
-class Class:
+class Class(JObject):
     def __init__(self, obj):
-        if obj == None:
-            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
-        self._obj = obj
+        JObject.__init__(self, obj)
+
+    def __del__(self):
+        JObject.__del__(self)
 
 
-""" AutoGrouping can be used by an application to auto-group a long list of product nodes (e.g. bands)
+class Product_AutoGrouping(JObject):
+    """ AutoGrouping can be used by an application to auto-group a long list of product nodes (e.g. bands)
 as a tree of product nodes.
 """
-class Product_AutoGrouping:
     def __init__(self, obj):
-        if obj == None:
-            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
-        self._obj = obj
+        JObject.__init__(self, obj)
+
+    def __del__(self):
+        JObject.__del__(self)
 
 
-""" A <code>PixelPos</code> represents a position or point in a pixel coordinate system.
+class PixelPos(JObject):
+    """ A <code>PixelPos</code> represents a position or point in a pixel coordinate system.
 """
-class PixelPos:
     def __init__(self, obj):
-        if obj == None:
-            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
-        self._obj = obj
+        JObject.__init__(self, obj)
+
+    def __del__(self):
+        JObject.__del__(self)
 
     @staticmethod
     def newPixelPos():
@@ -1628,24 +1663,27 @@ class PixelPos:
         return PixelPos_equals(self._obj, arg0._obj)
 
 
-""" A pixel mask provides a boolean value for a given pixel position.
+class BitRaster(JObject):
+    """ A pixel mask provides a boolean value for a given pixel position.
 It is used to identify valid pixels in a raster.
 """
-class BitRaster:
     def __init__(self, obj):
-        if obj == None:
-            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
-        self._obj = obj
+        JObject.__init__(self, obj)
+
+    def __del__(self):
+        JObject.__del__(self)
 
 
-class ImageOutputStream:
+class ImageOutputStream(JObject):
     def __init__(self, obj):
-        if obj == None:
-            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
-        self._obj = obj
+        JObject.__init__(self, obj)
+
+    def __del__(self):
+        JObject.__del__(self)
 
 
-""" Provides statistic information for a raster data node at a given image resolution level.
+class Stx(JObject):
+    """ Provides statistic information for a raster data node at a given image resolution level.
 Instances of the <code>Stx</code> class are created using the {@link StxFactory}.
 
 <i>Important note: This class has been revised in BEAM 4.10. All behaviour has been moved to {@link StxFactory}
@@ -1654,28 +1692,31 @@ geo-physically interpreted image data (before it operated on the raw, unscaled d
 not required to scale the returned statistical properties, e.g. we used to write
 {@code band.scale(stx.getMean())}. This is not required anymore.</i>
 """
-class Stx:
     def __init__(self, obj):
-        if obj == None:
-            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
-        self._obj = obj
+        JObject.__init__(self, obj)
+
+    def __del__(self):
+        JObject.__del__(self)
 
 
-class Rectangle:
+class Rectangle(JObject):
     def __init__(self, obj):
-        if obj == None:
-            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
-        self._obj = obj
+        JObject.__init__(self, obj)
+
+    def __del__(self):
+        JObject.__del__(self)
 
 
-class Dimension:
+class Dimension(JObject):
     def __init__(self, obj):
-        if obj == None:
-            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
-        self._obj = obj
+        JObject.__init__(self, obj)
+
+    def __del__(self):
+        JObject.__del__(self)
 
 
-""" The <code>ProductIO</code> class provides several utility methods concerning data I/O for remote sensing data
+class ProductIO(JObject):
+    """ The <code>ProductIO</code> class provides several utility methods concerning data I/O for remote sensing data
 products.
 
  For example, a product can be read in using a single method call:
@@ -1687,14 +1728,14 @@ and written out in a similar way:
 ProductIO.writeProduct(product, "HDF5", "test.h5", null);
 </pre>
 """
-class ProductIO:
 
     DEFAULT_FORMAT_NAME = 'BEAM-DIMAP'
 
     def __init__(self, obj):
-        if obj == None:
-            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
-        self._obj = obj
+        JObject.__init__(self, obj)
+
+    def __del__(self):
+        JObject.__del__(self)
 
     @staticmethod
     def getProductReader(formatName):
@@ -1786,21 +1827,23 @@ class ProductIO:
         return
 
 
-""" The <code>ProductNode</code> is the base class for all nodes within a remote sensing data product and even the data
+class ProductNode(JObject):
+    """ The <code>ProductNode</code> is the base class for all nodes within a remote sensing data product and even the data
 product itself.
 """
-class ProductNode:
     def __init__(self, obj):
-        if obj == None:
-            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
-        self._obj = obj
+        JObject.__init__(self, obj)
+
+    def __del__(self):
+        JObject.__del__(self)
 
 
-class AngularDirection:
+class AngularDirection(JObject):
     def __init__(self, obj):
-        if obj == None:
-            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
-        self._obj = obj
+        JObject.__init__(self, obj)
+
+    def __del__(self):
+        JObject.__del__(self)
 
     @staticmethod
     def newAngularDirection(azimuth, zenith):
@@ -1813,39 +1856,43 @@ class AngularDirection:
         return AngularDirection_toString(self._obj)
 
 
-class SimpleFeatureType:
+class SimpleFeatureType(JObject):
     def __init__(self, obj):
-        if obj == None:
-            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
-        self._obj = obj
+        JObject.__init__(self, obj)
+
+    def __del__(self):
+        JObject.__del__(self)
 
 
-""" Provides the information required to decode integer sample values that
+class SampleCoding(JObject):
+    """ Provides the information required to decode integer sample values that
 are combined of single flags (bit indexes).
 """
-class SampleCoding:
     def __init__(self, obj):
-        if obj == None:
-            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
-        self._obj = obj
+        JObject.__init__(self, obj)
+
+    def __del__(self):
+        JObject.__del__(self)
 
 
-class Object:
+class Object(JObject):
     def __init__(self, obj):
-        if obj == None:
-            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
-        self._obj = obj
+        JObject.__init__(self, obj)
+
+    def __del__(self):
+        JObject.__del__(self)
 
 
-""" Classes implementing the <code>ProductReader</code> interface know how to create an in-memory representation of a
+class ProductReader(JObject):
+    """ Classes implementing the <code>ProductReader</code> interface know how to create an in-memory representation of a
 given data product as input source.
 @see ProductWriter
 """
-class ProductReader:
     def __init__(self, obj):
-        if obj == None:
-            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
-        self._obj = obj
+        JObject.__init__(self, obj)
+
+    def __del__(self):
+        JObject.__del__(self)
 
     def getReaderPlugIn(self):
         """
@@ -1940,7 +1987,8 @@ class ProductReader:
         return
 
 
-""" The <code>ProductReaderPlugIn</code> interface is implemented by data product reader plug-ins.
+class ProductReaderPlugIn(JObject):
+    """ The <code>ProductReaderPlugIn</code> interface is implemented by data product reader plug-ins.
 
 XMLDecoder plug-ins are used to provide meta-information about a particular data format and to create instances of
 the actual reader objects.
@@ -1949,21 +1997,23 @@ the actual reader objects.
 a classpath scan.
 @see ProductWriterPlugIn
 """
-class ProductReaderPlugIn:
     def __init__(self, obj):
-        if obj == None:
-            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
-        self._obj = obj
+        JObject.__init__(self, obj)
+
+    def __del__(self):
+        JObject.__del__(self)
 
 
-class Integer:
+class Integer(JObject):
     def __init__(self, obj):
-        if obj == None:
-            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
-        self._obj = obj
+        JObject.__init__(self, obj)
+
+    def __del__(self):
+        JObject.__del__(self)
 
 
-""" The <code>ProductData.UTC</code> class is a <code>ProductData.UInt</code> specialisation for UTC date/time
+class ProductData_UTC(JObject):
+    """ The <code>ProductData.UTC</code> class is a <code>ProductData.UInt</code> specialisation for UTC date/time
 values.
 
  Internally, data is stored in an <code>int[3]</code> array which represents a Modified Julian Day 2000
@@ -1976,14 +2026,15 @@ ProductData.UTC#getMicroSecondsFraction() micro-seconds} fraction.
 @see ProductData.UTC#getSecondsFraction()
 @see ProductData.UTC#getMicroSecondsFraction()
 """
-class ProductData_UTC:
     def __init__(self, obj):
-        if obj == None:
-            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
-        self._obj = obj
+        JObject.__init__(self, obj)
+
+    def __del__(self):
+        JObject.__del__(self)
 
 
-""" A band contains the data for geophysical parameter in remote sensing data products. Bands are two-dimensional images
+class Band(JObject):
+    """ A band contains the data for geophysical parameter in remote sensing data products. Bands are two-dimensional images
 which hold their pixel values (samples) in a buffer of the type {@link ProductData}. The band class is just a
 container for attached metadata of the band, currently: <ul> <li>the flag coding {@link FlagCoding}</li> <li>the band
 index at which position the band is stored in the associated product</li> <li>the center wavelength of the band</li>
@@ -2001,7 +2052,6 @@ the conversion is <code>pow(10, scalingFactor * rawSample + scalingOffset)</code
 and <code>writePixel</code> perform the inverse operations in this case.
 @see ProductData
 """
-class Band:
 
     PROPERTY_NAME_SAMPLE_CODING = 'sampleCoding'
     PROPERTY_NAME_SOLAR_FLUX = 'solarFlux'
@@ -2032,9 +2082,10 @@ class Band:
     PROPERTY_NAME_DESCRIPTION = 'description'
 
     def __init__(self, obj):
-        if obj == None:
-            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
-        self._obj = obj
+        JObject.__init__(self, obj)
+
+    def __del__(self):
+        JObject.__del__(self)
 
     @staticmethod
     def newBand(name, dataType, width, height):
@@ -3167,6 +3218,7 @@ class Band:
     def setDataElems(self, elems):
         """
            Sets the data elements of this data node.
+           @deprecated since 5.0
            @see ProductData#setElems(Object)
         """
         Band_setDataElems(self._obj, elems._obj)
@@ -3329,27 +3381,29 @@ class Band:
         return Object(Band_getExtension(self._obj, arg0._obj))
 
 
-class ColorPaletteDef_Point:
+class ColorPaletteDef_Point(JObject):
     def __init__(self, obj):
-        if obj == None:
-            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
-        self._obj = obj
+        JObject.__init__(self, obj)
+
+    def __del__(self):
+        JObject.__del__(self)
 
 
-class RenderedImage:
+class RenderedImage(JObject):
     def __init__(self, obj):
-        if obj == None:
-            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
-        self._obj = obj
+        JObject.__init__(self, obj)
+
+    def __del__(self):
+        JObject.__del__(self)
 
 
-""" Placemarks are displayed as symbols at the image's pixel position corresponding to their geographical position. The name is
+class Placemark(JObject):
+    """ Placemarks are displayed as symbols at the image's pixel position corresponding to their geographical position. The name is
 displayed as label next to the symbol. If the user moves the mouse over a placemark, the textual description property shall
 appear as tool-tip text. Single placemarks can be selected either by mouse-click or by the ? Prev./Next Placemark tool.
 Placemarks are contained in the active product and stored in CSV format. To share placemarks between products,
 the placemarks of a product can be imported and exported.
 """
-class Placemark:
 
     PLACEMARK_FEATURE_TYPE_NAME = 'Placemark'
     PROPERTY_NAME_LABEL = 'label'
@@ -3362,9 +3416,10 @@ class Placemark:
     PROPERTY_NAME_DESCRIPTION = 'description'
 
     def __init__(self, obj):
-        if obj == None:
-            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
-        self._obj = obj
+        JObject.__init__(self, obj)
+
+    def __del__(self):
+        JObject.__del__(self)
 
     @staticmethod
     def newPlacemark(descriptor, feature):
@@ -3656,53 +3711,60 @@ class Placemark:
         return Object(Placemark_getExtension(self._obj, arg0._obj))
 
 
-""" An interface used as parameter to several methods which perform some actions on data arrays.
+class IndexValidator(JObject):
+    """ An interface used as parameter to several methods which perform some actions on data arrays.
 It is used to decide whether or not an array value shall be taken into account for a particular
 computation.
 """
-class IndexValidator:
     def __init__(self, obj):
-        if obj == None:
-            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
-        self._obj = obj
+        JObject.__init__(self, obj)
+
+    def __del__(self):
+        JObject.__del__(self)
 
 
-class Area:
+class Area(JObject):
     def __init__(self, obj):
-        if obj == None:
-            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
-        self._obj = obj
+        JObject.__init__(self, obj)
+
+    def __del__(self):
+        JObject.__del__(self)
 
 
-class ComponentColorModel:
+class ComponentColorModel(JObject):
     def __init__(self, obj):
-        if obj == None:
-            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
-        self._obj = obj
+        JObject.__init__(self, obj)
+
+    def __del__(self):
+        JObject.__del__(self)
 
 
-class Iterator:
+class Iterator(JObject):
     def __init__(self, obj):
-        if obj == None:
-            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
-        self._obj = obj
+        JObject.__init__(self, obj)
+
+    def __del__(self):
+        JObject.__del__(self)
 
 
-class MathTransform:
+class MathTransform(JObject):
     def __init__(self, obj):
-        if obj == None:
-            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
-        self._obj = obj
+        JObject.__init__(self, obj)
+
+    def __del__(self):
+        JObject.__del__(self)
 
 
-class CoordinateReferenceSystem:
+class CoordinateReferenceSystem(JObject):
     def __init__(self, obj):
-        if obj == None:
-            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
-        self._obj = obj
+        JObject.__init__(self, obj)
+
+    def __del__(self):
+        JObject.__del__(self)
 
 
-""" The <code>ProductWriterPlugIn</code> interface is implemented by data product writer plug-ins.
+class ProductWriterPlugIn(JObject):
+    """ The <code>ProductWriterPlugIn</code> interface is implemented by data product writer plug-ins.
 
 XMLCoder plug-ins are used to provide meta-information about a particular data format and to create instances of
 the actual writer objects.
@@ -3711,27 +3773,37 @@ the actual writer objects.
 a classpath scan.
 @see ProductReaderPlugIn
 """
-class ProductWriterPlugIn:
     def __init__(self, obj):
-        if obj == None:
-            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
-        self._obj = obj
+        JObject.__init__(self, obj)
+
+    def __del__(self):
+        JObject.__del__(self)
 
 
-class File:
+class Rectangle2D(JObject):
     def __init__(self, obj):
-        if obj == None:
-            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
-        self._obj = obj
+        JObject.__init__(self, obj)
+
+    def __del__(self):
+        JObject.__del__(self)
 
 
-""" The <code>GeoPos</code> class represents a geographical position measured in longitudes and latitudes.
+class File(JObject):
+    def __init__(self, obj):
+        JObject.__init__(self, obj)
+
+    def __del__(self):
+        JObject.__del__(self)
+
+
+class GeoPos(JObject):
+    """ The <code>GeoPos</code> class represents a geographical position measured in longitudes and latitudes.
 """
-class GeoPos:
     def __init__(self, obj):
-        if obj == None:
-            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
-        self._obj = obj
+        JObject.__init__(self, obj)
+
+    def __del__(self):
+        JObject.__del__(self)
 
     @staticmethod
     def newGeoPos(lat, lon):
@@ -3842,17 +3914,18 @@ class GeoPos:
         return GeoPos_getLonString(self._obj)
 
 
-""" A type-safe container for elements of the type <code>ProductNode</code>.
+class ProductNodeGroup(JObject):
+    """ A type-safe container for elements of the type <code>ProductNode</code>.
 """
-class ProductNodeGroup:
 
     PROPERTY_NAME_NAME = 'name'
     PROPERTY_NAME_DESCRIPTION = 'description'
 
     def __init__(self, obj):
-        if obj == None:
-            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
-        self._obj = obj
+        JObject.__init__(self, obj)
+
+    def __del__(self):
+        JObject.__del__(self)
 
     @staticmethod
     def newProductNodeGroup(name):
@@ -4103,26 +4176,28 @@ class ProductNodeGroup:
         return Object(ProductNodeGroup_getExtension(self._obj, arg0._obj))
 
 
-""" A map projection is a mathematical model for the transformation of locations from a three-dimensional earth surface
+class MapProjection(JObject):
+    """ A map projection is a mathematical model for the transformation of locations from a three-dimensional earth surface
 to a two-dimensional map representation.
 
 @deprecated since BEAM 4.7, use geotools {@link org.geotools.referencing.operation.projection.MapProjection} instead.
 """
-class MapProjection:
     def __init__(self, obj):
-        if obj == None:
-            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
-        self._obj = obj
+        JObject.__init__(self, obj)
+
+    def __del__(self):
+        JObject.__del__(self)
 
 
-""" A type-safe container for elements of the type <code>Product</code>. ProductListeners can be added to inform if a
+class ProductManager(JObject):
+    """ A type-safe container for elements of the type <code>Product</code>. ProductListeners can be added to inform if a
 <code>Product</code> was added or removed.
 """
-class ProductManager:
     def __init__(self, obj):
-        if obj == None:
-            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
-        self._obj = obj
+        JObject.__init__(self, obj)
+
+    def __del__(self):
+        JObject.__del__(self)
 
     @staticmethod
     def newProductManager():
@@ -4249,18 +4324,19 @@ class ProductManager:
         return ProductManager_removeListener(self._obj, listener._obj)
 
 
-""" Provides the information required to decode integer sample values that
+class FlagCoding(JObject):
+    """ Provides the information required to decode integer sample values that
 are combined of single flags (bit indexes).
 """
-class FlagCoding:
 
     PROPERTY_NAME_NAME = 'name'
     PROPERTY_NAME_DESCRIPTION = 'description'
 
     def __init__(self, obj):
-        if obj == None:
-            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
-        self._obj = obj
+        JObject.__init__(self, obj)
+
+    def __del__(self):
+        JObject.__del__(self)
 
     @staticmethod
     def newFlagCoding(name):
@@ -4748,14 +4824,16 @@ class FlagCoding:
         return Object(FlagCoding_getExtension(self._obj, arg0._obj))
 
 
-class IndexColorModel:
+class IndexColorModel(JObject):
     def __init__(self, obj):
-        if obj == None:
-            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
-        self._obj = obj
+        JObject.__init__(self, obj)
+
+    def __del__(self):
+        JObject.__del__(self)
 
 
-""" The abstract base class for all operators intended to be extended by clients.
+class Operator(JObject):
+    """ The abstract base class for all operators intended to be extended by clients.
 The following methods are intended to be implemented or overridden:
 <ld>
 <li>{@link #initialize()}: must be implemented in order to initialise the operator and create the target
@@ -4795,59 +4873,64 @@ todo - Explain the role of the SPI (nf - 15.10.2007)
 @see annotations.SourceProduct
 @see annotations.SourceProducts
 """
-class Operator:
     def __init__(self, obj):
-        if obj == None:
-            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
-        self._obj = obj
+        JObject.__init__(self, obj)
+
+    def __del__(self):
+        JObject.__del__(self)
 
 
-""" A registry for operator SPI instances.
+class OperatorSpiRegistry(JObject):
+    """ A registry for operator SPI instances.
 """
-class OperatorSpiRegistry:
     def __init__(self, obj):
-        if obj == None:
-            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
-        self._obj = obj
+        JObject.__init__(self, obj)
+
+    def __del__(self):
+        JObject.__del__(self)
 
 
-""" Enumerates the possible histogram matching modes.
+class ImageInfo_HistogramMatching(JObject):
+    """ Enumerates the possible histogram matching modes.
 """
-class ImageInfo_HistogramMatching:
     def __init__(self, obj):
-        if obj == None:
-            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
-        self._obj = obj
+        JObject.__init__(self, obj)
+
+    def __del__(self):
+        JObject.__del__(self)
 
 
-""" Represents a bitmask definition comprising the bitmask properties name, description, flag expression color and
+class BitmaskDef(JObject):
+    """ Represents a bitmask definition comprising the bitmask properties name, description, flag expression color and
 transparancy.
 @deprecated since BEAM 4.7, use {@code Mask} with {@code Mask.BandMathType} instead.
 """
-class BitmaskDef:
     def __init__(self, obj):
-        if obj == None:
-            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
-        self._obj = obj
+        JObject.__init__(self, obj)
+
+    def __del__(self):
+        JObject.__del__(self)
 
 
-""" A listener which listens to internal data product changes.
+class ProductNodeListener(JObject):
+    """ A listener which listens to internal data product changes.
 """
-class ProductNodeListener:
     def __init__(self, obj):
-        if obj == None:
-            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
-        self._obj = obj
+        JObject.__init__(self, obj)
+
+    def __del__(self):
+        JObject.__del__(self)
 
 
-""" This class provides many static factory methods to be used in conjunction with data products.
+class ProductUtils(JObject):
+    """ This class provides many static factory methods to be used in conjunction with data products.
 @see Product
 """
-class ProductUtils:
     def __init__(self, obj):
-        if obj == None:
-            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
-        self._obj = obj
+        JObject.__init__(self, obj)
+
+    def __del__(self):
+        JObject.__del__(self)
 
     @staticmethod
     def newProductUtils():
@@ -5006,6 +5089,21 @@ class ProductUtils:
            @see #createPixelBoundary(Product, java.awt.Rectangle, int, boolean)
         """
         return GeoPos(ProductUtils_createGeoBoundary3(product._obj, region._obj, step, usePixelCenter))
+
+    @staticmethod
+    def getClosestGeoPos(gc, origPos, region, step):
+        """
+           Searches for a valid GeoPos by considering the vicinity of a {@link PixelPos}. It does not check
+           the original pixel position, but uses it for determining which pixel positions to examine.
+           @param gc      the GeoCoding, must not be null
+           @param origPos the original pixel position, must not be null
+           @param region  the rectangle which determines the valid pixel positions, must not be null
+           @param step    determines the step size between pixels which is used in the search process. Small step
+           sizes will increase the accuracy, but need more computational time
+           @return a {@link GeoPos}. This will be valid if the search was successful. If not, a {@link GeoPos} with
+           NaN-values for latitude and longitude will be returned.
+        """
+        return GeoPos(ProductUtils_getClosestGeoPos(gc._obj, origPos._obj, region._obj, step))
 
     @staticmethod
     def createGeoBoundary4(raster, region, step):
@@ -5656,18 +5754,19 @@ class ProductUtils:
         return ProductUtils_getGeophysicalSampleLong(band._obj, pixelX, pixelY, level)
 
 
-""" A <code>MetadataElement</code> is a data node used to store metadata. Metadata elements can have any number of
+class MetadataElement(JObject):
+    """ A <code>MetadataElement</code> is a data node used to store metadata. Metadata elements can have any number of
 metadata attributes of the type {@link MetadataAttribute} and any number of inner <code>MetadataElement</code>s.
 """
-class MetadataElement:
 
     PROPERTY_NAME_NAME = 'name'
     PROPERTY_NAME_DESCRIPTION = 'description'
 
     def __init__(self, obj):
-        if obj == None:
-            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
-        self._obj = obj
+        JObject.__init__(self, obj)
+
+    def __del__(self):
+        JObject.__del__(self)
 
     @staticmethod
     def newMetadataElement(name):
@@ -6083,46 +6182,51 @@ class MetadataElement:
         return Object(MetadataElement_getExtension(self._obj, arg0._obj))
 
 
-""" Represents a geodetic datum. Geodetic datums define the size and shape of the earth and the origin and orientation of
+class Datum(JObject):
+    """ Represents a geodetic datum. Geodetic datums define the size and shape of the earth and the origin and orientation of
 the coordinate systems used to map the earth.
 
 @deprecated since BEAM 4.7, use {@link org.opengis.referencing.datum.GeodeticDatum} instead.
 """
-class Datum:
     def __init__(self, obj):
-        if obj == None:
-            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
-        self._obj = obj
+        JObject.__init__(self, obj)
+
+    def __del__(self):
+        JObject.__del__(self)
 
 
-class Map:
+class Map(JObject):
     def __init__(self, obj):
-        if obj == None:
-            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
-        self._obj = obj
+        JObject.__init__(self, obj)
+
+    def __del__(self):
+        JObject.__del__(self)
 
 
-""" The interface <code>Pointing</code> wraps a {@link GeoCoding} and optionally provides more geometry
+class Pointing(JObject):
+    """ The interface <code>Pointing</code> wraps a {@link GeoCoding} and optionally provides more geometry
 information such as sun direction, satellite (view) direction and elevation at a given pixel position.
 
 All <code>Pointing</code> implementations should override
 the {@link Object#equals(Object) equals()} and  {@link Object#hashCode() hashCode()} methods.
 """
-class Pointing:
     def __init__(self, obj):
-        if obj == None:
-            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
-        self._obj = obj
+        JObject.__init__(self, obj)
+
+    def __del__(self):
+        JObject.__del__(self)
 
 
-class Color:
+class Color(JObject):
     def __init__(self, obj):
-        if obj == None:
-            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
-        self._obj = obj
+        JObject.__init__(self, obj)
+
+    def __del__(self):
+        JObject.__del__(self)
 
 
-""" Placemark descriptors are used to describe and create {@link Placemark}s.
+class PlacemarkDescriptor(JObject):
+    """ Placemark descriptors are used to describe and create {@link Placemark}s.
 
 New placemark descriptors can be added by using the Service Provider Interface
 {@code META-INF/services/PlacemarkDescriptor}.
@@ -6130,42 +6234,45 @@ New placemark descriptors can be added by using the Service Provider Interface
 Since this interface is likely to change, clients should not directly implement it.
 Instead they should derive their implementation from {@link AbstractPlacemarkDescriptor}.
 """
-class PlacemarkDescriptor:
     def __init__(self, obj):
-        if obj == None:
-            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
-        self._obj = obj
+        JObject.__init__(self, obj)
+
+    def __del__(self):
+        JObject.__del__(self)
 
 
-""" A factory which creates instances of a {@link Pointing} for a given raster data node.
+class PointingFactory(JObject):
+    """ A factory which creates instances of a {@link Pointing} for a given raster data node.
 A <code>PointingFactory</code> is usually assigned to data {@link Product} by its {@link ProductReader ProductReader}
 """
-class PointingFactory:
     def __init__(self, obj):
-        if obj == None:
-            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
-        self._obj = obj
+        JObject.__init__(self, obj)
+
+    def __del__(self):
+        JObject.__del__(self)
 
 
-""" A container for data which fully describes a transect profile. Use {@link TransectProfileDataBuilder} to create
+class TransectProfileData(JObject):
+    """ A container for data which fully describes a transect profile. Use {@link TransectProfileDataBuilder} to create
 instances.
 """
-class TransectProfileData:
     def __init__(self, obj):
-        if obj == None:
-            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
-        self._obj = obj
+        JObject.__init__(self, obj)
+
+    def __del__(self):
+        JObject.__del__(self)
 
 
-class PlacemarkGroup:
+class PlacemarkGroup(JObject):
 
     PROPERTY_NAME_NAME = 'name'
     PROPERTY_NAME_DESCRIPTION = 'description'
 
     def __init__(self, obj):
-        if obj == None:
-            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
-        self._obj = obj
+        JObject.__init__(self, obj)
+
+    def __del__(self):
+        JObject.__del__(self)
 
     def getVectorDataNode(self):
         return VectorDataNode(PlacemarkGroup_getVectorDataNode(self._obj))
@@ -6457,7 +6564,8 @@ class PlacemarkGroup:
         return Object(PlacemarkGroup_getExtension(self._obj, arg0._obj))
 
 
-""" <code>Product</code> instances are an in-memory representation of a remote sensing data product. The product is more
+class Product(JObject):
+    """ <code>Product</code> instances are an in-memory representation of a remote sensing data product. The product is more
 an abstract hull containing references to the data of the product or readers to retrieve the data on demant. The
 product itself does not hold the remote sensing data. Data products can contain multiple geophysical parameters
 stored as bands and can also have multiple metadata attributes. Also, a <code>Product</code> can contain any number
@@ -6467,7 +6575,6 @@ Every product can also have a product reader and writer assigned to it. The read
 which a product was created, whereas the writer represents the data sink. Both, the source and the sink must not
 necessarily store data in the same format. Furthermore, it is not mandatory for a product to have both of them.
 """
-class Product:
 
     METADATA_ROOT_NAME = 'metadata'
     HISTORY_ROOT_NAME = 'history'
@@ -6480,9 +6587,10 @@ class Product:
     PROPERTY_NAME_DESCRIPTION = 'description'
 
     def __init__(self, obj):
-        if obj == None:
-            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
-        self._obj = obj
+        JObject.__init__(self, obj)
+
+    def __del__(self):
+        JObject.__del__(self)
 
     @staticmethod
     def newProduct(name, type, sceneRasterWidth, sceneRasterHeight):
@@ -6747,12 +6855,18 @@ class Product:
         """
         return MetadataElement(Product_getMetadataRoot(self._obj))
 
-    def getBandGroup(self):
+    def getGroups(self):
         """
-           Gets the band group of this product.
-           @return The group of all bands.
+           @return The group which contains all other product node groups.
         """
-        return ProductNodeGroup(Product_getBandGroup(self._obj))
+        return ProductNodeGroup(Product_getGroups(self._obj))
+
+    def getGroup(self, name):
+        """
+           @param name The group name.
+           @return The group with the given name, or {@code null} if no such group exists.
+        """
+        return ProductNodeGroup(Product_getGroup(self._obj, name))
 
     def getTiePointGridGroup(self):
         """
@@ -6826,6 +6940,13 @@ class Product:
            <code>false</code> otherwise
         """
         return Product_containsTiePointGrid(self._obj, name)
+
+    def getBandGroup(self):
+        """
+           Gets the band group of this product.
+           @return The group of all bands.
+        """
+        return ProductNodeGroup(Product_getBandGroup(self._obj))
 
     def addBand(self, band):
         """
@@ -6980,6 +7101,21 @@ class Product:
            @return the pin group.
         """
         return PlacemarkGroup(Product_getPinGroup(self._obj))
+
+    def getNumResolutionsMax(self):
+        """
+           @return The maximum number of resolution levels common to all band images.
+           If less than or equal to zero, the  number of resolution levels is considered to be unknown.
+        """
+        return Product_getNumResolutionsMax(self._obj)
+
+    def setNumResolutionsMax(self, numResolutionsMax):
+        """
+           @param numResolutionsMax The maximum number of resolution levels common to all band images.
+           If less than or equal to zero, the  number of resolution levels is considered to be unknown.
+        """
+        Product_setNumResolutionsMax(self._obj, numResolutionsMax)
+        return
 
     def isCompatibleProduct(self, product, eps):
         """
@@ -7464,98 +7600,109 @@ class Product:
         return Object(Product_getExtension(self._obj, arg0._obj))
 
 
-class Point2D:
+class Point2D(JObject):
     def __init__(self, obj):
-        if obj == None:
-            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
-        self._obj = obj
+        JObject.__init__(self, obj)
+
+    def __del__(self):
+        JObject.__del__(self)
 
 
-""" A visitor for a product and all other product nodes. This interface is part of the <i>visitor pattern</i> used to
+class ProductVisitor(JObject):
+    """ A visitor for a product and all other product nodes. This interface is part of the <i>visitor pattern</i> used to
 visit all nodes of a data product. Implementations of this interface can be passed to the <code>acceptVisitor</code>
 method of an <code>Product</code> (or any other <code>ProductNode</code>).
 @see Product#acceptVisitor(ProductVisitor)
 @see ProductNode#acceptVisitor(ProductVisitor)
 """
-class ProductVisitor:
     def __init__(self, obj):
-        if obj == None:
-            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
-        self._obj = obj
+        JObject.__init__(self, obj)
+
+    def __del__(self):
+        JObject.__del__(self)
 
 
-""" The scaling method used for geophysical value transformation in a {@link Band}.
+class Scaling(JObject):
+    """ The scaling method used for geophysical value transformation in a {@link Band}.
 """
-class Scaling:
     def __init__(self, obj):
-        if obj == None:
-            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
-        self._obj = obj
+        JObject.__init__(self, obj)
+
+    def __del__(self):
+        JObject.__del__(self)
 
 
-class WritableNamespace:
+class WritableNamespace(JObject):
     def __init__(self, obj):
-        if obj == None:
-            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
-        self._obj = obj
+        JObject.__init__(self, obj)
+
+    def __del__(self):
+        JObject.__del__(self)
 
 
-class MultiLevelImage:
+class MultiLevelImage(JObject):
     def __init__(self, obj):
-        if obj == None:
-            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
-        self._obj = obj
+        JObject.__init__(self, obj)
+
+    def __del__(self):
+        JObject.__del__(self)
 
 
-class ROI:
+class ROI(JObject):
     def __init__(self, obj):
-        if obj == None:
-            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
-        self._obj = obj
+        JObject.__init__(self, obj)
+
+    def __del__(self):
+        JObject.__del__(self)
 
 
-class RenderingHints_Key:
+class RenderingHints_Key(JObject):
     def __init__(self, obj):
-        if obj == None:
-            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
-        self._obj = obj
+        JObject.__init__(self, obj)
+
+    def __del__(self):
+        JObject.__del__(self)
 
 
-class Collection:
+class Collection(JObject):
     def __init__(self, obj):
-        if obj == None:
-            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
-        self._obj = obj
+        JObject.__init__(self, obj)
+
+    def __del__(self):
+        JObject.__del__(self)
 
 
-""" A listener for the product manager.
+class ProductManager_Listener(JObject):
+    """ A listener for the product manager.
 """
-class ProductManager_Listener:
     def __init__(self, obj):
-        if obj == None:
-            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
-        self._obj = obj
+        JObject.__init__(self, obj)
+
+    def __del__(self):
+        JObject.__del__(self)
 
 
-class GeoTIFFMetadata:
+class GeoTIFFMetadata(JObject):
     def __init__(self, obj):
-        if obj == None:
-            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
-        self._obj = obj
+        JObject.__init__(self, obj)
+
+    def __del__(self):
+        JObject.__del__(self)
 
 
-""" The <code>ColorPaletteDef</code> class represents a curve that is used to transform the sample values of a
+class ColorPaletteDef(JObject):
+    """ The <code>ColorPaletteDef</code> class represents a curve that is used to transform the sample values of a
 geo-physical band into color palette indexes.
 
  This special implemnentation of a gradation curve also provides separate color values for each of the tie points
 contained in the curve. This allows a better image interpretation because certain colors correspond to certain sample
 values even if the curve points are used to create color gradient palettes.
 """
-class ColorPaletteDef:
     def __init__(self, obj):
-        if obj == None:
-            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
-        self._obj = obj
+        JObject.__init__(self, obj)
+
+    def __del__(self):
+        JObject.__del__(self)
 
     @staticmethod
     def newColorPaletteDef(minSample, maxSample):
@@ -7699,21 +7846,22 @@ class ColorPaletteDef:
         return Color(ColorPaletteDef_computeColor(self._obj, scaling._obj, sample))
 
 
-""" The <code>MapInfo</code> class holds information required to bring the cartographic map co-ordinate system to a
+class MapInfo(JObject):
+    """ The <code>MapInfo</code> class holds information required to bring the cartographic map co-ordinate system to a
 raster co-ordinate system and back.
 
 @deprecated since BEAM 4.7, use geotools and {@link CrsGeoCoding} instead.
 """
-class MapInfo:
     def __init__(self, obj):
-        if obj == None:
-            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
-        self._obj = obj
+        JObject.__init__(self, obj)
+
+    def __del__(self):
+        JObject.__del__(self)
 
 
-""" This class contains information about how a product's raster data node is displayed as an image.
+class ImageInfo(JObject):
+    """ This class contains information about how a product's raster data node is displayed as an image.
 """
-class ImageInfo:
 
     NO_COLOR = None
     HISTOGRAM_MATCHING_OFF = 'off'
@@ -7721,9 +7869,10 @@ class ImageInfo:
     HISTOGRAM_MATCHING_NORMALIZE = 'normalize'
 
     def __init__(self, obj):
-        if obj == None:
-            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
-        self._obj = obj
+        JObject.__init__(self, obj)
+
+    def __del__(self):
+        JObject.__del__(self)
 
     @staticmethod
     def newImageInfo(colorPaletteDef):
@@ -7848,34 +7997,38 @@ class ImageInfo:
         return ImageInfo_HistogramMatching(ImageInfo_getHistogramMatching(mode))
 
 
-""" Instances of the <code>Histogram</code> class store histogram data.
+class Histogram(JObject):
+    """ Instances of the <code>Histogram</code> class store histogram data.
 """
-class Histogram:
     def __init__(self, obj):
-        if obj == None:
-            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
-        self._obj = obj
+        JObject.__init__(self, obj)
+
+    def __del__(self):
+        JObject.__del__(self)
 
 
-class String:
+class String(JObject):
     def __init__(self, obj):
-        if obj == None:
-            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
-        self._obj = obj
+        JObject.__init__(self, obj)
+
+    def __del__(self):
+        JObject.__del__(self)
 
 
-class BufferedImage:
+class BufferedImage(JObject):
     def __init__(self, obj):
-        if obj == None:
-            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
-        self._obj = obj
+        JObject.__init__(self, obj)
+
+    def __del__(self):
+        JObject.__del__(self)
 
 
-class RGBChannelDef:
+class RGBChannelDef(JObject):
     def __init__(self, obj):
-        if obj == None:
-            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
-        self._obj = obj
+        JObject.__init__(self, obj)
+
+    def __del__(self):
+        JObject.__del__(self)
 
     @staticmethod
     def newRGBChannelDef():
@@ -7926,12 +8079,12 @@ class RGBChannelDef:
         return Object(RGBChannelDef_clone(self._obj))
 
 
-""" A tie-point grid contains the data for geophysical parameter in remote sensing data products. Tie-point grid are
+class TiePointGrid(JObject):
+    """ A tie-point grid contains the data for geophysical parameter in remote sensing data products. Tie-point grid are
 two-dimensional images which hold their pixel values (samples) in a <code>float</code> array. 
 
 Usually, tie-point grids are a sub-sampling of a data product's scene resolution.
 """
-class TiePointGrid:
 
     PROPERTY_NAME_IMAGE_INFO = 'imageInfo'
     PROPERTY_NAME_LOG_10_SCALED = 'log10Scaled'
@@ -7954,9 +8107,10 @@ class TiePointGrid:
     PROPERTY_NAME_DESCRIPTION = 'description'
 
     def __init__(self, obj):
-        if obj == None:
-            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
-        self._obj = obj
+        JObject.__init__(self, obj)
+
+    def __del__(self):
+        JObject.__del__(self)
 
     @staticmethod
     def newTiePointGrid(name, gridWidth, gridHeight, offsetX, offsetY, subSamplingX, subSamplingY, tiePoints):
@@ -9308,6 +9462,7 @@ class TiePointGrid:
     def setDataElems(self, elems):
         """
            Sets the data elements of this data node.
+           @deprecated since 5.0
            @see ProductData#setElems(Object)
         """
         TiePointGrid_setDataElems(self._obj, elems._obj)
@@ -9505,33 +9660,36 @@ class TiePointGrid:
         return Object(TiePointGrid_getExtension(self._obj, arg0._obj))
 
 
-class SimpleFeature:
+class SimpleFeature(JObject):
     def __init__(self, obj):
-        if obj == None:
-            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
-        self._obj = obj
+        JObject.__init__(self, obj)
+
+    def __del__(self):
+        JObject.__del__(self)
 
 
-""" The <code>ProductSubsetDef</code> class describes a subset or portion of a remote sensing data product.
+class ProductSubsetDef(JObject):
+    """ The <code>ProductSubsetDef</code> class describes a subset or portion of a remote sensing data product.
 
  Subsets can be spatial or spectral or both. A spatial subset is given through a rectangular region in pixels. The
 spectral subset as a list of band (or channel) names.
 """
-class ProductSubsetDef:
     def __init__(self, obj):
-        if obj == None:
-            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
-        self._obj = obj
+        JObject.__init__(self, obj)
+
+    def __del__(self):
+        JObject.__del__(self)
 
 
-""" An interface that supports writing a complete data product tree and single band rasters.
+class ProductWriter(JObject):
+    """ An interface that supports writing a complete data product tree and single band rasters.
 @see ProductReader
 """
-class ProductWriter:
     def __init__(self, obj):
-        if obj == None:
-            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
-        self._obj = obj
+        JObject.__init__(self, obj)
+
+    def __del__(self):
+        JObject.__del__(self)
 
     def getWriterPlugIn(self):
         """
@@ -9656,9 +9814,9 @@ class ProductWriter:
         return
 
 
-""" A <code>MetadataAttribute</code> is part of a <code>{@link MetadataElement}</code> and represents a key/value pair.
+class MetadataAttribute(JObject):
+    """ A <code>MetadataAttribute</code> is part of a <code>{@link MetadataElement}</code> and represents a key/value pair.
 """
-class MetadataAttribute:
 
     PROPERTY_NAME_DATA = 'data'
     PROPERTY_NAME_READ_ONLY = 'readOnly'
@@ -9668,9 +9826,10 @@ class MetadataAttribute:
     PROPERTY_NAME_DESCRIPTION = 'description'
 
     def __init__(self, obj):
-        if obj == None:
-            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
-        self._obj = obj
+        JObject.__init__(self, obj)
+
+    def __del__(self):
+        JObject.__del__(self)
 
     @staticmethod
     def newMetadataAttribute(name, data, readOnly):
@@ -9733,6 +9892,7 @@ class MetadataAttribute:
     def setDataElems(self, elems):
         """
            Sets the data elements of this data node.
+           @deprecated since 5.0
            @see ProductData#setElems(Object)
         """
         MetadataAttribute_setDataElems(self._obj, elems._obj)
@@ -9943,44 +10103,49 @@ class MetadataAttribute:
         return Object(MetadataAttribute_getExtension(self._obj, arg0._obj))
 
 
-class ProgressMonitor:
+class ProgressMonitor(JObject):
     def __init__(self, obj):
-        if obj == None:
-            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
-        self._obj = obj
+        JObject.__init__(self, obj)
+
+    def __del__(self):
+        JObject.__del__(self)
 
 
-""" A container which allows to store vector data in the BEAM product model.
+class VectorDataNode(JObject):
+    """ A container which allows to store vector data in the BEAM product model.
 
 This is a preliminary API under construction for BEAM 4.7. Not intended for public use.
 @see Product#getVectorDataGroup()
 """
-class VectorDataNode:
     def __init__(self, obj):
-        if obj == None:
-            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
-        self._obj = obj
+        JObject.__init__(self, obj)
+
+    def __del__(self):
+        JObject.__del__(self)
 
 
-class GeneralPath:
+class GeneralPath(JObject):
     def __init__(self, obj):
-        if obj == None:
-            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
-        self._obj = obj
+        JObject.__init__(self, obj)
+
+    def __del__(self):
+        JObject.__del__(self)
 
 
-class ImageInputStream:
+class ImageInputStream(JObject):
     def __init__(self, obj):
-        if obj == None:
-            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
-        self._obj = obj
+        JObject.__init__(self, obj)
+
+    def __del__(self):
+        JObject.__del__(self)
 
 
-class RenderingHints:
+class RenderingHints(JObject):
     def __init__(self, obj):
-        if obj == None:
-            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
-        self._obj = obj
+        JObject.__init__(self, obj)
+
+    def __del__(self):
+        JObject.__del__(self)
 
 
 class String:
