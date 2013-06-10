@@ -1223,6 +1223,7 @@ Product GPF_createProductFromNoSourceProducts(const char* operatorName, Map para
     }
     operatorNameString = (*jenv)->NewStringUTF(jenv, operatorName);
     _result = (*jenv)->CallStaticObjectMethod(jenv, classGPF, _method, operatorNameString, parameters);
+    (*jenv)->DeleteLocalRef(jenv, operatorNameString);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
@@ -1244,6 +1245,7 @@ Product GPF_createProductFromSourceProduct(const char* operatorName, Map paramet
     }
     operatorNameString = (*jenv)->NewStringUTF(jenv, operatorName);
     _result = (*jenv)->CallStaticObjectMethod(jenv, classGPF, _method, operatorNameString, parameters, sourceProduct);
+    (*jenv)->DeleteLocalRef(jenv, operatorNameString);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
@@ -1267,6 +1269,8 @@ Product GPF_createProductFromSourceProducts(const char* operatorName, Map parame
     operatorNameString = (*jenv)->NewStringUTF(jenv, operatorName);
     sourceProductsArray = beam_new_jobject_array(sourceProductsElems, sourceProductsLength, classProduct);
     _result = (*jenv)->CallStaticObjectMethod(jenv, classGPF, _method, operatorNameString, parameters, sourceProductsArray);
+    (*jenv)->DeleteLocalRef(jenv, operatorNameString);
+    (*jenv)->DeleteLocalRef(jenv, sourceProductsArray);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
@@ -1288,6 +1292,7 @@ Product GPF_createProductFromNamedSourceProducts(const char* operatorName, Map p
     }
     operatorNameString = (*jenv)->NewStringUTF(jenv, operatorName);
     _result = (*jenv)->CallStaticObjectMethod(jenv, classGPF, _method, operatorNameString, parameters, sourceProducts);
+    (*jenv)->DeleteLocalRef(jenv, operatorNameString);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
@@ -1309,6 +1314,7 @@ Product GPF_createProductNS(GPF _this, const char* operatorName, Map parameters,
     }
     operatorNameString = (*jenv)->NewStringUTF(jenv, operatorName);
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, operatorNameString, parameters, sourceProducts, renderingHints);
+    (*jenv)->DeleteLocalRef(jenv, operatorNameString);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
@@ -1330,6 +1336,7 @@ Operator GPF_createOperator(GPF _this, const char* operatorName, Map parameters,
     }
     operatorNameString = (*jenv)->NewStringUTF(jenv, operatorName);
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, operatorNameString, parameters, sourceProducts, renderingHints);
+    (*jenv)->DeleteLocalRef(jenv, operatorNameString);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
@@ -1422,6 +1429,7 @@ void GPF_writeProduct(Product product, File file, const char* formatName, boolea
     }
     formatNameString = (*jenv)->NewStringUTF(jenv, formatName);
     (*jenv)->CallStaticVoidMethod(jenv, classGPF, _method, product, file, formatNameString, incremental, pm);
+    (*jenv)->DeleteLocalRef(jenv, formatNameString);
 }
 
 IndexCoding IndexCoding_newIndexCoding(const char* name)
@@ -1442,6 +1450,7 @@ IndexCoding IndexCoding_newIndexCoding(const char* name)
     }
     nameString = (*jenv)->NewStringUTF(jenv, name);
     _result = (*jenv)->NewObject(jenv, classIndexCoding, _method, nameString);
+    (*jenv)->DeleteLocalRef(jenv, nameString);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
@@ -1463,6 +1472,7 @@ MetadataAttribute IndexCoding_getIndex(IndexCoding _this, const char* name)
     }
     nameString = (*jenv)->NewStringUTF(jenv, name);
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, nameString);
+    (*jenv)->DeleteLocalRef(jenv, nameString);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
@@ -1484,6 +1494,7 @@ char** IndexCoding_getIndexNames(IndexCoding _this, int* resultArrayLength)
     }
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string_array(_resultArray, resultArrayLength);
+    (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
 
@@ -1507,6 +1518,8 @@ MetadataAttribute IndexCoding_addIndex(IndexCoding _this, const char* name, int 
     nameString = (*jenv)->NewStringUTF(jenv, name);
     descriptionString = (*jenv)->NewStringUTF(jenv, description);
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, nameString, value, descriptionString);
+    (*jenv)->DeleteLocalRef(jenv, nameString);
+    (*jenv)->DeleteLocalRef(jenv, descriptionString);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
@@ -1528,6 +1541,7 @@ int IndexCoding_getIndexValue(IndexCoding _this, const char* name)
     }
     nameString = (*jenv)->NewStringUTF(jenv, name);
     _result = (*jenv)->CallIntMethod(jenv, _this, _method, nameString);
+    (*jenv)->DeleteLocalRef(jenv, nameString);
     return _result;
 }
 
@@ -1602,6 +1616,8 @@ MetadataAttribute IndexCoding_addSample(IndexCoding _this, const char* name, int
     nameString = (*jenv)->NewStringUTF(jenv, name);
     descriptionString = (*jenv)->NewStringUTF(jenv, description);
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, nameString, value, descriptionString);
+    (*jenv)->DeleteLocalRef(jenv, nameString);
+    (*jenv)->DeleteLocalRef(jenv, descriptionString);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
@@ -1642,6 +1658,7 @@ char* IndexCoding_getSampleName(IndexCoding _this, int index)
     }
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method, index);
     _result = beam_alloc_string(_resultString);
+    (*jenv)->DeleteLocalRef(jenv, _resultString);
     return _result;
 }
 
@@ -1794,6 +1811,7 @@ char** IndexCoding_getElementNames(IndexCoding _this, int* resultArrayLength)
     }
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string_array(_resultArray, resultArrayLength);
+    (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
 
@@ -1815,6 +1833,7 @@ MetadataElement* IndexCoding_getElements(IndexCoding _this, int* resultArrayLeng
     }
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_object_array(_resultArray, resultArrayLength);
+    (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
 
@@ -1836,6 +1855,7 @@ MetadataElement IndexCoding_getElement(IndexCoding _this, const char* name)
     }
     nameString = (*jenv)->NewStringUTF(jenv, name);
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, nameString);
+    (*jenv)->DeleteLocalRef(jenv, nameString);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
@@ -1857,6 +1877,7 @@ boolean IndexCoding_containsElement(IndexCoding _this, const char* name)
     }
     nameString = (*jenv)->NewStringUTF(jenv, name);
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method, nameString);
+    (*jenv)->DeleteLocalRef(jenv, nameString);
     return _result;
 }
 
@@ -1954,6 +1975,7 @@ char** IndexCoding_getAttributeNames(IndexCoding _this, int* resultArrayLength)
     }
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string_array(_resultArray, resultArrayLength);
+    (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
 
@@ -1975,6 +1997,7 @@ MetadataAttribute* IndexCoding_getAttributes(IndexCoding _this, int* resultArray
     }
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_object_array(_resultArray, resultArrayLength);
+    (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
 
@@ -1996,6 +2019,7 @@ MetadataAttribute IndexCoding_getAttribute(IndexCoding _this, const char* name)
     }
     nameString = (*jenv)->NewStringUTF(jenv, name);
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, nameString);
+    (*jenv)->DeleteLocalRef(jenv, nameString);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
@@ -2017,6 +2041,7 @@ boolean IndexCoding_containsAttribute(IndexCoding _this, const char* name)
     }
     nameString = (*jenv)->NewStringUTF(jenv, name);
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method, nameString);
+    (*jenv)->DeleteLocalRef(jenv, nameString);
     return _result;
 }
 
@@ -2057,6 +2082,7 @@ double IndexCoding_getAttributeDouble(IndexCoding _this, const char* name, doubl
     }
     nameString = (*jenv)->NewStringUTF(jenv, name);
     _result = (*jenv)->CallDoubleMethod(jenv, _this, _method, nameString, defaultValue);
+    (*jenv)->DeleteLocalRef(jenv, nameString);
     return _result;
 }
 
@@ -2078,6 +2104,7 @@ ProductData_UTC IndexCoding_getAttributeUTC(IndexCoding _this, const char* name,
     }
     nameString = (*jenv)->NewStringUTF(jenv, name);
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, nameString, defaultValue);
+    (*jenv)->DeleteLocalRef(jenv, nameString);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
@@ -2099,6 +2126,7 @@ int IndexCoding_getAttributeInt(IndexCoding _this, const char* name, int default
     }
     nameString = (*jenv)->NewStringUTF(jenv, name);
     _result = (*jenv)->CallIntMethod(jenv, _this, _method, nameString, defaultValue);
+    (*jenv)->DeleteLocalRef(jenv, nameString);
     return _result;
 }
 
@@ -2119,6 +2147,7 @@ void IndexCoding_setAttributeInt(IndexCoding _this, const char* name, int value)
     }
     nameString = (*jenv)->NewStringUTF(jenv, name);
     (*jenv)->CallVoidMethod(jenv, _this, _method, nameString, value);
+    (*jenv)->DeleteLocalRef(jenv, nameString);
 }
 
 void IndexCoding_setAttributeDouble(IndexCoding _this, const char* name, double value)
@@ -2138,6 +2167,7 @@ void IndexCoding_setAttributeDouble(IndexCoding _this, const char* name, double 
     }
     nameString = (*jenv)->NewStringUTF(jenv, name);
     (*jenv)->CallVoidMethod(jenv, _this, _method, nameString, value);
+    (*jenv)->DeleteLocalRef(jenv, nameString);
 }
 
 void IndexCoding_setAttributeUTC(IndexCoding _this, const char* name, ProductData_UTC value)
@@ -2157,6 +2187,7 @@ void IndexCoding_setAttributeUTC(IndexCoding _this, const char* name, ProductDat
     }
     nameString = (*jenv)->NewStringUTF(jenv, name);
     (*jenv)->CallVoidMethod(jenv, _this, _method, nameString, value);
+    (*jenv)->DeleteLocalRef(jenv, nameString);
 }
 
 char* IndexCoding_getAttributeString(IndexCoding _this, const char* name, const char* defaultValue)
@@ -2181,6 +2212,9 @@ char* IndexCoding_getAttributeString(IndexCoding _this, const char* name, const 
     defaultValueString = (*jenv)->NewStringUTF(jenv, defaultValue);
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method, nameString, defaultValueString);
     _result = beam_alloc_string(_resultString);
+    (*jenv)->DeleteLocalRef(jenv, nameString);
+    (*jenv)->DeleteLocalRef(jenv, defaultValueString);
+    (*jenv)->DeleteLocalRef(jenv, _resultString);
     return _result;
 }
 
@@ -2203,6 +2237,8 @@ void IndexCoding_setAttributeString(IndexCoding _this, const char* name, const c
     nameString = (*jenv)->NewStringUTF(jenv, name);
     valueString = (*jenv)->NewStringUTF(jenv, value);
     (*jenv)->CallVoidMethod(jenv, _this, _method, nameString, valueString);
+    (*jenv)->DeleteLocalRef(jenv, nameString);
+    (*jenv)->DeleteLocalRef(jenv, valueString);
 }
 
 void IndexCoding_setModified(IndexCoding _this, boolean modified)
@@ -2295,6 +2331,7 @@ char* IndexCoding_getName(IndexCoding _this)
     }
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
+    (*jenv)->DeleteLocalRef(jenv, _resultString);
     return _result;
 }
 
@@ -2315,6 +2352,7 @@ void IndexCoding_setName(IndexCoding _this, const char* name)
     }
     nameString = (*jenv)->NewStringUTF(jenv, name);
     (*jenv)->CallVoidMethod(jenv, _this, _method, nameString);
+    (*jenv)->DeleteLocalRef(jenv, nameString);
 }
 
 char* IndexCoding_getDescription(IndexCoding _this)
@@ -2335,6 +2373,7 @@ char* IndexCoding_getDescription(IndexCoding _this)
     }
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
+    (*jenv)->DeleteLocalRef(jenv, _resultString);
     return _result;
 }
 
@@ -2355,6 +2394,7 @@ void IndexCoding_setDescription(IndexCoding _this, const char* description)
     }
     descriptionString = (*jenv)->NewStringUTF(jenv, description);
     (*jenv)->CallVoidMethod(jenv, _this, _method, descriptionString);
+    (*jenv)->DeleteLocalRef(jenv, descriptionString);
 }
 
 boolean IndexCoding_isModified(IndexCoding _this)
@@ -2394,6 +2434,7 @@ char* IndexCoding_toString(IndexCoding _this)
     }
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
+    (*jenv)->DeleteLocalRef(jenv, _resultString);
     return _result;
 }
 
@@ -2415,6 +2456,7 @@ boolean IndexCoding_isValidNodeName(const char* name)
     }
     nameString = (*jenv)->NewStringUTF(jenv, name);
     _result = (*jenv)->CallStaticBooleanMethod(jenv, classIndexCoding, _method, nameString);
+    (*jenv)->DeleteLocalRef(jenv, nameString);
     return _result;
 }
 
@@ -2493,6 +2535,7 @@ char* IndexCoding_getDisplayName(IndexCoding _this)
     }
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
+    (*jenv)->DeleteLocalRef(jenv, _resultString);
     return _result;
 }
 
@@ -2514,6 +2557,7 @@ char* IndexCoding_getProductRefString(IndexCoding _this)
     }
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
+    (*jenv)->DeleteLocalRef(jenv, _resultString);
     return _result;
 }
 
@@ -2536,6 +2580,8 @@ void IndexCoding_updateExpression(IndexCoding _this, const char* oldExternalName
     oldExternalNameString = (*jenv)->NewStringUTF(jenv, oldExternalName);
     newExternalNameString = (*jenv)->NewStringUTF(jenv, newExternalName);
     (*jenv)->CallVoidMethod(jenv, _this, _method, oldExternalNameString, newExternalNameString);
+    (*jenv)->DeleteLocalRef(jenv, oldExternalNameString);
+    (*jenv)->DeleteLocalRef(jenv, newExternalNameString);
 }
 
 void IndexCoding_removeFromFile(IndexCoding _this, ProductWriter productWriter)
@@ -2738,6 +2784,7 @@ char* PixelPos_toString(PixelPos _this)
     }
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
+    (*jenv)->DeleteLocalRef(jenv, _resultString);
     return _result;
 }
 
@@ -2947,6 +2994,7 @@ ProductReader ProductIO_getProductReader(const char* formatName)
     }
     formatNameString = (*jenv)->NewStringUTF(jenv, formatName);
     _result = (*jenv)->CallStaticObjectMethod(jenv, classProductIO, _method, formatNameString);
+    (*jenv)->DeleteLocalRef(jenv, formatNameString);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
@@ -2970,6 +3018,8 @@ char** ProductIO_getProductWriterExtensions(const char* formatName, int* resultA
     formatNameString = (*jenv)->NewStringUTF(jenv, formatName);
     _resultArray = (*jenv)->CallStaticObjectMethod(jenv, classProductIO, _method, formatNameString);
     _result = beam_alloc_string_array(_resultArray, resultArrayLength);
+    (*jenv)->DeleteLocalRef(jenv, formatNameString);
+    (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
 
@@ -2991,6 +3041,7 @@ ProductWriter ProductIO_getProductWriter(const char* formatName)
     }
     formatNameString = (*jenv)->NewStringUTF(jenv, formatName);
     _result = (*jenv)->CallStaticObjectMethod(jenv, classProductIO, _method, formatNameString);
+    (*jenv)->DeleteLocalRef(jenv, formatNameString);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
@@ -3012,6 +3063,7 @@ Product ProductIO_readProduct(const char* filePath)
     }
     filePathString = (*jenv)->NewStringUTF(jenv, filePath);
     _result = (*jenv)->CallStaticObjectMethod(jenv, classProductIO, _method, filePathString);
+    (*jenv)->DeleteLocalRef(jenv, filePathString);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
@@ -3072,6 +3124,8 @@ void ProductIO_writeProduct(Product product, const char* filePath, const char* f
     filePathString = (*jenv)->NewStringUTF(jenv, filePath);
     formatNameString = (*jenv)->NewStringUTF(jenv, formatName);
     (*jenv)->CallStaticVoidMethod(jenv, classProductIO, _method, product, filePathString, formatNameString);
+    (*jenv)->DeleteLocalRef(jenv, filePathString);
+    (*jenv)->DeleteLocalRef(jenv, formatNameString);
 }
 
 Placemark Placemark_newPlacemark(PlacemarkDescriptor descriptor, SimpleFeature feature)
@@ -3115,6 +3169,9 @@ Placemark Placemark_createPointPlacemark(PlacemarkDescriptor descriptor, const c
     labelString = (*jenv)->NewStringUTF(jenv, label);
     textString = (*jenv)->NewStringUTF(jenv, text);
     _result = (*jenv)->CallStaticObjectMethod(jenv, classPlacemark, _method, descriptor, nameString, labelString, textString, pixelPos, geoPos, geoCoding);
+    (*jenv)->DeleteLocalRef(jenv, nameString);
+    (*jenv)->DeleteLocalRef(jenv, labelString);
+    (*jenv)->DeleteLocalRef(jenv, textString);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
@@ -3174,6 +3231,7 @@ Object Placemark_getAttributeValue(Placemark _this, const char* attributeName)
     }
     attributeNameString = (*jenv)->NewStringUTF(jenv, attributeName);
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, attributeNameString);
+    (*jenv)->DeleteLocalRef(jenv, attributeNameString);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
@@ -3194,6 +3252,7 @@ void Placemark_setAttributeValue(Placemark _this, const char* attributeName, Obj
     }
     attributeNameString = (*jenv)->NewStringUTF(jenv, attributeName);
     (*jenv)->CallVoidMethod(jenv, _this, _method, attributeNameString, attributeValue);
+    (*jenv)->DeleteLocalRef(jenv, attributeNameString);
 }
 
 void Placemark_setLabel(Placemark _this, const char* label)
@@ -3213,6 +3272,7 @@ void Placemark_setLabel(Placemark _this, const char* label)
     }
     labelString = (*jenv)->NewStringUTF(jenv, label);
     (*jenv)->CallVoidMethod(jenv, _this, _method, labelString);
+    (*jenv)->DeleteLocalRef(jenv, labelString);
 }
 
 char* Placemark_getLabel(Placemark _this)
@@ -3233,6 +3293,7 @@ char* Placemark_getLabel(Placemark _this)
     }
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
+    (*jenv)->DeleteLocalRef(jenv, _resultString);
     return _result;
 }
 
@@ -3253,6 +3314,7 @@ void Placemark_setText(Placemark _this, const char* text)
     }
     textString = (*jenv)->NewStringUTF(jenv, text);
     (*jenv)->CallVoidMethod(jenv, _this, _method, textString);
+    (*jenv)->DeleteLocalRef(jenv, textString);
 }
 
 char* Placemark_getText(Placemark _this)
@@ -3273,6 +3335,7 @@ char* Placemark_getText(Placemark _this)
     }
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
+    (*jenv)->DeleteLocalRef(jenv, _resultString);
     return _result;
 }
 
@@ -3293,6 +3356,7 @@ void Placemark_setStyleCss(Placemark _this, const char* styleCss)
     }
     styleCssString = (*jenv)->NewStringUTF(jenv, styleCss);
     (*jenv)->CallVoidMethod(jenv, _this, _method, styleCssString);
+    (*jenv)->DeleteLocalRef(jenv, styleCssString);
 }
 
 char* Placemark_getStyleCss(Placemark _this)
@@ -3313,6 +3377,7 @@ char* Placemark_getStyleCss(Placemark _this)
     }
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
+    (*jenv)->DeleteLocalRef(jenv, _resultString);
     return _result;
 }
 
@@ -3497,6 +3562,7 @@ SimpleFeatureType Placemark_createPointFeatureType(const char* name)
     }
     nameString = (*jenv)->NewStringUTF(jenv, name);
     _result = (*jenv)->CallStaticObjectMethod(jenv, classPlacemark, _method, nameString);
+    (*jenv)->DeleteLocalRef(jenv, nameString);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
@@ -3537,6 +3603,7 @@ char* Placemark_getName(Placemark _this)
     }
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
+    (*jenv)->DeleteLocalRef(jenv, _resultString);
     return _result;
 }
 
@@ -3557,6 +3624,7 @@ void Placemark_setName(Placemark _this, const char* name)
     }
     nameString = (*jenv)->NewStringUTF(jenv, name);
     (*jenv)->CallVoidMethod(jenv, _this, _method, nameString);
+    (*jenv)->DeleteLocalRef(jenv, nameString);
 }
 
 char* Placemark_getDescription(Placemark _this)
@@ -3577,6 +3645,7 @@ char* Placemark_getDescription(Placemark _this)
     }
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
+    (*jenv)->DeleteLocalRef(jenv, _resultString);
     return _result;
 }
 
@@ -3597,6 +3666,7 @@ void Placemark_setDescription(Placemark _this, const char* description)
     }
     descriptionString = (*jenv)->NewStringUTF(jenv, description);
     (*jenv)->CallVoidMethod(jenv, _this, _method, descriptionString);
+    (*jenv)->DeleteLocalRef(jenv, descriptionString);
 }
 
 boolean Placemark_isModified(Placemark _this)
@@ -3653,6 +3723,7 @@ char* Placemark_toString(Placemark _this)
     }
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
+    (*jenv)->DeleteLocalRef(jenv, _resultString);
     return _result;
 }
 
@@ -3691,6 +3762,7 @@ boolean Placemark_isValidNodeName(const char* name)
     }
     nameString = (*jenv)->NewStringUTF(jenv, name);
     _result = (*jenv)->CallStaticBooleanMethod(jenv, classPlacemark, _method, nameString);
+    (*jenv)->DeleteLocalRef(jenv, nameString);
     return _result;
 }
 
@@ -3769,6 +3841,7 @@ char* Placemark_getDisplayName(Placemark _this)
     }
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
+    (*jenv)->DeleteLocalRef(jenv, _resultString);
     return _result;
 }
 
@@ -3790,6 +3863,7 @@ char* Placemark_getProductRefString(Placemark _this)
     }
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
+    (*jenv)->DeleteLocalRef(jenv, _resultString);
     return _result;
 }
 
@@ -3812,6 +3886,8 @@ void Placemark_updateExpression(Placemark _this, const char* oldExternalName, co
     oldExternalNameString = (*jenv)->NewStringUTF(jenv, oldExternalName);
     newExternalNameString = (*jenv)->NewStringUTF(jenv, newExternalName);
     (*jenv)->CallVoidMethod(jenv, _this, _method, oldExternalNameString, newExternalNameString);
+    (*jenv)->DeleteLocalRef(jenv, oldExternalNameString);
+    (*jenv)->DeleteLocalRef(jenv, newExternalNameString);
 }
 
 void Placemark_removeFromFile(Placemark _this, ProductWriter productWriter)
@@ -3868,6 +3944,7 @@ MetadataElement MetadataElement_newMetadataElement(const char* name)
     }
     nameString = (*jenv)->NewStringUTF(jenv, name);
     _result = (*jenv)->NewObject(jenv, classMetadataElement, _method, nameString);
+    (*jenv)->DeleteLocalRef(jenv, nameString);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
@@ -4018,6 +4095,7 @@ char** MetadataElement_getElementNames(MetadataElement _this, int* resultArrayLe
     }
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string_array(_resultArray, resultArrayLength);
+    (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
 
@@ -4039,6 +4117,7 @@ MetadataElement* MetadataElement_getElements(MetadataElement _this, int* resultA
     }
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_object_array(_resultArray, resultArrayLength);
+    (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
 
@@ -4060,6 +4139,7 @@ MetadataElement MetadataElement_getElement(MetadataElement _this, const char* na
     }
     nameString = (*jenv)->NewStringUTF(jenv, name);
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, nameString);
+    (*jenv)->DeleteLocalRef(jenv, nameString);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
@@ -4081,6 +4161,7 @@ boolean MetadataElement_containsElement(MetadataElement _this, const char* name)
     }
     nameString = (*jenv)->NewStringUTF(jenv, name);
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method, nameString);
+    (*jenv)->DeleteLocalRef(jenv, nameString);
     return _result;
 }
 
@@ -4195,6 +4276,7 @@ char** MetadataElement_getAttributeNames(MetadataElement _this, int* resultArray
     }
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string_array(_resultArray, resultArrayLength);
+    (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
 
@@ -4216,6 +4298,7 @@ MetadataAttribute* MetadataElement_getAttributes(MetadataElement _this, int* res
     }
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_object_array(_resultArray, resultArrayLength);
+    (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
 
@@ -4237,6 +4320,7 @@ MetadataAttribute MetadataElement_getAttribute(MetadataElement _this, const char
     }
     nameString = (*jenv)->NewStringUTF(jenv, name);
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, nameString);
+    (*jenv)->DeleteLocalRef(jenv, nameString);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
@@ -4258,6 +4342,7 @@ boolean MetadataElement_containsAttribute(MetadataElement _this, const char* nam
     }
     nameString = (*jenv)->NewStringUTF(jenv, name);
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method, nameString);
+    (*jenv)->DeleteLocalRef(jenv, nameString);
     return _result;
 }
 
@@ -4298,6 +4383,7 @@ double MetadataElement_getAttributeDouble(MetadataElement _this, const char* nam
     }
     nameString = (*jenv)->NewStringUTF(jenv, name);
     _result = (*jenv)->CallDoubleMethod(jenv, _this, _method, nameString, defaultValue);
+    (*jenv)->DeleteLocalRef(jenv, nameString);
     return _result;
 }
 
@@ -4319,6 +4405,7 @@ ProductData_UTC MetadataElement_getAttributeUTC(MetadataElement _this, const cha
     }
     nameString = (*jenv)->NewStringUTF(jenv, name);
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, nameString, defaultValue);
+    (*jenv)->DeleteLocalRef(jenv, nameString);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
@@ -4340,6 +4427,7 @@ int MetadataElement_getAttributeInt(MetadataElement _this, const char* name, int
     }
     nameString = (*jenv)->NewStringUTF(jenv, name);
     _result = (*jenv)->CallIntMethod(jenv, _this, _method, nameString, defaultValue);
+    (*jenv)->DeleteLocalRef(jenv, nameString);
     return _result;
 }
 
@@ -4360,6 +4448,7 @@ void MetadataElement_setAttributeInt(MetadataElement _this, const char* name, in
     }
     nameString = (*jenv)->NewStringUTF(jenv, name);
     (*jenv)->CallVoidMethod(jenv, _this, _method, nameString, value);
+    (*jenv)->DeleteLocalRef(jenv, nameString);
 }
 
 void MetadataElement_setAttributeDouble(MetadataElement _this, const char* name, double value)
@@ -4379,6 +4468,7 @@ void MetadataElement_setAttributeDouble(MetadataElement _this, const char* name,
     }
     nameString = (*jenv)->NewStringUTF(jenv, name);
     (*jenv)->CallVoidMethod(jenv, _this, _method, nameString, value);
+    (*jenv)->DeleteLocalRef(jenv, nameString);
 }
 
 void MetadataElement_setAttributeUTC(MetadataElement _this, const char* name, ProductData_UTC value)
@@ -4398,6 +4488,7 @@ void MetadataElement_setAttributeUTC(MetadataElement _this, const char* name, Pr
     }
     nameString = (*jenv)->NewStringUTF(jenv, name);
     (*jenv)->CallVoidMethod(jenv, _this, _method, nameString, value);
+    (*jenv)->DeleteLocalRef(jenv, nameString);
 }
 
 char* MetadataElement_getAttributeString(MetadataElement _this, const char* name, const char* defaultValue)
@@ -4422,6 +4513,9 @@ char* MetadataElement_getAttributeString(MetadataElement _this, const char* name
     defaultValueString = (*jenv)->NewStringUTF(jenv, defaultValue);
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method, nameString, defaultValueString);
     _result = beam_alloc_string(_resultString);
+    (*jenv)->DeleteLocalRef(jenv, nameString);
+    (*jenv)->DeleteLocalRef(jenv, defaultValueString);
+    (*jenv)->DeleteLocalRef(jenv, _resultString);
     return _result;
 }
 
@@ -4444,6 +4538,8 @@ void MetadataElement_setAttributeString(MetadataElement _this, const char* name,
     nameString = (*jenv)->NewStringUTF(jenv, name);
     valueString = (*jenv)->NewStringUTF(jenv, value);
     (*jenv)->CallVoidMethod(jenv, _this, _method, nameString, valueString);
+    (*jenv)->DeleteLocalRef(jenv, nameString);
+    (*jenv)->DeleteLocalRef(jenv, valueString);
 }
 
 void MetadataElement_setModified(MetadataElement _this, boolean modified)
@@ -4553,6 +4649,7 @@ char* MetadataElement_getName(MetadataElement _this)
     }
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
+    (*jenv)->DeleteLocalRef(jenv, _resultString);
     return _result;
 }
 
@@ -4573,6 +4670,7 @@ void MetadataElement_setName(MetadataElement _this, const char* name)
     }
     nameString = (*jenv)->NewStringUTF(jenv, name);
     (*jenv)->CallVoidMethod(jenv, _this, _method, nameString);
+    (*jenv)->DeleteLocalRef(jenv, nameString);
 }
 
 char* MetadataElement_getDescription(MetadataElement _this)
@@ -4593,6 +4691,7 @@ char* MetadataElement_getDescription(MetadataElement _this)
     }
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
+    (*jenv)->DeleteLocalRef(jenv, _resultString);
     return _result;
 }
 
@@ -4613,6 +4712,7 @@ void MetadataElement_setDescription(MetadataElement _this, const char* descripti
     }
     descriptionString = (*jenv)->NewStringUTF(jenv, description);
     (*jenv)->CallVoidMethod(jenv, _this, _method, descriptionString);
+    (*jenv)->DeleteLocalRef(jenv, descriptionString);
 }
 
 boolean MetadataElement_isModified(MetadataElement _this)
@@ -4652,6 +4752,7 @@ char* MetadataElement_toString(MetadataElement _this)
     }
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
+    (*jenv)->DeleteLocalRef(jenv, _resultString);
     return _result;
 }
 
@@ -4673,6 +4774,7 @@ boolean MetadataElement_isValidNodeName(const char* name)
     }
     nameString = (*jenv)->NewStringUTF(jenv, name);
     _result = (*jenv)->CallStaticBooleanMethod(jenv, classMetadataElement, _method, nameString);
+    (*jenv)->DeleteLocalRef(jenv, nameString);
     return _result;
 }
 
@@ -4751,6 +4853,7 @@ char* MetadataElement_getDisplayName(MetadataElement _this)
     }
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
+    (*jenv)->DeleteLocalRef(jenv, _resultString);
     return _result;
 }
 
@@ -4772,6 +4875,7 @@ char* MetadataElement_getProductRefString(MetadataElement _this)
     }
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
+    (*jenv)->DeleteLocalRef(jenv, _resultString);
     return _result;
 }
 
@@ -4794,6 +4898,8 @@ void MetadataElement_updateExpression(MetadataElement _this, const char* oldExte
     oldExternalNameString = (*jenv)->NewStringUTF(jenv, oldExternalName);
     newExternalNameString = (*jenv)->NewStringUTF(jenv, newExternalName);
     (*jenv)->CallVoidMethod(jenv, _this, _method, oldExternalNameString, newExternalNameString);
+    (*jenv)->DeleteLocalRef(jenv, oldExternalNameString);
+    (*jenv)->DeleteLocalRef(jenv, newExternalNameString);
 }
 
 void MetadataElement_removeFromFile(MetadataElement _this, ProductWriter productWriter)
@@ -4852,6 +4958,8 @@ Product Product_newProduct(const char* name, const char* type, int sceneRasterWi
     nameString = (*jenv)->NewStringUTF(jenv, name);
     typeString = (*jenv)->NewStringUTF(jenv, type);
     _result = (*jenv)->NewObject(jenv, classProduct, _method, nameString, typeString, sceneRasterWidth, sceneRasterHeight);
+    (*jenv)->DeleteLocalRef(jenv, nameString);
+    (*jenv)->DeleteLocalRef(jenv, typeString);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
@@ -4909,6 +5017,7 @@ char* Product_getProductType(Product _this)
     }
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
+    (*jenv)->DeleteLocalRef(jenv, _resultString);
     return _result;
 }
 
@@ -4929,6 +5038,7 @@ void Product_setProductType(Product _this, const char* productType)
     }
     productTypeString = (*jenv)->NewStringUTF(jenv, productType);
     (*jenv)->CallVoidMethod(jenv, _this, _method, productTypeString);
+    (*jenv)->DeleteLocalRef(jenv, productTypeString);
 }
 
 void Product_setProductReader(Product _this, ProductReader reader)
@@ -5364,6 +5474,7 @@ ProductNodeGroup Product_getGroup(Product _this, const char* name)
     }
     nameString = (*jenv)->NewStringUTF(jenv, name);
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, nameString);
+    (*jenv)->DeleteLocalRef(jenv, nameString);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
@@ -5478,6 +5589,7 @@ char** Product_getTiePointGridNames(Product _this, int* resultArrayLength)
     }
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string_array(_resultArray, resultArrayLength);
+    (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
 
@@ -5499,6 +5611,7 @@ TiePointGrid* Product_getTiePointGrids(Product _this, int* resultArrayLength)
     }
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_object_array(_resultArray, resultArrayLength);
+    (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
 
@@ -5520,6 +5633,7 @@ TiePointGrid Product_getTiePointGrid(Product _this, const char* name)
     }
     nameString = (*jenv)->NewStringUTF(jenv, name);
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, nameString);
+    (*jenv)->DeleteLocalRef(jenv, nameString);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
@@ -5541,6 +5655,7 @@ boolean Product_containsTiePointGrid(Product _this, const char* name)
     }
     nameString = (*jenv)->NewStringUTF(jenv, name);
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method, nameString);
+    (*jenv)->DeleteLocalRef(jenv, nameString);
     return _result;
 }
 
@@ -5598,6 +5713,7 @@ Band Product_addNewBand(Product _this, const char* bandName, int dataType)
     }
     bandNameString = (*jenv)->NewStringUTF(jenv, bandName);
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, bandNameString, dataType);
+    (*jenv)->DeleteLocalRef(jenv, bandNameString);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
@@ -5621,6 +5737,8 @@ Band Product_addComputedBand(Product _this, const char* bandName, const char* ex
     bandNameString = (*jenv)->NewStringUTF(jenv, bandName);
     expressionString = (*jenv)->NewStringUTF(jenv, expression);
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, bandNameString, expressionString);
+    (*jenv)->DeleteLocalRef(jenv, bandNameString);
+    (*jenv)->DeleteLocalRef(jenv, expressionString);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
@@ -5699,6 +5817,7 @@ char** Product_getBandNames(Product _this, int* resultArrayLength)
     }
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string_array(_resultArray, resultArrayLength);
+    (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
 
@@ -5720,6 +5839,7 @@ Band* Product_getBands(Product _this, int* resultArrayLength)
     }
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_object_array(_resultArray, resultArrayLength);
+    (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
 
@@ -5741,6 +5861,7 @@ Band Product_getBand(Product _this, const char* name)
     }
     nameString = (*jenv)->NewStringUTF(jenv, name);
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, nameString);
+    (*jenv)->DeleteLocalRef(jenv, nameString);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
@@ -5762,6 +5883,7 @@ int Product_getBandIndex(Product _this, const char* name)
     }
     nameString = (*jenv)->NewStringUTF(jenv, name);
     _result = (*jenv)->CallIntMethod(jenv, _this, _method, nameString);
+    (*jenv)->DeleteLocalRef(jenv, nameString);
     return _result;
 }
 
@@ -5783,6 +5905,7 @@ boolean Product_containsBand(Product _this, const char* name)
     }
     nameString = (*jenv)->NewStringUTF(jenv, name);
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method, nameString);
+    (*jenv)->DeleteLocalRef(jenv, nameString);
     return _result;
 }
 
@@ -5804,6 +5927,7 @@ boolean Product_containsRasterDataNode(Product _this, const char* name)
     }
     nameString = (*jenv)->NewStringUTF(jenv, name);
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method, nameString);
+    (*jenv)->DeleteLocalRef(jenv, nameString);
     return _result;
 }
 
@@ -5825,6 +5949,7 @@ RasterDataNode Product_getRasterDataNode(Product _this, const char* name)
     }
     nameString = (*jenv)->NewStringUTF(jenv, name);
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, nameString);
+    (*jenv)->DeleteLocalRef(jenv, nameString);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
@@ -6034,6 +6159,7 @@ Term Product_parseExpression(Product _this, const char* expression)
     }
     expressionString = (*jenv)->NewStringUTF(jenv, expression);
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, expressionString);
+    (*jenv)->DeleteLocalRef(jenv, expressionString);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
@@ -6108,6 +6234,7 @@ ProductNodeListener* Product_getProductNodeListeners(Product _this, int* resultA
     }
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_object_array(_resultArray, resultArrayLength);
+    (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
 
@@ -6241,6 +6368,8 @@ Product Product_createSubset(Product _this, ProductSubsetDef subsetDef, const ch
     nameString = (*jenv)->NewStringUTF(jenv, name);
     descString = (*jenv)->NewStringUTF(jenv, desc);
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, subsetDef, nameString, descString);
+    (*jenv)->DeleteLocalRef(jenv, nameString);
+    (*jenv)->DeleteLocalRef(jenv, descString);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
@@ -6264,6 +6393,8 @@ Product Product_createFlippedProduct(Product _this, int flipType, const char* na
     nameString = (*jenv)->NewStringUTF(jenv, name);
     descString = (*jenv)->NewStringUTF(jenv, desc);
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, flipType, nameString, descString);
+    (*jenv)->DeleteLocalRef(jenv, nameString);
+    (*jenv)->DeleteLocalRef(jenv, descString);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
@@ -6302,6 +6433,7 @@ char* Product_getQuicklookBandName(Product _this)
     }
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
+    (*jenv)->DeleteLocalRef(jenv, _resultString);
     return _result;
 }
 
@@ -6322,6 +6454,7 @@ void Product_setQuicklookBandName(Product _this, const char* quicklookBandName)
     }
     quicklookBandNameString = (*jenv)->NewStringUTF(jenv, quicklookBandName);
     (*jenv)->CallVoidMethod(jenv, _this, _method, quicklookBandNameString);
+    (*jenv)->DeleteLocalRef(jenv, quicklookBandNameString);
 }
 
 char* Product_createPixelInfoString(Product _this, int pixelX, int pixelY)
@@ -6342,6 +6475,7 @@ char* Product_createPixelInfoString(Product _this, int pixelX, int pixelY)
     }
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method, pixelX, pixelY);
     _result = beam_alloc_string(_resultString);
+    (*jenv)->DeleteLocalRef(jenv, _resultString);
     return _result;
 }
 
@@ -6363,6 +6497,7 @@ ProductNode* Product_getRemovedChildNodes(Product _this, int* resultArrayLength)
     }
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_object_array(_resultArray, resultArrayLength);
+    (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
 
@@ -6439,6 +6574,7 @@ char** Product_getAllFlagNames(Product _this, int* resultArrayLength)
     }
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string_array(_resultArray, resultArrayLength);
+    (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
 
@@ -6478,6 +6614,7 @@ void Product_setAutoGrouping(Product _this, const char* pattern)
     }
     patternString = (*jenv)->NewStringUTF(jenv, pattern);
     (*jenv)->CallVoidMethod(jenv, _this, _method, patternString);
+    (*jenv)->DeleteLocalRef(jenv, patternString);
 }
 
 Mask Product_addComputedMask(Product _this, const char* maskName, const char* expression, const char* description, Color color, double transparency)
@@ -6502,6 +6639,9 @@ Mask Product_addComputedMask(Product _this, const char* maskName, const char* ex
     expressionString = (*jenv)->NewStringUTF(jenv, expression);
     descriptionString = (*jenv)->NewStringUTF(jenv, description);
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, maskNameString, expressionString, descriptionString, color, transparency);
+    (*jenv)->DeleteLocalRef(jenv, maskNameString);
+    (*jenv)->DeleteLocalRef(jenv, expressionString);
+    (*jenv)->DeleteLocalRef(jenv, descriptionString);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
@@ -6540,6 +6680,7 @@ char** Product_getBitmaskDefNames(Product _this, int* resultArrayLength)
     }
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string_array(_resultArray, resultArrayLength);
+    (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
 
@@ -6561,6 +6702,7 @@ BitmaskDef Product_getBitmaskDef(Product _this, const char* name)
     }
     nameString = (*jenv)->NewStringUTF(jenv, name);
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, nameString);
+    (*jenv)->DeleteLocalRef(jenv, nameString);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
@@ -6582,6 +6724,7 @@ BitRaster Product_getValidMask(Product _this, const char* id)
     }
     idString = (*jenv)->NewStringUTF(jenv, id);
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, idString);
+    (*jenv)->DeleteLocalRef(jenv, idString);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
@@ -6602,6 +6745,7 @@ void Product_setValidMask(Product _this, const char* id, BitRaster validMask)
     }
     idString = (*jenv)->NewStringUTF(jenv, id);
     (*jenv)->CallVoidMethod(jenv, _this, _method, idString, validMask);
+    (*jenv)->DeleteLocalRef(jenv, idString);
 }
 
 BitRaster Product_createValidMask2(Product _this, const char* expression, ProgressMonitor pm)
@@ -6622,6 +6766,7 @@ BitRaster Product_createValidMask2(Product _this, const char* expression, Progre
     }
     expressionString = (*jenv)->NewStringUTF(jenv, expression);
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, expressionString, pm);
+    (*jenv)->DeleteLocalRef(jenv, expressionString);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
@@ -6662,6 +6807,7 @@ void Product_readBitmask2(Product _this, int offsetX, int offsetY, int width, in
     bitmaskArray = (*jenv)->NewBooleanArray(jenv, bitmaskLength);
     beam_copy_to_jarray(bitmaskArray, bitmaskElems, bitmaskLength, sizeof (boolean));
     (*jenv)->CallVoidMethod(jenv, _this, _method, offsetX, offsetY, width, height, bitmaskTerm, bitmaskArray, pm);
+    (*jenv)->DeleteLocalRef(jenv, bitmaskArray);
 }
 
 void Product_readBitmask1(Product _this, int offsetX, int offsetY, int width, int height, Term bitmaskTerm, const byte* bitmaskElems, int bitmaskLength, byte trueValue, byte falseValue, ProgressMonitor pm)
@@ -6682,6 +6828,7 @@ void Product_readBitmask1(Product _this, int offsetX, int offsetY, int width, in
     bitmaskArray = (*jenv)->NewByteArray(jenv, bitmaskLength);
     beam_copy_to_jarray(bitmaskArray, bitmaskElems, bitmaskLength, sizeof (byte));
     (*jenv)->CallVoidMethod(jenv, _this, _method, offsetX, offsetY, width, height, bitmaskTerm, bitmaskArray, trueValue, falseValue, pm);
+    (*jenv)->DeleteLocalRef(jenv, bitmaskArray);
 }
 
 ProductNode Product_getOwner(Product _this)
@@ -6721,6 +6868,7 @@ char* Product_getName(Product _this)
     }
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
+    (*jenv)->DeleteLocalRef(jenv, _resultString);
     return _result;
 }
 
@@ -6741,6 +6889,7 @@ void Product_setName(Product _this, const char* name)
     }
     nameString = (*jenv)->NewStringUTF(jenv, name);
     (*jenv)->CallVoidMethod(jenv, _this, _method, nameString);
+    (*jenv)->DeleteLocalRef(jenv, nameString);
 }
 
 char* Product_getDescription(Product _this)
@@ -6761,6 +6910,7 @@ char* Product_getDescription(Product _this)
     }
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
+    (*jenv)->DeleteLocalRef(jenv, _resultString);
     return _result;
 }
 
@@ -6781,6 +6931,7 @@ void Product_setDescription(Product _this, const char* description)
     }
     descriptionString = (*jenv)->NewStringUTF(jenv, description);
     (*jenv)->CallVoidMethod(jenv, _this, _method, descriptionString);
+    (*jenv)->DeleteLocalRef(jenv, descriptionString);
 }
 
 boolean Product_isModified(Product _this)
@@ -6820,6 +6971,7 @@ char* Product_toString(Product _this)
     }
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
+    (*jenv)->DeleteLocalRef(jenv, _resultString);
     return _result;
 }
 
@@ -6841,6 +6993,7 @@ boolean Product_isValidNodeName(const char* name)
     }
     nameString = (*jenv)->NewStringUTF(jenv, name);
     _result = (*jenv)->CallStaticBooleanMethod(jenv, classProduct, _method, nameString);
+    (*jenv)->DeleteLocalRef(jenv, nameString);
     return _result;
 }
 
@@ -6881,6 +7034,7 @@ char* Product_getDisplayName(Product _this)
     }
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
+    (*jenv)->DeleteLocalRef(jenv, _resultString);
     return _result;
 }
 
@@ -6902,6 +7056,7 @@ char* Product_getProductRefString(Product _this)
     }
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
+    (*jenv)->DeleteLocalRef(jenv, _resultString);
     return _result;
 }
 
@@ -6924,6 +7079,8 @@ void Product_updateExpression(Product _this, const char* oldExternalName, const 
     oldExternalNameString = (*jenv)->NewStringUTF(jenv, oldExternalName);
     newExternalNameString = (*jenv)->NewStringUTF(jenv, newExternalName);
     (*jenv)->CallVoidMethod(jenv, _this, _method, oldExternalNameString, newExternalNameString);
+    (*jenv)->DeleteLocalRef(jenv, oldExternalNameString);
+    (*jenv)->DeleteLocalRef(jenv, newExternalNameString);
 }
 
 void Product_removeFromFile(Product _this, ProductWriter productWriter)
@@ -6999,6 +7156,7 @@ ColorPaletteDef ColorPaletteDef_newColorPaletteDefFromPoints(const ColorPaletteD
     }
     pointsArray = beam_new_jobject_array(pointsElems, pointsLength, classColorPaletteDef_Point);
     _result = (*jenv)->NewObject(jenv, classColorPaletteDef, _method, pointsArray, numColors);
+    (*jenv)->DeleteLocalRef(jenv, pointsArray);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
@@ -7348,6 +7506,7 @@ ColorPaletteDef_Point* ColorPaletteDef_getPoints(ColorPaletteDef _this, int* res
     }
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_object_array(_resultArray, resultArrayLength);
+    (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
 
@@ -7368,6 +7527,7 @@ void ColorPaletteDef_setPoints(ColorPaletteDef _this, const ColorPaletteDef_Poin
     }
     pointsArray = beam_new_jobject_array(pointsElems, pointsLength, classColorPaletteDef_Point);
     (*jenv)->CallVoidMethod(jenv, _this, _method, pointsArray);
+    (*jenv)->DeleteLocalRef(jenv, pointsArray);
 }
 
 Iterator ColorPaletteDef_getIterator(ColorPaletteDef _this)
@@ -7498,6 +7658,7 @@ Color* ColorPaletteDef_getColors(ColorPaletteDef _this, int* resultArrayLength)
     }
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_object_array(_resultArray, resultArrayLength);
+    (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
 
@@ -7519,6 +7680,7 @@ Color* ColorPaletteDef_createColorPalette(ColorPaletteDef _this, Scaling scaling
     }
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method, scaling);
     _result = beam_alloc_object_array(_resultArray, resultArrayLength);
+    (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
 
@@ -7724,6 +7886,7 @@ Color* ImageInfo_getColors(ImageInfo _this, int* resultArrayLength)
     }
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_object_array(_resultArray, resultArrayLength);
+    (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
 
@@ -7856,6 +8019,7 @@ void ImageInfo_setColors(ImageInfo _this, const Color colorsElems, int colorsLen
     }
     colorsArray = beam_new_jobject_array(colorsElems, colorsLength, classColor);
     (*jenv)->CallVoidMethod(jenv, _this, _method, colorsArray);
+    (*jenv)->DeleteLocalRef(jenv, colorsArray);
 }
 
 void ImageInfo_setColorPaletteDef(ImageInfo _this, ColorPaletteDef colorPaletteDef, double minSample, double maxSample, boolean autoDistribute)
@@ -7893,6 +8057,7 @@ ImageInfo_HistogramMatching ImageInfo_getHistogramMatching(const char* mode)
     }
     modeString = (*jenv)->NewStringUTF(jenv, mode);
     _result = (*jenv)->CallStaticObjectMethod(jenv, classImageInfo, _method, modeString);
+    (*jenv)->DeleteLocalRef(jenv, modeString);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
@@ -7971,6 +8136,7 @@ char** ProductManager_getProductDisplayNames(ProductManager _this, int* resultAr
     }
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string_array(_resultArray, resultArrayLength);
+    (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
 
@@ -7992,6 +8158,7 @@ char** ProductManager_getProductNames(ProductManager _this, int* resultArrayLeng
     }
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string_array(_resultArray, resultArrayLength);
+    (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
 
@@ -8013,6 +8180,7 @@ Product* ProductManager_getProducts(ProductManager _this, int* resultArrayLength
     }
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_object_array(_resultArray, resultArrayLength);
+    (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
 
@@ -8034,6 +8202,7 @@ Product ProductManager_getProductByDisplayName(ProductManager _this, const char*
     }
     displayNameString = (*jenv)->NewStringUTF(jenv, displayName);
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, displayNameString);
+    (*jenv)->DeleteLocalRef(jenv, displayNameString);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
@@ -8074,6 +8243,7 @@ Product ProductManager_getProductByName(ProductManager _this, const char* name)
     }
     nameString = (*jenv)->NewStringUTF(jenv, name);
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, nameString);
+    (*jenv)->DeleteLocalRef(jenv, nameString);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
@@ -8114,6 +8284,7 @@ boolean ProductManager_containsProduct(ProductManager _this, const char* name)
     }
     nameString = (*jenv)->NewStringUTF(jenv, name);
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method, nameString);
+    (*jenv)->DeleteLocalRef(jenv, nameString);
     return _result;
 }
 
@@ -8433,6 +8604,7 @@ Band Band_newBand(const char* name, int dataType, int width, int height)
     }
     nameString = (*jenv)->NewStringUTF(jenv, name);
     _result = (*jenv)->NewObject(jenv, classBand, _method, nameString, dataType, width, height);
+    (*jenv)->DeleteLocalRef(jenv, nameString);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
@@ -8727,6 +8899,7 @@ char* Band_toString(Band _this)
     }
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
+    (*jenv)->DeleteLocalRef(jenv, _resultString);
     return _result;
 }
 
@@ -8784,6 +8957,8 @@ char* Band_getViewModeId(Band _this, const char* bandName)
     bandNameString = (*jenv)->NewStringUTF(jenv, bandName);
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method, bandNameString);
     _result = beam_alloc_string(_resultString);
+    (*jenv)->DeleteLocalRef(jenv, bandNameString);
+    (*jenv)->DeleteLocalRef(jenv, _resultString);
     return _result;
 }
 
@@ -8809,6 +8984,9 @@ int Band_computeBand(Band _this, const char* expression, const char* validMaskEx
     validMaskExpressionString = (*jenv)->NewStringUTF(jenv, validMaskExpression);
     sourceProductsArray = beam_new_jobject_array(sourceProductsElems, sourceProductsLength, classProduct);
     _result = (*jenv)->CallIntMethod(jenv, _this, _method, expressionString, validMaskExpressionString, sourceProductsArray, defaultProductIndex, checkInvalids, useInvalidValue, noDataValue, pm);
+    (*jenv)->DeleteLocalRef(jenv, expressionString);
+    (*jenv)->DeleteLocalRef(jenv, validMaskExpressionString);
+    (*jenv)->DeleteLocalRef(jenv, sourceProductsArray);
     return _result;
 }
 
@@ -8957,6 +9135,7 @@ void Band_setPixelsInt(Band _this, int x, int y, int w, int h, const int* pixels
     pixelsArray = (*jenv)->NewIntArray(jenv, pixelsLength);
     beam_copy_to_jarray(pixelsArray, pixelsElems, pixelsLength, sizeof (int));
     (*jenv)->CallVoidMethod(jenv, _this, _method, x, y, w, h, pixelsArray);
+    (*jenv)->DeleteLocalRef(jenv, pixelsArray);
 }
 
 void Band_setPixelsFloat(Band _this, int x, int y, int w, int h, const float* pixelsElems, int pixelsLength)
@@ -8977,6 +9156,7 @@ void Band_setPixelsFloat(Band _this, int x, int y, int w, int h, const float* pi
     pixelsArray = (*jenv)->NewFloatArray(jenv, pixelsLength);
     beam_copy_to_jarray(pixelsArray, pixelsElems, pixelsLength, sizeof (float));
     (*jenv)->CallVoidMethod(jenv, _this, _method, x, y, w, h, pixelsArray);
+    (*jenv)->DeleteLocalRef(jenv, pixelsArray);
 }
 
 void Band_setPixelsDouble(Band _this, int x, int y, int w, int h, const double* pixelsElems, int pixelsLength)
@@ -8997,6 +9177,7 @@ void Band_setPixelsDouble(Band _this, int x, int y, int w, int h, const double* 
     pixelsArray = (*jenv)->NewDoubleArray(jenv, pixelsLength);
     beam_copy_to_jarray(pixelsArray, pixelsElems, pixelsLength, sizeof (double));
     (*jenv)->CallVoidMethod(jenv, _this, _method, x, y, w, h, pixelsArray);
+    (*jenv)->DeleteLocalRef(jenv, pixelsArray);
 }
 
 void Band_ensureRasterData(Band _this)
@@ -9383,6 +9564,7 @@ boolean Band_isValidMaskProperty(const char* propertyName)
     }
     propertyNameString = (*jenv)->NewStringUTF(jenv, propertyName);
     _result = (*jenv)->CallStaticBooleanMethod(jenv, classBand, _method, propertyNameString);
+    (*jenv)->DeleteLocalRef(jenv, propertyNameString);
     return _result;
 }
 
@@ -9548,6 +9730,7 @@ char* Band_getValidPixelExpression(Band _this)
     }
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
+    (*jenv)->DeleteLocalRef(jenv, _resultString);
     return _result;
 }
 
@@ -9568,6 +9751,7 @@ void Band_setValidPixelExpression(Band _this, const char* validPixelExpression)
     }
     validPixelExpressionString = (*jenv)->NewStringUTF(jenv, validPixelExpression);
     (*jenv)->CallVoidMethod(jenv, _this, _method, validPixelExpressionString);
+    (*jenv)->DeleteLocalRef(jenv, validPixelExpressionString);
 }
 
 boolean Band_isValidMaskUsed(Band _this)
@@ -9624,6 +9808,7 @@ char* Band_getValidMaskExpression(Band _this)
     }
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
+    (*jenv)->DeleteLocalRef(jenv, _resultString);
     return _result;
 }
 
@@ -9646,6 +9831,8 @@ void Band_updateExpression(Band _this, const char* oldExternalName, const char* 
     oldExternalNameString = (*jenv)->NewStringUTF(jenv, oldExternalName);
     newExternalNameString = (*jenv)->NewStringUTF(jenv, newExternalName);
     (*jenv)->CallVoidMethod(jenv, _this, _method, oldExternalNameString, newExternalNameString);
+    (*jenv)->DeleteLocalRef(jenv, oldExternalNameString);
+    (*jenv)->DeleteLocalRef(jenv, newExternalNameString);
 }
 
 boolean Band_hasRasterData(Band _this)
@@ -9798,6 +9985,8 @@ int* Band_getPixelsInt(Band _this, int x, int y, int w, int h, const int* pixels
     beam_copy_to_jarray(pixelsArray, pixelsElems, pixelsLength, sizeof (int));
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method, x, y, w, h, pixelsArray);
     _result = beam_alloc_int_array(_resultArray, resultArrayLength);
+    (*jenv)->DeleteLocalRef(jenv, pixelsArray);
+    (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
 
@@ -9822,6 +10011,8 @@ float* Band_getPixelsFloat(Band _this, int x, int y, int w, int h, const float* 
     beam_copy_to_jarray(pixelsArray, pixelsElems, pixelsLength, sizeof (float));
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method, x, y, w, h, pixelsArray);
     _result = beam_alloc_float_array(_resultArray, resultArrayLength);
+    (*jenv)->DeleteLocalRef(jenv, pixelsArray);
+    (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
 
@@ -9846,6 +10037,8 @@ double* Band_getPixelsDouble(Band _this, int x, int y, int w, int h, const doubl
     beam_copy_to_jarray(pixelsArray, pixelsElems, pixelsLength, sizeof (double));
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method, x, y, w, h, pixelsArray);
     _result = beam_alloc_double_array(_resultArray, resultArrayLength);
+    (*jenv)->DeleteLocalRef(jenv, pixelsArray);
+    (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
 
@@ -9871,11 +10064,14 @@ int* Band_readPixelsInt(Band _this, int x, int y, int w, int h, int* pixelsElems
     if (pixelsElems != NULL && (*jenv)->IsSameObject(jenv, pixelsArray, _resultArray)) {
         beam_copy_from_jarray(_resultArray, pixelsElems, pixelsLength, sizeof (int));
         _result = pixelsElems;
-        if (resultArrayLength != NULL)
+        if (resultArrayLength != NULL) {
             *resultArrayLength = pixelsLength;
+        }
     } else {
         _result = beam_alloc_int_array(_resultArray, resultArrayLength);
     }
+    (*jenv)->DeleteLocalRef(jenv, pixelsArray);
+    (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
 
@@ -9901,11 +10097,14 @@ float* Band_readPixelsFloat(Band _this, int x, int y, int w, int h, float* pixel
     if (pixelsElems != NULL && (*jenv)->IsSameObject(jenv, pixelsArray, _resultArray)) {
         beam_copy_from_jarray(_resultArray, pixelsElems, pixelsLength, sizeof (float));
         _result = pixelsElems;
-        if (resultArrayLength != NULL)
+        if (resultArrayLength != NULL) {
             *resultArrayLength = pixelsLength;
+        }
     } else {
         _result = beam_alloc_float_array(_resultArray, resultArrayLength);
     }
+    (*jenv)->DeleteLocalRef(jenv, pixelsArray);
+    (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
 
@@ -9931,11 +10130,14 @@ double* Band_readPixelsDouble(Band _this, int x, int y, int w, int h, double* pi
     if (pixelsElems != NULL && (*jenv)->IsSameObject(jenv, pixelsArray, _resultArray)) {
         beam_copy_from_jarray(_resultArray, pixelsElems, pixelsLength, sizeof (double));
         _result = pixelsElems;
-        if (resultArrayLength != NULL)
+        if (resultArrayLength != NULL) {
             *resultArrayLength = pixelsLength;
+        }
     } else {
         _result = beam_alloc_double_array(_resultArray, resultArrayLength);
     }
+    (*jenv)->DeleteLocalRef(jenv, pixelsArray);
+    (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
 
@@ -9957,6 +10159,7 @@ void Band_writePixelsInt(Band _this, int x, int y, int w, int h, const int* pixe
     pixelsArray = (*jenv)->NewIntArray(jenv, pixelsLength);
     beam_copy_to_jarray(pixelsArray, pixelsElems, pixelsLength, sizeof (int));
     (*jenv)->CallVoidMethod(jenv, _this, _method, x, y, w, h, pixelsArray);
+    (*jenv)->DeleteLocalRef(jenv, pixelsArray);
 }
 
 void Band_writePixelsFloat(Band _this, int x, int y, int w, int h, const float* pixelsElems, int pixelsLength)
@@ -9977,6 +10180,7 @@ void Band_writePixelsFloat(Band _this, int x, int y, int w, int h, const float* 
     pixelsArray = (*jenv)->NewFloatArray(jenv, pixelsLength);
     beam_copy_to_jarray(pixelsArray, pixelsElems, pixelsLength, sizeof (float));
     (*jenv)->CallVoidMethod(jenv, _this, _method, x, y, w, h, pixelsArray);
+    (*jenv)->DeleteLocalRef(jenv, pixelsArray);
 }
 
 void Band_writePixelsDouble(Band _this, int x, int y, int w, int h, const double* pixelsElems, int pixelsLength)
@@ -9997,6 +10201,7 @@ void Band_writePixelsDouble(Band _this, int x, int y, int w, int h, const double
     pixelsArray = (*jenv)->NewDoubleArray(jenv, pixelsLength);
     beam_copy_to_jarray(pixelsArray, pixelsElems, pixelsLength, sizeof (double));
     (*jenv)->CallVoidMethod(jenv, _this, _method, x, y, w, h, pixelsArray);
+    (*jenv)->DeleteLocalRef(jenv, pixelsArray);
 }
 
 boolean* Band_readValidMask(Band _this, int x, int y, int w, int h, boolean* validMaskElems, int validMaskLength, int* resultArrayLength)
@@ -10021,11 +10226,14 @@ boolean* Band_readValidMask(Band _this, int x, int y, int w, int h, boolean* val
     if (validMaskElems != NULL && (*jenv)->IsSameObject(jenv, validMaskArray, _resultArray)) {
         beam_copy_from_jarray(_resultArray, validMaskElems, validMaskLength, sizeof (boolean));
         _result = validMaskElems;
-        if (resultArrayLength != NULL)
+        if (resultArrayLength != NULL) {
             *resultArrayLength = validMaskLength;
+        }
     } else {
         _result = beam_alloc_boolean_array(_resultArray, resultArrayLength);
     }
+    (*jenv)->DeleteLocalRef(jenv, validMaskArray);
+    (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
 
@@ -10266,6 +10474,7 @@ ImageInfo Band_createDefaultImageInfo(Band _this, const double* histoSkipAreasEl
     histoSkipAreasArray = (*jenv)->NewDoubleArray(jenv, histoSkipAreasLength);
     beam_copy_to_jarray(histoSkipAreasArray, histoSkipAreasElems, histoSkipAreasLength, sizeof (double));
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, histoSkipAreasArray, histogram);
+    (*jenv)->DeleteLocalRef(jenv, histoSkipAreasArray);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
@@ -10401,6 +10610,7 @@ char* Band_getPixelString(Band _this, int x, int y)
     }
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method, x, y);
     _result = beam_alloc_string(_resultString);
+    (*jenv)->DeleteLocalRef(jenv, _resultString);
     return _result;
 }
 
@@ -10793,6 +11003,7 @@ void Band_setUnit(Band _this, const char* unit)
     }
     unitString = (*jenv)->NewStringUTF(jenv, unit);
     (*jenv)->CallVoidMethod(jenv, _this, _method, unitString);
+    (*jenv)->DeleteLocalRef(jenv, unitString);
 }
 
 char* Band_getUnit(Band _this)
@@ -10813,6 +11024,7 @@ char* Band_getUnit(Band _this)
     }
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
+    (*jenv)->DeleteLocalRef(jenv, _resultString);
     return _result;
 }
 
@@ -10925,6 +11137,7 @@ char* Band_getName(Band _this)
     }
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
+    (*jenv)->DeleteLocalRef(jenv, _resultString);
     return _result;
 }
 
@@ -10945,6 +11158,7 @@ void Band_setName(Band _this, const char* name)
     }
     nameString = (*jenv)->NewStringUTF(jenv, name);
     (*jenv)->CallVoidMethod(jenv, _this, _method, nameString);
+    (*jenv)->DeleteLocalRef(jenv, nameString);
 }
 
 char* Band_getDescription(Band _this)
@@ -10965,6 +11179,7 @@ char* Band_getDescription(Band _this)
     }
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
+    (*jenv)->DeleteLocalRef(jenv, _resultString);
     return _result;
 }
 
@@ -10985,6 +11200,7 @@ void Band_setDescription(Band _this, const char* description)
     }
     descriptionString = (*jenv)->NewStringUTF(jenv, description);
     (*jenv)->CallVoidMethod(jenv, _this, _method, descriptionString);
+    (*jenv)->DeleteLocalRef(jenv, descriptionString);
 }
 
 boolean Band_isModified(Band _this)
@@ -11024,6 +11240,7 @@ boolean Band_isValidNodeName(const char* name)
     }
     nameString = (*jenv)->NewStringUTF(jenv, name);
     _result = (*jenv)->CallStaticBooleanMethod(jenv, classBand, _method, nameString);
+    (*jenv)->DeleteLocalRef(jenv, nameString);
     return _result;
 }
 
@@ -11102,6 +11319,7 @@ char* Band_getDisplayName(Band _this)
     }
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
+    (*jenv)->DeleteLocalRef(jenv, _resultString);
     return _result;
 }
 
@@ -11123,6 +11341,7 @@ char* Band_getProductRefString(Band _this)
     }
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
+    (*jenv)->DeleteLocalRef(jenv, _resultString);
     return _result;
 }
 
@@ -11330,6 +11549,7 @@ char** PlacemarkGroup_getNodeDisplayNames(PlacemarkGroup _this, int* resultArray
     }
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string_array(_resultArray, resultArrayLength);
+    (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
 
@@ -11351,6 +11571,7 @@ char** PlacemarkGroup_getNodeNames(PlacemarkGroup _this, int* resultArrayLength)
     }
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string_array(_resultArray, resultArrayLength);
+    (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
 
@@ -11372,6 +11593,7 @@ ProductNode* PlacemarkGroup_toArray1(PlacemarkGroup _this, int* resultArrayLengt
     }
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_object_array(_resultArray, resultArrayLength);
+    (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
 
@@ -11393,6 +11615,7 @@ ProductNode PlacemarkGroup_toArray2(PlacemarkGroup _this, const ProductNode arra
     }
     arrayArray = beam_new_jobject_array(arrayElems, arrayLength, classProductNode);
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, arrayArray);
+    (*jenv)->DeleteLocalRef(jenv, arrayArray);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
@@ -11414,6 +11637,7 @@ int PlacemarkGroup_indexOf1(PlacemarkGroup _this, const char* name)
     }
     nameString = (*jenv)->NewStringUTF(jenv, name);
     _result = (*jenv)->CallIntMethod(jenv, _this, _method, nameString);
+    (*jenv)->DeleteLocalRef(jenv, nameString);
     return _result;
 }
 
@@ -11454,6 +11678,7 @@ ProductNode PlacemarkGroup_getByDisplayName(PlacemarkGroup _this, const char* di
     }
     displayNameString = (*jenv)->NewStringUTF(jenv, displayName);
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, displayNameString);
+    (*jenv)->DeleteLocalRef(jenv, displayNameString);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
@@ -11475,6 +11700,7 @@ ProductNode PlacemarkGroup_get2(PlacemarkGroup _this, const char* name)
     }
     nameString = (*jenv)->NewStringUTF(jenv, name);
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, nameString);
+    (*jenv)->DeleteLocalRef(jenv, nameString);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
@@ -11496,6 +11722,7 @@ boolean PlacemarkGroup_contains1(PlacemarkGroup _this, const char* name)
     }
     nameString = (*jenv)->NewStringUTF(jenv, name);
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method, nameString);
+    (*jenv)->DeleteLocalRef(jenv, nameString);
     return _result;
 }
 
@@ -11698,6 +11925,8 @@ void PlacemarkGroup_updateExpression(PlacemarkGroup _this, const char* oldExtern
     oldExternalNameString = (*jenv)->NewStringUTF(jenv, oldExternalName);
     newExternalNameString = (*jenv)->NewStringUTF(jenv, newExternalName);
     (*jenv)->CallVoidMethod(jenv, _this, _method, oldExternalNameString, newExternalNameString);
+    (*jenv)->DeleteLocalRef(jenv, oldExternalNameString);
+    (*jenv)->DeleteLocalRef(jenv, newExternalNameString);
 }
 
 ProductNode PlacemarkGroup_getOwner(PlacemarkGroup _this)
@@ -11737,6 +11966,7 @@ char* PlacemarkGroup_getName(PlacemarkGroup _this)
     }
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
+    (*jenv)->DeleteLocalRef(jenv, _resultString);
     return _result;
 }
 
@@ -11757,6 +11987,7 @@ void PlacemarkGroup_setName(PlacemarkGroup _this, const char* name)
     }
     nameString = (*jenv)->NewStringUTF(jenv, name);
     (*jenv)->CallVoidMethod(jenv, _this, _method, nameString);
+    (*jenv)->DeleteLocalRef(jenv, nameString);
 }
 
 char* PlacemarkGroup_getDescription(PlacemarkGroup _this)
@@ -11777,6 +12008,7 @@ char* PlacemarkGroup_getDescription(PlacemarkGroup _this)
     }
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
+    (*jenv)->DeleteLocalRef(jenv, _resultString);
     return _result;
 }
 
@@ -11797,6 +12029,7 @@ void PlacemarkGroup_setDescription(PlacemarkGroup _this, const char* description
     }
     descriptionString = (*jenv)->NewStringUTF(jenv, description);
     (*jenv)->CallVoidMethod(jenv, _this, _method, descriptionString);
+    (*jenv)->DeleteLocalRef(jenv, descriptionString);
 }
 
 boolean PlacemarkGroup_isModified(PlacemarkGroup _this)
@@ -11836,6 +12069,7 @@ char* PlacemarkGroup_toString(PlacemarkGroup _this)
     }
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
+    (*jenv)->DeleteLocalRef(jenv, _resultString);
     return _result;
 }
 
@@ -11857,6 +12091,7 @@ boolean PlacemarkGroup_isValidNodeName(const char* name)
     }
     nameString = (*jenv)->NewStringUTF(jenv, name);
     _result = (*jenv)->CallStaticBooleanMethod(jenv, classPlacemarkGroup, _method, nameString);
+    (*jenv)->DeleteLocalRef(jenv, nameString);
     return _result;
 }
 
@@ -11935,6 +12170,7 @@ char* PlacemarkGroup_getDisplayName(PlacemarkGroup _this)
     }
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
+    (*jenv)->DeleteLocalRef(jenv, _resultString);
     return _result;
 }
 
@@ -11956,6 +12192,7 @@ char* PlacemarkGroup_getProductRefString(PlacemarkGroup _this)
     }
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
+    (*jenv)->DeleteLocalRef(jenv, _resultString);
     return _result;
 }
 
@@ -11995,6 +12232,7 @@ void PlacemarkGroup_fireProductNodeChanged1(PlacemarkGroup _this, const char* pr
     }
     propertyNameString = (*jenv)->NewStringUTF(jenv, propertyName);
     (*jenv)->CallVoidMethod(jenv, _this, _method, propertyNameString);
+    (*jenv)->DeleteLocalRef(jenv, propertyNameString);
 }
 
 void PlacemarkGroup_fireProductNodeChanged2(PlacemarkGroup _this, const char* propertyName, Object oldValue, Object newValue)
@@ -12014,6 +12252,7 @@ void PlacemarkGroup_fireProductNodeChanged2(PlacemarkGroup _this, const char* pr
     }
     propertyNameString = (*jenv)->NewStringUTF(jenv, propertyName);
     (*jenv)->CallVoidMethod(jenv, _this, _method, propertyNameString, oldValue, newValue);
+    (*jenv)->DeleteLocalRef(jenv, propertyNameString);
 }
 
 void PlacemarkGroup_removeFromFile(PlacemarkGroup _this, ProductWriter productWriter)
@@ -12073,6 +12312,8 @@ TiePointGrid TiePointGrid_newTiePointGrid1(const char* name, int gridWidth, int 
     tiePointsArray = (*jenv)->NewFloatArray(jenv, tiePointsLength);
     beam_copy_to_jarray(tiePointsArray, tiePointsElems, tiePointsLength, sizeof (float));
     _result = (*jenv)->NewObject(jenv, classTiePointGrid, _method, nameString, gridWidth, gridHeight, offsetX, offsetY, subSamplingX, subSamplingY, tiePointsArray);
+    (*jenv)->DeleteLocalRef(jenv, nameString);
+    (*jenv)->DeleteLocalRef(jenv, tiePointsArray);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
@@ -12097,6 +12338,8 @@ TiePointGrid TiePointGrid_newTiePointGrid2(const char* name, int gridWidth, int 
     tiePointsArray = (*jenv)->NewFloatArray(jenv, tiePointsLength);
     beam_copy_to_jarray(tiePointsArray, tiePointsElems, tiePointsLength, sizeof (float));
     _result = (*jenv)->NewObject(jenv, classTiePointGrid, _method, nameString, gridWidth, gridHeight, offsetX, offsetY, subSamplingX, subSamplingY, tiePointsArray, discontinuity);
+    (*jenv)->DeleteLocalRef(jenv, nameString);
+    (*jenv)->DeleteLocalRef(jenv, tiePointsArray);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
@@ -12121,6 +12364,8 @@ TiePointGrid TiePointGrid_newTiePointGrid3(const char* name, int gridWidth, int 
     tiePointsArray = (*jenv)->NewFloatArray(jenv, tiePointsLength);
     beam_copy_to_jarray(tiePointsArray, tiePointsElems, tiePointsLength, sizeof (float));
     _result = (*jenv)->NewObject(jenv, classTiePointGrid, _method, nameString, gridWidth, gridHeight, offsetX, offsetY, subSamplingX, subSamplingY, tiePointsArray, containsAngles);
+    (*jenv)->DeleteLocalRef(jenv, nameString);
+    (*jenv)->DeleteLocalRef(jenv, tiePointsArray);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
@@ -12143,6 +12388,7 @@ int TiePointGrid_getDiscontinuity2(const float* tiePointsElems, int tiePointsLen
     tiePointsArray = (*jenv)->NewFloatArray(jenv, tiePointsLength);
     beam_copy_to_jarray(tiePointsArray, tiePointsElems, tiePointsLength, sizeof (float));
     _result = (*jenv)->CallStaticIntMethod(jenv, classTiePointGrid, _method, tiePointsArray);
+    (*jenv)->DeleteLocalRef(jenv, tiePointsArray);
     return _result;
 }
 
@@ -12371,6 +12617,7 @@ float* TiePointGrid_getTiePoints(TiePointGrid _this, int* resultArrayLength)
     }
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_float_array(_resultArray, resultArrayLength);
+    (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
 
@@ -12539,6 +12786,8 @@ int* TiePointGrid_getPixels6(TiePointGrid _this, int x, int y, int w, int h, con
     beam_copy_to_jarray(pixelsArray, pixelsElems, pixelsLength, sizeof (int));
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method, x, y, w, h, pixelsArray, pm);
     _result = beam_alloc_int_array(_resultArray, resultArrayLength);
+    (*jenv)->DeleteLocalRef(jenv, pixelsArray);
+    (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
 
@@ -12563,6 +12812,8 @@ float* TiePointGrid_getPixels4(TiePointGrid _this, int x, int y, int w, int h, c
     beam_copy_to_jarray(pixelsArray, pixelsElems, pixelsLength, sizeof (float));
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method, x, y, w, h, pixelsArray, pm);
     _result = beam_alloc_float_array(_resultArray, resultArrayLength);
+    (*jenv)->DeleteLocalRef(jenv, pixelsArray);
+    (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
 
@@ -12587,6 +12838,8 @@ double* TiePointGrid_getPixels2(TiePointGrid _this, int x, int y, int w, int h, 
     beam_copy_to_jarray(pixelsArray, pixelsElems, pixelsLength, sizeof (double));
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method, x, y, w, h, pixelsArray, pm);
     _result = beam_alloc_double_array(_resultArray, resultArrayLength);
+    (*jenv)->DeleteLocalRef(jenv, pixelsArray);
+    (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
 
@@ -12608,6 +12861,7 @@ void TiePointGrid_setPixels3(TiePointGrid _this, int x, int y, int w, int h, con
     pixelsArray = (*jenv)->NewIntArray(jenv, pixelsLength);
     beam_copy_to_jarray(pixelsArray, pixelsElems, pixelsLength, sizeof (int));
     (*jenv)->CallVoidMethod(jenv, _this, _method, x, y, w, h, pixelsArray);
+    (*jenv)->DeleteLocalRef(jenv, pixelsArray);
 }
 
 void TiePointGrid_setPixels2(TiePointGrid _this, int x, int y, int w, int h, const float* pixelsElems, int pixelsLength)
@@ -12628,6 +12882,7 @@ void TiePointGrid_setPixels2(TiePointGrid _this, int x, int y, int w, int h, con
     pixelsArray = (*jenv)->NewFloatArray(jenv, pixelsLength);
     beam_copy_to_jarray(pixelsArray, pixelsElems, pixelsLength, sizeof (float));
     (*jenv)->CallVoidMethod(jenv, _this, _method, x, y, w, h, pixelsArray);
+    (*jenv)->DeleteLocalRef(jenv, pixelsArray);
 }
 
 void TiePointGrid_setPixels1(TiePointGrid _this, int x, int y, int w, int h, const double* pixelsElems, int pixelsLength)
@@ -12648,6 +12903,7 @@ void TiePointGrid_setPixels1(TiePointGrid _this, int x, int y, int w, int h, con
     pixelsArray = (*jenv)->NewDoubleArray(jenv, pixelsLength);
     beam_copy_to_jarray(pixelsArray, pixelsElems, pixelsLength, sizeof (double));
     (*jenv)->CallVoidMethod(jenv, _this, _method, x, y, w, h, pixelsArray);
+    (*jenv)->DeleteLocalRef(jenv, pixelsArray);
 }
 
 int* TiePointGrid_readPixels6(TiePointGrid _this, int x, int y, int w, int h, const int* pixelsElems, int pixelsLength, ProgressMonitor pm, int* resultArrayLength)
@@ -12671,6 +12927,8 @@ int* TiePointGrid_readPixels6(TiePointGrid _this, int x, int y, int w, int h, co
     beam_copy_to_jarray(pixelsArray, pixelsElems, pixelsLength, sizeof (int));
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method, x, y, w, h, pixelsArray, pm);
     _result = beam_alloc_int_array(_resultArray, resultArrayLength);
+    (*jenv)->DeleteLocalRef(jenv, pixelsArray);
+    (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
 
@@ -12695,6 +12953,8 @@ float* TiePointGrid_readPixels4(TiePointGrid _this, int x, int y, int w, int h, 
     beam_copy_to_jarray(pixelsArray, pixelsElems, pixelsLength, sizeof (float));
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method, x, y, w, h, pixelsArray, pm);
     _result = beam_alloc_float_array(_resultArray, resultArrayLength);
+    (*jenv)->DeleteLocalRef(jenv, pixelsArray);
+    (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
 
@@ -12719,6 +12979,8 @@ double* TiePointGrid_readPixels2(TiePointGrid _this, int x, int y, int w, int h,
     beam_copy_to_jarray(pixelsArray, pixelsElems, pixelsLength, sizeof (double));
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method, x, y, w, h, pixelsArray, pm);
     _result = beam_alloc_double_array(_resultArray, resultArrayLength);
+    (*jenv)->DeleteLocalRef(jenv, pixelsArray);
+    (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
 
@@ -12740,6 +13002,7 @@ void TiePointGrid_writePixels6(TiePointGrid _this, int x, int y, int w, int h, c
     pixelsArray = (*jenv)->NewIntArray(jenv, pixelsLength);
     beam_copy_to_jarray(pixelsArray, pixelsElems, pixelsLength, sizeof (int));
     (*jenv)->CallVoidMethod(jenv, _this, _method, x, y, w, h, pixelsArray, pm);
+    (*jenv)->DeleteLocalRef(jenv, pixelsArray);
 }
 
 void TiePointGrid_writePixels4(TiePointGrid _this, int x, int y, int w, int h, const float* pixelsElems, int pixelsLength, ProgressMonitor pm)
@@ -12760,6 +13023,7 @@ void TiePointGrid_writePixels4(TiePointGrid _this, int x, int y, int w, int h, c
     pixelsArray = (*jenv)->NewFloatArray(jenv, pixelsLength);
     beam_copy_to_jarray(pixelsArray, pixelsElems, pixelsLength, sizeof (float));
     (*jenv)->CallVoidMethod(jenv, _this, _method, x, y, w, h, pixelsArray, pm);
+    (*jenv)->DeleteLocalRef(jenv, pixelsArray);
 }
 
 void TiePointGrid_writePixels2(TiePointGrid _this, int x, int y, int w, int h, const double* pixelsElems, int pixelsLength, ProgressMonitor pm)
@@ -12780,6 +13044,7 @@ void TiePointGrid_writePixels2(TiePointGrid _this, int x, int y, int w, int h, c
     pixelsArray = (*jenv)->NewDoubleArray(jenv, pixelsLength);
     beam_copy_to_jarray(pixelsArray, pixelsElems, pixelsLength, sizeof (double));
     (*jenv)->CallVoidMethod(jenv, _this, _method, x, y, w, h, pixelsArray, pm);
+    (*jenv)->DeleteLocalRef(jenv, pixelsArray);
 }
 
 void TiePointGrid_readRasterData2(TiePointGrid _this, int offsetX, int offsetY, int width, int height, ProductData rasterData, ProgressMonitor pm)
@@ -13198,6 +13463,7 @@ boolean TiePointGrid_isValidMaskProperty(const char* propertyName)
     }
     propertyNameString = (*jenv)->NewStringUTF(jenv, propertyName);
     _result = (*jenv)->CallStaticBooleanMethod(jenv, classTiePointGrid, _method, propertyNameString);
+    (*jenv)->DeleteLocalRef(jenv, propertyNameString);
     return _result;
 }
 
@@ -13363,6 +13629,7 @@ char* TiePointGrid_getValidPixelExpression(TiePointGrid _this)
     }
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
+    (*jenv)->DeleteLocalRef(jenv, _resultString);
     return _result;
 }
 
@@ -13383,6 +13650,7 @@ void TiePointGrid_setValidPixelExpression(TiePointGrid _this, const char* validP
     }
     validPixelExpressionString = (*jenv)->NewStringUTF(jenv, validPixelExpression);
     (*jenv)->CallVoidMethod(jenv, _this, _method, validPixelExpressionString);
+    (*jenv)->DeleteLocalRef(jenv, validPixelExpressionString);
 }
 
 boolean TiePointGrid_isValidMaskUsed(TiePointGrid _this)
@@ -13439,6 +13707,7 @@ char* TiePointGrid_getValidMaskExpression(TiePointGrid _this)
     }
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
+    (*jenv)->DeleteLocalRef(jenv, _resultString);
     return _result;
 }
 
@@ -13461,6 +13730,8 @@ void TiePointGrid_updateExpression(TiePointGrid _this, const char* oldExternalNa
     oldExternalNameString = (*jenv)->NewStringUTF(jenv, oldExternalName);
     newExternalNameString = (*jenv)->NewStringUTF(jenv, newExternalName);
     (*jenv)->CallVoidMethod(jenv, _this, _method, oldExternalNameString, newExternalNameString);
+    (*jenv)->DeleteLocalRef(jenv, oldExternalNameString);
+    (*jenv)->DeleteLocalRef(jenv, newExternalNameString);
 }
 
 boolean TiePointGrid_hasRasterData(TiePointGrid _this)
@@ -13685,6 +13956,8 @@ int* TiePointGrid_getPixels5(TiePointGrid _this, int x, int y, int w, int h, con
     beam_copy_to_jarray(pixelsArray, pixelsElems, pixelsLength, sizeof (int));
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method, x, y, w, h, pixelsArray);
     _result = beam_alloc_int_array(_resultArray, resultArrayLength);
+    (*jenv)->DeleteLocalRef(jenv, pixelsArray);
+    (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
 
@@ -13709,6 +13982,8 @@ float* TiePointGrid_getPixels3(TiePointGrid _this, int x, int y, int w, int h, c
     beam_copy_to_jarray(pixelsArray, pixelsElems, pixelsLength, sizeof (float));
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method, x, y, w, h, pixelsArray);
     _result = beam_alloc_float_array(_resultArray, resultArrayLength);
+    (*jenv)->DeleteLocalRef(jenv, pixelsArray);
+    (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
 
@@ -13733,6 +14008,8 @@ double* TiePointGrid_getPixels1(TiePointGrid _this, int x, int y, int w, int h, 
     beam_copy_to_jarray(pixelsArray, pixelsElems, pixelsLength, sizeof (double));
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method, x, y, w, h, pixelsArray);
     _result = beam_alloc_double_array(_resultArray, resultArrayLength);
+    (*jenv)->DeleteLocalRef(jenv, pixelsArray);
+    (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
 
@@ -13757,6 +14034,8 @@ int* TiePointGrid_readPixels5(TiePointGrid _this, int x, int y, int w, int h, co
     beam_copy_to_jarray(pixelsArray, pixelsElems, pixelsLength, sizeof (int));
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method, x, y, w, h, pixelsArray);
     _result = beam_alloc_int_array(_resultArray, resultArrayLength);
+    (*jenv)->DeleteLocalRef(jenv, pixelsArray);
+    (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
 
@@ -13781,6 +14060,8 @@ float* TiePointGrid_readPixels3(TiePointGrid _this, int x, int y, int w, int h, 
     beam_copy_to_jarray(pixelsArray, pixelsElems, pixelsLength, sizeof (float));
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method, x, y, w, h, pixelsArray);
     _result = beam_alloc_float_array(_resultArray, resultArrayLength);
+    (*jenv)->DeleteLocalRef(jenv, pixelsArray);
+    (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
 
@@ -13805,6 +14086,8 @@ double* TiePointGrid_readPixels1(TiePointGrid _this, int x, int y, int w, int h,
     beam_copy_to_jarray(pixelsArray, pixelsElems, pixelsLength, sizeof (double));
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method, x, y, w, h, pixelsArray);
     _result = beam_alloc_double_array(_resultArray, resultArrayLength);
+    (*jenv)->DeleteLocalRef(jenv, pixelsArray);
+    (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
 
@@ -13826,6 +14109,7 @@ void TiePointGrid_writePixels5(TiePointGrid _this, int x, int y, int w, int h, c
     pixelsArray = (*jenv)->NewIntArray(jenv, pixelsLength);
     beam_copy_to_jarray(pixelsArray, pixelsElems, pixelsLength, sizeof (int));
     (*jenv)->CallVoidMethod(jenv, _this, _method, x, y, w, h, pixelsArray);
+    (*jenv)->DeleteLocalRef(jenv, pixelsArray);
 }
 
 void TiePointGrid_writePixels3(TiePointGrid _this, int x, int y, int w, int h, const float* pixelsElems, int pixelsLength)
@@ -13846,6 +14130,7 @@ void TiePointGrid_writePixels3(TiePointGrid _this, int x, int y, int w, int h, c
     pixelsArray = (*jenv)->NewFloatArray(jenv, pixelsLength);
     beam_copy_to_jarray(pixelsArray, pixelsElems, pixelsLength, sizeof (float));
     (*jenv)->CallVoidMethod(jenv, _this, _method, x, y, w, h, pixelsArray);
+    (*jenv)->DeleteLocalRef(jenv, pixelsArray);
 }
 
 void TiePointGrid_writePixels1(TiePointGrid _this, int x, int y, int w, int h, const double* pixelsElems, int pixelsLength)
@@ -13866,6 +14151,7 @@ void TiePointGrid_writePixels1(TiePointGrid _this, int x, int y, int w, int h, c
     pixelsArray = (*jenv)->NewDoubleArray(jenv, pixelsLength);
     beam_copy_to_jarray(pixelsArray, pixelsElems, pixelsLength, sizeof (double));
     (*jenv)->CallVoidMethod(jenv, _this, _method, x, y, w, h, pixelsArray);
+    (*jenv)->DeleteLocalRef(jenv, pixelsArray);
 }
 
 boolean* TiePointGrid_readValidMask(TiePointGrid _this, int x, int y, int w, int h, const boolean* validMaskElems, int validMaskLength, int* resultArrayLength)
@@ -13889,6 +14175,8 @@ boolean* TiePointGrid_readValidMask(TiePointGrid _this, int x, int y, int w, int
     beam_copy_to_jarray(validMaskArray, validMaskElems, validMaskLength, sizeof (boolean));
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method, x, y, w, h, validMaskArray);
     _result = beam_alloc_boolean_array(_resultArray, resultArrayLength);
+    (*jenv)->DeleteLocalRef(jenv, validMaskArray);
+    (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
 
@@ -14182,6 +14470,7 @@ ImageInfo TiePointGrid_getImageInfo3(TiePointGrid _this, const double* histoSkip
     histoSkipAreasArray = (*jenv)->NewDoubleArray(jenv, histoSkipAreasLength);
     beam_copy_to_jarray(histoSkipAreasArray, histoSkipAreasElems, histoSkipAreasLength, sizeof (double));
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, histoSkipAreasArray, pm);
+    (*jenv)->DeleteLocalRef(jenv, histoSkipAreasArray);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
@@ -14204,6 +14493,7 @@ ImageInfo TiePointGrid_createDefaultImageInfo1(TiePointGrid _this, const double*
     histoSkipAreasArray = (*jenv)->NewDoubleArray(jenv, histoSkipAreasLength);
     beam_copy_to_jarray(histoSkipAreasArray, histoSkipAreasElems, histoSkipAreasLength, sizeof (double));
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, histoSkipAreasArray, pm);
+    (*jenv)->DeleteLocalRef(jenv, histoSkipAreasArray);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
@@ -14226,6 +14516,7 @@ ImageInfo TiePointGrid_createDefaultImageInfo2(TiePointGrid _this, const double*
     histoSkipAreasArray = (*jenv)->NewDoubleArray(jenv, histoSkipAreasLength);
     beam_copy_to_jarray(histoSkipAreasArray, histoSkipAreasElems, histoSkipAreasLength, sizeof (double));
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, histoSkipAreasArray, histogram);
+    (*jenv)->DeleteLocalRef(jenv, histoSkipAreasArray);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
@@ -14304,6 +14595,7 @@ byte* TiePointGrid_quantizeRasterData1(TiePointGrid _this, double newMin, double
     }
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method, newMin, newMax, gamma, pm);
     _result = beam_alloc_byte_array(_resultArray, resultArrayLength);
+    (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
 
@@ -14325,6 +14617,7 @@ void TiePointGrid_quantizeRasterData2(TiePointGrid _this, double newMin, double 
     samplesArray = (*jenv)->NewByteArray(jenv, samplesLength);
     beam_copy_to_jarray(samplesArray, samplesElems, samplesLength, sizeof (byte));
     (*jenv)->CallVoidMethod(jenv, _this, _method, newMin, newMax, gamma, samplesArray, offset, stride, pm);
+    (*jenv)->DeleteLocalRef(jenv, samplesArray);
 }
 
 IndexValidator TiePointGrid_createPixelValidator(TiePointGrid _this, int lineOffset, ROI roi)
@@ -14402,6 +14695,7 @@ char* TiePointGrid_getPixelString(TiePointGrid _this, int x, int y)
     }
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method, x, y);
     _result = beam_alloc_string(_resultString);
+    (*jenv)->DeleteLocalRef(jenv, _resultString);
     return _result;
 }
 
@@ -14847,6 +15141,7 @@ void TiePointGrid_setUnit(TiePointGrid _this, const char* unit)
     }
     unitString = (*jenv)->NewStringUTF(jenv, unit);
     (*jenv)->CallVoidMethod(jenv, _this, _method, unitString);
+    (*jenv)->DeleteLocalRef(jenv, unitString);
 }
 
 char* TiePointGrid_getUnit(TiePointGrid _this)
@@ -14867,6 +15162,7 @@ char* TiePointGrid_getUnit(TiePointGrid _this)
     }
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
+    (*jenv)->DeleteLocalRef(jenv, _resultString);
     return _result;
 }
 
@@ -14998,6 +15294,7 @@ char* TiePointGrid_getName(TiePointGrid _this)
     }
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
+    (*jenv)->DeleteLocalRef(jenv, _resultString);
     return _result;
 }
 
@@ -15018,6 +15315,7 @@ void TiePointGrid_setName(TiePointGrid _this, const char* name)
     }
     nameString = (*jenv)->NewStringUTF(jenv, name);
     (*jenv)->CallVoidMethod(jenv, _this, _method, nameString);
+    (*jenv)->DeleteLocalRef(jenv, nameString);
 }
 
 char* TiePointGrid_getDescription(TiePointGrid _this)
@@ -15038,6 +15336,7 @@ char* TiePointGrid_getDescription(TiePointGrid _this)
     }
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
+    (*jenv)->DeleteLocalRef(jenv, _resultString);
     return _result;
 }
 
@@ -15058,6 +15357,7 @@ void TiePointGrid_setDescription(TiePointGrid _this, const char* description)
     }
     descriptionString = (*jenv)->NewStringUTF(jenv, description);
     (*jenv)->CallVoidMethod(jenv, _this, _method, descriptionString);
+    (*jenv)->DeleteLocalRef(jenv, descriptionString);
 }
 
 boolean TiePointGrid_isModified(TiePointGrid _this)
@@ -15097,6 +15397,7 @@ char* TiePointGrid_toString(TiePointGrid _this)
     }
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
+    (*jenv)->DeleteLocalRef(jenv, _resultString);
     return _result;
 }
 
@@ -15118,6 +15419,7 @@ boolean TiePointGrid_isValidNodeName(const char* name)
     }
     nameString = (*jenv)->NewStringUTF(jenv, name);
     _result = (*jenv)->CallStaticBooleanMethod(jenv, classTiePointGrid, _method, nameString);
+    (*jenv)->DeleteLocalRef(jenv, nameString);
     return _result;
 }
 
@@ -15196,6 +15498,7 @@ char* TiePointGrid_getDisplayName(TiePointGrid _this)
     }
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
+    (*jenv)->DeleteLocalRef(jenv, _resultString);
     return _result;
 }
 
@@ -15217,6 +15520,7 @@ char* TiePointGrid_getProductRefString(TiePointGrid _this)
     }
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
+    (*jenv)->DeleteLocalRef(jenv, _resultString);
     return _result;
 }
 
@@ -15256,6 +15560,7 @@ void TiePointGrid_fireProductNodeChanged1(TiePointGrid _this, const char* proper
     }
     propertyNameString = (*jenv)->NewStringUTF(jenv, propertyName);
     (*jenv)->CallVoidMethod(jenv, _this, _method, propertyNameString);
+    (*jenv)->DeleteLocalRef(jenv, propertyNameString);
 }
 
 void TiePointGrid_fireProductNodeChanged2(TiePointGrid _this, const char* propertyName, Object oldValue, Object newValue)
@@ -15275,6 +15580,7 @@ void TiePointGrid_fireProductNodeChanged2(TiePointGrid _this, const char* proper
     }
     propertyNameString = (*jenv)->NewStringUTF(jenv, propertyName);
     (*jenv)->CallVoidMethod(jenv, _this, _method, propertyNameString, oldValue, newValue);
+    (*jenv)->DeleteLocalRef(jenv, propertyNameString);
 }
 
 void TiePointGrid_removeFromFile(TiePointGrid _this, ProductWriter productWriter)
@@ -15369,6 +15675,7 @@ char* AngularDirection_toString(AngularDirection _this)
     }
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
+    (*jenv)->DeleteLocalRef(jenv, _resultString);
     return _result;
 }
 
@@ -15390,6 +15697,7 @@ FlagCoding FlagCoding_newFlagCoding(const char* name)
     }
     nameString = (*jenv)->NewStringUTF(jenv, name);
     _result = (*jenv)->NewObject(jenv, classFlagCoding, _method, nameString);
+    (*jenv)->DeleteLocalRef(jenv, nameString);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
@@ -15411,6 +15719,7 @@ MetadataAttribute FlagCoding_getFlag(FlagCoding _this, const char* name)
     }
     nameString = (*jenv)->NewStringUTF(jenv, name);
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, nameString);
+    (*jenv)->DeleteLocalRef(jenv, nameString);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
@@ -15432,6 +15741,7 @@ char** FlagCoding_getFlagNames(FlagCoding _this, int* resultArrayLength)
     }
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string_array(_resultArray, resultArrayLength);
+    (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
 
@@ -15455,6 +15765,8 @@ MetadataAttribute FlagCoding_addFlag(FlagCoding _this, const char* name, int fla
     nameString = (*jenv)->NewStringUTF(jenv, name);
     descriptionString = (*jenv)->NewStringUTF(jenv, description);
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, nameString, flagMask, descriptionString);
+    (*jenv)->DeleteLocalRef(jenv, nameString);
+    (*jenv)->DeleteLocalRef(jenv, descriptionString);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
@@ -15476,6 +15788,7 @@ int FlagCoding_getFlagMask(FlagCoding _this, const char* name)
     }
     nameString = (*jenv)->NewStringUTF(jenv, name);
     _result = (*jenv)->CallIntMethod(jenv, _this, _method, nameString);
+    (*jenv)->DeleteLocalRef(jenv, nameString);
     return _result;
 }
 
@@ -15550,6 +15863,8 @@ MetadataAttribute FlagCoding_addSample(FlagCoding _this, const char* name, int v
     nameString = (*jenv)->NewStringUTF(jenv, name);
     descriptionString = (*jenv)->NewStringUTF(jenv, description);
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, nameString, value, descriptionString);
+    (*jenv)->DeleteLocalRef(jenv, nameString);
+    (*jenv)->DeleteLocalRef(jenv, descriptionString);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
@@ -15590,6 +15905,7 @@ char* FlagCoding_getSampleName(FlagCoding _this, int index)
     }
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method, index);
     _result = beam_alloc_string(_resultString);
+    (*jenv)->DeleteLocalRef(jenv, _resultString);
     return _result;
 }
 
@@ -15742,6 +16058,7 @@ char** FlagCoding_getElementNames(FlagCoding _this, int* resultArrayLength)
     }
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string_array(_resultArray, resultArrayLength);
+    (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
 
@@ -15763,6 +16080,7 @@ MetadataElement* FlagCoding_getElements(FlagCoding _this, int* resultArrayLength
     }
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_object_array(_resultArray, resultArrayLength);
+    (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
 
@@ -15784,6 +16102,7 @@ MetadataElement FlagCoding_getElement(FlagCoding _this, const char* name)
     }
     nameString = (*jenv)->NewStringUTF(jenv, name);
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, nameString);
+    (*jenv)->DeleteLocalRef(jenv, nameString);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
@@ -15805,6 +16124,7 @@ boolean FlagCoding_containsElement(FlagCoding _this, const char* name)
     }
     nameString = (*jenv)->NewStringUTF(jenv, name);
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method, nameString);
+    (*jenv)->DeleteLocalRef(jenv, nameString);
     return _result;
 }
 
@@ -15902,6 +16222,7 @@ char** FlagCoding_getAttributeNames(FlagCoding _this, int* resultArrayLength)
     }
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string_array(_resultArray, resultArrayLength);
+    (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
 
@@ -15923,6 +16244,7 @@ MetadataAttribute* FlagCoding_getAttributes(FlagCoding _this, int* resultArrayLe
     }
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_object_array(_resultArray, resultArrayLength);
+    (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
 
@@ -15944,6 +16266,7 @@ MetadataAttribute FlagCoding_getAttribute(FlagCoding _this, const char* name)
     }
     nameString = (*jenv)->NewStringUTF(jenv, name);
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, nameString);
+    (*jenv)->DeleteLocalRef(jenv, nameString);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
@@ -15965,6 +16288,7 @@ boolean FlagCoding_containsAttribute(FlagCoding _this, const char* name)
     }
     nameString = (*jenv)->NewStringUTF(jenv, name);
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method, nameString);
+    (*jenv)->DeleteLocalRef(jenv, nameString);
     return _result;
 }
 
@@ -16005,6 +16329,7 @@ double FlagCoding_getAttributeDouble(FlagCoding _this, const char* name, double 
     }
     nameString = (*jenv)->NewStringUTF(jenv, name);
     _result = (*jenv)->CallDoubleMethod(jenv, _this, _method, nameString, defaultValue);
+    (*jenv)->DeleteLocalRef(jenv, nameString);
     return _result;
 }
 
@@ -16026,6 +16351,7 @@ ProductData_UTC FlagCoding_getAttributeUTC(FlagCoding _this, const char* name, P
     }
     nameString = (*jenv)->NewStringUTF(jenv, name);
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, nameString, defaultValue);
+    (*jenv)->DeleteLocalRef(jenv, nameString);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
@@ -16047,6 +16373,7 @@ int FlagCoding_getAttributeInt(FlagCoding _this, const char* name, int defaultVa
     }
     nameString = (*jenv)->NewStringUTF(jenv, name);
     _result = (*jenv)->CallIntMethod(jenv, _this, _method, nameString, defaultValue);
+    (*jenv)->DeleteLocalRef(jenv, nameString);
     return _result;
 }
 
@@ -16067,6 +16394,7 @@ void FlagCoding_setAttributeInt(FlagCoding _this, const char* name, int value)
     }
     nameString = (*jenv)->NewStringUTF(jenv, name);
     (*jenv)->CallVoidMethod(jenv, _this, _method, nameString, value);
+    (*jenv)->DeleteLocalRef(jenv, nameString);
 }
 
 void FlagCoding_setAttributeDouble(FlagCoding _this, const char* name, double value)
@@ -16086,6 +16414,7 @@ void FlagCoding_setAttributeDouble(FlagCoding _this, const char* name, double va
     }
     nameString = (*jenv)->NewStringUTF(jenv, name);
     (*jenv)->CallVoidMethod(jenv, _this, _method, nameString, value);
+    (*jenv)->DeleteLocalRef(jenv, nameString);
 }
 
 void FlagCoding_setAttributeUTC(FlagCoding _this, const char* name, ProductData_UTC value)
@@ -16105,6 +16434,7 @@ void FlagCoding_setAttributeUTC(FlagCoding _this, const char* name, ProductData_
     }
     nameString = (*jenv)->NewStringUTF(jenv, name);
     (*jenv)->CallVoidMethod(jenv, _this, _method, nameString, value);
+    (*jenv)->DeleteLocalRef(jenv, nameString);
 }
 
 char* FlagCoding_getAttributeString(FlagCoding _this, const char* name, const char* defaultValue)
@@ -16129,6 +16459,9 @@ char* FlagCoding_getAttributeString(FlagCoding _this, const char* name, const ch
     defaultValueString = (*jenv)->NewStringUTF(jenv, defaultValue);
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method, nameString, defaultValueString);
     _result = beam_alloc_string(_resultString);
+    (*jenv)->DeleteLocalRef(jenv, nameString);
+    (*jenv)->DeleteLocalRef(jenv, defaultValueString);
+    (*jenv)->DeleteLocalRef(jenv, _resultString);
     return _result;
 }
 
@@ -16151,6 +16484,8 @@ void FlagCoding_setAttributeString(FlagCoding _this, const char* name, const cha
     nameString = (*jenv)->NewStringUTF(jenv, name);
     valueString = (*jenv)->NewStringUTF(jenv, value);
     (*jenv)->CallVoidMethod(jenv, _this, _method, nameString, valueString);
+    (*jenv)->DeleteLocalRef(jenv, nameString);
+    (*jenv)->DeleteLocalRef(jenv, valueString);
 }
 
 void FlagCoding_setModified(FlagCoding _this, boolean modified)
@@ -16243,6 +16578,7 @@ char* FlagCoding_getName(FlagCoding _this)
     }
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
+    (*jenv)->DeleteLocalRef(jenv, _resultString);
     return _result;
 }
 
@@ -16263,6 +16599,7 @@ void FlagCoding_setName(FlagCoding _this, const char* name)
     }
     nameString = (*jenv)->NewStringUTF(jenv, name);
     (*jenv)->CallVoidMethod(jenv, _this, _method, nameString);
+    (*jenv)->DeleteLocalRef(jenv, nameString);
 }
 
 char* FlagCoding_getDescription(FlagCoding _this)
@@ -16283,6 +16620,7 @@ char* FlagCoding_getDescription(FlagCoding _this)
     }
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
+    (*jenv)->DeleteLocalRef(jenv, _resultString);
     return _result;
 }
 
@@ -16303,6 +16641,7 @@ void FlagCoding_setDescription(FlagCoding _this, const char* description)
     }
     descriptionString = (*jenv)->NewStringUTF(jenv, description);
     (*jenv)->CallVoidMethod(jenv, _this, _method, descriptionString);
+    (*jenv)->DeleteLocalRef(jenv, descriptionString);
 }
 
 boolean FlagCoding_isModified(FlagCoding _this)
@@ -16342,6 +16681,7 @@ char* FlagCoding_toString(FlagCoding _this)
     }
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
+    (*jenv)->DeleteLocalRef(jenv, _resultString);
     return _result;
 }
 
@@ -16363,6 +16703,7 @@ boolean FlagCoding_isValidNodeName(const char* name)
     }
     nameString = (*jenv)->NewStringUTF(jenv, name);
     _result = (*jenv)->CallStaticBooleanMethod(jenv, classFlagCoding, _method, nameString);
+    (*jenv)->DeleteLocalRef(jenv, nameString);
     return _result;
 }
 
@@ -16441,6 +16782,7 @@ char* FlagCoding_getDisplayName(FlagCoding _this)
     }
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
+    (*jenv)->DeleteLocalRef(jenv, _resultString);
     return _result;
 }
 
@@ -16462,6 +16804,7 @@ char* FlagCoding_getProductRefString(FlagCoding _this)
     }
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
+    (*jenv)->DeleteLocalRef(jenv, _resultString);
     return _result;
 }
 
@@ -16484,6 +16827,8 @@ void FlagCoding_updateExpression(FlagCoding _this, const char* oldExternalName, 
     oldExternalNameString = (*jenv)->NewStringUTF(jenv, oldExternalName);
     newExternalNameString = (*jenv)->NewStringUTF(jenv, newExternalName);
     (*jenv)->CallVoidMethod(jenv, _this, _method, oldExternalNameString, newExternalNameString);
+    (*jenv)->DeleteLocalRef(jenv, oldExternalNameString);
+    (*jenv)->DeleteLocalRef(jenv, newExternalNameString);
 }
 
 void FlagCoding_removeFromFile(FlagCoding _this, ProductWriter productWriter)
@@ -16669,6 +17014,7 @@ char* RGBChannelDef_getSourceName(RGBChannelDef _this, int index)
     }
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method, index);
     _result = beam_alloc_string(_resultString);
+    (*jenv)->DeleteLocalRef(jenv, _resultString);
     return _result;
 }
 
@@ -16689,6 +17035,7 @@ void RGBChannelDef_setSourceName(RGBChannelDef _this, int index, const char* sou
     }
     sourceNameString = (*jenv)->NewStringUTF(jenv, sourceName);
     (*jenv)->CallVoidMethod(jenv, _this, _method, index, sourceNameString);
+    (*jenv)->DeleteLocalRef(jenv, sourceNameString);
 }
 
 char** RGBChannelDef_getSourceNames(RGBChannelDef _this, int* resultArrayLength)
@@ -16709,6 +17056,7 @@ char** RGBChannelDef_getSourceNames(RGBChannelDef _this, int* resultArrayLength)
     }
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string_array(_resultArray, resultArrayLength);
+    (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
 
@@ -16729,6 +17077,7 @@ void RGBChannelDef_setSourceNames(RGBChannelDef _this, const char** bandNamesEle
     }
     bandNamesArray = beam_new_jstring_array(bandNamesElems, bandNamesLength);
     (*jenv)->CallVoidMethod(jenv, _this, _method, bandNamesArray);
+    (*jenv)->DeleteLocalRef(jenv, bandNamesArray);
 }
 
 boolean RGBChannelDef_isAlphaUsed(RGBChannelDef _this)
@@ -16972,6 +17321,7 @@ ProductData ProductData_createInstance5(const byte* elemsElems, int elemsLength)
     elemsArray = (*jenv)->NewByteArray(jenv, elemsLength);
     beam_copy_to_jarray(elemsArray, elemsElems, elemsLength, sizeof (byte));
     _result = (*jenv)->CallStaticObjectMethod(jenv, classProductData, _method, elemsArray);
+    (*jenv)->DeleteLocalRef(jenv, elemsArray);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
@@ -16994,6 +17344,7 @@ ProductData ProductData_createUnsignedInstance1(const byte* elemsElems, int elem
     elemsArray = (*jenv)->NewByteArray(jenv, elemsLength);
     beam_copy_to_jarray(elemsArray, elemsElems, elemsLength, sizeof (byte));
     _result = (*jenv)->CallStaticObjectMethod(jenv, classProductData, _method, elemsArray);
+    (*jenv)->DeleteLocalRef(jenv, elemsArray);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
@@ -17016,6 +17367,7 @@ ProductData ProductData_createInstance10(const short* elemsElems, int elemsLengt
     elemsArray = (*jenv)->NewShortArray(jenv, elemsLength);
     beam_copy_to_jarray(elemsArray, elemsElems, elemsLength, sizeof (short));
     _result = (*jenv)->CallStaticObjectMethod(jenv, classProductData, _method, elemsArray);
+    (*jenv)->DeleteLocalRef(jenv, elemsArray);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
@@ -17038,6 +17390,7 @@ ProductData ProductData_createUnsignedInstance3(const short* elemsElems, int ele
     elemsArray = (*jenv)->NewShortArray(jenv, elemsLength);
     beam_copy_to_jarray(elemsArray, elemsElems, elemsLength, sizeof (short));
     _result = (*jenv)->CallStaticObjectMethod(jenv, classProductData, _method, elemsArray);
+    (*jenv)->DeleteLocalRef(jenv, elemsArray);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
@@ -17060,6 +17413,7 @@ ProductData ProductData_createInstance8(const int* elemsElems, int elemsLength)
     elemsArray = (*jenv)->NewIntArray(jenv, elemsLength);
     beam_copy_to_jarray(elemsArray, elemsElems, elemsLength, sizeof (int));
     _result = (*jenv)->CallStaticObjectMethod(jenv, classProductData, _method, elemsArray);
+    (*jenv)->DeleteLocalRef(jenv, elemsArray);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
@@ -17082,6 +17436,7 @@ ProductData ProductData_createUnsignedInstance2(const int* elemsElems, int elems
     elemsArray = (*jenv)->NewIntArray(jenv, elemsLength);
     beam_copy_to_jarray(elemsArray, elemsElems, elemsLength, sizeof (int));
     _result = (*jenv)->CallStaticObjectMethod(jenv, classProductData, _method, elemsArray);
+    (*jenv)->DeleteLocalRef(jenv, elemsArray);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
@@ -17104,6 +17459,7 @@ ProductData ProductData_createInstance9(const dlong* elemsElems, int elemsLength
     elemsArray = (*jenv)->NewLongArray(jenv, elemsLength);
     beam_copy_to_jarray(elemsArray, elemsElems, elemsLength, sizeof (long));
     _result = (*jenv)->CallStaticObjectMethod(jenv, classProductData, _method, elemsArray);
+    (*jenv)->DeleteLocalRef(jenv, elemsArray);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
@@ -17125,6 +17481,7 @@ ProductData ProductData_createInstance4(const char* strData)
     }
     strDataString = (*jenv)->NewStringUTF(jenv, strData);
     _result = (*jenv)->CallStaticObjectMethod(jenv, classProductData, _method, strDataString);
+    (*jenv)->DeleteLocalRef(jenv, strDataString);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
@@ -17147,6 +17504,7 @@ ProductData ProductData_createInstance7(const float* elemsElems, int elemsLength
     elemsArray = (*jenv)->NewFloatArray(jenv, elemsLength);
     beam_copy_to_jarray(elemsArray, elemsElems, elemsLength, sizeof (float));
     _result = (*jenv)->CallStaticObjectMethod(jenv, classProductData, _method, elemsArray);
+    (*jenv)->DeleteLocalRef(jenv, elemsArray);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
@@ -17169,6 +17527,7 @@ ProductData ProductData_createInstance6(const double* elemsElems, int elemsLengt
     elemsArray = (*jenv)->NewDoubleArray(jenv, elemsLength);
     beam_copy_to_jarray(elemsArray, elemsElems, elemsLength, sizeof (double));
     _result = (*jenv)->CallStaticObjectMethod(jenv, classProductData, _method, elemsArray);
+    (*jenv)->DeleteLocalRef(jenv, elemsArray);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
@@ -17247,6 +17606,7 @@ char* ProductData_getTypeString2(int type)
     }
     _resultString = (*jenv)->CallStaticObjectMethod(jenv, classProductData, _method, type);
     _result = beam_alloc_string(_resultString);
+    (*jenv)->DeleteLocalRef(jenv, _resultString);
     return _result;
 }
 
@@ -17268,6 +17628,7 @@ int ProductData_getType2(const char* type)
     }
     typeString = (*jenv)->NewStringUTF(jenv, type);
     _result = (*jenv)->CallStaticIntMethod(jenv, classProductData, _method, typeString);
+    (*jenv)->DeleteLocalRef(jenv, typeString);
     return _result;
 }
 
@@ -17289,6 +17650,7 @@ char* ProductData_getTypeString1(ProductData _this)
     }
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
+    (*jenv)->DeleteLocalRef(jenv, _resultString);
     return _result;
 }
 
@@ -17538,6 +17900,7 @@ char* ProductData_getElemString(ProductData _this)
     }
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
+    (*jenv)->DeleteLocalRef(jenv, _resultString);
     return _result;
 }
 
@@ -17654,6 +18017,7 @@ char* ProductData_getElemStringAt(ProductData _this, int index)
     }
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method, index);
     _result = beam_alloc_string(_resultString);
+    (*jenv)->DeleteLocalRef(jenv, _resultString);
     return _result;
 }
 
@@ -17761,6 +18125,7 @@ void ProductData_setElemString(ProductData _this, const char* value)
     }
     valueString = (*jenv)->NewStringUTF(jenv, value);
     (*jenv)->CallVoidMethod(jenv, _this, _method, valueString);
+    (*jenv)->DeleteLocalRef(jenv, valueString);
 }
 
 void ProductData_setElemBoolean(ProductData _this, boolean value)
@@ -17865,6 +18230,7 @@ void ProductData_setElemStringAt(ProductData _this, int index, const char* value
     }
     valueString = (*jenv)->NewStringUTF(jenv, value);
     (*jenv)->CallVoidMethod(jenv, _this, _method, index, valueString);
+    (*jenv)->DeleteLocalRef(jenv, valueString);
 }
 
 void ProductData_setElemBooleanAt(ProductData _this, int index, boolean value)
@@ -18074,6 +18440,7 @@ char* ProductData_toString(ProductData _this)
     }
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
+    (*jenv)->DeleteLocalRef(jenv, _resultString);
     return _result;
 }
 
@@ -18262,6 +18629,7 @@ boolean GeoPos_areValid(const GeoPos aElems, int aLength)
     }
     aArray = beam_new_jobject_array(aElems, aLength, classGeoPos);
     _result = (*jenv)->CallStaticBooleanMethod(jenv, classGeoPos, _method, aArray);
+    (*jenv)->DeleteLocalRef(jenv, aArray);
     return _result;
 }
 
@@ -18338,6 +18706,7 @@ char* GeoPos_toString(GeoPos _this)
     }
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
+    (*jenv)->DeleteLocalRef(jenv, _resultString);
     return _result;
 }
 
@@ -18395,6 +18764,7 @@ char* GeoPos_getLatString(GeoPos _this)
     }
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
+    (*jenv)->DeleteLocalRef(jenv, _resultString);
     return _result;
 }
 
@@ -18416,6 +18786,7 @@ char* GeoPos_getLonString(GeoPos _this)
     }
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
+    (*jenv)->DeleteLocalRef(jenv, _resultString);
     return _result;
 }
 
@@ -18437,6 +18808,7 @@ ProductNodeGroup ProductNodeGroup_newProductNodeGroup(const char* name)
     }
     nameString = (*jenv)->NewStringUTF(jenv, name);
     _result = (*jenv)->NewObject(jenv, classProductNodeGroup, _method, nameString);
+    (*jenv)->DeleteLocalRef(jenv, nameString);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
@@ -18515,6 +18887,7 @@ char** ProductNodeGroup_getNodeDisplayNames(ProductNodeGroup _this, int* resultA
     }
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string_array(_resultArray, resultArrayLength);
+    (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
 
@@ -18536,6 +18909,7 @@ char** ProductNodeGroup_getNodeNames(ProductNodeGroup _this, int* resultArrayLen
     }
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string_array(_resultArray, resultArrayLength);
+    (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
 
@@ -18557,6 +18931,7 @@ int ProductNodeGroup_indexOfName(ProductNodeGroup _this, const char* name)
     }
     nameString = (*jenv)->NewStringUTF(jenv, name);
     _result = (*jenv)->CallIntMethod(jenv, _this, _method, nameString);
+    (*jenv)->DeleteLocalRef(jenv, nameString);
     return _result;
 }
 
@@ -18597,6 +18972,7 @@ ProductNode ProductNodeGroup_getByDisplayName(ProductNodeGroup _this, const char
     }
     displayNameString = (*jenv)->NewStringUTF(jenv, displayName);
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, displayNameString);
+    (*jenv)->DeleteLocalRef(jenv, displayNameString);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
@@ -18618,6 +18994,7 @@ ProductNode ProductNodeGroup_get(ProductNodeGroup _this, const char* name)
     }
     nameString = (*jenv)->NewStringUTF(jenv, name);
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, nameString);
+    (*jenv)->DeleteLocalRef(jenv, nameString);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
@@ -18639,6 +19016,7 @@ boolean ProductNodeGroup_containsName(ProductNodeGroup _this, const char* name)
     }
     nameString = (*jenv)->NewStringUTF(jenv, name);
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method, nameString);
+    (*jenv)->DeleteLocalRef(jenv, nameString);
     return _result;
 }
 
@@ -18839,6 +19217,8 @@ void ProductNodeGroup_updateExpression(ProductNodeGroup _this, const char* oldEx
     oldExternalNameString = (*jenv)->NewStringUTF(jenv, oldExternalName);
     newExternalNameString = (*jenv)->NewStringUTF(jenv, newExternalName);
     (*jenv)->CallVoidMethod(jenv, _this, _method, oldExternalNameString, newExternalNameString);
+    (*jenv)->DeleteLocalRef(jenv, oldExternalNameString);
+    (*jenv)->DeleteLocalRef(jenv, newExternalNameString);
 }
 
 ProductNode ProductNodeGroup_getOwner(ProductNodeGroup _this)
@@ -18878,6 +19258,7 @@ char* ProductNodeGroup_getName(ProductNodeGroup _this)
     }
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
+    (*jenv)->DeleteLocalRef(jenv, _resultString);
     return _result;
 }
 
@@ -18898,6 +19279,7 @@ void ProductNodeGroup_setName(ProductNodeGroup _this, const char* name)
     }
     nameString = (*jenv)->NewStringUTF(jenv, name);
     (*jenv)->CallVoidMethod(jenv, _this, _method, nameString);
+    (*jenv)->DeleteLocalRef(jenv, nameString);
 }
 
 char* ProductNodeGroup_getDescription(ProductNodeGroup _this)
@@ -18918,6 +19300,7 @@ char* ProductNodeGroup_getDescription(ProductNodeGroup _this)
     }
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
+    (*jenv)->DeleteLocalRef(jenv, _resultString);
     return _result;
 }
 
@@ -18938,6 +19321,7 @@ void ProductNodeGroup_setDescription(ProductNodeGroup _this, const char* descrip
     }
     descriptionString = (*jenv)->NewStringUTF(jenv, description);
     (*jenv)->CallVoidMethod(jenv, _this, _method, descriptionString);
+    (*jenv)->DeleteLocalRef(jenv, descriptionString);
 }
 
 boolean ProductNodeGroup_isModified(ProductNodeGroup _this)
@@ -18977,6 +19361,7 @@ char* ProductNodeGroup_toString(ProductNodeGroup _this)
     }
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
+    (*jenv)->DeleteLocalRef(jenv, _resultString);
     return _result;
 }
 
@@ -18998,6 +19383,7 @@ boolean ProductNodeGroup_isValidNodeName(const char* name)
     }
     nameString = (*jenv)->NewStringUTF(jenv, name);
     _result = (*jenv)->CallStaticBooleanMethod(jenv, classProductNodeGroup, _method, nameString);
+    (*jenv)->DeleteLocalRef(jenv, nameString);
     return _result;
 }
 
@@ -19076,6 +19462,7 @@ char* ProductNodeGroup_getDisplayName(ProductNodeGroup _this)
     }
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
+    (*jenv)->DeleteLocalRef(jenv, _resultString);
     return _result;
 }
 
@@ -19097,6 +19484,7 @@ char* ProductNodeGroup_getProductRefString(ProductNodeGroup _this)
     }
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
+    (*jenv)->DeleteLocalRef(jenv, _resultString);
     return _result;
 }
 
@@ -19173,6 +19561,7 @@ ImageInfo ProductUtils_createImageInfo(const RasterDataNode rastersElems, int ra
     }
     rastersArray = beam_new_jobject_array(rastersElems, rastersLength, classRasterDataNode);
     _result = (*jenv)->CallStaticObjectMethod(jenv, classProductUtils, _method, rastersArray, assignMissingImageInfos, pm);
+    (*jenv)->DeleteLocalRef(jenv, rastersArray);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
@@ -19194,6 +19583,7 @@ BufferedImage ProductUtils_createRgbImage(const RasterDataNode rastersElems, int
     }
     rastersArray = beam_new_jobject_array(rastersElems, rastersLength, classRasterDataNode);
     _result = (*jenv)->CallStaticObjectMethod(jenv, classProductUtils, _method, rastersArray, imageInfo, pm);
+    (*jenv)->DeleteLocalRef(jenv, rastersArray);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
@@ -19291,6 +19681,7 @@ Point2D* ProductUtils_createMapEnvelope2(Product product, Rectangle rect, MapTra
     }
     _resultArray = (*jenv)->CallStaticObjectMethod(jenv, classProductUtils, _method, product, rect, mapTransform);
     _result = beam_alloc_object_array(_resultArray, resultArrayLength);
+    (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
 
@@ -19312,6 +19703,7 @@ Point2D* ProductUtils_createMapEnvelope1(Product product, Rectangle rect, int st
     }
     _resultArray = (*jenv)->CallStaticObjectMethod(jenv, classProductUtils, _method, product, rect, step, mapTransform);
     _result = beam_alloc_object_array(_resultArray, resultArrayLength);
+    (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
 
@@ -19335,6 +19727,8 @@ Point2D* ProductUtils_getMinMax(const Point2D boundaryElems, int boundaryLength,
     boundaryArray = beam_new_jobject_array(boundaryElems, boundaryLength, classPoint2D);
     _resultArray = (*jenv)->CallStaticObjectMethod(jenv, classProductUtils, _method, boundaryArray);
     _result = beam_alloc_object_array(_resultArray, resultArrayLength);
+    (*jenv)->DeleteLocalRef(jenv, boundaryArray);
+    (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
 
@@ -19356,6 +19750,7 @@ Point2D* ProductUtils_createMapBoundary(Product product, Rectangle rect, int ste
     }
     _resultArray = (*jenv)->CallStaticObjectMethod(jenv, classProductUtils, _method, product, rect, step, mapTransform);
     _result = beam_alloc_object_array(_resultArray, resultArrayLength);
+    (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
 
@@ -19377,6 +19772,7 @@ GeoPos* ProductUtils_createGeoBoundary1(Product product, int step, int* resultAr
     }
     _resultArray = (*jenv)->CallStaticObjectMethod(jenv, classProductUtils, _method, product, step);
     _result = beam_alloc_object_array(_resultArray, resultArrayLength);
+    (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
 
@@ -19398,6 +19794,7 @@ GeoPos* ProductUtils_createGeoBoundary2(Product product, Rectangle region, int s
     }
     _resultArray = (*jenv)->CallStaticObjectMethod(jenv, classProductUtils, _method, product, region, step);
     _result = beam_alloc_object_array(_resultArray, resultArrayLength);
+    (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
 
@@ -19419,6 +19816,7 @@ GeoPos* ProductUtils_createGeoBoundary3(Product product, Rectangle region, int s
     }
     _resultArray = (*jenv)->CallStaticObjectMethod(jenv, classProductUtils, _method, product, region, step, usePixelCenter);
     _result = beam_alloc_object_array(_resultArray, resultArrayLength);
+    (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
 
@@ -19459,6 +19857,7 @@ GeoPos* ProductUtils_createGeoBoundary4(RasterDataNode raster, Rectangle region,
     }
     _resultArray = (*jenv)->CallStaticObjectMethod(jenv, classProductUtils, _method, raster, region, step);
     _result = beam_alloc_object_array(_resultArray, resultArrayLength);
+    (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
 
@@ -19480,6 +19879,7 @@ GeneralPath* ProductUtils_createGeoBoundaryPaths1(Product product, int* resultAr
     }
     _resultArray = (*jenv)->CallStaticObjectMethod(jenv, classProductUtils, _method, product);
     _result = beam_alloc_object_array(_resultArray, resultArrayLength);
+    (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
 
@@ -19501,6 +19901,7 @@ GeneralPath* ProductUtils_createGeoBoundaryPaths2(Product product, Rectangle reg
     }
     _resultArray = (*jenv)->CallStaticObjectMethod(jenv, classProductUtils, _method, product, region, step);
     _result = beam_alloc_object_array(_resultArray, resultArrayLength);
+    (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
 
@@ -19522,6 +19923,7 @@ GeneralPath* ProductUtils_createGeoBoundaryPaths3(Product product, Rectangle reg
     }
     _resultArray = (*jenv)->CallStaticObjectMethod(jenv, classProductUtils, _method, product, region, step, usePixelCenter);
     _result = beam_alloc_object_array(_resultArray, resultArrayLength);
+    (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
 
@@ -19543,6 +19945,7 @@ PixelPos* ProductUtils_createPixelBoundary1(Product product, Rectangle rect, int
     }
     _resultArray = (*jenv)->CallStaticObjectMethod(jenv, classProductUtils, _method, product, rect, step);
     _result = beam_alloc_object_array(_resultArray, resultArrayLength);
+    (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
 
@@ -19564,6 +19967,7 @@ PixelPos* ProductUtils_createPixelBoundary2(Product product, Rectangle rect, int
     }
     _resultArray = (*jenv)->CallStaticObjectMethod(jenv, classProductUtils, _method, product, rect, step, usePixelCenter);
     _result = beam_alloc_object_array(_resultArray, resultArrayLength);
+    (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
 
@@ -19585,6 +19989,7 @@ PixelPos* ProductUtils_createPixelBoundary3(RasterDataNode raster, Rectangle rec
     }
     _resultArray = (*jenv)->CallStaticObjectMethod(jenv, classProductUtils, _method, raster, rect, step);
     _result = beam_alloc_object_array(_resultArray, resultArrayLength);
+    (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
 
@@ -19606,6 +20011,7 @@ PixelPos* ProductUtils_createRectBoundary1(Rectangle rect, int step, int* result
     }
     _resultArray = (*jenv)->CallStaticObjectMethod(jenv, classProductUtils, _method, rect, step);
     _result = beam_alloc_object_array(_resultArray, resultArrayLength);
+    (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
 
@@ -19627,6 +20033,7 @@ PixelPos* ProductUtils_createRectBoundary2(Rectangle rect, int step, boolean use
     }
     _resultArray = (*jenv)->CallStaticObjectMethod(jenv, classProductUtils, _method, rect, step, usePixelCenter);
     _result = beam_alloc_object_array(_resultArray, resultArrayLength);
+    (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
 
@@ -19788,6 +20195,7 @@ TiePointGrid ProductUtils_copyTiePointGrid(const char* gridName, Product sourceP
     }
     gridNameString = (*jenv)->NewStringUTF(jenv, gridName);
     _result = (*jenv)->CallStaticObjectMethod(jenv, classProductUtils, _method, gridNameString, sourceProduct, targetProduct);
+    (*jenv)->DeleteLocalRef(jenv, gridNameString);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
@@ -19809,6 +20217,7 @@ Band ProductUtils_copyBand4(const char* sourceBandName, Product sourceProduct, P
     }
     sourceBandNameString = (*jenv)->NewStringUTF(jenv, sourceBandName);
     _result = (*jenv)->CallStaticObjectMethod(jenv, classProductUtils, _method, sourceBandNameString, sourceProduct, targetProduct, copySourceImage);
+    (*jenv)->DeleteLocalRef(jenv, sourceBandNameString);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
@@ -19832,6 +20241,8 @@ Band ProductUtils_copyBand2(const char* sourceBandName, Product sourceProduct, c
     sourceBandNameString = (*jenv)->NewStringUTF(jenv, sourceBandName);
     targetBandNameString = (*jenv)->NewStringUTF(jenv, targetBandName);
     _result = (*jenv)->CallStaticObjectMethod(jenv, classProductUtils, _method, sourceBandNameString, sourceProduct, targetBandNameString, targetProduct, copySourceImage);
+    (*jenv)->DeleteLocalRef(jenv, sourceBandNameString);
+    (*jenv)->DeleteLocalRef(jenv, targetBandNameString);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
@@ -19870,6 +20281,7 @@ Band ProductUtils_copyBand3(const char* sourceBandName, Product sourceProduct, P
     }
     sourceBandNameString = (*jenv)->NewStringUTF(jenv, sourceBandName);
     _result = (*jenv)->CallStaticObjectMethod(jenv, classProductUtils, _method, sourceBandNameString, sourceProduct, targetProduct);
+    (*jenv)->DeleteLocalRef(jenv, sourceBandNameString);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
@@ -19893,6 +20305,8 @@ Band ProductUtils_copyBand1(const char* sourceBandName, Product sourceProduct, c
     sourceBandNameString = (*jenv)->NewStringUTF(jenv, sourceBandName);
     targetBandNameString = (*jenv)->NewStringUTF(jenv, targetBandName);
     _result = (*jenv)->CallStaticObjectMethod(jenv, classProductUtils, _method, sourceBandNameString, sourceProduct, targetBandNameString, targetProduct);
+    (*jenv)->DeleteLocalRef(jenv, sourceBandNameString);
+    (*jenv)->DeleteLocalRef(jenv, targetBandNameString);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
@@ -20077,6 +20491,7 @@ int ProductUtils_normalizeGeoPolygon(const GeoPos polygonElems, int polygonLengt
     }
     polygonArray = beam_new_jobject_array(polygonElems, polygonLength, classGeoPos);
     _result = (*jenv)->CallStaticIntMethod(jenv, classProductUtils, _method, polygonArray);
+    (*jenv)->DeleteLocalRef(jenv, polygonArray);
     return _result;
 }
 
@@ -20098,6 +20513,7 @@ int ProductUtils_normalizeGeoPolygon_old(const GeoPos polygonElems, int polygonL
     }
     polygonArray = beam_new_jobject_array(polygonElems, polygonLength, classGeoPos);
     _result = (*jenv)->CallStaticIntMethod(jenv, classProductUtils, _method, polygonArray);
+    (*jenv)->DeleteLocalRef(jenv, polygonArray);
     return _result;
 }
 
@@ -20118,6 +20534,7 @@ void ProductUtils_denormalizeGeoPolygon(const GeoPos polygonElems, int polygonLe
     }
     polygonArray = beam_new_jobject_array(polygonElems, polygonLength, classGeoPos);
     (*jenv)->CallStaticVoidMethod(jenv, classProductUtils, _method, polygonArray);
+    (*jenv)->DeleteLocalRef(jenv, polygonArray);
 }
 
 void ProductUtils_denormalizeGeoPos(GeoPos geoPos)
@@ -20172,6 +20589,7 @@ int ProductUtils_getRotationDirection(const GeoPos polygonElems, int polygonLeng
     }
     polygonArray = beam_new_jobject_array(polygonElems, polygonLength, classGeoPos);
     _result = (*jenv)->CallStaticIntMethod(jenv, classProductUtils, _method, polygonArray);
+    (*jenv)->DeleteLocalRef(jenv, polygonArray);
     return _result;
 }
 
@@ -20193,6 +20611,7 @@ double ProductUtils_getAngleSum(const GeoPos polygonElems, int polygonLength)
     }
     polygonArray = beam_new_jobject_array(polygonElems, polygonLength, classGeoPos);
     _result = (*jenv)->CallStaticDoubleMethod(jenv, classProductUtils, _method, polygonArray);
+    (*jenv)->DeleteLocalRef(jenv, polygonArray);
     return _result;
 }
 
@@ -20377,6 +20796,7 @@ char** ProductUtils_removeInvalidExpressions(Product product, int* resultArrayLe
     }
     _resultArray = (*jenv)->CallStaticObjectMethod(jenv, classProductUtils, _method, product);
     _result = beam_alloc_string_array(_resultArray, resultArrayLength);
+    (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
 
@@ -20398,6 +20818,7 @@ char* ProductUtils_findSuitableQuicklookBandName(Product product)
     }
     _resultString = (*jenv)->CallStaticObjectMethod(jenv, classProductUtils, _method, product);
     _result = beam_alloc_string(_resultString);
+    (*jenv)->DeleteLocalRef(jenv, _resultString);
     return _result;
 }
 
@@ -20419,6 +20840,7 @@ PixelPos* ProductUtils_computeSourcePixelCoordinates(GeoCoding sourceGeoCoding, 
     }
     _resultArray = (*jenv)->CallStaticObjectMethod(jenv, classProductUtils, _method, sourceGeoCoding, sourceWidth, sourceHeight, destGeoCoding, destArea);
     _result = beam_alloc_object_array(_resultArray, resultArrayLength);
+    (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
 
@@ -20442,6 +20864,8 @@ float* ProductUtils_computeMinMaxY(const PixelPos pixelPositionsElems, int pixel
     pixelPositionsArray = beam_new_jobject_array(pixelPositionsElems, pixelPositionsLength, classPixelPos);
     _resultArray = (*jenv)->CallStaticObjectMethod(jenv, classProductUtils, _method, pixelPositionsArray);
     _result = beam_alloc_float_array(_resultArray, resultArrayLength);
+    (*jenv)->DeleteLocalRef(jenv, pixelPositionsArray);
+    (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
 
@@ -20554,6 +20978,7 @@ MetadataAttribute MetadataAttribute_newMetadataAttribute(const char* name, Produ
     }
     nameString = (*jenv)->NewStringUTF(jenv, name);
     _result = (*jenv)->NewObject(jenv, classMetadataAttribute, _method, nameString, data, readOnly);
+    (*jenv)->DeleteLocalRef(jenv, nameString);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
@@ -20832,6 +21257,7 @@ void MetadataAttribute_setUnit(MetadataAttribute _this, const char* unit)
     }
     unitString = (*jenv)->NewStringUTF(jenv, unit);
     (*jenv)->CallVoidMethod(jenv, _this, _method, unitString);
+    (*jenv)->DeleteLocalRef(jenv, unitString);
 }
 
 char* MetadataAttribute_getUnit(MetadataAttribute _this)
@@ -20852,6 +21278,7 @@ char* MetadataAttribute_getUnit(MetadataAttribute _this)
     }
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
+    (*jenv)->DeleteLocalRef(jenv, _resultString);
     return _result;
 }
 
@@ -20981,6 +21408,7 @@ char* MetadataAttribute_getName(MetadataAttribute _this)
     }
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
+    (*jenv)->DeleteLocalRef(jenv, _resultString);
     return _result;
 }
 
@@ -21001,6 +21429,7 @@ void MetadataAttribute_setName(MetadataAttribute _this, const char* name)
     }
     nameString = (*jenv)->NewStringUTF(jenv, name);
     (*jenv)->CallVoidMethod(jenv, _this, _method, nameString);
+    (*jenv)->DeleteLocalRef(jenv, nameString);
 }
 
 char* MetadataAttribute_getDescription(MetadataAttribute _this)
@@ -21021,6 +21450,7 @@ char* MetadataAttribute_getDescription(MetadataAttribute _this)
     }
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
+    (*jenv)->DeleteLocalRef(jenv, _resultString);
     return _result;
 }
 
@@ -21041,6 +21471,7 @@ void MetadataAttribute_setDescription(MetadataAttribute _this, const char* descr
     }
     descriptionString = (*jenv)->NewStringUTF(jenv, description);
     (*jenv)->CallVoidMethod(jenv, _this, _method, descriptionString);
+    (*jenv)->DeleteLocalRef(jenv, descriptionString);
 }
 
 boolean MetadataAttribute_isModified(MetadataAttribute _this)
@@ -21097,6 +21528,7 @@ char* MetadataAttribute_toString(MetadataAttribute _this)
     }
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
+    (*jenv)->DeleteLocalRef(jenv, _resultString);
     return _result;
 }
 
@@ -21118,6 +21550,7 @@ boolean MetadataAttribute_isValidNodeName(const char* name)
     }
     nameString = (*jenv)->NewStringUTF(jenv, name);
     _result = (*jenv)->CallStaticBooleanMethod(jenv, classMetadataAttribute, _method, nameString);
+    (*jenv)->DeleteLocalRef(jenv, nameString);
     return _result;
 }
 
@@ -21196,6 +21629,7 @@ char* MetadataAttribute_getDisplayName(MetadataAttribute _this)
     }
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
+    (*jenv)->DeleteLocalRef(jenv, _resultString);
     return _result;
 }
 
@@ -21217,6 +21651,7 @@ char* MetadataAttribute_getProductRefString(MetadataAttribute _this)
     }
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
+    (*jenv)->DeleteLocalRef(jenv, _resultString);
     return _result;
 }
 
@@ -21239,6 +21674,8 @@ void MetadataAttribute_updateExpression(MetadataAttribute _this, const char* old
     oldExternalNameString = (*jenv)->NewStringUTF(jenv, oldExternalName);
     newExternalNameString = (*jenv)->NewStringUTF(jenv, newExternalName);
     (*jenv)->CallVoidMethod(jenv, _this, _method, oldExternalNameString, newExternalNameString);
+    (*jenv)->DeleteLocalRef(jenv, oldExternalNameString);
+    (*jenv)->DeleteLocalRef(jenv, newExternalNameString);
 }
 
 void MetadataAttribute_removeFromFile(MetadataAttribute _this, ProductWriter productWriter)

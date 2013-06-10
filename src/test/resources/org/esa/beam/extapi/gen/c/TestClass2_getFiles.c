@@ -18,5 +18,7 @@ File* TestClass2_getFiles(TestClass2 _this, const char* p1, int* resultArrayLeng
     p1String = (*jenv)->NewStringUTF(jenv, p1);
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method, p1String);
     _result = beam_alloc_object_array(_resultArray, resultArrayLength);
+    (*jenv)->DeleteLocalRef(jenv, p1String);
+    (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }

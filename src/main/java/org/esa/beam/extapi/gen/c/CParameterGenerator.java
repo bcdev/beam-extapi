@@ -6,9 +6,10 @@ import org.esa.beam.extapi.gen.ApiParameter;
 import org.esa.beam.extapi.gen.GeneratorContext;
 import org.esa.beam.extapi.gen.ParameterGenerator;
 
+import static org.esa.beam.extapi.gen.JavadocHelpers.getComponentCTypeName;
 import static org.esa.beam.extapi.gen.TemplateEval.eval;
 import static org.esa.beam.extapi.gen.TemplateEval.kv;
-import static org.esa.beam.extapi.gen.JavadocHelpers.getComponentCTypeName;
+import static org.esa.beam.extapi.gen.c.CModuleGenerator.RESULT_VAR_NAME;
 
 /**
  * @author Norman Fomferra
@@ -87,7 +88,9 @@ public abstract class CParameterGenerator implements ParameterGenerator {
         @Override
         public String generateFunctionParamDeclaration(GeneratorContext context) {
             String typeName = CModuleGenerator.getComponentCClassName(getType());
-            return String.format("%s %s", typeName, getName());
+            return eval("${t} ${p}",
+                        kv("t", typeName),
+                        kv("p", getName()));
         }
 
         @Override
@@ -104,27 +107,36 @@ public abstract class CParameterGenerator implements ParameterGenerator {
 
         @Override
         public String generateFunctionParamDeclaration(GeneratorContext context) {
-            return String.format("const char* %s", getName());
+            return eval("const char* ${p}",
+                        kv("p", getName()));
         }
 
         @Override
         public String generateJniArgDeclaration(GeneratorContext context) {
-            return String.format("jstring %sString = NULL;", getName());
+            return eval("jstring ${p}String = NULL;",
+                        kv("p", getName()));
         }
 
         @Override
         public String generateJniCallArgs(GeneratorContext context) {
-            return String.format("%sString", getName());
+            return eval("${p}String",
+                        kv("p", getName()));
         }
 
         @Override
         public String generateJniArgFromTransformedTargetArgAssignment(GeneratorContext context) {
-            return String.format("%sString = (*jenv)->NewStringUTF(jenv, %s);",
-                                 getName(), getName());
+            return eval("${p}String = (*jenv)->NewStringUTF(jenv, ${p});",
+                        kv("p", getName()));
+        }
+
+        @Override
+        public String generateJniArgDeref(GeneratorContext context) {
+            return eval("(*jenv)->DeleteLocalRef(jenv, ${p}String);",
+                        kv("p", getName()));
         }
     }
 
-     static class PrimitiveArray extends CParameterGenerator {
+    static class PrimitiveArray extends CParameterGenerator {
 
         PrimitiveArray(ApiParameter parameter) {
             super(parameter);
@@ -138,11 +150,11 @@ public abstract class CParameterGenerator implements ParameterGenerator {
                         kv("p", getName()));
         }
 
-         @Override
-         public String generateJniArgDeclaration(GeneratorContext context) {
-             return eval("jarray ${p}Array = NULL;",
-                         kv("p", getName()));
-         }
+        @Override
+        public String generateJniArgDeclaration(GeneratorContext context) {
+            return eval("jarray ${p}Array = NULL;",
+                        kv("p", getName()));
+        }
 
         @Override
         public String generateJniArgFromTransformedTargetArgAssignment(GeneratorContext context) {
@@ -178,14 +190,15 @@ public abstract class CParameterGenerator implements ParameterGenerator {
             } else if (parameter.getModifier() == ApiParameter.Modifier.RETURN) {
                 return eval("" +
                                     "if (${p}Elems != NULL && (*jenv)->IsSameObject(jenv, ${p}Array, ${r}Array)) {\n" +
-                                    "    beam_copy_from_jarray(_resultArray, ${p}Elems, ${p}Length, sizeof (${t}));\n" +
+                                    "    beam_copy_from_jarray(${r}Array, ${p}Elems, ${p}Length, sizeof (${t}));\n" +
                                     "    ${r} = ${p}Elems;\n" +
-                                    "    if (resultArrayLength != NULL)\n" +
+                                    "    if (resultArrayLength != NULL) {\n" +
                                     "        *resultArrayLength = ${p}Length;\n" +
+                                    "    }\n" +
                                     "} else {\n" +
                                     "    ${r} = beam_alloc_${t}_array(${r}Array, resultArrayLength);\n" +
                                     "}",
-                            kv("r", CModuleGenerator.RESULT_VAR_NAME),
+                            kv("r", RESULT_VAR_NAME),
                             kv("p", getName()),
                             kv("t", getType().simpleTypeName()));
             } else {
@@ -193,12 +206,13 @@ public abstract class CParameterGenerator implements ParameterGenerator {
             }
         }
 
-         @Override
-         public String generateJniArgDeref(GeneratorContext context) {
-             // todo - deref ${p}Array ?
-             return null;
-         }
-     }
+        @Override
+        public String generateJniArgDeref(GeneratorContext context) {
+            return eval("(*jenv)->DeleteLocalRef(jenv, ${p}Array);",
+                        kv("p", getName()));
+        }
+
+    }
 
 
     static class ObjectArray extends CParameterGenerator {
@@ -236,8 +250,8 @@ public abstract class CParameterGenerator implements ParameterGenerator {
 
         @Override
         public String generateJniArgDeref(GeneratorContext context) {
-            // todo - deref ${p}Array ?
-            return null;
+            return eval("(*jenv)->DeleteLocalRef(jenv, ${p}Array);",
+                        kv("p", getName()));
         }
     }
 
@@ -279,8 +293,8 @@ public abstract class CParameterGenerator implements ParameterGenerator {
 
         @Override
         public String generateJniArgDeref(GeneratorContext context) {
-            // todo - deref ${p}Array ?
-            return null;
+            return eval("(*jenv)->DeleteLocalRef(jenv, ${p}Array);",
+                        kv("p", getName()));
         }
     }
 

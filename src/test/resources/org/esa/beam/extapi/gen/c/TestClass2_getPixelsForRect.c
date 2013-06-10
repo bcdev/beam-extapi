@@ -16,5 +16,6 @@ float* TestClass2_getPixelsForRect(TestClass2 _this, Rectangle2D p1, int* result
     }
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method, p1);
     _result = beam_alloc_float_array(_resultArray, resultArrayLength);
+    (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
