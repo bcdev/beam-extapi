@@ -2,11 +2,18 @@ package org.esa.beam.extapi.gen.c;
 
 import com.sun.javadoc.ExecutableMemberDoc;
 import com.sun.javadoc.Type;
-import org.esa.beam.extapi.gen.*;
+import org.esa.beam.extapi.gen.ApiClass;
+import org.esa.beam.extapi.gen.ApiMethod;
+import org.esa.beam.extapi.gen.ApiParameter;
+import org.esa.beam.extapi.gen.FunctionGenerator;
+import org.esa.beam.extapi.gen.GeneratorContext;
+import org.esa.beam.extapi.gen.JavadocHelpers;
+import org.esa.beam.extapi.gen.ParameterGenerator;
 
 import static org.esa.beam.extapi.gen.TemplateEval.eval;
 import static org.esa.beam.extapi.gen.TemplateEval.kv;
 import static org.esa.beam.extapi.gen.c.CModuleGenerator.METHOD_VAR_NAME;
+import static org.esa.beam.extapi.gen.c.CModuleGenerator.RESULT_VAR_NAME;
 import static org.esa.beam.extapi.gen.c.CModuleGenerator.THIS_VAR_NAME;
 
 /**
@@ -64,12 +71,42 @@ public abstract class CFunctionGenerator implements FunctionGenerator {
     }
 
     @Override
-    public String generateLocalVarDeclarations(ModuleGenerator moduleGenerator) {
+    public String generateLocalVarDeclarations(GeneratorContext context) {
         return String.format("static jmethodID %s = NULL;\n", METHOD_VAR_NAME);
     }
 
     @Override
     public String generateExtraFunctionParamDeclaration(GeneratorContext context) {
+        return null;
+    }
+
+    @Override
+    public String generateEnterCode(GeneratorContext context) {
+        final ApiMethod apiMethod = getApiMethod();
+
+        return eval("" +
+                            "if (${mv} == NULL) {\n"
+                            + "    if (beam_init_api() == 0) {\n"
+                            + "        ${mv} = (*jenv)->${f}(jenv, ${c}, \"${name}\", \"${sig}\");\n"
+                            + "        if (${mv} == NULL) {\n"
+                            + "            /* Set global error */\n"
+                            + "        }\n"
+                            + "    }\n"
+                            + "    if (${mv} == NULL) {\n"
+                            + "        " + (JavadocHelpers.isVoid(apiMethod.getReturnType()) ? "return" : "return ${r}") + ";\n"
+                            + "    }\n"
+                            + "}\n",
+                    kv("mv", METHOD_VAR_NAME),
+                    kv("r", RESULT_VAR_NAME),
+                    kv("f", apiMethod.getMemberDoc().isStatic() ? "GetStaticMethodID" : "GetMethodID"),
+                    kv("c", CModuleGenerator.getComponentCClassVarName(apiMethod.getEnclosingClass().getType())),
+                    kv("name", apiMethod.getJavaName()),
+                    kv("sig", apiMethod.getJavaSignature()));
+    }
+
+    @Override
+    public String generateExitCode(GeneratorContext context) {
+        // todo - implement generateExitCode (Norman, 10.06.13)
         return null;
     }
 
@@ -207,7 +244,7 @@ public abstract class CFunctionGenerator implements FunctionGenerator {
         @Override
         public String generateTargetResultDeclaration(GeneratorContext context) {
             String targetTypeName = JavadocHelpers.getCTypeName(getReturnType());
-            return String.format("%s %s = (%s) 0;", targetTypeName, CModuleGenerator.RESULT_VAR_NAME, targetTypeName);
+            return String.format("%s %s = (%s) 0;", targetTypeName, RESULT_VAR_NAME, targetTypeName);
         }
 
         @Override
@@ -218,12 +255,12 @@ public abstract class CFunctionGenerator implements FunctionGenerator {
 
         @Override
         public String generateJniResultFromJniCallAssignment(GeneratorContext context) {
-            return String.format("%s = %s;", CModuleGenerator.RESULT_VAR_NAME, generateJniCall(context));
+            return String.format("%s = %s;", RESULT_VAR_NAME, generateJniCall(context));
         }
 
         @Override
         public String generateReturnStatement(GeneratorContext context) {
-            return String.format("return %s;", CModuleGenerator.RESULT_VAR_NAME);
+            return String.format("return %s;", RESULT_VAR_NAME);
         }
     }
 
@@ -242,7 +279,7 @@ public abstract class CFunctionGenerator implements FunctionGenerator {
         @Override
         public String generateReturnStatement(GeneratorContext context) {
             return String.format("return %s != NULL ? (*jenv)->NewGlobalRef(jenv, %s) : NULL;",
-                                 CModuleGenerator.RESULT_VAR_NAME, CModuleGenerator.RESULT_VAR_NAME);
+                                 RESULT_VAR_NAME, RESULT_VAR_NAME);
         }
     }
 
@@ -255,7 +292,7 @@ public abstract class CFunctionGenerator implements FunctionGenerator {
         @Override
         public String generateTargetResultDeclaration(GeneratorContext context) {
             String targetTypeName = JavadocHelpers.getCTypeName(getReturnType());
-            return String.format("%s %s = (%s) 0;", targetTypeName, CModuleGenerator.RESULT_VAR_NAME, targetTypeName);
+            return String.format("%s %s = (%s) 0;", targetTypeName, RESULT_VAR_NAME, targetTypeName);
         }
     }
 
@@ -286,7 +323,7 @@ public abstract class CFunctionGenerator implements FunctionGenerator {
         @Override
         public String generateReturnStatement(GeneratorContext context) {
             return String.format("return %s != NULL ? (*jenv)->NewGlobalRef(jenv, %s) : NULL;",
-                                 CModuleGenerator.RESULT_VAR_NAME, CModuleGenerator.RESULT_VAR_NAME);
+                                 RESULT_VAR_NAME, RESULT_VAR_NAME);
         }
     }
 
@@ -304,12 +341,12 @@ public abstract class CFunctionGenerator implements FunctionGenerator {
         public String generateJniResultFromJniCallAssignment(GeneratorContext context) {
             return String.format("_resultString = %s;\n" +
                                          "%s = beam_alloc_string(_resultString);",
-                                 generateJniCall(context), CModuleGenerator.RESULT_VAR_NAME);
+                                 generateJniCall(context), RESULT_VAR_NAME);
         }
 
         @Override
         public String generateReturnStatement(GeneratorContext context) {
-            return String.format("return %s;", CModuleGenerator.RESULT_VAR_NAME);
+            return String.format("return %s;", RESULT_VAR_NAME);
         }
     }
 
@@ -332,7 +369,7 @@ public abstract class CFunctionGenerator implements FunctionGenerator {
         @Override
         public String generateJniResultDeclaration(GeneratorContext context) {
             return eval("jarray ${r}Array = NULL;",
-                          kv("r", CModuleGenerator.RESULT_VAR_NAME));
+                        kv("r", RESULT_VAR_NAME));
         }
 
         @Override
@@ -340,12 +377,12 @@ public abstract class CFunctionGenerator implements FunctionGenerator {
             if (hasReturnParameter(context)) {
                 // NOTE: ParameterGenerator.<T>Array will generate code which sets ${r} = ...
                 return eval("${r}Array = ${c};",
-                            kv("r", CModuleGenerator.RESULT_VAR_NAME),
+                            kv("r", RESULT_VAR_NAME),
                             kv("c", generateJniCall(context)));
             } else {
                 return eval("${r}Array = ${c};\n" +
                                     "${r} = ${f}(${r}Array, resultArrayLength);",
-                            kv("r", CModuleGenerator.RESULT_VAR_NAME),
+                            kv("r", RESULT_VAR_NAME),
                             kv("c", generateJniCall(context)),
                             kv("f", getAllocFunctionName()));
             }
@@ -354,7 +391,7 @@ public abstract class CFunctionGenerator implements FunctionGenerator {
         @Override
         public String generateReturnStatement(GeneratorContext context) {
             return eval("return ${r};",
-                        kv("r", CModuleGenerator.RESULT_VAR_NAME));
+                        kv("r", RESULT_VAR_NAME));
         }
 
         protected abstract String getAllocFunctionName();

@@ -46,6 +46,8 @@ public class CModuleGeneratorTest {
         testFunctionGenerator(apiClass, "TestClass2_getPixels.c", "getPixels", "([FI)[F");
         testFunctionGenerator(apiClass, "TestClass2_getName.c", "getName", "()Ljava/lang/String;");
         testFunctionGenerator(apiClass, "TestClass2_getFiles.c", "getFiles", "(Ljava/lang/String;)[Ljava/io/File;");
+        testFunctionGenerator(apiClass, "TestClass2_getPixelsForType.c", "getPixelsForType", "(Ljava/lang/Class;)Ljava/lang/Object;");
+        testFunctionGenerator(apiClass, "TestClass2_getPixelsForRect.c", "getPixelsForRect", "(Ljava/awt/geom/Rectangle2D;)[F");
 
         dumpAllMethods(apiClass);
     }
@@ -85,7 +87,8 @@ public class CModuleGeneratorTest {
 
     private String generateFunctionDefinition(FunctionGenerator functionGenerator) throws IOException {
         StringWriter writer = new StringWriter();
-        moduleGenerator.writeFunctionDefinition(functionGenerator, new PrintWriter(writer));
+        final FunctionWriter functionWriter = new FunctionWriter(moduleGenerator, new PrintWriter(writer));
+        functionWriter.writeFunctionDefinition(functionGenerator);
         return writer.toString();
     }
 

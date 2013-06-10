@@ -19,9 +19,12 @@ package org.esa.beam.extapi.gen;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.PrintWriter;
 import java.io.Writer;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import static org.esa.beam.extapi.gen.TemplateEval.KV;
 
@@ -38,10 +41,6 @@ public abstract class ModuleGenerator implements GeneratorContext {
         this.apiInfo = apiInfo;
         functionGenerators = createFunctionGenerators(apiInfo, factory);
         templateEval = TemplateEval.create();
-    }
-
-    public ApiInfo getApiInfo() {
-        return apiInfo;
     }
 
     public Set<ApiClass> getApiClasses() {
@@ -61,49 +60,22 @@ public abstract class ModuleGenerator implements GeneratorContext {
         return generatorList != null ? generatorList : new ArrayList<FunctionGenerator>(0);
     }
 
+    public abstract String getModuleName();
+
+    @Override
+    public ApiInfo getApiInfo() {
+        return apiInfo;
+    }
+
     @Override
     public ApiParameter[] getParametersFor(ApiMethod apiMethod) {
         return apiInfo.getParametersFor(apiMethod);
     }
 
-    public abstract String getModuleName();
-
     public void run() throws IOException {
         getTemplateEval().add("libName", getModuleName());
         getTemplateEval().add("libNameUC", getModuleName().toUpperCase().replace("-", "_"));
     }
-
-    protected void writeFunctionDeclaration(PrintWriter writer, FunctionGenerator generator) {
-        writer.printf("%s;\n", generator.generateFunctionSignature(this));
-    }
-
-    public void writeFunctionDefinition(FunctionGenerator functionGenerator, PrintWriter writer) throws IOException {
-        writer.printf("%s\n", functionGenerator.generateFunctionSignature(this));
-        writer.print("{\n");
-        writeFunctionBodyCode(writer, functionGenerator.generateLocalVarDeclarations(this));
-        for (ParameterGenerator parameterGenerator : functionGenerator.getParameterGenerators()) {
-            writeFunctionBodyCode(writer, parameterGenerator.generateTargetArgDeclaration(this));
-            writeFunctionBodyCode(writer, parameterGenerator.generateJniArgDeclaration(this));
-        }
-        writeFunctionBodyCode(writer, functionGenerator.generateTargetResultDeclaration(this));
-        writeFunctionBodyCode(writer, functionGenerator.generateJniResultDeclaration(this));
-        writeFunctionBodyCode(writer, functionGenerator.generateTargetArgsFromParsedParamsAssignment(this));
-        writeInitCode(writer, functionGenerator);
-        for (ParameterGenerator parameterGenerator : functionGenerator.getParameterGenerators()) {
-            writeFunctionBodyCode(writer, parameterGenerator.generateJniArgFromTransformedTargetArgAssignment(this));
-        }
-        writeFunctionBodyCode(writer, functionGenerator.generateJniResultFromJniCallAssignment(this));
-        writeFunctionBodyCode(writer, functionGenerator.generateTargetResultFromTransformedJniResultAssignment(this));
-        for (ParameterGenerator parameterGenerator : functionGenerator.getParameterGenerators()) {
-            writeFunctionBodyCode(writer, parameterGenerator.generateTargetResultFromTransformedJniResultAssignment(this));
-            writeFunctionBodyCode(writer, parameterGenerator.generateJniArgDeref(this));
-        }
-        writeFunctionBodyCode(writer, functionGenerator.generateJniResultDeref(this));
-        writeFunctionBodyCode(writer, functionGenerator.generateReturnStatement(this));
-        writer.print("}\n");
-    }
-
-    protected abstract void writeInitCode(PrintWriter writer, FunctionGenerator functionGenerator) throws IOException;
 
     protected void writeTemplateResource(Writer writer, String resourceName, KV... pairs) throws IOException {
         final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(resourceName)));
@@ -132,20 +104,4 @@ public abstract class ModuleGenerator implements GeneratorContext {
         }
         return map;
     }
-
-    private static void writeFunctionBodyCode(PrintWriter writer, String code) throws IOException {
-        String[] callCode = generateLines(code);
-        for (String line : callCode) {
-            writer.printf("    %s\n", line);
-        }
-    }
-
-    private static String[] generateLines(String code) {
-        if (code == null || code.length() == 0) {
-            return new String[0];
-        }
-        return code.split("\n");
-    }
-
-
 }

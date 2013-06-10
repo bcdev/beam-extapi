@@ -1,10 +1,10 @@
-TestClass2 TestClass2_newTestClass2()
+Object TestClass2_getPixelsForType(TestClass2 _this, Class p1)
 {
     static jmethodID _method = NULL;
-    TestClass2 _result = (TestClass2) 0;
+    Object _result = (Object) 0;
     if (_method == NULL) {
         if (beam_init_api() == 0) {
-            _method = (*jenv)->GetMethodID(jenv, classTestClass2, "<init>", "()V");
+            _method = (*jenv)->GetMethodID(jenv, classTestClass2, "getPixelsForType", "(Ljava/lang/Class;)Ljava/lang/Object;");
             if (_method == NULL) {
                 /* Set global error */
             }
@@ -13,6 +13,6 @@ TestClass2 TestClass2_newTestClass2()
             return _result;
         }
     }
-    _result = (*jenv)->NewObject(jenv, classTestClass2, _method);
+    _result = (*jenv)->CallObjectMethod(jenv, _this, _method, p1);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }

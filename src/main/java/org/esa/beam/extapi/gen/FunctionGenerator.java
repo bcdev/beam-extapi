@@ -16,7 +16,7 @@ public interface FunctionGenerator {
 
     String generateExtraFunctionParamDeclaration(GeneratorContext context);
 
-    String generateLocalVarDeclarations(ModuleGenerator moduleGenerator);
+    String generateLocalVarDeclarations(GeneratorContext context);
 
     String generateTargetResultDeclaration(GeneratorContext context);
 
@@ -31,4 +31,8 @@ public interface FunctionGenerator {
     String generateJniResultDeref(GeneratorContext context);
 
     String generateReturnStatement(GeneratorContext context);
+
+    String generateEnterCode(GeneratorContext context);
+
+    String generateExitCode(GeneratorContext context);
 }

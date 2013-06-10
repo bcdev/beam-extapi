@@ -234,9 +234,9 @@ public class CModuleGenerator extends ModuleGenerator {
             writer.write("\n");
             writer.printf("/* Functions for class %s */\n", getComponentCClassName(apiClass.getType()));
             writer.write("\n");
+            final FunctionWriter functionWriter = new FunctionWriter(this, writer);
             for (FunctionGenerator generator : getFunctionGenerators(apiClass)) {
-                //writer.printf("/**\n %s\n */\n", generator.getMemberDoc().getRawCommentText());
-                writeFunctionDeclaration(writer, generator);
+                functionWriter.writeFunctionDeclaration(generator);
             }
         }
     }
@@ -334,9 +334,10 @@ public class CModuleGenerator extends ModuleGenerator {
                 /////////////////////////////////////////////////////////////////////////////////////
                 // Generate function code
                 //
+                final FunctionWriter functionWriter = new FunctionWriter(CModuleGenerator.this, writer);
                 for (ApiClass apiClass : getApiClasses()) {
                     for (FunctionGenerator generator : getFunctionGenerators(apiClass)) {
-                        writeFunctionDefinition(generator, writer);
+                        functionWriter.writeFunctionDefinition(generator);
                         writer.println();
                     }
                 }
@@ -355,41 +356,6 @@ public class CModuleGenerator extends ModuleGenerator {
         writer.write(String.format("    if (%s == NULL) { exitCode = %d; return exitCode; }\n",
                                    classVarName, errCode));
         writer.write("\n");
-    }
-
-    @Override
-    protected void writeInitCode(PrintWriter writer, FunctionGenerator functionGenerator) throws IOException {
-        writeInitVmCode(writer, functionGenerator);
-        writeInitMethodCode(writer, functionGenerator);
-    }
-
-    private void writeInitVmCode(PrintWriter writer, FunctionGenerator generator) {
-        writer.printf("\n");
-        if (JavadocHelpers.isVoid(generator.getApiMethod().getReturnType())) {
-            writer.printf("    if (beam_init_api() != 0) return;\n");
-        } else {
-            writer.printf("    if (beam_init_api() != 0) return _result;\n");
-        }
-        writer.printf("\n");
-    }
-
-    private void writeInitMethodCode(PrintWriter writer, FunctionGenerator functionGenerator) {
-        final ApiMethod apiMethod = functionGenerator.getApiMethod();
-
-        writer.printf("    if (%s == NULL) {\n", METHOD_VAR_NAME);
-        writer.printf("        %s = (*jenv)->%s(jenv, %s, \"%s\", \"%s\");\n",
-                      METHOD_VAR_NAME,
-                      apiMethod.getMemberDoc().isStatic() ? "GetStaticMethodID" : "GetMethodID",
-                      getComponentCClassVarName(apiMethod.getEnclosingClass().getType()),
-                      apiMethod.getJavaName(),
-                      apiMethod.getJavaSignature());
-        if (JavadocHelpers.isVoid(apiMethod.getReturnType())) {
-            writer.printf("        if (%s == NULL) return;\n", METHOD_VAR_NAME);
-        } else {
-            writer.printf("        if (%s == NULL) return _result;\n", METHOD_VAR_NAME);
-        }
-        writer.printf("    }\n");
-        writer.printf("\n");
     }
 
     private void printStats() {

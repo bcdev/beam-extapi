@@ -79,6 +79,16 @@ public abstract class PyCFunctionGenerator implements FunctionGenerator {
     }
 
     @Override
+    public String generateEnterCode(GeneratorContext context) {
+        return null;
+    }
+
+    @Override
+    public String generateExitCode(GeneratorContext context) {
+        return null;
+    }
+
+    @Override
     public final String generateTargetResultDeclaration(GeneratorContext context) {
         StringBuilder sb = new StringBuilder();
         if (isInstanceMethod()) {
@@ -161,7 +171,7 @@ public abstract class PyCFunctionGenerator implements FunctionGenerator {
     }
 
     @Override
-    public String generateLocalVarDeclarations(ModuleGenerator moduleGenerator) {
+    public String generateLocalVarDeclarations(GeneratorContext context) {
         // todo - Python-C code shall directly call JNI, but we still call the C-API here
         return null;
     }

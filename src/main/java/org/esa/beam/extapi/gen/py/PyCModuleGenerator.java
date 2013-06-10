@@ -300,9 +300,10 @@ public class PyCModuleGenerator extends ModuleGenerator {
                 writeTemplateResource(writer, "PyCModuleGenerator-stubs-2b.c");
                 writer.printf("\n");
 
+                final FunctionWriter functionWriter = new FunctionWriter(PyCModuleGenerator.this, writer);
                 for (ApiClass apiClass : getApiClasses()) {
                     for (FunctionGenerator generator : getFunctionGenerators(apiClass)) {
-                        writeFunctionDefinition(generator, writer);
+                        functionWriter.writeFunctionDefinition(generator);
                         writer.println();
                     }
                 }
@@ -329,9 +330,5 @@ public class PyCModuleGenerator extends ModuleGenerator {
                               kv("ctype", ctype),
                               kv("elemToItemCall", elemToItemCall),
                               kv("itemToElemCall", itemToElemCall));
-    }
-
-    @Override
-    protected void writeInitCode(PrintWriter writer, FunctionGenerator functionGenerator) throws IOException {
     }
 }
