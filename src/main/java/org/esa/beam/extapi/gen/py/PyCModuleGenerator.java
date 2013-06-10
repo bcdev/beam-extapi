@@ -47,15 +47,12 @@ public class PyCModuleGenerator extends ModuleGenerator {
     public PyCModuleGenerator(CModuleGenerator cModuleGenerator) {
         super(cModuleGenerator.getApiInfo(), new PyCFunctionGeneratorFactory(cModuleGenerator.getApiInfo()));
         this.cModuleGenerator = cModuleGenerator;
+        getTemplateEval().add("libName", BEAM_PYAPI_NAME);
+        getTemplateEval().add("libNameUC", BEAM_PYAPI_NAME.toUpperCase());
     }
 
     CModuleGenerator getCModuleGenerator() {
         return cModuleGenerator;
-    }
-
-    @Override
-    public String getModuleName() {
-        return BEAM_PYAPI_NAME;
     }
 
     @Override
@@ -65,7 +62,6 @@ public class PyCModuleGenerator extends ModuleGenerator {
 
     @Override
     public void run() throws IOException {
-        super.run();
         writeWinDef();
         writeCHeader();
         writeCSource();

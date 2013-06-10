@@ -60,8 +60,6 @@ public abstract class ModuleGenerator implements GeneratorContext {
         return generatorList != null ? generatorList : new ArrayList<FunctionGenerator>(0);
     }
 
-    public abstract String getModuleName();
-
     @Override
     public ApiInfo getApiInfo() {
         return apiInfo;
@@ -72,10 +70,7 @@ public abstract class ModuleGenerator implements GeneratorContext {
         return apiInfo.getParametersFor(apiMethod);
     }
 
-    public void run() throws IOException {
-        getTemplateEval().add("libName", getModuleName());
-        getTemplateEval().add("libNameUC", getModuleName().toUpperCase().replace("-", "_"));
-    }
+    public abstract void run() throws IOException;
 
     protected void writeTemplateResource(Writer writer, String resourceName, KV... pairs) throws IOException {
         final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(resourceName)));

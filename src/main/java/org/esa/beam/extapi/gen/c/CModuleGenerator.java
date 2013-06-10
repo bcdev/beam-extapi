@@ -48,13 +48,8 @@ public class CModuleGenerator extends ModuleGenerator {
         getTemplateEval().add("libNameUC", BEAM_CAPI_NAME.toUpperCase().replace("-", "_"));
     }
 
-    public String getModuleName() {
-        return BEAM_CAPI_NAME;
-    }
-
     @Override
     public void run() throws IOException {
-        super.run();
         writeWinDef();
         writeCHeader();
         writeCHeaderJ();
