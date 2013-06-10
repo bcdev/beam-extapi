@@ -67,7 +67,6 @@ jclass classAffineTransform;
 jclass classArea;
 jclass classGeneralPath;
 jclass classPoint2D;
-jclass classRectangle2D;
 jclass classBufferedImage;
 jclass classComponentColorModel;
 jclass classIndexColorModel;
@@ -807,14 +806,17 @@ boolean GeoCoding_isCrossingMeridianAt180(GeoCoding _this)
 {
     static jmethodID _method = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classGeoCoding, "isCrossingMeridianAt180", "()Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classGeoCoding, "isCrossingMeridianAt180", "()Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method);
     return _result;
 }
@@ -823,14 +825,17 @@ boolean GeoCoding_canGetPixelPos(GeoCoding _this)
 {
     static jmethodID _method = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classGeoCoding, "canGetPixelPos", "()Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classGeoCoding, "canGetPixelPos", "()Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method);
     return _result;
 }
@@ -839,14 +844,17 @@ boolean GeoCoding_canGetGeoPos(GeoCoding _this)
 {
     static jmethodID _method = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classGeoCoding, "canGetGeoPos", "()Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classGeoCoding, "canGetGeoPos", "()Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method);
     return _result;
 }
@@ -855,14 +863,17 @@ PixelPos GeoCoding_getPixelPos(GeoCoding _this, GeoPos geoPos, PixelPos pixelPos
 {
     static jmethodID _method = NULL;
     PixelPos _result = (PixelPos) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classGeoCoding, "getPixelPos", "(Lorg/esa/beam/framework/datamodel/GeoPos;Lorg/esa/beam/framework/datamodel/PixelPos;)Lorg/esa/beam/framework/datamodel/PixelPos;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classGeoCoding, "getPixelPos", "(Lorg/esa/beam/framework/datamodel/GeoPos;Lorg/esa/beam/framework/datamodel/PixelPos;)Lorg/esa/beam/framework/datamodel/PixelPos;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, geoPos, pixelPos);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -871,14 +882,17 @@ GeoPos GeoCoding_getGeoPos(GeoCoding _this, PixelPos pixelPos, GeoPos geoPos)
 {
     static jmethodID _method = NULL;
     GeoPos _result = (GeoPos) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classGeoCoding, "getGeoPos", "(Lorg/esa/beam/framework/datamodel/PixelPos;Lorg/esa/beam/framework/datamodel/GeoPos;)Lorg/esa/beam/framework/datamodel/GeoPos;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classGeoCoding, "getGeoPos", "(Lorg/esa/beam/framework/datamodel/PixelPos;Lorg/esa/beam/framework/datamodel/GeoPos;)Lorg/esa/beam/framework/datamodel/GeoPos;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, pixelPos, geoPos);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -887,14 +901,17 @@ Datum GeoCoding_getDatum(GeoCoding _this)
 {
     static jmethodID _method = NULL;
     Datum _result = (Datum) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classGeoCoding, "getDatum", "()Lorg/esa/beam/framework/dataop/maptransf/Datum;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classGeoCoding, "getDatum", "()Lorg/esa/beam/framework/dataop/maptransf/Datum;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -902,14 +919,17 @@ Datum GeoCoding_getDatum(GeoCoding _this)
 void GeoCoding_dispose(GeoCoding _this)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classGeoCoding, "dispose", "()V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classGeoCoding, "dispose", "()V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method);
 }
 
@@ -917,14 +937,17 @@ CoordinateReferenceSystem GeoCoding_getImageCRS(GeoCoding _this)
 {
     static jmethodID _method = NULL;
     CoordinateReferenceSystem _result = (CoordinateReferenceSystem) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classGeoCoding, "getImageCRS", "()Lorg/opengis/referencing/crs/CoordinateReferenceSystem;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classGeoCoding, "getImageCRS", "()Lorg/opengis/referencing/crs/CoordinateReferenceSystem;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -933,14 +956,17 @@ CoordinateReferenceSystem GeoCoding_getMapCRS(GeoCoding _this)
 {
     static jmethodID _method = NULL;
     CoordinateReferenceSystem _result = (CoordinateReferenceSystem) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classGeoCoding, "getMapCRS", "()Lorg/opengis/referencing/crs/CoordinateReferenceSystem;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classGeoCoding, "getMapCRS", "()Lorg/opengis/referencing/crs/CoordinateReferenceSystem;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -949,14 +975,17 @@ CoordinateReferenceSystem GeoCoding_getGeoCRS(GeoCoding _this)
 {
     static jmethodID _method = NULL;
     CoordinateReferenceSystem _result = (CoordinateReferenceSystem) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classGeoCoding, "getGeoCRS", "()Lorg/opengis/referencing/crs/CoordinateReferenceSystem;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classGeoCoding, "getGeoCRS", "()Lorg/opengis/referencing/crs/CoordinateReferenceSystem;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -965,14 +994,17 @@ MathTransform GeoCoding_getImageToMapTransform(GeoCoding _this)
 {
     static jmethodID _method = NULL;
     MathTransform _result = (MathTransform) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classGeoCoding, "getImageToMapTransform", "()Lorg/opengis/referencing/operation/MathTransform;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classGeoCoding, "getImageToMapTransform", "()Lorg/opengis/referencing/operation/MathTransform;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -981,14 +1013,17 @@ ProductWriterPlugIn ProductWriter_getWriterPlugIn(ProductWriter _this)
 {
     static jmethodID _method = NULL;
     ProductWriterPlugIn _result = (ProductWriterPlugIn) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProductWriter, "getWriterPlugIn", "()Lorg/esa/beam/framework/dataio/ProductWriterPlugIn;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductWriter, "getWriterPlugIn", "()Lorg/esa/beam/framework/dataio/ProductWriterPlugIn;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -997,14 +1032,17 @@ Object ProductWriter_getOutput(ProductWriter _this)
 {
     static jmethodID _method = NULL;
     Object _result = (Object) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProductWriter, "getOutput", "()Ljava/lang/Object;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductWriter, "getOutput", "()Ljava/lang/Object;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -1012,56 +1050,68 @@ Object ProductWriter_getOutput(ProductWriter _this)
 void ProductWriter_writeProductNodes(ProductWriter _this, Product product, Object output)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProductWriter, "writeProductNodes", "(Lorg/esa/beam/framework/datamodel/Product;Ljava/lang/Object;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductWriter, "writeProductNodes", "(Lorg/esa/beam/framework/datamodel/Product;Ljava/lang/Object;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, product, output);
 }
 
 void ProductWriter_writeBandRasterData(ProductWriter _this, Band sourceBand, int sourceOffsetX, int sourceOffsetY, int sourceWidth, int sourceHeight, ProductData sourceBuffer, ProgressMonitor pm)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProductWriter, "writeBandRasterData", "(Lorg/esa/beam/framework/datamodel/Band;IIIILorg/esa/beam/framework/datamodel/ProductData;Lcom/bc/ceres/core/ProgressMonitor;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductWriter, "writeBandRasterData", "(Lorg/esa/beam/framework/datamodel/Band;IIIILorg/esa/beam/framework/datamodel/ProductData;Lcom/bc/ceres/core/ProgressMonitor;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, sourceBand, sourceOffsetX, sourceOffsetY, sourceWidth, sourceHeight, sourceBuffer, pm);
 }
 
 void ProductWriter_flush(ProductWriter _this)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProductWriter, "flush", "()V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductWriter, "flush", "()V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method);
 }
 
 void ProductWriter_close(ProductWriter _this)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProductWriter, "close", "()V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductWriter, "close", "()V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method);
 }
 
@@ -1069,14 +1119,17 @@ boolean ProductWriter_shouldWrite(ProductWriter _this, ProductNode node)
 {
     static jmethodID _method = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProductWriter, "shouldWrite", "(Lorg/esa/beam/framework/datamodel/ProductNode;)Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductWriter, "shouldWrite", "(Lorg/esa/beam/framework/datamodel/ProductNode;)Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method, node);
     return _result;
 }
@@ -1085,14 +1138,17 @@ boolean ProductWriter_isIncrementalMode(ProductWriter _this)
 {
     static jmethodID _method = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProductWriter, "isIncrementalMode", "()Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductWriter, "isIncrementalMode", "()Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method);
     return _result;
 }
@@ -1100,42 +1156,51 @@ boolean ProductWriter_isIncrementalMode(ProductWriter _this)
 void ProductWriter_setIncrementalMode(ProductWriter _this, boolean enabled)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProductWriter, "setIncrementalMode", "(Z)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductWriter, "setIncrementalMode", "(Z)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, enabled);
 }
 
 void ProductWriter_deleteOutput(ProductWriter _this)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProductWriter, "deleteOutput", "()V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductWriter, "deleteOutput", "()V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method);
 }
 
 void ProductWriter_removeBand(ProductWriter _this, Band band)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProductWriter, "removeBand", "(Lorg/esa/beam/framework/datamodel/Band;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductWriter, "removeBand", "(Lorg/esa/beam/framework/datamodel/Band;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, band);
 }
 
@@ -1144,14 +1209,17 @@ Product GPF_createProductFromNoSourceProducts(const char* operatorName, Map para
     static jmethodID _method = NULL;
     jstring operatorNameString = NULL;
     Product _result = (Product) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classGPF, "createProduct", "(Ljava/lang/String;Ljava/util/Map;)Lorg/esa/beam/framework/datamodel/Product;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classGPF, "createProduct", "(Ljava/lang/String;Ljava/util/Map;)Lorg/esa/beam/framework/datamodel/Product;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     operatorNameString = (*jenv)->NewStringUTF(jenv, operatorName);
     _result = (*jenv)->CallStaticObjectMethod(jenv, classGPF, _method, operatorNameString, parameters);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
@@ -1162,14 +1230,17 @@ Product GPF_createProductFromSourceProduct(const char* operatorName, Map paramet
     static jmethodID _method = NULL;
     jstring operatorNameString = NULL;
     Product _result = (Product) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classGPF, "createProduct", "(Ljava/lang/String;Ljava/util/Map;Lorg/esa/beam/framework/datamodel/Product;)Lorg/esa/beam/framework/datamodel/Product;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classGPF, "createProduct", "(Ljava/lang/String;Ljava/util/Map;Lorg/esa/beam/framework/datamodel/Product;)Lorg/esa/beam/framework/datamodel/Product;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     operatorNameString = (*jenv)->NewStringUTF(jenv, operatorName);
     _result = (*jenv)->CallStaticObjectMethod(jenv, classGPF, _method, operatorNameString, parameters, sourceProduct);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
@@ -1181,14 +1252,17 @@ Product GPF_createProductFromSourceProducts(const char* operatorName, Map parame
     jstring operatorNameString = NULL;
     jarray sourceProductsArray = NULL;
     Product _result = (Product) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classGPF, "createProduct", "(Ljava/lang/String;Ljava/util/Map;[Lorg/esa/beam/framework/datamodel/Product;)Lorg/esa/beam/framework/datamodel/Product;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classGPF, "createProduct", "(Ljava/lang/String;Ljava/util/Map;[Lorg/esa/beam/framework/datamodel/Product;)Lorg/esa/beam/framework/datamodel/Product;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     operatorNameString = (*jenv)->NewStringUTF(jenv, operatorName);
     sourceProductsArray = beam_new_jobject_array(sourceProductsElems, sourceProductsLength, classProduct);
     _result = (*jenv)->CallStaticObjectMethod(jenv, classGPF, _method, operatorNameString, parameters, sourceProductsArray);
@@ -1200,14 +1274,17 @@ Product GPF_createProductFromNamedSourceProducts(const char* operatorName, Map p
     static jmethodID _method = NULL;
     jstring operatorNameString = NULL;
     Product _result = (Product) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classGPF, "createProduct", "(Ljava/lang/String;Ljava/util/Map;Ljava/util/Map;)Lorg/esa/beam/framework/datamodel/Product;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classGPF, "createProduct", "(Ljava/lang/String;Ljava/util/Map;Ljava/util/Map;)Lorg/esa/beam/framework/datamodel/Product;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     operatorNameString = (*jenv)->NewStringUTF(jenv, operatorName);
     _result = (*jenv)->CallStaticObjectMethod(jenv, classGPF, _method, operatorNameString, parameters, sourceProducts);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
@@ -1218,14 +1295,17 @@ Product GPF_createProductNS(GPF _this, const char* operatorName, Map parameters,
     static jmethodID _method = NULL;
     jstring operatorNameString = NULL;
     Product _result = (Product) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classGPF, "createProductNS", "(Ljava/lang/String;Ljava/util/Map;Ljava/util/Map;Ljava/awt/RenderingHints;)Lorg/esa/beam/framework/datamodel/Product;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classGPF, "createProductNS", "(Ljava/lang/String;Ljava/util/Map;Ljava/util/Map;Ljava/awt/RenderingHints;)Lorg/esa/beam/framework/datamodel/Product;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     operatorNameString = (*jenv)->NewStringUTF(jenv, operatorName);
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, operatorNameString, parameters, sourceProducts, renderingHints);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
@@ -1236,14 +1316,17 @@ Operator GPF_createOperator(GPF _this, const char* operatorName, Map parameters,
     static jmethodID _method = NULL;
     jstring operatorNameString = NULL;
     Operator _result = (Operator) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classGPF, "createOperator", "(Ljava/lang/String;Ljava/util/Map;Ljava/util/Map;Ljava/awt/RenderingHints;)Lorg/esa/beam/framework/gpf/Operator;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classGPF, "createOperator", "(Ljava/lang/String;Ljava/util/Map;Ljava/util/Map;Ljava/awt/RenderingHints;)Lorg/esa/beam/framework/gpf/Operator;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     operatorNameString = (*jenv)->NewStringUTF(jenv, operatorName);
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, operatorNameString, parameters, sourceProducts, renderingHints);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
@@ -1253,14 +1336,17 @@ OperatorSpiRegistry GPF_getOperatorSpiRegistry(GPF _this)
 {
     static jmethodID _method = NULL;
     OperatorSpiRegistry _result = (OperatorSpiRegistry) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classGPF, "getOperatorSpiRegistry", "()Lorg/esa/beam/framework/gpf/OperatorSpiRegistry;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classGPF, "getOperatorSpiRegistry", "()Lorg/esa/beam/framework/gpf/OperatorSpiRegistry;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -1268,14 +1354,17 @@ OperatorSpiRegistry GPF_getOperatorSpiRegistry(GPF _this)
 void GPF_setOperatorSpiRegistry(GPF _this, OperatorSpiRegistry spiRegistry)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classGPF, "setOperatorSpiRegistry", "(Lorg/esa/beam/framework/gpf/OperatorSpiRegistry;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classGPF, "setOperatorSpiRegistry", "(Lorg/esa/beam/framework/gpf/OperatorSpiRegistry;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, spiRegistry);
 }
 
@@ -1283,14 +1372,17 @@ GPF GPF_getDefaultInstance()
 {
     static jmethodID _method = NULL;
     GPF _result = (GPF) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classGPF, "getDefaultInstance", "()Lorg/esa/beam/framework/gpf/GPF;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classGPF, "getDefaultInstance", "()Lorg/esa/beam/framework/gpf/GPF;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallStaticObjectMethod(jenv, classGPF, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -1298,14 +1390,17 @@ GPF GPF_getDefaultInstance()
 void GPF_setDefaultInstance(GPF defaultInstance)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classGPF, "setDefaultInstance", "(Lorg/esa/beam/framework/gpf/GPF;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classGPF, "setDefaultInstance", "(Lorg/esa/beam/framework/gpf/GPF;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallStaticVoidMethod(jenv, classGPF, _method, defaultInstance);
 }
 
@@ -1313,14 +1408,17 @@ void GPF_writeProduct(Product product, File file, const char* formatName, boolea
 {
     static jmethodID _method = NULL;
     jstring formatNameString = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classGPF, "writeProduct", "(Lorg/esa/beam/framework/datamodel/Product;Ljava/io/File;Ljava/lang/String;ZLcom/bc/ceres/core/ProgressMonitor;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classGPF, "writeProduct", "(Lorg/esa/beam/framework/datamodel/Product;Ljava/io/File;Ljava/lang/String;ZLcom/bc/ceres/core/ProgressMonitor;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     formatNameString = (*jenv)->NewStringUTF(jenv, formatName);
     (*jenv)->CallStaticVoidMethod(jenv, classGPF, _method, product, file, formatNameString, incremental, pm);
 }
@@ -1330,14 +1428,17 @@ IndexCoding IndexCoding_newIndexCoding(const char* name)
     static jmethodID _method = NULL;
     jstring nameString = NULL;
     IndexCoding _result = (IndexCoding) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classIndexCoding, "<init>", "(Ljava/lang/String;)V");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classIndexCoding, "<init>", "(Ljava/lang/String;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     nameString = (*jenv)->NewStringUTF(jenv, name);
     _result = (*jenv)->NewObject(jenv, classIndexCoding, _method, nameString);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
@@ -1348,14 +1449,17 @@ MetadataAttribute IndexCoding_getIndex(IndexCoding _this, const char* name)
     static jmethodID _method = NULL;
     jstring nameString = NULL;
     MetadataAttribute _result = (MetadataAttribute) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classIndexCoding, "getIndex", "(Ljava/lang/String;)Lorg/esa/beam/framework/datamodel/MetadataAttribute;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classIndexCoding, "getIndex", "(Ljava/lang/String;)Lorg/esa/beam/framework/datamodel/MetadataAttribute;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     nameString = (*jenv)->NewStringUTF(jenv, name);
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, nameString);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
@@ -1366,14 +1470,17 @@ char** IndexCoding_getIndexNames(IndexCoding _this, int* resultArrayLength)
     static jmethodID _method = NULL;
     char** _result = (char**) 0;
     jarray _resultArray = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classIndexCoding, "getIndexNames", "()[Ljava/lang/String;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classIndexCoding, "getIndexNames", "()[Ljava/lang/String;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string_array(_resultArray, resultArrayLength);
     return _result;
@@ -1385,14 +1492,17 @@ MetadataAttribute IndexCoding_addIndex(IndexCoding _this, const char* name, int 
     jstring nameString = NULL;
     jstring descriptionString = NULL;
     MetadataAttribute _result = (MetadataAttribute) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classIndexCoding, "addIndex", "(Ljava/lang/String;ILjava/lang/String;)Lorg/esa/beam/framework/datamodel/MetadataAttribute;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classIndexCoding, "addIndex", "(Ljava/lang/String;ILjava/lang/String;)Lorg/esa/beam/framework/datamodel/MetadataAttribute;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     nameString = (*jenv)->NewStringUTF(jenv, name);
     descriptionString = (*jenv)->NewStringUTF(jenv, description);
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, nameString, value, descriptionString);
@@ -1404,14 +1514,17 @@ int IndexCoding_getIndexValue(IndexCoding _this, const char* name)
     static jmethodID _method = NULL;
     jstring nameString = NULL;
     int _result = (int) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classIndexCoding, "getIndexValue", "(Ljava/lang/String;)I");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classIndexCoding, "getIndexValue", "(Ljava/lang/String;)I");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     nameString = (*jenv)->NewStringUTF(jenv, name);
     _result = (*jenv)->CallIntMethod(jenv, _this, _method, nameString);
     return _result;
@@ -1420,42 +1533,51 @@ int IndexCoding_getIndexValue(IndexCoding _this, const char* name)
 void IndexCoding_acceptVisitor(IndexCoding _this, ProductVisitor visitor)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classIndexCoding, "acceptVisitor", "(Lorg/esa/beam/framework/datamodel/ProductVisitor;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classIndexCoding, "acceptVisitor", "(Lorg/esa/beam/framework/datamodel/ProductVisitor;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, visitor);
 }
 
 void IndexCoding_addElement(IndexCoding _this, MetadataElement element)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classIndexCoding, "addElement", "(Lorg/esa/beam/framework/datamodel/MetadataElement;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classIndexCoding, "addElement", "(Lorg/esa/beam/framework/datamodel/MetadataElement;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, element);
 }
 
 void IndexCoding_addAttribute(IndexCoding _this, MetadataAttribute attribute)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classIndexCoding, "addAttribute", "(Lorg/esa/beam/framework/datamodel/MetadataAttribute;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classIndexCoding, "addAttribute", "(Lorg/esa/beam/framework/datamodel/MetadataAttribute;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, attribute);
 }
 
@@ -1465,14 +1587,17 @@ MetadataAttribute IndexCoding_addSample(IndexCoding _this, const char* name, int
     jstring nameString = NULL;
     jstring descriptionString = NULL;
     MetadataAttribute _result = (MetadataAttribute) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classIndexCoding, "addSample", "(Ljava/lang/String;ILjava/lang/String;)Lorg/esa/beam/framework/datamodel/MetadataAttribute;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classIndexCoding, "addSample", "(Ljava/lang/String;ILjava/lang/String;)Lorg/esa/beam/framework/datamodel/MetadataAttribute;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     nameString = (*jenv)->NewStringUTF(jenv, name);
     descriptionString = (*jenv)->NewStringUTF(jenv, description);
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, nameString, value, descriptionString);
@@ -1483,14 +1608,17 @@ int IndexCoding_getSampleCount(IndexCoding _this)
 {
     static jmethodID _method = NULL;
     int _result = (int) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classIndexCoding, "getSampleCount", "()I");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classIndexCoding, "getSampleCount", "()I");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallIntMethod(jenv, _this, _method);
     return _result;
 }
@@ -1500,14 +1628,17 @@ char* IndexCoding_getSampleName(IndexCoding _this, int index)
     static jmethodID _method = NULL;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classIndexCoding, "getSampleName", "(I)Ljava/lang/String;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classIndexCoding, "getSampleName", "(I)Ljava/lang/String;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method, index);
     _result = beam_alloc_string(_resultString);
     return _result;
@@ -1517,14 +1648,17 @@ int IndexCoding_getSampleValue(IndexCoding _this, int index)
 {
     static jmethodID _method = NULL;
     int _result = (int) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classIndexCoding, "getSampleValue", "(I)I");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classIndexCoding, "getSampleValue", "(I)I");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallIntMethod(jenv, _this, _method, index);
     return _result;
 }
@@ -1533,14 +1667,17 @@ ProductNodeGroup IndexCoding_getElementGroup(IndexCoding _this)
 {
     static jmethodID _method = NULL;
     ProductNodeGroup _result = (ProductNodeGroup) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classIndexCoding, "getElementGroup", "()Lorg/esa/beam/framework/datamodel/ProductNodeGroup;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classIndexCoding, "getElementGroup", "()Lorg/esa/beam/framework/datamodel/ProductNodeGroup;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -1549,14 +1686,17 @@ MetadataElement IndexCoding_getParentElement(IndexCoding _this)
 {
     static jmethodID _method = NULL;
     MetadataElement _result = (MetadataElement) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classIndexCoding, "getParentElement", "()Lorg/esa/beam/framework/datamodel/MetadataElement;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classIndexCoding, "getParentElement", "()Lorg/esa/beam/framework/datamodel/MetadataElement;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -1564,14 +1704,17 @@ MetadataElement IndexCoding_getParentElement(IndexCoding _this)
 void IndexCoding_addElementAt(IndexCoding _this, MetadataElement element, int index)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classIndexCoding, "addElementAt", "(Lorg/esa/beam/framework/datamodel/MetadataElement;I)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classIndexCoding, "addElementAt", "(Lorg/esa/beam/framework/datamodel/MetadataElement;I)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, element, index);
 }
 
@@ -1579,14 +1722,17 @@ boolean IndexCoding_removeElement(IndexCoding _this, MetadataElement element)
 {
     static jmethodID _method = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classIndexCoding, "removeElement", "(Lorg/esa/beam/framework/datamodel/MetadataElement;)Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classIndexCoding, "removeElement", "(Lorg/esa/beam/framework/datamodel/MetadataElement;)Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method, element);
     return _result;
 }
@@ -1595,14 +1741,17 @@ int IndexCoding_getNumElements(IndexCoding _this)
 {
     static jmethodID _method = NULL;
     int _result = (int) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classIndexCoding, "getNumElements", "()I");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classIndexCoding, "getNumElements", "()I");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallIntMethod(jenv, _this, _method);
     return _result;
 }
@@ -1611,14 +1760,17 @@ MetadataElement IndexCoding_getElementAt(IndexCoding _this, int index)
 {
     static jmethodID _method = NULL;
     MetadataElement _result = (MetadataElement) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classIndexCoding, "getElementAt", "(I)Lorg/esa/beam/framework/datamodel/MetadataElement;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classIndexCoding, "getElementAt", "(I)Lorg/esa/beam/framework/datamodel/MetadataElement;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, index);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -1628,14 +1780,17 @@ char** IndexCoding_getElementNames(IndexCoding _this, int* resultArrayLength)
     static jmethodID _method = NULL;
     char** _result = (char**) 0;
     jarray _resultArray = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classIndexCoding, "getElementNames", "()[Ljava/lang/String;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classIndexCoding, "getElementNames", "()[Ljava/lang/String;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string_array(_resultArray, resultArrayLength);
     return _result;
@@ -1646,14 +1801,17 @@ MetadataElement* IndexCoding_getElements(IndexCoding _this, int* resultArrayLeng
     static jmethodID _method = NULL;
     MetadataElement* _result = (MetadataElement*) 0;
     jarray _resultArray = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classIndexCoding, "getElements", "()[Lorg/esa/beam/framework/datamodel/MetadataElement;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classIndexCoding, "getElements", "()[Lorg/esa/beam/framework/datamodel/MetadataElement;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_object_array(_resultArray, resultArrayLength);
     return _result;
@@ -1664,14 +1822,17 @@ MetadataElement IndexCoding_getElement(IndexCoding _this, const char* name)
     static jmethodID _method = NULL;
     jstring nameString = NULL;
     MetadataElement _result = (MetadataElement) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classIndexCoding, "getElement", "(Ljava/lang/String;)Lorg/esa/beam/framework/datamodel/MetadataElement;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classIndexCoding, "getElement", "(Ljava/lang/String;)Lorg/esa/beam/framework/datamodel/MetadataElement;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     nameString = (*jenv)->NewStringUTF(jenv, name);
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, nameString);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
@@ -1682,14 +1843,17 @@ boolean IndexCoding_containsElement(IndexCoding _this, const char* name)
     static jmethodID _method = NULL;
     jstring nameString = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classIndexCoding, "containsElement", "(Ljava/lang/String;)Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classIndexCoding, "containsElement", "(Ljava/lang/String;)Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     nameString = (*jenv)->NewStringUTF(jenv, name);
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method, nameString);
     return _result;
@@ -1699,14 +1863,17 @@ int IndexCoding_getElementIndex(IndexCoding _this, MetadataElement element)
 {
     static jmethodID _method = NULL;
     int _result = (int) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classIndexCoding, "getElementIndex", "(Lorg/esa/beam/framework/datamodel/MetadataElement;)I");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classIndexCoding, "getElementIndex", "(Lorg/esa/beam/framework/datamodel/MetadataElement;)I");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallIntMethod(jenv, _this, _method, element);
     return _result;
 }
@@ -1715,14 +1882,17 @@ boolean IndexCoding_removeAttribute(IndexCoding _this, MetadataAttribute attribu
 {
     static jmethodID _method = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classIndexCoding, "removeAttribute", "(Lorg/esa/beam/framework/datamodel/MetadataAttribute;)Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classIndexCoding, "removeAttribute", "(Lorg/esa/beam/framework/datamodel/MetadataAttribute;)Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method, attribute);
     return _result;
 }
@@ -1731,14 +1901,17 @@ int IndexCoding_getNumAttributes(IndexCoding _this)
 {
     static jmethodID _method = NULL;
     int _result = (int) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classIndexCoding, "getNumAttributes", "()I");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classIndexCoding, "getNumAttributes", "()I");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallIntMethod(jenv, _this, _method);
     return _result;
 }
@@ -1747,14 +1920,17 @@ MetadataAttribute IndexCoding_getAttributeAt(IndexCoding _this, int index)
 {
     static jmethodID _method = NULL;
     MetadataAttribute _result = (MetadataAttribute) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classIndexCoding, "getAttributeAt", "(I)Lorg/esa/beam/framework/datamodel/MetadataAttribute;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classIndexCoding, "getAttributeAt", "(I)Lorg/esa/beam/framework/datamodel/MetadataAttribute;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, index);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -1764,14 +1940,17 @@ char** IndexCoding_getAttributeNames(IndexCoding _this, int* resultArrayLength)
     static jmethodID _method = NULL;
     char** _result = (char**) 0;
     jarray _resultArray = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classIndexCoding, "getAttributeNames", "()[Ljava/lang/String;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classIndexCoding, "getAttributeNames", "()[Ljava/lang/String;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string_array(_resultArray, resultArrayLength);
     return _result;
@@ -1782,14 +1961,17 @@ MetadataAttribute* IndexCoding_getAttributes(IndexCoding _this, int* resultArray
     static jmethodID _method = NULL;
     MetadataAttribute* _result = (MetadataAttribute*) 0;
     jarray _resultArray = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classIndexCoding, "getAttributes", "()[Lorg/esa/beam/framework/datamodel/MetadataAttribute;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classIndexCoding, "getAttributes", "()[Lorg/esa/beam/framework/datamodel/MetadataAttribute;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_object_array(_resultArray, resultArrayLength);
     return _result;
@@ -1800,14 +1982,17 @@ MetadataAttribute IndexCoding_getAttribute(IndexCoding _this, const char* name)
     static jmethodID _method = NULL;
     jstring nameString = NULL;
     MetadataAttribute _result = (MetadataAttribute) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classIndexCoding, "getAttribute", "(Ljava/lang/String;)Lorg/esa/beam/framework/datamodel/MetadataAttribute;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classIndexCoding, "getAttribute", "(Ljava/lang/String;)Lorg/esa/beam/framework/datamodel/MetadataAttribute;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     nameString = (*jenv)->NewStringUTF(jenv, name);
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, nameString);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
@@ -1818,14 +2003,17 @@ boolean IndexCoding_containsAttribute(IndexCoding _this, const char* name)
     static jmethodID _method = NULL;
     jstring nameString = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classIndexCoding, "containsAttribute", "(Ljava/lang/String;)Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classIndexCoding, "containsAttribute", "(Ljava/lang/String;)Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     nameString = (*jenv)->NewStringUTF(jenv, name);
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method, nameString);
     return _result;
@@ -1835,14 +2023,17 @@ int IndexCoding_getAttributeIndex(IndexCoding _this, MetadataAttribute attribute
 {
     static jmethodID _method = NULL;
     int _result = (int) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classIndexCoding, "getAttributeIndex", "(Lorg/esa/beam/framework/datamodel/MetadataAttribute;)I");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classIndexCoding, "getAttributeIndex", "(Lorg/esa/beam/framework/datamodel/MetadataAttribute;)I");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallIntMethod(jenv, _this, _method, attribute);
     return _result;
 }
@@ -1852,14 +2043,17 @@ double IndexCoding_getAttributeDouble(IndexCoding _this, const char* name, doubl
     static jmethodID _method = NULL;
     jstring nameString = NULL;
     double _result = (double) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classIndexCoding, "getAttributeDouble", "(Ljava/lang/String;D)D");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classIndexCoding, "getAttributeDouble", "(Ljava/lang/String;D)D");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     nameString = (*jenv)->NewStringUTF(jenv, name);
     _result = (*jenv)->CallDoubleMethod(jenv, _this, _method, nameString, defaultValue);
     return _result;
@@ -1870,14 +2064,17 @@ ProductData_UTC IndexCoding_getAttributeUTC(IndexCoding _this, const char* name,
     static jmethodID _method = NULL;
     jstring nameString = NULL;
     ProductData_UTC _result = (ProductData_UTC) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classIndexCoding, "getAttributeUTC", "(Ljava/lang/String;Lorg/esa/beam/framework/datamodel/ProductData/UTC;)Lorg/esa/beam/framework/datamodel/ProductData/UTC;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classIndexCoding, "getAttributeUTC", "(Ljava/lang/String;Lorg/esa/beam/framework/datamodel/ProductData/UTC;)Lorg/esa/beam/framework/datamodel/ProductData/UTC;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     nameString = (*jenv)->NewStringUTF(jenv, name);
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, nameString, defaultValue);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
@@ -1888,14 +2085,17 @@ int IndexCoding_getAttributeInt(IndexCoding _this, const char* name, int default
     static jmethodID _method = NULL;
     jstring nameString = NULL;
     int _result = (int) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classIndexCoding, "getAttributeInt", "(Ljava/lang/String;I)I");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classIndexCoding, "getAttributeInt", "(Ljava/lang/String;I)I");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     nameString = (*jenv)->NewStringUTF(jenv, name);
     _result = (*jenv)->CallIntMethod(jenv, _this, _method, nameString, defaultValue);
     return _result;
@@ -1905,14 +2105,17 @@ void IndexCoding_setAttributeInt(IndexCoding _this, const char* name, int value)
 {
     static jmethodID _method = NULL;
     jstring nameString = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classIndexCoding, "setAttributeInt", "(Ljava/lang/String;I)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classIndexCoding, "setAttributeInt", "(Ljava/lang/String;I)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     nameString = (*jenv)->NewStringUTF(jenv, name);
     (*jenv)->CallVoidMethod(jenv, _this, _method, nameString, value);
 }
@@ -1921,14 +2124,17 @@ void IndexCoding_setAttributeDouble(IndexCoding _this, const char* name, double 
 {
     static jmethodID _method = NULL;
     jstring nameString = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classIndexCoding, "setAttributeDouble", "(Ljava/lang/String;D)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classIndexCoding, "setAttributeDouble", "(Ljava/lang/String;D)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     nameString = (*jenv)->NewStringUTF(jenv, name);
     (*jenv)->CallVoidMethod(jenv, _this, _method, nameString, value);
 }
@@ -1937,14 +2143,17 @@ void IndexCoding_setAttributeUTC(IndexCoding _this, const char* name, ProductDat
 {
     static jmethodID _method = NULL;
     jstring nameString = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classIndexCoding, "setAttributeUTC", "(Ljava/lang/String;Lorg/esa/beam/framework/datamodel/ProductData/UTC;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classIndexCoding, "setAttributeUTC", "(Ljava/lang/String;Lorg/esa/beam/framework/datamodel/ProductData/UTC;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     nameString = (*jenv)->NewStringUTF(jenv, name);
     (*jenv)->CallVoidMethod(jenv, _this, _method, nameString, value);
 }
@@ -1956,14 +2165,17 @@ char* IndexCoding_getAttributeString(IndexCoding _this, const char* name, const 
     jstring defaultValueString = NULL;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classIndexCoding, "getAttributeString", "(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classIndexCoding, "getAttributeString", "(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     nameString = (*jenv)->NewStringUTF(jenv, name);
     defaultValueString = (*jenv)->NewStringUTF(jenv, defaultValue);
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method, nameString, defaultValueString);
@@ -1976,14 +2188,17 @@ void IndexCoding_setAttributeString(IndexCoding _this, const char* name, const c
     static jmethodID _method = NULL;
     jstring nameString = NULL;
     jstring valueString = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classIndexCoding, "setAttributeString", "(Ljava/lang/String;Ljava/lang/String;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classIndexCoding, "setAttributeString", "(Ljava/lang/String;Ljava/lang/String;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     nameString = (*jenv)->NewStringUTF(jenv, name);
     valueString = (*jenv)->NewStringUTF(jenv, value);
     (*jenv)->CallVoidMethod(jenv, _this, _method, nameString, valueString);
@@ -1992,14 +2207,17 @@ void IndexCoding_setAttributeString(IndexCoding _this, const char* name, const c
 void IndexCoding_setModified(IndexCoding _this, boolean modified)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classIndexCoding, "setModified", "(Z)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classIndexCoding, "setModified", "(Z)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, modified);
 }
 
@@ -2007,14 +2225,17 @@ MetadataElement IndexCoding_createDeepClone(IndexCoding _this)
 {
     static jmethodID _method = NULL;
     MetadataElement _result = (MetadataElement) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classIndexCoding, "createDeepClone", "()Lorg/esa/beam/framework/datamodel/MetadataElement;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classIndexCoding, "createDeepClone", "()Lorg/esa/beam/framework/datamodel/MetadataElement;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -2022,14 +2243,17 @@ MetadataElement IndexCoding_createDeepClone(IndexCoding _this)
 void IndexCoding_dispose(IndexCoding _this)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classIndexCoding, "dispose", "()V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classIndexCoding, "dispose", "()V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method);
 }
 
@@ -2037,14 +2261,17 @@ ProductNode IndexCoding_getOwner(IndexCoding _this)
 {
     static jmethodID _method = NULL;
     ProductNode _result = (ProductNode) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classIndexCoding, "getOwner", "()Lorg/esa/beam/framework/datamodel/ProductNode;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classIndexCoding, "getOwner", "()Lorg/esa/beam/framework/datamodel/ProductNode;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -2054,14 +2281,17 @@ char* IndexCoding_getName(IndexCoding _this)
     static jmethodID _method = NULL;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classIndexCoding, "getName", "()Ljava/lang/String;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classIndexCoding, "getName", "()Ljava/lang/String;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
     return _result;
@@ -2071,14 +2301,17 @@ void IndexCoding_setName(IndexCoding _this, const char* name)
 {
     static jmethodID _method = NULL;
     jstring nameString = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classIndexCoding, "setName", "(Ljava/lang/String;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classIndexCoding, "setName", "(Ljava/lang/String;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     nameString = (*jenv)->NewStringUTF(jenv, name);
     (*jenv)->CallVoidMethod(jenv, _this, _method, nameString);
 }
@@ -2088,14 +2321,17 @@ char* IndexCoding_getDescription(IndexCoding _this)
     static jmethodID _method = NULL;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classIndexCoding, "getDescription", "()Ljava/lang/String;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classIndexCoding, "getDescription", "()Ljava/lang/String;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
     return _result;
@@ -2105,14 +2341,17 @@ void IndexCoding_setDescription(IndexCoding _this, const char* description)
 {
     static jmethodID _method = NULL;
     jstring descriptionString = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classIndexCoding, "setDescription", "(Ljava/lang/String;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classIndexCoding, "setDescription", "(Ljava/lang/String;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     descriptionString = (*jenv)->NewStringUTF(jenv, description);
     (*jenv)->CallVoidMethod(jenv, _this, _method, descriptionString);
 }
@@ -2121,14 +2360,17 @@ boolean IndexCoding_isModified(IndexCoding _this)
 {
     static jmethodID _method = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classIndexCoding, "isModified", "()Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classIndexCoding, "isModified", "()Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method);
     return _result;
 }
@@ -2138,14 +2380,17 @@ char* IndexCoding_toString(IndexCoding _this)
     static jmethodID _method = NULL;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classIndexCoding, "toString", "()Ljava/lang/String;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classIndexCoding, "toString", "()Ljava/lang/String;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
     return _result;
@@ -2156,14 +2401,17 @@ boolean IndexCoding_isValidNodeName(const char* name)
     static jmethodID _method = NULL;
     jstring nameString = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classIndexCoding, "isValidNodeName", "(Ljava/lang/String;)Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classIndexCoding, "isValidNodeName", "(Ljava/lang/String;)Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     nameString = (*jenv)->NewStringUTF(jenv, name);
     _result = (*jenv)->CallStaticBooleanMethod(jenv, classIndexCoding, _method, nameString);
     return _result;
@@ -2173,14 +2421,17 @@ Product IndexCoding_getProduct(IndexCoding _this)
 {
     static jmethodID _method = NULL;
     Product _result = (Product) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classIndexCoding, "getProduct", "()Lorg/esa/beam/framework/datamodel/Product;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classIndexCoding, "getProduct", "()Lorg/esa/beam/framework/datamodel/Product;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -2189,14 +2440,17 @@ ProductReader IndexCoding_getProductReader(IndexCoding _this)
 {
     static jmethodID _method = NULL;
     ProductReader _result = (ProductReader) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classIndexCoding, "getProductReader", "()Lorg/esa/beam/framework/dataio/ProductReader;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classIndexCoding, "getProductReader", "()Lorg/esa/beam/framework/dataio/ProductReader;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -2205,14 +2459,17 @@ ProductWriter IndexCoding_getProductWriter(IndexCoding _this)
 {
     static jmethodID _method = NULL;
     ProductWriter _result = (ProductWriter) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classIndexCoding, "getProductWriter", "()Lorg/esa/beam/framework/dataio/ProductWriter;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classIndexCoding, "getProductWriter", "()Lorg/esa/beam/framework/dataio/ProductWriter;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -2222,14 +2479,17 @@ char* IndexCoding_getDisplayName(IndexCoding _this)
     static jmethodID _method = NULL;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classIndexCoding, "getDisplayName", "()Ljava/lang/String;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classIndexCoding, "getDisplayName", "()Ljava/lang/String;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
     return _result;
@@ -2240,14 +2500,17 @@ char* IndexCoding_getProductRefString(IndexCoding _this)
     static jmethodID _method = NULL;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classIndexCoding, "getProductRefString", "()Ljava/lang/String;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classIndexCoding, "getProductRefString", "()Ljava/lang/String;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
     return _result;
@@ -2258,14 +2521,17 @@ void IndexCoding_updateExpression(IndexCoding _this, const char* oldExternalName
     static jmethodID _method = NULL;
     jstring oldExternalNameString = NULL;
     jstring newExternalNameString = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classIndexCoding, "updateExpression", "(Ljava/lang/String;Ljava/lang/String;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classIndexCoding, "updateExpression", "(Ljava/lang/String;Ljava/lang/String;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     oldExternalNameString = (*jenv)->NewStringUTF(jenv, oldExternalName);
     newExternalNameString = (*jenv)->NewStringUTF(jenv, newExternalName);
     (*jenv)->CallVoidMethod(jenv, _this, _method, oldExternalNameString, newExternalNameString);
@@ -2274,14 +2540,17 @@ void IndexCoding_updateExpression(IndexCoding _this, const char* oldExternalName
 void IndexCoding_removeFromFile(IndexCoding _this, ProductWriter productWriter)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classIndexCoding, "removeFromFile", "(Lorg/esa/beam/framework/dataio/ProductWriter;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classIndexCoding, "removeFromFile", "(Lorg/esa/beam/framework/dataio/ProductWriter;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, productWriter);
 }
 
@@ -2289,14 +2558,17 @@ Object IndexCoding_getExtension(IndexCoding _this, Class arg0)
 {
     static jmethodID _method = NULL;
     Object _result = (Object) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classIndexCoding, "getExtension", "(Ljava/lang/Class;)Ljava/lang/Object;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classIndexCoding, "getExtension", "(Ljava/lang/Class;)Ljava/lang/Object;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, arg0);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -2305,14 +2577,17 @@ PixelPos PixelPos_newPixelPos1()
 {
     static jmethodID _method = NULL;
     PixelPos _result = (PixelPos) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classPixelPos, "<init>", "()V");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classPixelPos, "<init>", "()V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->NewObject(jenv, classPixelPos, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -2321,14 +2596,17 @@ PixelPos PixelPos_newPixelPos2(float x, float y)
 {
     static jmethodID _method = NULL;
     PixelPos _result = (PixelPos) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classPixelPos, "<init>", "(FF)V");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classPixelPos, "<init>", "(FF)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->NewObject(jenv, classPixelPos, _method, x, y);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -2337,14 +2615,17 @@ boolean PixelPos_isValid(PixelPos _this)
 {
     static jmethodID _method = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classPixelPos, "isValid", "()Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classPixelPos, "isValid", "()Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method);
     return _result;
 }
@@ -2352,14 +2633,17 @@ boolean PixelPos_isValid(PixelPos _this)
 void PixelPos_setInvalid(PixelPos _this)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classPixelPos, "setInvalid", "()V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classPixelPos, "setInvalid", "()V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method);
 }
 
@@ -2367,14 +2651,17 @@ double PixelPos_getX(PixelPos _this)
 {
     static jmethodID _method = NULL;
     double _result = (double) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classPixelPos, "getX", "()D");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classPixelPos, "getX", "()D");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallDoubleMethod(jenv, _this, _method);
     return _result;
 }
@@ -2383,14 +2670,17 @@ double PixelPos_getY(PixelPos _this)
 {
     static jmethodID _method = NULL;
     double _result = (double) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classPixelPos, "getY", "()D");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classPixelPos, "getY", "()D");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallDoubleMethod(jenv, _this, _method);
     return _result;
 }
@@ -2398,28 +2688,34 @@ double PixelPos_getY(PixelPos _this)
 void PixelPos_setLocation1(PixelPos _this, double arg0, double arg1)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classPixelPos, "setLocation", "(DD)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classPixelPos, "setLocation", "(DD)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, arg0, arg1);
 }
 
 void PixelPos_setLocation2(PixelPos _this, float arg0, float arg1)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classPixelPos, "setLocation", "(FF)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classPixelPos, "setLocation", "(FF)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, arg0, arg1);
 }
 
@@ -2428,14 +2724,17 @@ char* PixelPos_toString(PixelPos _this)
     static jmethodID _method = NULL;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classPixelPos, "toString", "()Ljava/lang/String;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classPixelPos, "toString", "()Ljava/lang/String;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
     return _result;
@@ -2444,14 +2743,17 @@ char* PixelPos_toString(PixelPos _this)
 void PixelPos_setLocation3(PixelPos _this, Point2D arg0)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classPixelPos, "setLocation", "(Ljava/awt/geom/Point2D;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classPixelPos, "setLocation", "(Ljava/awt/geom/Point2D;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, arg0);
 }
 
@@ -2459,14 +2761,17 @@ double PixelPos_distanceSq2(double arg0, double arg1, double arg2, double arg3)
 {
     static jmethodID _method = NULL;
     double _result = (double) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classPixelPos, "distanceSq", "(DDDD)D");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classPixelPos, "distanceSq", "(DDDD)D");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallStaticDoubleMethod(jenv, classPixelPos, _method, arg0, arg1, arg2, arg3);
     return _result;
 }
@@ -2475,14 +2780,17 @@ double PixelPos_distance2(double arg0, double arg1, double arg2, double arg3)
 {
     static jmethodID _method = NULL;
     double _result = (double) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classPixelPos, "distance", "(DDDD)D");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classPixelPos, "distance", "(DDDD)D");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallStaticDoubleMethod(jenv, classPixelPos, _method, arg0, arg1, arg2, arg3);
     return _result;
 }
@@ -2491,14 +2799,17 @@ double PixelPos_distanceSq1(PixelPos _this, double arg0, double arg1)
 {
     static jmethodID _method = NULL;
     double _result = (double) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classPixelPos, "distanceSq", "(DD)D");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classPixelPos, "distanceSq", "(DD)D");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallDoubleMethod(jenv, _this, _method, arg0, arg1);
     return _result;
 }
@@ -2507,14 +2818,17 @@ double PixelPos_distanceSq3(PixelPos _this, Point2D arg0)
 {
     static jmethodID _method = NULL;
     double _result = (double) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classPixelPos, "distanceSq", "(Ljava/awt/geom/Point2D;)D");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classPixelPos, "distanceSq", "(Ljava/awt/geom/Point2D;)D");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallDoubleMethod(jenv, _this, _method, arg0);
     return _result;
 }
@@ -2523,14 +2837,17 @@ double PixelPos_distance1(PixelPos _this, double arg0, double arg1)
 {
     static jmethodID _method = NULL;
     double _result = (double) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classPixelPos, "distance", "(DD)D");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classPixelPos, "distance", "(DD)D");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallDoubleMethod(jenv, _this, _method, arg0, arg1);
     return _result;
 }
@@ -2539,14 +2856,17 @@ double PixelPos_distance3(PixelPos _this, Point2D arg0)
 {
     static jmethodID _method = NULL;
     double _result = (double) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classPixelPos, "distance", "(Ljava/awt/geom/Point2D;)D");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classPixelPos, "distance", "(Ljava/awt/geom/Point2D;)D");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallDoubleMethod(jenv, _this, _method, arg0);
     return _result;
 }
@@ -2555,14 +2875,17 @@ Object PixelPos_clone(PixelPos _this)
 {
     static jmethodID _method = NULL;
     Object _result = (Object) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classPixelPos, "clone", "()Ljava/lang/Object;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classPixelPos, "clone", "()Ljava/lang/Object;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -2571,14 +2894,17 @@ int PixelPos_hashCode(PixelPos _this)
 {
     static jmethodID _method = NULL;
     int _result = (int) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classPixelPos, "hashCode", "()I");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classPixelPos, "hashCode", "()I");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallIntMethod(jenv, _this, _method);
     return _result;
 }
@@ -2587,14 +2913,17 @@ boolean PixelPos_equals(PixelPos _this, Object arg0)
 {
     static jmethodID _method = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classPixelPos, "equals", "(Ljava/lang/Object;)Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classPixelPos, "equals", "(Ljava/lang/Object;)Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method, arg0);
     return _result;
 }
@@ -2604,14 +2933,17 @@ ProductReader ProductIO_getProductReader(const char* formatName)
     static jmethodID _method = NULL;
     jstring formatNameString = NULL;
     ProductReader _result = (ProductReader) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classProductIO, "getProductReader", "(Ljava/lang/String;)Lorg/esa/beam/framework/dataio/ProductReader;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classProductIO, "getProductReader", "(Ljava/lang/String;)Lorg/esa/beam/framework/dataio/ProductReader;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     formatNameString = (*jenv)->NewStringUTF(jenv, formatName);
     _result = (*jenv)->CallStaticObjectMethod(jenv, classProductIO, _method, formatNameString);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
@@ -2623,14 +2955,17 @@ char** ProductIO_getProductWriterExtensions(const char* formatName, int* resultA
     jstring formatNameString = NULL;
     char** _result = (char**) 0;
     jarray _resultArray = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classProductIO, "getProductWriterExtensions", "(Ljava/lang/String;)[Ljava/lang/String;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classProductIO, "getProductWriterExtensions", "(Ljava/lang/String;)[Ljava/lang/String;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     formatNameString = (*jenv)->NewStringUTF(jenv, formatName);
     _resultArray = (*jenv)->CallStaticObjectMethod(jenv, classProductIO, _method, formatNameString);
     _result = beam_alloc_string_array(_resultArray, resultArrayLength);
@@ -2642,14 +2977,17 @@ ProductWriter ProductIO_getProductWriter(const char* formatName)
     static jmethodID _method = NULL;
     jstring formatNameString = NULL;
     ProductWriter _result = (ProductWriter) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classProductIO, "getProductWriter", "(Ljava/lang/String;)Lorg/esa/beam/framework/dataio/ProductWriter;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classProductIO, "getProductWriter", "(Ljava/lang/String;)Lorg/esa/beam/framework/dataio/ProductWriter;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     formatNameString = (*jenv)->NewStringUTF(jenv, formatName);
     _result = (*jenv)->CallStaticObjectMethod(jenv, classProductIO, _method, formatNameString);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
@@ -2660,14 +2998,17 @@ Product ProductIO_readProduct(const char* filePath)
     static jmethodID _method = NULL;
     jstring filePathString = NULL;
     Product _result = (Product) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classProductIO, "readProduct", "(Ljava/lang/String;)Lorg/esa/beam/framework/datamodel/Product;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classProductIO, "readProduct", "(Ljava/lang/String;)Lorg/esa/beam/framework/datamodel/Product;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     filePathString = (*jenv)->NewStringUTF(jenv, filePath);
     _result = (*jenv)->CallStaticObjectMethod(jenv, classProductIO, _method, filePathString);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
@@ -2677,14 +3018,17 @@ ProductReader ProductIO_getProductReaderForFile(File file)
 {
     static jmethodID _method = NULL;
     ProductReader _result = (ProductReader) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classProductIO, "getProductReaderForFile", "(Ljava/io/File;)Lorg/esa/beam/framework/dataio/ProductReader;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classProductIO, "getProductReaderForFile", "(Ljava/io/File;)Lorg/esa/beam/framework/dataio/ProductReader;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallStaticObjectMethod(jenv, classProductIO, _method, file);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -2693,14 +3037,17 @@ ProductReader ProductIO_getProductReaderForInput(Object input)
 {
     static jmethodID _method = NULL;
     ProductReader _result = (ProductReader) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classProductIO, "getProductReaderForInput", "(Ljava/lang/Object;)Lorg/esa/beam/framework/dataio/ProductReader;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classProductIO, "getProductReaderForInput", "(Ljava/lang/Object;)Lorg/esa/beam/framework/dataio/ProductReader;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallStaticObjectMethod(jenv, classProductIO, _method, input);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -2710,14 +3057,17 @@ void ProductIO_writeProduct(Product product, const char* filePath, const char* f
     static jmethodID _method = NULL;
     jstring filePathString = NULL;
     jstring formatNameString = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classProductIO, "writeProduct", "(Lorg/esa/beam/framework/datamodel/Product;Ljava/lang/String;Ljava/lang/String;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classProductIO, "writeProduct", "(Lorg/esa/beam/framework/datamodel/Product;Ljava/lang/String;Ljava/lang/String;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     filePathString = (*jenv)->NewStringUTF(jenv, filePath);
     formatNameString = (*jenv)->NewStringUTF(jenv, formatName);
     (*jenv)->CallStaticVoidMethod(jenv, classProductIO, _method, product, filePathString, formatNameString);
@@ -2727,14 +3077,17 @@ Placemark Placemark_newPlacemark(PlacemarkDescriptor descriptor, SimpleFeature f
 {
     static jmethodID _method = NULL;
     Placemark _result = (Placemark) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classPlacemark, "<init>", "(Lorg/esa/beam/framework/datamodel/PlacemarkDescriptor;Lorg/opengis/feature/simple/SimpleFeature;)V");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classPlacemark, "<init>", "(Lorg/esa/beam/framework/datamodel/PlacemarkDescriptor;Lorg/opengis/feature/simple/SimpleFeature;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->NewObject(jenv, classPlacemark, _method, descriptor, feature);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -2746,14 +3099,17 @@ Placemark Placemark_createPointPlacemark(PlacemarkDescriptor descriptor, const c
     jstring labelString = NULL;
     jstring textString = NULL;
     Placemark _result = (Placemark) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classPlacemark, "createPointPlacemark", "(Lorg/esa/beam/framework/datamodel/PlacemarkDescriptor;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lorg/esa/beam/framework/datamodel/PixelPos;Lorg/esa/beam/framework/datamodel/GeoPos;Lorg/esa/beam/framework/datamodel/GeoCoding;)Lorg/esa/beam/framework/datamodel/Placemark;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classPlacemark, "createPointPlacemark", "(Lorg/esa/beam/framework/datamodel/PlacemarkDescriptor;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lorg/esa/beam/framework/datamodel/PixelPos;Lorg/esa/beam/framework/datamodel/GeoPos;Lorg/esa/beam/framework/datamodel/GeoCoding;)Lorg/esa/beam/framework/datamodel/Placemark;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     nameString = (*jenv)->NewStringUTF(jenv, name);
     labelString = (*jenv)->NewStringUTF(jenv, label);
     textString = (*jenv)->NewStringUTF(jenv, text);
@@ -2765,14 +3121,17 @@ PlacemarkDescriptor Placemark_getDescriptor(Placemark _this)
 {
     static jmethodID _method = NULL;
     PlacemarkDescriptor _result = (PlacemarkDescriptor) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classPlacemark, "getDescriptor", "()Lorg/esa/beam/framework/datamodel/PlacemarkDescriptor;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classPlacemark, "getDescriptor", "()Lorg/esa/beam/framework/datamodel/PlacemarkDescriptor;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -2781,14 +3140,17 @@ SimpleFeature Placemark_getFeature(Placemark _this)
 {
     static jmethodID _method = NULL;
     SimpleFeature _result = (SimpleFeature) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classPlacemark, "getFeature", "()Lorg/opengis/feature/simple/SimpleFeature;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classPlacemark, "getFeature", "()Lorg/opengis/feature/simple/SimpleFeature;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -2798,14 +3160,17 @@ Object Placemark_getAttributeValue(Placemark _this, const char* attributeName)
     static jmethodID _method = NULL;
     jstring attributeNameString = NULL;
     Object _result = (Object) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classPlacemark, "getAttributeValue", "(Ljava/lang/String;)Ljava/lang/Object;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classPlacemark, "getAttributeValue", "(Ljava/lang/String;)Ljava/lang/Object;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     attributeNameString = (*jenv)->NewStringUTF(jenv, attributeName);
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, attributeNameString);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
@@ -2815,14 +3180,17 @@ void Placemark_setAttributeValue(Placemark _this, const char* attributeName, Obj
 {
     static jmethodID _method = NULL;
     jstring attributeNameString = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classPlacemark, "setAttributeValue", "(Ljava/lang/String;Ljava/lang/Object;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classPlacemark, "setAttributeValue", "(Ljava/lang/String;Ljava/lang/Object;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     attributeNameString = (*jenv)->NewStringUTF(jenv, attributeName);
     (*jenv)->CallVoidMethod(jenv, _this, _method, attributeNameString, attributeValue);
 }
@@ -2831,14 +3199,17 @@ void Placemark_setLabel(Placemark _this, const char* label)
 {
     static jmethodID _method = NULL;
     jstring labelString = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classPlacemark, "setLabel", "(Ljava/lang/String;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classPlacemark, "setLabel", "(Ljava/lang/String;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     labelString = (*jenv)->NewStringUTF(jenv, label);
     (*jenv)->CallVoidMethod(jenv, _this, _method, labelString);
 }
@@ -2848,14 +3219,17 @@ char* Placemark_getLabel(Placemark _this)
     static jmethodID _method = NULL;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classPlacemark, "getLabel", "()Ljava/lang/String;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classPlacemark, "getLabel", "()Ljava/lang/String;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
     return _result;
@@ -2865,14 +3239,17 @@ void Placemark_setText(Placemark _this, const char* text)
 {
     static jmethodID _method = NULL;
     jstring textString = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classPlacemark, "setText", "(Ljava/lang/String;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classPlacemark, "setText", "(Ljava/lang/String;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     textString = (*jenv)->NewStringUTF(jenv, text);
     (*jenv)->CallVoidMethod(jenv, _this, _method, textString);
 }
@@ -2882,14 +3259,17 @@ char* Placemark_getText(Placemark _this)
     static jmethodID _method = NULL;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classPlacemark, "getText", "()Ljava/lang/String;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classPlacemark, "getText", "()Ljava/lang/String;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
     return _result;
@@ -2899,14 +3279,17 @@ void Placemark_setStyleCss(Placemark _this, const char* styleCss)
 {
     static jmethodID _method = NULL;
     jstring styleCssString = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classPlacemark, "setStyleCss", "(Ljava/lang/String;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classPlacemark, "setStyleCss", "(Ljava/lang/String;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     styleCssString = (*jenv)->NewStringUTF(jenv, styleCss);
     (*jenv)->CallVoidMethod(jenv, _this, _method, styleCssString);
 }
@@ -2916,14 +3299,17 @@ char* Placemark_getStyleCss(Placemark _this)
     static jmethodID _method = NULL;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classPlacemark, "getStyleCss", "()Ljava/lang/String;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classPlacemark, "getStyleCss", "()Ljava/lang/String;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
     return _result;
@@ -2932,14 +3318,17 @@ char* Placemark_getStyleCss(Placemark _this)
 void Placemark_acceptVisitor(Placemark _this, ProductVisitor visitor)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classPlacemark, "acceptVisitor", "(Lorg/esa/beam/framework/datamodel/ProductVisitor;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classPlacemark, "acceptVisitor", "(Lorg/esa/beam/framework/datamodel/ProductVisitor;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, visitor);
 }
 
@@ -2947,14 +3336,17 @@ PixelPos Placemark_getPixelPos(Placemark _this)
 {
     static jmethodID _method = NULL;
     PixelPos _result = (PixelPos) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classPlacemark, "getPixelPos", "()Lorg/esa/beam/framework/datamodel/PixelPos;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classPlacemark, "getPixelPos", "()Lorg/esa/beam/framework/datamodel/PixelPos;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -2962,14 +3354,17 @@ PixelPos Placemark_getPixelPos(Placemark _this)
 void Placemark_setPixelPos(Placemark _this, PixelPos pixelPos)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classPlacemark, "setPixelPos", "(Lorg/esa/beam/framework/datamodel/PixelPos;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classPlacemark, "setPixelPos", "(Lorg/esa/beam/framework/datamodel/PixelPos;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, pixelPos);
 }
 
@@ -2977,14 +3372,17 @@ GeoPos Placemark_getGeoPos(Placemark _this)
 {
     static jmethodID _method = NULL;
     GeoPos _result = (GeoPos) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classPlacemark, "getGeoPos", "()Lorg/esa/beam/framework/datamodel/GeoPos;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classPlacemark, "getGeoPos", "()Lorg/esa/beam/framework/datamodel/GeoPos;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -2992,28 +3390,34 @@ GeoPos Placemark_getGeoPos(Placemark _this)
 void Placemark_setGeoPos(Placemark _this, GeoPos geoPos)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classPlacemark, "setGeoPos", "(Lorg/esa/beam/framework/datamodel/GeoPos;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classPlacemark, "setGeoPos", "(Lorg/esa/beam/framework/datamodel/GeoPos;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, geoPos);
 }
 
 void Placemark_updatePositions(Placemark _this)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classPlacemark, "updatePositions", "()V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classPlacemark, "updatePositions", "()V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method);
 }
 
@@ -3021,14 +3425,17 @@ SimpleFeatureType Placemark_createPinFeatureType()
 {
     static jmethodID _method = NULL;
     SimpleFeatureType _result = (SimpleFeatureType) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classPlacemark, "createPinFeatureType", "()Lorg/opengis/feature/simple/SimpleFeatureType;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classPlacemark, "createPinFeatureType", "()Lorg/opengis/feature/simple/SimpleFeatureType;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallStaticObjectMethod(jenv, classPlacemark, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -3037,14 +3444,17 @@ SimpleFeatureType Placemark_createGcpFeatureType()
 {
     static jmethodID _method = NULL;
     SimpleFeatureType _result = (SimpleFeatureType) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classPlacemark, "createGcpFeatureType", "()Lorg/opengis/feature/simple/SimpleFeatureType;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classPlacemark, "createGcpFeatureType", "()Lorg/opengis/feature/simple/SimpleFeatureType;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallStaticObjectMethod(jenv, classPlacemark, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -3053,14 +3463,17 @@ SimpleFeatureType Placemark_createGeometryFeatureType()
 {
     static jmethodID _method = NULL;
     SimpleFeatureType _result = (SimpleFeatureType) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classPlacemark, "createGeometryFeatureType", "()Lorg/opengis/feature/simple/SimpleFeatureType;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classPlacemark, "createGeometryFeatureType", "()Lorg/opengis/feature/simple/SimpleFeatureType;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallStaticObjectMethod(jenv, classPlacemark, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -3070,14 +3483,17 @@ SimpleFeatureType Placemark_createPointFeatureType(const char* name)
     static jmethodID _method = NULL;
     jstring nameString = NULL;
     SimpleFeatureType _result = (SimpleFeatureType) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classPlacemark, "createPointFeatureType", "(Ljava/lang/String;)Lorg/opengis/feature/simple/SimpleFeatureType;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classPlacemark, "createPointFeatureType", "(Ljava/lang/String;)Lorg/opengis/feature/simple/SimpleFeatureType;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     nameString = (*jenv)->NewStringUTF(jenv, name);
     _result = (*jenv)->CallStaticObjectMethod(jenv, classPlacemark, _method, nameString);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
@@ -3087,14 +3503,17 @@ ProductNode Placemark_getOwner(Placemark _this)
 {
     static jmethodID _method = NULL;
     ProductNode _result = (ProductNode) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classPlacemark, "getOwner", "()Lorg/esa/beam/framework/datamodel/ProductNode;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classPlacemark, "getOwner", "()Lorg/esa/beam/framework/datamodel/ProductNode;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -3104,14 +3523,17 @@ char* Placemark_getName(Placemark _this)
     static jmethodID _method = NULL;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classPlacemark, "getName", "()Ljava/lang/String;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classPlacemark, "getName", "()Ljava/lang/String;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
     return _result;
@@ -3121,14 +3543,17 @@ void Placemark_setName(Placemark _this, const char* name)
 {
     static jmethodID _method = NULL;
     jstring nameString = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classPlacemark, "setName", "(Ljava/lang/String;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classPlacemark, "setName", "(Ljava/lang/String;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     nameString = (*jenv)->NewStringUTF(jenv, name);
     (*jenv)->CallVoidMethod(jenv, _this, _method, nameString);
 }
@@ -3138,14 +3563,17 @@ char* Placemark_getDescription(Placemark _this)
     static jmethodID _method = NULL;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classPlacemark, "getDescription", "()Ljava/lang/String;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classPlacemark, "getDescription", "()Ljava/lang/String;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
     return _result;
@@ -3155,14 +3583,17 @@ void Placemark_setDescription(Placemark _this, const char* description)
 {
     static jmethodID _method = NULL;
     jstring descriptionString = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classPlacemark, "setDescription", "(Ljava/lang/String;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classPlacemark, "setDescription", "(Ljava/lang/String;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     descriptionString = (*jenv)->NewStringUTF(jenv, description);
     (*jenv)->CallVoidMethod(jenv, _this, _method, descriptionString);
 }
@@ -3171,14 +3602,17 @@ boolean Placemark_isModified(Placemark _this)
 {
     static jmethodID _method = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classPlacemark, "isModified", "()Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classPlacemark, "isModified", "()Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method);
     return _result;
 }
@@ -3186,14 +3620,17 @@ boolean Placemark_isModified(Placemark _this)
 void Placemark_setModified(Placemark _this, boolean modified)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classPlacemark, "setModified", "(Z)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classPlacemark, "setModified", "(Z)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, modified);
 }
 
@@ -3202,14 +3639,17 @@ char* Placemark_toString(Placemark _this)
     static jmethodID _method = NULL;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classPlacemark, "toString", "()Ljava/lang/String;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classPlacemark, "toString", "()Ljava/lang/String;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
     return _result;
@@ -3218,14 +3658,17 @@ char* Placemark_toString(Placemark _this)
 void Placemark_dispose(Placemark _this)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classPlacemark, "dispose", "()V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classPlacemark, "dispose", "()V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method);
 }
 
@@ -3234,14 +3677,17 @@ boolean Placemark_isValidNodeName(const char* name)
     static jmethodID _method = NULL;
     jstring nameString = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classPlacemark, "isValidNodeName", "(Ljava/lang/String;)Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classPlacemark, "isValidNodeName", "(Ljava/lang/String;)Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     nameString = (*jenv)->NewStringUTF(jenv, name);
     _result = (*jenv)->CallStaticBooleanMethod(jenv, classPlacemark, _method, nameString);
     return _result;
@@ -3251,14 +3697,17 @@ Product Placemark_getProduct(Placemark _this)
 {
     static jmethodID _method = NULL;
     Product _result = (Product) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classPlacemark, "getProduct", "()Lorg/esa/beam/framework/datamodel/Product;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classPlacemark, "getProduct", "()Lorg/esa/beam/framework/datamodel/Product;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -3267,14 +3716,17 @@ ProductReader Placemark_getProductReader(Placemark _this)
 {
     static jmethodID _method = NULL;
     ProductReader _result = (ProductReader) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classPlacemark, "getProductReader", "()Lorg/esa/beam/framework/dataio/ProductReader;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classPlacemark, "getProductReader", "()Lorg/esa/beam/framework/dataio/ProductReader;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -3283,14 +3735,17 @@ ProductWriter Placemark_getProductWriter(Placemark _this)
 {
     static jmethodID _method = NULL;
     ProductWriter _result = (ProductWriter) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classPlacemark, "getProductWriter", "()Lorg/esa/beam/framework/dataio/ProductWriter;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classPlacemark, "getProductWriter", "()Lorg/esa/beam/framework/dataio/ProductWriter;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -3300,14 +3755,17 @@ char* Placemark_getDisplayName(Placemark _this)
     static jmethodID _method = NULL;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classPlacemark, "getDisplayName", "()Ljava/lang/String;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classPlacemark, "getDisplayName", "()Ljava/lang/String;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
     return _result;
@@ -3318,14 +3776,17 @@ char* Placemark_getProductRefString(Placemark _this)
     static jmethodID _method = NULL;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classPlacemark, "getProductRefString", "()Ljava/lang/String;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classPlacemark, "getProductRefString", "()Ljava/lang/String;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
     return _result;
@@ -3336,14 +3797,17 @@ void Placemark_updateExpression(Placemark _this, const char* oldExternalName, co
     static jmethodID _method = NULL;
     jstring oldExternalNameString = NULL;
     jstring newExternalNameString = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classPlacemark, "updateExpression", "(Ljava/lang/String;Ljava/lang/String;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classPlacemark, "updateExpression", "(Ljava/lang/String;Ljava/lang/String;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     oldExternalNameString = (*jenv)->NewStringUTF(jenv, oldExternalName);
     newExternalNameString = (*jenv)->NewStringUTF(jenv, newExternalName);
     (*jenv)->CallVoidMethod(jenv, _this, _method, oldExternalNameString, newExternalNameString);
@@ -3352,14 +3816,17 @@ void Placemark_updateExpression(Placemark _this, const char* oldExternalName, co
 void Placemark_removeFromFile(Placemark _this, ProductWriter productWriter)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classPlacemark, "removeFromFile", "(Lorg/esa/beam/framework/dataio/ProductWriter;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classPlacemark, "removeFromFile", "(Lorg/esa/beam/framework/dataio/ProductWriter;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, productWriter);
 }
 
@@ -3367,14 +3834,17 @@ Object Placemark_getExtension(Placemark _this, Class arg0)
 {
     static jmethodID _method = NULL;
     Object _result = (Object) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classPlacemark, "getExtension", "(Ljava/lang/Class;)Ljava/lang/Object;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classPlacemark, "getExtension", "(Ljava/lang/Class;)Ljava/lang/Object;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, arg0);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -3384,14 +3854,17 @@ MetadataElement MetadataElement_newMetadataElement(const char* name)
     static jmethodID _method = NULL;
     jstring nameString = NULL;
     MetadataElement _result = (MetadataElement) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classMetadataElement, "<init>", "(Ljava/lang/String;)V");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classMetadataElement, "<init>", "(Ljava/lang/String;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     nameString = (*jenv)->NewStringUTF(jenv, name);
     _result = (*jenv)->NewObject(jenv, classMetadataElement, _method, nameString);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
@@ -3401,14 +3874,17 @@ ProductNodeGroup MetadataElement_getElementGroup(MetadataElement _this)
 {
     static jmethodID _method = NULL;
     ProductNodeGroup _result = (ProductNodeGroup) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classMetadataElement, "getElementGroup", "()Lorg/esa/beam/framework/datamodel/ProductNodeGroup;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classMetadataElement, "getElementGroup", "()Lorg/esa/beam/framework/datamodel/ProductNodeGroup;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -3417,14 +3893,17 @@ MetadataElement MetadataElement_getParentElement(MetadataElement _this)
 {
     static jmethodID _method = NULL;
     MetadataElement _result = (MetadataElement) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classMetadataElement, "getParentElement", "()Lorg/esa/beam/framework/datamodel/MetadataElement;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classMetadataElement, "getParentElement", "()Lorg/esa/beam/framework/datamodel/MetadataElement;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -3432,28 +3911,34 @@ MetadataElement MetadataElement_getParentElement(MetadataElement _this)
 void MetadataElement_addElement(MetadataElement _this, MetadataElement element)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classMetadataElement, "addElement", "(Lorg/esa/beam/framework/datamodel/MetadataElement;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classMetadataElement, "addElement", "(Lorg/esa/beam/framework/datamodel/MetadataElement;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, element);
 }
 
 void MetadataElement_addElementAt(MetadataElement _this, MetadataElement element, int index)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classMetadataElement, "addElementAt", "(Lorg/esa/beam/framework/datamodel/MetadataElement;I)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classMetadataElement, "addElementAt", "(Lorg/esa/beam/framework/datamodel/MetadataElement;I)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, element, index);
 }
 
@@ -3461,14 +3946,17 @@ boolean MetadataElement_removeElement(MetadataElement _this, MetadataElement ele
 {
     static jmethodID _method = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classMetadataElement, "removeElement", "(Lorg/esa/beam/framework/datamodel/MetadataElement;)Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classMetadataElement, "removeElement", "(Lorg/esa/beam/framework/datamodel/MetadataElement;)Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method, element);
     return _result;
 }
@@ -3477,14 +3965,17 @@ int MetadataElement_getNumElements(MetadataElement _this)
 {
     static jmethodID _method = NULL;
     int _result = (int) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classMetadataElement, "getNumElements", "()I");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classMetadataElement, "getNumElements", "()I");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallIntMethod(jenv, _this, _method);
     return _result;
 }
@@ -3493,14 +3984,17 @@ MetadataElement MetadataElement_getElementAt(MetadataElement _this, int index)
 {
     static jmethodID _method = NULL;
     MetadataElement _result = (MetadataElement) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classMetadataElement, "getElementAt", "(I)Lorg/esa/beam/framework/datamodel/MetadataElement;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classMetadataElement, "getElementAt", "(I)Lorg/esa/beam/framework/datamodel/MetadataElement;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, index);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -3510,14 +4004,17 @@ char** MetadataElement_getElementNames(MetadataElement _this, int* resultArrayLe
     static jmethodID _method = NULL;
     char** _result = (char**) 0;
     jarray _resultArray = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classMetadataElement, "getElementNames", "()[Ljava/lang/String;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classMetadataElement, "getElementNames", "()[Ljava/lang/String;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string_array(_resultArray, resultArrayLength);
     return _result;
@@ -3528,14 +4025,17 @@ MetadataElement* MetadataElement_getElements(MetadataElement _this, int* resultA
     static jmethodID _method = NULL;
     MetadataElement* _result = (MetadataElement*) 0;
     jarray _resultArray = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classMetadataElement, "getElements", "()[Lorg/esa/beam/framework/datamodel/MetadataElement;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classMetadataElement, "getElements", "()[Lorg/esa/beam/framework/datamodel/MetadataElement;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_object_array(_resultArray, resultArrayLength);
     return _result;
@@ -3546,14 +4046,17 @@ MetadataElement MetadataElement_getElement(MetadataElement _this, const char* na
     static jmethodID _method = NULL;
     jstring nameString = NULL;
     MetadataElement _result = (MetadataElement) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classMetadataElement, "getElement", "(Ljava/lang/String;)Lorg/esa/beam/framework/datamodel/MetadataElement;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classMetadataElement, "getElement", "(Ljava/lang/String;)Lorg/esa/beam/framework/datamodel/MetadataElement;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     nameString = (*jenv)->NewStringUTF(jenv, name);
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, nameString);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
@@ -3564,14 +4067,17 @@ boolean MetadataElement_containsElement(MetadataElement _this, const char* name)
     static jmethodID _method = NULL;
     jstring nameString = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classMetadataElement, "containsElement", "(Ljava/lang/String;)Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classMetadataElement, "containsElement", "(Ljava/lang/String;)Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     nameString = (*jenv)->NewStringUTF(jenv, name);
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method, nameString);
     return _result;
@@ -3581,14 +4087,17 @@ int MetadataElement_getElementIndex(MetadataElement _this, MetadataElement eleme
 {
     static jmethodID _method = NULL;
     int _result = (int) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classMetadataElement, "getElementIndex", "(Lorg/esa/beam/framework/datamodel/MetadataElement;)I");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classMetadataElement, "getElementIndex", "(Lorg/esa/beam/framework/datamodel/MetadataElement;)I");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallIntMethod(jenv, _this, _method, element);
     return _result;
 }
@@ -3596,14 +4105,17 @@ int MetadataElement_getElementIndex(MetadataElement _this, MetadataElement eleme
 void MetadataElement_addAttribute(MetadataElement _this, MetadataAttribute attribute)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classMetadataElement, "addAttribute", "(Lorg/esa/beam/framework/datamodel/MetadataAttribute;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classMetadataElement, "addAttribute", "(Lorg/esa/beam/framework/datamodel/MetadataAttribute;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, attribute);
 }
 
@@ -3611,14 +4123,17 @@ boolean MetadataElement_removeAttribute(MetadataElement _this, MetadataAttribute
 {
     static jmethodID _method = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classMetadataElement, "removeAttribute", "(Lorg/esa/beam/framework/datamodel/MetadataAttribute;)Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classMetadataElement, "removeAttribute", "(Lorg/esa/beam/framework/datamodel/MetadataAttribute;)Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method, attribute);
     return _result;
 }
@@ -3627,14 +4142,17 @@ int MetadataElement_getNumAttributes(MetadataElement _this)
 {
     static jmethodID _method = NULL;
     int _result = (int) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classMetadataElement, "getNumAttributes", "()I");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classMetadataElement, "getNumAttributes", "()I");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallIntMethod(jenv, _this, _method);
     return _result;
 }
@@ -3643,14 +4161,17 @@ MetadataAttribute MetadataElement_getAttributeAt(MetadataElement _this, int inde
 {
     static jmethodID _method = NULL;
     MetadataAttribute _result = (MetadataAttribute) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classMetadataElement, "getAttributeAt", "(I)Lorg/esa/beam/framework/datamodel/MetadataAttribute;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classMetadataElement, "getAttributeAt", "(I)Lorg/esa/beam/framework/datamodel/MetadataAttribute;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, index);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -3660,14 +4181,17 @@ char** MetadataElement_getAttributeNames(MetadataElement _this, int* resultArray
     static jmethodID _method = NULL;
     char** _result = (char**) 0;
     jarray _resultArray = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classMetadataElement, "getAttributeNames", "()[Ljava/lang/String;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classMetadataElement, "getAttributeNames", "()[Ljava/lang/String;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string_array(_resultArray, resultArrayLength);
     return _result;
@@ -3678,14 +4202,17 @@ MetadataAttribute* MetadataElement_getAttributes(MetadataElement _this, int* res
     static jmethodID _method = NULL;
     MetadataAttribute* _result = (MetadataAttribute*) 0;
     jarray _resultArray = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classMetadataElement, "getAttributes", "()[Lorg/esa/beam/framework/datamodel/MetadataAttribute;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classMetadataElement, "getAttributes", "()[Lorg/esa/beam/framework/datamodel/MetadataAttribute;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_object_array(_resultArray, resultArrayLength);
     return _result;
@@ -3696,14 +4223,17 @@ MetadataAttribute MetadataElement_getAttribute(MetadataElement _this, const char
     static jmethodID _method = NULL;
     jstring nameString = NULL;
     MetadataAttribute _result = (MetadataAttribute) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classMetadataElement, "getAttribute", "(Ljava/lang/String;)Lorg/esa/beam/framework/datamodel/MetadataAttribute;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classMetadataElement, "getAttribute", "(Ljava/lang/String;)Lorg/esa/beam/framework/datamodel/MetadataAttribute;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     nameString = (*jenv)->NewStringUTF(jenv, name);
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, nameString);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
@@ -3714,14 +4244,17 @@ boolean MetadataElement_containsAttribute(MetadataElement _this, const char* nam
     static jmethodID _method = NULL;
     jstring nameString = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classMetadataElement, "containsAttribute", "(Ljava/lang/String;)Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classMetadataElement, "containsAttribute", "(Ljava/lang/String;)Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     nameString = (*jenv)->NewStringUTF(jenv, name);
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method, nameString);
     return _result;
@@ -3731,14 +4264,17 @@ int MetadataElement_getAttributeIndex(MetadataElement _this, MetadataAttribute a
 {
     static jmethodID _method = NULL;
     int _result = (int) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classMetadataElement, "getAttributeIndex", "(Lorg/esa/beam/framework/datamodel/MetadataAttribute;)I");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classMetadataElement, "getAttributeIndex", "(Lorg/esa/beam/framework/datamodel/MetadataAttribute;)I");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallIntMethod(jenv, _this, _method, attribute);
     return _result;
 }
@@ -3748,14 +4284,17 @@ double MetadataElement_getAttributeDouble(MetadataElement _this, const char* nam
     static jmethodID _method = NULL;
     jstring nameString = NULL;
     double _result = (double) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classMetadataElement, "getAttributeDouble", "(Ljava/lang/String;D)D");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classMetadataElement, "getAttributeDouble", "(Ljava/lang/String;D)D");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     nameString = (*jenv)->NewStringUTF(jenv, name);
     _result = (*jenv)->CallDoubleMethod(jenv, _this, _method, nameString, defaultValue);
     return _result;
@@ -3766,14 +4305,17 @@ ProductData_UTC MetadataElement_getAttributeUTC(MetadataElement _this, const cha
     static jmethodID _method = NULL;
     jstring nameString = NULL;
     ProductData_UTC _result = (ProductData_UTC) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classMetadataElement, "getAttributeUTC", "(Ljava/lang/String;Lorg/esa/beam/framework/datamodel/ProductData/UTC;)Lorg/esa/beam/framework/datamodel/ProductData/UTC;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classMetadataElement, "getAttributeUTC", "(Ljava/lang/String;Lorg/esa/beam/framework/datamodel/ProductData/UTC;)Lorg/esa/beam/framework/datamodel/ProductData/UTC;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     nameString = (*jenv)->NewStringUTF(jenv, name);
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, nameString, defaultValue);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
@@ -3784,14 +4326,17 @@ int MetadataElement_getAttributeInt(MetadataElement _this, const char* name, int
     static jmethodID _method = NULL;
     jstring nameString = NULL;
     int _result = (int) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classMetadataElement, "getAttributeInt", "(Ljava/lang/String;I)I");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classMetadataElement, "getAttributeInt", "(Ljava/lang/String;I)I");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     nameString = (*jenv)->NewStringUTF(jenv, name);
     _result = (*jenv)->CallIntMethod(jenv, _this, _method, nameString, defaultValue);
     return _result;
@@ -3801,14 +4346,17 @@ void MetadataElement_setAttributeInt(MetadataElement _this, const char* name, in
 {
     static jmethodID _method = NULL;
     jstring nameString = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classMetadataElement, "setAttributeInt", "(Ljava/lang/String;I)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classMetadataElement, "setAttributeInt", "(Ljava/lang/String;I)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     nameString = (*jenv)->NewStringUTF(jenv, name);
     (*jenv)->CallVoidMethod(jenv, _this, _method, nameString, value);
 }
@@ -3817,14 +4365,17 @@ void MetadataElement_setAttributeDouble(MetadataElement _this, const char* name,
 {
     static jmethodID _method = NULL;
     jstring nameString = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classMetadataElement, "setAttributeDouble", "(Ljava/lang/String;D)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classMetadataElement, "setAttributeDouble", "(Ljava/lang/String;D)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     nameString = (*jenv)->NewStringUTF(jenv, name);
     (*jenv)->CallVoidMethod(jenv, _this, _method, nameString, value);
 }
@@ -3833,14 +4384,17 @@ void MetadataElement_setAttributeUTC(MetadataElement _this, const char* name, Pr
 {
     static jmethodID _method = NULL;
     jstring nameString = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classMetadataElement, "setAttributeUTC", "(Ljava/lang/String;Lorg/esa/beam/framework/datamodel/ProductData/UTC;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classMetadataElement, "setAttributeUTC", "(Ljava/lang/String;Lorg/esa/beam/framework/datamodel/ProductData/UTC;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     nameString = (*jenv)->NewStringUTF(jenv, name);
     (*jenv)->CallVoidMethod(jenv, _this, _method, nameString, value);
 }
@@ -3852,14 +4406,17 @@ char* MetadataElement_getAttributeString(MetadataElement _this, const char* name
     jstring defaultValueString = NULL;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classMetadataElement, "getAttributeString", "(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classMetadataElement, "getAttributeString", "(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     nameString = (*jenv)->NewStringUTF(jenv, name);
     defaultValueString = (*jenv)->NewStringUTF(jenv, defaultValue);
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method, nameString, defaultValueString);
@@ -3872,14 +4429,17 @@ void MetadataElement_setAttributeString(MetadataElement _this, const char* name,
     static jmethodID _method = NULL;
     jstring nameString = NULL;
     jstring valueString = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classMetadataElement, "setAttributeString", "(Ljava/lang/String;Ljava/lang/String;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classMetadataElement, "setAttributeString", "(Ljava/lang/String;Ljava/lang/String;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     nameString = (*jenv)->NewStringUTF(jenv, name);
     valueString = (*jenv)->NewStringUTF(jenv, value);
     (*jenv)->CallVoidMethod(jenv, _this, _method, nameString, valueString);
@@ -3888,28 +4448,34 @@ void MetadataElement_setAttributeString(MetadataElement _this, const char* name,
 void MetadataElement_setModified(MetadataElement _this, boolean modified)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classMetadataElement, "setModified", "(Z)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classMetadataElement, "setModified", "(Z)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, modified);
 }
 
 void MetadataElement_acceptVisitor(MetadataElement _this, ProductVisitor visitor)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classMetadataElement, "acceptVisitor", "(Lorg/esa/beam/framework/datamodel/ProductVisitor;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classMetadataElement, "acceptVisitor", "(Lorg/esa/beam/framework/datamodel/ProductVisitor;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, visitor);
 }
 
@@ -3917,14 +4483,17 @@ MetadataElement MetadataElement_createDeepClone(MetadataElement _this)
 {
     static jmethodID _method = NULL;
     MetadataElement _result = (MetadataElement) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classMetadataElement, "createDeepClone", "()Lorg/esa/beam/framework/datamodel/MetadataElement;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classMetadataElement, "createDeepClone", "()Lorg/esa/beam/framework/datamodel/MetadataElement;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -3932,14 +4501,17 @@ MetadataElement MetadataElement_createDeepClone(MetadataElement _this)
 void MetadataElement_dispose(MetadataElement _this)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classMetadataElement, "dispose", "()V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classMetadataElement, "dispose", "()V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method);
 }
 
@@ -3947,14 +4519,17 @@ ProductNode MetadataElement_getOwner(MetadataElement _this)
 {
     static jmethodID _method = NULL;
     ProductNode _result = (ProductNode) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classMetadataElement, "getOwner", "()Lorg/esa/beam/framework/datamodel/ProductNode;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classMetadataElement, "getOwner", "()Lorg/esa/beam/framework/datamodel/ProductNode;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -3964,14 +4539,17 @@ char* MetadataElement_getName(MetadataElement _this)
     static jmethodID _method = NULL;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classMetadataElement, "getName", "()Ljava/lang/String;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classMetadataElement, "getName", "()Ljava/lang/String;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
     return _result;
@@ -3981,14 +4559,17 @@ void MetadataElement_setName(MetadataElement _this, const char* name)
 {
     static jmethodID _method = NULL;
     jstring nameString = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classMetadataElement, "setName", "(Ljava/lang/String;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classMetadataElement, "setName", "(Ljava/lang/String;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     nameString = (*jenv)->NewStringUTF(jenv, name);
     (*jenv)->CallVoidMethod(jenv, _this, _method, nameString);
 }
@@ -3998,14 +4579,17 @@ char* MetadataElement_getDescription(MetadataElement _this)
     static jmethodID _method = NULL;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classMetadataElement, "getDescription", "()Ljava/lang/String;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classMetadataElement, "getDescription", "()Ljava/lang/String;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
     return _result;
@@ -4015,14 +4599,17 @@ void MetadataElement_setDescription(MetadataElement _this, const char* descripti
 {
     static jmethodID _method = NULL;
     jstring descriptionString = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classMetadataElement, "setDescription", "(Ljava/lang/String;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classMetadataElement, "setDescription", "(Ljava/lang/String;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     descriptionString = (*jenv)->NewStringUTF(jenv, description);
     (*jenv)->CallVoidMethod(jenv, _this, _method, descriptionString);
 }
@@ -4031,14 +4618,17 @@ boolean MetadataElement_isModified(MetadataElement _this)
 {
     static jmethodID _method = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classMetadataElement, "isModified", "()Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classMetadataElement, "isModified", "()Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method);
     return _result;
 }
@@ -4048,14 +4638,17 @@ char* MetadataElement_toString(MetadataElement _this)
     static jmethodID _method = NULL;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classMetadataElement, "toString", "()Ljava/lang/String;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classMetadataElement, "toString", "()Ljava/lang/String;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
     return _result;
@@ -4066,14 +4659,17 @@ boolean MetadataElement_isValidNodeName(const char* name)
     static jmethodID _method = NULL;
     jstring nameString = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classMetadataElement, "isValidNodeName", "(Ljava/lang/String;)Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classMetadataElement, "isValidNodeName", "(Ljava/lang/String;)Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     nameString = (*jenv)->NewStringUTF(jenv, name);
     _result = (*jenv)->CallStaticBooleanMethod(jenv, classMetadataElement, _method, nameString);
     return _result;
@@ -4083,14 +4679,17 @@ Product MetadataElement_getProduct(MetadataElement _this)
 {
     static jmethodID _method = NULL;
     Product _result = (Product) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classMetadataElement, "getProduct", "()Lorg/esa/beam/framework/datamodel/Product;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classMetadataElement, "getProduct", "()Lorg/esa/beam/framework/datamodel/Product;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -4099,14 +4698,17 @@ ProductReader MetadataElement_getProductReader(MetadataElement _this)
 {
     static jmethodID _method = NULL;
     ProductReader _result = (ProductReader) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classMetadataElement, "getProductReader", "()Lorg/esa/beam/framework/dataio/ProductReader;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classMetadataElement, "getProductReader", "()Lorg/esa/beam/framework/dataio/ProductReader;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -4115,14 +4717,17 @@ ProductWriter MetadataElement_getProductWriter(MetadataElement _this)
 {
     static jmethodID _method = NULL;
     ProductWriter _result = (ProductWriter) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classMetadataElement, "getProductWriter", "()Lorg/esa/beam/framework/dataio/ProductWriter;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classMetadataElement, "getProductWriter", "()Lorg/esa/beam/framework/dataio/ProductWriter;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -4132,14 +4737,17 @@ char* MetadataElement_getDisplayName(MetadataElement _this)
     static jmethodID _method = NULL;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classMetadataElement, "getDisplayName", "()Ljava/lang/String;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classMetadataElement, "getDisplayName", "()Ljava/lang/String;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
     return _result;
@@ -4150,14 +4758,17 @@ char* MetadataElement_getProductRefString(MetadataElement _this)
     static jmethodID _method = NULL;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classMetadataElement, "getProductRefString", "()Ljava/lang/String;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classMetadataElement, "getProductRefString", "()Ljava/lang/String;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
     return _result;
@@ -4168,14 +4779,17 @@ void MetadataElement_updateExpression(MetadataElement _this, const char* oldExte
     static jmethodID _method = NULL;
     jstring oldExternalNameString = NULL;
     jstring newExternalNameString = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classMetadataElement, "updateExpression", "(Ljava/lang/String;Ljava/lang/String;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classMetadataElement, "updateExpression", "(Ljava/lang/String;Ljava/lang/String;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     oldExternalNameString = (*jenv)->NewStringUTF(jenv, oldExternalName);
     newExternalNameString = (*jenv)->NewStringUTF(jenv, newExternalName);
     (*jenv)->CallVoidMethod(jenv, _this, _method, oldExternalNameString, newExternalNameString);
@@ -4184,14 +4798,17 @@ void MetadataElement_updateExpression(MetadataElement _this, const char* oldExte
 void MetadataElement_removeFromFile(MetadataElement _this, ProductWriter productWriter)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classMetadataElement, "removeFromFile", "(Lorg/esa/beam/framework/dataio/ProductWriter;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classMetadataElement, "removeFromFile", "(Lorg/esa/beam/framework/dataio/ProductWriter;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, productWriter);
 }
 
@@ -4199,14 +4816,17 @@ Object MetadataElement_getExtension(MetadataElement _this, Class arg0)
 {
     static jmethodID _method = NULL;
     Object _result = (Object) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classMetadataElement, "getExtension", "(Ljava/lang/Class;)Ljava/lang/Object;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classMetadataElement, "getExtension", "(Ljava/lang/Class;)Ljava/lang/Object;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, arg0);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -4217,14 +4837,17 @@ Product Product_newProduct(const char* name, const char* type, int sceneRasterWi
     jstring nameString = NULL;
     jstring typeString = NULL;
     Product _result = (Product) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProduct, "<init>", "(Ljava/lang/String;Ljava/lang/String;II)V");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProduct, "<init>", "(Ljava/lang/String;Ljava/lang/String;II)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     nameString = (*jenv)->NewStringUTF(jenv, name);
     typeString = (*jenv)->NewStringUTF(jenv, type);
     _result = (*jenv)->NewObject(jenv, classProduct, _method, nameString, typeString, sceneRasterWidth, sceneRasterHeight);
@@ -4235,14 +4858,17 @@ File Product_getFileLocation(Product _this)
 {
     static jmethodID _method = NULL;
     File _result = (File) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProduct, "getFileLocation", "()Ljava/io/File;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProduct, "getFileLocation", "()Ljava/io/File;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -4250,14 +4876,17 @@ File Product_getFileLocation(Product _this)
 void Product_setFileLocation(Product _this, File fileLocation)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProduct, "setFileLocation", "(Ljava/io/File;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProduct, "setFileLocation", "(Ljava/io/File;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, fileLocation);
 }
 
@@ -4266,14 +4895,17 @@ char* Product_getProductType(Product _this)
     static jmethodID _method = NULL;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProduct, "getProductType", "()Ljava/lang/String;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProduct, "getProductType", "()Ljava/lang/String;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
     return _result;
@@ -4283,14 +4915,17 @@ void Product_setProductType(Product _this, const char* productType)
 {
     static jmethodID _method = NULL;
     jstring productTypeString = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProduct, "setProductType", "(Ljava/lang/String;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProduct, "setProductType", "(Ljava/lang/String;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     productTypeString = (*jenv)->NewStringUTF(jenv, productType);
     (*jenv)->CallVoidMethod(jenv, _this, _method, productTypeString);
 }
@@ -4298,14 +4933,17 @@ void Product_setProductType(Product _this, const char* productType)
 void Product_setProductReader(Product _this, ProductReader reader)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProduct, "setProductReader", "(Lorg/esa/beam/framework/dataio/ProductReader;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProduct, "setProductReader", "(Lorg/esa/beam/framework/dataio/ProductReader;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, reader);
 }
 
@@ -4313,14 +4951,17 @@ ProductReader Product_getProductReader(Product _this)
 {
     static jmethodID _method = NULL;
     ProductReader _result = (ProductReader) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProduct, "getProductReader", "()Lorg/esa/beam/framework/dataio/ProductReader;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProduct, "getProductReader", "()Lorg/esa/beam/framework/dataio/ProductReader;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -4328,14 +4969,17 @@ ProductReader Product_getProductReader(Product _this)
 void Product_setProductWriter(Product _this, ProductWriter writer)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProduct, "setProductWriter", "(Lorg/esa/beam/framework/dataio/ProductWriter;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProduct, "setProductWriter", "(Lorg/esa/beam/framework/dataio/ProductWriter;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, writer);
 }
 
@@ -4343,14 +4987,17 @@ ProductWriter Product_getProductWriter(Product _this)
 {
     static jmethodID _method = NULL;
     ProductWriter _result = (ProductWriter) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProduct, "getProductWriter", "()Lorg/esa/beam/framework/dataio/ProductWriter;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProduct, "getProductWriter", "()Lorg/esa/beam/framework/dataio/ProductWriter;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -4358,70 +5005,85 @@ ProductWriter Product_getProductWriter(Product _this)
 void Product_writeHeader(Product _this, Object output)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProduct, "writeHeader", "(Ljava/lang/Object;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProduct, "writeHeader", "(Ljava/lang/Object;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, output);
 }
 
 void Product_closeProductReader(Product _this)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProduct, "closeProductReader", "()V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProduct, "closeProductReader", "()V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method);
 }
 
 void Product_closeProductWriter(Product _this)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProduct, "closeProductWriter", "()V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProduct, "closeProductWriter", "()V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method);
 }
 
 void Product_closeIO(Product _this)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProduct, "closeIO", "()V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProduct, "closeIO", "()V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method);
 }
 
 void Product_dispose(Product _this)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProduct, "dispose", "()V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProduct, "dispose", "()V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method);
 }
 
@@ -4429,14 +5091,17 @@ PointingFactory Product_getPointingFactory(Product _this)
 {
     static jmethodID _method = NULL;
     PointingFactory _result = (PointingFactory) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProduct, "getPointingFactory", "()Lorg/esa/beam/framework/datamodel/PointingFactory;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProduct, "getPointingFactory", "()Lorg/esa/beam/framework/datamodel/PointingFactory;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -4444,28 +5109,34 @@ PointingFactory Product_getPointingFactory(Product _this)
 void Product_setPointingFactory(Product _this, PointingFactory pointingFactory)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProduct, "setPointingFactory", "(Lorg/esa/beam/framework/datamodel/PointingFactory;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProduct, "setPointingFactory", "(Lorg/esa/beam/framework/datamodel/PointingFactory;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, pointingFactory);
 }
 
 void Product_setGeoCoding(Product _this, GeoCoding geoCoding)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProduct, "setGeoCoding", "(Lorg/esa/beam/framework/datamodel/GeoCoding;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProduct, "setGeoCoding", "(Lorg/esa/beam/framework/datamodel/GeoCoding;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, geoCoding);
 }
 
@@ -4473,14 +5144,17 @@ GeoCoding Product_getGeoCoding(Product _this)
 {
     static jmethodID _method = NULL;
     GeoCoding _result = (GeoCoding) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProduct, "getGeoCoding", "()Lorg/esa/beam/framework/datamodel/GeoCoding;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProduct, "getGeoCoding", "()Lorg/esa/beam/framework/datamodel/GeoCoding;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -4489,14 +5163,17 @@ boolean Product_isUsingSingleGeoCoding(Product _this)
 {
     static jmethodID _method = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProduct, "isUsingSingleGeoCoding", "()Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProduct, "isUsingSingleGeoCoding", "()Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method);
     return _result;
 }
@@ -4505,14 +5182,17 @@ boolean Product_transferGeoCodingTo(Product _this, Product destProduct, ProductS
 {
     static jmethodID _method = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProduct, "transferGeoCodingTo", "(Lorg/esa/beam/framework/datamodel/Product;Lorg/esa/beam/framework/dataio/ProductSubsetDef;)Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProduct, "transferGeoCodingTo", "(Lorg/esa/beam/framework/datamodel/Product;Lorg/esa/beam/framework/dataio/ProductSubsetDef;)Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method, destProduct, subsetDef);
     return _result;
 }
@@ -4521,14 +5201,17 @@ int Product_getSceneRasterWidth(Product _this)
 {
     static jmethodID _method = NULL;
     int _result = (int) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProduct, "getSceneRasterWidth", "()I");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProduct, "getSceneRasterWidth", "()I");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallIntMethod(jenv, _this, _method);
     return _result;
 }
@@ -4537,14 +5220,17 @@ int Product_getSceneRasterHeight(Product _this)
 {
     static jmethodID _method = NULL;
     int _result = (int) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProduct, "getSceneRasterHeight", "()I");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProduct, "getSceneRasterHeight", "()I");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallIntMethod(jenv, _this, _method);
     return _result;
 }
@@ -4553,14 +5239,17 @@ ProductData_UTC Product_getStartTime(Product _this)
 {
     static jmethodID _method = NULL;
     ProductData_UTC _result = (ProductData_UTC) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProduct, "getStartTime", "()Lorg/esa/beam/framework/datamodel/ProductData/UTC;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProduct, "getStartTime", "()Lorg/esa/beam/framework/datamodel/ProductData/UTC;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -4568,14 +5257,17 @@ ProductData_UTC Product_getStartTime(Product _this)
 void Product_setStartTime(Product _this, ProductData_UTC startTime)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProduct, "setStartTime", "(Lorg/esa/beam/framework/datamodel/ProductData/UTC;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProduct, "setStartTime", "(Lorg/esa/beam/framework/datamodel/ProductData/UTC;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, startTime);
 }
 
@@ -4583,14 +5275,17 @@ ProductData_UTC Product_getEndTime(Product _this)
 {
     static jmethodID _method = NULL;
     ProductData_UTC _result = (ProductData_UTC) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProduct, "getEndTime", "()Lorg/esa/beam/framework/datamodel/ProductData/UTC;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProduct, "getEndTime", "()Lorg/esa/beam/framework/datamodel/ProductData/UTC;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -4598,14 +5293,17 @@ ProductData_UTC Product_getEndTime(Product _this)
 void Product_setEndTime(Product _this, ProductData_UTC endTime)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProduct, "setEndTime", "(Lorg/esa/beam/framework/datamodel/ProductData/UTC;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProduct, "setEndTime", "(Lorg/esa/beam/framework/datamodel/ProductData/UTC;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, endTime);
 }
 
@@ -4613,49 +5311,37 @@ MetadataElement Product_getMetadataRoot(Product _this)
 {
     static jmethodID _method = NULL;
     MetadataElement _result = (MetadataElement) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProduct, "getMetadataRoot", "()Lorg/esa/beam/framework/datamodel/MetadataElement;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProduct, "getMetadataRoot", "()Lorg/esa/beam/framework/datamodel/MetadataElement;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
-ProductNodeGroup Product_getGroups(Product _this)
+ProductNodeGroup Product_getBandGroup(Product _this)
 {
     static jmethodID _method = NULL;
     ProductNodeGroup _result = (ProductNodeGroup) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProduct, "getGroups", "()Lorg/esa/beam/framework/datamodel/ProductNodeGroup;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProduct, "getBandGroup", "()Lorg/esa/beam/framework/datamodel/ProductNodeGroup;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
-    return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
-}
-
-ProductNodeGroup Product_getGroup(Product _this, const char* name)
-{
-    static jmethodID _method = NULL;
-    jstring nameString = NULL;
-    ProductNodeGroup _result = (ProductNodeGroup) 0;
-
-    if (beam_init_api() != 0) return _result;
-
-    if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProduct, "getGroup", "(Ljava/lang/String;)Lorg/esa/beam/framework/datamodel/ProductNodeGroup;");
-        if (_method == NULL) return _result;
-    }
-
-    nameString = (*jenv)->NewStringUTF(jenv, name);
-    _result = (*jenv)->CallObjectMethod(jenv, _this, _method, nameString);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
@@ -4663,14 +5349,17 @@ ProductNodeGroup Product_getTiePointGridGroup(Product _this)
 {
     static jmethodID _method = NULL;
     ProductNodeGroup _result = (ProductNodeGroup) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProduct, "getTiePointGridGroup", "()Lorg/esa/beam/framework/datamodel/ProductNodeGroup;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProduct, "getTiePointGridGroup", "()Lorg/esa/beam/framework/datamodel/ProductNodeGroup;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -4678,14 +5367,17 @@ ProductNodeGroup Product_getTiePointGridGroup(Product _this)
 void Product_addTiePointGrid(Product _this, TiePointGrid tiePointGrid)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProduct, "addTiePointGrid", "(Lorg/esa/beam/framework/datamodel/TiePointGrid;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProduct, "addTiePointGrid", "(Lorg/esa/beam/framework/datamodel/TiePointGrid;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, tiePointGrid);
 }
 
@@ -4693,14 +5385,17 @@ boolean Product_removeTiePointGrid(Product _this, TiePointGrid tiePointGrid)
 {
     static jmethodID _method = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProduct, "removeTiePointGrid", "(Lorg/esa/beam/framework/datamodel/TiePointGrid;)Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProduct, "removeTiePointGrid", "(Lorg/esa/beam/framework/datamodel/TiePointGrid;)Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method, tiePointGrid);
     return _result;
 }
@@ -4709,14 +5404,17 @@ int Product_getNumTiePointGrids(Product _this)
 {
     static jmethodID _method = NULL;
     int _result = (int) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProduct, "getNumTiePointGrids", "()I");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProduct, "getNumTiePointGrids", "()I");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallIntMethod(jenv, _this, _method);
     return _result;
 }
@@ -4725,14 +5423,17 @@ TiePointGrid Product_getTiePointGridAt(Product _this, int index)
 {
     static jmethodID _method = NULL;
     TiePointGrid _result = (TiePointGrid) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProduct, "getTiePointGridAt", "(I)Lorg/esa/beam/framework/datamodel/TiePointGrid;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProduct, "getTiePointGridAt", "(I)Lorg/esa/beam/framework/datamodel/TiePointGrid;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, index);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -4742,14 +5443,17 @@ char** Product_getTiePointGridNames(Product _this, int* resultArrayLength)
     static jmethodID _method = NULL;
     char** _result = (char**) 0;
     jarray _resultArray = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProduct, "getTiePointGridNames", "()[Ljava/lang/String;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProduct, "getTiePointGridNames", "()[Ljava/lang/String;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string_array(_resultArray, resultArrayLength);
     return _result;
@@ -4760,14 +5464,17 @@ TiePointGrid* Product_getTiePointGrids(Product _this, int* resultArrayLength)
     static jmethodID _method = NULL;
     TiePointGrid* _result = (TiePointGrid*) 0;
     jarray _resultArray = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProduct, "getTiePointGrids", "()[Lorg/esa/beam/framework/datamodel/TiePointGrid;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProduct, "getTiePointGrids", "()[Lorg/esa/beam/framework/datamodel/TiePointGrid;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_object_array(_resultArray, resultArrayLength);
     return _result;
@@ -4778,14 +5485,17 @@ TiePointGrid Product_getTiePointGrid(Product _this, const char* name)
     static jmethodID _method = NULL;
     jstring nameString = NULL;
     TiePointGrid _result = (TiePointGrid) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProduct, "getTiePointGrid", "(Ljava/lang/String;)Lorg/esa/beam/framework/datamodel/TiePointGrid;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProduct, "getTiePointGrid", "(Ljava/lang/String;)Lorg/esa/beam/framework/datamodel/TiePointGrid;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     nameString = (*jenv)->NewStringUTF(jenv, name);
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, nameString);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
@@ -4796,46 +5506,36 @@ boolean Product_containsTiePointGrid(Product _this, const char* name)
     static jmethodID _method = NULL;
     jstring nameString = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProduct, "containsTiePointGrid", "(Ljava/lang/String;)Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProduct, "containsTiePointGrid", "(Ljava/lang/String;)Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     nameString = (*jenv)->NewStringUTF(jenv, name);
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method, nameString);
     return _result;
 }
 
-ProductNodeGroup Product_getBandGroup(Product _this)
-{
-    static jmethodID _method = NULL;
-    ProductNodeGroup _result = (ProductNodeGroup) 0;
-
-    if (beam_init_api() != 0) return _result;
-
-    if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProduct, "getBandGroup", "()Lorg/esa/beam/framework/datamodel/ProductNodeGroup;");
-        if (_method == NULL) return _result;
-    }
-
-    _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
-    return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
-}
-
 void Product_addBand(Product _this, Band band)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProduct, "addBand", "(Lorg/esa/beam/framework/datamodel/Band;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProduct, "addBand", "(Lorg/esa/beam/framework/datamodel/Band;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, band);
 }
 
@@ -4844,14 +5544,17 @@ Band Product_addNewBand(Product _this, const char* bandName, int dataType)
     static jmethodID _method = NULL;
     jstring bandNameString = NULL;
     Band _result = (Band) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProduct, "addBand", "(Ljava/lang/String;I)Lorg/esa/beam/framework/datamodel/Band;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProduct, "addBand", "(Ljava/lang/String;I)Lorg/esa/beam/framework/datamodel/Band;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     bandNameString = (*jenv)->NewStringUTF(jenv, bandName);
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, bandNameString, dataType);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
@@ -4863,14 +5566,17 @@ Band Product_addComputedBand(Product _this, const char* bandName, const char* ex
     jstring bandNameString = NULL;
     jstring expressionString = NULL;
     Band _result = (Band) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProduct, "addBand", "(Ljava/lang/String;Ljava/lang/String;)Lorg/esa/beam/framework/datamodel/Band;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProduct, "addBand", "(Ljava/lang/String;Ljava/lang/String;)Lorg/esa/beam/framework/datamodel/Band;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     bandNameString = (*jenv)->NewStringUTF(jenv, bandName);
     expressionString = (*jenv)->NewStringUTF(jenv, expression);
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, bandNameString, expressionString);
@@ -4881,14 +5587,17 @@ boolean Product_removeBand(Product _this, Band band)
 {
     static jmethodID _method = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProduct, "removeBand", "(Lorg/esa/beam/framework/datamodel/Band;)Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProduct, "removeBand", "(Lorg/esa/beam/framework/datamodel/Band;)Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method, band);
     return _result;
 }
@@ -4897,14 +5606,17 @@ int Product_getNumBands(Product _this)
 {
     static jmethodID _method = NULL;
     int _result = (int) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProduct, "getNumBands", "()I");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProduct, "getNumBands", "()I");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallIntMethod(jenv, _this, _method);
     return _result;
 }
@@ -4913,14 +5625,17 @@ Band Product_getBandAt(Product _this, int index)
 {
     static jmethodID _method = NULL;
     Band _result = (Band) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProduct, "getBandAt", "(I)Lorg/esa/beam/framework/datamodel/Band;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProduct, "getBandAt", "(I)Lorg/esa/beam/framework/datamodel/Band;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, index);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -4930,14 +5645,17 @@ char** Product_getBandNames(Product _this, int* resultArrayLength)
     static jmethodID _method = NULL;
     char** _result = (char**) 0;
     jarray _resultArray = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProduct, "getBandNames", "()[Ljava/lang/String;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProduct, "getBandNames", "()[Ljava/lang/String;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string_array(_resultArray, resultArrayLength);
     return _result;
@@ -4948,14 +5666,17 @@ Band* Product_getBands(Product _this, int* resultArrayLength)
     static jmethodID _method = NULL;
     Band* _result = (Band*) 0;
     jarray _resultArray = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProduct, "getBands", "()[Lorg/esa/beam/framework/datamodel/Band;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProduct, "getBands", "()[Lorg/esa/beam/framework/datamodel/Band;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_object_array(_resultArray, resultArrayLength);
     return _result;
@@ -4966,14 +5687,17 @@ Band Product_getBand(Product _this, const char* name)
     static jmethodID _method = NULL;
     jstring nameString = NULL;
     Band _result = (Band) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProduct, "getBand", "(Ljava/lang/String;)Lorg/esa/beam/framework/datamodel/Band;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProduct, "getBand", "(Ljava/lang/String;)Lorg/esa/beam/framework/datamodel/Band;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     nameString = (*jenv)->NewStringUTF(jenv, name);
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, nameString);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
@@ -4984,14 +5708,17 @@ int Product_getBandIndex(Product _this, const char* name)
     static jmethodID _method = NULL;
     jstring nameString = NULL;
     int _result = (int) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProduct, "getBandIndex", "(Ljava/lang/String;)I");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProduct, "getBandIndex", "(Ljava/lang/String;)I");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     nameString = (*jenv)->NewStringUTF(jenv, name);
     _result = (*jenv)->CallIntMethod(jenv, _this, _method, nameString);
     return _result;
@@ -5002,14 +5729,17 @@ boolean Product_containsBand(Product _this, const char* name)
     static jmethodID _method = NULL;
     jstring nameString = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProduct, "containsBand", "(Ljava/lang/String;)Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProduct, "containsBand", "(Ljava/lang/String;)Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     nameString = (*jenv)->NewStringUTF(jenv, name);
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method, nameString);
     return _result;
@@ -5020,14 +5750,17 @@ boolean Product_containsRasterDataNode(Product _this, const char* name)
     static jmethodID _method = NULL;
     jstring nameString = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProduct, "containsRasterDataNode", "(Ljava/lang/String;)Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProduct, "containsRasterDataNode", "(Ljava/lang/String;)Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     nameString = (*jenv)->NewStringUTF(jenv, name);
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method, nameString);
     return _result;
@@ -5038,14 +5771,17 @@ RasterDataNode Product_getRasterDataNode(Product _this, const char* name)
     static jmethodID _method = NULL;
     jstring nameString = NULL;
     RasterDataNode _result = (RasterDataNode) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProduct, "getRasterDataNode", "(Ljava/lang/String;)Lorg/esa/beam/framework/datamodel/RasterDataNode;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProduct, "getRasterDataNode", "(Ljava/lang/String;)Lorg/esa/beam/framework/datamodel/RasterDataNode;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     nameString = (*jenv)->NewStringUTF(jenv, name);
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, nameString);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
@@ -5055,14 +5791,17 @@ ProductNodeGroup Product_getMaskGroup(Product _this)
 {
     static jmethodID _method = NULL;
     ProductNodeGroup _result = (ProductNodeGroup) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProduct, "getMaskGroup", "()Lorg/esa/beam/framework/datamodel/ProductNodeGroup;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProduct, "getMaskGroup", "()Lorg/esa/beam/framework/datamodel/ProductNodeGroup;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -5071,14 +5810,17 @@ ProductNodeGroup Product_getVectorDataGroup(Product _this)
 {
     static jmethodID _method = NULL;
     ProductNodeGroup _result = (ProductNodeGroup) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProduct, "getVectorDataGroup", "()Lorg/esa/beam/framework/datamodel/ProductNodeGroup;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProduct, "getVectorDataGroup", "()Lorg/esa/beam/framework/datamodel/ProductNodeGroup;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -5087,14 +5829,17 @@ ProductNodeGroup Product_getFlagCodingGroup(Product _this)
 {
     static jmethodID _method = NULL;
     ProductNodeGroup _result = (ProductNodeGroup) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProduct, "getFlagCodingGroup", "()Lorg/esa/beam/framework/datamodel/ProductNodeGroup;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProduct, "getFlagCodingGroup", "()Lorg/esa/beam/framework/datamodel/ProductNodeGroup;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -5103,14 +5848,17 @@ ProductNodeGroup Product_getIndexCodingGroup(Product _this)
 {
     static jmethodID _method = NULL;
     ProductNodeGroup _result = (ProductNodeGroup) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProduct, "getIndexCodingGroup", "()Lorg/esa/beam/framework/datamodel/ProductNodeGroup;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProduct, "getIndexCodingGroup", "()Lorg/esa/beam/framework/datamodel/ProductNodeGroup;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -5119,14 +5867,17 @@ boolean Product_containsPixel(Product _this, float x, float y)
 {
     static jmethodID _method = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProduct, "containsPixel", "(FF)Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProduct, "containsPixel", "(FF)Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method, x, y);
     return _result;
 }
@@ -5135,14 +5886,17 @@ PlacemarkGroup Product_getGcpGroup(Product _this)
 {
     static jmethodID _method = NULL;
     PlacemarkGroup _result = (PlacemarkGroup) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProduct, "getGcpGroup", "()Lorg/esa/beam/framework/datamodel/PlacemarkGroup;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProduct, "getGcpGroup", "()Lorg/esa/beam/framework/datamodel/PlacemarkGroup;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -5151,60 +5905,36 @@ PlacemarkGroup Product_getPinGroup(Product _this)
 {
     static jmethodID _method = NULL;
     PlacemarkGroup _result = (PlacemarkGroup) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProduct, "getPinGroup", "()Lorg/esa/beam/framework/datamodel/PlacemarkGroup;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProduct, "getPinGroup", "()Lorg/esa/beam/framework/datamodel/PlacemarkGroup;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
-}
-
-int Product_getNumResolutionsMax(Product _this)
-{
-    static jmethodID _method = NULL;
-    int _result = (int) 0;
-
-    if (beam_init_api() != 0) return _result;
-
-    if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProduct, "getNumResolutionsMax", "()I");
-        if (_method == NULL) return _result;
-    }
-
-    _result = (*jenv)->CallIntMethod(jenv, _this, _method);
-    return _result;
-}
-
-void Product_setNumResolutionsMax(Product _this, int numResolutionsMax)
-{
-    static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
-    if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProduct, "setNumResolutionsMax", "(I)V");
-        if (_method == NULL) return;
-    }
-
-    (*jenv)->CallVoidMethod(jenv, _this, _method, numResolutionsMax);
 }
 
 boolean Product_isCompatibleProduct(Product _this, Product product, float eps)
 {
     static jmethodID _method = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProduct, "isCompatibleProduct", "(Lorg/esa/beam/framework/datamodel/Product;F)Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProduct, "isCompatibleProduct", "(Lorg/esa/beam/framework/datamodel/Product;F)Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method, product, eps);
     return _result;
 }
@@ -5214,14 +5944,17 @@ Term Product_parseExpression(Product _this, const char* expression)
     static jmethodID _method = NULL;
     jstring expressionString = NULL;
     Term _result = (Term) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProduct, "parseExpression", "(Ljava/lang/String;)Lcom/bc/jexp/Term;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProduct, "parseExpression", "(Ljava/lang/String;)Lcom/bc/jexp/Term;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     expressionString = (*jenv)->NewStringUTF(jenv, expression);
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, expressionString);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
@@ -5230,14 +5963,17 @@ Term Product_parseExpression(Product _this, const char* expression)
 void Product_acceptVisitor(Product _this, ProductVisitor visitor)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProduct, "acceptVisitor", "(Lorg/esa/beam/framework/datamodel/ProductVisitor;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProduct, "acceptVisitor", "(Lorg/esa/beam/framework/datamodel/ProductVisitor;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, visitor);
 }
 
@@ -5245,14 +5981,17 @@ boolean Product_addProductNodeListener(Product _this, ProductNodeListener listen
 {
     static jmethodID _method = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProduct, "addProductNodeListener", "(Lorg/esa/beam/framework/datamodel/ProductNodeListener;)Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProduct, "addProductNodeListener", "(Lorg/esa/beam/framework/datamodel/ProductNodeListener;)Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method, listener);
     return _result;
 }
@@ -5260,14 +5999,17 @@ boolean Product_addProductNodeListener(Product _this, ProductNodeListener listen
 void Product_removeProductNodeListener(Product _this, ProductNodeListener listener)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProduct, "removeProductNodeListener", "(Lorg/esa/beam/framework/datamodel/ProductNodeListener;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProduct, "removeProductNodeListener", "(Lorg/esa/beam/framework/datamodel/ProductNodeListener;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, listener);
 }
 
@@ -5276,14 +6018,17 @@ ProductNodeListener* Product_getProductNodeListeners(Product _this, int* resultA
     static jmethodID _method = NULL;
     ProductNodeListener* _result = (ProductNodeListener*) 0;
     jarray _resultArray = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProduct, "getProductNodeListeners", "()[Lorg/esa/beam/framework/datamodel/ProductNodeListener;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProduct, "getProductNodeListeners", "()[Lorg/esa/beam/framework/datamodel/ProductNodeListener;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_object_array(_resultArray, resultArrayLength);
     return _result;
@@ -5293,14 +6038,17 @@ int Product_getRefNo(Product _this)
 {
     static jmethodID _method = NULL;
     int _result = (int) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProduct, "getRefNo", "()I");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProduct, "getRefNo", "()I");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallIntMethod(jenv, _this, _method);
     return _result;
 }
@@ -5308,28 +6056,34 @@ int Product_getRefNo(Product _this)
 void Product_setRefNo(Product _this, int refNo)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProduct, "setRefNo", "(I)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProduct, "setRefNo", "(I)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, refNo);
 }
 
 void Product_resetRefNo(Product _this)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProduct, "resetRefNo", "()V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProduct, "resetRefNo", "()V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method);
 }
 
@@ -5337,14 +6091,17 @@ ProductManager Product_getProductManager(Product _this)
 {
     static jmethodID _method = NULL;
     ProductManager _result = (ProductManager) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProduct, "getProductManager", "()Lorg/esa/beam/framework/datamodel/ProductManager;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProduct, "getProductManager", "()Lorg/esa/beam/framework/datamodel/ProductManager;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -5353,14 +6110,17 @@ Parser Product_createBandArithmeticParser(Product _this)
 {
     static jmethodID _method = NULL;
     Parser _result = (Parser) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProduct, "createBandArithmeticParser", "()Lcom/bc/jexp/Parser;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProduct, "createBandArithmeticParser", "()Lcom/bc/jexp/Parser;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -5369,14 +6129,17 @@ WritableNamespace Product_createBandArithmeticDefaultNamespace(Product _this)
 {
     static jmethodID _method = NULL;
     WritableNamespace _result = (WritableNamespace) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProduct, "createBandArithmeticDefaultNamespace", "()Lcom/bc/jexp/WritableNamespace;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProduct, "createBandArithmeticDefaultNamespace", "()Lcom/bc/jexp/WritableNamespace;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -5387,14 +6150,17 @@ Product Product_createSubset(Product _this, ProductSubsetDef subsetDef, const ch
     jstring nameString = NULL;
     jstring descString = NULL;
     Product _result = (Product) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProduct, "createSubset", "(Lorg/esa/beam/framework/dataio/ProductSubsetDef;Ljava/lang/String;Ljava/lang/String;)Lorg/esa/beam/framework/datamodel/Product;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProduct, "createSubset", "(Lorg/esa/beam/framework/dataio/ProductSubsetDef;Ljava/lang/String;Ljava/lang/String;)Lorg/esa/beam/framework/datamodel/Product;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     nameString = (*jenv)->NewStringUTF(jenv, name);
     descString = (*jenv)->NewStringUTF(jenv, desc);
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, subsetDef, nameString, descString);
@@ -5407,14 +6173,17 @@ Product Product_createFlippedProduct(Product _this, int flipType, const char* na
     jstring nameString = NULL;
     jstring descString = NULL;
     Product _result = (Product) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProduct, "createFlippedProduct", "(ILjava/lang/String;Ljava/lang/String;)Lorg/esa/beam/framework/datamodel/Product;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProduct, "createFlippedProduct", "(ILjava/lang/String;Ljava/lang/String;)Lorg/esa/beam/framework/datamodel/Product;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     nameString = (*jenv)->NewStringUTF(jenv, name);
     descString = (*jenv)->NewStringUTF(jenv, desc);
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, flipType, nameString, descString);
@@ -5424,14 +6193,17 @@ Product Product_createFlippedProduct(Product _this, int flipType, const char* na
 void Product_setModified(Product _this, boolean modified)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProduct, "setModified", "(Z)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProduct, "setModified", "(Z)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, modified);
 }
 
@@ -5440,14 +6212,17 @@ char* Product_getQuicklookBandName(Product _this)
     static jmethodID _method = NULL;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProduct, "getQuicklookBandName", "()Ljava/lang/String;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProduct, "getQuicklookBandName", "()Ljava/lang/String;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
     return _result;
@@ -5457,14 +6232,17 @@ void Product_setQuicklookBandName(Product _this, const char* quicklookBandName)
 {
     static jmethodID _method = NULL;
     jstring quicklookBandNameString = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProduct, "setQuicklookBandName", "(Ljava/lang/String;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProduct, "setQuicklookBandName", "(Ljava/lang/String;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     quicklookBandNameString = (*jenv)->NewStringUTF(jenv, quicklookBandName);
     (*jenv)->CallVoidMethod(jenv, _this, _method, quicklookBandNameString);
 }
@@ -5474,14 +6252,17 @@ char* Product_createPixelInfoString(Product _this, int pixelX, int pixelY)
     static jmethodID _method = NULL;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProduct, "createPixelInfoString", "(II)Ljava/lang/String;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProduct, "createPixelInfoString", "(II)Ljava/lang/String;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method, pixelX, pixelY);
     _result = beam_alloc_string(_resultString);
     return _result;
@@ -5492,14 +6273,17 @@ ProductNode* Product_getRemovedChildNodes(Product _this, int* resultArrayLength)
     static jmethodID _method = NULL;
     ProductNode* _result = (ProductNode*) 0;
     jarray _resultArray = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProduct, "getRemovedChildNodes", "()[Lorg/esa/beam/framework/datamodel/ProductNode;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProduct, "getRemovedChildNodes", "()[Lorg/esa/beam/framework/datamodel/ProductNode;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_object_array(_resultArray, resultArrayLength);
     return _result;
@@ -5509,14 +6293,17 @@ boolean Product_canBeOrthorectified(Product _this)
 {
     static jmethodID _method = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProduct, "canBeOrthorectified", "()Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProduct, "canBeOrthorectified", "()Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method);
     return _result;
 }
@@ -5525,14 +6312,17 @@ Dimension Product_getPreferredTileSize(Product _this)
 {
     static jmethodID _method = NULL;
     Dimension _result = (Dimension) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProduct, "getPreferredTileSize", "()Ljava/awt/Dimension;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProduct, "getPreferredTileSize", "()Ljava/awt/Dimension;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -5540,14 +6330,17 @@ Dimension Product_getPreferredTileSize(Product _this)
 void Product_setPreferredTileSize(Product _this, int tileWidth, int tileHeight)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProduct, "setPreferredTileSize", "(II)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProduct, "setPreferredTileSize", "(II)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, tileWidth, tileHeight);
 }
 
@@ -5556,14 +6349,17 @@ char** Product_getAllFlagNames(Product _this, int* resultArrayLength)
     static jmethodID _method = NULL;
     char** _result = (char**) 0;
     jarray _resultArray = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProduct, "getAllFlagNames", "()[Ljava/lang/String;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProduct, "getAllFlagNames", "()[Ljava/lang/String;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string_array(_resultArray, resultArrayLength);
     return _result;
@@ -5573,14 +6369,17 @@ Product_AutoGrouping Product_getAutoGrouping(Product _this)
 {
     static jmethodID _method = NULL;
     Product_AutoGrouping _result = (Product_AutoGrouping) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProduct, "getAutoGrouping", "()Lorg/esa/beam/framework/datamodel/Product/AutoGrouping;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProduct, "getAutoGrouping", "()Lorg/esa/beam/framework/datamodel/Product/AutoGrouping;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -5589,14 +6388,17 @@ void Product_setAutoGrouping(Product _this, const char* pattern)
 {
     static jmethodID _method = NULL;
     jstring patternString = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProduct, "setAutoGrouping", "(Ljava/lang/String;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProduct, "setAutoGrouping", "(Ljava/lang/String;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     patternString = (*jenv)->NewStringUTF(jenv, pattern);
     (*jenv)->CallVoidMethod(jenv, _this, _method, patternString);
 }
@@ -5608,14 +6410,17 @@ Mask Product_addComputedMask(Product _this, const char* maskName, const char* ex
     jstring expressionString = NULL;
     jstring descriptionString = NULL;
     Mask _result = (Mask) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProduct, "addMask", "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/awt/Color;D)Lorg/esa/beam/framework/datamodel/Mask;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProduct, "addMask", "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/awt/Color;D)Lorg/esa/beam/framework/datamodel/Mask;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     maskNameString = (*jenv)->NewStringUTF(jenv, maskName);
     expressionString = (*jenv)->NewStringUTF(jenv, expression);
     descriptionString = (*jenv)->NewStringUTF(jenv, description);
@@ -5626,14 +6431,17 @@ Mask Product_addComputedMask(Product _this, const char* maskName, const char* ex
 void Product_addBitmaskDef(Product _this, BitmaskDef bitmaskDef)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProduct, "addBitmaskDef", "(Lorg/esa/beam/framework/datamodel/BitmaskDef;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProduct, "addBitmaskDef", "(Lorg/esa/beam/framework/datamodel/BitmaskDef;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, bitmaskDef);
 }
 
@@ -5642,14 +6450,17 @@ char** Product_getBitmaskDefNames(Product _this, int* resultArrayLength)
     static jmethodID _method = NULL;
     char** _result = (char**) 0;
     jarray _resultArray = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProduct, "getBitmaskDefNames", "()[Ljava/lang/String;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProduct, "getBitmaskDefNames", "()[Ljava/lang/String;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string_array(_resultArray, resultArrayLength);
     return _result;
@@ -5660,14 +6471,17 @@ BitmaskDef Product_getBitmaskDef(Product _this, const char* name)
     static jmethodID _method = NULL;
     jstring nameString = NULL;
     BitmaskDef _result = (BitmaskDef) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProduct, "getBitmaskDef", "(Ljava/lang/String;)Lorg/esa/beam/framework/datamodel/BitmaskDef;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProduct, "getBitmaskDef", "(Ljava/lang/String;)Lorg/esa/beam/framework/datamodel/BitmaskDef;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     nameString = (*jenv)->NewStringUTF(jenv, name);
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, nameString);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
@@ -5678,14 +6492,17 @@ BitRaster Product_getValidMask(Product _this, const char* id)
     static jmethodID _method = NULL;
     jstring idString = NULL;
     BitRaster _result = (BitRaster) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProduct, "getValidMask", "(Ljava/lang/String;)Lorg/esa/beam/util/BitRaster;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProduct, "getValidMask", "(Ljava/lang/String;)Lorg/esa/beam/util/BitRaster;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     idString = (*jenv)->NewStringUTF(jenv, id);
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, idString);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
@@ -5695,14 +6512,17 @@ void Product_setValidMask(Product _this, const char* id, BitRaster validMask)
 {
     static jmethodID _method = NULL;
     jstring idString = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProduct, "setValidMask", "(Ljava/lang/String;Lorg/esa/beam/util/BitRaster;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProduct, "setValidMask", "(Ljava/lang/String;Lorg/esa/beam/util/BitRaster;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     idString = (*jenv)->NewStringUTF(jenv, id);
     (*jenv)->CallVoidMethod(jenv, _this, _method, idString, validMask);
 }
@@ -5712,14 +6532,17 @@ BitRaster Product_createValidMask2(Product _this, const char* expression, Progre
     static jmethodID _method = NULL;
     jstring expressionString = NULL;
     BitRaster _result = (BitRaster) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProduct, "createValidMask", "(Ljava/lang/String;Lcom/bc/ceres/core/ProgressMonitor;)Lorg/esa/beam/util/BitRaster;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProduct, "createValidMask", "(Ljava/lang/String;Lcom/bc/ceres/core/ProgressMonitor;)Lorg/esa/beam/util/BitRaster;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     expressionString = (*jenv)->NewStringUTF(jenv, expression);
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, expressionString, pm);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
@@ -5729,14 +6552,17 @@ BitRaster Product_createValidMask1(Product _this, Term term, ProgressMonitor pm)
 {
     static jmethodID _method = NULL;
     BitRaster _result = (BitRaster) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProduct, "createValidMask", "(Lcom/bc/jexp/Term;Lcom/bc/ceres/core/ProgressMonitor;)Lorg/esa/beam/util/BitRaster;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProduct, "createValidMask", "(Lcom/bc/jexp/Term;Lcom/bc/ceres/core/ProgressMonitor;)Lorg/esa/beam/util/BitRaster;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, term, pm);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -5745,14 +6571,17 @@ void Product_readBitmask2(Product _this, int offsetX, int offsetY, int width, in
 {
     static jmethodID _method = NULL;
     jarray bitmaskArray = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProduct, "readBitmask", "(IIIILcom/bc/jexp/Term;[ZLcom/bc/ceres/core/ProgressMonitor;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProduct, "readBitmask", "(IIIILcom/bc/jexp/Term;[ZLcom/bc/ceres/core/ProgressMonitor;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     bitmaskArray = (*jenv)->NewBooleanArray(jenv, bitmaskLength);
     beam_copy_to_jarray(bitmaskArray, bitmaskElems, bitmaskLength, sizeof (boolean));
     (*jenv)->CallVoidMethod(jenv, _this, _method, offsetX, offsetY, width, height, bitmaskTerm, bitmaskArray, pm);
@@ -5762,14 +6591,17 @@ void Product_readBitmask1(Product _this, int offsetX, int offsetY, int width, in
 {
     static jmethodID _method = NULL;
     jarray bitmaskArray = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProduct, "readBitmask", "(IIIILcom/bc/jexp/Term;[BBBLcom/bc/ceres/core/ProgressMonitor;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProduct, "readBitmask", "(IIIILcom/bc/jexp/Term;[BBBLcom/bc/ceres/core/ProgressMonitor;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     bitmaskArray = (*jenv)->NewByteArray(jenv, bitmaskLength);
     beam_copy_to_jarray(bitmaskArray, bitmaskElems, bitmaskLength, sizeof (byte));
     (*jenv)->CallVoidMethod(jenv, _this, _method, offsetX, offsetY, width, height, bitmaskTerm, bitmaskArray, trueValue, falseValue, pm);
@@ -5779,14 +6611,17 @@ ProductNode Product_getOwner(Product _this)
 {
     static jmethodID _method = NULL;
     ProductNode _result = (ProductNode) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProduct, "getOwner", "()Lorg/esa/beam/framework/datamodel/ProductNode;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProduct, "getOwner", "()Lorg/esa/beam/framework/datamodel/ProductNode;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -5796,14 +6631,17 @@ char* Product_getName(Product _this)
     static jmethodID _method = NULL;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProduct, "getName", "()Ljava/lang/String;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProduct, "getName", "()Ljava/lang/String;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
     return _result;
@@ -5813,14 +6651,17 @@ void Product_setName(Product _this, const char* name)
 {
     static jmethodID _method = NULL;
     jstring nameString = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProduct, "setName", "(Ljava/lang/String;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProduct, "setName", "(Ljava/lang/String;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     nameString = (*jenv)->NewStringUTF(jenv, name);
     (*jenv)->CallVoidMethod(jenv, _this, _method, nameString);
 }
@@ -5830,14 +6671,17 @@ char* Product_getDescription(Product _this)
     static jmethodID _method = NULL;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProduct, "getDescription", "()Ljava/lang/String;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProduct, "getDescription", "()Ljava/lang/String;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
     return _result;
@@ -5847,14 +6691,17 @@ void Product_setDescription(Product _this, const char* description)
 {
     static jmethodID _method = NULL;
     jstring descriptionString = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProduct, "setDescription", "(Ljava/lang/String;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProduct, "setDescription", "(Ljava/lang/String;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     descriptionString = (*jenv)->NewStringUTF(jenv, description);
     (*jenv)->CallVoidMethod(jenv, _this, _method, descriptionString);
 }
@@ -5863,14 +6710,17 @@ boolean Product_isModified(Product _this)
 {
     static jmethodID _method = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProduct, "isModified", "()Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProduct, "isModified", "()Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method);
     return _result;
 }
@@ -5880,14 +6730,17 @@ char* Product_toString(Product _this)
     static jmethodID _method = NULL;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProduct, "toString", "()Ljava/lang/String;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProduct, "toString", "()Ljava/lang/String;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
     return _result;
@@ -5898,14 +6751,17 @@ boolean Product_isValidNodeName(const char* name)
     static jmethodID _method = NULL;
     jstring nameString = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classProduct, "isValidNodeName", "(Ljava/lang/String;)Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classProduct, "isValidNodeName", "(Ljava/lang/String;)Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     nameString = (*jenv)->NewStringUTF(jenv, name);
     _result = (*jenv)->CallStaticBooleanMethod(jenv, classProduct, _method, nameString);
     return _result;
@@ -5915,14 +6771,17 @@ Product Product_getProduct(Product _this)
 {
     static jmethodID _method = NULL;
     Product _result = (Product) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProduct, "getProduct", "()Lorg/esa/beam/framework/datamodel/Product;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProduct, "getProduct", "()Lorg/esa/beam/framework/datamodel/Product;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -5932,14 +6791,17 @@ char* Product_getDisplayName(Product _this)
     static jmethodID _method = NULL;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProduct, "getDisplayName", "()Ljava/lang/String;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProduct, "getDisplayName", "()Ljava/lang/String;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
     return _result;
@@ -5950,14 +6812,17 @@ char* Product_getProductRefString(Product _this)
     static jmethodID _method = NULL;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProduct, "getProductRefString", "()Ljava/lang/String;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProduct, "getProductRefString", "()Ljava/lang/String;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
     return _result;
@@ -5968,14 +6833,17 @@ void Product_updateExpression(Product _this, const char* oldExternalName, const 
     static jmethodID _method = NULL;
     jstring oldExternalNameString = NULL;
     jstring newExternalNameString = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProduct, "updateExpression", "(Ljava/lang/String;Ljava/lang/String;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProduct, "updateExpression", "(Ljava/lang/String;Ljava/lang/String;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     oldExternalNameString = (*jenv)->NewStringUTF(jenv, oldExternalName);
     newExternalNameString = (*jenv)->NewStringUTF(jenv, newExternalName);
     (*jenv)->CallVoidMethod(jenv, _this, _method, oldExternalNameString, newExternalNameString);
@@ -5984,14 +6852,17 @@ void Product_updateExpression(Product _this, const char* oldExternalName, const 
 void Product_removeFromFile(Product _this, ProductWriter productWriter)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProduct, "removeFromFile", "(Lorg/esa/beam/framework/dataio/ProductWriter;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProduct, "removeFromFile", "(Lorg/esa/beam/framework/dataio/ProductWriter;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, productWriter);
 }
 
@@ -5999,14 +6870,17 @@ Object Product_getExtension(Product _this, Class arg0)
 {
     static jmethodID _method = NULL;
     Object _result = (Object) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProduct, "getExtension", "(Ljava/lang/Class;)Ljava/lang/Object;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProduct, "getExtension", "(Ljava/lang/Class;)Ljava/lang/Object;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, arg0);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -6015,14 +6889,17 @@ ColorPaletteDef ColorPaletteDef_newColorPaletteDefFromRange(double minSample, do
 {
     static jmethodID _method = NULL;
     ColorPaletteDef _result = (ColorPaletteDef) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classColorPaletteDef, "<init>", "(DD)V");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classColorPaletteDef, "<init>", "(DD)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->NewObject(jenv, classColorPaletteDef, _method, minSample, maxSample);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -6032,14 +6909,17 @@ ColorPaletteDef ColorPaletteDef_newColorPaletteDefFromPoints(const ColorPaletteD
     static jmethodID _method = NULL;
     jarray pointsArray = NULL;
     ColorPaletteDef _result = (ColorPaletteDef) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classColorPaletteDef, "<init>", "([Lorg/esa/beam/framework/datamodel/ColorPaletteDef/Point;I)V");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classColorPaletteDef, "<init>", "([Lorg/esa/beam/framework/datamodel/ColorPaletteDef/Point;I)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     pointsArray = beam_new_jobject_array(pointsElems, pointsLength, classColorPaletteDef_Point);
     _result = (*jenv)->NewObject(jenv, classColorPaletteDef, _method, pointsArray, numColors);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
@@ -6049,14 +6929,17 @@ boolean ColorPaletteDef_isDiscrete(ColorPaletteDef _this)
 {
     static jmethodID _method = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classColorPaletteDef, "isDiscrete", "()Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classColorPaletteDef, "isDiscrete", "()Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method);
     return _result;
 }
@@ -6064,14 +6947,17 @@ boolean ColorPaletteDef_isDiscrete(ColorPaletteDef _this)
 void ColorPaletteDef_setDiscrete(ColorPaletteDef _this, boolean discrete)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classColorPaletteDef, "setDiscrete", "(Z)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classColorPaletteDef, "setDiscrete", "(Z)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, discrete);
 }
 
@@ -6079,14 +6965,17 @@ int ColorPaletteDef_getNumColors(ColorPaletteDef _this)
 {
     static jmethodID _method = NULL;
     int _result = (int) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classColorPaletteDef, "getNumColors", "()I");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classColorPaletteDef, "getNumColors", "()I");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallIntMethod(jenv, _this, _method);
     return _result;
 }
@@ -6094,14 +6983,17 @@ int ColorPaletteDef_getNumColors(ColorPaletteDef _this)
 void ColorPaletteDef_setNumColors(ColorPaletteDef _this, int numColors)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classColorPaletteDef, "setNumColors", "(I)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classColorPaletteDef, "setNumColors", "(I)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, numColors);
 }
 
@@ -6109,14 +7001,17 @@ int ColorPaletteDef_getNumPoints(ColorPaletteDef _this)
 {
     static jmethodID _method = NULL;
     int _result = (int) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classColorPaletteDef, "getNumPoints", "()I");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classColorPaletteDef, "getNumPoints", "()I");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallIntMethod(jenv, _this, _method);
     return _result;
 }
@@ -6124,14 +7019,17 @@ int ColorPaletteDef_getNumPoints(ColorPaletteDef _this)
 void ColorPaletteDef_setNumPoints(ColorPaletteDef _this, int numPoints)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classColorPaletteDef, "setNumPoints", "(I)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classColorPaletteDef, "setNumPoints", "(I)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, numPoints);
 }
 
@@ -6139,14 +7037,17 @@ boolean ColorPaletteDef_isAutoDistribute(ColorPaletteDef _this)
 {
     static jmethodID _method = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classColorPaletteDef, "isAutoDistribute", "()Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classColorPaletteDef, "isAutoDistribute", "()Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method);
     return _result;
 }
@@ -6154,14 +7055,17 @@ boolean ColorPaletteDef_isAutoDistribute(ColorPaletteDef _this)
 void ColorPaletteDef_setAutoDistribute(ColorPaletteDef _this, boolean autoDistribute)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classColorPaletteDef, "setAutoDistribute", "(Z)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classColorPaletteDef, "setAutoDistribute", "(Z)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, autoDistribute);
 }
 
@@ -6169,14 +7073,17 @@ ColorPaletteDef_Point ColorPaletteDef_getPointAt(ColorPaletteDef _this, int inde
 {
     static jmethodID _method = NULL;
     ColorPaletteDef_Point _result = (ColorPaletteDef_Point) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classColorPaletteDef, "getPointAt", "(I)Lorg/esa/beam/framework/datamodel/ColorPaletteDef/Point;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classColorPaletteDef, "getPointAt", "(I)Lorg/esa/beam/framework/datamodel/ColorPaletteDef/Point;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, index);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -6185,14 +7092,17 @@ ColorPaletteDef_Point ColorPaletteDef_getFirstPoint(ColorPaletteDef _this)
 {
     static jmethodID _method = NULL;
     ColorPaletteDef_Point _result = (ColorPaletteDef_Point) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classColorPaletteDef, "getFirstPoint", "()Lorg/esa/beam/framework/datamodel/ColorPaletteDef/Point;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classColorPaletteDef, "getFirstPoint", "()Lorg/esa/beam/framework/datamodel/ColorPaletteDef/Point;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -6201,14 +7111,17 @@ ColorPaletteDef_Point ColorPaletteDef_getLastPoint(ColorPaletteDef _this)
 {
     static jmethodID _method = NULL;
     ColorPaletteDef_Point _result = (ColorPaletteDef_Point) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classColorPaletteDef, "getLastPoint", "()Lorg/esa/beam/framework/datamodel/ColorPaletteDef/Point;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classColorPaletteDef, "getLastPoint", "()Lorg/esa/beam/framework/datamodel/ColorPaletteDef/Point;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -6217,14 +7130,17 @@ double ColorPaletteDef_getMinDisplaySample(ColorPaletteDef _this)
 {
     static jmethodID _method = NULL;
     double _result = (double) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classColorPaletteDef, "getMinDisplaySample", "()D");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classColorPaletteDef, "getMinDisplaySample", "()D");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallDoubleMethod(jenv, _this, _method);
     return _result;
 }
@@ -6233,14 +7149,17 @@ double ColorPaletteDef_getMaxDisplaySample(ColorPaletteDef _this)
 {
     static jmethodID _method = NULL;
     double _result = (double) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classColorPaletteDef, "getMaxDisplaySample", "()D");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classColorPaletteDef, "getMaxDisplaySample", "()D");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallDoubleMethod(jenv, _this, _method);
     return _result;
 }
@@ -6248,14 +7167,17 @@ double ColorPaletteDef_getMaxDisplaySample(ColorPaletteDef _this)
 void ColorPaletteDef_insertPointAfter(ColorPaletteDef _this, int index, ColorPaletteDef_Point point)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classColorPaletteDef, "insertPointAfter", "(ILorg/esa/beam/framework/datamodel/ColorPaletteDef/Point;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classColorPaletteDef, "insertPointAfter", "(ILorg/esa/beam/framework/datamodel/ColorPaletteDef/Point;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, index, point);
 }
 
@@ -6263,14 +7185,17 @@ boolean ColorPaletteDef_createPointAfter(ColorPaletteDef _this, int index, Scali
 {
     static jmethodID _method = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classColorPaletteDef, "createPointAfter", "(ILorg/esa/beam/framework/datamodel/Scaling;)Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classColorPaletteDef, "createPointAfter", "(ILorg/esa/beam/framework/datamodel/Scaling;)Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method, index, scaling);
     return _result;
 }
@@ -6279,14 +7204,17 @@ Color ColorPaletteDef_getCenterColor(Color c1, Color c2)
 {
     static jmethodID _method = NULL;
     Color _result = (Color) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classColorPaletteDef, "getCenterColor", "(Ljava/awt/Color;Ljava/awt/Color;)Ljava/awt/Color;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classColorPaletteDef, "getCenterColor", "(Ljava/awt/Color;Ljava/awt/Color;)Ljava/awt/Color;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallStaticObjectMethod(jenv, classColorPaletteDef, _method, c1, c2);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -6294,28 +7222,34 @@ Color ColorPaletteDef_getCenterColor(Color c1, Color c2)
 void ColorPaletteDef_removePointAt(ColorPaletteDef _this, int index)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classColorPaletteDef, "removePointAt", "(I)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classColorPaletteDef, "removePointAt", "(I)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, index);
 }
 
 void ColorPaletteDef_addPoint(ColorPaletteDef _this, ColorPaletteDef_Point point)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classColorPaletteDef, "addPoint", "(Lorg/esa/beam/framework/datamodel/ColorPaletteDef/Point;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classColorPaletteDef, "addPoint", "(Lorg/esa/beam/framework/datamodel/ColorPaletteDef/Point;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, point);
 }
 
@@ -6324,14 +7258,17 @@ ColorPaletteDef_Point* ColorPaletteDef_getPoints(ColorPaletteDef _this, int* res
     static jmethodID _method = NULL;
     ColorPaletteDef_Point* _result = (ColorPaletteDef_Point*) 0;
     jarray _resultArray = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classColorPaletteDef, "getPoints", "()[Lorg/esa/beam/framework/datamodel/ColorPaletteDef/Point;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classColorPaletteDef, "getPoints", "()[Lorg/esa/beam/framework/datamodel/ColorPaletteDef/Point;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_object_array(_resultArray, resultArrayLength);
     return _result;
@@ -6341,14 +7278,17 @@ void ColorPaletteDef_setPoints(ColorPaletteDef _this, const ColorPaletteDef_Poin
 {
     static jmethodID _method = NULL;
     jarray pointsArray = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classColorPaletteDef, "setPoints", "([Lorg/esa/beam/framework/datamodel/ColorPaletteDef/Point;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classColorPaletteDef, "setPoints", "([Lorg/esa/beam/framework/datamodel/ColorPaletteDef/Point;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     pointsArray = beam_new_jobject_array(pointsElems, pointsLength, classColorPaletteDef_Point);
     (*jenv)->CallVoidMethod(jenv, _this, _method, pointsArray);
 }
@@ -6357,14 +7297,17 @@ Iterator ColorPaletteDef_getIterator(ColorPaletteDef _this)
 {
     static jmethodID _method = NULL;
     Iterator _result = (Iterator) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classColorPaletteDef, "getIterator", "()Ljava/util/Iterator;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classColorPaletteDef, "getIterator", "()Ljava/util/Iterator;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -6373,14 +7316,17 @@ Object ColorPaletteDef_clone(ColorPaletteDef _this)
 {
     static jmethodID _method = NULL;
     Object _result = (Object) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classColorPaletteDef, "clone", "()Ljava/lang/Object;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classColorPaletteDef, "clone", "()Ljava/lang/Object;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -6389,14 +7335,17 @@ ColorPaletteDef ColorPaletteDef_createDeepCopy(ColorPaletteDef _this)
 {
     static jmethodID _method = NULL;
     ColorPaletteDef _result = (ColorPaletteDef) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classColorPaletteDef, "createDeepCopy", "()Lorg/esa/beam/framework/datamodel/ColorPaletteDef;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classColorPaletteDef, "createDeepCopy", "()Lorg/esa/beam/framework/datamodel/ColorPaletteDef;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -6405,14 +7354,17 @@ ColorPaletteDef ColorPaletteDef_loadColorPaletteDef(File file)
 {
     static jmethodID _method = NULL;
     ColorPaletteDef _result = (ColorPaletteDef) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classColorPaletteDef, "loadColorPaletteDef", "(Ljava/io/File;)Lorg/esa/beam/framework/datamodel/ColorPaletteDef;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classColorPaletteDef, "loadColorPaletteDef", "(Ljava/io/File;)Lorg/esa/beam/framework/datamodel/ColorPaletteDef;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallStaticObjectMethod(jenv, classColorPaletteDef, _method, file);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -6420,28 +7372,34 @@ ColorPaletteDef ColorPaletteDef_loadColorPaletteDef(File file)
 void ColorPaletteDef_storeColorPaletteDef(ColorPaletteDef colorPaletteDef, File file)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classColorPaletteDef, "storeColorPaletteDef", "(Lorg/esa/beam/framework/datamodel/ColorPaletteDef;Ljava/io/File;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classColorPaletteDef, "storeColorPaletteDef", "(Lorg/esa/beam/framework/datamodel/ColorPaletteDef;Ljava/io/File;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallStaticVoidMethod(jenv, classColorPaletteDef, _method, colorPaletteDef, file);
 }
 
 void ColorPaletteDef_dispose(ColorPaletteDef _this)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classColorPaletteDef, "dispose", "()V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classColorPaletteDef, "dispose", "()V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method);
 }
 
@@ -6450,14 +7408,17 @@ Color* ColorPaletteDef_getColors(ColorPaletteDef _this, int* resultArrayLength)
     static jmethodID _method = NULL;
     Color* _result = (Color*) 0;
     jarray _resultArray = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classColorPaletteDef, "getColors", "()[Ljava/awt/Color;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classColorPaletteDef, "getColors", "()[Ljava/awt/Color;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_object_array(_resultArray, resultArrayLength);
     return _result;
@@ -6468,14 +7429,17 @@ Color* ColorPaletteDef_createColorPalette(ColorPaletteDef _this, Scaling scaling
     static jmethodID _method = NULL;
     Color* _result = (Color*) 0;
     jarray _resultArray = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classColorPaletteDef, "createColorPalette", "(Lorg/esa/beam/framework/datamodel/Scaling;)[Ljava/awt/Color;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classColorPaletteDef, "createColorPalette", "(Lorg/esa/beam/framework/datamodel/Scaling;)[Ljava/awt/Color;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method, scaling);
     _result = beam_alloc_object_array(_resultArray, resultArrayLength);
     return _result;
@@ -6485,14 +7449,17 @@ Color ColorPaletteDef_computeColor(ColorPaletteDef _this, Scaling scaling, doubl
 {
     static jmethodID _method = NULL;
     Color _result = (Color) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classColorPaletteDef, "computeColor", "(Lorg/esa/beam/framework/datamodel/Scaling;D)Ljava/awt/Color;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classColorPaletteDef, "computeColor", "(Lorg/esa/beam/framework/datamodel/Scaling;D)Ljava/awt/Color;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, scaling, sample);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -6501,14 +7468,17 @@ ImageInfo ImageInfo_newImageInfoPalette(ColorPaletteDef colorPaletteDef)
 {
     static jmethodID _method = NULL;
     ImageInfo _result = (ImageInfo) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classImageInfo, "<init>", "(Lorg/esa/beam/framework/datamodel/ColorPaletteDef;)V");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classImageInfo, "<init>", "(Lorg/esa/beam/framework/datamodel/ColorPaletteDef;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->NewObject(jenv, classImageInfo, _method, colorPaletteDef);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -6517,14 +7487,17 @@ ImageInfo ImageInfo_newImageInfoRGB(RGBChannelDef rgbChannelDef)
 {
     static jmethodID _method = NULL;
     ImageInfo _result = (ImageInfo) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classImageInfo, "<init>", "(Lorg/esa/beam/framework/datamodel/RGBChannelDef;)V");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classImageInfo, "<init>", "(Lorg/esa/beam/framework/datamodel/RGBChannelDef;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->NewObject(jenv, classImageInfo, _method, rgbChannelDef);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -6533,14 +7506,17 @@ ColorPaletteDef ImageInfo_getColorPaletteDef(ImageInfo _this)
 {
     static jmethodID _method = NULL;
     ColorPaletteDef _result = (ColorPaletteDef) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classImageInfo, "getColorPaletteDef", "()Lorg/esa/beam/framework/datamodel/ColorPaletteDef;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classImageInfo, "getColorPaletteDef", "()Lorg/esa/beam/framework/datamodel/ColorPaletteDef;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -6549,14 +7525,17 @@ RGBChannelDef ImageInfo_getRgbChannelDef(ImageInfo _this)
 {
     static jmethodID _method = NULL;
     RGBChannelDef _result = (RGBChannelDef) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classImageInfo, "getRgbChannelDef", "()Lorg/esa/beam/framework/datamodel/RGBChannelDef;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classImageInfo, "getRgbChannelDef", "()Lorg/esa/beam/framework/datamodel/RGBChannelDef;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -6565,14 +7544,17 @@ Color ImageInfo_getNoDataColor(ImageInfo _this)
 {
     static jmethodID _method = NULL;
     Color _result = (Color) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classImageInfo, "getNoDataColor", "()Ljava/awt/Color;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classImageInfo, "getNoDataColor", "()Ljava/awt/Color;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -6580,28 +7562,34 @@ Color ImageInfo_getNoDataColor(ImageInfo _this)
 void ImageInfo_setNoDataColor(ImageInfo _this, Color noDataColor)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classImageInfo, "setNoDataColor", "(Ljava/awt/Color;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classImageInfo, "setNoDataColor", "(Ljava/awt/Color;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, noDataColor);
 }
 
 void ImageInfo_setHistogramMatching(ImageInfo _this, ImageInfo_HistogramMatching histogramMatching)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classImageInfo, "setHistogramMatching", "(Lorg/esa/beam/framework/datamodel/ImageInfo/HistogramMatching;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classImageInfo, "setHistogramMatching", "(Lorg/esa/beam/framework/datamodel/ImageInfo/HistogramMatching;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, histogramMatching);
 }
 
@@ -6609,14 +7597,17 @@ boolean ImageInfo_isLogScaled(ImageInfo _this)
 {
     static jmethodID _method = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classImageInfo, "isLogScaled", "()Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classImageInfo, "isLogScaled", "()Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method);
     return _result;
 }
@@ -6624,14 +7615,17 @@ boolean ImageInfo_isLogScaled(ImageInfo _this)
 void ImageInfo_setLogScaled(ImageInfo _this, boolean logScaled)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classImageInfo, "setLogScaled", "(Z)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classImageInfo, "setLogScaled", "(Z)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, logScaled);
 }
 
@@ -6640,14 +7634,17 @@ Color* ImageInfo_getColors(ImageInfo _this, int* resultArrayLength)
     static jmethodID _method = NULL;
     Color* _result = (Color*) 0;
     jarray _resultArray = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classImageInfo, "getColors", "()[Ljava/awt/Color;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classImageInfo, "getColors", "()[Ljava/awt/Color;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_object_array(_resultArray, resultArrayLength);
     return _result;
@@ -6657,14 +7654,17 @@ int ImageInfo_getColorComponentCount(ImageInfo _this)
 {
     static jmethodID _method = NULL;
     int _result = (int) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classImageInfo, "getColorComponentCount", "()I");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classImageInfo, "getColorComponentCount", "()I");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallIntMethod(jenv, _this, _method);
     return _result;
 }
@@ -6673,14 +7673,17 @@ IndexColorModel ImageInfo_createIndexColorModel(ImageInfo _this, Scaling scaling
 {
     static jmethodID _method = NULL;
     IndexColorModel _result = (IndexColorModel) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classImageInfo, "createIndexColorModel", "(Lorg/esa/beam/framework/datamodel/Scaling;)Ljava/awt/image/IndexColorModel;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classImageInfo, "createIndexColorModel", "(Lorg/esa/beam/framework/datamodel/Scaling;)Ljava/awt/image/IndexColorModel;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, scaling);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -6689,14 +7692,17 @@ ComponentColorModel ImageInfo_createComponentColorModel(ImageInfo _this)
 {
     static jmethodID _method = NULL;
     ComponentColorModel _result = (ComponentColorModel) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classImageInfo, "createComponentColorModel", "()Ljava/awt/image/ComponentColorModel;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classImageInfo, "createComponentColorModel", "()Ljava/awt/image/ComponentColorModel;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -6705,14 +7711,17 @@ Object ImageInfo_clone(ImageInfo _this)
 {
     static jmethodID _method = NULL;
     Object _result = (Object) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classImageInfo, "clone", "()Ljava/lang/Object;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classImageInfo, "clone", "()Ljava/lang/Object;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -6721,14 +7730,17 @@ ImageInfo ImageInfo_createDeepCopy(ImageInfo _this)
 {
     static jmethodID _method = NULL;
     ImageInfo _result = (ImageInfo) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classImageInfo, "createDeepCopy", "()Lorg/esa/beam/framework/datamodel/ImageInfo;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classImageInfo, "createDeepCopy", "()Lorg/esa/beam/framework/datamodel/ImageInfo;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -6736,14 +7748,17 @@ ImageInfo ImageInfo_createDeepCopy(ImageInfo _this)
 void ImageInfo_dispose(ImageInfo _this)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classImageInfo, "dispose", "()V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classImageInfo, "dispose", "()V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method);
 }
 
@@ -6751,14 +7766,17 @@ void ImageInfo_setColors(ImageInfo _this, const Color colorsElems, int colorsLen
 {
     static jmethodID _method = NULL;
     jarray colorsArray = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classImageInfo, "setColors", "([Ljava/awt/Color;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classImageInfo, "setColors", "([Ljava/awt/Color;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     colorsArray = beam_new_jobject_array(colorsElems, colorsLength, classColor);
     (*jenv)->CallVoidMethod(jenv, _this, _method, colorsArray);
 }
@@ -6766,14 +7784,17 @@ void ImageInfo_setColors(ImageInfo _this, const Color colorsElems, int colorsLen
 void ImageInfo_setColorPaletteDef(ImageInfo _this, ColorPaletteDef colorPaletteDef, double minSample, double maxSample, boolean autoDistribute)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classImageInfo, "setColorPaletteDef", "(Lorg/esa/beam/framework/datamodel/ColorPaletteDef;DDZ)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classImageInfo, "setColorPaletteDef", "(Lorg/esa/beam/framework/datamodel/ColorPaletteDef;DDZ)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, colorPaletteDef, minSample, maxSample, autoDistribute);
 }
 
@@ -6782,14 +7803,17 @@ ImageInfo_HistogramMatching ImageInfo_getHistogramMatching(const char* mode)
     static jmethodID _method = NULL;
     jstring modeString = NULL;
     ImageInfo_HistogramMatching _result = (ImageInfo_HistogramMatching) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classImageInfo, "getHistogramMatching", "(Ljava/lang/String;)Lorg/esa/beam/framework/datamodel/ImageInfo/HistogramMatching;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classImageInfo, "getHistogramMatching", "(Ljava/lang/String;)Lorg/esa/beam/framework/datamodel/ImageInfo/HistogramMatching;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     modeString = (*jenv)->NewStringUTF(jenv, mode);
     _result = (*jenv)->CallStaticObjectMethod(jenv, classImageInfo, _method, modeString);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
@@ -6799,14 +7823,17 @@ ProductManager ProductManager_newProductManager()
 {
     static jmethodID _method = NULL;
     ProductManager _result = (ProductManager) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProductManager, "<init>", "()V");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductManager, "<init>", "()V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->NewObject(jenv, classProductManager, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -6815,14 +7842,17 @@ int ProductManager_getProductCount(ProductManager _this)
 {
     static jmethodID _method = NULL;
     int _result = (int) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProductManager, "getProductCount", "()I");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductManager, "getProductCount", "()I");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallIntMethod(jenv, _this, _method);
     return _result;
 }
@@ -6831,14 +7861,17 @@ Product ProductManager_getProduct(ProductManager _this, int index)
 {
     static jmethodID _method = NULL;
     Product _result = (Product) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProductManager, "getProduct", "(I)Lorg/esa/beam/framework/datamodel/Product;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductManager, "getProduct", "(I)Lorg/esa/beam/framework/datamodel/Product;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, index);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -6848,14 +7881,17 @@ char** ProductManager_getProductDisplayNames(ProductManager _this, int* resultAr
     static jmethodID _method = NULL;
     char** _result = (char**) 0;
     jarray _resultArray = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProductManager, "getProductDisplayNames", "()[Ljava/lang/String;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductManager, "getProductDisplayNames", "()[Ljava/lang/String;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string_array(_resultArray, resultArrayLength);
     return _result;
@@ -6866,14 +7902,17 @@ char** ProductManager_getProductNames(ProductManager _this, int* resultArrayLeng
     static jmethodID _method = NULL;
     char** _result = (char**) 0;
     jarray _resultArray = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProductManager, "getProductNames", "()[Ljava/lang/String;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductManager, "getProductNames", "()[Ljava/lang/String;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string_array(_resultArray, resultArrayLength);
     return _result;
@@ -6884,14 +7923,17 @@ Product* ProductManager_getProducts(ProductManager _this, int* resultArrayLength
     static jmethodID _method = NULL;
     Product* _result = (Product*) 0;
     jarray _resultArray = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProductManager, "getProducts", "()[Lorg/esa/beam/framework/datamodel/Product;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductManager, "getProducts", "()[Lorg/esa/beam/framework/datamodel/Product;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_object_array(_resultArray, resultArrayLength);
     return _result;
@@ -6902,14 +7944,17 @@ Product ProductManager_getProductByDisplayName(ProductManager _this, const char*
     static jmethodID _method = NULL;
     jstring displayNameString = NULL;
     Product _result = (Product) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProductManager, "getProductByDisplayName", "(Ljava/lang/String;)Lorg/esa/beam/framework/datamodel/Product;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductManager, "getProductByDisplayName", "(Ljava/lang/String;)Lorg/esa/beam/framework/datamodel/Product;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     displayNameString = (*jenv)->NewStringUTF(jenv, displayName);
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, displayNameString);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
@@ -6919,14 +7964,17 @@ Product ProductManager_getProductByRefNo(ProductManager _this, int refNo)
 {
     static jmethodID _method = NULL;
     Product _result = (Product) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProductManager, "getProductByRefNo", "(I)Lorg/esa/beam/framework/datamodel/Product;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductManager, "getProductByRefNo", "(I)Lorg/esa/beam/framework/datamodel/Product;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, refNo);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -6936,14 +7984,17 @@ Product ProductManager_getProductByName(ProductManager _this, const char* name)
     static jmethodID _method = NULL;
     jstring nameString = NULL;
     Product _result = (Product) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProductManager, "getProduct", "(Ljava/lang/String;)Lorg/esa/beam/framework/datamodel/Product;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductManager, "getProduct", "(Ljava/lang/String;)Lorg/esa/beam/framework/datamodel/Product;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     nameString = (*jenv)->NewStringUTF(jenv, name);
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, nameString);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
@@ -6953,14 +8004,17 @@ int ProductManager_getProductIndex(ProductManager _this, Product product)
 {
     static jmethodID _method = NULL;
     int _result = (int) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProductManager, "getProductIndex", "(Lorg/esa/beam/framework/datamodel/Product;)I");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductManager, "getProductIndex", "(Lorg/esa/beam/framework/datamodel/Product;)I");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallIntMethod(jenv, _this, _method, product);
     return _result;
 }
@@ -6970,14 +8024,17 @@ boolean ProductManager_containsProduct(ProductManager _this, const char* name)
     static jmethodID _method = NULL;
     jstring nameString = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProductManager, "containsProduct", "(Ljava/lang/String;)Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductManager, "containsProduct", "(Ljava/lang/String;)Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     nameString = (*jenv)->NewStringUTF(jenv, name);
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method, nameString);
     return _result;
@@ -6987,14 +8044,17 @@ boolean ProductManager_contains(ProductManager _this, Product product)
 {
     static jmethodID _method = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProductManager, "contains", "(Lorg/esa/beam/framework/datamodel/Product;)Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductManager, "contains", "(Lorg/esa/beam/framework/datamodel/Product;)Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method, product);
     return _result;
 }
@@ -7002,14 +8062,17 @@ boolean ProductManager_contains(ProductManager _this, Product product)
 void ProductManager_addProduct(ProductManager _this, Product product)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProductManager, "addProduct", "(Lorg/esa/beam/framework/datamodel/Product;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductManager, "addProduct", "(Lorg/esa/beam/framework/datamodel/Product;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, product);
 }
 
@@ -7017,14 +8080,17 @@ boolean ProductManager_removeProduct(ProductManager _this, Product product)
 {
     static jmethodID _method = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProductManager, "removeProduct", "(Lorg/esa/beam/framework/datamodel/Product;)Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductManager, "removeProduct", "(Lorg/esa/beam/framework/datamodel/Product;)Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method, product);
     return _result;
 }
@@ -7032,14 +8098,17 @@ boolean ProductManager_removeProduct(ProductManager _this, Product product)
 void ProductManager_removeAllProducts(ProductManager _this)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProductManager, "removeAllProducts", "()V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductManager, "removeAllProducts", "()V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method);
 }
 
@@ -7047,14 +8116,17 @@ boolean ProductManager_addListener(ProductManager _this, ProductManager_Listener
 {
     static jmethodID _method = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProductManager, "addListener", "(Lorg/esa/beam/framework/datamodel/ProductManager/Listener;)Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductManager, "addListener", "(Lorg/esa/beam/framework/datamodel/ProductManager/Listener;)Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method, listener);
     return _result;
 }
@@ -7063,14 +8135,17 @@ boolean ProductManager_removeListener(ProductManager _this, ProductManager_Liste
 {
     static jmethodID _method = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProductManager, "removeListener", "(Lorg/esa/beam/framework/datamodel/ProductManager/Listener;)Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductManager, "removeListener", "(Lorg/esa/beam/framework/datamodel/ProductManager/Listener;)Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method, listener);
     return _result;
 }
@@ -7079,14 +8154,17 @@ ImageGeometry ImageGeometry_newImageGeometry(Rectangle bounds, CoordinateReferen
 {
     static jmethodID _method = NULL;
     ImageGeometry _result = (ImageGeometry) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classImageGeometry, "<init>", "(Ljava/awt/Rectangle;Lorg/opengis/referencing/crs/CoordinateReferenceSystem;Ljava/awt/geom/AffineTransform;)V");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classImageGeometry, "<init>", "(Ljava/awt/Rectangle;Lorg/opengis/referencing/crs/CoordinateReferenceSystem;Ljava/awt/geom/AffineTransform;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->NewObject(jenv, classImageGeometry, _method, bounds, mapCrs, image2map);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -7095,14 +8173,17 @@ AffineTransform ImageGeometry_getImage2MapTransform(ImageGeometry _this)
 {
     static jmethodID _method = NULL;
     AffineTransform _result = (AffineTransform) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classImageGeometry, "getImage2MapTransform", "()Ljava/awt/geom/AffineTransform;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classImageGeometry, "getImage2MapTransform", "()Ljava/awt/geom/AffineTransform;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -7111,14 +8192,17 @@ Rectangle ImageGeometry_getImageRect(ImageGeometry _this)
 {
     static jmethodID _method = NULL;
     Rectangle _result = (Rectangle) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classImageGeometry, "getImageRect", "()Ljava/awt/Rectangle;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classImageGeometry, "getImageRect", "()Ljava/awt/Rectangle;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -7127,14 +8211,17 @@ CoordinateReferenceSystem ImageGeometry_getMapCrs(ImageGeometry _this)
 {
     static jmethodID _method = NULL;
     CoordinateReferenceSystem _result = (CoordinateReferenceSystem) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classImageGeometry, "getMapCrs", "()Lorg/opengis/referencing/crs/CoordinateReferenceSystem;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classImageGeometry, "getMapCrs", "()Lorg/opengis/referencing/crs/CoordinateReferenceSystem;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -7142,14 +8229,17 @@ CoordinateReferenceSystem ImageGeometry_getMapCrs(ImageGeometry _this)
 void ImageGeometry_changeYAxisDirection(ImageGeometry _this)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classImageGeometry, "changeYAxisDirection", "()V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classImageGeometry, "changeYAxisDirection", "()V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method);
 }
 
@@ -7157,14 +8247,17 @@ Point2D ImageGeometry_calculateEastingNorthing(Product sourceProduct, Coordinate
 {
     static jmethodID _method = NULL;
     Point2D _result = (Point2D) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classImageGeometry, "calculateEastingNorthing", "(Lorg/esa/beam/framework/datamodel/Product;Lorg/opengis/referencing/crs/CoordinateReferenceSystem;DDDD)Ljava/awt/geom/Point2D;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classImageGeometry, "calculateEastingNorthing", "(Lorg/esa/beam/framework/datamodel/Product;Lorg/opengis/referencing/crs/CoordinateReferenceSystem;DDDD)Ljava/awt/geom/Point2D;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallStaticObjectMethod(jenv, classImageGeometry, _method, sourceProduct, targetCrs, referencePixelX, referencePixelY, pixelSizeX, pixelSizeY);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -7173,14 +8266,17 @@ Rectangle ImageGeometry_calculateProductSize(Product sourceProduct, CoordinateRe
 {
     static jmethodID _method = NULL;
     Rectangle _result = (Rectangle) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classImageGeometry, "calculateProductSize", "(Lorg/esa/beam/framework/datamodel/Product;Lorg/opengis/referencing/crs/CoordinateReferenceSystem;DD)Ljava/awt/Rectangle;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classImageGeometry, "calculateProductSize", "(Lorg/esa/beam/framework/datamodel/Product;Lorg/opengis/referencing/crs/CoordinateReferenceSystem;DD)Ljava/awt/Rectangle;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallStaticObjectMethod(jenv, classImageGeometry, _method, sourceProduct, targetCrs, pixelSizeX, pixelSizeY);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -7189,14 +8285,17 @@ ImageGeometry ImageGeometry_createTargetGeometry(Product sourceProduct, Coordina
 {
     static jmethodID _method = NULL;
     ImageGeometry _result = (ImageGeometry) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classImageGeometry, "createTargetGeometry", "(Lorg/esa/beam/framework/datamodel/Product;Lorg/opengis/referencing/crs/CoordinateReferenceSystem;Ljava/lang/Double;Ljava/lang/Double;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Double;Ljava/lang/Double;Ljava/lang/Double;Ljava/lang/Double;Ljava/lang/Double;)Lorg/esa/beam/framework/datamodel/ImageGeometry;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classImageGeometry, "createTargetGeometry", "(Lorg/esa/beam/framework/datamodel/Product;Lorg/opengis/referencing/crs/CoordinateReferenceSystem;Ljava/lang/Double;Ljava/lang/Double;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Double;Ljava/lang/Double;Ljava/lang/Double;Ljava/lang/Double;Ljava/lang/Double;)Lorg/esa/beam/framework/datamodel/ImageGeometry;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallStaticObjectMethod(jenv, classImageGeometry, _method, sourceProduct, targetCrs, pixelSizeX, pixelSizeY, width, height, orientation, easting, northing, referencePixelX, referencePixelY);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -7205,31 +8304,18 @@ ImageGeometry ImageGeometry_createCollocationTargetGeometry(Product targetProduc
 {
     static jmethodID _method = NULL;
     ImageGeometry _result = (ImageGeometry) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classImageGeometry, "createCollocationTargetGeometry", "(Lorg/esa/beam/framework/datamodel/Product;Lorg/esa/beam/framework/datamodel/Product;)Lorg/esa/beam/framework/datamodel/ImageGeometry;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classImageGeometry, "createCollocationTargetGeometry", "(Lorg/esa/beam/framework/datamodel/Product;Lorg/esa/beam/framework/datamodel/Product;)Lorg/esa/beam/framework/datamodel/ImageGeometry;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallStaticObjectMethod(jenv, classImageGeometry, _method, targetProduct, collocationProduct);
-    return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
-}
-
-Rectangle2D ImageGeometry_createValidRect(Product product)
-{
-    static jmethodID _method = NULL;
-    Rectangle2D _result = (Rectangle2D) 0;
-
-    if (beam_init_api() != 0) return _result;
-
-    if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classImageGeometry, "createValidRect", "(Lorg/esa/beam/framework/datamodel/Product;)Ljava/awt/geom/Rectangle2D;");
-        if (_method == NULL) return _result;
-    }
-
-    _result = (*jenv)->CallStaticObjectMethod(jenv, classImageGeometry, _method, product);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
@@ -7238,14 +8324,17 @@ Band Band_newBand(const char* name, int dataType, int width, int height)
     static jmethodID _method = NULL;
     jstring nameString = NULL;
     Band _result = (Band) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "<init>", "(Ljava/lang/String;III)V");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "<init>", "(Ljava/lang/String;III)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     nameString = (*jenv)->NewStringUTF(jenv, name);
     _result = (*jenv)->NewObject(jenv, classBand, _method, nameString, dataType, width, height);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
@@ -7255,14 +8344,17 @@ FlagCoding Band_getFlagCoding(Band _this)
 {
     static jmethodID _method = NULL;
     FlagCoding _result = (FlagCoding) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "getFlagCoding", "()Lorg/esa/beam/framework/datamodel/FlagCoding;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "getFlagCoding", "()Lorg/esa/beam/framework/datamodel/FlagCoding;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -7271,14 +8363,17 @@ boolean Band_isFlagBand(Band _this)
 {
     static jmethodID _method = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "isFlagBand", "()Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "isFlagBand", "()Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method);
     return _result;
 }
@@ -7287,14 +8382,17 @@ IndexCoding Band_getIndexCoding(Band _this)
 {
     static jmethodID _method = NULL;
     IndexCoding _result = (IndexCoding) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "getIndexCoding", "()Lorg/esa/beam/framework/datamodel/IndexCoding;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "getIndexCoding", "()Lorg/esa/beam/framework/datamodel/IndexCoding;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -7303,14 +8401,17 @@ boolean Band_isIndexBand(Band _this)
 {
     static jmethodID _method = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "isIndexBand", "()Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "isIndexBand", "()Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method);
     return _result;
 }
@@ -7319,14 +8420,17 @@ SampleCoding Band_getSampleCoding(Band _this)
 {
     static jmethodID _method = NULL;
     SampleCoding _result = (SampleCoding) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "getSampleCoding", "()Lorg/esa/beam/framework/datamodel/SampleCoding;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "getSampleCoding", "()Lorg/esa/beam/framework/datamodel/SampleCoding;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -7334,14 +8438,17 @@ SampleCoding Band_getSampleCoding(Band _this)
 void Band_setSampleCoding(Band _this, SampleCoding sampleCoding)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "setSampleCoding", "(Lorg/esa/beam/framework/datamodel/SampleCoding;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "setSampleCoding", "(Lorg/esa/beam/framework/datamodel/SampleCoding;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, sampleCoding);
 }
 
@@ -7349,14 +8456,17 @@ int Band_getSpectralBandIndex(Band _this)
 {
     static jmethodID _method = NULL;
     int _result = (int) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "getSpectralBandIndex", "()I");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "getSpectralBandIndex", "()I");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallIntMethod(jenv, _this, _method);
     return _result;
 }
@@ -7364,14 +8474,17 @@ int Band_getSpectralBandIndex(Band _this)
 void Band_setSpectralBandIndex(Band _this, int spectralBandIndex)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "setSpectralBandIndex", "(I)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "setSpectralBandIndex", "(I)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, spectralBandIndex);
 }
 
@@ -7379,14 +8492,17 @@ float Band_getSpectralWavelength(Band _this)
 {
     static jmethodID _method = NULL;
     float _result = (float) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "getSpectralWavelength", "()F");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "getSpectralWavelength", "()F");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallFloatMethod(jenv, _this, _method);
     return _result;
 }
@@ -7394,14 +8510,17 @@ float Band_getSpectralWavelength(Band _this)
 void Band_setSpectralWavelength(Band _this, float spectralWavelength)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "setSpectralWavelength", "(F)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "setSpectralWavelength", "(F)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, spectralWavelength);
 }
 
@@ -7409,14 +8528,17 @@ float Band_getSpectralBandwidth(Band _this)
 {
     static jmethodID _method = NULL;
     float _result = (float) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "getSpectralBandwidth", "()F");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "getSpectralBandwidth", "()F");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallFloatMethod(jenv, _this, _method);
     return _result;
 }
@@ -7424,14 +8546,17 @@ float Band_getSpectralBandwidth(Band _this)
 void Band_setSpectralBandwidth(Band _this, float spectralBandwidth)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "setSpectralBandwidth", "(F)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "setSpectralBandwidth", "(F)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, spectralBandwidth);
 }
 
@@ -7439,14 +8564,17 @@ float Band_getSolarFlux(Band _this)
 {
     static jmethodID _method = NULL;
     float _result = (float) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "getSolarFlux", "()F");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "getSolarFlux", "()F");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallFloatMethod(jenv, _this, _method);
     return _result;
 }
@@ -7454,28 +8582,34 @@ float Band_getSolarFlux(Band _this)
 void Band_setSolarFlux(Band _this, float solarFlux)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "setSolarFlux", "(F)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "setSolarFlux", "(F)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, solarFlux);
 }
 
 void Band_acceptVisitor(Band _this, ProductVisitor visitor)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "acceptVisitor", "(Lorg/esa/beam/framework/datamodel/ProductVisitor;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "acceptVisitor", "(Lorg/esa/beam/framework/datamodel/ProductVisitor;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, visitor);
 }
 
@@ -7484,14 +8618,17 @@ char* Band_toString(Band _this)
     static jmethodID _method = NULL;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "toString", "()Ljava/lang/String;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "toString", "()Ljava/lang/String;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
     return _result;
@@ -7500,28 +8637,34 @@ char* Band_toString(Band _this)
 void Band_removeFromFile(Band _this, ProductWriter productWriter)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "removeFromFile", "(Lorg/esa/beam/framework/dataio/ProductWriter;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "removeFromFile", "(Lorg/esa/beam/framework/dataio/ProductWriter;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, productWriter);
 }
 
 void Band_dispose(Band _this)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "dispose", "()V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "dispose", "()V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method);
 }
 
@@ -7531,14 +8674,17 @@ char* Band_getViewModeId(Band _this, const char* bandName)
     jstring bandNameString = NULL;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "getViewModeId", "(Ljava/lang/String;)Ljava/lang/String;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "getViewModeId", "(Ljava/lang/String;)Ljava/lang/String;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     bandNameString = (*jenv)->NewStringUTF(jenv, bandName);
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method, bandNameString);
     _result = beam_alloc_string(_resultString);
@@ -7552,14 +8698,17 @@ int Band_computeBand(Band _this, const char* expression, const char* validMaskEx
     jstring validMaskExpressionString = NULL;
     jarray sourceProductsArray = NULL;
     int _result = (int) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "computeBand", "(Ljava/lang/String;Ljava/lang/String;[Lorg/esa/beam/framework/datamodel/Product;IZZDLcom/bc/ceres/core/ProgressMonitor;)I");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "computeBand", "(Ljava/lang/String;Ljava/lang/String;[Lorg/esa/beam/framework/datamodel/Product;IZZDLcom/bc/ceres/core/ProgressMonitor;)I");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     expressionString = (*jenv)->NewStringUTF(jenv, expression);
     validMaskExpressionString = (*jenv)->NewStringUTF(jenv, validMaskExpression);
     sourceProductsArray = beam_new_jobject_array(sourceProductsElems, sourceProductsLength, classProduct);
@@ -7571,14 +8720,17 @@ ProductData Band_getSceneRasterData(Band _this)
 {
     static jmethodID _method = NULL;
     ProductData _result = (ProductData) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "getSceneRasterData", "()Lorg/esa/beam/framework/datamodel/ProductData;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "getSceneRasterData", "()Lorg/esa/beam/framework/datamodel/ProductData;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -7587,14 +8739,17 @@ int Band_getPixelInt(Band _this, int x, int y)
 {
     static jmethodID _method = NULL;
     int _result = (int) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "getPixelInt", "(II)I");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "getPixelInt", "(II)I");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallIntMethod(jenv, _this, _method, x, y);
     return _result;
 }
@@ -7603,14 +8758,17 @@ float Band_getPixelFloat(Band _this, int x, int y)
 {
     static jmethodID _method = NULL;
     float _result = (float) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "getPixelFloat", "(II)F");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "getPixelFloat", "(II)F");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallFloatMethod(jenv, _this, _method, x, y);
     return _result;
 }
@@ -7619,14 +8777,17 @@ double Band_getPixelDouble(Band _this, int x, int y)
 {
     static jmethodID _method = NULL;
     double _result = (double) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "getPixelDouble", "(II)D");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "getPixelDouble", "(II)D");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallDoubleMethod(jenv, _this, _method, x, y);
     return _result;
 }
@@ -7634,42 +8795,51 @@ double Band_getPixelDouble(Band _this, int x, int y)
 void Band_setPixelInt(Band _this, int x, int y, int pixelValue)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "setPixelInt", "(III)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "setPixelInt", "(III)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, x, y, pixelValue);
 }
 
 void Band_setPixelFloat(Band _this, int x, int y, float pixelValue)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "setPixelFloat", "(IIF)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "setPixelFloat", "(IIF)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, x, y, pixelValue);
 }
 
 void Band_setPixelDouble(Band _this, int x, int y, double pixelValue)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "setPixelDouble", "(IID)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "setPixelDouble", "(IID)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, x, y, pixelValue);
 }
 
@@ -7677,14 +8847,17 @@ void Band_setPixelsInt(Band _this, int x, int y, int w, int h, const int* pixels
 {
     static jmethodID _method = NULL;
     jarray pixelsArray = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "setPixels", "(IIII[I)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "setPixels", "(IIII[I)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     pixelsArray = (*jenv)->NewIntArray(jenv, pixelsLength);
     beam_copy_to_jarray(pixelsArray, pixelsElems, pixelsLength, sizeof (int));
     (*jenv)->CallVoidMethod(jenv, _this, _method, x, y, w, h, pixelsArray);
@@ -7694,14 +8867,17 @@ void Band_setPixelsFloat(Band _this, int x, int y, int w, int h, const float* pi
 {
     static jmethodID _method = NULL;
     jarray pixelsArray = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "setPixels", "(IIII[F)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "setPixels", "(IIII[F)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     pixelsArray = (*jenv)->NewFloatArray(jenv, pixelsLength);
     beam_copy_to_jarray(pixelsArray, pixelsElems, pixelsLength, sizeof (float));
     (*jenv)->CallVoidMethod(jenv, _this, _method, x, y, w, h, pixelsArray);
@@ -7711,14 +8887,17 @@ void Band_setPixelsDouble(Band _this, int x, int y, int w, int h, const double* 
 {
     static jmethodID _method = NULL;
     jarray pixelsArray = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "setPixels", "(IIII[D)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "setPixels", "(IIII[D)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     pixelsArray = (*jenv)->NewDoubleArray(jenv, pixelsLength);
     beam_copy_to_jarray(pixelsArray, pixelsElems, pixelsLength, sizeof (double));
     (*jenv)->CallVoidMethod(jenv, _this, _method, x, y, w, h, pixelsArray);
@@ -7727,28 +8906,34 @@ void Band_setPixelsDouble(Band _this, int x, int y, int w, int h, const double* 
 void Band_ensureRasterData(Band _this)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "ensureRasterData", "()V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "ensureRasterData", "()V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method);
 }
 
 void Band_unloadRasterData(Band _this)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "unloadRasterData", "()V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "unloadRasterData", "()V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method);
 }
 
@@ -7756,14 +8941,17 @@ int Band_getSceneRasterWidth(Band _this)
 {
     static jmethodID _method = NULL;
     int _result = (int) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "getSceneRasterWidth", "()I");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "getSceneRasterWidth", "()I");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallIntMethod(jenv, _this, _method);
     return _result;
 }
@@ -7772,14 +8960,17 @@ int Band_getSceneRasterHeight(Band _this)
 {
     static jmethodID _method = NULL;
     int _result = (int) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "getSceneRasterHeight", "()I");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "getSceneRasterHeight", "()I");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallIntMethod(jenv, _this, _method);
     return _result;
 }
@@ -7788,14 +8979,17 @@ int Band_getRasterWidth(Band _this)
 {
     static jmethodID _method = NULL;
     int _result = (int) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "getRasterWidth", "()I");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "getRasterWidth", "()I");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallIntMethod(jenv, _this, _method);
     return _result;
 }
@@ -7804,14 +8998,17 @@ int Band_getRasterHeight(Band _this)
 {
     static jmethodID _method = NULL;
     int _result = (int) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "getRasterHeight", "()I");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "getRasterHeight", "()I");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallIntMethod(jenv, _this, _method);
     return _result;
 }
@@ -7819,14 +9016,17 @@ int Band_getRasterHeight(Band _this)
 void Band_setModified(Band _this, boolean modified)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "setModified", "(Z)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "setModified", "(Z)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, modified);
 }
 
@@ -7834,14 +9034,17 @@ GeoCoding Band_getGeoCoding(Band _this)
 {
     static jmethodID _method = NULL;
     GeoCoding _result = (GeoCoding) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "getGeoCoding", "()Lorg/esa/beam/framework/datamodel/GeoCoding;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "getGeoCoding", "()Lorg/esa/beam/framework/datamodel/GeoCoding;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -7849,14 +9052,17 @@ GeoCoding Band_getGeoCoding(Band _this)
 void Band_setGeoCoding(Band _this, GeoCoding geoCoding)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "setGeoCoding", "(Lorg/esa/beam/framework/datamodel/GeoCoding;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "setGeoCoding", "(Lorg/esa/beam/framework/datamodel/GeoCoding;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, geoCoding);
 }
 
@@ -7864,14 +9070,17 @@ Pointing Band_getPointing(Band _this)
 {
     static jmethodID _method = NULL;
     Pointing _result = (Pointing) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "getPointing", "()Lorg/esa/beam/framework/datamodel/Pointing;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "getPointing", "()Lorg/esa/beam/framework/datamodel/Pointing;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -7880,14 +9089,17 @@ boolean Band_canBeOrthorectified(Band _this)
 {
     static jmethodID _method = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "canBeOrthorectified", "()Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "canBeOrthorectified", "()Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method);
     return _result;
 }
@@ -7896,14 +9108,17 @@ boolean Band_isFloatingPointType(Band _this)
 {
     static jmethodID _method = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "isFloatingPointType", "()Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "isFloatingPointType", "()Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method);
     return _result;
 }
@@ -7912,14 +9127,17 @@ int Band_getGeophysicalDataType(Band _this)
 {
     static jmethodID _method = NULL;
     int _result = (int) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "getGeophysicalDataType", "()I");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "getGeophysicalDataType", "()I");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallIntMethod(jenv, _this, _method);
     return _result;
 }
@@ -7928,14 +9146,17 @@ double Band_getScalingFactor(Band _this)
 {
     static jmethodID _method = NULL;
     double _result = (double) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "getScalingFactor", "()D");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "getScalingFactor", "()D");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallDoubleMethod(jenv, _this, _method);
     return _result;
 }
@@ -7943,14 +9164,17 @@ double Band_getScalingFactor(Band _this)
 void Band_setScalingFactor(Band _this, double scalingFactor)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "setScalingFactor", "(D)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "setScalingFactor", "(D)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, scalingFactor);
 }
 
@@ -7958,14 +9182,17 @@ double Band_getScalingOffset(Band _this)
 {
     static jmethodID _method = NULL;
     double _result = (double) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "getScalingOffset", "()D");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "getScalingOffset", "()D");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallDoubleMethod(jenv, _this, _method);
     return _result;
 }
@@ -7973,14 +9200,17 @@ double Band_getScalingOffset(Band _this)
 void Band_setScalingOffset(Band _this, double scalingOffset)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "setScalingOffset", "(D)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "setScalingOffset", "(D)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, scalingOffset);
 }
 
@@ -7988,14 +9218,17 @@ boolean Band_isLog10Scaled(Band _this)
 {
     static jmethodID _method = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "isLog10Scaled", "()Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "isLog10Scaled", "()Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method);
     return _result;
 }
@@ -8003,14 +9236,17 @@ boolean Band_isLog10Scaled(Band _this)
 void Band_setLog10Scaled(Band _this, boolean log10Scaled)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "setLog10Scaled", "(Z)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "setLog10Scaled", "(Z)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, log10Scaled);
 }
 
@@ -8018,14 +9254,17 @@ boolean Band_isScalingApplied(Band _this)
 {
     static jmethodID _method = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "isScalingApplied", "()Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "isScalingApplied", "()Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method);
     return _result;
 }
@@ -8035,14 +9274,17 @@ boolean Band_isValidMaskProperty(const char* propertyName)
     static jmethodID _method = NULL;
     jstring propertyNameString = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classBand, "isValidMaskProperty", "(Ljava/lang/String;)Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classBand, "isValidMaskProperty", "(Ljava/lang/String;)Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     propertyNameString = (*jenv)->NewStringUTF(jenv, propertyName);
     _result = (*jenv)->CallStaticBooleanMethod(jenv, classBand, _method, propertyNameString);
     return _result;
@@ -8052,14 +9294,17 @@ boolean Band_isNoDataValueSet(Band _this)
 {
     static jmethodID _method = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "isNoDataValueSet", "()Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "isNoDataValueSet", "()Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method);
     return _result;
 }
@@ -8067,14 +9312,17 @@ boolean Band_isNoDataValueSet(Band _this)
 void Band_clearNoDataValue(Band _this)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "clearNoDataValue", "()V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "clearNoDataValue", "()V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method);
 }
 
@@ -8082,14 +9330,17 @@ boolean Band_isNoDataValueUsed(Band _this)
 {
     static jmethodID _method = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "isNoDataValueUsed", "()Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "isNoDataValueUsed", "()Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method);
     return _result;
 }
@@ -8097,14 +9348,17 @@ boolean Band_isNoDataValueUsed(Band _this)
 void Band_setNoDataValueUsed(Band _this, boolean noDataValueUsed)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "setNoDataValueUsed", "(Z)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "setNoDataValueUsed", "(Z)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, noDataValueUsed);
 }
 
@@ -8112,14 +9366,17 @@ double Band_getNoDataValue(Band _this)
 {
     static jmethodID _method = NULL;
     double _result = (double) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "getNoDataValue", "()D");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "getNoDataValue", "()D");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallDoubleMethod(jenv, _this, _method);
     return _result;
 }
@@ -8127,14 +9384,17 @@ double Band_getNoDataValue(Band _this)
 void Band_setNoDataValue(Band _this, double noDataValue)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "setNoDataValue", "(D)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "setNoDataValue", "(D)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, noDataValue);
 }
 
@@ -8142,14 +9402,17 @@ double Band_getGeophysicalNoDataValue(Band _this)
 {
     static jmethodID _method = NULL;
     double _result = (double) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "getGeophysicalNoDataValue", "()D");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "getGeophysicalNoDataValue", "()D");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallDoubleMethod(jenv, _this, _method);
     return _result;
 }
@@ -8157,14 +9420,17 @@ double Band_getGeophysicalNoDataValue(Band _this)
 void Band_setGeophysicalNoDataValue(Band _this, double noDataValue)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "setGeophysicalNoDataValue", "(D)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "setGeophysicalNoDataValue", "(D)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, noDataValue);
 }
 
@@ -8173,14 +9439,17 @@ char* Band_getValidPixelExpression(Band _this)
     static jmethodID _method = NULL;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "getValidPixelExpression", "()Ljava/lang/String;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "getValidPixelExpression", "()Ljava/lang/String;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
     return _result;
@@ -8190,14 +9459,17 @@ void Band_setValidPixelExpression(Band _this, const char* validPixelExpression)
 {
     static jmethodID _method = NULL;
     jstring validPixelExpressionString = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "setValidPixelExpression", "(Ljava/lang/String;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "setValidPixelExpression", "(Ljava/lang/String;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     validPixelExpressionString = (*jenv)->NewStringUTF(jenv, validPixelExpression);
     (*jenv)->CallVoidMethod(jenv, _this, _method, validPixelExpressionString);
 }
@@ -8206,14 +9478,17 @@ boolean Band_isValidMaskUsed(Band _this)
 {
     static jmethodID _method = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "isValidMaskUsed", "()Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "isValidMaskUsed", "()Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method);
     return _result;
 }
@@ -8221,14 +9496,17 @@ boolean Band_isValidMaskUsed(Band _this)
 void Band_resetValidMask(Band _this)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "resetValidMask", "()V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "resetValidMask", "()V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method);
 }
 
@@ -8237,14 +9515,17 @@ char* Band_getValidMaskExpression(Band _this)
     static jmethodID _method = NULL;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "getValidMaskExpression", "()Ljava/lang/String;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "getValidMaskExpression", "()Ljava/lang/String;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
     return _result;
@@ -8255,14 +9536,17 @@ void Band_updateExpression(Band _this, const char* oldExternalName, const char* 
     static jmethodID _method = NULL;
     jstring oldExternalNameString = NULL;
     jstring newExternalNameString = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "updateExpression", "(Ljava/lang/String;Ljava/lang/String;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "updateExpression", "(Ljava/lang/String;Ljava/lang/String;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     oldExternalNameString = (*jenv)->NewStringUTF(jenv, oldExternalName);
     newExternalNameString = (*jenv)->NewStringUTF(jenv, newExternalName);
     (*jenv)->CallVoidMethod(jenv, _this, _method, oldExternalNameString, newExternalNameString);
@@ -8272,14 +9556,17 @@ boolean Band_hasRasterData(Band _this)
 {
     static jmethodID _method = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "hasRasterData", "()Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "hasRasterData", "()Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method);
     return _result;
 }
@@ -8288,14 +9575,17 @@ ProductData Band_getRasterData(Band _this)
 {
     static jmethodID _method = NULL;
     ProductData _result = (ProductData) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "getRasterData", "()Lorg/esa/beam/framework/datamodel/ProductData;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "getRasterData", "()Lorg/esa/beam/framework/datamodel/ProductData;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -8303,28 +9593,34 @@ ProductData Band_getRasterData(Band _this)
 void Band_setRasterData(Band _this, ProductData rasterData)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "setRasterData", "(Lorg/esa/beam/framework/datamodel/ProductData;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "setRasterData", "(Lorg/esa/beam/framework/datamodel/ProductData;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, rasterData);
 }
 
 void Band_loadRasterData(Band _this)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "loadRasterData", "()V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "loadRasterData", "()V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method);
 }
 
@@ -8332,14 +9628,17 @@ boolean Band_isPixelValid(Band _this, int x, int y)
 {
     static jmethodID _method = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "isPixelValid", "(II)Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "isPixelValid", "(II)Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method, x, y);
     return _result;
 }
@@ -8348,14 +9647,17 @@ int Band_getSampleInt(Band _this, int x, int y)
 {
     static jmethodID _method = NULL;
     int _result = (int) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "getSampleInt", "(II)I");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "getSampleInt", "(II)I");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallIntMethod(jenv, _this, _method, x, y);
     return _result;
 }
@@ -8364,14 +9666,17 @@ float Band_getSampleFloat(Band _this, int x, int y)
 {
     static jmethodID _method = NULL;
     float _result = (float) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "getSampleFloat", "(II)F");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "getSampleFloat", "(II)F");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallFloatMethod(jenv, _this, _method, x, y);
     return _result;
 }
@@ -8382,14 +9687,17 @@ int* Band_getPixelsInt(Band _this, int x, int y, int w, int h, const int* pixels
     jarray pixelsArray = NULL;
     int* _result = (int*) 0;
     jarray _resultArray = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "getPixels", "(IIII[I)[I");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "getPixels", "(IIII[I)[I");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     pixelsArray = (*jenv)->NewIntArray(jenv, pixelsLength);
     beam_copy_to_jarray(pixelsArray, pixelsElems, pixelsLength, sizeof (int));
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method, x, y, w, h, pixelsArray);
@@ -8403,14 +9711,17 @@ float* Band_getPixelsFloat(Band _this, int x, int y, int w, int h, const float* 
     jarray pixelsArray = NULL;
     float* _result = (float*) 0;
     jarray _resultArray = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "getPixels", "(IIII[F)[F");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "getPixels", "(IIII[F)[F");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     pixelsArray = (*jenv)->NewFloatArray(jenv, pixelsLength);
     beam_copy_to_jarray(pixelsArray, pixelsElems, pixelsLength, sizeof (float));
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method, x, y, w, h, pixelsArray);
@@ -8424,14 +9735,17 @@ double* Band_getPixelsDouble(Band _this, int x, int y, int w, int h, const doubl
     jarray pixelsArray = NULL;
     double* _result = (double*) 0;
     jarray _resultArray = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "getPixels", "(IIII[D)[D");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "getPixels", "(IIII[D)[D");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     pixelsArray = (*jenv)->NewDoubleArray(jenv, pixelsLength);
     beam_copy_to_jarray(pixelsArray, pixelsElems, pixelsLength, sizeof (double));
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method, x, y, w, h, pixelsArray);
@@ -8445,14 +9759,17 @@ int* Band_readPixelsInt(Band _this, int x, int y, int w, int h, int* pixelsElems
     jarray pixelsArray = NULL;
     int* _result = (int*) 0;
     jarray _resultArray = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "readPixels", "(IIII[I)[I");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "readPixels", "(IIII[I)[I");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     pixelsArray = (*jenv)->NewIntArray(jenv, pixelsLength);
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method, x, y, w, h, pixelsArray);
     if (pixelsElems != NULL && (*jenv)->IsSameObject(jenv, pixelsArray, _resultArray)) {
@@ -8472,14 +9789,17 @@ float* Band_readPixelsFloat(Band _this, int x, int y, int w, int h, float* pixel
     jarray pixelsArray = NULL;
     float* _result = (float*) 0;
     jarray _resultArray = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "readPixels", "(IIII[F)[F");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "readPixels", "(IIII[F)[F");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     pixelsArray = (*jenv)->NewFloatArray(jenv, pixelsLength);
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method, x, y, w, h, pixelsArray);
     if (pixelsElems != NULL && (*jenv)->IsSameObject(jenv, pixelsArray, _resultArray)) {
@@ -8499,14 +9819,17 @@ double* Band_readPixelsDouble(Band _this, int x, int y, int w, int h, double* pi
     jarray pixelsArray = NULL;
     double* _result = (double*) 0;
     jarray _resultArray = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "readPixels", "(IIII[D)[D");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "readPixels", "(IIII[D)[D");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     pixelsArray = (*jenv)->NewDoubleArray(jenv, pixelsLength);
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method, x, y, w, h, pixelsArray);
     if (pixelsElems != NULL && (*jenv)->IsSameObject(jenv, pixelsArray, _resultArray)) {
@@ -8524,14 +9847,17 @@ void Band_writePixelsInt(Band _this, int x, int y, int w, int h, const int* pixe
 {
     static jmethodID _method = NULL;
     jarray pixelsArray = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "writePixels", "(IIII[I)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "writePixels", "(IIII[I)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     pixelsArray = (*jenv)->NewIntArray(jenv, pixelsLength);
     beam_copy_to_jarray(pixelsArray, pixelsElems, pixelsLength, sizeof (int));
     (*jenv)->CallVoidMethod(jenv, _this, _method, x, y, w, h, pixelsArray);
@@ -8541,14 +9867,17 @@ void Band_writePixelsFloat(Band _this, int x, int y, int w, int h, const float* 
 {
     static jmethodID _method = NULL;
     jarray pixelsArray = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "writePixels", "(IIII[F)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "writePixels", "(IIII[F)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     pixelsArray = (*jenv)->NewFloatArray(jenv, pixelsLength);
     beam_copy_to_jarray(pixelsArray, pixelsElems, pixelsLength, sizeof (float));
     (*jenv)->CallVoidMethod(jenv, _this, _method, x, y, w, h, pixelsArray);
@@ -8558,14 +9887,17 @@ void Band_writePixelsDouble(Band _this, int x, int y, int w, int h, const double
 {
     static jmethodID _method = NULL;
     jarray pixelsArray = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "writePixels", "(IIII[D)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "writePixels", "(IIII[D)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     pixelsArray = (*jenv)->NewDoubleArray(jenv, pixelsLength);
     beam_copy_to_jarray(pixelsArray, pixelsElems, pixelsLength, sizeof (double));
     (*jenv)->CallVoidMethod(jenv, _this, _method, x, y, w, h, pixelsArray);
@@ -8577,14 +9909,17 @@ boolean* Band_readValidMask(Band _this, int x, int y, int w, int h, boolean* val
     jarray validMaskArray = NULL;
     boolean* _result = (boolean*) 0;
     jarray _resultArray = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "readValidMask", "(IIII[Z)[Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "readValidMask", "(IIII[Z)[Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     validMaskArray = (*jenv)->NewBooleanArray(jenv, validMaskLength);
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method, x, y, w, h, validMaskArray);
     if (validMaskElems != NULL && (*jenv)->IsSameObject(jenv, validMaskArray, _resultArray)) {
@@ -8601,28 +9936,34 @@ boolean* Band_readValidMask(Band _this, int x, int y, int w, int h, boolean* val
 void Band_writeRasterDataFully(Band _this)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "writeRasterDataFully", "()V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "writeRasterDataFully", "()V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method);
 }
 
 void Band_writeRasterData(Band _this, int offsetX, int offsetY, int width, int height, ProductData rasterData)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "writeRasterData", "(IIIILorg/esa/beam/framework/datamodel/ProductData;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "writeRasterData", "(IIIILorg/esa/beam/framework/datamodel/ProductData;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, offsetX, offsetY, width, height, rasterData);
 }
 
@@ -8630,14 +9971,17 @@ ProductData Band_createCompatibleRasterData(Band _this)
 {
     static jmethodID _method = NULL;
     ProductData _result = (ProductData) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "createCompatibleRasterData", "()Lorg/esa/beam/framework/datamodel/ProductData;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "createCompatibleRasterData", "()Lorg/esa/beam/framework/datamodel/ProductData;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -8646,14 +9990,17 @@ ProductData Band_createCompatibleSceneRasterData(Band _this)
 {
     static jmethodID _method = NULL;
     ProductData _result = (ProductData) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "createCompatibleSceneRasterData", "()Lorg/esa/beam/framework/datamodel/ProductData;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "createCompatibleSceneRasterData", "()Lorg/esa/beam/framework/datamodel/ProductData;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -8662,14 +10009,17 @@ ProductData Band_createCompatibleRasterDataForRect(Band _this, int width, int he
 {
     static jmethodID _method = NULL;
     ProductData _result = (ProductData) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "createCompatibleRasterData", "(II)Lorg/esa/beam/framework/datamodel/ProductData;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "createCompatibleRasterData", "(II)Lorg/esa/beam/framework/datamodel/ProductData;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, width, height);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -8678,14 +10028,17 @@ boolean Band_isCompatibleRasterData(Band _this, ProductData rasterData, int w, i
 {
     static jmethodID _method = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "isCompatibleRasterData", "(Lorg/esa/beam/framework/datamodel/ProductData;II)Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "isCompatibleRasterData", "(Lorg/esa/beam/framework/datamodel/ProductData;II)Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method, rasterData, w, h);
     return _result;
 }
@@ -8693,14 +10046,17 @@ boolean Band_isCompatibleRasterData(Band _this, ProductData rasterData, int w, i
 void Band_checkCompatibleRasterData(Band _this, ProductData rasterData, int w, int h)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "checkCompatibleRasterData", "(Lorg/esa/beam/framework/datamodel/ProductData;II)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "checkCompatibleRasterData", "(Lorg/esa/beam/framework/datamodel/ProductData;II)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, rasterData, w, h);
 }
 
@@ -8708,14 +10064,17 @@ boolean Band_hasIntPixels(Band _this)
 {
     static jmethodID _method = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "hasIntPixels", "()Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "hasIntPixels", "()Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method);
     return _result;
 }
@@ -8724,14 +10083,17 @@ TransectProfileData Band_createTransectProfileData(Band _this, Shape shape)
 {
     static jmethodID _method = NULL;
     TransectProfileData _result = (TransectProfileData) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "createTransectProfileData", "(Ljava/awt/Shape;)Lorg/esa/beam/framework/datamodel/TransectProfileData;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "createTransectProfileData", "(Ljava/awt/Shape;)Lorg/esa/beam/framework/datamodel/TransectProfileData;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, shape);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -8740,14 +10102,17 @@ ImageInfo Band_getImageInfo(Band _this)
 {
     static jmethodID _method = NULL;
     ImageInfo _result = (ImageInfo) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "getImageInfo", "()Lorg/esa/beam/framework/datamodel/ImageInfo;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "getImageInfo", "()Lorg/esa/beam/framework/datamodel/ImageInfo;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -8755,28 +10120,34 @@ ImageInfo Band_getImageInfo(Band _this)
 void Band_setImageInfo(Band _this, ImageInfo imageInfo)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "setImageInfo", "(Lorg/esa/beam/framework/datamodel/ImageInfo;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "setImageInfo", "(Lorg/esa/beam/framework/datamodel/ImageInfo;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, imageInfo);
 }
 
 void Band_fireImageInfoChanged(Band _this)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "fireImageInfoChanged", "()V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "fireImageInfoChanged", "()V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method);
 }
 
@@ -8785,14 +10156,17 @@ ImageInfo Band_createDefaultImageInfo(Band _this, const double* histoSkipAreasEl
     static jmethodID _method = NULL;
     jarray histoSkipAreasArray = NULL;
     ImageInfo _result = (ImageInfo) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "createDefaultImageInfo", "([DLorg/esa/beam/util/math/Histogram;)Lorg/esa/beam/framework/datamodel/ImageInfo;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "createDefaultImageInfo", "([DLorg/esa/beam/util/math/Histogram;)Lorg/esa/beam/framework/datamodel/ImageInfo;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     histoSkipAreasArray = (*jenv)->NewDoubleArray(jenv, histoSkipAreasLength);
     beam_copy_to_jarray(histoSkipAreasArray, histoSkipAreasElems, histoSkipAreasLength, sizeof (double));
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, histoSkipAreasArray, histogram);
@@ -8803,14 +10177,17 @@ ProductNodeGroup Band_getOverlayMaskGroup(Band _this)
 {
     static jmethodID _method = NULL;
     ProductNodeGroup _result = (ProductNodeGroup) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "getOverlayMaskGroup", "()Lorg/esa/beam/framework/datamodel/ProductNodeGroup;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "getOverlayMaskGroup", "()Lorg/esa/beam/framework/datamodel/ProductNodeGroup;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -8819,14 +10196,17 @@ BufferedImage Band_createColorIndexedImage(Band _this, ProgressMonitor pm)
 {
     static jmethodID _method = NULL;
     BufferedImage _result = (BufferedImage) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "createColorIndexedImage", "(Lcom/bc/ceres/core/ProgressMonitor;)Ljava/awt/image/BufferedImage;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "createColorIndexedImage", "(Lcom/bc/ceres/core/ProgressMonitor;)Ljava/awt/image/BufferedImage;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, pm);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -8835,14 +10215,17 @@ BufferedImage Band_createRgbImage(Band _this, ProgressMonitor pm)
 {
     static jmethodID _method = NULL;
     BufferedImage _result = (BufferedImage) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "createRgbImage", "(Lcom/bc/ceres/core/ProgressMonitor;)Ljava/awt/image/BufferedImage;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "createRgbImage", "(Lcom/bc/ceres/core/ProgressMonitor;)Ljava/awt/image/BufferedImage;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, pm);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -8851,14 +10234,17 @@ IndexValidator Band_createPixelValidator(Band _this, int lineOffset, ROI roi)
 {
     static jmethodID _method = NULL;
     IndexValidator _result = (IndexValidator) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "createPixelValidator", "(ILjavax/media/jai/ROI;)Lorg/esa/beam/util/math/IndexValidator;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "createPixelValidator", "(ILjavax/media/jai/ROI;)Lorg/esa/beam/util/math/IndexValidator;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, lineOffset, roi);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -8867,14 +10253,17 @@ double Band_scale(Band _this, double v)
 {
     static jmethodID _method = NULL;
     double _result = (double) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "scale", "(D)D");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "scale", "(D)D");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallDoubleMethod(jenv, _this, _method, v);
     return _result;
 }
@@ -8883,14 +10272,17 @@ double Band_scaleInverse(Band _this, double v)
 {
     static jmethodID _method = NULL;
     double _result = (double) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "scaleInverse", "(D)D");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "scaleInverse", "(D)D");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallDoubleMethod(jenv, _this, _method, v);
     return _result;
 }
@@ -8900,14 +10292,17 @@ char* Band_getPixelString(Band _this, int x, int y)
     static jmethodID _method = NULL;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "getPixelString", "(II)Ljava/lang/String;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "getPixelString", "(II)Ljava/lang/String;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method, x, y);
     _result = beam_alloc_string(_resultString);
     return _result;
@@ -8917,14 +10312,17 @@ boolean Band_isSourceImageSet(Band _this)
 {
     static jmethodID _method = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "isSourceImageSet", "()Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "isSourceImageSet", "()Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method);
     return _result;
 }
@@ -8933,14 +10331,17 @@ MultiLevelImage Band_getSourceImage(Band _this)
 {
     static jmethodID _method = NULL;
     MultiLevelImage _result = (MultiLevelImage) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "getSourceImage", "()Lcom/bc/ceres/glevel/MultiLevelImage;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "getSourceImage", "()Lcom/bc/ceres/glevel/MultiLevelImage;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -8949,14 +10350,17 @@ boolean Band_isGeophysicalImageSet(Band _this)
 {
     static jmethodID _method = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "isGeophysicalImageSet", "()Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "isGeophysicalImageSet", "()Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method);
     return _result;
 }
@@ -8965,14 +10369,17 @@ MultiLevelImage Band_getGeophysicalImage(Band _this)
 {
     static jmethodID _method = NULL;
     MultiLevelImage _result = (MultiLevelImage) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "getGeophysicalImage", "()Lcom/bc/ceres/glevel/MultiLevelImage;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "getGeophysicalImage", "()Lcom/bc/ceres/glevel/MultiLevelImage;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -8981,14 +10388,17 @@ boolean Band_isValidMaskImageSet(Band _this)
 {
     static jmethodID _method = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "isValidMaskImageSet", "()Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "isValidMaskImageSet", "()Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method);
     return _result;
 }
@@ -8997,14 +10407,17 @@ MultiLevelImage Band_getValidMaskImage(Band _this)
 {
     static jmethodID _method = NULL;
     MultiLevelImage _result = (MultiLevelImage) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "getValidMaskImage", "()Lcom/bc/ceres/glevel/MultiLevelImage;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "getValidMaskImage", "()Lcom/bc/ceres/glevel/MultiLevelImage;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -9013,14 +10426,17 @@ boolean Band_isStxSet(Band _this)
 {
     static jmethodID _method = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "isStxSet", "()Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "isStxSet", "()Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method);
     return _result;
 }
@@ -9029,14 +10445,17 @@ Stx Band_getStx(Band _this)
 {
     static jmethodID _method = NULL;
     Stx _result = (Stx) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "getStx", "()Lorg/esa/beam/framework/datamodel/Stx;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "getStx", "()Lorg/esa/beam/framework/datamodel/Stx;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -9044,14 +10463,17 @@ Stx Band_getStx(Band _this)
 void Band_setStx(Band _this, Stx stx)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "setStx", "(Lorg/esa/beam/framework/datamodel/Stx;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "setStx", "(Lorg/esa/beam/framework/datamodel/Stx;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, stx);
 }
 
@@ -9059,14 +10481,17 @@ Shape Band_getValidShape(Band _this)
 {
     static jmethodID _method = NULL;
     Shape _result = (Shape) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "getValidShape", "()Ljava/awt/Shape;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "getValidShape", "()Ljava/awt/Shape;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -9075,14 +10500,17 @@ ProductNodeGroup Band_getRoiMaskGroup(Band _this)
 {
     static jmethodID _method = NULL;
     ProductNodeGroup _result = (ProductNodeGroup) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "getRoiMaskGroup", "()Lorg/esa/beam/framework/datamodel/ProductNodeGroup;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "getRoiMaskGroup", "()Lorg/esa/beam/framework/datamodel/ProductNodeGroup;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -9091,14 +10519,17 @@ int Band_getDataType(Band _this)
 {
     static jmethodID _method = NULL;
     int _result = (int) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "getDataType", "()I");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "getDataType", "()I");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallIntMethod(jenv, _this, _method);
     return _result;
 }
@@ -9107,14 +10538,17 @@ dlong Band_getNumDataElems(Band _this)
 {
     static jmethodID _method = NULL;
     dlong _result = (dlong) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "getNumDataElems", "()J");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "getNumDataElems", "()J");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallLongMethod(jenv, _this, _method);
     return _result;
 }
@@ -9122,14 +10556,17 @@ dlong Band_getNumDataElems(Band _this)
 void Band_setData(Band _this, ProductData data)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "setData", "(Lorg/esa/beam/framework/datamodel/ProductData;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "setData", "(Lorg/esa/beam/framework/datamodel/ProductData;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, data);
 }
 
@@ -9137,14 +10574,17 @@ ProductData Band_getData(Band _this)
 {
     static jmethodID _method = NULL;
     ProductData _result = (ProductData) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "getData", "()Lorg/esa/beam/framework/datamodel/ProductData;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "getData", "()Lorg/esa/beam/framework/datamodel/ProductData;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -9152,14 +10592,17 @@ ProductData Band_getData(Band _this)
 void Band_setDataElems(Band _this, Object elems)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "setDataElems", "(Ljava/lang/Object;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "setDataElems", "(Ljava/lang/Object;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, elems);
 }
 
@@ -9167,14 +10610,17 @@ Object Band_getDataElems(Band _this)
 {
     static jmethodID _method = NULL;
     Object _result = (Object) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "getDataElems", "()Ljava/lang/Object;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "getDataElems", "()Ljava/lang/Object;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -9183,14 +10629,17 @@ int Band_getDataElemSize(Band _this)
 {
     static jmethodID _method = NULL;
     int _result = (int) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "getDataElemSize", "()I");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "getDataElemSize", "()I");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallIntMethod(jenv, _this, _method);
     return _result;
 }
@@ -9198,14 +10647,17 @@ int Band_getDataElemSize(Band _this)
 void Band_setReadOnly(Band _this, boolean readOnly)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "setReadOnly", "(Z)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "setReadOnly", "(Z)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, readOnly);
 }
 
@@ -9213,14 +10665,17 @@ boolean Band_isReadOnly(Band _this)
 {
     static jmethodID _method = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "isReadOnly", "()Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "isReadOnly", "()Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method);
     return _result;
 }
@@ -9229,14 +10684,17 @@ void Band_setUnit(Band _this, const char* unit)
 {
     static jmethodID _method = NULL;
     jstring unitString = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "setUnit", "(Ljava/lang/String;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "setUnit", "(Ljava/lang/String;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     unitString = (*jenv)->NewStringUTF(jenv, unit);
     (*jenv)->CallVoidMethod(jenv, _this, _method, unitString);
 }
@@ -9246,14 +10704,17 @@ char* Band_getUnit(Band _this)
     static jmethodID _method = NULL;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "getUnit", "()Ljava/lang/String;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "getUnit", "()Ljava/lang/String;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
     return _result;
@@ -9263,14 +10724,17 @@ boolean Band_isSynthetic(Band _this)
 {
     static jmethodID _method = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "isSynthetic", "()Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "isSynthetic", "()Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method);
     return _result;
 }
@@ -9278,28 +10742,34 @@ boolean Band_isSynthetic(Band _this)
 void Band_setSynthetic(Band _this, boolean synthetic)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "setSynthetic", "(Z)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "setSynthetic", "(Z)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, synthetic);
 }
 
 void Band_fireProductNodeDataChanged(Band _this)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "fireProductNodeDataChanged", "()V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "fireProductNodeDataChanged", "()V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method);
 }
 
@@ -9307,14 +10777,17 @@ ProductData Band_createCompatibleProductData(Band _this, int numElems)
 {
     static jmethodID _method = NULL;
     ProductData _result = (ProductData) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "createCompatibleProductData", "(I)Lorg/esa/beam/framework/datamodel/ProductData;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "createCompatibleProductData", "(I)Lorg/esa/beam/framework/datamodel/ProductData;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, numElems);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -9323,14 +10796,17 @@ ProductNode Band_getOwner(Band _this)
 {
     static jmethodID _method = NULL;
     ProductNode _result = (ProductNode) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "getOwner", "()Lorg/esa/beam/framework/datamodel/ProductNode;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "getOwner", "()Lorg/esa/beam/framework/datamodel/ProductNode;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -9340,14 +10816,17 @@ char* Band_getName(Band _this)
     static jmethodID _method = NULL;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "getName", "()Ljava/lang/String;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "getName", "()Ljava/lang/String;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
     return _result;
@@ -9357,14 +10836,17 @@ void Band_setName(Band _this, const char* name)
 {
     static jmethodID _method = NULL;
     jstring nameString = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "setName", "(Ljava/lang/String;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "setName", "(Ljava/lang/String;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     nameString = (*jenv)->NewStringUTF(jenv, name);
     (*jenv)->CallVoidMethod(jenv, _this, _method, nameString);
 }
@@ -9374,14 +10856,17 @@ char* Band_getDescription(Band _this)
     static jmethodID _method = NULL;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "getDescription", "()Ljava/lang/String;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "getDescription", "()Ljava/lang/String;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
     return _result;
@@ -9391,14 +10876,17 @@ void Band_setDescription(Band _this, const char* description)
 {
     static jmethodID _method = NULL;
     jstring descriptionString = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "setDescription", "(Ljava/lang/String;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "setDescription", "(Ljava/lang/String;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     descriptionString = (*jenv)->NewStringUTF(jenv, description);
     (*jenv)->CallVoidMethod(jenv, _this, _method, descriptionString);
 }
@@ -9407,14 +10895,17 @@ boolean Band_isModified(Band _this)
 {
     static jmethodID _method = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "isModified", "()Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "isModified", "()Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method);
     return _result;
 }
@@ -9424,14 +10915,17 @@ boolean Band_isValidNodeName(const char* name)
     static jmethodID _method = NULL;
     jstring nameString = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classBand, "isValidNodeName", "(Ljava/lang/String;)Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classBand, "isValidNodeName", "(Ljava/lang/String;)Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     nameString = (*jenv)->NewStringUTF(jenv, name);
     _result = (*jenv)->CallStaticBooleanMethod(jenv, classBand, _method, nameString);
     return _result;
@@ -9441,14 +10935,17 @@ Product Band_getProduct(Band _this)
 {
     static jmethodID _method = NULL;
     Product _result = (Product) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "getProduct", "()Lorg/esa/beam/framework/datamodel/Product;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "getProduct", "()Lorg/esa/beam/framework/datamodel/Product;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -9457,14 +10954,17 @@ ProductReader Band_getProductReader(Band _this)
 {
     static jmethodID _method = NULL;
     ProductReader _result = (ProductReader) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "getProductReader", "()Lorg/esa/beam/framework/dataio/ProductReader;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "getProductReader", "()Lorg/esa/beam/framework/dataio/ProductReader;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -9473,14 +10973,17 @@ ProductWriter Band_getProductWriter(Band _this)
 {
     static jmethodID _method = NULL;
     ProductWriter _result = (ProductWriter) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "getProductWriter", "()Lorg/esa/beam/framework/dataio/ProductWriter;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "getProductWriter", "()Lorg/esa/beam/framework/dataio/ProductWriter;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -9490,14 +10993,17 @@ char* Band_getDisplayName(Band _this)
     static jmethodID _method = NULL;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "getDisplayName", "()Ljava/lang/String;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "getDisplayName", "()Ljava/lang/String;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
     return _result;
@@ -9508,14 +11014,17 @@ char* Band_getProductRefString(Band _this)
     static jmethodID _method = NULL;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "getProductRefString", "()Ljava/lang/String;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "getProductRefString", "()Ljava/lang/String;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
     return _result;
@@ -9525,14 +11034,17 @@ Object Band_getExtension(Band _this, Class arg0)
 {
     static jmethodID _method = NULL;
     Object _result = (Object) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classBand, "getExtension", "(Ljava/lang/Class;)Ljava/lang/Object;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classBand, "getExtension", "(Ljava/lang/Class;)Ljava/lang/Object;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, arg0);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -9541,14 +11053,17 @@ VectorDataNode PlacemarkGroup_getVectorDataNode(PlacemarkGroup _this)
 {
     static jmethodID _method = NULL;
     VectorDataNode _result = (VectorDataNode) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classPlacemarkGroup, "getVectorDataNode", "()Lorg/esa/beam/framework/datamodel/VectorDataNode;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classPlacemarkGroup, "getVectorDataNode", "()Lorg/esa/beam/framework/datamodel/VectorDataNode;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -9557,14 +11072,17 @@ Placemark PlacemarkGroup_getPlacemark(PlacemarkGroup _this, SimpleFeature featur
 {
     static jmethodID _method = NULL;
     Placemark _result = (Placemark) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classPlacemarkGroup, "getPlacemark", "(Lorg/opengis/feature/simple/SimpleFeature;)Lorg/esa/beam/framework/datamodel/Placemark;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classPlacemarkGroup, "getPlacemark", "(Lorg/opengis/feature/simple/SimpleFeature;)Lorg/esa/beam/framework/datamodel/Placemark;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, feature);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -9573,14 +11091,17 @@ boolean PlacemarkGroup_add3(PlacemarkGroup _this, Placemark placemark)
 {
     static jmethodID _method = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classPlacemarkGroup, "add", "(Lorg/esa/beam/framework/datamodel/Placemark;)Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classPlacemarkGroup, "add", "(Lorg/esa/beam/framework/datamodel/Placemark;)Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method, placemark);
     return _result;
 }
@@ -9588,14 +11109,17 @@ boolean PlacemarkGroup_add3(PlacemarkGroup _this, Placemark placemark)
 void PlacemarkGroup_add1(PlacemarkGroup _this, int index, Placemark placemark)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classPlacemarkGroup, "add", "(ILorg/esa/beam/framework/datamodel/Placemark;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classPlacemarkGroup, "add", "(ILorg/esa/beam/framework/datamodel/Placemark;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, index, placemark);
 }
 
@@ -9603,14 +11127,17 @@ boolean PlacemarkGroup_remove1(PlacemarkGroup _this, Placemark placemark)
 {
     static jmethodID _method = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classPlacemarkGroup, "remove", "(Lorg/esa/beam/framework/datamodel/Placemark;)Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classPlacemarkGroup, "remove", "(Lorg/esa/beam/framework/datamodel/Placemark;)Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method, placemark);
     return _result;
 }
@@ -9618,14 +11145,17 @@ boolean PlacemarkGroup_remove1(PlacemarkGroup _this, Placemark placemark)
 void PlacemarkGroup_dispose(PlacemarkGroup _this)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classPlacemarkGroup, "dispose", "()V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classPlacemarkGroup, "dispose", "()V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method);
 }
 
@@ -9633,14 +11163,17 @@ boolean PlacemarkGroup_isTakingOverNodeOwnership(PlacemarkGroup _this)
 {
     static jmethodID _method = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classPlacemarkGroup, "isTakingOverNodeOwnership", "()Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classPlacemarkGroup, "isTakingOverNodeOwnership", "()Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method);
     return _result;
 }
@@ -9649,14 +11182,17 @@ int PlacemarkGroup_getNodeCount(PlacemarkGroup _this)
 {
     static jmethodID _method = NULL;
     int _result = (int) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classPlacemarkGroup, "getNodeCount", "()I");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classPlacemarkGroup, "getNodeCount", "()I");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallIntMethod(jenv, _this, _method);
     return _result;
 }
@@ -9665,14 +11201,17 @@ ProductNode PlacemarkGroup_get1(PlacemarkGroup _this, int index)
 {
     static jmethodID _method = NULL;
     ProductNode _result = (ProductNode) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classPlacemarkGroup, "get", "(I)Lorg/esa/beam/framework/datamodel/ProductNode;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classPlacemarkGroup, "get", "(I)Lorg/esa/beam/framework/datamodel/ProductNode;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, index);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -9682,14 +11221,17 @@ char** PlacemarkGroup_getNodeDisplayNames(PlacemarkGroup _this, int* resultArray
     static jmethodID _method = NULL;
     char** _result = (char**) 0;
     jarray _resultArray = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classPlacemarkGroup, "getNodeDisplayNames", "()[Ljava/lang/String;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classPlacemarkGroup, "getNodeDisplayNames", "()[Ljava/lang/String;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string_array(_resultArray, resultArrayLength);
     return _result;
@@ -9700,14 +11242,17 @@ char** PlacemarkGroup_getNodeNames(PlacemarkGroup _this, int* resultArrayLength)
     static jmethodID _method = NULL;
     char** _result = (char**) 0;
     jarray _resultArray = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classPlacemarkGroup, "getNodeNames", "()[Ljava/lang/String;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classPlacemarkGroup, "getNodeNames", "()[Ljava/lang/String;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string_array(_resultArray, resultArrayLength);
     return _result;
@@ -9718,14 +11263,17 @@ ProductNode* PlacemarkGroup_toArray1(PlacemarkGroup _this, int* resultArrayLengt
     static jmethodID _method = NULL;
     ProductNode* _result = (ProductNode*) 0;
     jarray _resultArray = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classPlacemarkGroup, "toArray", "()[Lorg/esa/beam/framework/datamodel/ProductNode;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classPlacemarkGroup, "toArray", "()[Lorg/esa/beam/framework/datamodel/ProductNode;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_object_array(_resultArray, resultArrayLength);
     return _result;
@@ -9736,14 +11284,17 @@ ProductNode PlacemarkGroup_toArray2(PlacemarkGroup _this, const ProductNode arra
     static jmethodID _method = NULL;
     jarray arrayArray = NULL;
     ProductNode _result = (ProductNode) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classPlacemarkGroup, "toArray", "([Lorg/esa/beam/framework/datamodel/ProductNode;)[Lorg/esa/beam/framework/datamodel/ProductNode;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classPlacemarkGroup, "toArray", "([Lorg/esa/beam/framework/datamodel/ProductNode;)[Lorg/esa/beam/framework/datamodel/ProductNode;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     arrayArray = beam_new_jobject_array(arrayElems, arrayLength, classProductNode);
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, arrayArray);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
@@ -9754,14 +11305,17 @@ int PlacemarkGroup_indexOf1(PlacemarkGroup _this, const char* name)
     static jmethodID _method = NULL;
     jstring nameString = NULL;
     int _result = (int) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classPlacemarkGroup, "indexOf", "(Ljava/lang/String;)I");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classPlacemarkGroup, "indexOf", "(Ljava/lang/String;)I");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     nameString = (*jenv)->NewStringUTF(jenv, name);
     _result = (*jenv)->CallIntMethod(jenv, _this, _method, nameString);
     return _result;
@@ -9771,14 +11325,17 @@ int PlacemarkGroup_indexOf2(PlacemarkGroup _this, ProductNode element)
 {
     static jmethodID _method = NULL;
     int _result = (int) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classPlacemarkGroup, "indexOf", "(Lorg/esa/beam/framework/datamodel/ProductNode;)I");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classPlacemarkGroup, "indexOf", "(Lorg/esa/beam/framework/datamodel/ProductNode;)I");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallIntMethod(jenv, _this, _method, element);
     return _result;
 }
@@ -9788,14 +11345,17 @@ ProductNode PlacemarkGroup_getByDisplayName(PlacemarkGroup _this, const char* di
     static jmethodID _method = NULL;
     jstring displayNameString = NULL;
     ProductNode _result = (ProductNode) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classPlacemarkGroup, "getByDisplayName", "(Ljava/lang/String;)Lorg/esa/beam/framework/datamodel/ProductNode;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classPlacemarkGroup, "getByDisplayName", "(Ljava/lang/String;)Lorg/esa/beam/framework/datamodel/ProductNode;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     displayNameString = (*jenv)->NewStringUTF(jenv, displayName);
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, displayNameString);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
@@ -9806,14 +11366,17 @@ ProductNode PlacemarkGroup_get2(PlacemarkGroup _this, const char* name)
     static jmethodID _method = NULL;
     jstring nameString = NULL;
     ProductNode _result = (ProductNode) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classPlacemarkGroup, "get", "(Ljava/lang/String;)Lorg/esa/beam/framework/datamodel/ProductNode;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classPlacemarkGroup, "get", "(Ljava/lang/String;)Lorg/esa/beam/framework/datamodel/ProductNode;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     nameString = (*jenv)->NewStringUTF(jenv, name);
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, nameString);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
@@ -9824,14 +11387,17 @@ boolean PlacemarkGroup_contains1(PlacemarkGroup _this, const char* name)
     static jmethodID _method = NULL;
     jstring nameString = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classPlacemarkGroup, "contains", "(Ljava/lang/String;)Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classPlacemarkGroup, "contains", "(Ljava/lang/String;)Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     nameString = (*jenv)->NewStringUTF(jenv, name);
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method, nameString);
     return _result;
@@ -9841,14 +11407,17 @@ boolean PlacemarkGroup_contains2(PlacemarkGroup _this, ProductNode node)
 {
     static jmethodID _method = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classPlacemarkGroup, "contains", "(Lorg/esa/beam/framework/datamodel/ProductNode;)Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classPlacemarkGroup, "contains", "(Lorg/esa/beam/framework/datamodel/ProductNode;)Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method, node);
     return _result;
 }
@@ -9857,14 +11426,17 @@ boolean PlacemarkGroup_add4(PlacemarkGroup _this, ProductNode node)
 {
     static jmethodID _method = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classPlacemarkGroup, "add", "(Lorg/esa/beam/framework/datamodel/ProductNode;)Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classPlacemarkGroup, "add", "(Lorg/esa/beam/framework/datamodel/ProductNode;)Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method, node);
     return _result;
 }
@@ -9872,14 +11444,17 @@ boolean PlacemarkGroup_add4(PlacemarkGroup _this, ProductNode node)
 void PlacemarkGroup_add2(PlacemarkGroup _this, int index, ProductNode node)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classPlacemarkGroup, "add", "(ILorg/esa/beam/framework/datamodel/ProductNode;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classPlacemarkGroup, "add", "(ILorg/esa/beam/framework/datamodel/ProductNode;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, index, node);
 }
 
@@ -9887,14 +11462,17 @@ boolean PlacemarkGroup_remove2(PlacemarkGroup _this, ProductNode node)
 {
     static jmethodID _method = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classPlacemarkGroup, "remove", "(Lorg/esa/beam/framework/datamodel/ProductNode;)Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classPlacemarkGroup, "remove", "(Lorg/esa/beam/framework/datamodel/ProductNode;)Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method, node);
     return _result;
 }
@@ -9902,28 +11480,34 @@ boolean PlacemarkGroup_remove2(PlacemarkGroup _this, ProductNode node)
 void PlacemarkGroup_removeAll(PlacemarkGroup _this)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classPlacemarkGroup, "removeAll", "()V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classPlacemarkGroup, "removeAll", "()V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method);
 }
 
 void PlacemarkGroup_clearRemovedList(PlacemarkGroup _this)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classPlacemarkGroup, "clearRemovedList", "()V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classPlacemarkGroup, "clearRemovedList", "()V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method);
 }
 
@@ -9931,14 +11515,17 @@ Collection PlacemarkGroup_getRemovedNodes(PlacemarkGroup _this)
 {
     static jmethodID _method = NULL;
     Collection _result = (Collection) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classPlacemarkGroup, "getRemovedNodes", "()Ljava/util/Collection;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classPlacemarkGroup, "getRemovedNodes", "()Ljava/util/Collection;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -9947,14 +11534,17 @@ dlong PlacemarkGroup_getRawStorageSize2(PlacemarkGroup _this, ProductSubsetDef s
 {
     static jmethodID _method = NULL;
     dlong _result = (dlong) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classPlacemarkGroup, "getRawStorageSize", "(Lorg/esa/beam/framework/dataio/ProductSubsetDef;)J");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classPlacemarkGroup, "getRawStorageSize", "(Lorg/esa/beam/framework/dataio/ProductSubsetDef;)J");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallLongMethod(jenv, _this, _method, subsetDef);
     return _result;
 }
@@ -9962,28 +11552,34 @@ dlong PlacemarkGroup_getRawStorageSize2(PlacemarkGroup _this, ProductSubsetDef s
 void PlacemarkGroup_setModified(PlacemarkGroup _this, boolean modified)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classPlacemarkGroup, "setModified", "(Z)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classPlacemarkGroup, "setModified", "(Z)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, modified);
 }
 
 void PlacemarkGroup_acceptVisitor(PlacemarkGroup _this, ProductVisitor visitor)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classPlacemarkGroup, "acceptVisitor", "(Lorg/esa/beam/framework/datamodel/ProductVisitor;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classPlacemarkGroup, "acceptVisitor", "(Lorg/esa/beam/framework/datamodel/ProductVisitor;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, visitor);
 }
 
@@ -9992,14 +11588,17 @@ void PlacemarkGroup_updateExpression(PlacemarkGroup _this, const char* oldExtern
     static jmethodID _method = NULL;
     jstring oldExternalNameString = NULL;
     jstring newExternalNameString = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classPlacemarkGroup, "updateExpression", "(Ljava/lang/String;Ljava/lang/String;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classPlacemarkGroup, "updateExpression", "(Ljava/lang/String;Ljava/lang/String;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     oldExternalNameString = (*jenv)->NewStringUTF(jenv, oldExternalName);
     newExternalNameString = (*jenv)->NewStringUTF(jenv, newExternalName);
     (*jenv)->CallVoidMethod(jenv, _this, _method, oldExternalNameString, newExternalNameString);
@@ -10009,14 +11608,17 @@ ProductNode PlacemarkGroup_getOwner(PlacemarkGroup _this)
 {
     static jmethodID _method = NULL;
     ProductNode _result = (ProductNode) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classPlacemarkGroup, "getOwner", "()Lorg/esa/beam/framework/datamodel/ProductNode;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classPlacemarkGroup, "getOwner", "()Lorg/esa/beam/framework/datamodel/ProductNode;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -10026,14 +11628,17 @@ char* PlacemarkGroup_getName(PlacemarkGroup _this)
     static jmethodID _method = NULL;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classPlacemarkGroup, "getName", "()Ljava/lang/String;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classPlacemarkGroup, "getName", "()Ljava/lang/String;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
     return _result;
@@ -10043,14 +11648,17 @@ void PlacemarkGroup_setName(PlacemarkGroup _this, const char* name)
 {
     static jmethodID _method = NULL;
     jstring nameString = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classPlacemarkGroup, "setName", "(Ljava/lang/String;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classPlacemarkGroup, "setName", "(Ljava/lang/String;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     nameString = (*jenv)->NewStringUTF(jenv, name);
     (*jenv)->CallVoidMethod(jenv, _this, _method, nameString);
 }
@@ -10060,14 +11668,17 @@ char* PlacemarkGroup_getDescription(PlacemarkGroup _this)
     static jmethodID _method = NULL;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classPlacemarkGroup, "getDescription", "()Ljava/lang/String;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classPlacemarkGroup, "getDescription", "()Ljava/lang/String;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
     return _result;
@@ -10077,14 +11688,17 @@ void PlacemarkGroup_setDescription(PlacemarkGroup _this, const char* description
 {
     static jmethodID _method = NULL;
     jstring descriptionString = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classPlacemarkGroup, "setDescription", "(Ljava/lang/String;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classPlacemarkGroup, "setDescription", "(Ljava/lang/String;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     descriptionString = (*jenv)->NewStringUTF(jenv, description);
     (*jenv)->CallVoidMethod(jenv, _this, _method, descriptionString);
 }
@@ -10093,14 +11707,17 @@ boolean PlacemarkGroup_isModified(PlacemarkGroup _this)
 {
     static jmethodID _method = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classPlacemarkGroup, "isModified", "()Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classPlacemarkGroup, "isModified", "()Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method);
     return _result;
 }
@@ -10110,14 +11727,17 @@ char* PlacemarkGroup_toString(PlacemarkGroup _this)
     static jmethodID _method = NULL;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classPlacemarkGroup, "toString", "()Ljava/lang/String;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classPlacemarkGroup, "toString", "()Ljava/lang/String;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
     return _result;
@@ -10128,14 +11748,17 @@ boolean PlacemarkGroup_isValidNodeName(const char* name)
     static jmethodID _method = NULL;
     jstring nameString = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classPlacemarkGroup, "isValidNodeName", "(Ljava/lang/String;)Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classPlacemarkGroup, "isValidNodeName", "(Ljava/lang/String;)Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     nameString = (*jenv)->NewStringUTF(jenv, name);
     _result = (*jenv)->CallStaticBooleanMethod(jenv, classPlacemarkGroup, _method, nameString);
     return _result;
@@ -10145,14 +11768,17 @@ Product PlacemarkGroup_getProduct(PlacemarkGroup _this)
 {
     static jmethodID _method = NULL;
     Product _result = (Product) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classPlacemarkGroup, "getProduct", "()Lorg/esa/beam/framework/datamodel/Product;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classPlacemarkGroup, "getProduct", "()Lorg/esa/beam/framework/datamodel/Product;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -10161,14 +11787,17 @@ ProductReader PlacemarkGroup_getProductReader(PlacemarkGroup _this)
 {
     static jmethodID _method = NULL;
     ProductReader _result = (ProductReader) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classPlacemarkGroup, "getProductReader", "()Lorg/esa/beam/framework/dataio/ProductReader;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classPlacemarkGroup, "getProductReader", "()Lorg/esa/beam/framework/dataio/ProductReader;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -10177,14 +11806,17 @@ ProductWriter PlacemarkGroup_getProductWriter(PlacemarkGroup _this)
 {
     static jmethodID _method = NULL;
     ProductWriter _result = (ProductWriter) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classPlacemarkGroup, "getProductWriter", "()Lorg/esa/beam/framework/dataio/ProductWriter;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classPlacemarkGroup, "getProductWriter", "()Lorg/esa/beam/framework/dataio/ProductWriter;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -10194,14 +11826,17 @@ char* PlacemarkGroup_getDisplayName(PlacemarkGroup _this)
     static jmethodID _method = NULL;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classPlacemarkGroup, "getDisplayName", "()Ljava/lang/String;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classPlacemarkGroup, "getDisplayName", "()Ljava/lang/String;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
     return _result;
@@ -10212,14 +11847,17 @@ char* PlacemarkGroup_getProductRefString(PlacemarkGroup _this)
     static jmethodID _method = NULL;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classPlacemarkGroup, "getProductRefString", "()Ljava/lang/String;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classPlacemarkGroup, "getProductRefString", "()Ljava/lang/String;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
     return _result;
@@ -10229,14 +11867,17 @@ dlong PlacemarkGroup_getRawStorageSize1(PlacemarkGroup _this)
 {
     static jmethodID _method = NULL;
     dlong _result = (dlong) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classPlacemarkGroup, "getRawStorageSize", "()J");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classPlacemarkGroup, "getRawStorageSize", "()J");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallLongMethod(jenv, _this, _method);
     return _result;
 }
@@ -10245,14 +11886,17 @@ void PlacemarkGroup_fireProductNodeChanged1(PlacemarkGroup _this, const char* pr
 {
     static jmethodID _method = NULL;
     jstring propertyNameString = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classPlacemarkGroup, "fireProductNodeChanged", "(Ljava/lang/String;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classPlacemarkGroup, "fireProductNodeChanged", "(Ljava/lang/String;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     propertyNameString = (*jenv)->NewStringUTF(jenv, propertyName);
     (*jenv)->CallVoidMethod(jenv, _this, _method, propertyNameString);
 }
@@ -10261,14 +11905,17 @@ void PlacemarkGroup_fireProductNodeChanged2(PlacemarkGroup _this, const char* pr
 {
     static jmethodID _method = NULL;
     jstring propertyNameString = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classPlacemarkGroup, "fireProductNodeChanged", "(Ljava/lang/String;Ljava/lang/Object;Ljava/lang/Object;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classPlacemarkGroup, "fireProductNodeChanged", "(Ljava/lang/String;Ljava/lang/Object;Ljava/lang/Object;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     propertyNameString = (*jenv)->NewStringUTF(jenv, propertyName);
     (*jenv)->CallVoidMethod(jenv, _this, _method, propertyNameString, oldValue, newValue);
 }
@@ -10276,14 +11923,17 @@ void PlacemarkGroup_fireProductNodeChanged2(PlacemarkGroup _this, const char* pr
 void PlacemarkGroup_removeFromFile(PlacemarkGroup _this, ProductWriter productWriter)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classPlacemarkGroup, "removeFromFile", "(Lorg/esa/beam/framework/dataio/ProductWriter;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classPlacemarkGroup, "removeFromFile", "(Lorg/esa/beam/framework/dataio/ProductWriter;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, productWriter);
 }
 
@@ -10291,14 +11941,17 @@ Object PlacemarkGroup_getExtension(PlacemarkGroup _this, Class arg0)
 {
     static jmethodID _method = NULL;
     Object _result = (Object) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classPlacemarkGroup, "getExtension", "(Ljava/lang/Class;)Ljava/lang/Object;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classPlacemarkGroup, "getExtension", "(Ljava/lang/Class;)Ljava/lang/Object;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, arg0);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -10309,14 +11962,17 @@ TiePointGrid TiePointGrid_newTiePointGrid1(const char* name, int gridWidth, int 
     jstring nameString = NULL;
     jarray tiePointsArray = NULL;
     TiePointGrid _result = (TiePointGrid) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "<init>", "(Ljava/lang/String;IIFFFF[F)V");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "<init>", "(Ljava/lang/String;IIFFFF[F)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     nameString = (*jenv)->NewStringUTF(jenv, name);
     tiePointsArray = (*jenv)->NewFloatArray(jenv, tiePointsLength);
     beam_copy_to_jarray(tiePointsArray, tiePointsElems, tiePointsLength, sizeof (float));
@@ -10330,14 +11986,17 @@ TiePointGrid TiePointGrid_newTiePointGrid2(const char* name, int gridWidth, int 
     jstring nameString = NULL;
     jarray tiePointsArray = NULL;
     TiePointGrid _result = (TiePointGrid) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "<init>", "(Ljava/lang/String;IIFFFF[FI)V");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "<init>", "(Ljava/lang/String;IIFFFF[FI)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     nameString = (*jenv)->NewStringUTF(jenv, name);
     tiePointsArray = (*jenv)->NewFloatArray(jenv, tiePointsLength);
     beam_copy_to_jarray(tiePointsArray, tiePointsElems, tiePointsLength, sizeof (float));
@@ -10351,14 +12010,17 @@ TiePointGrid TiePointGrid_newTiePointGrid3(const char* name, int gridWidth, int 
     jstring nameString = NULL;
     jarray tiePointsArray = NULL;
     TiePointGrid _result = (TiePointGrid) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "<init>", "(Ljava/lang/String;IIFFFF[FZ)V");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "<init>", "(Ljava/lang/String;IIFFFF[FZ)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     nameString = (*jenv)->NewStringUTF(jenv, name);
     tiePointsArray = (*jenv)->NewFloatArray(jenv, tiePointsLength);
     beam_copy_to_jarray(tiePointsArray, tiePointsElems, tiePointsLength, sizeof (float));
@@ -10371,14 +12033,17 @@ int TiePointGrid_getDiscontinuity2(const float* tiePointsElems, int tiePointsLen
     static jmethodID _method = NULL;
     jarray tiePointsArray = NULL;
     int _result = (int) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classTiePointGrid, "getDiscontinuity", "([F)I");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classTiePointGrid, "getDiscontinuity", "([F)I");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     tiePointsArray = (*jenv)->NewFloatArray(jenv, tiePointsLength);
     beam_copy_to_jarray(tiePointsArray, tiePointsElems, tiePointsLength, sizeof (float));
     _result = (*jenv)->CallStaticIntMethod(jenv, classTiePointGrid, _method, tiePointsArray);
@@ -10389,14 +12054,17 @@ int TiePointGrid_getDiscontinuity1(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
     int _result = (int) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "getDiscontinuity", "()I");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "getDiscontinuity", "()I");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallIntMethod(jenv, _this, _method);
     return _result;
 }
@@ -10404,14 +12072,17 @@ int TiePointGrid_getDiscontinuity1(TiePointGrid _this)
 void TiePointGrid_setDiscontinuity(TiePointGrid _this, int discontinuity)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "setDiscontinuity", "(I)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "setDiscontinuity", "(I)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, discontinuity);
 }
 
@@ -10419,14 +12090,17 @@ boolean TiePointGrid_isFloatingPointType(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "isFloatingPointType", "()Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "isFloatingPointType", "()Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method);
     return _result;
 }
@@ -10435,14 +12109,17 @@ int TiePointGrid_getGeophysicalDataType(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
     int _result = (int) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "getGeophysicalDataType", "()I");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "getGeophysicalDataType", "()I");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallIntMethod(jenv, _this, _method);
     return _result;
 }
@@ -10451,14 +12128,17 @@ ProductData TiePointGrid_getSceneRasterData(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
     ProductData _result = (ProductData) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "getSceneRasterData", "()Lorg/esa/beam/framework/datamodel/ProductData;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "getSceneRasterData", "()Lorg/esa/beam/framework/datamodel/ProductData;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -10467,14 +12147,17 @@ int TiePointGrid_getSceneRasterWidth(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
     int _result = (int) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "getSceneRasterWidth", "()I");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "getSceneRasterWidth", "()I");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallIntMethod(jenv, _this, _method);
     return _result;
 }
@@ -10483,14 +12166,17 @@ int TiePointGrid_getSceneRasterHeight(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
     int _result = (int) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "getSceneRasterHeight", "()I");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "getSceneRasterHeight", "()I");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallIntMethod(jenv, _this, _method);
     return _result;
 }
@@ -10499,14 +12185,17 @@ float TiePointGrid_getOffsetX(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
     float _result = (float) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "getOffsetX", "()F");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "getOffsetX", "()F");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallFloatMethod(jenv, _this, _method);
     return _result;
 }
@@ -10515,14 +12204,17 @@ float TiePointGrid_getOffsetY(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
     float _result = (float) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "getOffsetY", "()F");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "getOffsetY", "()F");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallFloatMethod(jenv, _this, _method);
     return _result;
 }
@@ -10531,14 +12223,17 @@ float TiePointGrid_getSubSamplingX(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
     float _result = (float) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "getSubSamplingX", "()F");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "getSubSamplingX", "()F");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallFloatMethod(jenv, _this, _method);
     return _result;
 }
@@ -10547,14 +12242,17 @@ float TiePointGrid_getSubSamplingY(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
     float _result = (float) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "getSubSamplingY", "()F");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "getSubSamplingY", "()F");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallFloatMethod(jenv, _this, _method);
     return _result;
 }
@@ -10564,14 +12262,17 @@ float* TiePointGrid_getTiePoints(TiePointGrid _this, int* resultArrayLength)
     static jmethodID _method = NULL;
     float* _result = (float*) 0;
     jarray _resultArray = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "getTiePoints", "()[F");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "getTiePoints", "()[F");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_float_array(_resultArray, resultArrayLength);
     return _result;
@@ -10581,14 +12282,17 @@ int TiePointGrid_getPixelInt(TiePointGrid _this, int x, int y)
 {
     static jmethodID _method = NULL;
     int _result = (int) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "getPixelInt", "(II)I");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "getPixelInt", "(II)I");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallIntMethod(jenv, _this, _method, x, y);
     return _result;
 }
@@ -10596,14 +12300,17 @@ int TiePointGrid_getPixelInt(TiePointGrid _this, int x, int y)
 void TiePointGrid_dispose(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "dispose", "()V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "dispose", "()V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method);
 }
 
@@ -10611,14 +12318,17 @@ float TiePointGrid_getPixelFloat2(TiePointGrid _this, int x, int y)
 {
     static jmethodID _method = NULL;
     float _result = (float) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "getPixelFloat", "(II)F");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "getPixelFloat", "(II)F");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallFloatMethod(jenv, _this, _method, x, y);
     return _result;
 }
@@ -10627,14 +12337,17 @@ float TiePointGrid_getPixelFloat1(TiePointGrid _this, float x, float y)
 {
     static jmethodID _method = NULL;
     float _result = (float) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "getPixelFloat", "(FF)F");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "getPixelFloat", "(FF)F");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallFloatMethod(jenv, _this, _method, x, y);
     return _result;
 }
@@ -10643,14 +12356,17 @@ double TiePointGrid_getPixelDouble(TiePointGrid _this, int x, int y)
 {
     static jmethodID _method = NULL;
     double _result = (double) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "getPixelDouble", "(II)D");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "getPixelDouble", "(II)D");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallDoubleMethod(jenv, _this, _method, x, y);
     return _result;
 }
@@ -10658,42 +12374,51 @@ double TiePointGrid_getPixelDouble(TiePointGrid _this, int x, int y)
 void TiePointGrid_setPixelInt(TiePointGrid _this, int x, int y, int pixelValue)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "setPixelInt", "(III)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "setPixelInt", "(III)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, x, y, pixelValue);
 }
 
 void TiePointGrid_setPixelFloat(TiePointGrid _this, int x, int y, float pixelValue)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "setPixelFloat", "(IIF)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "setPixelFloat", "(IIF)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, x, y, pixelValue);
 }
 
 void TiePointGrid_setPixelDouble(TiePointGrid _this, int x, int y, double pixelValue)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "setPixelDouble", "(IID)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "setPixelDouble", "(IID)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, x, y, pixelValue);
 }
 
@@ -10703,14 +12428,17 @@ int* TiePointGrid_getPixels6(TiePointGrid _this, int x, int y, int w, int h, con
     jarray pixelsArray = NULL;
     int* _result = (int*) 0;
     jarray _resultArray = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "getPixels", "(IIII[ILcom/bc/ceres/core/ProgressMonitor;)[I");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "getPixels", "(IIII[ILcom/bc/ceres/core/ProgressMonitor;)[I");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     pixelsArray = (*jenv)->NewIntArray(jenv, pixelsLength);
     beam_copy_to_jarray(pixelsArray, pixelsElems, pixelsLength, sizeof (int));
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method, x, y, w, h, pixelsArray, pm);
@@ -10724,14 +12452,17 @@ float* TiePointGrid_getPixels4(TiePointGrid _this, int x, int y, int w, int h, c
     jarray pixelsArray = NULL;
     float* _result = (float*) 0;
     jarray _resultArray = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "getPixels", "(IIII[FLcom/bc/ceres/core/ProgressMonitor;)[F");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "getPixels", "(IIII[FLcom/bc/ceres/core/ProgressMonitor;)[F");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     pixelsArray = (*jenv)->NewFloatArray(jenv, pixelsLength);
     beam_copy_to_jarray(pixelsArray, pixelsElems, pixelsLength, sizeof (float));
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method, x, y, w, h, pixelsArray, pm);
@@ -10745,14 +12476,17 @@ double* TiePointGrid_getPixels2(TiePointGrid _this, int x, int y, int w, int h, 
     jarray pixelsArray = NULL;
     double* _result = (double*) 0;
     jarray _resultArray = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "getPixels", "(IIII[DLcom/bc/ceres/core/ProgressMonitor;)[D");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "getPixels", "(IIII[DLcom/bc/ceres/core/ProgressMonitor;)[D");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     pixelsArray = (*jenv)->NewDoubleArray(jenv, pixelsLength);
     beam_copy_to_jarray(pixelsArray, pixelsElems, pixelsLength, sizeof (double));
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method, x, y, w, h, pixelsArray, pm);
@@ -10764,14 +12498,17 @@ void TiePointGrid_setPixels3(TiePointGrid _this, int x, int y, int w, int h, con
 {
     static jmethodID _method = NULL;
     jarray pixelsArray = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "setPixels", "(IIII[I)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "setPixels", "(IIII[I)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     pixelsArray = (*jenv)->NewIntArray(jenv, pixelsLength);
     beam_copy_to_jarray(pixelsArray, pixelsElems, pixelsLength, sizeof (int));
     (*jenv)->CallVoidMethod(jenv, _this, _method, x, y, w, h, pixelsArray);
@@ -10781,14 +12518,17 @@ void TiePointGrid_setPixels2(TiePointGrid _this, int x, int y, int w, int h, con
 {
     static jmethodID _method = NULL;
     jarray pixelsArray = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "setPixels", "(IIII[F)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "setPixels", "(IIII[F)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     pixelsArray = (*jenv)->NewFloatArray(jenv, pixelsLength);
     beam_copy_to_jarray(pixelsArray, pixelsElems, pixelsLength, sizeof (float));
     (*jenv)->CallVoidMethod(jenv, _this, _method, x, y, w, h, pixelsArray);
@@ -10798,14 +12538,17 @@ void TiePointGrid_setPixels1(TiePointGrid _this, int x, int y, int w, int h, con
 {
     static jmethodID _method = NULL;
     jarray pixelsArray = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "setPixels", "(IIII[D)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "setPixels", "(IIII[D)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     pixelsArray = (*jenv)->NewDoubleArray(jenv, pixelsLength);
     beam_copy_to_jarray(pixelsArray, pixelsElems, pixelsLength, sizeof (double));
     (*jenv)->CallVoidMethod(jenv, _this, _method, x, y, w, h, pixelsArray);
@@ -10817,14 +12560,17 @@ int* TiePointGrid_readPixels6(TiePointGrid _this, int x, int y, int w, int h, co
     jarray pixelsArray = NULL;
     int* _result = (int*) 0;
     jarray _resultArray = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "readPixels", "(IIII[ILcom/bc/ceres/core/ProgressMonitor;)[I");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "readPixels", "(IIII[ILcom/bc/ceres/core/ProgressMonitor;)[I");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     pixelsArray = (*jenv)->NewIntArray(jenv, pixelsLength);
     beam_copy_to_jarray(pixelsArray, pixelsElems, pixelsLength, sizeof (int));
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method, x, y, w, h, pixelsArray, pm);
@@ -10838,14 +12584,17 @@ float* TiePointGrid_readPixels4(TiePointGrid _this, int x, int y, int w, int h, 
     jarray pixelsArray = NULL;
     float* _result = (float*) 0;
     jarray _resultArray = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "readPixels", "(IIII[FLcom/bc/ceres/core/ProgressMonitor;)[F");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "readPixels", "(IIII[FLcom/bc/ceres/core/ProgressMonitor;)[F");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     pixelsArray = (*jenv)->NewFloatArray(jenv, pixelsLength);
     beam_copy_to_jarray(pixelsArray, pixelsElems, pixelsLength, sizeof (float));
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method, x, y, w, h, pixelsArray, pm);
@@ -10859,14 +12608,17 @@ double* TiePointGrid_readPixels2(TiePointGrid _this, int x, int y, int w, int h,
     jarray pixelsArray = NULL;
     double* _result = (double*) 0;
     jarray _resultArray = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "readPixels", "(IIII[DLcom/bc/ceres/core/ProgressMonitor;)[D");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "readPixels", "(IIII[DLcom/bc/ceres/core/ProgressMonitor;)[D");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     pixelsArray = (*jenv)->NewDoubleArray(jenv, pixelsLength);
     beam_copy_to_jarray(pixelsArray, pixelsElems, pixelsLength, sizeof (double));
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method, x, y, w, h, pixelsArray, pm);
@@ -10878,14 +12630,17 @@ void TiePointGrid_writePixels6(TiePointGrid _this, int x, int y, int w, int h, c
 {
     static jmethodID _method = NULL;
     jarray pixelsArray = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "writePixels", "(IIII[ILcom/bc/ceres/core/ProgressMonitor;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "writePixels", "(IIII[ILcom/bc/ceres/core/ProgressMonitor;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     pixelsArray = (*jenv)->NewIntArray(jenv, pixelsLength);
     beam_copy_to_jarray(pixelsArray, pixelsElems, pixelsLength, sizeof (int));
     (*jenv)->CallVoidMethod(jenv, _this, _method, x, y, w, h, pixelsArray, pm);
@@ -10895,14 +12650,17 @@ void TiePointGrid_writePixels4(TiePointGrid _this, int x, int y, int w, int h, c
 {
     static jmethodID _method = NULL;
     jarray pixelsArray = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "writePixels", "(IIII[FLcom/bc/ceres/core/ProgressMonitor;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "writePixels", "(IIII[FLcom/bc/ceres/core/ProgressMonitor;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     pixelsArray = (*jenv)->NewFloatArray(jenv, pixelsLength);
     beam_copy_to_jarray(pixelsArray, pixelsElems, pixelsLength, sizeof (float));
     (*jenv)->CallVoidMethod(jenv, _this, _method, x, y, w, h, pixelsArray, pm);
@@ -10912,14 +12670,17 @@ void TiePointGrid_writePixels2(TiePointGrid _this, int x, int y, int w, int h, c
 {
     static jmethodID _method = NULL;
     jarray pixelsArray = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "writePixels", "(IIII[DLcom/bc/ceres/core/ProgressMonitor;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "writePixels", "(IIII[DLcom/bc/ceres/core/ProgressMonitor;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     pixelsArray = (*jenv)->NewDoubleArray(jenv, pixelsLength);
     beam_copy_to_jarray(pixelsArray, pixelsElems, pixelsLength, sizeof (double));
     (*jenv)->CallVoidMethod(jenv, _this, _method, x, y, w, h, pixelsArray, pm);
@@ -10928,70 +12689,85 @@ void TiePointGrid_writePixels2(TiePointGrid _this, int x, int y, int w, int h, c
 void TiePointGrid_readRasterData2(TiePointGrid _this, int offsetX, int offsetY, int width, int height, ProductData rasterData, ProgressMonitor pm)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "readRasterData", "(IIIILorg/esa/beam/framework/datamodel/ProductData;Lcom/bc/ceres/core/ProgressMonitor;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "readRasterData", "(IIIILorg/esa/beam/framework/datamodel/ProductData;Lcom/bc/ceres/core/ProgressMonitor;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, offsetX, offsetY, width, height, rasterData, pm);
 }
 
 void TiePointGrid_readRasterDataFully2(TiePointGrid _this, ProgressMonitor pm)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "readRasterDataFully", "(Lcom/bc/ceres/core/ProgressMonitor;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "readRasterDataFully", "(Lcom/bc/ceres/core/ProgressMonitor;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, pm);
 }
 
 void TiePointGrid_writeRasterData2(TiePointGrid _this, int offsetX, int offsetY, int width, int height, ProductData rasterData, ProgressMonitor pm)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "writeRasterData", "(IIIILorg/esa/beam/framework/datamodel/ProductData;Lcom/bc/ceres/core/ProgressMonitor;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "writeRasterData", "(IIIILorg/esa/beam/framework/datamodel/ProductData;Lcom/bc/ceres/core/ProgressMonitor;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, offsetX, offsetY, width, height, rasterData, pm);
 }
 
 void TiePointGrid_writeRasterDataFully2(TiePointGrid _this, ProgressMonitor pm)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "writeRasterDataFully", "(Lcom/bc/ceres/core/ProgressMonitor;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "writeRasterDataFully", "(Lcom/bc/ceres/core/ProgressMonitor;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, pm);
 }
 
 void TiePointGrid_acceptVisitor(TiePointGrid _this, ProductVisitor visitor)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "acceptVisitor", "(Lorg/esa/beam/framework/datamodel/ProductVisitor;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "acceptVisitor", "(Lorg/esa/beam/framework/datamodel/ProductVisitor;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, visitor);
 }
 
@@ -10999,14 +12775,17 @@ TiePointGrid TiePointGrid_cloneTiePointGrid(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
     TiePointGrid _result = (TiePointGrid) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "cloneTiePointGrid", "()Lorg/esa/beam/framework/datamodel/TiePointGrid;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "cloneTiePointGrid", "()Lorg/esa/beam/framework/datamodel/TiePointGrid;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -11015,14 +12794,17 @@ TiePointGrid TiePointGrid_createZenithFromElevationAngleTiePointGrid(TiePointGri
 {
     static jmethodID _method = NULL;
     TiePointGrid _result = (TiePointGrid) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classTiePointGrid, "createZenithFromElevationAngleTiePointGrid", "(Lorg/esa/beam/framework/datamodel/TiePointGrid;)Lorg/esa/beam/framework/datamodel/TiePointGrid;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classTiePointGrid, "createZenithFromElevationAngleTiePointGrid", "(Lorg/esa/beam/framework/datamodel/TiePointGrid;)Lorg/esa/beam/framework/datamodel/TiePointGrid;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallStaticObjectMethod(jenv, classTiePointGrid, _method, elevationAngleGrid);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -11031,14 +12813,17 @@ TiePointGrid TiePointGrid_createSubset(TiePointGrid sourceTiePointGrid, ProductS
 {
     static jmethodID _method = NULL;
     TiePointGrid _result = (TiePointGrid) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classTiePointGrid, "createSubset", "(Lorg/esa/beam/framework/datamodel/TiePointGrid;Lorg/esa/beam/framework/dataio/ProductSubsetDef;)Lorg/esa/beam/framework/datamodel/TiePointGrid;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classTiePointGrid, "createSubset", "(Lorg/esa/beam/framework/datamodel/TiePointGrid;Lorg/esa/beam/framework/dataio/ProductSubsetDef;)Lorg/esa/beam/framework/datamodel/TiePointGrid;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallStaticObjectMethod(jenv, classTiePointGrid, _method, sourceTiePointGrid, subsetDef);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -11047,14 +12832,17 @@ int TiePointGrid_getRasterWidth(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
     int _result = (int) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "getRasterWidth", "()I");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "getRasterWidth", "()I");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallIntMethod(jenv, _this, _method);
     return _result;
 }
@@ -11063,14 +12851,17 @@ int TiePointGrid_getRasterHeight(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
     int _result = (int) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "getRasterHeight", "()I");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "getRasterHeight", "()I");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallIntMethod(jenv, _this, _method);
     return _result;
 }
@@ -11078,14 +12869,17 @@ int TiePointGrid_getRasterHeight(TiePointGrid _this)
 void TiePointGrid_setModified(TiePointGrid _this, boolean modified)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "setModified", "(Z)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "setModified", "(Z)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, modified);
 }
 
@@ -11093,14 +12887,17 @@ GeoCoding TiePointGrid_getGeoCoding(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
     GeoCoding _result = (GeoCoding) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "getGeoCoding", "()Lorg/esa/beam/framework/datamodel/GeoCoding;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "getGeoCoding", "()Lorg/esa/beam/framework/datamodel/GeoCoding;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -11108,14 +12905,17 @@ GeoCoding TiePointGrid_getGeoCoding(TiePointGrid _this)
 void TiePointGrid_setGeoCoding(TiePointGrid _this, GeoCoding geoCoding)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "setGeoCoding", "(Lorg/esa/beam/framework/datamodel/GeoCoding;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "setGeoCoding", "(Lorg/esa/beam/framework/datamodel/GeoCoding;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, geoCoding);
 }
 
@@ -11123,14 +12923,17 @@ Pointing TiePointGrid_getPointing(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
     Pointing _result = (Pointing) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "getPointing", "()Lorg/esa/beam/framework/datamodel/Pointing;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "getPointing", "()Lorg/esa/beam/framework/datamodel/Pointing;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -11139,14 +12942,17 @@ boolean TiePointGrid_canBeOrthorectified(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "canBeOrthorectified", "()Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "canBeOrthorectified", "()Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method);
     return _result;
 }
@@ -11155,14 +12961,17 @@ double TiePointGrid_getScalingFactor(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
     double _result = (double) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "getScalingFactor", "()D");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "getScalingFactor", "()D");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallDoubleMethod(jenv, _this, _method);
     return _result;
 }
@@ -11170,14 +12979,17 @@ double TiePointGrid_getScalingFactor(TiePointGrid _this)
 void TiePointGrid_setScalingFactor(TiePointGrid _this, double scalingFactor)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "setScalingFactor", "(D)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "setScalingFactor", "(D)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, scalingFactor);
 }
 
@@ -11185,14 +12997,17 @@ double TiePointGrid_getScalingOffset(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
     double _result = (double) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "getScalingOffset", "()D");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "getScalingOffset", "()D");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallDoubleMethod(jenv, _this, _method);
     return _result;
 }
@@ -11200,14 +13015,17 @@ double TiePointGrid_getScalingOffset(TiePointGrid _this)
 void TiePointGrid_setScalingOffset(TiePointGrid _this, double scalingOffset)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "setScalingOffset", "(D)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "setScalingOffset", "(D)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, scalingOffset);
 }
 
@@ -11215,14 +13033,17 @@ boolean TiePointGrid_isLog10Scaled(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "isLog10Scaled", "()Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "isLog10Scaled", "()Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method);
     return _result;
 }
@@ -11230,14 +13051,17 @@ boolean TiePointGrid_isLog10Scaled(TiePointGrid _this)
 void TiePointGrid_setLog10Scaled(TiePointGrid _this, boolean log10Scaled)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "setLog10Scaled", "(Z)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "setLog10Scaled", "(Z)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, log10Scaled);
 }
 
@@ -11245,14 +13069,17 @@ boolean TiePointGrid_isScalingApplied(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "isScalingApplied", "()Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "isScalingApplied", "()Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method);
     return _result;
 }
@@ -11262,14 +13089,17 @@ boolean TiePointGrid_isValidMaskProperty(const char* propertyName)
     static jmethodID _method = NULL;
     jstring propertyNameString = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classTiePointGrid, "isValidMaskProperty", "(Ljava/lang/String;)Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classTiePointGrid, "isValidMaskProperty", "(Ljava/lang/String;)Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     propertyNameString = (*jenv)->NewStringUTF(jenv, propertyName);
     _result = (*jenv)->CallStaticBooleanMethod(jenv, classTiePointGrid, _method, propertyNameString);
     return _result;
@@ -11279,14 +13109,17 @@ boolean TiePointGrid_isNoDataValueSet(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "isNoDataValueSet", "()Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "isNoDataValueSet", "()Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method);
     return _result;
 }
@@ -11294,14 +13127,17 @@ boolean TiePointGrid_isNoDataValueSet(TiePointGrid _this)
 void TiePointGrid_clearNoDataValue(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "clearNoDataValue", "()V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "clearNoDataValue", "()V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method);
 }
 
@@ -11309,14 +13145,17 @@ boolean TiePointGrid_isNoDataValueUsed(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "isNoDataValueUsed", "()Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "isNoDataValueUsed", "()Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method);
     return _result;
 }
@@ -11324,14 +13163,17 @@ boolean TiePointGrid_isNoDataValueUsed(TiePointGrid _this)
 void TiePointGrid_setNoDataValueUsed(TiePointGrid _this, boolean noDataValueUsed)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "setNoDataValueUsed", "(Z)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "setNoDataValueUsed", "(Z)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, noDataValueUsed);
 }
 
@@ -11339,14 +13181,17 @@ double TiePointGrid_getNoDataValue(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
     double _result = (double) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "getNoDataValue", "()D");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "getNoDataValue", "()D");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallDoubleMethod(jenv, _this, _method);
     return _result;
 }
@@ -11354,14 +13199,17 @@ double TiePointGrid_getNoDataValue(TiePointGrid _this)
 void TiePointGrid_setNoDataValue(TiePointGrid _this, double noDataValue)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "setNoDataValue", "(D)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "setNoDataValue", "(D)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, noDataValue);
 }
 
@@ -11369,14 +13217,17 @@ double TiePointGrid_getGeophysicalNoDataValue(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
     double _result = (double) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "getGeophysicalNoDataValue", "()D");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "getGeophysicalNoDataValue", "()D");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallDoubleMethod(jenv, _this, _method);
     return _result;
 }
@@ -11384,14 +13235,17 @@ double TiePointGrid_getGeophysicalNoDataValue(TiePointGrid _this)
 void TiePointGrid_setGeophysicalNoDataValue(TiePointGrid _this, double noDataValue)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "setGeophysicalNoDataValue", "(D)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "setGeophysicalNoDataValue", "(D)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, noDataValue);
 }
 
@@ -11400,14 +13254,17 @@ char* TiePointGrid_getValidPixelExpression(TiePointGrid _this)
     static jmethodID _method = NULL;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "getValidPixelExpression", "()Ljava/lang/String;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "getValidPixelExpression", "()Ljava/lang/String;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
     return _result;
@@ -11417,14 +13274,17 @@ void TiePointGrid_setValidPixelExpression(TiePointGrid _this, const char* validP
 {
     static jmethodID _method = NULL;
     jstring validPixelExpressionString = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "setValidPixelExpression", "(Ljava/lang/String;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "setValidPixelExpression", "(Ljava/lang/String;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     validPixelExpressionString = (*jenv)->NewStringUTF(jenv, validPixelExpression);
     (*jenv)->CallVoidMethod(jenv, _this, _method, validPixelExpressionString);
 }
@@ -11433,14 +13293,17 @@ boolean TiePointGrid_isValidMaskUsed(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "isValidMaskUsed", "()Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "isValidMaskUsed", "()Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method);
     return _result;
 }
@@ -11448,14 +13311,17 @@ boolean TiePointGrid_isValidMaskUsed(TiePointGrid _this)
 void TiePointGrid_resetValidMask(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "resetValidMask", "()V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "resetValidMask", "()V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method);
 }
 
@@ -11464,14 +13330,17 @@ char* TiePointGrid_getValidMaskExpression(TiePointGrid _this)
     static jmethodID _method = NULL;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "getValidMaskExpression", "()Ljava/lang/String;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "getValidMaskExpression", "()Ljava/lang/String;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
     return _result;
@@ -11482,14 +13351,17 @@ void TiePointGrid_updateExpression(TiePointGrid _this, const char* oldExternalNa
     static jmethodID _method = NULL;
     jstring oldExternalNameString = NULL;
     jstring newExternalNameString = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "updateExpression", "(Ljava/lang/String;Ljava/lang/String;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "updateExpression", "(Ljava/lang/String;Ljava/lang/String;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     oldExternalNameString = (*jenv)->NewStringUTF(jenv, oldExternalName);
     newExternalNameString = (*jenv)->NewStringUTF(jenv, newExternalName);
     (*jenv)->CallVoidMethod(jenv, _this, _method, oldExternalNameString, newExternalNameString);
@@ -11499,14 +13371,17 @@ boolean TiePointGrid_hasRasterData(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "hasRasterData", "()Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "hasRasterData", "()Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method);
     return _result;
 }
@@ -11515,14 +13390,17 @@ ProductData TiePointGrid_getRasterData(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
     ProductData _result = (ProductData) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "getRasterData", "()Lorg/esa/beam/framework/datamodel/ProductData;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "getRasterData", "()Lorg/esa/beam/framework/datamodel/ProductData;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -11530,56 +13408,68 @@ ProductData TiePointGrid_getRasterData(TiePointGrid _this)
 void TiePointGrid_setRasterData(TiePointGrid _this, ProductData rasterData)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "setRasterData", "(Lorg/esa/beam/framework/datamodel/ProductData;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "setRasterData", "(Lorg/esa/beam/framework/datamodel/ProductData;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, rasterData);
 }
 
 void TiePointGrid_loadRasterData1(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "loadRasterData", "()V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "loadRasterData", "()V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method);
 }
 
 void TiePointGrid_loadRasterData2(TiePointGrid _this, ProgressMonitor pm)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "loadRasterData", "(Lcom/bc/ceres/core/ProgressMonitor;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "loadRasterData", "(Lcom/bc/ceres/core/ProgressMonitor;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, pm);
 }
 
 void TiePointGrid_unloadRasterData(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "unloadRasterData", "()V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "unloadRasterData", "()V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method);
 }
 
@@ -11587,14 +13477,17 @@ boolean TiePointGrid_isPixelValid2(TiePointGrid _this, int x, int y)
 {
     static jmethodID _method = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "isPixelValid", "(II)Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "isPixelValid", "(II)Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method, x, y);
     return _result;
 }
@@ -11603,14 +13496,17 @@ int TiePointGrid_getSampleInt(TiePointGrid _this, int x, int y)
 {
     static jmethodID _method = NULL;
     int _result = (int) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "getSampleInt", "(II)I");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "getSampleInt", "(II)I");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallIntMethod(jenv, _this, _method, x, y);
     return _result;
 }
@@ -11619,14 +13515,17 @@ float TiePointGrid_getSampleFloat(TiePointGrid _this, int x, int y)
 {
     static jmethodID _method = NULL;
     float _result = (float) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "getSampleFloat", "(II)F");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "getSampleFloat", "(II)F");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallFloatMethod(jenv, _this, _method, x, y);
     return _result;
 }
@@ -11635,14 +13534,17 @@ boolean TiePointGrid_isPixelValid1(TiePointGrid _this, int pixelIndex)
 {
     static jmethodID _method = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "isPixelValid", "(I)Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "isPixelValid", "(I)Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method, pixelIndex);
     return _result;
 }
@@ -11651,14 +13553,17 @@ boolean TiePointGrid_isPixelValid3(TiePointGrid _this, int x, int y, ROI roi)
 {
     static jmethodID _method = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "isPixelValid", "(IILjavax/media/jai/ROI;)Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "isPixelValid", "(IILjavax/media/jai/ROI;)Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method, x, y, roi);
     return _result;
 }
@@ -11669,14 +13574,17 @@ int* TiePointGrid_getPixels5(TiePointGrid _this, int x, int y, int w, int h, con
     jarray pixelsArray = NULL;
     int* _result = (int*) 0;
     jarray _resultArray = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "getPixels", "(IIII[I)[I");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "getPixels", "(IIII[I)[I");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     pixelsArray = (*jenv)->NewIntArray(jenv, pixelsLength);
     beam_copy_to_jarray(pixelsArray, pixelsElems, pixelsLength, sizeof (int));
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method, x, y, w, h, pixelsArray);
@@ -11690,14 +13598,17 @@ float* TiePointGrid_getPixels3(TiePointGrid _this, int x, int y, int w, int h, c
     jarray pixelsArray = NULL;
     float* _result = (float*) 0;
     jarray _resultArray = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "getPixels", "(IIII[F)[F");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "getPixels", "(IIII[F)[F");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     pixelsArray = (*jenv)->NewFloatArray(jenv, pixelsLength);
     beam_copy_to_jarray(pixelsArray, pixelsElems, pixelsLength, sizeof (float));
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method, x, y, w, h, pixelsArray);
@@ -11711,14 +13622,17 @@ double* TiePointGrid_getPixels1(TiePointGrid _this, int x, int y, int w, int h, 
     jarray pixelsArray = NULL;
     double* _result = (double*) 0;
     jarray _resultArray = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "getPixels", "(IIII[D)[D");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "getPixels", "(IIII[D)[D");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     pixelsArray = (*jenv)->NewDoubleArray(jenv, pixelsLength);
     beam_copy_to_jarray(pixelsArray, pixelsElems, pixelsLength, sizeof (double));
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method, x, y, w, h, pixelsArray);
@@ -11732,14 +13646,17 @@ int* TiePointGrid_readPixels5(TiePointGrid _this, int x, int y, int w, int h, co
     jarray pixelsArray = NULL;
     int* _result = (int*) 0;
     jarray _resultArray = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "readPixels", "(IIII[I)[I");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "readPixels", "(IIII[I)[I");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     pixelsArray = (*jenv)->NewIntArray(jenv, pixelsLength);
     beam_copy_to_jarray(pixelsArray, pixelsElems, pixelsLength, sizeof (int));
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method, x, y, w, h, pixelsArray);
@@ -11753,14 +13670,17 @@ float* TiePointGrid_readPixels3(TiePointGrid _this, int x, int y, int w, int h, 
     jarray pixelsArray = NULL;
     float* _result = (float*) 0;
     jarray _resultArray = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "readPixels", "(IIII[F)[F");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "readPixels", "(IIII[F)[F");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     pixelsArray = (*jenv)->NewFloatArray(jenv, pixelsLength);
     beam_copy_to_jarray(pixelsArray, pixelsElems, pixelsLength, sizeof (float));
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method, x, y, w, h, pixelsArray);
@@ -11774,14 +13694,17 @@ double* TiePointGrid_readPixels1(TiePointGrid _this, int x, int y, int w, int h,
     jarray pixelsArray = NULL;
     double* _result = (double*) 0;
     jarray _resultArray = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "readPixels", "(IIII[D)[D");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "readPixels", "(IIII[D)[D");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     pixelsArray = (*jenv)->NewDoubleArray(jenv, pixelsLength);
     beam_copy_to_jarray(pixelsArray, pixelsElems, pixelsLength, sizeof (double));
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method, x, y, w, h, pixelsArray);
@@ -11793,14 +13716,17 @@ void TiePointGrid_writePixels5(TiePointGrid _this, int x, int y, int w, int h, c
 {
     static jmethodID _method = NULL;
     jarray pixelsArray = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "writePixels", "(IIII[I)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "writePixels", "(IIII[I)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     pixelsArray = (*jenv)->NewIntArray(jenv, pixelsLength);
     beam_copy_to_jarray(pixelsArray, pixelsElems, pixelsLength, sizeof (int));
     (*jenv)->CallVoidMethod(jenv, _this, _method, x, y, w, h, pixelsArray);
@@ -11810,14 +13736,17 @@ void TiePointGrid_writePixels3(TiePointGrid _this, int x, int y, int w, int h, c
 {
     static jmethodID _method = NULL;
     jarray pixelsArray = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "writePixels", "(IIII[F)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "writePixels", "(IIII[F)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     pixelsArray = (*jenv)->NewFloatArray(jenv, pixelsLength);
     beam_copy_to_jarray(pixelsArray, pixelsElems, pixelsLength, sizeof (float));
     (*jenv)->CallVoidMethod(jenv, _this, _method, x, y, w, h, pixelsArray);
@@ -11827,14 +13756,17 @@ void TiePointGrid_writePixels1(TiePointGrid _this, int x, int y, int w, int h, c
 {
     static jmethodID _method = NULL;
     jarray pixelsArray = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "writePixels", "(IIII[D)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "writePixels", "(IIII[D)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     pixelsArray = (*jenv)->NewDoubleArray(jenv, pixelsLength);
     beam_copy_to_jarray(pixelsArray, pixelsElems, pixelsLength, sizeof (double));
     (*jenv)->CallVoidMethod(jenv, _this, _method, x, y, w, h, pixelsArray);
@@ -11846,14 +13778,17 @@ boolean* TiePointGrid_readValidMask(TiePointGrid _this, int x, int y, int w, int
     jarray validMaskArray = NULL;
     boolean* _result = (boolean*) 0;
     jarray _resultArray = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "readValidMask", "(IIII[Z)[Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "readValidMask", "(IIII[Z)[Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     validMaskArray = (*jenv)->NewBooleanArray(jenv, validMaskLength);
     beam_copy_to_jarray(validMaskArray, validMaskElems, validMaskLength, sizeof (boolean));
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method, x, y, w, h, validMaskArray);
@@ -11864,56 +13799,68 @@ boolean* TiePointGrid_readValidMask(TiePointGrid _this, int x, int y, int w, int
 void TiePointGrid_readRasterDataFully1(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "readRasterDataFully", "()V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "readRasterDataFully", "()V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method);
 }
 
 void TiePointGrid_readRasterData1(TiePointGrid _this, int offsetX, int offsetY, int width, int height, ProductData rasterData)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "readRasterData", "(IIIILorg/esa/beam/framework/datamodel/ProductData;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "readRasterData", "(IIIILorg/esa/beam/framework/datamodel/ProductData;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, offsetX, offsetY, width, height, rasterData);
 }
 
 void TiePointGrid_writeRasterDataFully1(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "writeRasterDataFully", "()V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "writeRasterDataFully", "()V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method);
 }
 
 void TiePointGrid_writeRasterData1(TiePointGrid _this, int offsetX, int offsetY, int width, int height, ProductData rasterData)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "writeRasterData", "(IIIILorg/esa/beam/framework/datamodel/ProductData;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "writeRasterData", "(IIIILorg/esa/beam/framework/datamodel/ProductData;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, offsetX, offsetY, width, height, rasterData);
 }
 
@@ -11921,14 +13868,17 @@ ProductData TiePointGrid_createCompatibleRasterData1(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
     ProductData _result = (ProductData) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "createCompatibleRasterData", "()Lorg/esa/beam/framework/datamodel/ProductData;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "createCompatibleRasterData", "()Lorg/esa/beam/framework/datamodel/ProductData;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -11937,14 +13887,17 @@ ProductData TiePointGrid_createCompatibleSceneRasterData(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
     ProductData _result = (ProductData) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "createCompatibleSceneRasterData", "()Lorg/esa/beam/framework/datamodel/ProductData;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "createCompatibleSceneRasterData", "()Lorg/esa/beam/framework/datamodel/ProductData;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -11953,14 +13906,17 @@ ProductData TiePointGrid_createCompatibleRasterData2(TiePointGrid _this, int wid
 {
     static jmethodID _method = NULL;
     ProductData _result = (ProductData) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "createCompatibleRasterData", "(II)Lorg/esa/beam/framework/datamodel/ProductData;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "createCompatibleRasterData", "(II)Lorg/esa/beam/framework/datamodel/ProductData;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, width, height);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -11969,14 +13925,17 @@ boolean TiePointGrid_isCompatibleRasterData(TiePointGrid _this, ProductData rast
 {
     static jmethodID _method = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "isCompatibleRasterData", "(Lorg/esa/beam/framework/datamodel/ProductData;II)Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "isCompatibleRasterData", "(Lorg/esa/beam/framework/datamodel/ProductData;II)Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method, rasterData, w, h);
     return _result;
 }
@@ -11984,14 +13943,17 @@ boolean TiePointGrid_isCompatibleRasterData(TiePointGrid _this, ProductData rast
 void TiePointGrid_checkCompatibleRasterData(TiePointGrid _this, ProductData rasterData, int w, int h)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "checkCompatibleRasterData", "(Lorg/esa/beam/framework/datamodel/ProductData;II)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "checkCompatibleRasterData", "(Lorg/esa/beam/framework/datamodel/ProductData;II)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, rasterData, w, h);
 }
 
@@ -11999,14 +13961,17 @@ boolean TiePointGrid_hasIntPixels(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "hasIntPixels", "()Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "hasIntPixels", "()Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method);
     return _result;
 }
@@ -12015,14 +13980,17 @@ TransectProfileData TiePointGrid_createTransectProfileData(TiePointGrid _this, S
 {
     static jmethodID _method = NULL;
     TransectProfileData _result = (TransectProfileData) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "createTransectProfileData", "(Ljava/awt/Shape;)Lorg/esa/beam/framework/datamodel/TransectProfileData;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "createTransectProfileData", "(Ljava/awt/Shape;)Lorg/esa/beam/framework/datamodel/TransectProfileData;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, shape);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -12031,14 +13999,17 @@ ImageInfo TiePointGrid_getImageInfo1(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
     ImageInfo _result = (ImageInfo) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "getImageInfo", "()Lorg/esa/beam/framework/datamodel/ImageInfo;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "getImageInfo", "()Lorg/esa/beam/framework/datamodel/ImageInfo;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -12046,28 +14017,34 @@ ImageInfo TiePointGrid_getImageInfo1(TiePointGrid _this)
 void TiePointGrid_setImageInfo(TiePointGrid _this, ImageInfo imageInfo)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "setImageInfo", "(Lorg/esa/beam/framework/datamodel/ImageInfo;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "setImageInfo", "(Lorg/esa/beam/framework/datamodel/ImageInfo;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, imageInfo);
 }
 
 void TiePointGrid_fireImageInfoChanged(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "fireImageInfoChanged", "()V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "fireImageInfoChanged", "()V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method);
 }
 
@@ -12075,14 +14052,17 @@ ImageInfo TiePointGrid_getImageInfo2(TiePointGrid _this, ProgressMonitor pm)
 {
     static jmethodID _method = NULL;
     ImageInfo _result = (ImageInfo) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "getImageInfo", "(Lcom/bc/ceres/core/ProgressMonitor;)Lorg/esa/beam/framework/datamodel/ImageInfo;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "getImageInfo", "(Lcom/bc/ceres/core/ProgressMonitor;)Lorg/esa/beam/framework/datamodel/ImageInfo;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, pm);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -12092,14 +14072,17 @@ ImageInfo TiePointGrid_getImageInfo3(TiePointGrid _this, const double* histoSkip
     static jmethodID _method = NULL;
     jarray histoSkipAreasArray = NULL;
     ImageInfo _result = (ImageInfo) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "getImageInfo", "([DLcom/bc/ceres/core/ProgressMonitor;)Lorg/esa/beam/framework/datamodel/ImageInfo;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "getImageInfo", "([DLcom/bc/ceres/core/ProgressMonitor;)Lorg/esa/beam/framework/datamodel/ImageInfo;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     histoSkipAreasArray = (*jenv)->NewDoubleArray(jenv, histoSkipAreasLength);
     beam_copy_to_jarray(histoSkipAreasArray, histoSkipAreasElems, histoSkipAreasLength, sizeof (double));
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, histoSkipAreasArray, pm);
@@ -12111,14 +14094,17 @@ ImageInfo TiePointGrid_createDefaultImageInfo1(TiePointGrid _this, const double*
     static jmethodID _method = NULL;
     jarray histoSkipAreasArray = NULL;
     ImageInfo _result = (ImageInfo) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "createDefaultImageInfo", "([DLcom/bc/ceres/core/ProgressMonitor;)Lorg/esa/beam/framework/datamodel/ImageInfo;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "createDefaultImageInfo", "([DLcom/bc/ceres/core/ProgressMonitor;)Lorg/esa/beam/framework/datamodel/ImageInfo;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     histoSkipAreasArray = (*jenv)->NewDoubleArray(jenv, histoSkipAreasLength);
     beam_copy_to_jarray(histoSkipAreasArray, histoSkipAreasElems, histoSkipAreasLength, sizeof (double));
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, histoSkipAreasArray, pm);
@@ -12130,14 +14116,17 @@ ImageInfo TiePointGrid_createDefaultImageInfo2(TiePointGrid _this, const double*
     static jmethodID _method = NULL;
     jarray histoSkipAreasArray = NULL;
     ImageInfo _result = (ImageInfo) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "createDefaultImageInfo", "([DLorg/esa/beam/util/math/Histogram;)Lorg/esa/beam/framework/datamodel/ImageInfo;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "createDefaultImageInfo", "([DLorg/esa/beam/util/math/Histogram;)Lorg/esa/beam/framework/datamodel/ImageInfo;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     histoSkipAreasArray = (*jenv)->NewDoubleArray(jenv, histoSkipAreasLength);
     beam_copy_to_jarray(histoSkipAreasArray, histoSkipAreasElems, histoSkipAreasLength, sizeof (double));
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, histoSkipAreasArray, histogram);
@@ -12148,14 +14137,17 @@ ProductNodeGroup TiePointGrid_getOverlayMaskGroup(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
     ProductNodeGroup _result = (ProductNodeGroup) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "getOverlayMaskGroup", "()Lorg/esa/beam/framework/datamodel/ProductNodeGroup;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "getOverlayMaskGroup", "()Lorg/esa/beam/framework/datamodel/ProductNodeGroup;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -12164,14 +14156,17 @@ BufferedImage TiePointGrid_createColorIndexedImage(TiePointGrid _this, ProgressM
 {
     static jmethodID _method = NULL;
     BufferedImage _result = (BufferedImage) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "createColorIndexedImage", "(Lcom/bc/ceres/core/ProgressMonitor;)Ljava/awt/image/BufferedImage;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "createColorIndexedImage", "(Lcom/bc/ceres/core/ProgressMonitor;)Ljava/awt/image/BufferedImage;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, pm);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -12180,14 +14175,17 @@ BufferedImage TiePointGrid_createRgbImage(TiePointGrid _this, ProgressMonitor pm
 {
     static jmethodID _method = NULL;
     BufferedImage _result = (BufferedImage) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "createRgbImage", "(Lcom/bc/ceres/core/ProgressMonitor;)Ljava/awt/image/BufferedImage;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "createRgbImage", "(Lcom/bc/ceres/core/ProgressMonitor;)Ljava/awt/image/BufferedImage;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, pm);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -12197,14 +14195,17 @@ byte* TiePointGrid_quantizeRasterData1(TiePointGrid _this, double newMin, double
     static jmethodID _method = NULL;
     byte* _result = (byte*) 0;
     jarray _resultArray = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "quantizeRasterData", "(DDDLcom/bc/ceres/core/ProgressMonitor;)[B");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "quantizeRasterData", "(DDDLcom/bc/ceres/core/ProgressMonitor;)[B");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method, newMin, newMax, gamma, pm);
     _result = beam_alloc_byte_array(_resultArray, resultArrayLength);
     return _result;
@@ -12214,14 +14215,17 @@ void TiePointGrid_quantizeRasterData2(TiePointGrid _this, double newMin, double 
 {
     static jmethodID _method = NULL;
     jarray samplesArray = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "quantizeRasterData", "(DDD[BIILcom/bc/ceres/core/ProgressMonitor;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "quantizeRasterData", "(DDD[BIILcom/bc/ceres/core/ProgressMonitor;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     samplesArray = (*jenv)->NewByteArray(jenv, samplesLength);
     beam_copy_to_jarray(samplesArray, samplesElems, samplesLength, sizeof (byte));
     (*jenv)->CallVoidMethod(jenv, _this, _method, newMin, newMax, gamma, samplesArray, offset, stride, pm);
@@ -12231,14 +14235,17 @@ IndexValidator TiePointGrid_createPixelValidator(TiePointGrid _this, int lineOff
 {
     static jmethodID _method = NULL;
     IndexValidator _result = (IndexValidator) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "createPixelValidator", "(ILjavax/media/jai/ROI;)Lorg/esa/beam/util/math/IndexValidator;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "createPixelValidator", "(ILjavax/media/jai/ROI;)Lorg/esa/beam/util/math/IndexValidator;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, lineOffset, roi);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -12247,14 +14254,17 @@ double TiePointGrid_scale(TiePointGrid _this, double v)
 {
     static jmethodID _method = NULL;
     double _result = (double) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "scale", "(D)D");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "scale", "(D)D");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallDoubleMethod(jenv, _this, _method, v);
     return _result;
 }
@@ -12263,14 +14273,17 @@ double TiePointGrid_scaleInverse(TiePointGrid _this, double v)
 {
     static jmethodID _method = NULL;
     double _result = (double) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "scaleInverse", "(D)D");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "scaleInverse", "(D)D");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallDoubleMethod(jenv, _this, _method, v);
     return _result;
 }
@@ -12280,14 +14293,17 @@ char* TiePointGrid_getPixelString(TiePointGrid _this, int x, int y)
     static jmethodID _method = NULL;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "getPixelString", "(II)Ljava/lang/String;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "getPixelString", "(II)Ljava/lang/String;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method, x, y);
     _result = beam_alloc_string(_resultString);
     return _result;
@@ -12297,14 +14313,17 @@ boolean TiePointGrid_isSourceImageSet(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "isSourceImageSet", "()Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "isSourceImageSet", "()Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method);
     return _result;
 }
@@ -12313,14 +14332,17 @@ MultiLevelImage TiePointGrid_getSourceImage(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
     MultiLevelImage _result = (MultiLevelImage) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "getSourceImage", "()Lcom/bc/ceres/glevel/MultiLevelImage;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "getSourceImage", "()Lcom/bc/ceres/glevel/MultiLevelImage;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -12328,28 +14350,34 @@ MultiLevelImage TiePointGrid_getSourceImage(TiePointGrid _this)
 void TiePointGrid_setSourceImage2(TiePointGrid _this, RenderedImage sourceImage)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "setSourceImage", "(Ljava/awt/image/RenderedImage;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "setSourceImage", "(Ljava/awt/image/RenderedImage;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, sourceImage);
 }
 
 void TiePointGrid_setSourceImage1(TiePointGrid _this, MultiLevelImage sourceImage)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "setSourceImage", "(Lcom/bc/ceres/glevel/MultiLevelImage;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "setSourceImage", "(Lcom/bc/ceres/glevel/MultiLevelImage;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, sourceImage);
 }
 
@@ -12357,14 +14385,17 @@ boolean TiePointGrid_isGeophysicalImageSet(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "isGeophysicalImageSet", "()Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "isGeophysicalImageSet", "()Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method);
     return _result;
 }
@@ -12373,14 +14404,17 @@ MultiLevelImage TiePointGrid_getGeophysicalImage(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
     MultiLevelImage _result = (MultiLevelImage) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "getGeophysicalImage", "()Lcom/bc/ceres/glevel/MultiLevelImage;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "getGeophysicalImage", "()Lcom/bc/ceres/glevel/MultiLevelImage;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -12389,14 +14423,17 @@ boolean TiePointGrid_isValidMaskImageSet(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "isValidMaskImageSet", "()Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "isValidMaskImageSet", "()Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method);
     return _result;
 }
@@ -12405,14 +14442,17 @@ MultiLevelImage TiePointGrid_getValidMaskImage(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
     MultiLevelImage _result = (MultiLevelImage) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "getValidMaskImage", "()Lcom/bc/ceres/glevel/MultiLevelImage;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "getValidMaskImage", "()Lcom/bc/ceres/glevel/MultiLevelImage;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -12421,14 +14461,17 @@ boolean TiePointGrid_isStxSet(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "isStxSet", "()Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "isStxSet", "()Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method);
     return _result;
 }
@@ -12437,14 +14480,17 @@ Stx TiePointGrid_getStx1(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
     Stx _result = (Stx) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "getStx", "()Lorg/esa/beam/framework/datamodel/Stx;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "getStx", "()Lorg/esa/beam/framework/datamodel/Stx;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -12453,14 +14499,17 @@ Stx TiePointGrid_getStx2(TiePointGrid _this, boolean accurate, ProgressMonitor p
 {
     static jmethodID _method = NULL;
     Stx _result = (Stx) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "getStx", "(ZLcom/bc/ceres/core/ProgressMonitor;)Lorg/esa/beam/framework/datamodel/Stx;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "getStx", "(ZLcom/bc/ceres/core/ProgressMonitor;)Lorg/esa/beam/framework/datamodel/Stx;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, accurate, pm);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -12468,14 +14517,17 @@ Stx TiePointGrid_getStx2(TiePointGrid _this, boolean accurate, ProgressMonitor p
 void TiePointGrid_setStx(TiePointGrid _this, Stx stx)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "setStx", "(Lorg/esa/beam/framework/datamodel/Stx;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "setStx", "(Lorg/esa/beam/framework/datamodel/Stx;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, stx);
 }
 
@@ -12483,14 +14535,17 @@ Shape TiePointGrid_getValidShape(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
     Shape _result = (Shape) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "getValidShape", "()Ljava/awt/Shape;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "getValidShape", "()Ljava/awt/Shape;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -12499,14 +14554,17 @@ ProductNodeGroup TiePointGrid_getRoiMaskGroup(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
     ProductNodeGroup _result = (ProductNodeGroup) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "getRoiMaskGroup", "()Lorg/esa/beam/framework/datamodel/ProductNodeGroup;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "getRoiMaskGroup", "()Lorg/esa/beam/framework/datamodel/ProductNodeGroup;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -12515,14 +14573,17 @@ int TiePointGrid_getDataType(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
     int _result = (int) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "getDataType", "()I");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "getDataType", "()I");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallIntMethod(jenv, _this, _method);
     return _result;
 }
@@ -12531,14 +14592,17 @@ dlong TiePointGrid_getNumDataElems(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
     dlong _result = (dlong) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "getNumDataElems", "()J");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "getNumDataElems", "()J");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallLongMethod(jenv, _this, _method);
     return _result;
 }
@@ -12546,14 +14610,17 @@ dlong TiePointGrid_getNumDataElems(TiePointGrid _this)
 void TiePointGrid_setData(TiePointGrid _this, ProductData data)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "setData", "(Lorg/esa/beam/framework/datamodel/ProductData;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "setData", "(Lorg/esa/beam/framework/datamodel/ProductData;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, data);
 }
 
@@ -12561,14 +14628,17 @@ ProductData TiePointGrid_getData(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
     ProductData _result = (ProductData) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "getData", "()Lorg/esa/beam/framework/datamodel/ProductData;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "getData", "()Lorg/esa/beam/framework/datamodel/ProductData;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -12576,14 +14646,17 @@ ProductData TiePointGrid_getData(TiePointGrid _this)
 void TiePointGrid_setDataElems(TiePointGrid _this, Object elems)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "setDataElems", "(Ljava/lang/Object;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "setDataElems", "(Ljava/lang/Object;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, elems);
 }
 
@@ -12591,14 +14664,17 @@ Object TiePointGrid_getDataElems(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
     Object _result = (Object) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "getDataElems", "()Ljava/lang/Object;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "getDataElems", "()Ljava/lang/Object;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -12607,14 +14683,17 @@ int TiePointGrid_getDataElemSize(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
     int _result = (int) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "getDataElemSize", "()I");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "getDataElemSize", "()I");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallIntMethod(jenv, _this, _method);
     return _result;
 }
@@ -12622,14 +14701,17 @@ int TiePointGrid_getDataElemSize(TiePointGrid _this)
 void TiePointGrid_setReadOnly(TiePointGrid _this, boolean readOnly)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "setReadOnly", "(Z)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "setReadOnly", "(Z)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, readOnly);
 }
 
@@ -12637,14 +14719,17 @@ boolean TiePointGrid_isReadOnly(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "isReadOnly", "()Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "isReadOnly", "()Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method);
     return _result;
 }
@@ -12653,14 +14738,17 @@ void TiePointGrid_setUnit(TiePointGrid _this, const char* unit)
 {
     static jmethodID _method = NULL;
     jstring unitString = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "setUnit", "(Ljava/lang/String;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "setUnit", "(Ljava/lang/String;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     unitString = (*jenv)->NewStringUTF(jenv, unit);
     (*jenv)->CallVoidMethod(jenv, _this, _method, unitString);
 }
@@ -12670,14 +14758,17 @@ char* TiePointGrid_getUnit(TiePointGrid _this)
     static jmethodID _method = NULL;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "getUnit", "()Ljava/lang/String;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "getUnit", "()Ljava/lang/String;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
     return _result;
@@ -12687,14 +14778,17 @@ boolean TiePointGrid_isSynthetic(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "isSynthetic", "()Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "isSynthetic", "()Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method);
     return _result;
 }
@@ -12702,28 +14796,34 @@ boolean TiePointGrid_isSynthetic(TiePointGrid _this)
 void TiePointGrid_setSynthetic(TiePointGrid _this, boolean synthetic)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "setSynthetic", "(Z)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "setSynthetic", "(Z)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, synthetic);
 }
 
 void TiePointGrid_fireProductNodeDataChanged(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "fireProductNodeDataChanged", "()V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "fireProductNodeDataChanged", "()V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method);
 }
 
@@ -12731,14 +14831,17 @@ dlong TiePointGrid_getRawStorageSize2(TiePointGrid _this, ProductSubsetDef subse
 {
     static jmethodID _method = NULL;
     dlong _result = (dlong) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "getRawStorageSize", "(Lorg/esa/beam/framework/dataio/ProductSubsetDef;)J");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "getRawStorageSize", "(Lorg/esa/beam/framework/dataio/ProductSubsetDef;)J");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallLongMethod(jenv, _this, _method, subsetDef);
     return _result;
 }
@@ -12747,14 +14850,17 @@ ProductData TiePointGrid_createCompatibleProductData(TiePointGrid _this, int num
 {
     static jmethodID _method = NULL;
     ProductData _result = (ProductData) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "createCompatibleProductData", "(I)Lorg/esa/beam/framework/datamodel/ProductData;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "createCompatibleProductData", "(I)Lorg/esa/beam/framework/datamodel/ProductData;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, numElems);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -12763,14 +14869,17 @@ ProductNode TiePointGrid_getOwner(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
     ProductNode _result = (ProductNode) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "getOwner", "()Lorg/esa/beam/framework/datamodel/ProductNode;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "getOwner", "()Lorg/esa/beam/framework/datamodel/ProductNode;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -12780,14 +14889,17 @@ char* TiePointGrid_getName(TiePointGrid _this)
     static jmethodID _method = NULL;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "getName", "()Ljava/lang/String;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "getName", "()Ljava/lang/String;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
     return _result;
@@ -12797,14 +14909,17 @@ void TiePointGrid_setName(TiePointGrid _this, const char* name)
 {
     static jmethodID _method = NULL;
     jstring nameString = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "setName", "(Ljava/lang/String;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "setName", "(Ljava/lang/String;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     nameString = (*jenv)->NewStringUTF(jenv, name);
     (*jenv)->CallVoidMethod(jenv, _this, _method, nameString);
 }
@@ -12814,14 +14929,17 @@ char* TiePointGrid_getDescription(TiePointGrid _this)
     static jmethodID _method = NULL;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "getDescription", "()Ljava/lang/String;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "getDescription", "()Ljava/lang/String;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
     return _result;
@@ -12831,14 +14949,17 @@ void TiePointGrid_setDescription(TiePointGrid _this, const char* description)
 {
     static jmethodID _method = NULL;
     jstring descriptionString = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "setDescription", "(Ljava/lang/String;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "setDescription", "(Ljava/lang/String;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     descriptionString = (*jenv)->NewStringUTF(jenv, description);
     (*jenv)->CallVoidMethod(jenv, _this, _method, descriptionString);
 }
@@ -12847,14 +14968,17 @@ boolean TiePointGrid_isModified(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "isModified", "()Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "isModified", "()Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method);
     return _result;
 }
@@ -12864,14 +14988,17 @@ char* TiePointGrid_toString(TiePointGrid _this)
     static jmethodID _method = NULL;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "toString", "()Ljava/lang/String;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "toString", "()Ljava/lang/String;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
     return _result;
@@ -12882,14 +15009,17 @@ boolean TiePointGrid_isValidNodeName(const char* name)
     static jmethodID _method = NULL;
     jstring nameString = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classTiePointGrid, "isValidNodeName", "(Ljava/lang/String;)Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classTiePointGrid, "isValidNodeName", "(Ljava/lang/String;)Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     nameString = (*jenv)->NewStringUTF(jenv, name);
     _result = (*jenv)->CallStaticBooleanMethod(jenv, classTiePointGrid, _method, nameString);
     return _result;
@@ -12899,14 +15029,17 @@ Product TiePointGrid_getProduct(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
     Product _result = (Product) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "getProduct", "()Lorg/esa/beam/framework/datamodel/Product;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "getProduct", "()Lorg/esa/beam/framework/datamodel/Product;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -12915,14 +15048,17 @@ ProductReader TiePointGrid_getProductReader(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
     ProductReader _result = (ProductReader) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "getProductReader", "()Lorg/esa/beam/framework/dataio/ProductReader;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "getProductReader", "()Lorg/esa/beam/framework/dataio/ProductReader;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -12931,14 +15067,17 @@ ProductWriter TiePointGrid_getProductWriter(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
     ProductWriter _result = (ProductWriter) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "getProductWriter", "()Lorg/esa/beam/framework/dataio/ProductWriter;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "getProductWriter", "()Lorg/esa/beam/framework/dataio/ProductWriter;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -12948,14 +15087,17 @@ char* TiePointGrid_getDisplayName(TiePointGrid _this)
     static jmethodID _method = NULL;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "getDisplayName", "()Ljava/lang/String;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "getDisplayName", "()Ljava/lang/String;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
     return _result;
@@ -12966,14 +15108,17 @@ char* TiePointGrid_getProductRefString(TiePointGrid _this)
     static jmethodID _method = NULL;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "getProductRefString", "()Ljava/lang/String;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "getProductRefString", "()Ljava/lang/String;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
     return _result;
@@ -12983,14 +15128,17 @@ dlong TiePointGrid_getRawStorageSize1(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
     dlong _result = (dlong) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "getRawStorageSize", "()J");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "getRawStorageSize", "()J");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallLongMethod(jenv, _this, _method);
     return _result;
 }
@@ -12999,14 +15147,17 @@ void TiePointGrid_fireProductNodeChanged1(TiePointGrid _this, const char* proper
 {
     static jmethodID _method = NULL;
     jstring propertyNameString = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "fireProductNodeChanged", "(Ljava/lang/String;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "fireProductNodeChanged", "(Ljava/lang/String;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     propertyNameString = (*jenv)->NewStringUTF(jenv, propertyName);
     (*jenv)->CallVoidMethod(jenv, _this, _method, propertyNameString);
 }
@@ -13015,14 +15166,17 @@ void TiePointGrid_fireProductNodeChanged2(TiePointGrid _this, const char* proper
 {
     static jmethodID _method = NULL;
     jstring propertyNameString = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "fireProductNodeChanged", "(Ljava/lang/String;Ljava/lang/Object;Ljava/lang/Object;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "fireProductNodeChanged", "(Ljava/lang/String;Ljava/lang/Object;Ljava/lang/Object;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     propertyNameString = (*jenv)->NewStringUTF(jenv, propertyName);
     (*jenv)->CallVoidMethod(jenv, _this, _method, propertyNameString, oldValue, newValue);
 }
@@ -13030,14 +15184,17 @@ void TiePointGrid_fireProductNodeChanged2(TiePointGrid _this, const char* proper
 void TiePointGrid_removeFromFile(TiePointGrid _this, ProductWriter productWriter)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "removeFromFile", "(Lorg/esa/beam/framework/dataio/ProductWriter;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "removeFromFile", "(Lorg/esa/beam/framework/dataio/ProductWriter;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, productWriter);
 }
 
@@ -13045,14 +15202,17 @@ Object TiePointGrid_getExtension(TiePointGrid _this, Class arg0)
 {
     static jmethodID _method = NULL;
     Object _result = (Object) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "getExtension", "(Ljava/lang/Class;)Ljava/lang/Object;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "getExtension", "(Ljava/lang/Class;)Ljava/lang/Object;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, arg0);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -13061,14 +15221,17 @@ AngularDirection AngularDirection_newAngularDirection(double azimuth, double zen
 {
     static jmethodID _method = NULL;
     AngularDirection _result = (AngularDirection) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classAngularDirection, "<init>", "(DD)V");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classAngularDirection, "<init>", "(DD)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->NewObject(jenv, classAngularDirection, _method, azimuth, zenith);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -13077,14 +15240,17 @@ boolean AngularDirection_equals(AngularDirection _this, Object obj)
 {
     static jmethodID _method = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classAngularDirection, "equals", "(Ljava/lang/Object;)Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classAngularDirection, "equals", "(Ljava/lang/Object;)Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method, obj);
     return _result;
 }
@@ -13094,14 +15260,17 @@ char* AngularDirection_toString(AngularDirection _this)
     static jmethodID _method = NULL;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classAngularDirection, "toString", "()Ljava/lang/String;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classAngularDirection, "toString", "()Ljava/lang/String;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
     return _result;
@@ -13112,14 +15281,17 @@ FlagCoding FlagCoding_newFlagCoding(const char* name)
     static jmethodID _method = NULL;
     jstring nameString = NULL;
     FlagCoding _result = (FlagCoding) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classFlagCoding, "<init>", "(Ljava/lang/String;)V");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classFlagCoding, "<init>", "(Ljava/lang/String;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     nameString = (*jenv)->NewStringUTF(jenv, name);
     _result = (*jenv)->NewObject(jenv, classFlagCoding, _method, nameString);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
@@ -13130,14 +15302,17 @@ MetadataAttribute FlagCoding_getFlag(FlagCoding _this, const char* name)
     static jmethodID _method = NULL;
     jstring nameString = NULL;
     MetadataAttribute _result = (MetadataAttribute) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classFlagCoding, "getFlag", "(Ljava/lang/String;)Lorg/esa/beam/framework/datamodel/MetadataAttribute;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classFlagCoding, "getFlag", "(Ljava/lang/String;)Lorg/esa/beam/framework/datamodel/MetadataAttribute;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     nameString = (*jenv)->NewStringUTF(jenv, name);
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, nameString);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
@@ -13148,14 +15323,17 @@ char** FlagCoding_getFlagNames(FlagCoding _this, int* resultArrayLength)
     static jmethodID _method = NULL;
     char** _result = (char**) 0;
     jarray _resultArray = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classFlagCoding, "getFlagNames", "()[Ljava/lang/String;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classFlagCoding, "getFlagNames", "()[Ljava/lang/String;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string_array(_resultArray, resultArrayLength);
     return _result;
@@ -13167,14 +15345,17 @@ MetadataAttribute FlagCoding_addFlag(FlagCoding _this, const char* name, int fla
     jstring nameString = NULL;
     jstring descriptionString = NULL;
     MetadataAttribute _result = (MetadataAttribute) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classFlagCoding, "addFlag", "(Ljava/lang/String;ILjava/lang/String;)Lorg/esa/beam/framework/datamodel/MetadataAttribute;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classFlagCoding, "addFlag", "(Ljava/lang/String;ILjava/lang/String;)Lorg/esa/beam/framework/datamodel/MetadataAttribute;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     nameString = (*jenv)->NewStringUTF(jenv, name);
     descriptionString = (*jenv)->NewStringUTF(jenv, description);
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, nameString, flagMask, descriptionString);
@@ -13186,14 +15367,17 @@ int FlagCoding_getFlagMask(FlagCoding _this, const char* name)
     static jmethodID _method = NULL;
     jstring nameString = NULL;
     int _result = (int) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classFlagCoding, "getFlagMask", "(Ljava/lang/String;)I");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classFlagCoding, "getFlagMask", "(Ljava/lang/String;)I");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     nameString = (*jenv)->NewStringUTF(jenv, name);
     _result = (*jenv)->CallIntMethod(jenv, _this, _method, nameString);
     return _result;
@@ -13202,42 +15386,51 @@ int FlagCoding_getFlagMask(FlagCoding _this, const char* name)
 void FlagCoding_acceptVisitor(FlagCoding _this, ProductVisitor visitor)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classFlagCoding, "acceptVisitor", "(Lorg/esa/beam/framework/datamodel/ProductVisitor;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classFlagCoding, "acceptVisitor", "(Lorg/esa/beam/framework/datamodel/ProductVisitor;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, visitor);
 }
 
 void FlagCoding_addElement(FlagCoding _this, MetadataElement element)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classFlagCoding, "addElement", "(Lorg/esa/beam/framework/datamodel/MetadataElement;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classFlagCoding, "addElement", "(Lorg/esa/beam/framework/datamodel/MetadataElement;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, element);
 }
 
 void FlagCoding_addAttribute(FlagCoding _this, MetadataAttribute attribute)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classFlagCoding, "addAttribute", "(Lorg/esa/beam/framework/datamodel/MetadataAttribute;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classFlagCoding, "addAttribute", "(Lorg/esa/beam/framework/datamodel/MetadataAttribute;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, attribute);
 }
 
@@ -13247,14 +15440,17 @@ MetadataAttribute FlagCoding_addSample(FlagCoding _this, const char* name, int v
     jstring nameString = NULL;
     jstring descriptionString = NULL;
     MetadataAttribute _result = (MetadataAttribute) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classFlagCoding, "addSample", "(Ljava/lang/String;ILjava/lang/String;)Lorg/esa/beam/framework/datamodel/MetadataAttribute;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classFlagCoding, "addSample", "(Ljava/lang/String;ILjava/lang/String;)Lorg/esa/beam/framework/datamodel/MetadataAttribute;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     nameString = (*jenv)->NewStringUTF(jenv, name);
     descriptionString = (*jenv)->NewStringUTF(jenv, description);
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, nameString, value, descriptionString);
@@ -13265,14 +15461,17 @@ int FlagCoding_getSampleCount(FlagCoding _this)
 {
     static jmethodID _method = NULL;
     int _result = (int) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classFlagCoding, "getSampleCount", "()I");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classFlagCoding, "getSampleCount", "()I");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallIntMethod(jenv, _this, _method);
     return _result;
 }
@@ -13282,14 +15481,17 @@ char* FlagCoding_getSampleName(FlagCoding _this, int index)
     static jmethodID _method = NULL;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classFlagCoding, "getSampleName", "(I)Ljava/lang/String;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classFlagCoding, "getSampleName", "(I)Ljava/lang/String;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method, index);
     _result = beam_alloc_string(_resultString);
     return _result;
@@ -13299,14 +15501,17 @@ int FlagCoding_getSampleValue(FlagCoding _this, int index)
 {
     static jmethodID _method = NULL;
     int _result = (int) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classFlagCoding, "getSampleValue", "(I)I");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classFlagCoding, "getSampleValue", "(I)I");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallIntMethod(jenv, _this, _method, index);
     return _result;
 }
@@ -13315,14 +15520,17 @@ ProductNodeGroup FlagCoding_getElementGroup(FlagCoding _this)
 {
     static jmethodID _method = NULL;
     ProductNodeGroup _result = (ProductNodeGroup) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classFlagCoding, "getElementGroup", "()Lorg/esa/beam/framework/datamodel/ProductNodeGroup;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classFlagCoding, "getElementGroup", "()Lorg/esa/beam/framework/datamodel/ProductNodeGroup;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -13331,14 +15539,17 @@ MetadataElement FlagCoding_getParentElement(FlagCoding _this)
 {
     static jmethodID _method = NULL;
     MetadataElement _result = (MetadataElement) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classFlagCoding, "getParentElement", "()Lorg/esa/beam/framework/datamodel/MetadataElement;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classFlagCoding, "getParentElement", "()Lorg/esa/beam/framework/datamodel/MetadataElement;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -13346,14 +15557,17 @@ MetadataElement FlagCoding_getParentElement(FlagCoding _this)
 void FlagCoding_addElementAt(FlagCoding _this, MetadataElement element, int index)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classFlagCoding, "addElementAt", "(Lorg/esa/beam/framework/datamodel/MetadataElement;I)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classFlagCoding, "addElementAt", "(Lorg/esa/beam/framework/datamodel/MetadataElement;I)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, element, index);
 }
 
@@ -13361,14 +15575,17 @@ boolean FlagCoding_removeElement(FlagCoding _this, MetadataElement element)
 {
     static jmethodID _method = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classFlagCoding, "removeElement", "(Lorg/esa/beam/framework/datamodel/MetadataElement;)Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classFlagCoding, "removeElement", "(Lorg/esa/beam/framework/datamodel/MetadataElement;)Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method, element);
     return _result;
 }
@@ -13377,14 +15594,17 @@ int FlagCoding_getNumElements(FlagCoding _this)
 {
     static jmethodID _method = NULL;
     int _result = (int) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classFlagCoding, "getNumElements", "()I");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classFlagCoding, "getNumElements", "()I");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallIntMethod(jenv, _this, _method);
     return _result;
 }
@@ -13393,14 +15613,17 @@ MetadataElement FlagCoding_getElementAt(FlagCoding _this, int index)
 {
     static jmethodID _method = NULL;
     MetadataElement _result = (MetadataElement) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classFlagCoding, "getElementAt", "(I)Lorg/esa/beam/framework/datamodel/MetadataElement;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classFlagCoding, "getElementAt", "(I)Lorg/esa/beam/framework/datamodel/MetadataElement;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, index);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -13410,14 +15633,17 @@ char** FlagCoding_getElementNames(FlagCoding _this, int* resultArrayLength)
     static jmethodID _method = NULL;
     char** _result = (char**) 0;
     jarray _resultArray = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classFlagCoding, "getElementNames", "()[Ljava/lang/String;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classFlagCoding, "getElementNames", "()[Ljava/lang/String;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string_array(_resultArray, resultArrayLength);
     return _result;
@@ -13428,14 +15654,17 @@ MetadataElement* FlagCoding_getElements(FlagCoding _this, int* resultArrayLength
     static jmethodID _method = NULL;
     MetadataElement* _result = (MetadataElement*) 0;
     jarray _resultArray = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classFlagCoding, "getElements", "()[Lorg/esa/beam/framework/datamodel/MetadataElement;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classFlagCoding, "getElements", "()[Lorg/esa/beam/framework/datamodel/MetadataElement;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_object_array(_resultArray, resultArrayLength);
     return _result;
@@ -13446,14 +15675,17 @@ MetadataElement FlagCoding_getElement(FlagCoding _this, const char* name)
     static jmethodID _method = NULL;
     jstring nameString = NULL;
     MetadataElement _result = (MetadataElement) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classFlagCoding, "getElement", "(Ljava/lang/String;)Lorg/esa/beam/framework/datamodel/MetadataElement;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classFlagCoding, "getElement", "(Ljava/lang/String;)Lorg/esa/beam/framework/datamodel/MetadataElement;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     nameString = (*jenv)->NewStringUTF(jenv, name);
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, nameString);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
@@ -13464,14 +15696,17 @@ boolean FlagCoding_containsElement(FlagCoding _this, const char* name)
     static jmethodID _method = NULL;
     jstring nameString = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classFlagCoding, "containsElement", "(Ljava/lang/String;)Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classFlagCoding, "containsElement", "(Ljava/lang/String;)Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     nameString = (*jenv)->NewStringUTF(jenv, name);
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method, nameString);
     return _result;
@@ -13481,14 +15716,17 @@ int FlagCoding_getElementIndex(FlagCoding _this, MetadataElement element)
 {
     static jmethodID _method = NULL;
     int _result = (int) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classFlagCoding, "getElementIndex", "(Lorg/esa/beam/framework/datamodel/MetadataElement;)I");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classFlagCoding, "getElementIndex", "(Lorg/esa/beam/framework/datamodel/MetadataElement;)I");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallIntMethod(jenv, _this, _method, element);
     return _result;
 }
@@ -13497,14 +15735,17 @@ boolean FlagCoding_removeAttribute(FlagCoding _this, MetadataAttribute attribute
 {
     static jmethodID _method = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classFlagCoding, "removeAttribute", "(Lorg/esa/beam/framework/datamodel/MetadataAttribute;)Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classFlagCoding, "removeAttribute", "(Lorg/esa/beam/framework/datamodel/MetadataAttribute;)Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method, attribute);
     return _result;
 }
@@ -13513,14 +15754,17 @@ int FlagCoding_getNumAttributes(FlagCoding _this)
 {
     static jmethodID _method = NULL;
     int _result = (int) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classFlagCoding, "getNumAttributes", "()I");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classFlagCoding, "getNumAttributes", "()I");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallIntMethod(jenv, _this, _method);
     return _result;
 }
@@ -13529,14 +15773,17 @@ MetadataAttribute FlagCoding_getAttributeAt(FlagCoding _this, int index)
 {
     static jmethodID _method = NULL;
     MetadataAttribute _result = (MetadataAttribute) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classFlagCoding, "getAttributeAt", "(I)Lorg/esa/beam/framework/datamodel/MetadataAttribute;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classFlagCoding, "getAttributeAt", "(I)Lorg/esa/beam/framework/datamodel/MetadataAttribute;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, index);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -13546,14 +15793,17 @@ char** FlagCoding_getAttributeNames(FlagCoding _this, int* resultArrayLength)
     static jmethodID _method = NULL;
     char** _result = (char**) 0;
     jarray _resultArray = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classFlagCoding, "getAttributeNames", "()[Ljava/lang/String;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classFlagCoding, "getAttributeNames", "()[Ljava/lang/String;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string_array(_resultArray, resultArrayLength);
     return _result;
@@ -13564,14 +15814,17 @@ MetadataAttribute* FlagCoding_getAttributes(FlagCoding _this, int* resultArrayLe
     static jmethodID _method = NULL;
     MetadataAttribute* _result = (MetadataAttribute*) 0;
     jarray _resultArray = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classFlagCoding, "getAttributes", "()[Lorg/esa/beam/framework/datamodel/MetadataAttribute;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classFlagCoding, "getAttributes", "()[Lorg/esa/beam/framework/datamodel/MetadataAttribute;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_object_array(_resultArray, resultArrayLength);
     return _result;
@@ -13582,14 +15835,17 @@ MetadataAttribute FlagCoding_getAttribute(FlagCoding _this, const char* name)
     static jmethodID _method = NULL;
     jstring nameString = NULL;
     MetadataAttribute _result = (MetadataAttribute) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classFlagCoding, "getAttribute", "(Ljava/lang/String;)Lorg/esa/beam/framework/datamodel/MetadataAttribute;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classFlagCoding, "getAttribute", "(Ljava/lang/String;)Lorg/esa/beam/framework/datamodel/MetadataAttribute;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     nameString = (*jenv)->NewStringUTF(jenv, name);
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, nameString);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
@@ -13600,14 +15856,17 @@ boolean FlagCoding_containsAttribute(FlagCoding _this, const char* name)
     static jmethodID _method = NULL;
     jstring nameString = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classFlagCoding, "containsAttribute", "(Ljava/lang/String;)Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classFlagCoding, "containsAttribute", "(Ljava/lang/String;)Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     nameString = (*jenv)->NewStringUTF(jenv, name);
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method, nameString);
     return _result;
@@ -13617,14 +15876,17 @@ int FlagCoding_getAttributeIndex(FlagCoding _this, MetadataAttribute attribute)
 {
     static jmethodID _method = NULL;
     int _result = (int) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classFlagCoding, "getAttributeIndex", "(Lorg/esa/beam/framework/datamodel/MetadataAttribute;)I");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classFlagCoding, "getAttributeIndex", "(Lorg/esa/beam/framework/datamodel/MetadataAttribute;)I");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallIntMethod(jenv, _this, _method, attribute);
     return _result;
 }
@@ -13634,14 +15896,17 @@ double FlagCoding_getAttributeDouble(FlagCoding _this, const char* name, double 
     static jmethodID _method = NULL;
     jstring nameString = NULL;
     double _result = (double) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classFlagCoding, "getAttributeDouble", "(Ljava/lang/String;D)D");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classFlagCoding, "getAttributeDouble", "(Ljava/lang/String;D)D");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     nameString = (*jenv)->NewStringUTF(jenv, name);
     _result = (*jenv)->CallDoubleMethod(jenv, _this, _method, nameString, defaultValue);
     return _result;
@@ -13652,14 +15917,17 @@ ProductData_UTC FlagCoding_getAttributeUTC(FlagCoding _this, const char* name, P
     static jmethodID _method = NULL;
     jstring nameString = NULL;
     ProductData_UTC _result = (ProductData_UTC) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classFlagCoding, "getAttributeUTC", "(Ljava/lang/String;Lorg/esa/beam/framework/datamodel/ProductData/UTC;)Lorg/esa/beam/framework/datamodel/ProductData/UTC;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classFlagCoding, "getAttributeUTC", "(Ljava/lang/String;Lorg/esa/beam/framework/datamodel/ProductData/UTC;)Lorg/esa/beam/framework/datamodel/ProductData/UTC;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     nameString = (*jenv)->NewStringUTF(jenv, name);
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, nameString, defaultValue);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
@@ -13670,14 +15938,17 @@ int FlagCoding_getAttributeInt(FlagCoding _this, const char* name, int defaultVa
     static jmethodID _method = NULL;
     jstring nameString = NULL;
     int _result = (int) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classFlagCoding, "getAttributeInt", "(Ljava/lang/String;I)I");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classFlagCoding, "getAttributeInt", "(Ljava/lang/String;I)I");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     nameString = (*jenv)->NewStringUTF(jenv, name);
     _result = (*jenv)->CallIntMethod(jenv, _this, _method, nameString, defaultValue);
     return _result;
@@ -13687,14 +15958,17 @@ void FlagCoding_setAttributeInt(FlagCoding _this, const char* name, int value)
 {
     static jmethodID _method = NULL;
     jstring nameString = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classFlagCoding, "setAttributeInt", "(Ljava/lang/String;I)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classFlagCoding, "setAttributeInt", "(Ljava/lang/String;I)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     nameString = (*jenv)->NewStringUTF(jenv, name);
     (*jenv)->CallVoidMethod(jenv, _this, _method, nameString, value);
 }
@@ -13703,14 +15977,17 @@ void FlagCoding_setAttributeDouble(FlagCoding _this, const char* name, double va
 {
     static jmethodID _method = NULL;
     jstring nameString = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classFlagCoding, "setAttributeDouble", "(Ljava/lang/String;D)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classFlagCoding, "setAttributeDouble", "(Ljava/lang/String;D)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     nameString = (*jenv)->NewStringUTF(jenv, name);
     (*jenv)->CallVoidMethod(jenv, _this, _method, nameString, value);
 }
@@ -13719,14 +15996,17 @@ void FlagCoding_setAttributeUTC(FlagCoding _this, const char* name, ProductData_
 {
     static jmethodID _method = NULL;
     jstring nameString = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classFlagCoding, "setAttributeUTC", "(Ljava/lang/String;Lorg/esa/beam/framework/datamodel/ProductData/UTC;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classFlagCoding, "setAttributeUTC", "(Ljava/lang/String;Lorg/esa/beam/framework/datamodel/ProductData/UTC;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     nameString = (*jenv)->NewStringUTF(jenv, name);
     (*jenv)->CallVoidMethod(jenv, _this, _method, nameString, value);
 }
@@ -13738,14 +16018,17 @@ char* FlagCoding_getAttributeString(FlagCoding _this, const char* name, const ch
     jstring defaultValueString = NULL;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classFlagCoding, "getAttributeString", "(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classFlagCoding, "getAttributeString", "(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     nameString = (*jenv)->NewStringUTF(jenv, name);
     defaultValueString = (*jenv)->NewStringUTF(jenv, defaultValue);
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method, nameString, defaultValueString);
@@ -13758,14 +16041,17 @@ void FlagCoding_setAttributeString(FlagCoding _this, const char* name, const cha
     static jmethodID _method = NULL;
     jstring nameString = NULL;
     jstring valueString = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classFlagCoding, "setAttributeString", "(Ljava/lang/String;Ljava/lang/String;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classFlagCoding, "setAttributeString", "(Ljava/lang/String;Ljava/lang/String;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     nameString = (*jenv)->NewStringUTF(jenv, name);
     valueString = (*jenv)->NewStringUTF(jenv, value);
     (*jenv)->CallVoidMethod(jenv, _this, _method, nameString, valueString);
@@ -13774,14 +16060,17 @@ void FlagCoding_setAttributeString(FlagCoding _this, const char* name, const cha
 void FlagCoding_setModified(FlagCoding _this, boolean modified)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classFlagCoding, "setModified", "(Z)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classFlagCoding, "setModified", "(Z)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, modified);
 }
 
@@ -13789,14 +16078,17 @@ MetadataElement FlagCoding_createDeepClone(FlagCoding _this)
 {
     static jmethodID _method = NULL;
     MetadataElement _result = (MetadataElement) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classFlagCoding, "createDeepClone", "()Lorg/esa/beam/framework/datamodel/MetadataElement;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classFlagCoding, "createDeepClone", "()Lorg/esa/beam/framework/datamodel/MetadataElement;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -13804,14 +16096,17 @@ MetadataElement FlagCoding_createDeepClone(FlagCoding _this)
 void FlagCoding_dispose(FlagCoding _this)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classFlagCoding, "dispose", "()V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classFlagCoding, "dispose", "()V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method);
 }
 
@@ -13819,14 +16114,17 @@ ProductNode FlagCoding_getOwner(FlagCoding _this)
 {
     static jmethodID _method = NULL;
     ProductNode _result = (ProductNode) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classFlagCoding, "getOwner", "()Lorg/esa/beam/framework/datamodel/ProductNode;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classFlagCoding, "getOwner", "()Lorg/esa/beam/framework/datamodel/ProductNode;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -13836,14 +16134,17 @@ char* FlagCoding_getName(FlagCoding _this)
     static jmethodID _method = NULL;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classFlagCoding, "getName", "()Ljava/lang/String;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classFlagCoding, "getName", "()Ljava/lang/String;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
     return _result;
@@ -13853,14 +16154,17 @@ void FlagCoding_setName(FlagCoding _this, const char* name)
 {
     static jmethodID _method = NULL;
     jstring nameString = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classFlagCoding, "setName", "(Ljava/lang/String;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classFlagCoding, "setName", "(Ljava/lang/String;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     nameString = (*jenv)->NewStringUTF(jenv, name);
     (*jenv)->CallVoidMethod(jenv, _this, _method, nameString);
 }
@@ -13870,14 +16174,17 @@ char* FlagCoding_getDescription(FlagCoding _this)
     static jmethodID _method = NULL;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classFlagCoding, "getDescription", "()Ljava/lang/String;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classFlagCoding, "getDescription", "()Ljava/lang/String;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
     return _result;
@@ -13887,14 +16194,17 @@ void FlagCoding_setDescription(FlagCoding _this, const char* description)
 {
     static jmethodID _method = NULL;
     jstring descriptionString = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classFlagCoding, "setDescription", "(Ljava/lang/String;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classFlagCoding, "setDescription", "(Ljava/lang/String;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     descriptionString = (*jenv)->NewStringUTF(jenv, description);
     (*jenv)->CallVoidMethod(jenv, _this, _method, descriptionString);
 }
@@ -13903,14 +16213,17 @@ boolean FlagCoding_isModified(FlagCoding _this)
 {
     static jmethodID _method = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classFlagCoding, "isModified", "()Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classFlagCoding, "isModified", "()Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method);
     return _result;
 }
@@ -13920,14 +16233,17 @@ char* FlagCoding_toString(FlagCoding _this)
     static jmethodID _method = NULL;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classFlagCoding, "toString", "()Ljava/lang/String;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classFlagCoding, "toString", "()Ljava/lang/String;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
     return _result;
@@ -13938,14 +16254,17 @@ boolean FlagCoding_isValidNodeName(const char* name)
     static jmethodID _method = NULL;
     jstring nameString = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classFlagCoding, "isValidNodeName", "(Ljava/lang/String;)Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classFlagCoding, "isValidNodeName", "(Ljava/lang/String;)Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     nameString = (*jenv)->NewStringUTF(jenv, name);
     _result = (*jenv)->CallStaticBooleanMethod(jenv, classFlagCoding, _method, nameString);
     return _result;
@@ -13955,14 +16274,17 @@ Product FlagCoding_getProduct(FlagCoding _this)
 {
     static jmethodID _method = NULL;
     Product _result = (Product) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classFlagCoding, "getProduct", "()Lorg/esa/beam/framework/datamodel/Product;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classFlagCoding, "getProduct", "()Lorg/esa/beam/framework/datamodel/Product;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -13971,14 +16293,17 @@ ProductReader FlagCoding_getProductReader(FlagCoding _this)
 {
     static jmethodID _method = NULL;
     ProductReader _result = (ProductReader) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classFlagCoding, "getProductReader", "()Lorg/esa/beam/framework/dataio/ProductReader;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classFlagCoding, "getProductReader", "()Lorg/esa/beam/framework/dataio/ProductReader;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -13987,14 +16312,17 @@ ProductWriter FlagCoding_getProductWriter(FlagCoding _this)
 {
     static jmethodID _method = NULL;
     ProductWriter _result = (ProductWriter) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classFlagCoding, "getProductWriter", "()Lorg/esa/beam/framework/dataio/ProductWriter;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classFlagCoding, "getProductWriter", "()Lorg/esa/beam/framework/dataio/ProductWriter;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -14004,14 +16332,17 @@ char* FlagCoding_getDisplayName(FlagCoding _this)
     static jmethodID _method = NULL;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classFlagCoding, "getDisplayName", "()Ljava/lang/String;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classFlagCoding, "getDisplayName", "()Ljava/lang/String;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
     return _result;
@@ -14022,14 +16353,17 @@ char* FlagCoding_getProductRefString(FlagCoding _this)
     static jmethodID _method = NULL;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classFlagCoding, "getProductRefString", "()Ljava/lang/String;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classFlagCoding, "getProductRefString", "()Ljava/lang/String;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
     return _result;
@@ -14040,14 +16374,17 @@ void FlagCoding_updateExpression(FlagCoding _this, const char* oldExternalName, 
     static jmethodID _method = NULL;
     jstring oldExternalNameString = NULL;
     jstring newExternalNameString = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classFlagCoding, "updateExpression", "(Ljava/lang/String;Ljava/lang/String;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classFlagCoding, "updateExpression", "(Ljava/lang/String;Ljava/lang/String;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     oldExternalNameString = (*jenv)->NewStringUTF(jenv, oldExternalName);
     newExternalNameString = (*jenv)->NewStringUTF(jenv, newExternalName);
     (*jenv)->CallVoidMethod(jenv, _this, _method, oldExternalNameString, newExternalNameString);
@@ -14056,14 +16393,17 @@ void FlagCoding_updateExpression(FlagCoding _this, const char* oldExternalName, 
 void FlagCoding_removeFromFile(FlagCoding _this, ProductWriter productWriter)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classFlagCoding, "removeFromFile", "(Lorg/esa/beam/framework/dataio/ProductWriter;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classFlagCoding, "removeFromFile", "(Lorg/esa/beam/framework/dataio/ProductWriter;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, productWriter);
 }
 
@@ -14071,14 +16411,17 @@ Object FlagCoding_getExtension(FlagCoding _this, Class arg0)
 {
     static jmethodID _method = NULL;
     Object _result = (Object) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classFlagCoding, "getExtension", "(Ljava/lang/Class;)Ljava/lang/Object;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classFlagCoding, "getExtension", "(Ljava/lang/Class;)Ljava/lang/Object;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, arg0);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -14087,14 +16430,17 @@ ProductReaderPlugIn ProductReader_getReaderPlugIn(ProductReader _this)
 {
     static jmethodID _method = NULL;
     ProductReaderPlugIn _result = (ProductReaderPlugIn) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProductReader, "getReaderPlugIn", "()Lorg/esa/beam/framework/dataio/ProductReaderPlugIn;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductReader, "getReaderPlugIn", "()Lorg/esa/beam/framework/dataio/ProductReaderPlugIn;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -14103,14 +16449,17 @@ Object ProductReader_getInput(ProductReader _this)
 {
     static jmethodID _method = NULL;
     Object _result = (Object) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProductReader, "getInput", "()Ljava/lang/Object;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductReader, "getInput", "()Ljava/lang/Object;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -14119,14 +16468,17 @@ ProductSubsetDef ProductReader_getSubsetDef(ProductReader _this)
 {
     static jmethodID _method = NULL;
     ProductSubsetDef _result = (ProductSubsetDef) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProductReader, "getSubsetDef", "()Lorg/esa/beam/framework/dataio/ProductSubsetDef;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductReader, "getSubsetDef", "()Lorg/esa/beam/framework/dataio/ProductSubsetDef;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -14135,14 +16487,17 @@ Product ProductReader_readProductNodes(ProductReader _this, Object input, Produc
 {
     static jmethodID _method = NULL;
     Product _result = (Product) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProductReader, "readProductNodes", "(Ljava/lang/Object;Lorg/esa/beam/framework/dataio/ProductSubsetDef;)Lorg/esa/beam/framework/datamodel/Product;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductReader, "readProductNodes", "(Ljava/lang/Object;Lorg/esa/beam/framework/dataio/ProductSubsetDef;)Lorg/esa/beam/framework/datamodel/Product;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, input, subsetDef);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -14150,28 +16505,34 @@ Product ProductReader_readProductNodes(ProductReader _this, Object input, Produc
 void ProductReader_readBandRasterData(ProductReader _this, Band destBand, int destOffsetX, int destOffsetY, int destWidth, int destHeight, ProductData destBuffer, ProgressMonitor pm)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProductReader, "readBandRasterData", "(Lorg/esa/beam/framework/datamodel/Band;IIIILorg/esa/beam/framework/datamodel/ProductData;Lcom/bc/ceres/core/ProgressMonitor;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductReader, "readBandRasterData", "(Lorg/esa/beam/framework/datamodel/Band;IIIILorg/esa/beam/framework/datamodel/ProductData;Lcom/bc/ceres/core/ProgressMonitor;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, destBand, destOffsetX, destOffsetY, destWidth, destHeight, destBuffer, pm);
 }
 
 void ProductReader_close(ProductReader _this)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProductReader, "close", "()V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductReader, "close", "()V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method);
 }
 
@@ -14179,14 +16540,17 @@ RGBChannelDef RGBChannelDef_newRGBChannelDef()
 {
     static jmethodID _method = NULL;
     RGBChannelDef _result = (RGBChannelDef) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classRGBChannelDef, "<init>", "()V");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classRGBChannelDef, "<init>", "()V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->NewObject(jenv, classRGBChannelDef, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -14196,14 +16560,17 @@ char* RGBChannelDef_getSourceName(RGBChannelDef _this, int index)
     static jmethodID _method = NULL;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classRGBChannelDef, "getSourceName", "(I)Ljava/lang/String;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classRGBChannelDef, "getSourceName", "(I)Ljava/lang/String;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method, index);
     _result = beam_alloc_string(_resultString);
     return _result;
@@ -14213,14 +16580,17 @@ void RGBChannelDef_setSourceName(RGBChannelDef _this, int index, const char* sou
 {
     static jmethodID _method = NULL;
     jstring sourceNameString = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classRGBChannelDef, "setSourceName", "(ILjava/lang/String;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classRGBChannelDef, "setSourceName", "(ILjava/lang/String;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     sourceNameString = (*jenv)->NewStringUTF(jenv, sourceName);
     (*jenv)->CallVoidMethod(jenv, _this, _method, index, sourceNameString);
 }
@@ -14230,14 +16600,17 @@ char** RGBChannelDef_getSourceNames(RGBChannelDef _this, int* resultArrayLength)
     static jmethodID _method = NULL;
     char** _result = (char**) 0;
     jarray _resultArray = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classRGBChannelDef, "getSourceNames", "()[Ljava/lang/String;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classRGBChannelDef, "getSourceNames", "()[Ljava/lang/String;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string_array(_resultArray, resultArrayLength);
     return _result;
@@ -14247,14 +16620,17 @@ void RGBChannelDef_setSourceNames(RGBChannelDef _this, const char** bandNamesEle
 {
     static jmethodID _method = NULL;
     jobjectArray bandNamesArray = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classRGBChannelDef, "setSourceNames", "([Ljava/lang/String;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classRGBChannelDef, "setSourceNames", "([Ljava/lang/String;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     bandNamesArray = beam_new_jstring_array(bandNamesElems, bandNamesLength);
     (*jenv)->CallVoidMethod(jenv, _this, _method, bandNamesArray);
 }
@@ -14263,14 +16639,17 @@ boolean RGBChannelDef_isAlphaUsed(RGBChannelDef _this)
 {
     static jmethodID _method = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classRGBChannelDef, "isAlphaUsed", "()Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classRGBChannelDef, "isAlphaUsed", "()Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method);
     return _result;
 }
@@ -14279,14 +16658,17 @@ boolean RGBChannelDef_isGammaUsed(RGBChannelDef _this, int index)
 {
     static jmethodID _method = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classRGBChannelDef, "isGammaUsed", "(I)Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classRGBChannelDef, "isGammaUsed", "(I)Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method, index);
     return _result;
 }
@@ -14295,14 +16677,17 @@ double RGBChannelDef_getGamma(RGBChannelDef _this, int index)
 {
     static jmethodID _method = NULL;
     double _result = (double) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classRGBChannelDef, "getGamma", "(I)D");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classRGBChannelDef, "getGamma", "(I)D");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallDoubleMethod(jenv, _this, _method, index);
     return _result;
 }
@@ -14310,14 +16695,17 @@ double RGBChannelDef_getGamma(RGBChannelDef _this, int index)
 void RGBChannelDef_setGamma(RGBChannelDef _this, int index, double gamma)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classRGBChannelDef, "setGamma", "(ID)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classRGBChannelDef, "setGamma", "(ID)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, index, gamma);
 }
 
@@ -14325,14 +16713,17 @@ double RGBChannelDef_getMinDisplaySample(RGBChannelDef _this, int index)
 {
     static jmethodID _method = NULL;
     double _result = (double) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classRGBChannelDef, "getMinDisplaySample", "(I)D");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classRGBChannelDef, "getMinDisplaySample", "(I)D");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallDoubleMethod(jenv, _this, _method, index);
     return _result;
 }
@@ -14340,14 +16731,17 @@ double RGBChannelDef_getMinDisplaySample(RGBChannelDef _this, int index)
 void RGBChannelDef_setMinDisplaySample(RGBChannelDef _this, int index, double min)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classRGBChannelDef, "setMinDisplaySample", "(ID)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classRGBChannelDef, "setMinDisplaySample", "(ID)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, index, min);
 }
 
@@ -14355,14 +16749,17 @@ double RGBChannelDef_getMaxDisplaySample(RGBChannelDef _this, int index)
 {
     static jmethodID _method = NULL;
     double _result = (double) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classRGBChannelDef, "getMaxDisplaySample", "(I)D");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classRGBChannelDef, "getMaxDisplaySample", "(I)D");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallDoubleMethod(jenv, _this, _method, index);
     return _result;
 }
@@ -14370,14 +16767,17 @@ double RGBChannelDef_getMaxDisplaySample(RGBChannelDef _this, int index)
 void RGBChannelDef_setMaxDisplaySample(RGBChannelDef _this, int index, double max)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classRGBChannelDef, "setMaxDisplaySample", "(ID)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classRGBChannelDef, "setMaxDisplaySample", "(ID)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, index, max);
 }
 
@@ -14385,14 +16785,17 @@ Object RGBChannelDef_clone(RGBChannelDef _this)
 {
     static jmethodID _method = NULL;
     Object _result = (Object) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classRGBChannelDef, "clone", "()Ljava/lang/Object;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classRGBChannelDef, "clone", "()Ljava/lang/Object;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -14401,14 +16804,17 @@ ProductData ProductData_createInstance1(int type)
 {
     static jmethodID _method = NULL;
     ProductData _result = (ProductData) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classProductData, "createInstance", "(I)Lorg/esa/beam/framework/datamodel/ProductData;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classProductData, "createInstance", "(I)Lorg/esa/beam/framework/datamodel/ProductData;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallStaticObjectMethod(jenv, classProductData, _method, type);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -14417,14 +16823,17 @@ ProductData ProductData_createInstance2(int type, int numElems)
 {
     static jmethodID _method = NULL;
     ProductData _result = (ProductData) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classProductData, "createInstance", "(II)Lorg/esa/beam/framework/datamodel/ProductData;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classProductData, "createInstance", "(II)Lorg/esa/beam/framework/datamodel/ProductData;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallStaticObjectMethod(jenv, classProductData, _method, type, numElems);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -14433,14 +16842,17 @@ ProductData ProductData_createInstance3(int type, Object data)
 {
     static jmethodID _method = NULL;
     ProductData _result = (ProductData) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classProductData, "createInstance", "(ILjava/lang/Object;)Lorg/esa/beam/framework/datamodel/ProductData;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classProductData, "createInstance", "(ILjava/lang/Object;)Lorg/esa/beam/framework/datamodel/ProductData;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallStaticObjectMethod(jenv, classProductData, _method, type, data);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -14450,14 +16862,17 @@ ProductData ProductData_createInstance5(const byte* elemsElems, int elemsLength)
     static jmethodID _method = NULL;
     jarray elemsArray = NULL;
     ProductData _result = (ProductData) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classProductData, "createInstance", "([B)Lorg/esa/beam/framework/datamodel/ProductData;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classProductData, "createInstance", "([B)Lorg/esa/beam/framework/datamodel/ProductData;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     elemsArray = (*jenv)->NewByteArray(jenv, elemsLength);
     beam_copy_to_jarray(elemsArray, elemsElems, elemsLength, sizeof (byte));
     _result = (*jenv)->CallStaticObjectMethod(jenv, classProductData, _method, elemsArray);
@@ -14469,14 +16884,17 @@ ProductData ProductData_createUnsignedInstance1(const byte* elemsElems, int elem
     static jmethodID _method = NULL;
     jarray elemsArray = NULL;
     ProductData _result = (ProductData) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classProductData, "createUnsignedInstance", "([B)Lorg/esa/beam/framework/datamodel/ProductData;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classProductData, "createUnsignedInstance", "([B)Lorg/esa/beam/framework/datamodel/ProductData;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     elemsArray = (*jenv)->NewByteArray(jenv, elemsLength);
     beam_copy_to_jarray(elemsArray, elemsElems, elemsLength, sizeof (byte));
     _result = (*jenv)->CallStaticObjectMethod(jenv, classProductData, _method, elemsArray);
@@ -14488,14 +16906,17 @@ ProductData ProductData_createInstance10(const short* elemsElems, int elemsLengt
     static jmethodID _method = NULL;
     jarray elemsArray = NULL;
     ProductData _result = (ProductData) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classProductData, "createInstance", "([S)Lorg/esa/beam/framework/datamodel/ProductData;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classProductData, "createInstance", "([S)Lorg/esa/beam/framework/datamodel/ProductData;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     elemsArray = (*jenv)->NewShortArray(jenv, elemsLength);
     beam_copy_to_jarray(elemsArray, elemsElems, elemsLength, sizeof (short));
     _result = (*jenv)->CallStaticObjectMethod(jenv, classProductData, _method, elemsArray);
@@ -14507,14 +16928,17 @@ ProductData ProductData_createUnsignedInstance3(const short* elemsElems, int ele
     static jmethodID _method = NULL;
     jarray elemsArray = NULL;
     ProductData _result = (ProductData) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classProductData, "createUnsignedInstance", "([S)Lorg/esa/beam/framework/datamodel/ProductData;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classProductData, "createUnsignedInstance", "([S)Lorg/esa/beam/framework/datamodel/ProductData;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     elemsArray = (*jenv)->NewShortArray(jenv, elemsLength);
     beam_copy_to_jarray(elemsArray, elemsElems, elemsLength, sizeof (short));
     _result = (*jenv)->CallStaticObjectMethod(jenv, classProductData, _method, elemsArray);
@@ -14526,14 +16950,17 @@ ProductData ProductData_createInstance8(const int* elemsElems, int elemsLength)
     static jmethodID _method = NULL;
     jarray elemsArray = NULL;
     ProductData _result = (ProductData) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classProductData, "createInstance", "([I)Lorg/esa/beam/framework/datamodel/ProductData;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classProductData, "createInstance", "([I)Lorg/esa/beam/framework/datamodel/ProductData;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     elemsArray = (*jenv)->NewIntArray(jenv, elemsLength);
     beam_copy_to_jarray(elemsArray, elemsElems, elemsLength, sizeof (int));
     _result = (*jenv)->CallStaticObjectMethod(jenv, classProductData, _method, elemsArray);
@@ -14545,14 +16972,17 @@ ProductData ProductData_createUnsignedInstance2(const int* elemsElems, int elems
     static jmethodID _method = NULL;
     jarray elemsArray = NULL;
     ProductData _result = (ProductData) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classProductData, "createUnsignedInstance", "([I)Lorg/esa/beam/framework/datamodel/ProductData;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classProductData, "createUnsignedInstance", "([I)Lorg/esa/beam/framework/datamodel/ProductData;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     elemsArray = (*jenv)->NewIntArray(jenv, elemsLength);
     beam_copy_to_jarray(elemsArray, elemsElems, elemsLength, sizeof (int));
     _result = (*jenv)->CallStaticObjectMethod(jenv, classProductData, _method, elemsArray);
@@ -14564,14 +16994,17 @@ ProductData ProductData_createInstance9(const dlong* elemsElems, int elemsLength
     static jmethodID _method = NULL;
     jarray elemsArray = NULL;
     ProductData _result = (ProductData) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classProductData, "createInstance", "([J)Lorg/esa/beam/framework/datamodel/ProductData;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classProductData, "createInstance", "([J)Lorg/esa/beam/framework/datamodel/ProductData;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     elemsArray = (*jenv)->NewLongArray(jenv, elemsLength);
     beam_copy_to_jarray(elemsArray, elemsElems, elemsLength, sizeof (long));
     _result = (*jenv)->CallStaticObjectMethod(jenv, classProductData, _method, elemsArray);
@@ -14583,14 +17016,17 @@ ProductData ProductData_createInstance4(const char* strData)
     static jmethodID _method = NULL;
     jstring strDataString = NULL;
     ProductData _result = (ProductData) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classProductData, "createInstance", "(Ljava/lang/String;)Lorg/esa/beam/framework/datamodel/ProductData;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classProductData, "createInstance", "(Ljava/lang/String;)Lorg/esa/beam/framework/datamodel/ProductData;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     strDataString = (*jenv)->NewStringUTF(jenv, strData);
     _result = (*jenv)->CallStaticObjectMethod(jenv, classProductData, _method, strDataString);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
@@ -14601,14 +17037,17 @@ ProductData ProductData_createInstance7(const float* elemsElems, int elemsLength
     static jmethodID _method = NULL;
     jarray elemsArray = NULL;
     ProductData _result = (ProductData) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classProductData, "createInstance", "([F)Lorg/esa/beam/framework/datamodel/ProductData;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classProductData, "createInstance", "([F)Lorg/esa/beam/framework/datamodel/ProductData;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     elemsArray = (*jenv)->NewFloatArray(jenv, elemsLength);
     beam_copy_to_jarray(elemsArray, elemsElems, elemsLength, sizeof (float));
     _result = (*jenv)->CallStaticObjectMethod(jenv, classProductData, _method, elemsArray);
@@ -14620,14 +17059,17 @@ ProductData ProductData_createInstance6(const double* elemsElems, int elemsLengt
     static jmethodID _method = NULL;
     jarray elemsArray = NULL;
     ProductData _result = (ProductData) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classProductData, "createInstance", "([D)Lorg/esa/beam/framework/datamodel/ProductData;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classProductData, "createInstance", "([D)Lorg/esa/beam/framework/datamodel/ProductData;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     elemsArray = (*jenv)->NewDoubleArray(jenv, elemsLength);
     beam_copy_to_jarray(elemsArray, elemsElems, elemsLength, sizeof (double));
     _result = (*jenv)->CallStaticObjectMethod(jenv, classProductData, _method, elemsArray);
@@ -14638,14 +17080,17 @@ int ProductData_getType1(ProductData _this)
 {
     static jmethodID _method = NULL;
     int _result = (int) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProductData, "getType", "()I");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductData, "getType", "()I");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallIntMethod(jenv, _this, _method);
     return _result;
 }
@@ -14654,14 +17099,17 @@ int ProductData_getElemSize2(int type)
 {
     static jmethodID _method = NULL;
     int _result = (int) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classProductData, "getElemSize", "(I)I");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classProductData, "getElemSize", "(I)I");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallStaticIntMethod(jenv, classProductData, _method, type);
     return _result;
 }
@@ -14670,14 +17118,17 @@ int ProductData_getElemSize1(ProductData _this)
 {
     static jmethodID _method = NULL;
     int _result = (int) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProductData, "getElemSize", "()I");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductData, "getElemSize", "()I");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallIntMethod(jenv, _this, _method);
     return _result;
 }
@@ -14687,14 +17138,17 @@ char* ProductData_getTypeString2(int type)
     static jmethodID _method = NULL;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classProductData, "getTypeString", "(I)Ljava/lang/String;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classProductData, "getTypeString", "(I)Ljava/lang/String;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultString = (*jenv)->CallStaticObjectMethod(jenv, classProductData, _method, type);
     _result = beam_alloc_string(_resultString);
     return _result;
@@ -14705,14 +17159,17 @@ int ProductData_getType2(const char* type)
     static jmethodID _method = NULL;
     jstring typeString = NULL;
     int _result = (int) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classProductData, "getType", "(Ljava/lang/String;)I");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classProductData, "getType", "(Ljava/lang/String;)I");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     typeString = (*jenv)->NewStringUTF(jenv, type);
     _result = (*jenv)->CallStaticIntMethod(jenv, classProductData, _method, typeString);
     return _result;
@@ -14723,14 +17180,17 @@ char* ProductData_getTypeString1(ProductData _this)
     static jmethodID _method = NULL;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProductData, "getTypeString", "()Ljava/lang/String;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductData, "getTypeString", "()Ljava/lang/String;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
     return _result;
@@ -14740,14 +17200,17 @@ boolean ProductData_isInt(ProductData _this)
 {
     static jmethodID _method = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProductData, "isInt", "()Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductData, "isInt", "()Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method);
     return _result;
 }
@@ -14756,14 +17219,17 @@ boolean ProductData_isIntType(int type)
 {
     static jmethodID _method = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classProductData, "isIntType", "(I)Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classProductData, "isIntType", "(I)Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallStaticBooleanMethod(jenv, classProductData, _method, type);
     return _result;
 }
@@ -14772,14 +17238,17 @@ boolean ProductData_isSigned(ProductData _this)
 {
     static jmethodID _method = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProductData, "isSigned", "()Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductData, "isSigned", "()Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method);
     return _result;
 }
@@ -14788,14 +17257,17 @@ boolean ProductData_isUnsigned(ProductData _this)
 {
     static jmethodID _method = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProductData, "isUnsigned", "()Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductData, "isUnsigned", "()Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method);
     return _result;
 }
@@ -14804,14 +17276,17 @@ boolean ProductData_isUIntType(int type)
 {
     static jmethodID _method = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classProductData, "isUIntType", "(I)Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classProductData, "isUIntType", "(I)Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallStaticBooleanMethod(jenv, classProductData, _method, type);
     return _result;
 }
@@ -14820,14 +17295,17 @@ boolean ProductData_isFloatingPointType(int type)
 {
     static jmethodID _method = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classProductData, "isFloatingPointType", "(I)Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classProductData, "isFloatingPointType", "(I)Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallStaticBooleanMethod(jenv, classProductData, _method, type);
     return _result;
 }
@@ -14836,14 +17314,17 @@ boolean ProductData_isScalar(ProductData _this)
 {
     static jmethodID _method = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProductData, "isScalar", "()Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductData, "isScalar", "()Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method);
     return _result;
 }
@@ -14852,14 +17333,17 @@ int ProductData_getNumElems(ProductData _this)
 {
     static jmethodID _method = NULL;
     int _result = (int) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProductData, "getNumElems", "()I");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductData, "getNumElems", "()I");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallIntMethod(jenv, _this, _method);
     return _result;
 }
@@ -14868,14 +17352,17 @@ int ProductData_getElemInt(ProductData _this)
 {
     static jmethodID _method = NULL;
     int _result = (int) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProductData, "getElemInt", "()I");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductData, "getElemInt", "()I");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallIntMethod(jenv, _this, _method);
     return _result;
 }
@@ -14884,14 +17371,17 @@ dlong ProductData_getElemUInt(ProductData _this)
 {
     static jmethodID _method = NULL;
     dlong _result = (dlong) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProductData, "getElemUInt", "()J");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductData, "getElemUInt", "()J");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallLongMethod(jenv, _this, _method);
     return _result;
 }
@@ -14900,14 +17390,17 @@ float ProductData_getElemFloat(ProductData _this)
 {
     static jmethodID _method = NULL;
     float _result = (float) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProductData, "getElemFloat", "()F");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductData, "getElemFloat", "()F");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallFloatMethod(jenv, _this, _method);
     return _result;
 }
@@ -14916,14 +17409,17 @@ double ProductData_getElemDouble(ProductData _this)
 {
     static jmethodID _method = NULL;
     double _result = (double) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProductData, "getElemDouble", "()D");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductData, "getElemDouble", "()D");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallDoubleMethod(jenv, _this, _method);
     return _result;
 }
@@ -14933,14 +17429,17 @@ char* ProductData_getElemString(ProductData _this)
     static jmethodID _method = NULL;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProductData, "getElemString", "()Ljava/lang/String;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductData, "getElemString", "()Ljava/lang/String;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
     return _result;
@@ -14950,14 +17449,17 @@ boolean ProductData_getElemBoolean(ProductData _this)
 {
     static jmethodID _method = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProductData, "getElemBoolean", "()Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductData, "getElemBoolean", "()Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method);
     return _result;
 }
@@ -14966,14 +17468,17 @@ int ProductData_getElemIntAt(ProductData _this, int index)
 {
     static jmethodID _method = NULL;
     int _result = (int) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProductData, "getElemIntAt", "(I)I");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductData, "getElemIntAt", "(I)I");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallIntMethod(jenv, _this, _method, index);
     return _result;
 }
@@ -14982,14 +17487,17 @@ dlong ProductData_getElemUIntAt(ProductData _this, int index)
 {
     static jmethodID _method = NULL;
     dlong _result = (dlong) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProductData, "getElemUIntAt", "(I)J");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductData, "getElemUIntAt", "(I)J");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallLongMethod(jenv, _this, _method, index);
     return _result;
 }
@@ -14998,14 +17506,17 @@ float ProductData_getElemFloatAt(ProductData _this, int index)
 {
     static jmethodID _method = NULL;
     float _result = (float) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProductData, "getElemFloatAt", "(I)F");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductData, "getElemFloatAt", "(I)F");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallFloatMethod(jenv, _this, _method, index);
     return _result;
 }
@@ -15014,14 +17525,17 @@ double ProductData_getElemDoubleAt(ProductData _this, int index)
 {
     static jmethodID _method = NULL;
     double _result = (double) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProductData, "getElemDoubleAt", "(I)D");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductData, "getElemDoubleAt", "(I)D");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallDoubleMethod(jenv, _this, _method, index);
     return _result;
 }
@@ -15031,14 +17545,17 @@ char* ProductData_getElemStringAt(ProductData _this, int index)
     static jmethodID _method = NULL;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProductData, "getElemStringAt", "(I)Ljava/lang/String;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductData, "getElemStringAt", "(I)Ljava/lang/String;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method, index);
     _result = beam_alloc_string(_resultString);
     return _result;
@@ -15048,14 +17565,17 @@ boolean ProductData_getElemBooleanAt(ProductData _this, int index)
 {
     static jmethodID _method = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProductData, "getElemBooleanAt", "(I)Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductData, "getElemBooleanAt", "(I)Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method, index);
     return _result;
 }
@@ -15063,56 +17583,68 @@ boolean ProductData_getElemBooleanAt(ProductData _this, int index)
 void ProductData_setElemInt(ProductData _this, int value)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProductData, "setElemInt", "(I)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductData, "setElemInt", "(I)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, value);
 }
 
 void ProductData_setElemUInt(ProductData _this, dlong value)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProductData, "setElemUInt", "(J)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductData, "setElemUInt", "(J)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, value);
 }
 
 void ProductData_setElemFloat(ProductData _this, float value)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProductData, "setElemFloat", "(F)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductData, "setElemFloat", "(F)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, value);
 }
 
 void ProductData_setElemDouble(ProductData _this, double value)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProductData, "setElemDouble", "(D)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductData, "setElemDouble", "(D)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, value);
 }
 
@@ -15120,14 +17652,17 @@ void ProductData_setElemString(ProductData _this, const char* value)
 {
     static jmethodID _method = NULL;
     jstring valueString = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProductData, "setElemString", "(Ljava/lang/String;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductData, "setElemString", "(Ljava/lang/String;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     valueString = (*jenv)->NewStringUTF(jenv, value);
     (*jenv)->CallVoidMethod(jenv, _this, _method, valueString);
 }
@@ -15135,70 +17670,85 @@ void ProductData_setElemString(ProductData _this, const char* value)
 void ProductData_setElemBoolean(ProductData _this, boolean value)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProductData, "setElemBoolean", "(Z)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductData, "setElemBoolean", "(Z)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, value);
 }
 
 void ProductData_setElemIntAt(ProductData _this, int index, int value)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProductData, "setElemIntAt", "(II)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductData, "setElemIntAt", "(II)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, index, value);
 }
 
 void ProductData_setElemUIntAt(ProductData _this, int index, dlong value)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProductData, "setElemUIntAt", "(IJ)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductData, "setElemUIntAt", "(IJ)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, index, value);
 }
 
 void ProductData_setElemFloatAt(ProductData _this, int index, float value)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProductData, "setElemFloatAt", "(IF)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductData, "setElemFloatAt", "(IF)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, index, value);
 }
 
 void ProductData_setElemDoubleAt(ProductData _this, int index, double value)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProductData, "setElemDoubleAt", "(ID)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductData, "setElemDoubleAt", "(ID)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, index, value);
 }
 
@@ -15206,14 +17756,17 @@ void ProductData_setElemStringAt(ProductData _this, int index, const char* value
 {
     static jmethodID _method = NULL;
     jstring valueString = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProductData, "setElemStringAt", "(ILjava/lang/String;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductData, "setElemStringAt", "(ILjava/lang/String;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     valueString = (*jenv)->NewStringUTF(jenv, value);
     (*jenv)->CallVoidMethod(jenv, _this, _method, index, valueString);
 }
@@ -15221,14 +17774,17 @@ void ProductData_setElemStringAt(ProductData _this, int index, const char* value
 void ProductData_setElemBooleanAt(ProductData _this, int index, boolean value)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProductData, "setElemBooleanAt", "(IZ)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductData, "setElemBooleanAt", "(IZ)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, index, value);
 }
 
@@ -15236,14 +17792,17 @@ Object ProductData_getElems(ProductData _this)
 {
     static jmethodID _method = NULL;
     Object _result = (Object) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProductData, "getElems", "()Ljava/lang/Object;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductData, "getElems", "()Ljava/lang/Object;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -15251,126 +17810,153 @@ Object ProductData_getElems(ProductData _this)
 void ProductData_setElems(ProductData _this, Object data)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProductData, "setElems", "(Ljava/lang/Object;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductData, "setElems", "(Ljava/lang/Object;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, data);
 }
 
 void ProductData_readFrom4(ProductData _this, ImageInputStream input)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProductData, "readFrom", "(Ljavax/imageio/stream/ImageInputStream;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductData, "readFrom", "(Ljavax/imageio/stream/ImageInputStream;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, input);
 }
 
 void ProductData_readFrom3(ProductData _this, int pos, ImageInputStream input)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProductData, "readFrom", "(ILjavax/imageio/stream/ImageInputStream;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductData, "readFrom", "(ILjavax/imageio/stream/ImageInputStream;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, pos, input);
 }
 
 void ProductData_readFrom1(ProductData _this, int startPos, int numElems, ImageInputStream input)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProductData, "readFrom", "(IILjavax/imageio/stream/ImageInputStream;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductData, "readFrom", "(IILjavax/imageio/stream/ImageInputStream;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, startPos, numElems, input);
 }
 
 void ProductData_readFrom2(ProductData _this, int startPos, int numElems, ImageInputStream input, dlong inputPos)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProductData, "readFrom", "(IILjavax/imageio/stream/ImageInputStream;J)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductData, "readFrom", "(IILjavax/imageio/stream/ImageInputStream;J)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, startPos, numElems, input, inputPos);
 }
 
 void ProductData_writeTo4(ProductData _this, ImageOutputStream output)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProductData, "writeTo", "(Ljavax/imageio/stream/ImageOutputStream;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductData, "writeTo", "(Ljavax/imageio/stream/ImageOutputStream;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, output);
 }
 
 void ProductData_writeTo3(ProductData _this, int pos, ImageOutputStream output)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProductData, "writeTo", "(ILjavax/imageio/stream/ImageOutputStream;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductData, "writeTo", "(ILjavax/imageio/stream/ImageOutputStream;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, pos, output);
 }
 
 void ProductData_writeTo1(ProductData _this, int startPos, int numElems, ImageOutputStream output)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProductData, "writeTo", "(IILjavax/imageio/stream/ImageOutputStream;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductData, "writeTo", "(IILjavax/imageio/stream/ImageOutputStream;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, startPos, numElems, output);
 }
 
 void ProductData_writeTo2(ProductData _this, int startPos, int numElems, ImageOutputStream output, dlong outputPos)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProductData, "writeTo", "(IILjavax/imageio/stream/ImageOutputStream;J)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductData, "writeTo", "(IILjavax/imageio/stream/ImageOutputStream;J)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, startPos, numElems, output, outputPos);
 }
 
@@ -15379,14 +17965,17 @@ char* ProductData_toString(ProductData _this)
     static jmethodID _method = NULL;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProductData, "toString", "()Ljava/lang/String;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductData, "toString", "()Ljava/lang/String;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
     return _result;
@@ -15396,14 +17985,17 @@ int ProductData_hashCode(ProductData _this)
 {
     static jmethodID _method = NULL;
     int _result = (int) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProductData, "hashCode", "()I");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductData, "hashCode", "()I");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallIntMethod(jenv, _this, _method);
     return _result;
 }
@@ -15412,14 +18004,17 @@ boolean ProductData_equals(ProductData _this, Object other)
 {
     static jmethodID _method = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProductData, "equals", "(Ljava/lang/Object;)Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductData, "equals", "(Ljava/lang/Object;)Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method, other);
     return _result;
 }
@@ -15428,14 +18023,17 @@ boolean ProductData_equalElems(ProductData _this, ProductData other)
 {
     static jmethodID _method = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProductData, "equalElems", "(Lorg/esa/beam/framework/datamodel/ProductData;)Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductData, "equalElems", "(Lorg/esa/beam/framework/datamodel/ProductData;)Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method, other);
     return _result;
 }
@@ -15443,14 +18041,17 @@ boolean ProductData_equalElems(ProductData _this, ProductData other)
 void ProductData_dispose(ProductData _this)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProductData, "dispose", "()V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductData, "dispose", "()V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method);
 }
 
@@ -15458,14 +18059,17 @@ GeoPos GeoPos_newGeoPos(float lat, float lon)
 {
     static jmethodID _method = NULL;
     GeoPos _result = (GeoPos) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classGeoPos, "<init>", "(FF)V");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classGeoPos, "<init>", "(FF)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->NewObject(jenv, classGeoPos, _method, lat, lon);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -15474,14 +18078,17 @@ float GeoPos_getLat(GeoPos _this)
 {
     static jmethodID _method = NULL;
     float _result = (float) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classGeoPos, "getLat", "()F");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classGeoPos, "getLat", "()F");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallFloatMethod(jenv, _this, _method);
     return _result;
 }
@@ -15490,14 +18097,17 @@ float GeoPos_getLon(GeoPos _this)
 {
     static jmethodID _method = NULL;
     float _result = (float) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classGeoPos, "getLon", "()F");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classGeoPos, "getLon", "()F");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallFloatMethod(jenv, _this, _method);
     return _result;
 }
@@ -15505,14 +18115,17 @@ float GeoPos_getLon(GeoPos _this)
 void GeoPos_setLocation(GeoPos _this, float lat, float lon)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classGeoPos, "setLocation", "(FF)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classGeoPos, "setLocation", "(FF)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, lat, lon);
 }
 
@@ -15520,14 +18133,17 @@ boolean GeoPos_isValid(GeoPos _this)
 {
     static jmethodID _method = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classGeoPos, "isValid", "()Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classGeoPos, "isValid", "()Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method);
     return _result;
 }
@@ -15537,14 +18153,17 @@ boolean GeoPos_areValid(const GeoPos aElems, int aLength)
     static jmethodID _method = NULL;
     jarray aArray = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classGeoPos, "areValid", "([Lorg/esa/beam/framework/datamodel/GeoPos;)Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classGeoPos, "areValid", "([Lorg/esa/beam/framework/datamodel/GeoPos;)Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     aArray = beam_new_jobject_array(aElems, aLength, classGeoPos);
     _result = (*jenv)->CallStaticBooleanMethod(jenv, classGeoPos, _method, aArray);
     return _result;
@@ -15553,14 +18172,17 @@ boolean GeoPos_areValid(const GeoPos aElems, int aLength)
 void GeoPos_setInvalid(GeoPos _this)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classGeoPos, "setInvalid", "()V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classGeoPos, "setInvalid", "()V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method);
 }
 
@@ -15568,14 +18190,17 @@ boolean GeoPos_equals(GeoPos _this, Object obj)
 {
     static jmethodID _method = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classGeoPos, "equals", "(Ljava/lang/Object;)Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classGeoPos, "equals", "(Ljava/lang/Object;)Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method, obj);
     return _result;
 }
@@ -15584,14 +18209,17 @@ int GeoPos_hashCode(GeoPos _this)
 {
     static jmethodID _method = NULL;
     int _result = (int) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classGeoPos, "hashCode", "()I");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classGeoPos, "hashCode", "()I");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallIntMethod(jenv, _this, _method);
     return _result;
 }
@@ -15601,14 +18229,17 @@ char* GeoPos_toString(GeoPos _this)
     static jmethodID _method = NULL;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classGeoPos, "toString", "()Ljava/lang/String;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classGeoPos, "toString", "()Ljava/lang/String;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
     return _result;
@@ -15617,14 +18248,17 @@ char* GeoPos_toString(GeoPos _this)
 void GeoPos_normalize(GeoPos _this)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classGeoPos, "normalize", "()V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classGeoPos, "normalize", "()V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method);
 }
 
@@ -15632,14 +18266,17 @@ float GeoPos_normalizeLon(float lon)
 {
     static jmethodID _method = NULL;
     float _result = (float) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classGeoPos, "normalizeLon", "(F)F");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classGeoPos, "normalizeLon", "(F)F");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallStaticFloatMethod(jenv, classGeoPos, _method, lon);
     return _result;
 }
@@ -15649,14 +18286,17 @@ char* GeoPos_getLatString(GeoPos _this)
     static jmethodID _method = NULL;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classGeoPos, "getLatString", "()Ljava/lang/String;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classGeoPos, "getLatString", "()Ljava/lang/String;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
     return _result;
@@ -15667,14 +18307,17 @@ char* GeoPos_getLonString(GeoPos _this)
     static jmethodID _method = NULL;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classGeoPos, "getLonString", "()Ljava/lang/String;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classGeoPos, "getLonString", "()Ljava/lang/String;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
     return _result;
@@ -15685,14 +18328,17 @@ ProductNodeGroup ProductNodeGroup_newProductNodeGroup(const char* name)
     static jmethodID _method = NULL;
     jstring nameString = NULL;
     ProductNodeGroup _result = (ProductNodeGroup) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProductNodeGroup, "<init>", "(Ljava/lang/String;)V");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductNodeGroup, "<init>", "(Ljava/lang/String;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     nameString = (*jenv)->NewStringUTF(jenv, name);
     _result = (*jenv)->NewObject(jenv, classProductNodeGroup, _method, nameString);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
@@ -15702,14 +18348,17 @@ boolean ProductNodeGroup_isTakingOverNodeOwnership(ProductNodeGroup _this)
 {
     static jmethodID _method = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProductNodeGroup, "isTakingOverNodeOwnership", "()Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductNodeGroup, "isTakingOverNodeOwnership", "()Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method);
     return _result;
 }
@@ -15718,14 +18367,17 @@ int ProductNodeGroup_getNodeCount(ProductNodeGroup _this)
 {
     static jmethodID _method = NULL;
     int _result = (int) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProductNodeGroup, "getNodeCount", "()I");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductNodeGroup, "getNodeCount", "()I");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallIntMethod(jenv, _this, _method);
     return _result;
 }
@@ -15734,14 +18386,17 @@ ProductNode ProductNodeGroup_getAt(ProductNodeGroup _this, int index)
 {
     static jmethodID _method = NULL;
     ProductNode _result = (ProductNode) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProductNodeGroup, "get", "(I)Lorg/esa/beam/framework/datamodel/ProductNode;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductNodeGroup, "get", "(I)Lorg/esa/beam/framework/datamodel/ProductNode;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, index);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -15751,14 +18406,17 @@ char** ProductNodeGroup_getNodeDisplayNames(ProductNodeGroup _this, int* resultA
     static jmethodID _method = NULL;
     char** _result = (char**) 0;
     jarray _resultArray = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProductNodeGroup, "getNodeDisplayNames", "()[Ljava/lang/String;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductNodeGroup, "getNodeDisplayNames", "()[Ljava/lang/String;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string_array(_resultArray, resultArrayLength);
     return _result;
@@ -15769,14 +18427,17 @@ char** ProductNodeGroup_getNodeNames(ProductNodeGroup _this, int* resultArrayLen
     static jmethodID _method = NULL;
     char** _result = (char**) 0;
     jarray _resultArray = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProductNodeGroup, "getNodeNames", "()[Ljava/lang/String;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductNodeGroup, "getNodeNames", "()[Ljava/lang/String;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string_array(_resultArray, resultArrayLength);
     return _result;
@@ -15787,14 +18448,17 @@ int ProductNodeGroup_indexOfName(ProductNodeGroup _this, const char* name)
     static jmethodID _method = NULL;
     jstring nameString = NULL;
     int _result = (int) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProductNodeGroup, "indexOf", "(Ljava/lang/String;)I");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductNodeGroup, "indexOf", "(Ljava/lang/String;)I");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     nameString = (*jenv)->NewStringUTF(jenv, name);
     _result = (*jenv)->CallIntMethod(jenv, _this, _method, nameString);
     return _result;
@@ -15804,14 +18468,17 @@ int ProductNodeGroup_indexOf(ProductNodeGroup _this, ProductNode element)
 {
     static jmethodID _method = NULL;
     int _result = (int) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProductNodeGroup, "indexOf", "(Lorg/esa/beam/framework/datamodel/ProductNode;)I");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductNodeGroup, "indexOf", "(Lorg/esa/beam/framework/datamodel/ProductNode;)I");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallIntMethod(jenv, _this, _method, element);
     return _result;
 }
@@ -15821,14 +18488,17 @@ ProductNode ProductNodeGroup_getByDisplayName(ProductNodeGroup _this, const char
     static jmethodID _method = NULL;
     jstring displayNameString = NULL;
     ProductNode _result = (ProductNode) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProductNodeGroup, "getByDisplayName", "(Ljava/lang/String;)Lorg/esa/beam/framework/datamodel/ProductNode;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductNodeGroup, "getByDisplayName", "(Ljava/lang/String;)Lorg/esa/beam/framework/datamodel/ProductNode;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     displayNameString = (*jenv)->NewStringUTF(jenv, displayName);
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, displayNameString);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
@@ -15839,14 +18509,17 @@ ProductNode ProductNodeGroup_get(ProductNodeGroup _this, const char* name)
     static jmethodID _method = NULL;
     jstring nameString = NULL;
     ProductNode _result = (ProductNode) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProductNodeGroup, "get", "(Ljava/lang/String;)Lorg/esa/beam/framework/datamodel/ProductNode;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductNodeGroup, "get", "(Ljava/lang/String;)Lorg/esa/beam/framework/datamodel/ProductNode;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     nameString = (*jenv)->NewStringUTF(jenv, name);
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, nameString);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
@@ -15857,14 +18530,17 @@ boolean ProductNodeGroup_containsName(ProductNodeGroup _this, const char* name)
     static jmethodID _method = NULL;
     jstring nameString = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProductNodeGroup, "contains", "(Ljava/lang/String;)Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductNodeGroup, "contains", "(Ljava/lang/String;)Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     nameString = (*jenv)->NewStringUTF(jenv, name);
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method, nameString);
     return _result;
@@ -15874,14 +18550,17 @@ boolean ProductNodeGroup_contains(ProductNodeGroup _this, ProductNode node)
 {
     static jmethodID _method = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProductNodeGroup, "contains", "(Lorg/esa/beam/framework/datamodel/ProductNode;)Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductNodeGroup, "contains", "(Lorg/esa/beam/framework/datamodel/ProductNode;)Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method, node);
     return _result;
 }
@@ -15890,14 +18569,17 @@ boolean ProductNodeGroup_add(ProductNodeGroup _this, ProductNode node)
 {
     static jmethodID _method = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProductNodeGroup, "add", "(Lorg/esa/beam/framework/datamodel/ProductNode;)Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductNodeGroup, "add", "(Lorg/esa/beam/framework/datamodel/ProductNode;)Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method, node);
     return _result;
 }
@@ -15905,14 +18587,17 @@ boolean ProductNodeGroup_add(ProductNodeGroup _this, ProductNode node)
 void ProductNodeGroup_addAt(ProductNodeGroup _this, int index, ProductNode node)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProductNodeGroup, "add", "(ILorg/esa/beam/framework/datamodel/ProductNode;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductNodeGroup, "add", "(ILorg/esa/beam/framework/datamodel/ProductNode;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, index, node);
 }
 
@@ -15920,14 +18605,17 @@ boolean ProductNodeGroup_remove(ProductNodeGroup _this, ProductNode node)
 {
     static jmethodID _method = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProductNodeGroup, "remove", "(Lorg/esa/beam/framework/datamodel/ProductNode;)Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductNodeGroup, "remove", "(Lorg/esa/beam/framework/datamodel/ProductNode;)Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method, node);
     return _result;
 }
@@ -15935,28 +18623,34 @@ boolean ProductNodeGroup_remove(ProductNodeGroup _this, ProductNode node)
 void ProductNodeGroup_removeAll(ProductNodeGroup _this)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProductNodeGroup, "removeAll", "()V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductNodeGroup, "removeAll", "()V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method);
 }
 
 void ProductNodeGroup_clearRemovedList(ProductNodeGroup _this)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProductNodeGroup, "clearRemovedList", "()V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductNodeGroup, "clearRemovedList", "()V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method);
 }
 
@@ -15964,14 +18658,17 @@ Collection ProductNodeGroup_getRemovedNodes(ProductNodeGroup _this)
 {
     static jmethodID _method = NULL;
     Collection _result = (Collection) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProductNodeGroup, "getRemovedNodes", "()Ljava/util/Collection;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductNodeGroup, "getRemovedNodes", "()Ljava/util/Collection;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -15979,42 +18676,51 @@ Collection ProductNodeGroup_getRemovedNodes(ProductNodeGroup _this)
 void ProductNodeGroup_setModified(ProductNodeGroup _this, boolean modified)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProductNodeGroup, "setModified", "(Z)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductNodeGroup, "setModified", "(Z)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, modified);
 }
 
 void ProductNodeGroup_acceptVisitor(ProductNodeGroup _this, ProductVisitor visitor)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProductNodeGroup, "acceptVisitor", "(Lorg/esa/beam/framework/datamodel/ProductVisitor;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductNodeGroup, "acceptVisitor", "(Lorg/esa/beam/framework/datamodel/ProductVisitor;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, visitor);
 }
 
 void ProductNodeGroup_dispose(ProductNodeGroup _this)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProductNodeGroup, "dispose", "()V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductNodeGroup, "dispose", "()V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method);
 }
 
@@ -16023,14 +18729,17 @@ void ProductNodeGroup_updateExpression(ProductNodeGroup _this, const char* oldEx
     static jmethodID _method = NULL;
     jstring oldExternalNameString = NULL;
     jstring newExternalNameString = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProductNodeGroup, "updateExpression", "(Ljava/lang/String;Ljava/lang/String;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductNodeGroup, "updateExpression", "(Ljava/lang/String;Ljava/lang/String;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     oldExternalNameString = (*jenv)->NewStringUTF(jenv, oldExternalName);
     newExternalNameString = (*jenv)->NewStringUTF(jenv, newExternalName);
     (*jenv)->CallVoidMethod(jenv, _this, _method, oldExternalNameString, newExternalNameString);
@@ -16040,14 +18749,17 @@ ProductNode ProductNodeGroup_getOwner(ProductNodeGroup _this)
 {
     static jmethodID _method = NULL;
     ProductNode _result = (ProductNode) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProductNodeGroup, "getOwner", "()Lorg/esa/beam/framework/datamodel/ProductNode;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductNodeGroup, "getOwner", "()Lorg/esa/beam/framework/datamodel/ProductNode;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -16057,14 +18769,17 @@ char* ProductNodeGroup_getName(ProductNodeGroup _this)
     static jmethodID _method = NULL;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProductNodeGroup, "getName", "()Ljava/lang/String;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductNodeGroup, "getName", "()Ljava/lang/String;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
     return _result;
@@ -16074,14 +18789,17 @@ void ProductNodeGroup_setName(ProductNodeGroup _this, const char* name)
 {
     static jmethodID _method = NULL;
     jstring nameString = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProductNodeGroup, "setName", "(Ljava/lang/String;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductNodeGroup, "setName", "(Ljava/lang/String;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     nameString = (*jenv)->NewStringUTF(jenv, name);
     (*jenv)->CallVoidMethod(jenv, _this, _method, nameString);
 }
@@ -16091,14 +18809,17 @@ char* ProductNodeGroup_getDescription(ProductNodeGroup _this)
     static jmethodID _method = NULL;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProductNodeGroup, "getDescription", "()Ljava/lang/String;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductNodeGroup, "getDescription", "()Ljava/lang/String;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
     return _result;
@@ -16108,14 +18829,17 @@ void ProductNodeGroup_setDescription(ProductNodeGroup _this, const char* descrip
 {
     static jmethodID _method = NULL;
     jstring descriptionString = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProductNodeGroup, "setDescription", "(Ljava/lang/String;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductNodeGroup, "setDescription", "(Ljava/lang/String;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     descriptionString = (*jenv)->NewStringUTF(jenv, description);
     (*jenv)->CallVoidMethod(jenv, _this, _method, descriptionString);
 }
@@ -16124,14 +18848,17 @@ boolean ProductNodeGroup_isModified(ProductNodeGroup _this)
 {
     static jmethodID _method = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProductNodeGroup, "isModified", "()Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductNodeGroup, "isModified", "()Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method);
     return _result;
 }
@@ -16141,14 +18868,17 @@ char* ProductNodeGroup_toString(ProductNodeGroup _this)
     static jmethodID _method = NULL;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProductNodeGroup, "toString", "()Ljava/lang/String;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductNodeGroup, "toString", "()Ljava/lang/String;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
     return _result;
@@ -16159,14 +18889,17 @@ boolean ProductNodeGroup_isValidNodeName(const char* name)
     static jmethodID _method = NULL;
     jstring nameString = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classProductNodeGroup, "isValidNodeName", "(Ljava/lang/String;)Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classProductNodeGroup, "isValidNodeName", "(Ljava/lang/String;)Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     nameString = (*jenv)->NewStringUTF(jenv, name);
     _result = (*jenv)->CallStaticBooleanMethod(jenv, classProductNodeGroup, _method, nameString);
     return _result;
@@ -16176,14 +18909,17 @@ Product ProductNodeGroup_getProduct(ProductNodeGroup _this)
 {
     static jmethodID _method = NULL;
     Product _result = (Product) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProductNodeGroup, "getProduct", "()Lorg/esa/beam/framework/datamodel/Product;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductNodeGroup, "getProduct", "()Lorg/esa/beam/framework/datamodel/Product;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -16192,14 +18928,17 @@ ProductReader ProductNodeGroup_getProductReader(ProductNodeGroup _this)
 {
     static jmethodID _method = NULL;
     ProductReader _result = (ProductReader) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProductNodeGroup, "getProductReader", "()Lorg/esa/beam/framework/dataio/ProductReader;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductNodeGroup, "getProductReader", "()Lorg/esa/beam/framework/dataio/ProductReader;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -16208,14 +18947,17 @@ ProductWriter ProductNodeGroup_getProductWriter(ProductNodeGroup _this)
 {
     static jmethodID _method = NULL;
     ProductWriter _result = (ProductWriter) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProductNodeGroup, "getProductWriter", "()Lorg/esa/beam/framework/dataio/ProductWriter;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductNodeGroup, "getProductWriter", "()Lorg/esa/beam/framework/dataio/ProductWriter;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -16225,14 +18967,17 @@ char* ProductNodeGroup_getDisplayName(ProductNodeGroup _this)
     static jmethodID _method = NULL;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProductNodeGroup, "getDisplayName", "()Ljava/lang/String;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductNodeGroup, "getDisplayName", "()Ljava/lang/String;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
     return _result;
@@ -16243,14 +18988,17 @@ char* ProductNodeGroup_getProductRefString(ProductNodeGroup _this)
     static jmethodID _method = NULL;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProductNodeGroup, "getProductRefString", "()Ljava/lang/String;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductNodeGroup, "getProductRefString", "()Ljava/lang/String;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
     return _result;
@@ -16259,14 +19007,17 @@ char* ProductNodeGroup_getProductRefString(ProductNodeGroup _this)
 void ProductNodeGroup_removeFromFile(ProductNodeGroup _this, ProductWriter productWriter)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProductNodeGroup, "removeFromFile", "(Lorg/esa/beam/framework/dataio/ProductWriter;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductNodeGroup, "removeFromFile", "(Lorg/esa/beam/framework/dataio/ProductWriter;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, productWriter);
 }
 
@@ -16274,14 +19025,17 @@ Object ProductNodeGroup_getExtension(ProductNodeGroup _this, Class arg0)
 {
     static jmethodID _method = NULL;
     Object _result = (Object) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProductNodeGroup, "getExtension", "(Ljava/lang/Class;)Ljava/lang/Object;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductNodeGroup, "getExtension", "(Ljava/lang/Class;)Ljava/lang/Object;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, arg0);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -16290,14 +19044,17 @@ ProductUtils ProductUtils_newProductUtils()
 {
     static jmethodID _method = NULL;
     ProductUtils _result = (ProductUtils) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classProductUtils, "<init>", "()V");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductUtils, "<init>", "()V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->NewObject(jenv, classProductUtils, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -16307,14 +19064,17 @@ ImageInfo ProductUtils_createImageInfo(const RasterDataNode rastersElems, int ra
     static jmethodID _method = NULL;
     jarray rastersArray = NULL;
     ImageInfo _result = (ImageInfo) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "createImageInfo", "([Lorg/esa/beam/framework/datamodel/RasterDataNode;ZLcom/bc/ceres/core/ProgressMonitor;)Lorg/esa/beam/framework/datamodel/ImageInfo;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "createImageInfo", "([Lorg/esa/beam/framework/datamodel/RasterDataNode;ZLcom/bc/ceres/core/ProgressMonitor;)Lorg/esa/beam/framework/datamodel/ImageInfo;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     rastersArray = beam_new_jobject_array(rastersElems, rastersLength, classRasterDataNode);
     _result = (*jenv)->CallStaticObjectMethod(jenv, classProductUtils, _method, rastersArray, assignMissingImageInfos, pm);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
@@ -16325,14 +19085,17 @@ BufferedImage ProductUtils_createRgbImage(const RasterDataNode rastersElems, int
     static jmethodID _method = NULL;
     jarray rastersArray = NULL;
     BufferedImage _result = (BufferedImage) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "createRgbImage", "([Lorg/esa/beam/framework/datamodel/RasterDataNode;Lorg/esa/beam/framework/datamodel/ImageInfo;Lcom/bc/ceres/core/ProgressMonitor;)Ljava/awt/image/BufferedImage;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "createRgbImage", "([Lorg/esa/beam/framework/datamodel/RasterDataNode;Lorg/esa/beam/framework/datamodel/ImageInfo;Lcom/bc/ceres/core/ProgressMonitor;)Ljava/awt/image/BufferedImage;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     rastersArray = beam_new_jobject_array(rastersElems, rastersLength, classRasterDataNode);
     _result = (*jenv)->CallStaticObjectMethod(jenv, classProductUtils, _method, rastersArray, imageInfo, pm);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
@@ -16342,14 +19105,17 @@ BufferedImage ProductUtils_createColorIndexedImage(RasterDataNode rasterDataNode
 {
     static jmethodID _method = NULL;
     BufferedImage _result = (BufferedImage) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "createColorIndexedImage", "(Lorg/esa/beam/framework/datamodel/RasterDataNode;Lcom/bc/ceres/core/ProgressMonitor;)Ljava/awt/image/BufferedImage;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "createColorIndexedImage", "(Lorg/esa/beam/framework/datamodel/RasterDataNode;Lcom/bc/ceres/core/ProgressMonitor;)Ljava/awt/image/BufferedImage;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallStaticObjectMethod(jenv, classProductUtils, _method, rasterDataNode, pm);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -16358,14 +19124,17 @@ MapInfo ProductUtils_createSuitableMapInfo1(Product product, Rectangle rect, Map
 {
     static jmethodID _method = NULL;
     MapInfo _result = (MapInfo) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "createSuitableMapInfo", "(Lorg/esa/beam/framework/datamodel/Product;Ljava/awt/Rectangle;Lorg/esa/beam/framework/dataop/maptransf/MapProjection;)Lorg/esa/beam/framework/dataop/maptransf/MapInfo;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "createSuitableMapInfo", "(Lorg/esa/beam/framework/datamodel/Product;Ljava/awt/Rectangle;Lorg/esa/beam/framework/dataop/maptransf/MapProjection;)Lorg/esa/beam/framework/dataop/maptransf/MapInfo;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallStaticObjectMethod(jenv, classProductUtils, _method, product, rect, mapProjection);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -16374,14 +19143,17 @@ MapInfo ProductUtils_createSuitableMapInfo2(Product product, MapProjection mapPr
 {
     static jmethodID _method = NULL;
     MapInfo _result = (MapInfo) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "createSuitableMapInfo", "(Lorg/esa/beam/framework/datamodel/Product;Lorg/esa/beam/framework/dataop/maptransf/MapProjection;DD)Lorg/esa/beam/framework/dataop/maptransf/MapInfo;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "createSuitableMapInfo", "(Lorg/esa/beam/framework/datamodel/Product;Lorg/esa/beam/framework/dataop/maptransf/MapProjection;DD)Lorg/esa/beam/framework/dataop/maptransf/MapInfo;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallStaticObjectMethod(jenv, classProductUtils, _method, product, mapProjection, orientation, noDataValue);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -16390,14 +19162,17 @@ Dimension ProductUtils_getOutputRasterSize(Product product, Rectangle rect, MapT
 {
     static jmethodID _method = NULL;
     Dimension _result = (Dimension) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "getOutputRasterSize", "(Lorg/esa/beam/framework/datamodel/Product;Ljava/awt/Rectangle;Lorg/esa/beam/framework/dataop/maptransf/MapTransform;DD)Ljava/awt/Dimension;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "getOutputRasterSize", "(Lorg/esa/beam/framework/datamodel/Product;Ljava/awt/Rectangle;Lorg/esa/beam/framework/dataop/maptransf/MapTransform;DD)Ljava/awt/Dimension;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallStaticObjectMethod(jenv, classProductUtils, _method, product, rect, mapTransform, pixelSizeX, pixelSizeY);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -16407,14 +19182,17 @@ Point2D* ProductUtils_createMapEnvelope2(Product product, Rectangle rect, MapTra
     static jmethodID _method = NULL;
     Point2D* _result = (Point2D*) 0;
     jarray _resultArray = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "createMapEnvelope", "(Lorg/esa/beam/framework/datamodel/Product;Ljava/awt/Rectangle;Lorg/esa/beam/framework/dataop/maptransf/MapTransform;)[Ljava/awt/geom/Point2D;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "createMapEnvelope", "(Lorg/esa/beam/framework/datamodel/Product;Ljava/awt/Rectangle;Lorg/esa/beam/framework/dataop/maptransf/MapTransform;)[Ljava/awt/geom/Point2D;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultArray = (*jenv)->CallStaticObjectMethod(jenv, classProductUtils, _method, product, rect, mapTransform);
     _result = beam_alloc_object_array(_resultArray, resultArrayLength);
     return _result;
@@ -16425,14 +19203,17 @@ Point2D* ProductUtils_createMapEnvelope1(Product product, Rectangle rect, int st
     static jmethodID _method = NULL;
     Point2D* _result = (Point2D*) 0;
     jarray _resultArray = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "createMapEnvelope", "(Lorg/esa/beam/framework/datamodel/Product;Ljava/awt/Rectangle;ILorg/esa/beam/framework/dataop/maptransf/MapTransform;)[Ljava/awt/geom/Point2D;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "createMapEnvelope", "(Lorg/esa/beam/framework/datamodel/Product;Ljava/awt/Rectangle;ILorg/esa/beam/framework/dataop/maptransf/MapTransform;)[Ljava/awt/geom/Point2D;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultArray = (*jenv)->CallStaticObjectMethod(jenv, classProductUtils, _method, product, rect, step, mapTransform);
     _result = beam_alloc_object_array(_resultArray, resultArrayLength);
     return _result;
@@ -16444,14 +19225,17 @@ Point2D* ProductUtils_getMinMax(const Point2D boundaryElems, int boundaryLength,
     jarray boundaryArray = NULL;
     Point2D* _result = (Point2D*) 0;
     jarray _resultArray = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "getMinMax", "([Ljava/awt/geom/Point2D;)[Ljava/awt/geom/Point2D;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "getMinMax", "([Ljava/awt/geom/Point2D;)[Ljava/awt/geom/Point2D;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     boundaryArray = beam_new_jobject_array(boundaryElems, boundaryLength, classPoint2D);
     _resultArray = (*jenv)->CallStaticObjectMethod(jenv, classProductUtils, _method, boundaryArray);
     _result = beam_alloc_object_array(_resultArray, resultArrayLength);
@@ -16463,14 +19247,17 @@ Point2D* ProductUtils_createMapBoundary(Product product, Rectangle rect, int ste
     static jmethodID _method = NULL;
     Point2D* _result = (Point2D*) 0;
     jarray _resultArray = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "createMapBoundary", "(Lorg/esa/beam/framework/datamodel/Product;Ljava/awt/Rectangle;ILorg/esa/beam/framework/dataop/maptransf/MapTransform;)[Ljava/awt/geom/Point2D;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "createMapBoundary", "(Lorg/esa/beam/framework/datamodel/Product;Ljava/awt/Rectangle;ILorg/esa/beam/framework/dataop/maptransf/MapTransform;)[Ljava/awt/geom/Point2D;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultArray = (*jenv)->CallStaticObjectMethod(jenv, classProductUtils, _method, product, rect, step, mapTransform);
     _result = beam_alloc_object_array(_resultArray, resultArrayLength);
     return _result;
@@ -16481,14 +19268,17 @@ GeoPos* ProductUtils_createGeoBoundary1(Product product, int step, int* resultAr
     static jmethodID _method = NULL;
     GeoPos* _result = (GeoPos*) 0;
     jarray _resultArray = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "createGeoBoundary", "(Lorg/esa/beam/framework/datamodel/Product;I)[Lorg/esa/beam/framework/datamodel/GeoPos;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "createGeoBoundary", "(Lorg/esa/beam/framework/datamodel/Product;I)[Lorg/esa/beam/framework/datamodel/GeoPos;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultArray = (*jenv)->CallStaticObjectMethod(jenv, classProductUtils, _method, product, step);
     _result = beam_alloc_object_array(_resultArray, resultArrayLength);
     return _result;
@@ -16499,14 +19289,17 @@ GeoPos* ProductUtils_createGeoBoundary2(Product product, Rectangle region, int s
     static jmethodID _method = NULL;
     GeoPos* _result = (GeoPos*) 0;
     jarray _resultArray = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "createGeoBoundary", "(Lorg/esa/beam/framework/datamodel/Product;Ljava/awt/Rectangle;I)[Lorg/esa/beam/framework/datamodel/GeoPos;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "createGeoBoundary", "(Lorg/esa/beam/framework/datamodel/Product;Ljava/awt/Rectangle;I)[Lorg/esa/beam/framework/datamodel/GeoPos;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultArray = (*jenv)->CallStaticObjectMethod(jenv, classProductUtils, _method, product, region, step);
     _result = beam_alloc_object_array(_resultArray, resultArrayLength);
     return _result;
@@ -16517,33 +19310,20 @@ GeoPos* ProductUtils_createGeoBoundary3(Product product, Rectangle region, int s
     static jmethodID _method = NULL;
     GeoPos* _result = (GeoPos*) 0;
     jarray _resultArray = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "createGeoBoundary", "(Lorg/esa/beam/framework/datamodel/Product;Ljava/awt/Rectangle;IZ)[Lorg/esa/beam/framework/datamodel/GeoPos;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "createGeoBoundary", "(Lorg/esa/beam/framework/datamodel/Product;Ljava/awt/Rectangle;IZ)[Lorg/esa/beam/framework/datamodel/GeoPos;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultArray = (*jenv)->CallStaticObjectMethod(jenv, classProductUtils, _method, product, region, step, usePixelCenter);
     _result = beam_alloc_object_array(_resultArray, resultArrayLength);
     return _result;
-}
-
-GeoPos ProductUtils_getClosestGeoPos(GeoCoding gc, PixelPos origPos, Rectangle region, int step)
-{
-    static jmethodID _method = NULL;
-    GeoPos _result = (GeoPos) 0;
-
-    if (beam_init_api() != 0) return _result;
-
-    if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "getClosestGeoPos", "(Lorg/esa/beam/framework/datamodel/GeoCoding;Lorg/esa/beam/framework/datamodel/PixelPos;Ljava/awt/Rectangle;I)Lorg/esa/beam/framework/datamodel/GeoPos;");
-        if (_method == NULL) return _result;
-    }
-
-    _result = (*jenv)->CallStaticObjectMethod(jenv, classProductUtils, _method, gc, origPos, region, step);
-    return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
 GeoPos* ProductUtils_createGeoBoundary4(RasterDataNode raster, Rectangle region, int step, int* resultArrayLength)
@@ -16551,14 +19331,17 @@ GeoPos* ProductUtils_createGeoBoundary4(RasterDataNode raster, Rectangle region,
     static jmethodID _method = NULL;
     GeoPos* _result = (GeoPos*) 0;
     jarray _resultArray = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "createGeoBoundary", "(Lorg/esa/beam/framework/datamodel/RasterDataNode;Ljava/awt/Rectangle;I)[Lorg/esa/beam/framework/datamodel/GeoPos;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "createGeoBoundary", "(Lorg/esa/beam/framework/datamodel/RasterDataNode;Ljava/awt/Rectangle;I)[Lorg/esa/beam/framework/datamodel/GeoPos;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultArray = (*jenv)->CallStaticObjectMethod(jenv, classProductUtils, _method, raster, region, step);
     _result = beam_alloc_object_array(_resultArray, resultArrayLength);
     return _result;
@@ -16569,14 +19352,17 @@ GeneralPath* ProductUtils_createGeoBoundaryPaths1(Product product, int* resultAr
     static jmethodID _method = NULL;
     GeneralPath* _result = (GeneralPath*) 0;
     jarray _resultArray = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "createGeoBoundaryPaths", "(Lorg/esa/beam/framework/datamodel/Product;)[Ljava/awt/geom/GeneralPath;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "createGeoBoundaryPaths", "(Lorg/esa/beam/framework/datamodel/Product;)[Ljava/awt/geom/GeneralPath;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultArray = (*jenv)->CallStaticObjectMethod(jenv, classProductUtils, _method, product);
     _result = beam_alloc_object_array(_resultArray, resultArrayLength);
     return _result;
@@ -16587,14 +19373,17 @@ GeneralPath* ProductUtils_createGeoBoundaryPaths2(Product product, Rectangle reg
     static jmethodID _method = NULL;
     GeneralPath* _result = (GeneralPath*) 0;
     jarray _resultArray = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "createGeoBoundaryPaths", "(Lorg/esa/beam/framework/datamodel/Product;Ljava/awt/Rectangle;I)[Ljava/awt/geom/GeneralPath;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "createGeoBoundaryPaths", "(Lorg/esa/beam/framework/datamodel/Product;Ljava/awt/Rectangle;I)[Ljava/awt/geom/GeneralPath;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultArray = (*jenv)->CallStaticObjectMethod(jenv, classProductUtils, _method, product, region, step);
     _result = beam_alloc_object_array(_resultArray, resultArrayLength);
     return _result;
@@ -16605,14 +19394,17 @@ GeneralPath* ProductUtils_createGeoBoundaryPaths3(Product product, Rectangle reg
     static jmethodID _method = NULL;
     GeneralPath* _result = (GeneralPath*) 0;
     jarray _resultArray = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "createGeoBoundaryPaths", "(Lorg/esa/beam/framework/datamodel/Product;Ljava/awt/Rectangle;IZ)[Ljava/awt/geom/GeneralPath;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "createGeoBoundaryPaths", "(Lorg/esa/beam/framework/datamodel/Product;Ljava/awt/Rectangle;IZ)[Ljava/awt/geom/GeneralPath;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultArray = (*jenv)->CallStaticObjectMethod(jenv, classProductUtils, _method, product, region, step, usePixelCenter);
     _result = beam_alloc_object_array(_resultArray, resultArrayLength);
     return _result;
@@ -16623,14 +19415,17 @@ PixelPos* ProductUtils_createPixelBoundary1(Product product, Rectangle rect, int
     static jmethodID _method = NULL;
     PixelPos* _result = (PixelPos*) 0;
     jarray _resultArray = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "createPixelBoundary", "(Lorg/esa/beam/framework/datamodel/Product;Ljava/awt/Rectangle;I)[Lorg/esa/beam/framework/datamodel/PixelPos;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "createPixelBoundary", "(Lorg/esa/beam/framework/datamodel/Product;Ljava/awt/Rectangle;I)[Lorg/esa/beam/framework/datamodel/PixelPos;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultArray = (*jenv)->CallStaticObjectMethod(jenv, classProductUtils, _method, product, rect, step);
     _result = beam_alloc_object_array(_resultArray, resultArrayLength);
     return _result;
@@ -16641,14 +19436,17 @@ PixelPos* ProductUtils_createPixelBoundary2(Product product, Rectangle rect, int
     static jmethodID _method = NULL;
     PixelPos* _result = (PixelPos*) 0;
     jarray _resultArray = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "createPixelBoundary", "(Lorg/esa/beam/framework/datamodel/Product;Ljava/awt/Rectangle;IZ)[Lorg/esa/beam/framework/datamodel/PixelPos;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "createPixelBoundary", "(Lorg/esa/beam/framework/datamodel/Product;Ljava/awt/Rectangle;IZ)[Lorg/esa/beam/framework/datamodel/PixelPos;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultArray = (*jenv)->CallStaticObjectMethod(jenv, classProductUtils, _method, product, rect, step, usePixelCenter);
     _result = beam_alloc_object_array(_resultArray, resultArrayLength);
     return _result;
@@ -16659,14 +19457,17 @@ PixelPos* ProductUtils_createPixelBoundary3(RasterDataNode raster, Rectangle rec
     static jmethodID _method = NULL;
     PixelPos* _result = (PixelPos*) 0;
     jarray _resultArray = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "createPixelBoundary", "(Lorg/esa/beam/framework/datamodel/RasterDataNode;Ljava/awt/Rectangle;I)[Lorg/esa/beam/framework/datamodel/PixelPos;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "createPixelBoundary", "(Lorg/esa/beam/framework/datamodel/RasterDataNode;Ljava/awt/Rectangle;I)[Lorg/esa/beam/framework/datamodel/PixelPos;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultArray = (*jenv)->CallStaticObjectMethod(jenv, classProductUtils, _method, raster, rect, step);
     _result = beam_alloc_object_array(_resultArray, resultArrayLength);
     return _result;
@@ -16677,14 +19478,17 @@ PixelPos* ProductUtils_createRectBoundary1(Rectangle rect, int step, int* result
     static jmethodID _method = NULL;
     PixelPos* _result = (PixelPos*) 0;
     jarray _resultArray = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "createRectBoundary", "(Ljava/awt/Rectangle;I)[Lorg/esa/beam/framework/datamodel/PixelPos;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "createRectBoundary", "(Ljava/awt/Rectangle;I)[Lorg/esa/beam/framework/datamodel/PixelPos;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultArray = (*jenv)->CallStaticObjectMethod(jenv, classProductUtils, _method, rect, step);
     _result = beam_alloc_object_array(_resultArray, resultArrayLength);
     return _result;
@@ -16695,14 +19499,17 @@ PixelPos* ProductUtils_createRectBoundary2(Rectangle rect, int step, boolean use
     static jmethodID _method = NULL;
     PixelPos* _result = (PixelPos*) 0;
     jarray _resultArray = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "createRectBoundary", "(Ljava/awt/Rectangle;IZ)[Lorg/esa/beam/framework/datamodel/PixelPos;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "createRectBoundary", "(Ljava/awt/Rectangle;IZ)[Lorg/esa/beam/framework/datamodel/PixelPos;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultArray = (*jenv)->CallStaticObjectMethod(jenv, classProductUtils, _method, rect, step, usePixelCenter);
     _result = beam_alloc_object_array(_resultArray, resultArrayLength);
     return _result;
@@ -16711,14 +19518,17 @@ PixelPos* ProductUtils_createRectBoundary2(Rectangle rect, int step, boolean use
 void ProductUtils_copyFlagCodings(Product source, Product target)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "copyFlagCodings", "(Lorg/esa/beam/framework/datamodel/Product;Lorg/esa/beam/framework/datamodel/Product;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "copyFlagCodings", "(Lorg/esa/beam/framework/datamodel/Product;Lorg/esa/beam/framework/datamodel/Product;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallStaticVoidMethod(jenv, classProductUtils, _method, source, target);
 }
 
@@ -16726,14 +19536,17 @@ FlagCoding ProductUtils_copyFlagCoding(FlagCoding sourceFlagCoding, Product targ
 {
     static jmethodID _method = NULL;
     FlagCoding _result = (FlagCoding) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "copyFlagCoding", "(Lorg/esa/beam/framework/datamodel/FlagCoding;Lorg/esa/beam/framework/datamodel/Product;)Lorg/esa/beam/framework/datamodel/FlagCoding;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "copyFlagCoding", "(Lorg/esa/beam/framework/datamodel/FlagCoding;Lorg/esa/beam/framework/datamodel/Product;)Lorg/esa/beam/framework/datamodel/FlagCoding;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallStaticObjectMethod(jenv, classProductUtils, _method, sourceFlagCoding, target);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -16742,14 +19555,17 @@ IndexCoding ProductUtils_copyIndexCoding(IndexCoding sourceIndexCoding, Product 
 {
     static jmethodID _method = NULL;
     IndexCoding _result = (IndexCoding) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "copyIndexCoding", "(Lorg/esa/beam/framework/datamodel/IndexCoding;Lorg/esa/beam/framework/datamodel/Product;)Lorg/esa/beam/framework/datamodel/IndexCoding;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "copyIndexCoding", "(Lorg/esa/beam/framework/datamodel/IndexCoding;Lorg/esa/beam/framework/datamodel/Product;)Lorg/esa/beam/framework/datamodel/IndexCoding;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallStaticObjectMethod(jenv, classProductUtils, _method, sourceIndexCoding, target);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -16757,70 +19573,85 @@ IndexCoding ProductUtils_copyIndexCoding(IndexCoding sourceIndexCoding, Product 
 void ProductUtils_copyMasks(Product sourceProduct, Product targetProduct)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "copyMasks", "(Lorg/esa/beam/framework/datamodel/Product;Lorg/esa/beam/framework/datamodel/Product;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "copyMasks", "(Lorg/esa/beam/framework/datamodel/Product;Lorg/esa/beam/framework/datamodel/Product;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallStaticVoidMethod(jenv, classProductUtils, _method, sourceProduct, targetProduct);
 }
 
 void ProductUtils_copyOverlayMasks(Product sourceProduct, Product targetProduct)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "copyOverlayMasks", "(Lorg/esa/beam/framework/datamodel/Product;Lorg/esa/beam/framework/datamodel/Product;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "copyOverlayMasks", "(Lorg/esa/beam/framework/datamodel/Product;Lorg/esa/beam/framework/datamodel/Product;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallStaticVoidMethod(jenv, classProductUtils, _method, sourceProduct, targetProduct);
 }
 
 void ProductUtils_copyRoiMasks(Product sourceProduct, Product targetProduct)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "copyRoiMasks", "(Lorg/esa/beam/framework/datamodel/Product;Lorg/esa/beam/framework/datamodel/Product;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "copyRoiMasks", "(Lorg/esa/beam/framework/datamodel/Product;Lorg/esa/beam/framework/datamodel/Product;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallStaticVoidMethod(jenv, classProductUtils, _method, sourceProduct, targetProduct);
 }
 
 void ProductUtils_copyFlagBands2(Product sourceProduct, Product targetProduct, boolean copySourceImage)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "copyFlagBands", "(Lorg/esa/beam/framework/datamodel/Product;Lorg/esa/beam/framework/datamodel/Product;Z)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "copyFlagBands", "(Lorg/esa/beam/framework/datamodel/Product;Lorg/esa/beam/framework/datamodel/Product;Z)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallStaticVoidMethod(jenv, classProductUtils, _method, sourceProduct, targetProduct, copySourceImage);
 }
 
 void ProductUtils_copyFlagBands1(Product sourceProduct, Product targetProduct)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "copyFlagBands", "(Lorg/esa/beam/framework/datamodel/Product;Lorg/esa/beam/framework/datamodel/Product;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "copyFlagBands", "(Lorg/esa/beam/framework/datamodel/Product;Lorg/esa/beam/framework/datamodel/Product;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallStaticVoidMethod(jenv, classProductUtils, _method, sourceProduct, targetProduct);
 }
 
@@ -16829,14 +19660,17 @@ TiePointGrid ProductUtils_copyTiePointGrid(const char* gridName, Product sourceP
     static jmethodID _method = NULL;
     jstring gridNameString = NULL;
     TiePointGrid _result = (TiePointGrid) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "copyTiePointGrid", "(Ljava/lang/String;Lorg/esa/beam/framework/datamodel/Product;Lorg/esa/beam/framework/datamodel/Product;)Lorg/esa/beam/framework/datamodel/TiePointGrid;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "copyTiePointGrid", "(Ljava/lang/String;Lorg/esa/beam/framework/datamodel/Product;Lorg/esa/beam/framework/datamodel/Product;)Lorg/esa/beam/framework/datamodel/TiePointGrid;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     gridNameString = (*jenv)->NewStringUTF(jenv, gridName);
     _result = (*jenv)->CallStaticObjectMethod(jenv, classProductUtils, _method, gridNameString, sourceProduct, targetProduct);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
@@ -16847,14 +19681,17 @@ Band ProductUtils_copyBand4(const char* sourceBandName, Product sourceProduct, P
     static jmethodID _method = NULL;
     jstring sourceBandNameString = NULL;
     Band _result = (Band) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "copyBand", "(Ljava/lang/String;Lorg/esa/beam/framework/datamodel/Product;Lorg/esa/beam/framework/datamodel/Product;Z)Lorg/esa/beam/framework/datamodel/Band;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "copyBand", "(Ljava/lang/String;Lorg/esa/beam/framework/datamodel/Product;Lorg/esa/beam/framework/datamodel/Product;Z)Lorg/esa/beam/framework/datamodel/Band;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     sourceBandNameString = (*jenv)->NewStringUTF(jenv, sourceBandName);
     _result = (*jenv)->CallStaticObjectMethod(jenv, classProductUtils, _method, sourceBandNameString, sourceProduct, targetProduct, copySourceImage);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
@@ -16866,14 +19703,17 @@ Band ProductUtils_copyBand2(const char* sourceBandName, Product sourceProduct, c
     jstring sourceBandNameString = NULL;
     jstring targetBandNameString = NULL;
     Band _result = (Band) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "copyBand", "(Ljava/lang/String;Lorg/esa/beam/framework/datamodel/Product;Ljava/lang/String;Lorg/esa/beam/framework/datamodel/Product;Z)Lorg/esa/beam/framework/datamodel/Band;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "copyBand", "(Ljava/lang/String;Lorg/esa/beam/framework/datamodel/Product;Ljava/lang/String;Lorg/esa/beam/framework/datamodel/Product;Z)Lorg/esa/beam/framework/datamodel/Band;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     sourceBandNameString = (*jenv)->NewStringUTF(jenv, sourceBandName);
     targetBandNameString = (*jenv)->NewStringUTF(jenv, targetBandName);
     _result = (*jenv)->CallStaticObjectMethod(jenv, classProductUtils, _method, sourceBandNameString, sourceProduct, targetBandNameString, targetProduct, copySourceImage);
@@ -16883,14 +19723,17 @@ Band ProductUtils_copyBand2(const char* sourceBandName, Product sourceProduct, c
 void ProductUtils_copyRasterDataNodeProperties(RasterDataNode sourceRaster, RasterDataNode targetRaster)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "copyRasterDataNodeProperties", "(Lorg/esa/beam/framework/datamodel/RasterDataNode;Lorg/esa/beam/framework/datamodel/RasterDataNode;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "copyRasterDataNodeProperties", "(Lorg/esa/beam/framework/datamodel/RasterDataNode;Lorg/esa/beam/framework/datamodel/RasterDataNode;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallStaticVoidMethod(jenv, classProductUtils, _method, sourceRaster, targetRaster);
 }
 
@@ -16899,14 +19742,17 @@ Band ProductUtils_copyBand3(const char* sourceBandName, Product sourceProduct, P
     static jmethodID _method = NULL;
     jstring sourceBandNameString = NULL;
     Band _result = (Band) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "copyBand", "(Ljava/lang/String;Lorg/esa/beam/framework/datamodel/Product;Lorg/esa/beam/framework/datamodel/Product;)Lorg/esa/beam/framework/datamodel/Band;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "copyBand", "(Ljava/lang/String;Lorg/esa/beam/framework/datamodel/Product;Lorg/esa/beam/framework/datamodel/Product;)Lorg/esa/beam/framework/datamodel/Band;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     sourceBandNameString = (*jenv)->NewStringUTF(jenv, sourceBandName);
     _result = (*jenv)->CallStaticObjectMethod(jenv, classProductUtils, _method, sourceBandNameString, sourceProduct, targetProduct);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
@@ -16918,14 +19764,17 @@ Band ProductUtils_copyBand1(const char* sourceBandName, Product sourceProduct, c
     jstring sourceBandNameString = NULL;
     jstring targetBandNameString = NULL;
     Band _result = (Band) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "copyBand", "(Ljava/lang/String;Lorg/esa/beam/framework/datamodel/Product;Ljava/lang/String;Lorg/esa/beam/framework/datamodel/Product;)Lorg/esa/beam/framework/datamodel/Band;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "copyBand", "(Ljava/lang/String;Lorg/esa/beam/framework/datamodel/Product;Ljava/lang/String;Lorg/esa/beam/framework/datamodel/Product;)Lorg/esa/beam/framework/datamodel/Band;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     sourceBandNameString = (*jenv)->NewStringUTF(jenv, sourceBandName);
     targetBandNameString = (*jenv)->NewStringUTF(jenv, targetBandName);
     _result = (*jenv)->CallStaticObjectMethod(jenv, classProductUtils, _method, sourceBandNameString, sourceProduct, targetBandNameString, targetProduct);
@@ -16935,56 +19784,68 @@ Band ProductUtils_copyBand1(const char* sourceBandName, Product sourceProduct, c
 void ProductUtils_copySpectralBandProperties(Band sourceBand, Band targetBand)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "copySpectralBandProperties", "(Lorg/esa/beam/framework/datamodel/Band;Lorg/esa/beam/framework/datamodel/Band;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "copySpectralBandProperties", "(Lorg/esa/beam/framework/datamodel/Band;Lorg/esa/beam/framework/datamodel/Band;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallStaticVoidMethod(jenv, classProductUtils, _method, sourceBand, targetBand);
 }
 
 void ProductUtils_copyGeoCoding(Product sourceProduct, Product targetProduct)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "copyGeoCoding", "(Lorg/esa/beam/framework/datamodel/Product;Lorg/esa/beam/framework/datamodel/Product;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "copyGeoCoding", "(Lorg/esa/beam/framework/datamodel/Product;Lorg/esa/beam/framework/datamodel/Product;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallStaticVoidMethod(jenv, classProductUtils, _method, sourceProduct, targetProduct);
 }
 
 void ProductUtils_copyTiePointGrids(Product sourceProduct, Product targetProduct)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "copyTiePointGrids", "(Lorg/esa/beam/framework/datamodel/Product;Lorg/esa/beam/framework/datamodel/Product;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "copyTiePointGrids", "(Lorg/esa/beam/framework/datamodel/Product;Lorg/esa/beam/framework/datamodel/Product;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallStaticVoidMethod(jenv, classProductUtils, _method, sourceProduct, targetProduct);
 }
 
 void ProductUtils_copyVectorData(Product sourceProduct, Product targetProduct)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "copyVectorData", "(Lorg/esa/beam/framework/datamodel/Product;Lorg/esa/beam/framework/datamodel/Product;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "copyVectorData", "(Lorg/esa/beam/framework/datamodel/Product;Lorg/esa/beam/framework/datamodel/Product;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallStaticVoidMethod(jenv, classProductUtils, _method, sourceProduct, targetProduct);
 }
 
@@ -16992,14 +19853,17 @@ boolean ProductUtils_canGetPixelPos1(Product product)
 {
     static jmethodID _method = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "canGetPixelPos", "(Lorg/esa/beam/framework/datamodel/Product;)Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "canGetPixelPos", "(Lorg/esa/beam/framework/datamodel/Product;)Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallStaticBooleanMethod(jenv, classProductUtils, _method, product);
     return _result;
 }
@@ -17008,14 +19872,17 @@ boolean ProductUtils_canGetPixelPos2(RasterDataNode raster)
 {
     static jmethodID _method = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "canGetPixelPos", "(Lorg/esa/beam/framework/datamodel/RasterDataNode;)Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "canGetPixelPos", "(Lorg/esa/beam/framework/datamodel/RasterDataNode;)Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallStaticBooleanMethod(jenv, classProductUtils, _method, raster);
     return _result;
 }
@@ -17024,14 +19891,17 @@ BufferedImage ProductUtils_createDensityPlotImage(RasterDataNode raster1, float 
 {
     static jmethodID _method = NULL;
     BufferedImage _result = (BufferedImage) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "createDensityPlotImage", "(Lorg/esa/beam/framework/datamodel/RasterDataNode;FFLorg/esa/beam/framework/datamodel/RasterDataNode;FFLorg/esa/beam/framework/datamodel/Mask;IILjava/awt/Color;Ljava/awt/image/BufferedImage;Lcom/bc/ceres/core/ProgressMonitor;)Ljava/awt/image/BufferedImage;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "createDensityPlotImage", "(Lorg/esa/beam/framework/datamodel/RasterDataNode;FFLorg/esa/beam/framework/datamodel/RasterDataNode;FFLorg/esa/beam/framework/datamodel/Mask;IILjava/awt/Color;Ljava/awt/image/BufferedImage;Lcom/bc/ceres/core/ProgressMonitor;)Ljava/awt/image/BufferedImage;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallStaticObjectMethod(jenv, classProductUtils, _method, raster1, sampleMin1, sampleMax1, raster2, sampleMin2, sampleMax2, roiMask, width, height, background, image, pm);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -17040,14 +19910,17 @@ BufferedImage ProductUtils_overlayMasks(RasterDataNode raster, BufferedImage ove
 {
     static jmethodID _method = NULL;
     BufferedImage _result = (BufferedImage) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "overlayMasks", "(Lorg/esa/beam/framework/datamodel/RasterDataNode;Ljava/awt/image/BufferedImage;Lcom/bc/ceres/core/ProgressMonitor;)Ljava/awt/image/BufferedImage;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "overlayMasks", "(Lorg/esa/beam/framework/datamodel/RasterDataNode;Ljava/awt/image/BufferedImage;Lcom/bc/ceres/core/ProgressMonitor;)Ljava/awt/image/BufferedImage;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallStaticObjectMethod(jenv, classProductUtils, _method, raster, overlayBIm, pm);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -17056,14 +19929,17 @@ GeoPos ProductUtils_getCenterGeoPos(Product product)
 {
     static jmethodID _method = NULL;
     GeoPos _result = (GeoPos) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "getCenterGeoPos", "(Lorg/esa/beam/framework/datamodel/Product;)Lorg/esa/beam/framework/datamodel/GeoPos;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "getCenterGeoPos", "(Lorg/esa/beam/framework/datamodel/Product;)Lorg/esa/beam/framework/datamodel/GeoPos;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallStaticObjectMethod(jenv, classProductUtils, _method, product);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -17073,14 +19949,17 @@ int ProductUtils_normalizeGeoPolygon(const GeoPos polygonElems, int polygonLengt
     static jmethodID _method = NULL;
     jarray polygonArray = NULL;
     int _result = (int) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "normalizeGeoPolygon", "([Lorg/esa/beam/framework/datamodel/GeoPos;)I");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "normalizeGeoPolygon", "([Lorg/esa/beam/framework/datamodel/GeoPos;)I");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     polygonArray = beam_new_jobject_array(polygonElems, polygonLength, classGeoPos);
     _result = (*jenv)->CallStaticIntMethod(jenv, classProductUtils, _method, polygonArray);
     return _result;
@@ -17091,14 +19970,17 @@ int ProductUtils_normalizeGeoPolygon_old(const GeoPos polygonElems, int polygonL
     static jmethodID _method = NULL;
     jarray polygonArray = NULL;
     int _result = (int) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "normalizeGeoPolygon_old", "([Lorg/esa/beam/framework/datamodel/GeoPos;)I");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "normalizeGeoPolygon_old", "([Lorg/esa/beam/framework/datamodel/GeoPos;)I");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     polygonArray = beam_new_jobject_array(polygonElems, polygonLength, classGeoPos);
     _result = (*jenv)->CallStaticIntMethod(jenv, classProductUtils, _method, polygonArray);
     return _result;
@@ -17108,14 +19990,17 @@ void ProductUtils_denormalizeGeoPolygon(const GeoPos polygonElems, int polygonLe
 {
     static jmethodID _method = NULL;
     jarray polygonArray = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "denormalizeGeoPolygon", "([Lorg/esa/beam/framework/datamodel/GeoPos;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "denormalizeGeoPolygon", "([Lorg/esa/beam/framework/datamodel/GeoPos;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     polygonArray = beam_new_jobject_array(polygonElems, polygonLength, classGeoPos);
     (*jenv)->CallStaticVoidMethod(jenv, classProductUtils, _method, polygonArray);
 }
@@ -17123,28 +20008,34 @@ void ProductUtils_denormalizeGeoPolygon(const GeoPos polygonElems, int polygonLe
 void ProductUtils_denormalizeGeoPos(GeoPos geoPos)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "denormalizeGeoPos", "(Lorg/esa/beam/framework/datamodel/GeoPos;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "denormalizeGeoPos", "(Lorg/esa/beam/framework/datamodel/GeoPos;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallStaticVoidMethod(jenv, classProductUtils, _method, geoPos);
 }
 
 void ProductUtils_denormalizeGeoPos_old(GeoPos geoPos)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "denormalizeGeoPos_old", "(Lorg/esa/beam/framework/datamodel/GeoPos;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "denormalizeGeoPos_old", "(Lorg/esa/beam/framework/datamodel/GeoPos;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallStaticVoidMethod(jenv, classProductUtils, _method, geoPos);
 }
 
@@ -17153,14 +20044,17 @@ int ProductUtils_getRotationDirection(const GeoPos polygonElems, int polygonLeng
     static jmethodID _method = NULL;
     jarray polygonArray = NULL;
     int _result = (int) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "getRotationDirection", "([Lorg/esa/beam/framework/datamodel/GeoPos;)I");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "getRotationDirection", "([Lorg/esa/beam/framework/datamodel/GeoPos;)I");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     polygonArray = beam_new_jobject_array(polygonElems, polygonLength, classGeoPos);
     _result = (*jenv)->CallStaticIntMethod(jenv, classProductUtils, _method, polygonArray);
     return _result;
@@ -17171,14 +20065,17 @@ double ProductUtils_getAngleSum(const GeoPos polygonElems, int polygonLength)
     static jmethodID _method = NULL;
     jarray polygonArray = NULL;
     double _result = (double) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "getAngleSum", "([Lorg/esa/beam/framework/datamodel/GeoPos;)D");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "getAngleSum", "([Lorg/esa/beam/framework/datamodel/GeoPos;)D");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     polygonArray = beam_new_jobject_array(polygonElems, polygonLength, classGeoPos);
     _result = (*jenv)->CallStaticDoubleMethod(jenv, classProductUtils, _method, polygonArray);
     return _result;
@@ -17188,14 +20085,17 @@ GeneralPath ProductUtils_convertToPixelPath(GeneralPath geoPath, GeoCoding geoCo
 {
     static jmethodID _method = NULL;
     GeneralPath _result = (GeneralPath) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "convertToPixelPath", "(Ljava/awt/geom/GeneralPath;Lorg/esa/beam/framework/datamodel/GeoCoding;)Ljava/awt/geom/GeneralPath;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "convertToPixelPath", "(Ljava/awt/geom/GeneralPath;Lorg/esa/beam/framework/datamodel/GeoCoding;)Ljava/awt/geom/GeneralPath;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallStaticObjectMethod(jenv, classProductUtils, _method, geoPath, geoCoding);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -17204,14 +20104,17 @@ GeneralPath ProductUtils_convertToGeoPath(Shape shape, GeoCoding geoCoding)
 {
     static jmethodID _method = NULL;
     GeneralPath _result = (GeneralPath) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "convertToGeoPath", "(Ljava/awt/Shape;Lorg/esa/beam/framework/datamodel/GeoCoding;)Ljava/awt/geom/GeneralPath;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "convertToGeoPath", "(Ljava/awt/Shape;Lorg/esa/beam/framework/datamodel/GeoCoding;)Ljava/awt/geom/GeneralPath;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallStaticObjectMethod(jenv, classProductUtils, _method, shape, geoCoding);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -17219,42 +20122,51 @@ GeneralPath ProductUtils_convertToGeoPath(Shape shape, GeoCoding geoCoding)
 void ProductUtils_copyMetadata2(Product source, Product target)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "copyMetadata", "(Lorg/esa/beam/framework/datamodel/Product;Lorg/esa/beam/framework/datamodel/Product;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "copyMetadata", "(Lorg/esa/beam/framework/datamodel/Product;Lorg/esa/beam/framework/datamodel/Product;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallStaticVoidMethod(jenv, classProductUtils, _method, source, target);
 }
 
 void ProductUtils_copyMetadata1(MetadataElement source, MetadataElement target)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "copyMetadata", "(Lorg/esa/beam/framework/datamodel/MetadataElement;Lorg/esa/beam/framework/datamodel/MetadataElement;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "copyMetadata", "(Lorg/esa/beam/framework/datamodel/MetadataElement;Lorg/esa/beam/framework/datamodel/MetadataElement;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallStaticVoidMethod(jenv, classProductUtils, _method, source, target);
 }
 
 void ProductUtils_copyPreferredTileSize(Product sourceProduct, Product targetProduct)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "copyPreferredTileSize", "(Lorg/esa/beam/framework/datamodel/Product;Lorg/esa/beam/framework/datamodel/Product;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "copyPreferredTileSize", "(Lorg/esa/beam/framework/datamodel/Product;Lorg/esa/beam/framework/datamodel/Product;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallStaticVoidMethod(jenv, classProductUtils, _method, sourceProduct, targetProduct);
 }
 
@@ -17262,14 +20174,17 @@ GeoTIFFMetadata ProductUtils_createGeoTIFFMetadata2(Product product)
 {
     static jmethodID _method = NULL;
     GeoTIFFMetadata _result = (GeoTIFFMetadata) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "createGeoTIFFMetadata", "(Lorg/esa/beam/framework/datamodel/Product;)Lorg/esa/beam/util/geotiff/GeoTIFFMetadata;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "createGeoTIFFMetadata", "(Lorg/esa/beam/framework/datamodel/Product;)Lorg/esa/beam/util/geotiff/GeoTIFFMetadata;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallStaticObjectMethod(jenv, classProductUtils, _method, product);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -17278,14 +20193,17 @@ GeoTIFFMetadata ProductUtils_createGeoTIFFMetadata1(GeoCoding geoCoding, int wid
 {
     static jmethodID _method = NULL;
     GeoTIFFMetadata _result = (GeoTIFFMetadata) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "createGeoTIFFMetadata", "(Lorg/esa/beam/framework/datamodel/GeoCoding;II)Lorg/esa/beam/util/geotiff/GeoTIFFMetadata;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "createGeoTIFFMetadata", "(Lorg/esa/beam/framework/datamodel/GeoCoding;II)Lorg/esa/beam/util/geotiff/GeoTIFFMetadata;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallStaticObjectMethod(jenv, classProductUtils, _method, geoCoding, width, height);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -17294,14 +20212,17 @@ GeneralPath ProductUtils_areaToPath(Area negativeArea, double deltaX)
 {
     static jmethodID _method = NULL;
     GeneralPath _result = (GeneralPath) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "areaToPath", "(Ljava/awt/geom/Area;D)Ljava/awt/geom/GeneralPath;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "areaToPath", "(Ljava/awt/geom/Area;D)Ljava/awt/geom/GeneralPath;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallStaticObjectMethod(jenv, classProductUtils, _method, negativeArea, deltaX);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -17309,14 +20230,17 @@ GeneralPath ProductUtils_areaToPath(Area negativeArea, double deltaX)
 void ProductUtils_addElementToHistory(Product product, MetadataElement elem)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "addElementToHistory", "(Lorg/esa/beam/framework/datamodel/Product;Lorg/esa/beam/framework/datamodel/MetadataElement;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "addElementToHistory", "(Lorg/esa/beam/framework/datamodel/Product;Lorg/esa/beam/framework/datamodel/MetadataElement;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallStaticVoidMethod(jenv, classProductUtils, _method, product, elem);
 }
 
@@ -17325,14 +20249,17 @@ char** ProductUtils_removeInvalidExpressions(Product product, int* resultArrayLe
     static jmethodID _method = NULL;
     char** _result = (char**) 0;
     jarray _resultArray = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "removeInvalidExpressions", "(Lorg/esa/beam/framework/datamodel/Product;)[Ljava/lang/String;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "removeInvalidExpressions", "(Lorg/esa/beam/framework/datamodel/Product;)[Ljava/lang/String;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultArray = (*jenv)->CallStaticObjectMethod(jenv, classProductUtils, _method, product);
     _result = beam_alloc_string_array(_resultArray, resultArrayLength);
     return _result;
@@ -17343,14 +20270,17 @@ char* ProductUtils_findSuitableQuicklookBandName(Product product)
     static jmethodID _method = NULL;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "findSuitableQuicklookBandName", "(Lorg/esa/beam/framework/datamodel/Product;)Ljava/lang/String;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "findSuitableQuicklookBandName", "(Lorg/esa/beam/framework/datamodel/Product;)Ljava/lang/String;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultString = (*jenv)->CallStaticObjectMethod(jenv, classProductUtils, _method, product);
     _result = beam_alloc_string(_resultString);
     return _result;
@@ -17361,14 +20291,17 @@ PixelPos* ProductUtils_computeSourcePixelCoordinates(GeoCoding sourceGeoCoding, 
     static jmethodID _method = NULL;
     PixelPos* _result = (PixelPos*) 0;
     jarray _resultArray = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "computeSourcePixelCoordinates", "(Lorg/esa/beam/framework/datamodel/GeoCoding;IILorg/esa/beam/framework/datamodel/GeoCoding;Ljava/awt/Rectangle;)[Lorg/esa/beam/framework/datamodel/PixelPos;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "computeSourcePixelCoordinates", "(Lorg/esa/beam/framework/datamodel/GeoCoding;IILorg/esa/beam/framework/datamodel/GeoCoding;Ljava/awt/Rectangle;)[Lorg/esa/beam/framework/datamodel/PixelPos;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultArray = (*jenv)->CallStaticObjectMethod(jenv, classProductUtils, _method, sourceGeoCoding, sourceWidth, sourceHeight, destGeoCoding, destArea);
     _result = beam_alloc_object_array(_resultArray, resultArrayLength);
     return _result;
@@ -17380,14 +20313,17 @@ float* ProductUtils_computeMinMaxY(const PixelPos pixelPositionsElems, int pixel
     jarray pixelPositionsArray = NULL;
     float* _result = (float*) 0;
     jarray _resultArray = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "computeMinMaxY", "([Lorg/esa/beam/framework/datamodel/PixelPos;)[F");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "computeMinMaxY", "([Lorg/esa/beam/framework/datamodel/PixelPos;)[F");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     pixelPositionsArray = beam_new_jobject_array(pixelPositionsElems, pixelPositionsLength, classPixelPos);
     _resultArray = (*jenv)->CallStaticObjectMethod(jenv, classProductUtils, _method, pixelPositionsArray);
     _result = beam_alloc_float_array(_resultArray, resultArrayLength);
@@ -17397,28 +20333,34 @@ float* ProductUtils_computeMinMaxY(const PixelPos pixelPositionsElems, int pixel
 void ProductUtils_copyBandsForGeomTransform1(Product sourceProduct, Product targetProduct, double defaultNoDataValue, Map addedRasterDataNodes)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "copyBandsForGeomTransform", "(Lorg/esa/beam/framework/datamodel/Product;Lorg/esa/beam/framework/datamodel/Product;DLjava/util/Map;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "copyBandsForGeomTransform", "(Lorg/esa/beam/framework/datamodel/Product;Lorg/esa/beam/framework/datamodel/Product;DLjava/util/Map;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallStaticVoidMethod(jenv, classProductUtils, _method, sourceProduct, targetProduct, defaultNoDataValue, addedRasterDataNodes);
 }
 
 void ProductUtils_copyBandsForGeomTransform2(Product sourceProduct, Product targetProduct, boolean includeTiePointGrids, double defaultNoDataValue, Map targetToSourceMap)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "copyBandsForGeomTransform", "(Lorg/esa/beam/framework/datamodel/Product;Lorg/esa/beam/framework/datamodel/Product;ZDLjava/util/Map;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "copyBandsForGeomTransform", "(Lorg/esa/beam/framework/datamodel/Product;Lorg/esa/beam/framework/datamodel/Product;ZDLjava/util/Map;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallStaticVoidMethod(jenv, classProductUtils, _method, sourceProduct, targetProduct, includeTiePointGrids, defaultNoDataValue, targetToSourceMap);
 }
 
@@ -17426,14 +20368,17 @@ ProductData_UTC ProductUtils_getScanLineTime(Product product, double y)
 {
     static jmethodID _method = NULL;
     ProductData_UTC _result = (ProductData_UTC) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "getScanLineTime", "(Lorg/esa/beam/framework/datamodel/Product;D)Lorg/esa/beam/framework/datamodel/ProductData/UTC;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "getScanLineTime", "(Lorg/esa/beam/framework/datamodel/Product;D)Lorg/esa/beam/framework/datamodel/ProductData/UTC;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallStaticObjectMethod(jenv, classProductUtils, _method, product, y);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -17442,14 +20387,17 @@ double ProductUtils_getGeophysicalSampleDouble(Band band, int pixelX, int pixelY
 {
     static jmethodID _method = NULL;
     double _result = (double) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "getGeophysicalSampleDouble", "(Lorg/esa/beam/framework/datamodel/Band;III)D");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "getGeophysicalSampleDouble", "(Lorg/esa/beam/framework/datamodel/Band;III)D");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallStaticDoubleMethod(jenv, classProductUtils, _method, band, pixelX, pixelY, level);
     return _result;
 }
@@ -17458,14 +20406,17 @@ dlong ProductUtils_getGeophysicalSampleLong(Band band, int pixelX, int pixelY, i
 {
     static jmethodID _method = NULL;
     dlong _result = (dlong) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "getGeophysicalSampleLong", "(Lorg/esa/beam/framework/datamodel/Band;III)J");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "getGeophysicalSampleLong", "(Lorg/esa/beam/framework/datamodel/Band;III)J");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallStaticLongMethod(jenv, classProductUtils, _method, band, pixelX, pixelY, level);
     return _result;
 }
@@ -17475,14 +20426,17 @@ MetadataAttribute MetadataAttribute_newMetadataAttribute(const char* name, Produ
     static jmethodID _method = NULL;
     jstring nameString = NULL;
     MetadataAttribute _result = (MetadataAttribute) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classMetadataAttribute, "<init>", "(Ljava/lang/String;Lorg/esa/beam/framework/datamodel/ProductData;Z)V");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classMetadataAttribute, "<init>", "(Ljava/lang/String;Lorg/esa/beam/framework/datamodel/ProductData;Z)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     nameString = (*jenv)->NewStringUTF(jenv, name);
     _result = (*jenv)->NewObject(jenv, classMetadataAttribute, _method, nameString, data, readOnly);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
@@ -17492,14 +20446,17 @@ MetadataElement MetadataAttribute_getParentElement(MetadataAttribute _this)
 {
     static jmethodID _method = NULL;
     MetadataElement _result = (MetadataElement) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classMetadataAttribute, "getParentElement", "()Lorg/esa/beam/framework/datamodel/MetadataElement;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classMetadataAttribute, "getParentElement", "()Lorg/esa/beam/framework/datamodel/MetadataElement;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -17508,14 +20465,17 @@ boolean MetadataAttribute_equals(MetadataAttribute _this, Object object)
 {
     static jmethodID _method = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classMetadataAttribute, "equals", "(Ljava/lang/Object;)Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classMetadataAttribute, "equals", "(Ljava/lang/Object;)Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method, object);
     return _result;
 }
@@ -17523,14 +20483,17 @@ boolean MetadataAttribute_equals(MetadataAttribute _this, Object object)
 void MetadataAttribute_acceptVisitor(MetadataAttribute _this, ProductVisitor visitor)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classMetadataAttribute, "acceptVisitor", "(Lorg/esa/beam/framework/datamodel/ProductVisitor;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classMetadataAttribute, "acceptVisitor", "(Lorg/esa/beam/framework/datamodel/ProductVisitor;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, visitor);
 }
 
@@ -17538,14 +20501,17 @@ MetadataAttribute MetadataAttribute_createDeepClone(MetadataAttribute _this)
 {
     static jmethodID _method = NULL;
     MetadataAttribute _result = (MetadataAttribute) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classMetadataAttribute, "createDeepClone", "()Lorg/esa/beam/framework/datamodel/MetadataAttribute;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classMetadataAttribute, "createDeepClone", "()Lorg/esa/beam/framework/datamodel/MetadataAttribute;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -17554,14 +20520,17 @@ int MetadataAttribute_getDataType(MetadataAttribute _this)
 {
     static jmethodID _method = NULL;
     int _result = (int) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classMetadataAttribute, "getDataType", "()I");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classMetadataAttribute, "getDataType", "()I");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallIntMethod(jenv, _this, _method);
     return _result;
 }
@@ -17570,14 +20539,17 @@ boolean MetadataAttribute_isFloatingPointType(MetadataAttribute _this)
 {
     static jmethodID _method = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classMetadataAttribute, "isFloatingPointType", "()Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classMetadataAttribute, "isFloatingPointType", "()Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method);
     return _result;
 }
@@ -17586,14 +20558,17 @@ dlong MetadataAttribute_getNumDataElems(MetadataAttribute _this)
 {
     static jmethodID _method = NULL;
     dlong _result = (dlong) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classMetadataAttribute, "getNumDataElems", "()J");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classMetadataAttribute, "getNumDataElems", "()J");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallLongMethod(jenv, _this, _method);
     return _result;
 }
@@ -17601,14 +20576,17 @@ dlong MetadataAttribute_getNumDataElems(MetadataAttribute _this)
 void MetadataAttribute_setData(MetadataAttribute _this, ProductData data)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classMetadataAttribute, "setData", "(Lorg/esa/beam/framework/datamodel/ProductData;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classMetadataAttribute, "setData", "(Lorg/esa/beam/framework/datamodel/ProductData;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, data);
 }
 
@@ -17616,14 +20594,17 @@ ProductData MetadataAttribute_getData(MetadataAttribute _this)
 {
     static jmethodID _method = NULL;
     ProductData _result = (ProductData) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classMetadataAttribute, "getData", "()Lorg/esa/beam/framework/datamodel/ProductData;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classMetadataAttribute, "getData", "()Lorg/esa/beam/framework/datamodel/ProductData;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -17631,14 +20612,17 @@ ProductData MetadataAttribute_getData(MetadataAttribute _this)
 void MetadataAttribute_setDataElems(MetadataAttribute _this, Object elems)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classMetadataAttribute, "setDataElems", "(Ljava/lang/Object;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classMetadataAttribute, "setDataElems", "(Ljava/lang/Object;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, elems);
 }
 
@@ -17646,14 +20630,17 @@ Object MetadataAttribute_getDataElems(MetadataAttribute _this)
 {
     static jmethodID _method = NULL;
     Object _result = (Object) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classMetadataAttribute, "getDataElems", "()Ljava/lang/Object;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classMetadataAttribute, "getDataElems", "()Ljava/lang/Object;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -17662,14 +20649,17 @@ int MetadataAttribute_getDataElemSize(MetadataAttribute _this)
 {
     static jmethodID _method = NULL;
     int _result = (int) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classMetadataAttribute, "getDataElemSize", "()I");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classMetadataAttribute, "getDataElemSize", "()I");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallIntMethod(jenv, _this, _method);
     return _result;
 }
@@ -17677,14 +20667,17 @@ int MetadataAttribute_getDataElemSize(MetadataAttribute _this)
 void MetadataAttribute_setReadOnly(MetadataAttribute _this, boolean readOnly)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classMetadataAttribute, "setReadOnly", "(Z)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classMetadataAttribute, "setReadOnly", "(Z)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, readOnly);
 }
 
@@ -17692,14 +20685,17 @@ boolean MetadataAttribute_isReadOnly(MetadataAttribute _this)
 {
     static jmethodID _method = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classMetadataAttribute, "isReadOnly", "()Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classMetadataAttribute, "isReadOnly", "()Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method);
     return _result;
 }
@@ -17708,14 +20704,17 @@ void MetadataAttribute_setUnit(MetadataAttribute _this, const char* unit)
 {
     static jmethodID _method = NULL;
     jstring unitString = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classMetadataAttribute, "setUnit", "(Ljava/lang/String;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classMetadataAttribute, "setUnit", "(Ljava/lang/String;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     unitString = (*jenv)->NewStringUTF(jenv, unit);
     (*jenv)->CallVoidMethod(jenv, _this, _method, unitString);
 }
@@ -17725,14 +20724,17 @@ char* MetadataAttribute_getUnit(MetadataAttribute _this)
     static jmethodID _method = NULL;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classMetadataAttribute, "getUnit", "()Ljava/lang/String;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classMetadataAttribute, "getUnit", "()Ljava/lang/String;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
     return _result;
@@ -17742,14 +20744,17 @@ boolean MetadataAttribute_isSynthetic(MetadataAttribute _this)
 {
     static jmethodID _method = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classMetadataAttribute, "isSynthetic", "()Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classMetadataAttribute, "isSynthetic", "()Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method);
     return _result;
 }
@@ -17757,42 +20762,51 @@ boolean MetadataAttribute_isSynthetic(MetadataAttribute _this)
 void MetadataAttribute_setSynthetic(MetadataAttribute _this, boolean synthetic)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classMetadataAttribute, "setSynthetic", "(Z)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classMetadataAttribute, "setSynthetic", "(Z)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, synthetic);
 }
 
 void MetadataAttribute_fireProductNodeDataChanged(MetadataAttribute _this)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classMetadataAttribute, "fireProductNodeDataChanged", "()V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classMetadataAttribute, "fireProductNodeDataChanged", "()V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method);
 }
 
 void MetadataAttribute_dispose(MetadataAttribute _this)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classMetadataAttribute, "dispose", "()V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classMetadataAttribute, "dispose", "()V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method);
 }
 
@@ -17800,14 +20814,17 @@ ProductData MetadataAttribute_createCompatibleProductData(MetadataAttribute _thi
 {
     static jmethodID _method = NULL;
     ProductData _result = (ProductData) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classMetadataAttribute, "createCompatibleProductData", "(I)Lorg/esa/beam/framework/datamodel/ProductData;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classMetadataAttribute, "createCompatibleProductData", "(I)Lorg/esa/beam/framework/datamodel/ProductData;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, numElems);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -17816,14 +20833,17 @@ ProductNode MetadataAttribute_getOwner(MetadataAttribute _this)
 {
     static jmethodID _method = NULL;
     ProductNode _result = (ProductNode) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classMetadataAttribute, "getOwner", "()Lorg/esa/beam/framework/datamodel/ProductNode;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classMetadataAttribute, "getOwner", "()Lorg/esa/beam/framework/datamodel/ProductNode;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -17833,14 +20853,17 @@ char* MetadataAttribute_getName(MetadataAttribute _this)
     static jmethodID _method = NULL;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classMetadataAttribute, "getName", "()Ljava/lang/String;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classMetadataAttribute, "getName", "()Ljava/lang/String;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
     return _result;
@@ -17850,14 +20873,17 @@ void MetadataAttribute_setName(MetadataAttribute _this, const char* name)
 {
     static jmethodID _method = NULL;
     jstring nameString = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classMetadataAttribute, "setName", "(Ljava/lang/String;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classMetadataAttribute, "setName", "(Ljava/lang/String;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     nameString = (*jenv)->NewStringUTF(jenv, name);
     (*jenv)->CallVoidMethod(jenv, _this, _method, nameString);
 }
@@ -17867,14 +20893,17 @@ char* MetadataAttribute_getDescription(MetadataAttribute _this)
     static jmethodID _method = NULL;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classMetadataAttribute, "getDescription", "()Ljava/lang/String;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classMetadataAttribute, "getDescription", "()Ljava/lang/String;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
     return _result;
@@ -17884,14 +20913,17 @@ void MetadataAttribute_setDescription(MetadataAttribute _this, const char* descr
 {
     static jmethodID _method = NULL;
     jstring descriptionString = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classMetadataAttribute, "setDescription", "(Ljava/lang/String;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classMetadataAttribute, "setDescription", "(Ljava/lang/String;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     descriptionString = (*jenv)->NewStringUTF(jenv, description);
     (*jenv)->CallVoidMethod(jenv, _this, _method, descriptionString);
 }
@@ -17900,14 +20932,17 @@ boolean MetadataAttribute_isModified(MetadataAttribute _this)
 {
     static jmethodID _method = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classMetadataAttribute, "isModified", "()Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classMetadataAttribute, "isModified", "()Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method);
     return _result;
 }
@@ -17915,14 +20950,17 @@ boolean MetadataAttribute_isModified(MetadataAttribute _this)
 void MetadataAttribute_setModified(MetadataAttribute _this, boolean modified)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classMetadataAttribute, "setModified", "(Z)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classMetadataAttribute, "setModified", "(Z)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, modified);
 }
 
@@ -17931,14 +20969,17 @@ char* MetadataAttribute_toString(MetadataAttribute _this)
     static jmethodID _method = NULL;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classMetadataAttribute, "toString", "()Ljava/lang/String;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classMetadataAttribute, "toString", "()Ljava/lang/String;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
     return _result;
@@ -17949,14 +20990,17 @@ boolean MetadataAttribute_isValidNodeName(const char* name)
     static jmethodID _method = NULL;
     jstring nameString = NULL;
     boolean _result = (boolean) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetStaticMethodID(jenv, classMetadataAttribute, "isValidNodeName", "(Ljava/lang/String;)Z");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classMetadataAttribute, "isValidNodeName", "(Ljava/lang/String;)Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     nameString = (*jenv)->NewStringUTF(jenv, name);
     _result = (*jenv)->CallStaticBooleanMethod(jenv, classMetadataAttribute, _method, nameString);
     return _result;
@@ -17966,14 +21010,17 @@ Product MetadataAttribute_getProduct(MetadataAttribute _this)
 {
     static jmethodID _method = NULL;
     Product _result = (Product) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classMetadataAttribute, "getProduct", "()Lorg/esa/beam/framework/datamodel/Product;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classMetadataAttribute, "getProduct", "()Lorg/esa/beam/framework/datamodel/Product;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -17982,14 +21029,17 @@ ProductReader MetadataAttribute_getProductReader(MetadataAttribute _this)
 {
     static jmethodID _method = NULL;
     ProductReader _result = (ProductReader) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classMetadataAttribute, "getProductReader", "()Lorg/esa/beam/framework/dataio/ProductReader;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classMetadataAttribute, "getProductReader", "()Lorg/esa/beam/framework/dataio/ProductReader;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -17998,14 +21048,17 @@ ProductWriter MetadataAttribute_getProductWriter(MetadataAttribute _this)
 {
     static jmethodID _method = NULL;
     ProductWriter _result = (ProductWriter) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classMetadataAttribute, "getProductWriter", "()Lorg/esa/beam/framework/dataio/ProductWriter;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classMetadataAttribute, "getProductWriter", "()Lorg/esa/beam/framework/dataio/ProductWriter;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -18015,14 +21068,17 @@ char* MetadataAttribute_getDisplayName(MetadataAttribute _this)
     static jmethodID _method = NULL;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classMetadataAttribute, "getDisplayName", "()Ljava/lang/String;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classMetadataAttribute, "getDisplayName", "()Ljava/lang/String;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
     return _result;
@@ -18033,14 +21089,17 @@ char* MetadataAttribute_getProductRefString(MetadataAttribute _this)
     static jmethodID _method = NULL;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classMetadataAttribute, "getProductRefString", "()Ljava/lang/String;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classMetadataAttribute, "getProductRefString", "()Ljava/lang/String;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
     _result = beam_alloc_string(_resultString);
     return _result;
@@ -18051,14 +21110,17 @@ void MetadataAttribute_updateExpression(MetadataAttribute _this, const char* old
     static jmethodID _method = NULL;
     jstring oldExternalNameString = NULL;
     jstring newExternalNameString = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classMetadataAttribute, "updateExpression", "(Ljava/lang/String;Ljava/lang/String;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classMetadataAttribute, "updateExpression", "(Ljava/lang/String;Ljava/lang/String;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     oldExternalNameString = (*jenv)->NewStringUTF(jenv, oldExternalName);
     newExternalNameString = (*jenv)->NewStringUTF(jenv, newExternalName);
     (*jenv)->CallVoidMethod(jenv, _this, _method, oldExternalNameString, newExternalNameString);
@@ -18067,14 +21129,17 @@ void MetadataAttribute_updateExpression(MetadataAttribute _this, const char* old
 void MetadataAttribute_removeFromFile(MetadataAttribute _this, ProductWriter productWriter)
 {
     static jmethodID _method = NULL;
-
-    if (beam_init_api() != 0) return;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classMetadataAttribute, "removeFromFile", "(Lorg/esa/beam/framework/dataio/ProductWriter;)V");
-        if (_method == NULL) return;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classMetadataAttribute, "removeFromFile", "(Lorg/esa/beam/framework/dataio/ProductWriter;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
     }
-
     (*jenv)->CallVoidMethod(jenv, _this, _method, productWriter);
 }
 
@@ -18082,14 +21147,17 @@ Object MetadataAttribute_getExtension(MetadataAttribute _this, Class arg0)
 {
     static jmethodID _method = NULL;
     Object _result = (Object) 0;
-
-    if (beam_init_api() != 0) return _result;
-
     if (_method == NULL) {
-        _method = (*jenv)->GetMethodID(jenv, classMetadataAttribute, "getExtension", "(Ljava/lang/Class;)Ljava/lang/Object;");
-        if (_method == NULL) return _result;
+        if (beam_init_api() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classMetadataAttribute, "getExtension", "(Ljava/lang/Class;)Ljava/lang/Object;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
     }
-
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, arg0);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
