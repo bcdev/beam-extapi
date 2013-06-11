@@ -5,7 +5,7 @@
  *   ctype =          ${ctype}
  *   elemToItemCall = ${elemToItemCall}
  */
-PyObject* beam_new_pyseq_from_${typeName}_array(const ${ctype}* elems, int length)
+PyObject* beampy_newPySeqFromC${typeName}Array(const ${ctype}* elems, int length)
 {
     PyObject* list;
     PyObject* item;
@@ -36,7 +36,7 @@ PyObject* beam_new_pyseq_from_${typeName}_array(const ${ctype}* elems, int lengt
  *   ctype =          ${ctype}
  *   elemToItemCall = ${elemToItemCall}
  */
-${ctype}* beam_new_${typeName}_array_from_pyseq(PyObject* seq, int* length)
+${ctype}* beampy_newC${typeName}ArrayFromPySeq(PyObject* seq, int* length)
 {
     Py_ssize_t size;
     ${ctype}* elems;

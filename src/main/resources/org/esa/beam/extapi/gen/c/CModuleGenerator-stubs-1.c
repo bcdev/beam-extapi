@@ -2,22 +2,22 @@
 static JavaVM* jvm = NULL;
 static JNIEnv* jenv = NULL;
 
-jobjectArray beam_new_jstring_array(const char** array_elems, int array_length);
-jobjectArray beam_new_jobject_array(const jobject* obj_array_data, int obj_array_length, jclass comp_class);
+jobjectArray beam_newJStringArray(const char** array_elems, int array_length);
+jobjectArray beam_newJObjectArray(const jobject* obj_array_data, int obj_array_length, jclass comp_class);
 
-void beam_copy_from_jarray(jarray array, void* elems, int array_length, int elem_size);
-void beam_copy_to_jarray(jarray array, const void* elems, int array_length, int elem_size);
+void beam_copyFromJArray(jarray array, void* elems, int array_length, int elem_size);
+void beam_copyToJArray(jarray array, const void* elems, int array_length, int elem_size);
 
-char* beam_alloc_string(jstring str);
-char** beam_alloc_string_array(jarray array, int* array_length);
-void** beam_alloc_object_array(jarray array, int* array_length);
-void* beam_alloc_primitive_array(jarray array, int* array_length, int elem_size);
-boolean* beam_alloc_boolean_array(jarray array, int* array_length);
-char* beam_alloc_char_array(jarray array, int* array_length);
-byte* beam_alloc_byte_array(jarray array, int* array_length);
-short* beam_alloc_short_array(jarray array, int* array_length);
-int* beam_alloc_int_array(jarray array, int* array_length);
-dlong* beam_alloc_long_array(jarray array, int* array_length);
-float* beam_alloc_float_array(jarray array, int* array_length);
-double* beam_alloc_double_array(jarray array, int* array_length);
+char* beam_newCString(jstring str);
+char** beam_newCStringArray(jarray array, int* array_length);
+void** beam_newCObjectArray(jarray array, int* array_length);
+void* beam_newCPrimitiveArray(jarray array, int* array_length, int elem_size);
+boolean* beam_newCBooleanArray(jarray array, int* array_length);
+char* beam_newCCharArray(jarray array, int* array_length);
+byte* beam_newCByteArray(jarray array, int* array_length);
+short* beam_newCShortArray(jarray array, int* array_length);
+int* beam_newCIntArray(jarray array, int* array_length);
+dlong* beam_newCLongArray(jarray array, int* array_length);
+float* beam_newCFloatArray(jarray array, int* array_length);
+double* beam_newCDoubleArray(jarray array, int* array_length);
 

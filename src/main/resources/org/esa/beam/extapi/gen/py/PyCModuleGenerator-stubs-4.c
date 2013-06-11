@@ -1,7 +1,7 @@
 /*
  * Creates a Python sequence (a list) from a C-array of Java objects (type void*).
  */
-PyObject* beam_new_pyseq_from_jobject_array(const char* type, const void** elems, int length)
+PyObject* beampy_newPySeqFromCObjectArray(const char* type, const void** elems, int length)
 {
     PyObject* list;
     PyObject* item;
@@ -28,7 +28,7 @@ PyObject* beam_new_pyseq_from_jobject_array(const char* type, const void** elems
 /*
  * Creates a C-array of Java objects (type void*) from a Python sequence.
  */
-void** beam_new_jobject_array_from_pyseq(const char* type, PyObject* seq, int* length)
+void** beampy_newCObjectArrayFromPySeq(const char* type, PyObject* seq, int* length)
 {
     /*
        TODO: IMPLEMENT ME!
@@ -42,7 +42,7 @@ void** beam_new_jobject_array_from_pyseq(const char* type, PyObject* seq, int* l
 /*
  * Creates a Python sequence (a list) from a C-array of C-strings (type const char*).
  */
-PyObject* beam_new_pyseq_from_string_array(const char** elems, int length)
+PyObject* beampy_newPySeqFromCStringArray(const char** elems, int length)
 {
     PyObject* list;
     PyObject* item;
@@ -67,9 +67,9 @@ PyObject* beam_new_pyseq_from_string_array(const char** elems, int length)
 }
 
 /*
- * Creates a a C-array of C-strings from a Python sequence.
+ * Creates a C-array of C-strings from a Python sequence.
  */
-char** beam_new_string_array_from_pyseq(PyObject* seq, int* length)
+char** beampy_newCStringArrayFromPySeq(PyObject* seq, int* length)
 {
     /*
        TODO: IMPLEMENT ME!

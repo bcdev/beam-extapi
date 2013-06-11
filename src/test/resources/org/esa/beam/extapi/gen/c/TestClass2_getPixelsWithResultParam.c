@@ -18,13 +18,13 @@ float* TestClass2_getPixelsWithResultParam(TestClass2 _this, float* p1Elems, int
     p1Array = (*jenv)->NewFloatArray(jenv, p1Length);
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method, p1Array, p2);
     if (p1Elems != NULL && (*jenv)->IsSameObject(jenv, p1Array, _resultArray)) {
-        beam_copy_from_jarray(_resultArray, p1Elems, p1Length, sizeof (float));
+        beam_copyFromJArray(_resultArray, p1Elems, p1Length, sizeof (float));
         _result = p1Elems;
         if (resultArrayLength != NULL) {
             *resultArrayLength = p1Length;
         }
     } else {
-        _result = beam_alloc_float_array(_resultArray, resultArrayLength);
+        _result = beam_newCFloatArray(_resultArray, resultArrayLength);
     }
     (*jenv)->DeleteLocalRef(jenv, p1Array);
     (*jenv)->DeleteLocalRef(jenv, _resultArray);

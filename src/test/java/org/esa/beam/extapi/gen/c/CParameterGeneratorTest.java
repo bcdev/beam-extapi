@@ -73,7 +73,7 @@ public class CParameterGeneratorTest {
                            null,
                            "jarray dataArray = NULL;",
                            "dataArray = (*jenv)->NewBooleanArray(jenv, dataLength);\n" +
-                                   "beam_copy_to_jarray(dataArray, dataElems, dataLength, sizeof (boolean));",
+                                   "beam_copyToJArray(dataArray, dataElems, dataLength, sizeof (boolean));",
                            "dataArray",
                            null);
 
@@ -83,7 +83,7 @@ public class CParameterGeneratorTest {
                            "jarray dataArray = NULL;",
                            "dataArray = (*jenv)->NewIntArray(jenv, dataLength);",
                            "dataArray",
-                           "beam_copy_from_jarray(dataArray, dataElems, dataLength, sizeof (int));");
+                           "beam_copyFromJArray(dataArray, dataElems, dataLength, sizeof (int));");
 
         testPrimitiveArray("data", float[].class, Modifier.RETURN,
                            "float* dataElems, int dataLength",
@@ -92,13 +92,13 @@ public class CParameterGeneratorTest {
                            "dataArray = (*jenv)->NewFloatArray(jenv, dataLength);",
                            "dataArray",
                            "if (dataElems != NULL && (*jenv)->IsSameObject(jenv, dataArray, _resultArray)) {\n" +
-                                   "    beam_copy_from_jarray(_resultArray, dataElems, dataLength, sizeof (float));\n" +
+                                   "    beam_copyFromJArray(_resultArray, dataElems, dataLength, sizeof (float));\n" +
                                    "    _result = dataElems;\n" +
                                    "    if (resultArrayLength != NULL) {\n" +
                                    "        *resultArrayLength = dataLength;\n" +
                                    "    }\n" +
                                    "} else {\n" +
-                                   "    _result = beam_alloc_float_array(_resultArray, resultArrayLength);\n" +
+                                   "    _result = beam_newCFloatArray(_resultArray, resultArrayLength);\n" +
                                    "}");
     }
 
@@ -108,7 +108,7 @@ public class CParameterGeneratorTest {
                         "const Band bandsElems, int bandsLength",
                         null,
                         "jarray bandsArray = NULL;",
-                        "bandsArray = beam_new_jobject_array(bandsElems, bandsLength, classBand);",
+                        "bandsArray = beam_newJObjectArray(bandsElems, bandsLength, classBand);",
                         "bandsArray",
                         null);
 
@@ -116,7 +116,7 @@ public class CParameterGeneratorTest {
                         "Band bandsElems, int bandsLength",
                         null,
                         "jarray bandsArray = NULL;",
-                        "bandsArray = beam_new_jobject_array(bandsElems, bandsLength, classBand);",
+                        "bandsArray = beam_newJObjectArray(bandsElems, bandsLength, classBand);",
                         "bandsArray",
                         null);
 
@@ -124,7 +124,7 @@ public class CParameterGeneratorTest {
                         "Band bandsElems, int bandsLength",
                         null,
                         "jarray bandsArray = NULL;",
-                        "bandsArray = beam_new_jobject_array(bandsElems, bandsLength, classBand);",
+                        "bandsArray = beam_newJObjectArray(bandsElems, bandsLength, classBand);",
                         "bandsArray",
                         null);
     }
@@ -135,7 +135,7 @@ public class CParameterGeneratorTest {
                         "const char** namesElems, int namesLength",
                         null,
                         "jobjectArray namesArray = NULL;",
-                        "namesArray = beam_new_jstring_array(namesElems, namesLength);",
+                        "namesArray = beam_newJStringArray(namesElems, namesLength);",
                         "namesArray",
                         null);
 
@@ -143,7 +143,7 @@ public class CParameterGeneratorTest {
                         "char** namesElems, int namesLength",
                         null,
                         "jobjectArray namesArray = NULL;",
-                        "namesArray = beam_new_jstring_array(namesElems, namesLength);",
+                        "namesArray = beam_newJStringArray(namesElems, namesLength);",
                         "namesArray",
                         null);
 
@@ -151,7 +151,7 @@ public class CParameterGeneratorTest {
                         "char** namesElems, int namesLength",
                         null,
                         "jobjectArray namesArray = NULL;",
-                        "namesArray = beam_new_jstring_array(namesElems, namesLength);",
+                        "namesArray = beam_newJStringArray(namesElems, namesLength);",
                         "namesArray",
                         null);
     }

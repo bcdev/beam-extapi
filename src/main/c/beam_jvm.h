@@ -13,18 +13,18 @@ extern "C" {
  * mode (= not loaded as shared library by a Java VM).
  */
 
-boolean beam_is_jvm_created();
-boolean beam_create_jvm(const char* option_strings[], int option_count);
-boolean beam_create_jvm_with_defaults();
-boolean beam_destroy_jvm();
+boolean beam_isJvmCreated();
+boolean beam_createJvm(const char* option_strings[], int option_count);
+boolean beam_createJvmWithDefaults();
+boolean beam_destroyJvm();
 
 void Object_delete(void* object);
 
 String String_newString(const char* chars);
-void beam_release_string(char* chars);
-void beam_release_string_array(char** array_elems, int array_length);
-void beam_release_object_array(void** array_elems, int array_length);
-void beam_release_primitive_array(void* array_elems, int array_length);
+void beam_deleteCString(char* chars);
+void beam_deleteCStringArray(char** array_elems, int array_length);
+void beam_deleteCObjectArray(void** array_elems, int array_length);
+void beam_deleteCPrimitiveArray(void* array_elems, int array_length);
 
 
 #ifdef __cplusplus

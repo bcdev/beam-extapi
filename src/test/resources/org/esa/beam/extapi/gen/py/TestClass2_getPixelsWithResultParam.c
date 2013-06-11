@@ -12,7 +12,7 @@ PyObject* BeamPyTestClass2_getPixelsWithResultParam(PyObject* self, PyObject* ar
     if (!PyArg_ParseTuple(args, "(sK)Oi:TestClass2_getPixelsWithResultParam", &thisObjType, &thisObj, &p1Obj, &p2)) {
         return NULL;
     }
-    p1Obj = beam_getPrimitiveArrayBufferWritable(p1Obj, &p1Buf, "f", -1);
+    p1Obj = beampy_getPrimitiveArrayBufferWritable(p1Obj, &p1Buf, "f", -1);
     if (p1Obj == NULL) {
         return NULL;
     }

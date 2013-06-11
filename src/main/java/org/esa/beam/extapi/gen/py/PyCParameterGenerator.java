@@ -196,7 +196,7 @@ public abstract class PyCParameterGenerator implements ParameterGenerator {
                 lengthExpr = "-1";
             }
             return eval("" +
-                                "${p}Obj = beam_getPrimitiveArrayBuffer${bm}(${p}Obj, &${p}Buf, \"${tf}\", ${le});\n" +
+                                "${p}Obj = beampy_getPrimitiveArrayBuffer${bm}(${p}Obj, &${p}Buf, \"${tf}\", ${le});\n" +
                                 "if (${p}Obj == NULL) {\n" +
                                 "    return NULL;\n" +
                                 "}\n" +
@@ -262,7 +262,7 @@ public abstract class PyCParameterGenerator implements ParameterGenerator {
 
         @Override
         public String generateJniArgFromTransformedTargetArgAssignment(GeneratorContext context) {
-            return eval("${p} = beam_new_jobject_array_from_pyseq(\"${t}\", ${p}Seq, &${p}Length);",
+            return eval("${p} = beampy_newCObjectArrayFromPySeq(\"${t}\", ${p}Seq, &${p}Length);",
                         kv("p", getName()),
                         kv("t", getComponentCTypeName(getType())));
         }
@@ -294,7 +294,7 @@ public abstract class PyCParameterGenerator implements ParameterGenerator {
 
         @Override
         public String generateJniArgFromTransformedTargetArgAssignment(GeneratorContext context) {
-            return eval("${p} = beam_new_string_array_from_pyseq(${p}Seq, &${p}Length);",
+            return eval("${p} = beampy_newCStringArrayFromPySeq(${p}Seq, &${p}Length);",
                         kv("p", getName()),
                         kv("c", CModuleGenerator.getComponentCClassVarName(getType())));
         }

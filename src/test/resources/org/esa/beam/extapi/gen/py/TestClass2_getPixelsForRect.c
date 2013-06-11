@@ -12,7 +12,7 @@ PyObject* BeamPyTestClass2_getPixelsForRect(PyObject* self, PyObject* args)
     }
     result = TestClass2_getPixelsForRect((TestClass2) thisObj, (Rectangle2D) p1, &resultLength);
     if (result != NULL) {
-        resultObj = CArray_createFromItems("f", result, resultLength, beam_release_primitive_array);
+        resultObj = CArray_createFromItems("f", result, resultLength, beam_deleteCPrimitiveArray);
         Py_INCREF(resultObj);
         return resultObj;
     } else {

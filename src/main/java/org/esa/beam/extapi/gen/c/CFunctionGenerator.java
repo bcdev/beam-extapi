@@ -3,6 +3,8 @@ package org.esa.beam.extapi.gen.c;
 import com.sun.javadoc.Type;
 import org.esa.beam.extapi.gen.*;
 
+import static org.esa.beam.extapi.gen.JavadocHelpers.firstCharToUpperCase;
+import static org.esa.beam.extapi.gen.JavadocHelpers.getComponentCTypeName;
 import static org.esa.beam.extapi.gen.TemplateEval.eval;
 import static org.esa.beam.extapi.gen.TemplateEval.kv;
 import static org.esa.beam.extapi.gen.c.CModuleGenerator.RESULT_VAR_NAME;
@@ -155,21 +157,16 @@ public abstract class CFunctionGenerator extends AbstractFunctionGenerator {
 
         @Override
         public String generateJniResultFromJniCallAssignment(GeneratorContext context) {
-            String t = getPrimitiveTypeTypeName();
+            String typeName = firstCharToUpperCase(getReturnType().simpleTypeName());
             return eval("${r} = ${c};",
                         kv("r", RESULT_VAR_NAME),
-                        kv("c", getJniMethodCall(context, t)));
+                        kv("c", getJniMethodCall(context, typeName)));
         }
 
         @Override
         public String generateReturnStatement(GeneratorContext context) {
             return eval("return ${r};",
                         kv("r", RESULT_VAR_NAME));
-        }
-
-        private String getPrimitiveTypeTypeName() {
-            String typeName = getReturnType().typeName();
-            return Character.toUpperCase(typeName.charAt(0)) + typeName.substring(1);
         }
 
     }
@@ -212,7 +209,7 @@ public abstract class CFunctionGenerator extends AbstractFunctionGenerator {
 
         @Override
         public String generateTargetResultFromTransformedJniResultAssignment(GeneratorContext context) {
-            return eval("${r} = beam_alloc_string(${r}String);",
+            return eval("${r} = beam_newCString(${r}String);",
                         kv("r", RESULT_VAR_NAME));
         }
 
@@ -289,8 +286,8 @@ public abstract class CFunctionGenerator extends AbstractFunctionGenerator {
 
         @Override
         protected String getArrayAllocFunctionName() {
-            return String.format("beam_alloc_%s_array",
-                                 JavadocHelpers.getComponentCTypeName(getReturnType()));
+            return String.format("beam_newC%sArray",
+                                 firstCharToUpperCase(getComponentCTypeName(getReturnType())));
         }
     }
 
@@ -302,7 +299,7 @@ public abstract class CFunctionGenerator extends AbstractFunctionGenerator {
 
         @Override
         protected String getArrayAllocFunctionName() {
-            return "beam_alloc_object_array";
+            return "beam_newCObjectArray";
         }
     }
 
@@ -314,7 +311,7 @@ public abstract class CFunctionGenerator extends AbstractFunctionGenerator {
 
         @Override
         protected String getArrayAllocFunctionName() {
-            return "beam_alloc_string_array";
+            return "beam_newCStringArray";
         }
     }
 }

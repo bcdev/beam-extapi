@@ -77,7 +77,7 @@ public class PyCParameterGeneratorTest {
                                    "int dataLength;\n" +
                                    "PyObject* dataObj;\n" +
                                    "Py_buffer dataBuf;\n",
-                           "dataObj = beam_getPrimitiveArrayBufferReadOnly(dataObj, &dataBuf, \"b\", -1);\n" +
+                           "dataObj = beampy_getPrimitiveArrayBufferReadOnly(dataObj, &dataBuf, \"b\", -1);\n" +
                                    "if (dataObj == NULL) {\n" +
                                    "    return NULL;\n" +
                                    "}\n" +
@@ -91,7 +91,7 @@ public class PyCParameterGeneratorTest {
                                    "int dataLength;\n" +
                                    "PyObject* dataObj;\n" +
                                    "Py_buffer dataBuf;\n",
-                           "dataObj = beam_getPrimitiveArrayBufferWritable(dataObj, &dataBuf, \"i\", -1);\n" +
+                           "dataObj = beampy_getPrimitiveArrayBufferWritable(dataObj, &dataBuf, \"i\", -1);\n" +
                                    "if (dataObj == NULL) {\n" +
                                    "    return NULL;\n" +
                                    "}\n" +
@@ -105,7 +105,7 @@ public class PyCParameterGeneratorTest {
                                    "int dataLength;\n" +
                                    "PyObject* dataObj;\n" +
                                    "Py_buffer dataBuf;\n",
-                           "dataObj = beam_getPrimitiveArrayBufferWritable(dataObj, &dataBuf, \"d\", -1);\n" +
+                           "dataObj = beampy_getPrimitiveArrayBufferWritable(dataObj, &dataBuf, \"d\", -1);\n" +
                                    "if (dataObj == NULL) {\n" +
                                    "    return NULL;\n" +
                                    "}\n" +
@@ -121,7 +121,7 @@ public class PyCParameterGeneratorTest {
                         "Band bands;\n" +
                                 "int bandsLength;\n" +
                                 "PyObject* bandsSeq;",
-                        "bands = beam_new_jobject_array_from_pyseq(\"Band\", bandsSeq, &bandsLength);",
+                        "bands = beampy_newCObjectArrayFromPySeq(\"Band\", bandsSeq, &bandsLength);",
                         "bands, bandsLength"
         );
 
@@ -129,7 +129,7 @@ public class PyCParameterGeneratorTest {
                         "Band bands;\n" +
                                 "int bandsLength;\n" +
                                 "PyObject* bandsSeq;",
-                        "bands = beam_new_jobject_array_from_pyseq(\"Band\", bandsSeq, &bandsLength);",
+                        "bands = beampy_newCObjectArrayFromPySeq(\"Band\", bandsSeq, &bandsLength);",
                         "bands, bandsLength"
         );
 
@@ -137,7 +137,7 @@ public class PyCParameterGeneratorTest {
                         "Band bands;\n" +
                                 "int bandsLength;\n" +
                                 "PyObject* bandsSeq;",
-                        "bands = beam_new_jobject_array_from_pyseq(\"Band\", bandsSeq, &bandsLength);",
+                        "bands = beampy_newCObjectArrayFromPySeq(\"Band\", bandsSeq, &bandsLength);",
                         "bands, bandsLength"
         );
     }
@@ -148,7 +148,7 @@ public class PyCParameterGeneratorTest {
                         "char** names;\n" +
                                 "int namesLength;\n" +
                                 "PyObject* namesSeq;",
-                        "names = beam_new_string_array_from_pyseq(namesSeq, &namesLength);",
+                        "names = beampy_newCStringArrayFromPySeq(namesSeq, &namesLength);",
                         "names, namesLength"
         );
 
@@ -156,7 +156,7 @@ public class PyCParameterGeneratorTest {
                         "char** names;\n" +
                                 "int namesLength;\n" +
                                 "PyObject* namesSeq;",
-                        "names = beam_new_string_array_from_pyseq(namesSeq, &namesLength);",
+                        "names = beampy_newCStringArrayFromPySeq(namesSeq, &namesLength);",
                         "names, namesLength"
         );
 
@@ -164,7 +164,7 @@ public class PyCParameterGeneratorTest {
                         "char** names;\n" +
                                 "int namesLength;\n" +
                                 "PyObject* namesSeq;",
-                        "names = beam_new_string_array_from_pyseq(namesSeq, &namesLength);",
+                        "names = beampy_newCStringArrayFromPySeq(namesSeq, &namesLength);",
                         "names, namesLength"
         );
     }

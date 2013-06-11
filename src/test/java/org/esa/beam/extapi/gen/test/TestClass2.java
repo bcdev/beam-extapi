@@ -62,4 +62,11 @@ public class TestClass2 extends TestClass1 {
     public Date getTimestamp() {
         return null;
     }
+
+    /*
+     * For testing code generation for a returned Java long value.
+     */
+    public long getDuration() {
+        return 0;
+    }
 }

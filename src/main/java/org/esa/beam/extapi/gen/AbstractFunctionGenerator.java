@@ -68,7 +68,7 @@ public abstract class AbstractFunctionGenerator implements FunctionGenerator {
 
         return eval("" +
                             "if (${mv} == NULL) {\n"
-                            + "    if (beam_init_api() == 0) {\n"
+                            + "    if (beam_initApi() == 0) {\n"
                             + "        ${mv} = (*jenv)->${f}(jenv, ${c}, \"${name}\", \"${sig}\");\n"
                             + "        if (${mv} == NULL) {\n"
                             + "            /* Set global error */\n"

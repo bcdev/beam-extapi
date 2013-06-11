@@ -111,7 +111,7 @@ public class CModuleGenerator extends ModuleGenerator {
                 writer.print("#include \"jni.h\"\n");
                 writer.printf("\n");
 
-                writer.printf("int beam_init_api();\n");
+                writer.printf("int beam_initApi();\n");
                 writer.printf("JavaVM* beam_getJavaVM();\n");
                 writer.printf("JNIEnv* beam_getJNIEnv();\n");
                 writer.printf("\n");
@@ -273,10 +273,10 @@ public class CModuleGenerator extends ModuleGenerator {
                 writer.printf("\n");
 
                 /////////////////////////////////////////////////////////////////////////////////////
-                // beam_init_api()
+                // beam_initApi()
                 //
                 writer.write("" +
-                                     "jclass beam_find_class(const char* classResourceName)\n" +
+                                     "jclass beam_findClass(const char* classResourceName)\n" +
                                      "{\n" +
                                      "    jclass c = (*jenv)->FindClass(jenv, classResourceName);\n" +
                                      "    if (c == NULL) {\n" +
@@ -285,7 +285,7 @@ public class CModuleGenerator extends ModuleGenerator {
                                      "    return c;\n" +
                                      "}\n");
 
-                writer.write("int beam_init_api()\n");
+                writer.write("int beam_initApi()\n");
                 writer.write("{\n");
 
                 writer.printf("" +
@@ -294,7 +294,7 @@ public class CModuleGenerator extends ModuleGenerator {
                                       "        return exitCode;\n" +
                                       "    }\n");
                 writer.printf("" +
-                                      "    if (!beam_is_jvm_created() && !beam_create_jvm_with_defaults()) {\n" +
+                                      "    if (!beam_isJvmCreated() && !beam_createJvmWithDefaults()) {\n" +
                                       "        exitCode = 1;\n" +
                                       "        return exitCode;\n" +
                                       "    }\n");
@@ -346,7 +346,7 @@ public class CModuleGenerator extends ModuleGenerator {
     }
 
     private static void writeClassDef(PrintWriter writer, String classVarName, String classResourceName, int errCode) {
-        writer.write(String.format("    %s = beam_find_class(\"%s\");\n",
+        writer.write(String.format("    %s = beam_findClass(\"%s\");\n",
                                    classVarName, classResourceName));
         writer.write(String.format("    if (%s == NULL) { exitCode = %d; return exitCode; }\n",
                                    classVarName, errCode));

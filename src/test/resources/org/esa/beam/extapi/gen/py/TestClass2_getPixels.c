@@ -13,7 +13,7 @@ PyObject* BeamPyTestClass2_getPixels(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "(sK)Oi:TestClass2_getPixels", &thisObjType, &thisObj, &p1Obj, &p2)) {
         return NULL;
     }
-    p1Obj = beam_getPrimitiveArrayBufferReadOnly(p1Obj, &p1Buf, "f", -1);
+    p1Obj = beampy_getPrimitiveArrayBufferReadOnly(p1Obj, &p1Buf, "f", -1);
     if (p1Obj == NULL) {
         return NULL;
     }
@@ -22,7 +22,7 @@ PyObject* BeamPyTestClass2_getPixels(PyObject* self, PyObject* args)
     result = TestClass2_getPixels((TestClass2) thisObj, p1, p1Length, p2, &resultLength);
     PyBuffer_Release(&p1Buf);
     if (result != NULL) {
-        resultObj = CArray_createFromItems("f", result, resultLength, beam_release_primitive_array);
+        resultObj = CArray_createFromItems("f", result, resultLength, beam_deleteCPrimitiveArray);
         Py_INCREF(resultObj);
         return resultObj;
     } else {

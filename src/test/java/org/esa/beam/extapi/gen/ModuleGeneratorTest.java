@@ -49,6 +49,7 @@ public abstract class ModuleGeneratorTest {
         testFunctionGenerator(apiClass, "TestClass2_getPixel1.c", "getPixel", "(II)F");
         testFunctionGenerator(apiClass, "TestClass2_getPixel2.c", "getPixel", "(III)F");
         testFunctionGenerator(apiClass, "TestClass2_getTimestamp.c", "getTimestamp", "()Ljava/util/Date;");
+        testFunctionGenerator(apiClass, "TestClass2_getDuration.c", "getDuration", "()J");
         testFunctionGenerator(apiClass, "TestClass2_getPixels.c", "getPixels", "([FI)[F");
         testFunctionGenerator(apiClass, "TestClass2_getPixelsWithResultParam.c", "getPixelsWithResultParam", "([FI)[F");
         testFunctionGenerator(apiClass, "TestClass2_getName.c", "getName", "()Ljava/lang/String;");

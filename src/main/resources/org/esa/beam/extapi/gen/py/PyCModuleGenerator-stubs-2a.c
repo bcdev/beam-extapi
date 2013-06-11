@@ -1,5 +1,5 @@
 
-PyObject* beam_getPrimitiveArrayBuffer(PyObject* obj, Py_buffer* view, int flags, const char* format, int len)
+PyObject* beampy_getPrimitiveArrayBuffer(PyObject* obj, Py_buffer* view, int flags, const char* format, int len)
 {
     if (obj == NULL || obj == Py_None) {
         if (len <= 0) {
@@ -34,13 +34,13 @@ PyObject* beam_getPrimitiveArrayBuffer(PyObject* obj, Py_buffer* view, int flags
     }
 }
 
-PyObject* beam_getPrimitiveArrayBufferReadOnly(PyObject* obj, Py_buffer* view, const char* format, int len)
+PyObject* beampy_getPrimitiveArrayBufferReadOnly(PyObject* obj, Py_buffer* view, const char* format, int len)
 {
-    return beam_getPrimitiveArrayBuffer(obj, view, PyBUF_SIMPLE, format, len);
+    return beampy_getPrimitiveArrayBuffer(obj, view, PyBUF_SIMPLE, format, len);
 }
 
 
-PyObject* beam_getPrimitiveArrayBufferWritable(PyObject* obj, Py_buffer* view, const char* format, int len)
+PyObject* beampy_getPrimitiveArrayBufferWritable(PyObject* obj, Py_buffer* view, const char* format, int len)
 {
-    return beam_getPrimitiveArrayBuffer(obj, view, PyBUF_WRITABLE, format, len);
+    return beampy_getPrimitiveArrayBuffer(obj, view, PyBUF_WRITABLE, format, len);
 }

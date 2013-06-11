@@ -11,8 +11,8 @@ PyObject* BeamPyTestClass2_getFiles(PyObject* self, PyObject* args)
     }
     result = TestClass2_getFiles((TestClass2) thisObj, p1, &resultLength);
     if (result != NULL) {
-        resultSeq = beam_new_pyseq_from_jobject_array("File", result, resultLength);
-        beam_release_object_array(result, resultLength);
+        resultSeq = beampy_newPySeqFromCObjectArray("File", result, resultLength);
+        beam_deleteCObjectArray(result, resultLength);
         return resultSeq;
     } else {
         return Py_BuildValue("");

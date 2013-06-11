@@ -7,7 +7,7 @@ extern "C" {
 
 #include "jni.h"
 
-int beam_init_api();
+int beam_initApi();
 JavaVM* beam_getJavaVM();
 JNIEnv* beam_getJNIEnv();
 

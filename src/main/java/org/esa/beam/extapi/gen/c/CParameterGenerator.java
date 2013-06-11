@@ -6,6 +6,7 @@ import org.esa.beam.extapi.gen.ApiParameter;
 import org.esa.beam.extapi.gen.GeneratorContext;
 import org.esa.beam.extapi.gen.ParameterGenerator;
 
+import static org.esa.beam.extapi.gen.JavadocHelpers.firstCharToUpperCase;
 import static org.esa.beam.extapi.gen.JavadocHelpers.getComponentCTypeName;
 import static org.esa.beam.extapi.gen.TemplateEval.eval;
 import static org.esa.beam.extapi.gen.TemplateEval.kv;
@@ -162,7 +163,7 @@ public abstract class CParameterGenerator implements ParameterGenerator {
             String typeNameUC = firstCharToUpperCase(typeName);
             if (parameter.getModifier() == ApiParameter.Modifier.IN) {
                 return eval("${p}Array = (*jenv)->New${tuc}Array(jenv, ${p}Length);\n" +
-                                    "beam_copy_to_jarray(${p}Array, ${p}Elems, ${p}Length, sizeof (${t}));",
+                                    "beam_copyToJArray(${p}Array, ${p}Elems, ${p}Length, sizeof (${t}));",
                             kv("t", typeName),
                             kv("tuc", typeNameUC),
                             kv("p", getName()));
@@ -183,24 +184,26 @@ public abstract class CParameterGenerator implements ParameterGenerator {
             if (parameter.getModifier() == ApiParameter.Modifier.IN) {
                 return null;
             } else if (parameter.getModifier() == ApiParameter.Modifier.OUT) {
-                return eval("beam_copy_from_jarray(${p}Array, ${p}Elems, ${p}Length, sizeof (${t}));" +
+                return eval("beam_copyFromJArray(${p}Array, ${p}Elems, ${p}Length, sizeof (${t}));" +
                                     "",
                             kv("p", getName()),
                             kv("t", getType().simpleTypeName()));
             } else if (parameter.getModifier() == ApiParameter.Modifier.RETURN) {
+                String typeName = getType().simpleTypeName();
                 return eval("" +
                                     "if (${p}Elems != NULL && (*jenv)->IsSameObject(jenv, ${p}Array, ${r}Array)) {\n" +
-                                    "    beam_copy_from_jarray(${r}Array, ${p}Elems, ${p}Length, sizeof (${t}));\n" +
+                                    "    beam_copyFromJArray(${r}Array, ${p}Elems, ${p}Length, sizeof (${t}));\n" +
                                     "    ${r} = ${p}Elems;\n" +
                                     "    if (resultArrayLength != NULL) {\n" +
                                     "        *resultArrayLength = ${p}Length;\n" +
                                     "    }\n" +
                                     "} else {\n" +
-                                    "    ${r} = beam_alloc_${t}_array(${r}Array, resultArrayLength);\n" +
+                                    "    ${r} = beam_newC${tuc}Array(${r}Array, resultArrayLength);\n" +
                                     "}",
                             kv("r", RESULT_VAR_NAME),
                             kv("p", getName()),
-                            kv("t", getType().simpleTypeName()));
+                            kv("t", typeName),
+                            kv("tuc", firstCharToUpperCase(typeName)));
             } else {
                 throw new IllegalStateException("Unknown modifier: " + parameter.getModifier());
             }
@@ -237,7 +240,7 @@ public abstract class CParameterGenerator implements ParameterGenerator {
 
         @Override
         public String generateJniArgFromTransformedTargetArgAssignment(GeneratorContext context) {
-            return eval("${p}Array = beam_new_jobject_array(${p}Elems, ${p}Length, ${c});",
+            return eval("${p}Array = beam_newJObjectArray(${p}Elems, ${p}Length, ${c});",
                         kv("p", getName()),
                         kv("c", CModuleGenerator.getComponentCClassVarName(getType())));
         }
@@ -281,7 +284,7 @@ public abstract class CParameterGenerator implements ParameterGenerator {
 
         @Override
         public String generateJniArgFromTransformedTargetArgAssignment(GeneratorContext context) {
-            return eval("${p}Array = beam_new_jstring_array(${p}Elems, ${p}Length);",
+            return eval("${p}Array = beam_newJStringArray(${p}Elems, ${p}Length);",
                         kv("p", getName()));
         }
 

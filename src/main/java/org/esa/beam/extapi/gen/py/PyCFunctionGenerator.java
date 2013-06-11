@@ -379,7 +379,7 @@ public abstract class PyCFunctionGenerator implements FunctionGenerator {
         public String generateReturnStatement(GeneratorContext context) {
             return format("if (${res} != NULL) {\n" +
                                   "    ${res}Str = PyUnicode_FromString(${res});\n" +
-                                  "    beam_release_string(${res});\n" +
+                                  "    beam_deleteCString(${res});\n" +
                                   "    return ${res}Str;\n" +
                                   "} else {\n" +
                                   "    return Py_BuildValue(\"\");\n" +
@@ -441,7 +441,7 @@ public abstract class PyCFunctionGenerator implements FunctionGenerator {
             } else {
                 return format("" +
                                       "if (${res} != NULL) {\n" +
-                                      "    ${res}Obj = CArray_createFromItems(\"${typeCode}\", ${res}, ${res}Length, beam_release_primitive_array);\n" +
+                                      "    ${res}Obj = CArray_createFromItems(\"${typeCode}\", ${res}, ${res}Length, beam_deleteCPrimitiveArray);\n" +
                                       "    Py_INCREF(${res}Obj);\n" +
                                       "    return ${res}Obj;\n" +
                                       "} else {\n" +
@@ -452,8 +452,8 @@ public abstract class PyCFunctionGenerator implements FunctionGenerator {
             }
 /* this code returns a python list
                 return format("if (${res} != NULL) {\n" +
-                                      "    ${res}Seq = beam_new_pyseq_from_${type}_array(${res}, ${res}Length);\n" +
-                                      "    beam_release_primitive_array(${res}, ${res}Length);\n" +
+                                      "    ${res}Seq = beampy_newPySeqFromC${type}Array(${res}, ${res}Length);\n" +
+                                      "    beam_deleteCPrimitiveArray(${res}, ${res}Length);\n" +
                                       "    return ${res}Seq;\n" +
                                       "} else {\n" +
                                       "    return Py_BuildValue(\"\");\n" +
@@ -480,8 +480,8 @@ public abstract class PyCFunctionGenerator implements FunctionGenerator {
         public String generateReturnStatement(GeneratorContext context) {
             String typeName = getComponentCTypeName(getReturnType());
             return format("if (${res} != NULL) {\n" +
-                                  "    ${res}Seq = beam_new_pyseq_from_jobject_array(\"${type}\", ${res}, ${res}Length);\n" +
-                                  "    beam_release_object_array(${res}, ${res}Length);\n" +
+                                  "    ${res}Seq = beampy_newPySeqFromCObjectArray(\"${type}\", ${res}, ${res}Length);\n" +
+                                  "    beam_deleteCObjectArray(${res}, ${res}Length);\n" +
                                   "    return ${res}Seq;\n" +
                                   "} else {\n" +
                                   "    return Py_BuildValue(\"\");\n" +
@@ -506,8 +506,8 @@ public abstract class PyCFunctionGenerator implements FunctionGenerator {
         @Override
         public String generateReturnStatement(GeneratorContext context) {
             return format("if (${res} != NULL) {\n" +
-                                  "    ${res}Seq = beam_new_pyseq_from_string_array(${res}, ${res}Length);\n" +
-                                  "    beam_release_string_array(${res}, ${res}Length);\n" +
+                                  "    ${res}Seq = beampy_newPySeqFromCStringArray(${res}, ${res}Length);\n" +
+                                  "    beam_deleteCStringArray(${res}, ${res}Length);\n" +
                                   "    return ${res}Seq;\n" +
                                   "} else {\n" +
                                   "    return Py_BuildValue(\"\");\n" +

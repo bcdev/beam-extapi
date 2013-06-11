@@ -15,7 +15,7 @@ char* TestClass2_getName(TestClass2 _this)
         }
     }
     _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
-    _result = beam_alloc_string(_resultString);
+    _result = beam_newCString(_resultString);
     (*jenv)->DeleteLocalRef(jenv, _resultString);
     return _result;
 }

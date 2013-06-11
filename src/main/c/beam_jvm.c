@@ -5,24 +5,24 @@
 static JavaVM* jvm = NULL;
 static JNIEnv* jenv = NULL;
 
-jobjectArray beam_new_jstring_array(const char** array_elems, int array_length);
-jobjectArray beam_new_jobject_array(const jobject* obj_array_data, int obj_array_length, jclass comp_class);
+jobjectArray beam_newJStringArray(const char** array_elems, int array_length);
+jobjectArray beam_newJObjectArray(const jobject* obj_array_data, int obj_array_length, jclass comp_class);
 
-void beam_copy_from_jarray(jarray array, void* elems, int array_length, int elem_size);
-void beam_copy_to_jarray(jarray array, const void* elems, int array_length, int elem_size);
+void beam_copyFromJArray(jarray array, void* elems, int array_length, int elem_size);
+void beam_copyToJArray(jarray array, const void* elems, int array_length, int elem_size);
 
-char* beam_alloc_string(jstring str);
-char** beam_alloc_string_array(jarray array, int* array_length);
-void** beam_alloc_object_array(jarray array, int* array_length);
-void* beam_alloc_primitive_array(jarray array, int* array_length, int elem_size);
-boolean* beam_alloc_boolean_array(jarray array, int* array_length);
-char* beam_alloc_char_array(jarray array, int* array_length);
-byte* beam_alloc_byte_array(jarray array, int* array_length);
-short* beam_alloc_short_array(jarray array, int* array_length);
-int* beam_alloc_int_array(jarray array, int* array_length);
-dlong* beam_alloc_long_array(jarray array, int* array_length);
-float* beam_alloc_float_array(jarray array, int* array_length);
-double* beam_alloc_double_array(jarray array, int* array_length);
+char* beam_newCString(jstring str);
+char** beam_newCStringArray(jarray array, int* array_length);
+void** beam_newCObjectArray(jarray array, int* array_length);
+void* beam_newCPrimitiveArray(jarray array, int* array_length, int elem_size);
+boolean* beam_newCBooleanArray(jarray array, int* array_length);
+char* beam_newCCharArray(jarray array, int* array_length);
+byte* beam_newCByteArray(jarray array, int* array_length);
+short* beam_newCShortArray(jarray array, int* array_length);
+int* beam_newCIntArray(jarray array, int* array_length);
+dlong* beam_newCLongArray(jarray array, int* array_length);
+float* beam_newCFloatArray(jarray array, int* array_length);
+double* beam_newCDoubleArray(jarray array, int* array_length);
 
 /* Shared library callbacks (called if this module's code is linked into a shared library and loaded by a Java VM) */
 
@@ -58,7 +58,7 @@ String String_newString(const char* chars)
     return (*jenv)->NewGlobalRef(jenv, str);
 }
 
-jobjectArray beam_new_jstring_array(const char** array_elems, int array_length)
+jobjectArray beam_newJStringArray(const char** array_elems, int array_length)
 {
     jobjectArray array;
     int i;
@@ -72,7 +72,7 @@ jobjectArray beam_new_jstring_array(const char** array_elems, int array_length)
     return (*jenv)->NewGlobalRef(jenv, array);
 }
 
-jobjectArray beam_new_jobject_array(const jobject* array_elems, int array_length, jclass comp_class)
+jobjectArray beam_newJObjectArray(const jobject* array_elems, int array_length, jclass comp_class)
 {
     jobjectArray array;
     int i;
@@ -92,28 +92,28 @@ void Object_delete(void* object)
     }
 }
 
-void beam_copy_from_jarray(jarray array, void* elems, int array_length, int elem_size)
+void beam_copyFromJArray(jarray array, void* elems, int array_length, int elem_size)
 {
     void* addr = (*jenv)->GetPrimitiveArrayCritical(jenv, array, NULL);
     memcpy(elems, addr, elem_size * array_length);
     (*jenv)->ReleasePrimitiveArrayCritical(jenv, array, addr, 0);
 }
 
-void beam_copy_to_jarray(jarray array, const void* elems, int array_length, int elem_size)
+void beam_copyToJArray(jarray array, const void* elems, int array_length, int elem_size)
 {
     void* addr = (*jenv)->GetPrimitiveArrayCritical(jenv, array, NULL);
     memcpy(addr, elems, elem_size * array_length);
     (*jenv)->ReleasePrimitiveArrayCritical(jenv, array, addr, 0);
 }
 
-void* beam_alloc_primitive_array(jarray array, int* array_length, int elem_size)
+void* beam_newCPrimitiveArray(jarray array, int* array_length, int elem_size)
 {
     void* elems;
     int n;
 
     n = (*jenv)->GetArrayLength(jenv, array);
     elems = (boolean*) malloc(n * elem_size);
-    beam_copy_from_jarray(array, elems, elem_size, n);
+    beam_copyFromJArray(array, elems, elem_size, n);
     if (array_length != NULL) {
         *array_length = n;
     }
@@ -121,47 +121,47 @@ void* beam_alloc_primitive_array(jarray array, int* array_length, int elem_size)
     return elems;
 }
 
-boolean* beam_alloc_boolean_array(jarray array, int* array_length)
+boolean* beam_newCBooleanArray(jarray array, int* array_length)
 {
-    return (boolean*) beam_alloc_primitive_array(array, array_length, sizeof (boolean));
+    return (boolean*) beam_newCPrimitiveArray(array, array_length, sizeof (boolean));
 }
 
-char* beam_alloc_char_array(jarray array, int* array_length)
+char* beam_newCCharArray(jarray array, int* array_length)
 {
-    return (char*) beam_alloc_primitive_array(array, array_length, sizeof (char));
+    return (char*) beam_newCPrimitiveArray(array, array_length, sizeof (char));
 }
 
-byte* beam_alloc_byte_array(jarray array, int* array_length)
+byte* beam_newCByteArray(jarray array, int* array_length)
 {
-    return (byte*) beam_alloc_primitive_array(array, array_length, sizeof (byte));
+    return (byte*) beam_newCPrimitiveArray(array, array_length, sizeof (byte));
 }
 
-short* beam_alloc_short_array(jarray array, int* array_length)
+short* beam_newCShortArray(jarray array, int* array_length)
 {
-    return (short*) beam_alloc_primitive_array(array, array_length, sizeof (short));
+    return (short*) beam_newCPrimitiveArray(array, array_length, sizeof (short));
 }
 
-int* beam_alloc_int_array(jarray array, int* array_length)
+int* beam_newCIntArray(jarray array, int* array_length)
 {
-    return (int*) beam_alloc_primitive_array(array, array_length, sizeof (int));
+    return (int*) beam_newCPrimitiveArray(array, array_length, sizeof (int));
 }
 
-dlong* beam_alloc_long_array(jarray array, int* array_length)
+dlong* beam_newCLongArray(jarray array, int* array_length)
 {
-    return (dlong*) beam_alloc_primitive_array(array, array_length, sizeof (dlong));
+    return (dlong*) beam_newCPrimitiveArray(array, array_length, sizeof (dlong));
 }
 
-float* beam_alloc_float_array(jarray array, int* array_length)
+float* beam_newCFloatArray(jarray array, int* array_length)
 {
-    return (float*) beam_alloc_primitive_array(array, array_length, sizeof (float));
+    return (float*) beam_newCPrimitiveArray(array, array_length, sizeof (float));
 }
 
-double* beam_alloc_double_array(jarray array, int* array_length)
+double* beam_newCDoubleArray(jarray array, int* array_length)
 {
-    return (double*) beam_alloc_primitive_array(array, array_length, sizeof (double));
+    return (double*) beam_newCPrimitiveArray(array, array_length, sizeof (double));
 }
 
-Object* beam_alloc_object_array(jarray array, int* array_length)
+Object* beam_newCObjectArray(jarray array, int* array_length)
 {
     Object* array_elems;
     jsize n;
@@ -183,7 +183,7 @@ Object* beam_alloc_object_array(jarray array, int* array_length)
 }
 
 
-char* beam_alloc_string(jstring str)
+char* beam_newCString(jstring str)
 {
     int len = (*jenv)->GetStringUTFLength(jenv, str);
     const char* chars = (*jenv)->GetStringUTFChars(jenv, str, 0);
@@ -195,14 +195,14 @@ char* beam_alloc_string(jstring str)
     return result;
 }
 
-void beam_release_string(char* chars)
+void beam_deleteCString(char* chars)
 {
     if (chars != NULL) {
         free(chars);
     }
 }
 
-char** beam_alloc_string_array(jarray array, int* array_length)
+char** beam_newCStringArray(jarray array, int* array_length)
 {
     char** array_elems;
     jsize n;
@@ -229,7 +229,7 @@ char** beam_alloc_string_array(jarray array, int* array_length)
     return array_elems;
 }
 
-void beam_release_string_array(char** array_elems, int array_length)
+void beam_deleteCStringArray(char** array_elems, int array_length)
 {
     if (array_elems != NULL) {
         int i;
@@ -242,7 +242,7 @@ void beam_release_string_array(char** array_elems, int array_length)
     }
 }
 
-void beam_release_object_array(void** array_elems, int array_length)
+void beam_deleteCObjectArray(void** array_elems, int array_length)
 {
     if (array_elems != NULL) {
         void* object;
@@ -256,7 +256,7 @@ void beam_release_object_array(void** array_elems, int array_length)
 }
 
 // array_length currently not used, but useful for debugging
-void beam_release_primitive_array(void* array_elems, int array_length)
+void beam_deleteCPrimitiveArray(void* array_elems, int array_length)
 {
      if (array_elems != NULL) {
           free(array_elems);
@@ -266,12 +266,12 @@ void beam_release_primitive_array(void* array_elems, int array_length)
 
 /* Java VM functions that must be used if this module is used in stand-alone mode (= not loaded as shared library by a Java VM) */
 
-jboolean beam_is_jvm_created()
+jboolean beam_isJvmCreated()
 {
     return jvm != NULL;
 }
 
-jboolean beam_create_jvm(const char* option_strings[], int option_count)
+jboolean beam_createJvm(const char* option_strings[], int option_count)
 {
     JavaVMInitArgs vm_args;
     JavaVMOption* options;
@@ -310,7 +310,7 @@ jboolean beam_create_jvm(const char* option_strings[], int option_count)
     return JNI_TRUE;
 }
 
-jboolean beam_destroy_jvm()
+jboolean beam_destroyJvm()
 {
     jint res;
 
@@ -391,7 +391,7 @@ char* beam_create_class_path_vm_option()
 #undef OS_FILESEP
 #undef OS_PATHSEP
 
-jboolean beam_create_jvm_with_defaults()
+jboolean beam_createJvmWithDefaults()
 {
     const char* jvm_options[5];
     char* class_path_option;
@@ -417,7 +417,7 @@ jboolean beam_create_jvm_with_defaults()
     jvm_options[3] = "-Xmx512M";
     jvm_options[4] = "-verbose:jni";
 
-    result = beam_create_jvm(jvm_options, 5);
+    result = beam_createJvm(jvm_options, 5);
 
     free(class_path_option);
 

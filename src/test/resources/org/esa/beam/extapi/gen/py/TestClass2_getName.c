@@ -10,7 +10,7 @@ PyObject* BeamPyTestClass2_getName(PyObject* self, PyObject* args)
     result = TestClass2_getName((TestClass2) thisObj);
     if (result != NULL) {
         resultStr = PyUnicode_FromString(result);
-        beam_release_string(result);
+        beam_deleteCString(result);
         return resultStr;
     } else {
         return Py_BuildValue("");

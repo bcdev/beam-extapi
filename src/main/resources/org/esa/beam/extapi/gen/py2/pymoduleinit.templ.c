@@ -63,7 +63,7 @@ PyMODINIT_FUNC PyInit_beampy()
     /////////////////////////////////////////////////////////////////////////
     // Create JVM
 
-    if (!beam_create_jvm_with_defaults()) {
+    if (!beam_createJvmWithDefaults()) {
         PyErr_SetString(BeamPy_Error, "Failed to create Java VM");
         return NULL;
     }
@@ -164,8 +164,8 @@ void* Map_newHashMap(PyObject* dict)
     jobject map = NULL;
     int apicode = 0;
 
-    if ((apicode = beam_init_api()) != 0) {
-        PyErr_SetString(BeamPy_Error, "beam_init_api failed");
+    if ((apicode = beam_initApi()) != 0) {
+        PyErr_SetString(BeamPy_Error, "beam_initApi failed");
         return NULL;
     }
 
