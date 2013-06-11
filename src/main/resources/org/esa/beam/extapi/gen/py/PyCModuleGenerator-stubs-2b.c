@@ -33,7 +33,7 @@ static int BeamPyJObject_init(BeamPyJObject* self, PyObject* args, PyObject* kwd
 static void BeamPyJObject_dealloc(BeamPyJObject* self)
 {
     printf("BeamPyJObject_dealloc\n");
-    beam_release_jobject(self->jobjectId);
+    Object_delete(self->jobjectId);
     self->jobjectId = NULL;
 }
 
@@ -307,14 +307,14 @@ PyObject* BeamPyMap_newHashMap(PyObject* self, PyObject* args)
     return Py_BuildValue("(sK)", "Map", (unsigned PY_LONG_LONG) result);
 }
 
-PyObject* BeamPyObject_deleteGlobalRef(PyObject* self, PyObject* args)
+PyObject* BeamPyObject_delete(PyObject* self, PyObject* args)
 {
     const char* thisObjType;
     unsigned PY_LONG_LONG thisObj;
-    if (!PyArg_ParseTuple(args, "(sK):Object_deleteGlobalRef", &thisObjType, &thisObj)) {
+    if (!PyArg_ParseTuple(args, "(sK):Object_delete", &thisObjType, &thisObj)) {
         return NULL;
     }
-    beam_release_jobject((void *) thisObj);
+    Object_delete((void *) thisObj);
     return Py_BuildValue("");
 }
 

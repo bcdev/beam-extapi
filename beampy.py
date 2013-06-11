@@ -1,6 +1,6 @@
 # Please note: This file is machine generated. DO NOT EDIT!
 # It will be regenerated every time you run 'java org.esa.beam.extapi.gen.ApiGeneratorDoclet <beam-src-dir>'.
-# Last updated on Mon Jun 10 22:28:41 CEST 2013.
+# Last updated on Tue Jun 11 12:28:52 CEST 2013.
 
 from _beampy import *
 
@@ -17,7 +17,7 @@ class JObject:
 
     def __del__(self):
         if self._obj != None:
-            Object_deleteGlobalRef(self._obj)
+            Object_delete(self._obj)
 
 class Shape(JObject):
     def __init__(self, obj):

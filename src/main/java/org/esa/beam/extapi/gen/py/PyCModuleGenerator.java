@@ -96,7 +96,7 @@ public class PyCModuleGenerator extends ModuleGenerator {
                                       + "\n"
                                       + "    def __del__(self):\n"
                                       + "        if self.${obj} != None:\n"
-                                      + "            Object_deleteGlobalRef(self.${obj})\n"
+                                      + "            Object_delete(self.${obj})\n"
                                       + "\n",
                                    kv("obj", SELF_OBJ_NAME)));
                 for (ApiClass apiClass : getApiInfo().getAllClasses()) {
@@ -310,7 +310,7 @@ public class PyCModuleGenerator extends ModuleGenerator {
                 }
                 writer.printf("    {\"String_newString\", BeamPyString_newString, METH_VARARGS, \"Converts a Python unicode string into a Java java.lang.String object\"},\n");
                 writer.printf("    {\"Map_newHashMap\", BeamPyMap_newHashMap, METH_VARARGS, \"Converts a Python dictionary into a Java java.utils.Map object\"},\n");
-                writer.printf("    {\"Object_deleteGlobalRef\", BeamPyObject_deleteGlobalRef, METH_VARARGS, \"Deletes global references to Java objects held by Python objects\"},\n");
+                writer.printf("    {\"Object_delete\", BeamPyObject_delete, METH_VARARGS, \"Deletes global references to Java objects held by Python objects\"},\n");
                 writer.printf("    {NULL, NULL, 0, NULL}  /* Sentinel */\n");
                 writer.printf("};\n");
                 writer.printf("\n");

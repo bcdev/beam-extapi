@@ -7,7 +7,6 @@ EXPORTS
 	beam_create_jvm
 	beam_create_jvm_with_defaults
 	beam_destroy_jvm
-	beam_release_jobject
 	beam_release_string
 	beam_release_string_array
 	beam_release_object_array
@@ -15,6 +14,7 @@ EXPORTS
 	Util_appendString
 	Util_listDir
 	String_newString
+	Object_delete
 	GeoCoding_isCrossingMeridianAt180
 	GeoCoding_canGetPixelPos
 	GeoCoding_canGetGeoPos

@@ -34,9 +34,9 @@ PyObject* beam_new_pyseq_from_string_array(const char** elems, int length);
 PyObject* beam_new_pyseq_from_jobject_array(const char* type, const void** elems, int length);
 
 /* Extra global functions for beampy. These will also go into the module definition. */
+PyObject* BeamPyObject_delete(PyObject* self, PyObject* args);
 PyObject* BeamPyString_newString(PyObject* self, PyObject* args);
 PyObject* BeamPyMap_newHashMap(PyObject* self, PyObject* args);
-PyObject* BeamPyObject_deleteGlobalRef(PyObject* self, PyObject* args);
 
 
 
@@ -2167,7 +2167,7 @@ static PyMethodDef BeamPy_Methods[] = {
     {"MetadataAttribute_getExtension", BeamPyMetadataAttribute_getExtension, METH_VARARGS, "\n@param this The MetadataAttribute object."},
     {"String_newString", BeamPyString_newString, METH_VARARGS, "Converts a Python unicode string into a Java java.lang.String object"},
     {"Map_newHashMap", BeamPyMap_newHashMap, METH_VARARGS, "Converts a Python dictionary into a Java java.utils.Map object"},
-    {"Object_deleteGlobalRef", BeamPyObject_deleteGlobalRef, METH_VARARGS, "Deletes global references to Java objects held by Python objects"},
+    {"Object_delete", BeamPyObject_delete, METH_VARARGS, "Deletes global references to Java objects held by Python objects"},
     {NULL, NULL, 0, NULL}  /* Sentinel */
 };
 
@@ -2253,7 +2253,7 @@ static int BeamPyJObject_init(BeamPyJObject* self, PyObject* args, PyObject* kwd
 static void BeamPyJObject_dealloc(BeamPyJObject* self)
 {
     printf("BeamPyJObject_dealloc\n");
-    beam_release_jobject(self->jobjectId);
+    Object_delete(self->jobjectId);
     self->jobjectId = NULL;
 }
 
@@ -2527,14 +2527,14 @@ PyObject* BeamPyMap_newHashMap(PyObject* self, PyObject* args)
     return Py_BuildValue("(sK)", "Map", (unsigned PY_LONG_LONG) result);
 }
 
-PyObject* BeamPyObject_deleteGlobalRef(PyObject* self, PyObject* args)
+PyObject* BeamPyObject_delete(PyObject* self, PyObject* args)
 {
     const char* thisObjType;
     unsigned PY_LONG_LONG thisObj;
-    if (!PyArg_ParseTuple(args, "(sK):Object_deleteGlobalRef", &thisObjType, &thisObj)) {
+    if (!PyArg_ParseTuple(args, "(sK):Object_delete", &thisObjType, &thisObj)) {
         return NULL;
     }
-    beam_release_jobject((void *) thisObj);
+    Object_delete((void *) thisObj);
     return Py_BuildValue("");
 }
 

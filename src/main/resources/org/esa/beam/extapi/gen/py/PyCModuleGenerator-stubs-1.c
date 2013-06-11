@@ -23,6 +23,6 @@ PyObject* beam_new_pyseq_from_string_array(const char** elems, int length);
 PyObject* beam_new_pyseq_from_jobject_array(const char* type, const void** elems, int length);
 
 /* Extra global functions for beampy. These will also go into the module definition. */
+PyObject* BeamPyObject_delete(PyObject* self, PyObject* args);
 PyObject* BeamPyString_newString(PyObject* self, PyObject* args);
 PyObject* BeamPyMap_newHashMap(PyObject* self, PyObject* args);
-PyObject* BeamPyObject_deleteGlobalRef(PyObject* self, PyObject* args);

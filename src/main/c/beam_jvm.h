@@ -18,7 +18,7 @@ boolean beam_create_jvm(const char* option_strings[], int option_count);
 boolean beam_create_jvm_with_defaults();
 boolean beam_destroy_jvm();
 
-void beam_release_jobject(void* object);
+void Object_delete(void* object);
 
 String String_newString(const char* chars);
 void beam_release_string(char* chars);
