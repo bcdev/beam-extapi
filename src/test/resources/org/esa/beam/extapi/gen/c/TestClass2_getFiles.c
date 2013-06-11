@@ -5,7 +5,7 @@ File* TestClass2_getFiles(TestClass2 _this, const char* p1, int* resultArrayLeng
     File* _result = (File*) 0;
     jarray _resultArray = NULL;
     if (_method == NULL) {
-        if (beam_init_api() == 0) {
+        if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classTestClass2, "getFiles", "(Ljava/lang/String;)[Ljava/io/File;");
             if (_method == NULL) {
                 /* Set global error */

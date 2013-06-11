@@ -3,7 +3,7 @@ TestClass2 TestClass2_newTestClass2()
     static jmethodID _method = NULL;
     TestClass2 _result = (TestClass2) 0;
     if (_method == NULL) {
-        if (beam_init_api() == 0) {
+        if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classTestClass2, "<init>", "()V");
             if (_method == NULL) {
                 /* Set global error */

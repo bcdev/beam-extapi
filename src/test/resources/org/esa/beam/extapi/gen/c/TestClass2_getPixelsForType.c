@@ -3,7 +3,7 @@ Object TestClass2_getPixelsForType(TestClass2 _this, Class p1)
     static jmethodID _method = NULL;
     Object _result = (Object) 0;
     if (_method == NULL) {
-        if (beam_init_api() == 0) {
+        if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classTestClass2, "getPixelsForType", "(Ljava/lang/Class;)Ljava/lang/Object;");
             if (_method == NULL) {
                 /* Set global error */

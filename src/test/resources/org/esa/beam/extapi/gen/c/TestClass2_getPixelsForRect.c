@@ -4,7 +4,7 @@ float* TestClass2_getPixelsForRect(TestClass2 _this, Rectangle2D p1, int* result
     float* _result = (float*) 0;
     jarray _resultArray = NULL;
     if (_method == NULL) {
-        if (beam_init_api() == 0) {
+        if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classTestClass2, "getPixelsForRect", "(Ljava/awt/geom/Rectangle2D;)[F");
             if (_method == NULL) {
                 /* Set global error */

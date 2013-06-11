@@ -4,7 +4,7 @@ char* TestClass2_getName(TestClass2 _this)
     char* _result = (char*) 0;
     jstring _resultString = NULL;
     if (_method == NULL) {
-        if (beam_init_api() == 0) {
+        if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classTestClass2, "getName", "()Ljava/lang/String;");
             if (_method == NULL) {
                 /* Set global error */

@@ -3,7 +3,7 @@ Date TestClass2_getTimestamp(TestClass2 _this)
     static jmethodID _method = NULL;
     Date _result = (Date) 0;
     if (_method == NULL) {
-        if (beam_init_api() == 0) {
+        if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classTestClass2, "getTimestamp", "()Ljava/util/Date;");
             if (_method == NULL) {
                 /* Set global error */

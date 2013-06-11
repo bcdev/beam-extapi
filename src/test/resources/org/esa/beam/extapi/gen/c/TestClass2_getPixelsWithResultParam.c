@@ -5,7 +5,7 @@ float* TestClass2_getPixelsWithResultParam(TestClass2 _this, float* p1Elems, int
     float* _result = (float*) 0;
     jarray _resultArray = NULL;
     if (_method == NULL) {
-        if (beam_init_api() == 0) {
+        if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classTestClass2, "getPixelsWithResultParam", "([FI)[F");
             if (_method == NULL) {
                 /* Set global error */

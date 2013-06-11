@@ -3,7 +3,7 @@ float TestClass2_getPixel2(TestClass2 _this, int p1, int p2, int p3)
     static jmethodID _method = NULL;
     float _result = (float) 0;
     if (_method == NULL) {
-        if (beam_init_api() == 0) {
+        if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classTestClass2, "getPixel", "(III)F");
             if (_method == NULL) {
                 /* Set global error */
