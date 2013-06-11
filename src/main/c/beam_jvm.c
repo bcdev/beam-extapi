@@ -1,3 +1,5 @@
+// todo - make use of this file, currently we generate this code from resource templates
+
 #include "beam_jvm.h"
 
 static JavaVM* jvm = NULL;

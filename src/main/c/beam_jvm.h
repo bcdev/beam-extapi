@@ -1,5 +1,6 @@
-#ifndef BEAM_JOBJECT_H
-#define BEAM_JOBJECT_H
+// todo - make use of this file, currently we generate this code from resource templates
+#ifndef BEAM_JVM_H
+#define BEAM_JVM_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -29,4 +30,4 @@ void beam_release_primitive_array(void* array_elems, int array_length);
 #ifdef __cplusplus
 }  /* extern "C" */
 #endif
-#endif /* !BEAMPY_JOBJECT_H */
+#endif /* !BEAMPY_JVM_H */
