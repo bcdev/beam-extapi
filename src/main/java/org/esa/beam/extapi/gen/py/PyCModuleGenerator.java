@@ -74,7 +74,7 @@ public class PyCModuleGenerator extends ModuleGenerator {
             protected void writeHeader() throws IOException {
                 writer.printf("# Please note: This file is machine generated. DO NOT EDIT!\n");
                 writer.printf("# It will be regenerated every time you run 'java %s <beam-src-dir>'.\n", ApiGeneratorDoclet.class.getName());
-                writer.printf("# Last updated on %s.\n", new Date());
+                //writer.printf("# Last updated on %s.\n", new Date());
                 writer.printf("\n");
             }
 
