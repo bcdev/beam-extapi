@@ -1,3 +1,4 @@
+// todo - make use of this file, currently we generate this code from resource templates
 #ifndef BEAM_JOBJECT_H
 #define BEAM_JOBJECT_H
 

@@ -1,3 +1,4 @@
+// todo - make use of this file, currently we generate this code from resource templates
 #include "beampy_jobject.h"
 
 /**
