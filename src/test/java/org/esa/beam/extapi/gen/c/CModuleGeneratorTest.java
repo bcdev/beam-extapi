@@ -14,6 +14,10 @@ import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
  * @author Norman Fomferra
@@ -25,7 +29,11 @@ public class CModuleGeneratorTest {
 
     @BeforeClass
     public static void beforeClass() throws Exception {
-        ApiGeneratorConfig config = new ApiGeneratorConfigMock(TEST_CLASS_2);
+        ApiGeneratorConfigMock config = new ApiGeneratorConfigMock(TEST_CLASS_2);
+        config.addModifiers("getPixelsWithResultParam", "([FI)[F", new ApiParameter.Modifier[]{
+                ApiParameter.Modifier.RETURN,
+                ApiParameter.Modifier.IN
+        });
         RootDoc rootDoc = DocMock.createRootDoc(TEST_CLASS_2);
         apiInfo = ApiInfo.create(config, rootDoc);
     }
@@ -44,6 +52,7 @@ public class CModuleGeneratorTest {
         testFunctionGenerator(apiClass, "TestClass2_getPixel2.c", "getPixel", "(III)F");
         testFunctionGenerator(apiClass, "TestClass2_getTimestamp.c", "getTimestamp", "()Ljava/util/Date;");
         testFunctionGenerator(apiClass, "TestClass2_getPixels.c", "getPixels", "([FI)[F");
+        testFunctionGenerator(apiClass, "TestClass2_getPixelsWithResultParam.c", "getPixelsWithResultParam", "([FI)[F");
         testFunctionGenerator(apiClass, "TestClass2_getName.c", "getName", "()Ljava/lang/String;");
         testFunctionGenerator(apiClass, "TestClass2_getFiles.c", "getFiles", "(Ljava/lang/String;)[Ljava/io/File;");
         testFunctionGenerator(apiClass, "TestClass2_getPixelsForType.c", "getPixelsForType", "(Ljava/lang/Class;)Ljava/lang/Object;");

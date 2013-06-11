@@ -1,15 +1,20 @@
 package org.esa.beam.extapi.gen;
 
-import org.esa.beam.extapi.gen.test.TestClass2;
+import java.util.HashMap;
 
 /**
-* @author Norman Fomferra
-*/
+ * @author Norman Fomferra
+ */
 public class ApiGeneratorConfigMock implements ApiGeneratorConfig {
-    private final Class<TestClass2> aClass;
+    private final Class<?> aClass;
+    private final HashMap<String, ApiParameter.Modifier[]> modifiersMap = new HashMap<String, ApiParameter.Modifier[]>();
 
-    public ApiGeneratorConfigMock(Class<TestClass2> aClass) {
+    public ApiGeneratorConfigMock(Class<?> aClass) {
         this.aClass = aClass;
+    }
+
+    public void addModifiers(String methodName, String methodSignature, ApiParameter.Modifier[] modifiers) {
+        modifiersMap.put(aClass.getName() + methodName + methodSignature, modifiers);
     }
 
     @Override
@@ -34,7 +39,7 @@ public class ApiGeneratorConfigMock implements ApiGeneratorConfig {
 
     @Override
     public ApiParameter.Modifier[] getParameterModifiers(String className, String methodName, String methodSignature) {
-        return null;
+        return modifiersMap.get(className + methodName + methodSignature);
     }
 
     @Override

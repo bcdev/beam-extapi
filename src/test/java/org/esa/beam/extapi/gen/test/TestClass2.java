@@ -14,42 +14,49 @@ public class TestClass2 extends TestClass1 {
     private static final Date DAY_ONE = new Date(0);
 
     /*
-     * For testing overloading (getPixel with 2 params).
+     * For testing code generation for overloaded methods (getPixel with 2 params).
      */
     public float getPixel(int x, int y) {
         return 0;
     }
 
     /*
-     * For testing overloading (getPixel with 3 params).
+     * For testing code generation for overloaded methods (getPixel with 3 params).
      */
     public float getPixel(int x, int y, int b) {
         return 0;
     }
 
     /*
-     * For testing primitive arrays (float[]).
+     * For testing code generation for primitive arrays return value and parameter (float[]).
      */
     public float[] getPixels(float[] pixels, int size) {
         return null;
     }
 
     /*
-     * For testing plain type variable T.
+     * For testing code generation for primitive array parameter that acts as return value (float[]).
+     */
+    public float[] getPixelsWithResultParam(float[] pixels, int size) {
+        return null;
+    }
+
+    /*
+     * For testing code generation for parameters that are a plain type variable T.
      */
     public <T> T getPixelsForType(Class<T> type) {
         return null;
     }
 
     /*
-     * For testing bound type variable T (extends Rectangle2D).
+     * For testing code generation for bound type variable T (extends Rectangle2D).
      */
     public <T extends Rectangle2D> float[] getPixelsForRect(T rect) {
         return null;
     }
 
     /*
-     * For testing AWT class Date.
+     * For testing code generation for a returned Java object (java.util.Date).
      */
     @Override
     public Date getTimestamp() {

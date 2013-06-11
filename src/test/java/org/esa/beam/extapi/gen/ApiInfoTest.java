@@ -81,12 +81,13 @@ public class ApiInfoTest {
 
         List<ApiMethod> apiMethods = apiInfo.getMethodsOf(apiClass1);
         assertNotNull(apiMethods);
-        assertEquals(9, apiMethods.size());
+        assertEquals(10, apiMethods.size());
 
         testMethod(apiMethods, "<init>", "()V");
         testMethod(apiMethods, "getPixel", "(II)F");
         testMethod(apiMethods, "getPixel", "(III)F");
         testMethod(apiMethods, "getPixels", "([FI)[F");
+        testMethod(apiMethods, "getPixelsWithResultParam", "([FI)[F");
         testMethod(apiMethods, "getName", "()Ljava/lang/String;");
         testMethod(apiMethods, "getTimestamp", "()Ljava/util/Date;");
         testMethod(apiMethods, "getFiles", "(Ljava/lang/String;)[Ljava/io/File;");
