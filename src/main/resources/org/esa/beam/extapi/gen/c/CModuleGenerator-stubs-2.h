@@ -15,5 +15,5 @@ void beam_release_object_array(void** array_elems, int array_length);
 void beam_release_primitive_array(void* array_elems, int array_length);
 
 String String_newString(const char* chars);
-void Object_delete(void* object);
+void Object_delete(Object object);
 

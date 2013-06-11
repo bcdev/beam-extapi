@@ -14,6 +14,13 @@ String String_newString(const char* chars)
     return (*jenv)->NewGlobalRef(jenv, str);
 }
 
+void Object_delete(Object object)
+{
+    if (object != NULL) {
+        (*jenv)->DeleteGlobalRef(jenv, object);
+    }
+}
+
 jobjectArray beam_new_jstring_array(const char** array_elems, int array_length)
 {
     jobjectArray array;
@@ -39,13 +46,6 @@ jobjectArray beam_new_jobject_array(const jobject* array_elems, int array_length
     }
 
     return (*jenv)->NewGlobalRef(jenv, array);
-}
-
-void Object_delete(void* object)
-{
-    if (object != NULL) {
-        (*jenv)->DeleteGlobalRef(jenv, object);
-    }
 }
 
 void beam_copy_from_jarray(jarray array, void* elems, int array_length, int elem_size)
