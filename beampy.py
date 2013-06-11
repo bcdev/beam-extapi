@@ -1,6 +1,5 @@
 # Please note: This file is machine generated. DO NOT EDIT!
 # It will be regenerated every time you run 'java org.esa.beam.extapi.gen.ApiGeneratorDoclet <beam-src-dir>'.
-# Last updated on Tue Jun 11 12:33:01 CEST 2013.
 
 from _beampy import *
 
