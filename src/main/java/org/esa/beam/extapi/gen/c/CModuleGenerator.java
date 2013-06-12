@@ -52,7 +52,6 @@ public class CModuleGenerator extends ModuleGenerator {
     public void run() throws IOException {
         writeWinDef();
         writeCHeader();
-        writeCHeaderJ();
         writeCSource();
         printStats();
     }
@@ -100,23 +99,6 @@ public class CModuleGenerator extends ModuleGenerator {
             @Override
             protected void writeContent() throws IOException {
                 CModuleGenerator.this.writeCHeaderContents(writer);
-            }
-        }.create();
-    }
-
-    private void writeCHeaderJ() throws IOException {
-        new TargetCHeaderFile(BEAM_CAPI_SRCDIR, BEAM_CAPI_NAME + "_j.h") {
-            @Override
-            protected void writeContent() throws IOException {
-                writer.print("#include \"jni.h\"\n");
-                writer.printf("\n");
-
-                writer.printf("int beam_initApi();\n");
-                writer.printf("JavaVM* beam_getJavaVM();\n");
-                writer.printf("JNIEnv* beam_getJNIEnv();\n");
-                writer.printf("\n");
-
-                writeClassDefinitions(writer, true);
             }
         }.create();
     }
@@ -240,17 +222,12 @@ public class CModuleGenerator extends ModuleGenerator {
         new TargetCFile(BEAM_CAPI_SRCDIR, BEAM_CAPI_NAME + ".c") {
             @Override
             protected void writeContent() throws IOException {
-                writer.printf("#include <stdlib.h>\n");
-                writer.printf("#include <string.h>\n");
-                writer.printf("#include \"../beam_util.h\"\n");
-                writer.printf("#include \"%s\"\n", BEAM_CAPI_NAME + ".h");
-                writer.printf("#include \"%s\"\n", BEAM_CAPI_NAME + "_j.h");
+                writeTemplateResource(writer, "CModuleGenerator-stubs-1.c");
+
                 writer.printf("\n");
 
                 writeClassDefinitions(writer, false);
 
-                writer.printf("\n");
-                writeTemplateResource(writer, "CModuleGenerator-stubs-1.c");
                 writer.printf("\n");
 
                 for (ApiClass apiClass : getApiClasses()) {
@@ -275,15 +252,6 @@ public class CModuleGenerator extends ModuleGenerator {
                 /////////////////////////////////////////////////////////////////////////////////////
                 // beam_initApi()
                 //
-                writer.write("" +
-                                     "jclass beam_findClass(const char* classResourceName)\n" +
-                                     "{\n" +
-                                     "    jclass c = (*jenv)->FindClass(jenv, classResourceName);\n" +
-                                     "    if (c == NULL) {\n" +
-                                     "        fprintf(stderr, \"error: Java class not found: %s\\n\", classResourceName);\n" +
-                                     "    }\n" +
-                                     "    return c;\n" +
-                                     "}\n");
 
                 writer.write("int beam_initApi()\n");
                 writer.write("{\n");

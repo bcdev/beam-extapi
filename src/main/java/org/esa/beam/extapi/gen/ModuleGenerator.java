@@ -75,7 +75,9 @@ public abstract class ModuleGenerator implements GeneratorContext {
     protected void writeTemplateResource(Writer writer, String resourceName, KV... pairs) throws IOException {
         final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(resourceName)));
         try {
+            writer.write("// << " + resourceName + "\n");
             templateEval.add(pairs).eval(bufferedReader, writer);
+            writer.write("// >> " + resourceName + "\n");
         } finally {
             bufferedReader.close();
         }

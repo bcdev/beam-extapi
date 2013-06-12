@@ -1,5 +1,12 @@
-static PyObject* BeamPy_Error;
+#include "beam_capi.h"
+#include "${libName}.h"
 
+#include <Python.h>
+
+#include "structmember.h"
+
+
+static PyObject* BeamPy_Error;
 
 boolean* beampy_newCBooleanArrayFromPySeq(PyObject* seq, int* length);
 char*    beampy_newCCharArrayFromPySeq(PyObject* seq, int* length);
@@ -26,4 +33,6 @@ PyObject* beampy_newPySeqFromCObjectArray(const char* type, const void** elems, 
 /* Extra global functions for beampy. These will also go into the module definition. */
 PyObject* BeamPyObject_delete(PyObject* self, PyObject* args);
 PyObject* BeamPyString_newString(PyObject* self, PyObject* args);
-PyObject* BeamPyMap_newHashMap(PyObject* self, PyObject* args);
+
+// experimental
+// PyObject* BeamPyMap_newHashMap(PyObject* self, PyObject* args);

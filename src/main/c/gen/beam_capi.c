@@ -3,11 +3,40 @@
  * This code has been generated using org.esa.beam.extapi.gen.ApiGeneratorDoclet
  */
 
+// << CModuleGenerator-stubs-1.c
 #include <stdlib.h>
 #include <string.h>
+
+#include <jni.h>
+
 #include "../beam_util.h"
 #include "beam_capi.h"
-#include "beam_capi_j.h"
+
+static JavaVM* jvm = NULL;
+static JNIEnv* jenv = NULL;
+
+int beam_initApi();
+
+jobjectArray beam_newJStringArray(const char** array_elems, int array_length);
+jobjectArray beam_newJObjectArray(const jobject* obj_array_data, int obj_array_length, jclass comp_class);
+
+void beam_copyFromJArray(jarray array, void* elems, int array_length, int elem_size);
+void beam_copyToJArray(jarray array, const void* elems, int array_length, int elem_size);
+
+char* beam_newCString(jstring str);
+char** beam_newCStringArray(jarray array, int* array_length);
+void** beam_newCObjectArray(jarray array, int* array_length);
+void* beam_newCPrimitiveArray(jarray array, int* array_length, int elem_size);
+boolean* beam_newCBooleanArray(jarray array, int* array_length);
+char* beam_newCCharArray(jarray array, int* array_length);
+byte* beam_newCByteArray(jarray array, int* array_length);
+short* beam_newCShortArray(jarray array, int* array_length);
+int* beam_newCIntArray(jarray array, int* array_length);
+dlong* beam_newCLongArray(jarray array, int* array_length);
+float* beam_newCFloatArray(jarray array, int* array_length);
+double* beam_newCDoubleArray(jarray array, int* array_length);
+
+// >> CModuleGenerator-stubs-1.c
 
 /* java.lang classes. */
 jclass classBoolean;
@@ -67,7 +96,6 @@ jclass classAffineTransform;
 jclass classArea;
 jclass classGeneralPath;
 jclass classPoint2D;
-jclass classRectangle2D;
 jclass classBufferedImage;
 jclass classComponentColorModel;
 jclass classIndexColorModel;
@@ -117,30 +145,6 @@ jclass classSimpleFeature;
 jclass classSimpleFeatureType;
 jclass classCoordinateReferenceSystem;
 jclass classMathTransform;
-
-
-
-static JavaVM* jvm = NULL;
-static JNIEnv* jenv = NULL;
-
-jobjectArray beam_newJStringArray(const char** array_elems, int array_length);
-jobjectArray beam_newJObjectArray(const jobject* obj_array_data, int obj_array_length, jclass comp_class);
-
-void beam_copyFromJArray(jarray array, void* elems, int array_length, int elem_size);
-void beam_copyToJArray(jarray array, const void* elems, int array_length, int elem_size);
-
-char* beam_newCString(jstring str);
-char** beam_newCStringArray(jarray array, int* array_length);
-void** beam_newCObjectArray(jarray array, int* array_length);
-void* beam_newCPrimitiveArray(jarray array, int* array_length, int elem_size);
-boolean* beam_newCBooleanArray(jarray array, int* array_length);
-char* beam_newCCharArray(jarray array, int* array_length);
-byte* beam_newCByteArray(jarray array, int* array_length);
-short* beam_newCShortArray(jarray array, int* array_length);
-int* beam_newCIntArray(jarray array, int* array_length);
-dlong* beam_newCLongArray(jarray array, int* array_length);
-float* beam_newCFloatArray(jarray array, int* array_length);
-double* beam_newCDoubleArray(jarray array, int* array_length);
 
 
 /* Constants of GPF */
@@ -273,6 +277,7 @@ const char* MetadataAttribute_PROPERTY_NAME_NAME = "name";
 const char* MetadataAttribute_PROPERTY_NAME_DESCRIPTION = "description";
 
 
+// << CModuleGenerator-stubs-2.c
 JavaVM* beam_getJavaVM()
 {
     return jvm;
@@ -528,14 +533,14 @@ jboolean beam_createJvm(const char* option_strings[], int option_count)
         return JNI_TRUE;
     }
 
-    fprintf(stdout, "beam_capi: Creating Java VM using %d options:\n", option_count);
+    fprintf(stdout, "beam_capi: creating Java VM using %d options\n", option_count);
 
     options = (JavaVMOption*) calloc(option_count, sizeof (JavaVMOption));
     {
         int i;
         for (i = 0; i < option_count; i++) {
             options[i].optionString = (char*) option_strings[i];
-            fprintf(stdout, "beam_capi: option_strings[%d] = \"%s\":\n", i, options[i].optionString);
+            fprintf(stdout, "beam_capi: option(%d) = \"%s\"\n", i, options[i].optionString);
         }
     }
 
@@ -548,7 +553,7 @@ jboolean beam_createJvm(const char* option_strings[], int option_count)
     free(options);
 
     if (res != 0) {
-        fprintf(stderr, "beam_capi error: JNI_CreateJavaVM failed with exit code %d\n", res);
+        fprintf(stderr, "beam_capi: JNI_CreateJavaVM failed with exit code %d\n", res);
         return JNI_FALSE;
     } else {
         fprintf(stdout, "beam_capi: Java VM successfully created\n");
@@ -567,7 +572,7 @@ jboolean beam_destroyJvm()
     
     res = (*jvm)->DestroyJavaVM(jvm);
     if (res != 0) {
-        fprintf(stderr, "beam_capi error: DestroyJavaVM failed with exit code %d\n", res);
+        fprintf(stderr, "beam_capi: DestroyJavaVM failed with exit code %d\n", res);
         return JNI_FALSE;
     }
 
@@ -611,8 +616,8 @@ char* beam_create_class_path_vm_option()
 
     beam_home = getenv("BEAM_HOME");
     if (beam_home == NULL) {
-        fprintf(stderr, "beam_capi: missing environment variable 'BEAM_HOME',\n");
-        fprintf(stderr, "           please make sure 'BEAM_HOME' points to a valid BEAM installation directory.\n");
+        fprintf(stderr, "beam_capi: missing environment variable 'BEAM_HOME'\n");
+        fprintf(stderr, "beam_capi: please make sure 'BEAM_HOME' points to a valid BEAM installation directory\n");
         return NULL;
     }
 
@@ -649,8 +654,8 @@ jboolean beam_createJvmWithDefaults()
         const char* beam_home = getenv("BEAM_HOME");
         fprintf(stderr, "beam_capi: failed to construct Java classpath\n");
         if (beam_home != NULL) {
-            fprintf(stderr, "           please make sure 'BEAM_HOME' points to a valid BEAM installation directory.\n");
-            fprintf(stderr, "           Currently BEAM_HOME = %s\n", beam_home);
+            fprintf(stderr, "beam_capi: please make sure 'BEAM_HOME' points to a valid BEAM installation directory\n");
+            fprintf(stderr, "beam_capi: currently BEAM_HOME = %s\n", beam_home);
         }
         return JNI_FALSE;
     }
@@ -672,15 +677,19 @@ jboolean beam_createJvmWithDefaults()
 }
 
 
-
 jclass beam_findClass(const char* classResourceName)
 {
     jclass c = (*jenv)->FindClass(jenv, classResourceName);
     if (c == NULL) {
-        fprintf(stderr, "error: Java class not found: %s\n", classResourceName);
+        fprintf(stderr, "beam_capi: Java class not found: %s\n", classResourceName);
     }
     return c;
 }
+
+
+
+// >> CModuleGenerator-stubs-2.c
+
 int beam_initApi()
 {
     static int exitCode = -1;
@@ -5437,13 +5446,13 @@ MetadataElement Product_getMetadataRoot(Product _this)
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
-ProductNodeGroup Product_getGroups(Product _this)
+ProductNodeGroup Product_getBandGroup(Product _this)
 {
     static jmethodID _method = NULL;
     ProductNodeGroup _result = (ProductNodeGroup) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
-            _method = (*jenv)->GetMethodID(jenv, classProduct, "getGroups", "()Lorg/esa/beam/framework/datamodel/ProductNodeGroup;");
+            _method = (*jenv)->GetMethodID(jenv, classProduct, "getBandGroup", "()Lorg/esa/beam/framework/datamodel/ProductNodeGroup;");
             if (_method == NULL) {
                 /* Set global error */
             }
@@ -5453,28 +5462,6 @@ ProductNodeGroup Product_getGroups(Product _this)
         }
     }
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
-    return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
-}
-
-ProductNodeGroup Product_getGroup(Product _this, const char* name)
-{
-    static jmethodID _method = NULL;
-    jstring nameString = NULL;
-    ProductNodeGroup _result = (ProductNodeGroup) 0;
-    if (_method == NULL) {
-        if (beam_initApi() == 0) {
-            _method = (*jenv)->GetMethodID(jenv, classProduct, "getGroup", "(Ljava/lang/String;)Lorg/esa/beam/framework/datamodel/ProductNodeGroup;");
-            if (_method == NULL) {
-                /* Set global error */
-            }
-        }
-        if (_method == NULL) {
-            return _result;
-        }
-    }
-    nameString = (*jenv)->NewStringUTF(jenv, name);
-    _result = (*jenv)->CallObjectMethod(jenv, _this, _method, nameString);
-    (*jenv)->DeleteLocalRef(jenv, nameString);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
@@ -5657,25 +5644,6 @@ boolean Product_containsTiePointGrid(Product _this, const char* name)
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method, nameString);
     (*jenv)->DeleteLocalRef(jenv, nameString);
     return _result;
-}
-
-ProductNodeGroup Product_getBandGroup(Product _this)
-{
-    static jmethodID _method = NULL;
-    ProductNodeGroup _result = (ProductNodeGroup) 0;
-    if (_method == NULL) {
-        if (beam_initApi() == 0) {
-            _method = (*jenv)->GetMethodID(jenv, classProduct, "getBandGroup", "()Lorg/esa/beam/framework/datamodel/ProductNodeGroup;");
-            if (_method == NULL) {
-                /* Set global error */
-            }
-        }
-        if (_method == NULL) {
-            return _result;
-        }
-    }
-    _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
-    return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
 void Product_addBand(Product _this, Band band)
@@ -6084,42 +6052,6 @@ PlacemarkGroup Product_getPinGroup(Product _this)
     }
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
-}
-
-int Product_getNumResolutionsMax(Product _this)
-{
-    static jmethodID _method = NULL;
-    int _result = (int) 0;
-    if (_method == NULL) {
-        if (beam_initApi() == 0) {
-            _method = (*jenv)->GetMethodID(jenv, classProduct, "getNumResolutionsMax", "()I");
-            if (_method == NULL) {
-                /* Set global error */
-            }
-        }
-        if (_method == NULL) {
-            return _result;
-        }
-    }
-    _result = (*jenv)->CallIntMethod(jenv, _this, _method);
-    return _result;
-}
-
-void Product_setNumResolutionsMax(Product _this, int numResolutionsMax)
-{
-    static jmethodID _method = NULL;
-    if (_method == NULL) {
-        if (beam_initApi() == 0) {
-            _method = (*jenv)->GetMethodID(jenv, classProduct, "setNumResolutionsMax", "(I)V");
-            if (_method == NULL) {
-                /* Set global error */
-            }
-        }
-        if (_method == NULL) {
-            return;
-        }
-    }
-    (*jenv)->CallVoidMethod(jenv, _this, _method, numResolutionsMax);
 }
 
 boolean Product_isCompatibleProduct(Product _this, Product product, float eps)
@@ -8564,25 +8496,6 @@ ImageGeometry ImageGeometry_createCollocationTargetGeometry(Product targetProduc
         }
     }
     _result = (*jenv)->CallStaticObjectMethod(jenv, classImageGeometry, _method, targetProduct, collocationProduct);
-    return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
-}
-
-Rectangle2D ImageGeometry_createValidRect(Product product)
-{
-    static jmethodID _method = NULL;
-    Rectangle2D _result = (Rectangle2D) 0;
-    if (_method == NULL) {
-        if (beam_initApi() == 0) {
-            _method = (*jenv)->GetStaticMethodID(jenv, classImageGeometry, "createValidRect", "(Lorg/esa/beam/framework/datamodel/Product;)Ljava/awt/geom/Rectangle2D;");
-            if (_method == NULL) {
-                /* Set global error */
-            }
-        }
-        if (_method == NULL) {
-            return _result;
-        }
-    }
-    _result = (*jenv)->CallStaticObjectMethod(jenv, classImageGeometry, _method, product);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
@@ -19818,25 +19731,6 @@ GeoPos* ProductUtils_createGeoBoundary3(Product product, Rectangle region, int s
     _result = beam_newCObjectArray(_resultArray, resultArrayLength);
     (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
-}
-
-GeoPos ProductUtils_getClosestGeoPos(GeoCoding gc, PixelPos origPos, Rectangle region, int step)
-{
-    static jmethodID _method = NULL;
-    GeoPos _result = (GeoPos) 0;
-    if (_method == NULL) {
-        if (beam_initApi() == 0) {
-            _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "getClosestGeoPos", "(Lorg/esa/beam/framework/datamodel/GeoCoding;Lorg/esa/beam/framework/datamodel/PixelPos;Ljava/awt/Rectangle;I)Lorg/esa/beam/framework/datamodel/GeoPos;");
-            if (_method == NULL) {
-                /* Set global error */
-            }
-        }
-        if (_method == NULL) {
-            return _result;
-        }
-    }
-    _result = (*jenv)->CallStaticObjectMethod(jenv, classProductUtils, _method, gc, origPos, region, step);
-    return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
 GeoPos* ProductUtils_createGeoBoundary4(RasterDataNode raster, Rectangle region, int step, int* resultArrayLength)

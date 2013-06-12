@@ -17,12 +17,22 @@
 package org.esa.beam.extapi.gen.py;
 
 import com.sun.javadoc.Type;
-import org.esa.beam.extapi.gen.*;
+import org.esa.beam.extapi.gen.ApiClass;
+import org.esa.beam.extapi.gen.ApiConstant;
+import org.esa.beam.extapi.gen.ApiGeneratorDoclet;
+import org.esa.beam.extapi.gen.ApiMethod;
+import org.esa.beam.extapi.gen.FunctionGenerator;
+import org.esa.beam.extapi.gen.FunctionWriter;
+import org.esa.beam.extapi.gen.JavadocHelpers;
+import org.esa.beam.extapi.gen.ModuleGenerator;
+import org.esa.beam.extapi.gen.ParameterGenerator;
+import org.esa.beam.extapi.gen.TargetCFile;
+import org.esa.beam.extapi.gen.TargetCHeaderFile;
+import org.esa.beam.extapi.gen.TargetFile;
 import org.esa.beam.extapi.gen.c.CModuleGenerator;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Date;
 import java.util.List;
 
 import static org.esa.beam.extapi.gen.TemplateEval.eval;
@@ -277,13 +287,7 @@ public class PyCModuleGenerator extends ModuleGenerator {
         new TargetCFile(BEAM_PYAPI_C_SRCDIR, BEAM_PYAPI_NAME + ".c") {
             @Override
             protected void writeContent() throws IOException {
-                writer.printf("#include \"%s\"\n", BEAM_PYAPI_NAME + ".h");
-                writer.printf("#include \"%s\"\n", CModuleGenerator.BEAM_CAPI_NAME + ".h");
-                writer.printf("#include \"%s\"\n", CModuleGenerator.BEAM_CAPI_NAME + "_j.h");
-                writer.printf("#include \"Python.h\"\n");
-                writer.printf("#include \"structmember.h\"\n");
 
-                writer.printf("\n");
                 writeTemplateResource(writer, "PyCModuleGenerator-stubs-1.c");
                 writer.printf("\n");
 
@@ -308,9 +312,10 @@ public class PyCModuleGenerator extends ModuleGenerator {
                                       generator.generateDocText(PyCModuleGenerator.this));
                     }
                 }
-                writer.printf("    {\"String_newString\", BeamPyString_newString, METH_VARARGS, \"Converts a Python unicode string into a Java java.lang.String object\"},\n");
-                writer.printf("    {\"Map_newHashMap\", BeamPyMap_newHashMap, METH_VARARGS, \"Converts a Python dictionary into a Java java.utils.Map object\"},\n");
                 writer.printf("    {\"Object_delete\", BeamPyObject_delete, METH_VARARGS, \"Deletes global references to Java objects held by Python objects\"},\n");
+                writer.printf("    {\"String_newString\", BeamPyString_newString, METH_VARARGS, \"Converts a Python unicode string into a Java java.lang.String object\"},\n");
+                // experimental
+                // writer.printf("    {\"Map_newHashMap\", BeamPyMap_newHashMap, METH_VARARGS, \"Converts a Python dictionary into a Java java.utils.Map object\"},\n");
                 writer.printf("    {NULL, NULL, 0, NULL}  /* Sentinel */\n");
                 writer.printf("};\n");
                 writer.printf("\n");
@@ -337,9 +342,11 @@ public class PyCModuleGenerator extends ModuleGenerator {
                 writeArrayConverters(writer, "dlong", "dlong", "PyLong_FromLongLong(elems[i])", "PyLong_AsLongLong(item)");
                 writeArrayConverters(writer, "float", "float", "PyFloat_FromDouble(elems[i])", "(float) PyFloat_AsDouble(item)");
                 writeArrayConverters(writer, "double", "double", "PyFloat_FromDouble(elems[i])", "PyFloat_AsDouble(item)");
-                writeTemplateResource(writer, "PyCModuleGenerator-stubs-4.c");
                 writer.printf("\n");
 
+                writeTemplateResource(writer, "PyCModuleGenerator-stubs-4.c");
+
+                writer.printf("\n");
             }
         }.create();
     }

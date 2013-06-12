@@ -223,7 +223,7 @@ void beam_deleteCPrimitiveArray(void* array_elems, int array_length)
 
 JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *vm, void *reserved)
 {
-    fprintf(stdout, "beam_capi: JNI_OnLoad() called\n");
+    fprintf(stdout, "${libName}: JNI_OnLoad() called\n");
     jvm = vm;
     (*jvm)->GetEnv(vm, &jenv, JNI_VERSION_1_6);
     return JNI_VERSION_1_6;
@@ -231,7 +231,7 @@ JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *vm, void *reserved)
 
 JNIEXPORT void JNICALL JNI_OnUnload(JavaVM *vm, void *reserved)
 {
-    fprintf(stdout, "beam_capi: JNI_OnUnload() called\n");
+    fprintf(stdout, "${libName}: JNI_OnUnload() called\n");
     jvm = NULL;
     jenv = NULL;
 }
@@ -253,14 +253,14 @@ jboolean beam_createJvm(const char* option_strings[], int option_count)
         return JNI_TRUE;
     }
 
-    fprintf(stdout, "beam_capi: Creating Java VM using %d options:\n", option_count);
+    fprintf(stdout, "${libName}: creating Java VM using %d options\n", option_count);
 
     options = (JavaVMOption*) calloc(option_count, sizeof (JavaVMOption));
     {
         int i;
         for (i = 0; i < option_count; i++) {
             options[i].optionString = (char*) option_strings[i];
-            fprintf(stdout, "beam_capi: option_strings[%d] = \"%s\":\n", i, options[i].optionString);
+            fprintf(stdout, "${libName}: option(%d) = \"%s\"\n", i, options[i].optionString);
         }
     }
 
@@ -273,10 +273,10 @@ jboolean beam_createJvm(const char* option_strings[], int option_count)
     free(options);
 
     if (res != 0) {
-        fprintf(stderr, "beam_capi error: JNI_CreateJavaVM failed with exit code %d\n", res);
+        fprintf(stderr, "${libName}: JNI_CreateJavaVM failed with exit code %d\n", res);
         return JNI_FALSE;
     } else {
-        fprintf(stdout, "beam_capi: Java VM successfully created\n");
+        fprintf(stdout, "${libName}: Java VM successfully created\n");
     }
 
     return JNI_TRUE;
@@ -292,7 +292,7 @@ jboolean beam_destroyJvm()
     
     res = (*jvm)->DestroyJavaVM(jvm);
     if (res != 0) {
-        fprintf(stderr, "beam_capi error: DestroyJavaVM failed with exit code %d\n", res);
+        fprintf(stderr, "${libName}: DestroyJavaVM failed with exit code %d\n", res);
         return JNI_FALSE;
     }
 
@@ -336,8 +336,8 @@ char* beam_create_class_path_vm_option()
 
     beam_home = getenv("BEAM_HOME");
     if (beam_home == NULL) {
-        fprintf(stderr, "beam_capi: missing environment variable 'BEAM_HOME',\n");
-        fprintf(stderr, "           please make sure 'BEAM_HOME' points to a valid BEAM installation directory.\n");
+        fprintf(stderr, "${libName}: missing environment variable 'BEAM_HOME'\n");
+        fprintf(stderr, "${libName}: please make sure 'BEAM_HOME' points to a valid BEAM installation directory\n");
         return NULL;
     }
 
@@ -372,15 +372,15 @@ jboolean beam_createJvmWithDefaults()
     class_path_option = beam_create_class_path_vm_option();
     if (class_path_option == NULL) {
         const char* beam_home = getenv("BEAM_HOME");
-        fprintf(stderr, "beam_capi: failed to construct Java classpath\n");
+        fprintf(stderr, "${libName}: failed to construct Java classpath\n");
         if (beam_home != NULL) {
-            fprintf(stderr, "           please make sure 'BEAM_HOME' points to a valid BEAM installation directory.\n");
-            fprintf(stderr, "           Currently BEAM_HOME = %s\n", beam_home);
+            fprintf(stderr, "${libName}: please make sure 'BEAM_HOME' points to a valid BEAM installation directory\n");
+            fprintf(stderr, "${libName}: currently BEAM_HOME = %s\n", beam_home);
         }
         return JNI_FALSE;
     }
 
-    fprintf(stdout, "beam_capi: %s\n", class_path_option);
+    fprintf(stdout, "${libName}: %s\n", class_path_option);
 
     jvm_options[0] = class_path_option;
     /*jvm_options[1] = "-Djava.library.path=c:\\mylibs";*/
@@ -395,5 +395,16 @@ jboolean beam_createJvmWithDefaults()
 
     return result;
 }
+
+
+jclass beam_findClass(const char* classResourceName)
+{
+    jclass c = (*jenv)->FindClass(jenv, classResourceName);
+    if (c == NULL) {
+        fprintf(stderr, "${libName}: Java class not found: %s\n", classResourceName);
+    }
+    return c;
+}
+
 
 

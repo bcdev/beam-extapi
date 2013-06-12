@@ -1,6 +1,15 @@
+#include <stdlib.h>
+#include <string.h>
+
+#include <jni.h>
+
+#include "../beam_util.h"
+#include "${libName}.h"
 
 static JavaVM* jvm = NULL;
 static JNIEnv* jenv = NULL;
+
+int beam_initApi();
 
 jobjectArray beam_newJStringArray(const char** array_elems, int array_length);
 jobjectArray beam_newJObjectArray(const jobject* obj_array_data, int obj_array_length, jclass comp_class);
