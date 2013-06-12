@@ -17,7 +17,6 @@
 package org.esa.beam.extapi.gen.c;
 
 import com.sun.javadoc.FieldDoc;
-import com.sun.javadoc.Type;
 import org.esa.beam.extapi.gen.ApiClass;
 import org.esa.beam.extapi.gen.ApiConstant;
 import org.esa.beam.extapi.gen.ApiInfo;
@@ -52,7 +51,6 @@ public class CModuleGenerator extends ModuleGenerator {
     public static final String THIS_VAR_NAME = "_this";
     public static final String METHOD_VAR_NAME = "_method";
     public static final String RESULT_VAR_NAME = "_result";
-    public static final String CLASS_VAR_NAME_PATTERN = "class%s";
     public static final String[] JAVA_LANG_CLASSES = new String[]{"Boolean", "Byte", "Character", "Short", "Integer", "Long", "Float", "Double", "String"};
     public static final String[] JAVA_UTIL_CLASSES = new String[]{"HashMap", "HashSet"};
 
@@ -78,15 +76,7 @@ public class CModuleGenerator extends ModuleGenerator {
         return functionNames.get(apiMethod);
     }
 
-    public static String getComponentCClassName(Type type) {
-        return type.typeName().replace('.', '_');
-    }
-
-    public static String getComponentCClassVarName(Type type) {
-        return String.format(CLASS_VAR_NAME_PATTERN, getComponentCClassName(type));
-    }
-
-    public static String getFunctionBaseName(ApiInfo apiInfo, ApiMethod apiMethod) {
+    private static String getFunctionBaseName(ApiInfo apiInfo, ApiMethod apiMethod) {
         String targetTypeName = getComponentCClassName(apiMethod.getEnclosingClass().getType());
         String methodCName = apiInfo.getConfig().getFunctionName(apiMethod.getEnclosingClass().getType().qualifiedTypeName(),
                                                                  apiMethod.getJavaName(),
