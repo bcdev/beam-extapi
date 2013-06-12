@@ -16,6 +16,8 @@
 
 package org.esa.beam.extapi.gen;
 
+import com.sun.javadoc.Type;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -33,6 +35,7 @@ import static org.esa.beam.extapi.gen.TemplateEval.KV;
  */
 public abstract class ModuleGenerator implements GeneratorContext {
 
+    public static final String CLASS_VAR_NAME_PATTERN = "class%s";
     private final ApiInfo apiInfo;
     private final Map<ApiClass, List<FunctionGenerator>> functionGenerators;
     private final TemplateEval templateEval;
@@ -41,6 +44,14 @@ public abstract class ModuleGenerator implements GeneratorContext {
         this.apiInfo = apiInfo;
         functionGenerators = createFunctionGenerators(apiInfo, factory);
         templateEval = TemplateEval.create();
+    }
+
+    public static String getComponentCClassName(Type type) {
+        return type.typeName().replace('.', '_');
+    }
+
+    public static String getComponentCClassVarName(Type type) {
+        return String.format(CLASS_VAR_NAME_PATTERN, getComponentCClassName(type));
     }
 
     public Set<ApiClass> getApiClasses() {

@@ -334,14 +334,14 @@ public class PyCModuleGenerator extends ModuleGenerator {
                 }
 
                 writer.printf("\n");
-                writeArrayConverters(writer, "boolean", "boolean", "PyBool_FromLong(elems[i])", "(boolean)(PyLong_AsLong(item) != 0)");
-                writeArrayConverters(writer, "char", "char", "PyUnicode_FromFormat(\"%c\", elems[i])", "(char) PyLong_AsLong(item)");
-                writeArrayConverters(writer, "byte", "byte", "PyLong_FromLong(elems[i])", "(byte) PyLong_AsLong(item)");
-                writeArrayConverters(writer, "short", "short", "PyLong_FromLong(elems[i])", "(short) PyLong_AsLong(item)");
-                writeArrayConverters(writer, "int", "int", "PyLong_FromLong(elems[i])", "(int) PyLong_AsLong(item)");
-                writeArrayConverters(writer, "dlong", "dlong", "PyLong_FromLongLong(elems[i])", "PyLong_AsLongLong(item)");
-                writeArrayConverters(writer, "float", "float", "PyFloat_FromDouble(elems[i])", "(float) PyFloat_AsDouble(item)");
-                writeArrayConverters(writer, "double", "double", "PyFloat_FromDouble(elems[i])", "PyFloat_AsDouble(item)");
+                writeArrayConverters(writer, "Boolean", "boolean", "PyBool_FromLong(elems[i])", "(boolean)(PyLong_AsLong(item) != 0)");
+                writeArrayConverters(writer, "Char", "char", "PyUnicode_FromFormat(\"%c\", elems[i])", "(char) PyLong_AsLong(item)");
+                writeArrayConverters(writer, "Byte", "byte", "PyLong_FromLong(elems[i])", "(byte) PyLong_AsLong(item)");
+                writeArrayConverters(writer, "Short", "short", "PyLong_FromLong(elems[i])", "(short) PyLong_AsLong(item)");
+                writeArrayConverters(writer, "Int", "int", "PyLong_FromLong(elems[i])", "(int) PyLong_AsLong(item)");
+                writeArrayConverters(writer, "Dlong", "dlong", "PyLong_FromLongLong(elems[i])", "PyLong_AsLongLong(item)");
+                writeArrayConverters(writer, "Float", "float", "PyFloat_FromDouble(elems[i])", "(float) PyFloat_AsDouble(item)");
+                writeArrayConverters(writer, "Double", "double", "PyFloat_FromDouble(elems[i])", "PyFloat_AsDouble(item)");
                 writer.printf("\n");
 
                 writeTemplateResource(writer, "PyCModuleGenerator-stubs-4.c");

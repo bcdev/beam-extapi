@@ -4,9 +4,9 @@ import com.sun.javadoc.Type;
 import org.esa.beam.extapi.gen.ApiInfo;
 import org.esa.beam.extapi.gen.ApiParameter;
 import org.esa.beam.extapi.gen.GeneratorContext;
+import org.esa.beam.extapi.gen.ModuleGenerator;
 import org.esa.beam.extapi.gen.ParameterGenerator;
 
-import static org.esa.beam.extapi.gen.JavadocHelpers.firstCharToUpperCase;
 import static org.esa.beam.extapi.gen.JavadocHelpers.getComponentCTypeName;
 import static org.esa.beam.extapi.gen.TemplateEval.eval;
 import static org.esa.beam.extapi.gen.TemplateEval.kv;
@@ -88,7 +88,7 @@ public abstract class CParameterGenerator implements ParameterGenerator {
 
         @Override
         public String generateFunctionParamDeclaration(GeneratorContext context) {
-            String typeName = CModuleGenerator.getComponentCClassName(getType());
+            String typeName = ModuleGenerator.getComponentCClassName(getType());
             return eval("${t} ${p}",
                         kv("t", typeName),
                         kv("p", getName()));
@@ -228,7 +228,7 @@ public abstract class CParameterGenerator implements ParameterGenerator {
         public String generateFunctionParamDeclaration(GeneratorContext context) {
             return eval("${m}${t} ${p}Elems, int ${p}Length",
                         kv("m", parameter.getModifier() == ApiParameter.Modifier.IN ? "const " : ""),
-                        kv("t", CModuleGenerator.getComponentCClassName(getType())),
+                        kv("t", ModuleGenerator.getComponentCClassName(getType())),
                         kv("p", getName()));
         }
 
@@ -242,7 +242,7 @@ public abstract class CParameterGenerator implements ParameterGenerator {
         public String generateJniArgFromTransformedTargetArgAssignment(GeneratorContext context) {
             return eval("${p}Array = beam_newJObjectArray(${p}Elems, ${p}Length, ${c});",
                         kv("p", getName()),
-                        kv("c", CModuleGenerator.getComponentCClassVarName(getType())));
+                        kv("c", ModuleGenerator.getComponentCClassVarName(getType())));
         }
 
         @Override

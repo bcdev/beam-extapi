@@ -2,7 +2,6 @@ package org.esa.beam.extapi.gen;
 
 import com.sun.javadoc.ExecutableMemberDoc;
 import com.sun.javadoc.Type;
-import org.esa.beam.extapi.gen.c.CModuleGenerator;
 
 import static org.esa.beam.extapi.gen.TemplateEval.eval;
 import static org.esa.beam.extapi.gen.TemplateEval.kv;
@@ -81,7 +80,7 @@ public abstract class AbstractFunctionGenerator implements FunctionGenerator {
                     kv("mv", METHOD_VAR_NAME),
                     kv("r", RESULT_VAR_NAME),
                     kv("f", apiMethod.getMemberDoc().isStatic() ? "GetStaticMethodID" : "GetMethodID"),
-                    kv("c", CModuleGenerator.getComponentCClassVarName(apiMethod.getEnclosingClass().getType())),
+                    kv("c", ModuleGenerator.getComponentCClassVarName(apiMethod.getEnclosingClass().getType())),
                     kv("name", apiMethod.getJavaName()),
                     kv("sig", apiMethod.getJavaSignature()));
     }
@@ -126,12 +125,12 @@ public abstract class AbstractFunctionGenerator implements FunctionGenerator {
 
         if (getMemberDoc().isConstructor()) {
             functionName = "NewObject";
-            argumentList.append(CModuleGenerator.getComponentCClassVarName(getEnclosingClass().getType()));
+            argumentList.append(ModuleGenerator.getComponentCClassVarName(getEnclosingClass().getType()));
             argumentList.append(", ");
             argumentList.append(METHOD_VAR_NAME);
         } else if (getMemberDoc().isStatic()) {
             functionName = String.format("CallStatic%sMethod", methodTypeName);
-            argumentList.append(CModuleGenerator.getComponentCClassVarName(getEnclosingClass().getType()));
+            argumentList.append(ModuleGenerator.getComponentCClassVarName(getEnclosingClass().getType()));
             argumentList.append(", ");
             argumentList.append(METHOD_VAR_NAME);
         } else {

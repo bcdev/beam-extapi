@@ -34,7 +34,7 @@ PyObject* beampy_newPySeqFromC${typeName}Array(const ${ctype}* elems, int length
  * Code generated from template. Parameters:
  *   typeName =       ${typeName}
  *   ctype =          ${ctype}
- *   elemToItemCall = ${elemToItemCall}
+ *   itemToElemCall = ${itemToElemCall}
  */
 ${ctype}* beampy_newC${typeName}ArrayFromPySeq(PyObject* seq, int* length)
 {

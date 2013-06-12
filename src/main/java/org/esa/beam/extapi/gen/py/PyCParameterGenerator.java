@@ -4,8 +4,8 @@ import com.sun.javadoc.Type;
 import org.esa.beam.extapi.gen.ApiInfo;
 import org.esa.beam.extapi.gen.ApiParameter;
 import org.esa.beam.extapi.gen.GeneratorContext;
+import org.esa.beam.extapi.gen.ModuleGenerator;
 import org.esa.beam.extapi.gen.ParameterGenerator;
-import org.esa.beam.extapi.gen.c.CModuleGenerator;
 
 import static org.esa.beam.extapi.gen.TemplateEval.eval;
 import static org.esa.beam.extapi.gen.TemplateEval.kv;
@@ -120,7 +120,7 @@ public abstract class PyCParameterGenerator implements ParameterGenerator {
 
         @Override
         public String generateJniCallArgs(GeneratorContext context) {
-            return String.format("(%s) %s", CModuleGenerator.getComponentCClassName(getType()), getName());
+            return String.format("(%s) %s", ModuleGenerator.getComponentCClassName(getType()), getName());
         }
 
         @Override
@@ -250,7 +250,7 @@ public abstract class PyCParameterGenerator implements ParameterGenerator {
             return eval("${t} ${p};\n" +
                                 "int ${p}Length;\n" +
                                 "PyObject* ${p}Seq;",
-                        kv("t", CModuleGenerator.getComponentCClassName(getType())),
+                        kv("t", ModuleGenerator.getComponentCClassName(getType())),
                         kv("p", getName()));
         }
 
@@ -296,7 +296,7 @@ public abstract class PyCParameterGenerator implements ParameterGenerator {
         public String generateJniArgFromTransformedTargetArgAssignment(GeneratorContext context) {
             return eval("${p} = beampy_newCStringArrayFromPySeq(${p}Seq, &${p}Length);",
                         kv("p", getName()),
-                        kv("c", CModuleGenerator.getComponentCClassVarName(getType())));
+                        kv("c", ModuleGenerator.getComponentCClassVarName(getType())));
         }
 
         @Override

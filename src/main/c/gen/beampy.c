@@ -19040,13 +19040,14 @@ PyObject* BeamPyMetadataAttribute_getExtension(PyObject* self, PyObject* args)
 
 // <<<<<<<< Begin include from PyCModuleGenerator-stubs-3.c
 /*
- * Creates a Python sequence (a list) from a C-array of type boolean.
+ * Creates a Python sequence (a list) from a C-array of type Boolean.
  * Code generated from template. Parameters:
- *   typeName =       boolean
+ *   typeName =       Boolean
  *   ctype =          boolean
  *   elemToItemCall = PyBool_FromLong(elems[i])
+ *   itemToElemCall = (boolean)(PyLong_AsLong(item) != 0)
  */
-PyObject* beampy_newPySeqFromCbooleanArray(const boolean* elems, int length)
+PyObject* beampy_newPySeqFromCBooleanArray(const boolean* elems, int length)
 {
     PyObject* list;
     PyObject* item;
@@ -19071,13 +19072,14 @@ PyObject* beampy_newPySeqFromCbooleanArray(const boolean* elems, int length)
 }
 
 /*
- * Creates C-array of type boolean from a Python sequence.
+ * Creates C-array of type Boolean from a Python sequence.
  * Code generated from template. Parameters:
- *   typeName =       boolean
+ *   typeName =       Boolean
  *   ctype =          boolean
  *   elemToItemCall = PyBool_FromLong(elems[i])
+ *   itemToElemCall = (boolean)(PyLong_AsLong(item) != 0)
  */
-boolean* beampy_newCbooleanArrayFromPySeq(PyObject* seq, int* length)
+boolean* beampy_newCBooleanArrayFromPySeq(PyObject* seq, int* length)
 {
     Py_ssize_t size;
     boolean* elems;
@@ -19115,13 +19117,14 @@ boolean* beampy_newCbooleanArrayFromPySeq(PyObject* seq, int* length)
 // >>>>>>>> End include from PyCModuleGenerator-stubs-3.c
 // <<<<<<<< Begin include from PyCModuleGenerator-stubs-3.c
 /*
- * Creates a Python sequence (a list) from a C-array of type char.
+ * Creates a Python sequence (a list) from a C-array of type Char.
  * Code generated from template. Parameters:
- *   typeName =       char
+ *   typeName =       Char
  *   ctype =          char
  *   elemToItemCall = PyUnicode_FromFormat("%c", elems[i])
+ *   itemToElemCall = (char) PyLong_AsLong(item)
  */
-PyObject* beampy_newPySeqFromCcharArray(const char* elems, int length)
+PyObject* beampy_newPySeqFromCCharArray(const char* elems, int length)
 {
     PyObject* list;
     PyObject* item;
@@ -19146,13 +19149,14 @@ PyObject* beampy_newPySeqFromCcharArray(const char* elems, int length)
 }
 
 /*
- * Creates C-array of type char from a Python sequence.
+ * Creates C-array of type Char from a Python sequence.
  * Code generated from template. Parameters:
- *   typeName =       char
+ *   typeName =       Char
  *   ctype =          char
  *   elemToItemCall = PyUnicode_FromFormat("%c", elems[i])
+ *   itemToElemCall = (char) PyLong_AsLong(item)
  */
-char* beampy_newCcharArrayFromPySeq(PyObject* seq, int* length)
+char* beampy_newCCharArrayFromPySeq(PyObject* seq, int* length)
 {
     Py_ssize_t size;
     char* elems;
@@ -19190,13 +19194,14 @@ char* beampy_newCcharArrayFromPySeq(PyObject* seq, int* length)
 // >>>>>>>> End include from PyCModuleGenerator-stubs-3.c
 // <<<<<<<< Begin include from PyCModuleGenerator-stubs-3.c
 /*
- * Creates a Python sequence (a list) from a C-array of type byte.
+ * Creates a Python sequence (a list) from a C-array of type Byte.
  * Code generated from template. Parameters:
- *   typeName =       byte
+ *   typeName =       Byte
  *   ctype =          byte
  *   elemToItemCall = PyLong_FromLong(elems[i])
+ *   itemToElemCall = (byte) PyLong_AsLong(item)
  */
-PyObject* beampy_newPySeqFromCbyteArray(const byte* elems, int length)
+PyObject* beampy_newPySeqFromCByteArray(const byte* elems, int length)
 {
     PyObject* list;
     PyObject* item;
@@ -19221,13 +19226,14 @@ PyObject* beampy_newPySeqFromCbyteArray(const byte* elems, int length)
 }
 
 /*
- * Creates C-array of type byte from a Python sequence.
+ * Creates C-array of type Byte from a Python sequence.
  * Code generated from template. Parameters:
- *   typeName =       byte
+ *   typeName =       Byte
  *   ctype =          byte
  *   elemToItemCall = PyLong_FromLong(elems[i])
+ *   itemToElemCall = (byte) PyLong_AsLong(item)
  */
-byte* beampy_newCbyteArrayFromPySeq(PyObject* seq, int* length)
+byte* beampy_newCByteArrayFromPySeq(PyObject* seq, int* length)
 {
     Py_ssize_t size;
     byte* elems;
@@ -19265,13 +19271,14 @@ byte* beampy_newCbyteArrayFromPySeq(PyObject* seq, int* length)
 // >>>>>>>> End include from PyCModuleGenerator-stubs-3.c
 // <<<<<<<< Begin include from PyCModuleGenerator-stubs-3.c
 /*
- * Creates a Python sequence (a list) from a C-array of type short.
+ * Creates a Python sequence (a list) from a C-array of type Short.
  * Code generated from template. Parameters:
- *   typeName =       short
+ *   typeName =       Short
  *   ctype =          short
  *   elemToItemCall = PyLong_FromLong(elems[i])
+ *   itemToElemCall = (short) PyLong_AsLong(item)
  */
-PyObject* beampy_newPySeqFromCshortArray(const short* elems, int length)
+PyObject* beampy_newPySeqFromCShortArray(const short* elems, int length)
 {
     PyObject* list;
     PyObject* item;
@@ -19296,13 +19303,14 @@ PyObject* beampy_newPySeqFromCshortArray(const short* elems, int length)
 }
 
 /*
- * Creates C-array of type short from a Python sequence.
+ * Creates C-array of type Short from a Python sequence.
  * Code generated from template. Parameters:
- *   typeName =       short
+ *   typeName =       Short
  *   ctype =          short
  *   elemToItemCall = PyLong_FromLong(elems[i])
+ *   itemToElemCall = (short) PyLong_AsLong(item)
  */
-short* beampy_newCshortArrayFromPySeq(PyObject* seq, int* length)
+short* beampy_newCShortArrayFromPySeq(PyObject* seq, int* length)
 {
     Py_ssize_t size;
     short* elems;
@@ -19340,13 +19348,14 @@ short* beampy_newCshortArrayFromPySeq(PyObject* seq, int* length)
 // >>>>>>>> End include from PyCModuleGenerator-stubs-3.c
 // <<<<<<<< Begin include from PyCModuleGenerator-stubs-3.c
 /*
- * Creates a Python sequence (a list) from a C-array of type int.
+ * Creates a Python sequence (a list) from a C-array of type Int.
  * Code generated from template. Parameters:
- *   typeName =       int
+ *   typeName =       Int
  *   ctype =          int
  *   elemToItemCall = PyLong_FromLong(elems[i])
+ *   itemToElemCall = (int) PyLong_AsLong(item)
  */
-PyObject* beampy_newPySeqFromCintArray(const int* elems, int length)
+PyObject* beampy_newPySeqFromCIntArray(const int* elems, int length)
 {
     PyObject* list;
     PyObject* item;
@@ -19371,13 +19380,14 @@ PyObject* beampy_newPySeqFromCintArray(const int* elems, int length)
 }
 
 /*
- * Creates C-array of type int from a Python sequence.
+ * Creates C-array of type Int from a Python sequence.
  * Code generated from template. Parameters:
- *   typeName =       int
+ *   typeName =       Int
  *   ctype =          int
  *   elemToItemCall = PyLong_FromLong(elems[i])
+ *   itemToElemCall = (int) PyLong_AsLong(item)
  */
-int* beampy_newCintArrayFromPySeq(PyObject* seq, int* length)
+int* beampy_newCIntArrayFromPySeq(PyObject* seq, int* length)
 {
     Py_ssize_t size;
     int* elems;
@@ -19415,13 +19425,14 @@ int* beampy_newCintArrayFromPySeq(PyObject* seq, int* length)
 // >>>>>>>> End include from PyCModuleGenerator-stubs-3.c
 // <<<<<<<< Begin include from PyCModuleGenerator-stubs-3.c
 /*
- * Creates a Python sequence (a list) from a C-array of type dlong.
+ * Creates a Python sequence (a list) from a C-array of type Dlong.
  * Code generated from template. Parameters:
- *   typeName =       dlong
+ *   typeName =       Dlong
  *   ctype =          dlong
  *   elemToItemCall = PyLong_FromLongLong(elems[i])
+ *   itemToElemCall = PyLong_AsLongLong(item)
  */
-PyObject* beampy_newPySeqFromCdlongArray(const dlong* elems, int length)
+PyObject* beampy_newPySeqFromCDlongArray(const dlong* elems, int length)
 {
     PyObject* list;
     PyObject* item;
@@ -19446,13 +19457,14 @@ PyObject* beampy_newPySeqFromCdlongArray(const dlong* elems, int length)
 }
 
 /*
- * Creates C-array of type dlong from a Python sequence.
+ * Creates C-array of type Dlong from a Python sequence.
  * Code generated from template. Parameters:
- *   typeName =       dlong
+ *   typeName =       Dlong
  *   ctype =          dlong
  *   elemToItemCall = PyLong_FromLongLong(elems[i])
+ *   itemToElemCall = PyLong_AsLongLong(item)
  */
-dlong* beampy_newCdlongArrayFromPySeq(PyObject* seq, int* length)
+dlong* beampy_newCDlongArrayFromPySeq(PyObject* seq, int* length)
 {
     Py_ssize_t size;
     dlong* elems;
@@ -19490,13 +19502,14 @@ dlong* beampy_newCdlongArrayFromPySeq(PyObject* seq, int* length)
 // >>>>>>>> End include from PyCModuleGenerator-stubs-3.c
 // <<<<<<<< Begin include from PyCModuleGenerator-stubs-3.c
 /*
- * Creates a Python sequence (a list) from a C-array of type float.
+ * Creates a Python sequence (a list) from a C-array of type Float.
  * Code generated from template. Parameters:
- *   typeName =       float
+ *   typeName =       Float
  *   ctype =          float
  *   elemToItemCall = PyFloat_FromDouble(elems[i])
+ *   itemToElemCall = (float) PyFloat_AsDouble(item)
  */
-PyObject* beampy_newPySeqFromCfloatArray(const float* elems, int length)
+PyObject* beampy_newPySeqFromCFloatArray(const float* elems, int length)
 {
     PyObject* list;
     PyObject* item;
@@ -19521,13 +19534,14 @@ PyObject* beampy_newPySeqFromCfloatArray(const float* elems, int length)
 }
 
 /*
- * Creates C-array of type float from a Python sequence.
+ * Creates C-array of type Float from a Python sequence.
  * Code generated from template. Parameters:
- *   typeName =       float
+ *   typeName =       Float
  *   ctype =          float
  *   elemToItemCall = PyFloat_FromDouble(elems[i])
+ *   itemToElemCall = (float) PyFloat_AsDouble(item)
  */
-float* beampy_newCfloatArrayFromPySeq(PyObject* seq, int* length)
+float* beampy_newCFloatArrayFromPySeq(PyObject* seq, int* length)
 {
     Py_ssize_t size;
     float* elems;
@@ -19565,13 +19579,14 @@ float* beampy_newCfloatArrayFromPySeq(PyObject* seq, int* length)
 // >>>>>>>> End include from PyCModuleGenerator-stubs-3.c
 // <<<<<<<< Begin include from PyCModuleGenerator-stubs-3.c
 /*
- * Creates a Python sequence (a list) from a C-array of type double.
+ * Creates a Python sequence (a list) from a C-array of type Double.
  * Code generated from template. Parameters:
- *   typeName =       double
+ *   typeName =       Double
  *   ctype =          double
  *   elemToItemCall = PyFloat_FromDouble(elems[i])
+ *   itemToElemCall = PyFloat_AsDouble(item)
  */
-PyObject* beampy_newPySeqFromCdoubleArray(const double* elems, int length)
+PyObject* beampy_newPySeqFromCDoubleArray(const double* elems, int length)
 {
     PyObject* list;
     PyObject* item;
@@ -19596,13 +19611,14 @@ PyObject* beampy_newPySeqFromCdoubleArray(const double* elems, int length)
 }
 
 /*
- * Creates C-array of type double from a Python sequence.
+ * Creates C-array of type Double from a Python sequence.
  * Code generated from template. Parameters:
- *   typeName =       double
+ *   typeName =       Double
  *   ctype =          double
  *   elemToItemCall = PyFloat_FromDouble(elems[i])
+ *   itemToElemCall = PyFloat_AsDouble(item)
  */
-double* beampy_newCdoubleArrayFromPySeq(PyObject* seq, int* length)
+double* beampy_newCDoubleArrayFromPySeq(PyObject* seq, int* length)
 {
     Py_ssize_t size;
     double* elems;
