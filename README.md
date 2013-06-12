@@ -38,7 +38,7 @@ If you have Visual Studio 2010 installed, execute
     SET VS90COMNTOOLS=%VS100COMNTOOLS%
 
 
-or with Visual Studio 2012 installed
+or with Visual Studio 2012 installed (this is not working; at least not with our build server; reason is not known yet)
 
     SET VS90COMNTOOLS=%VS110COMNTOOLS%
 
