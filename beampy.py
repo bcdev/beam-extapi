@@ -10157,13 +10157,3 @@ class String:
     def newString(str):
         return String(String_newString(str))
 
-class Map:
-    def __init__(self, obj):
-        if obj == None:
-            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')
-        self._obj = obj
-    
-    @staticmethod
-    def newHashMap(dict):
-        return Map(Map_newHashMap(dict))
-

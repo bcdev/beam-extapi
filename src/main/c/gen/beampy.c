@@ -44,7 +44,6 @@ PyObject* BeamPyString_newString(PyObject* self, PyObject* args);
 // PyObject* BeamPyMap_newHashMap(PyObject* self, PyObject* args);
 // >>>>>>>> End include from PyCModuleGenerator-stub-init.c
 
-
 PyObject* BeamPyGeoCoding_isCrossingMeridianAt180(PyObject* self, PyObject* args);
 PyObject* BeamPyGeoCoding_canGetPixelPos(PyObject* self, PyObject* args);
 PyObject* BeamPyGeoCoding_canGetGeoPos(PyObject* self, PyObject* args);
@@ -1106,7 +1105,6 @@ PyObject* BeamPyMetadataAttribute_getProductRefString(PyObject* self, PyObject* 
 PyObject* BeamPyMetadataAttribute_updateExpression(PyObject* self, PyObject* args);
 PyObject* BeamPyMetadataAttribute_removeFromFile(PyObject* self, PyObject* args);
 PyObject* BeamPyMetadataAttribute_getExtension(PyObject* self, PyObject* args);
-
 
 static PyMethodDef BeamPy_Methods[] = {
     {"GeoCoding_isCrossingMeridianAt180", BeamPyGeoCoding_isCrossingMeridianAt180, METH_VARARGS, " Checks whether or not the longitudes of this geo-coding cross the +/- 180 degree meridian.\n\n @return <code>true</code>, if so\n\n@param this The GeoCoding object."},
@@ -2174,7 +2172,6 @@ static PyMethodDef BeamPy_Methods[] = {
     {"String_newString", BeamPyString_newString, METH_VARARGS, "Converts a Python unicode string into a Java java.lang.String object"},
     {NULL, NULL, 0, NULL}  /* Sentinel */
 };
-
 
 // <<<<<<<< Begin include from PyCModuleGenerator-stub-buffer.c
 
