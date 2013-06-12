@@ -78,6 +78,110 @@ public class PyCModuleGenerator extends ModuleGenerator {
         writePythonSource();
     }
 
+    private void writeWinDef() throws IOException {
+        new TargetFile(BEAM_PYAPI_C_SRCDIR, BEAM_PYAPI_NAME + ".def") {
+            @Override
+            protected void writeContent() throws IOException {
+                writeTemplateResource(writer, "PyCModuleGenerator-stub-init.def");
+            }
+        }.create();
+    }
+
+    private void writeCHeader() throws IOException {
+        new TargetCHeaderFile(BEAM_PYAPI_C_SRCDIR, BEAM_PYAPI_NAME + ".h") {
+            @Override
+            protected void writeContent() {
+                writer.println("#include \"../beampy_carray.h\"");
+            }
+        }.create();
+    }
+
+    private void writeCSource() throws IOException {
+        new TargetCFile(BEAM_PYAPI_C_SRCDIR, BEAM_PYAPI_NAME + ".c") {
+            @Override
+            protected void writeContent() throws IOException {
+                writeTemplateResource(writer, "PyCModuleGenerator-stub-init.c");
+                writer.printf("\n");
+
+                writeFunctionDeclarations(writer);
+                writer.printf("\n");
+
+                writePyMethodDefs(writer);
+                writer.printf("\n");
+
+                writeTemplateResource(writer, "PyCModuleGenerator-stub-buffer.c");
+                writer.printf("\n");
+
+                writeTemplateResource(writer, "PyCModuleGenerator-stub-jobject.c");
+                writer.printf("\n");
+
+                writePrimitiveArrayConverters(writer);
+                writer.printf("\n");
+
+                writeTemplateResource(writer, "PyCModuleGenerator-stub-conv.c");
+                writer.printf("\n");
+
+                writeFunctionDefinitions(writer);
+                writer.printf("\n");
+            }
+        }.create();
+    }
+
+    private void writeFunctionDeclarations(PrintWriter writer) {
+        for (ApiClass apiClass : getApiClasses()) {
+            for (FunctionGenerator generator : getFunctionGenerators(apiClass)) {
+                writer.printf("%s;\n", generator.generateFunctionSignature(this));
+            }
+        }
+    }
+
+    private void writeFunctionDefinitions(PrintWriter writer) throws IOException {
+        final FunctionWriter functionWriter = new FunctionWriter(this, writer);
+        for (ApiClass apiClass : getApiClasses()) {
+            for (FunctionGenerator generator : getFunctionGenerators(apiClass)) {
+                functionWriter.writeFunctionDefinition(generator);
+                writer.printf("\n");
+            }
+        }
+    }
+
+    private void writePyMethodDefs(PrintWriter writer) {
+        writer.printf("static PyMethodDef BeamPy_Methods[] = {\n");
+        for (ApiClass apiClass : getApiClasses()) {
+            for (FunctionGenerator generator : getFunctionGenerators(apiClass)) {
+                writer.printf("    {\"%s\", %s, METH_VARARGS, \"%s\"},\n",
+                              generator.generateFunctionName(cModuleGenerator),
+                              generator.generateFunctionName(this),
+                              generator.generateDocText(this));
+            }
+        }
+        writer.printf("    {\"Object_delete\", BeamPyObject_delete, METH_VARARGS, \"Deletes global references to Java objects held by Python objects\"},\n");
+        writer.printf("    {\"String_newString\", BeamPyString_newString, METH_VARARGS, \"Converts a Python unicode string into a Java java.lang.String object\"},\n");
+        // experimental
+        // writer.printf("    {\"Map_newHashMap\", BeamPyMap_newHashMap, METH_VARARGS, \"Converts a Python dictionary into a Java java.utils.Map object\"},\n");
+        writer.printf("    {NULL, NULL, 0, NULL}  /* Sentinel */\n");
+        writer.printf("};\n");
+    }
+
+    private void writePrimitiveArrayConverters(PrintWriter writer) throws IOException {
+        writePrimitiveArrayConverter(writer, "Boolean", "boolean", "PyBool_FromLong(elems[i])", "(boolean)(PyLong_AsLong(item) != 0)");
+        writePrimitiveArrayConverter(writer, "Char", "char", "PyUnicode_FromFormat(\"%c\", elems[i])", "(char) PyLong_AsLong(item)");
+        writePrimitiveArrayConverter(writer, "Byte", "byte", "PyLong_FromLong(elems[i])", "(byte) PyLong_AsLong(item)");
+        writePrimitiveArrayConverter(writer, "Short", "short", "PyLong_FromLong(elems[i])", "(short) PyLong_AsLong(item)");
+        writePrimitiveArrayConverter(writer, "Int", "int", "PyLong_FromLong(elems[i])", "(int) PyLong_AsLong(item)");
+        writePrimitiveArrayConverter(writer, "Dlong", "dlong", "PyLong_FromLongLong(elems[i])", "PyLong_AsLongLong(item)");
+        writePrimitiveArrayConverter(writer, "Float", "float", "PyFloat_FromDouble(elems[i])", "(float) PyFloat_AsDouble(item)");
+        writePrimitiveArrayConverter(writer, "Double", "double", "PyFloat_FromDouble(elems[i])", "PyFloat_AsDouble(item)");
+    }
+
+    void writePrimitiveArrayConverter(PrintWriter writer, String typeName, String ctype, String elemToItemCall, String itemToElemCall) throws IOException {
+        writeTemplateResource(writer, "PyCModuleGenerator-stub-conv-primarr.c",
+                              kv("typeName", typeName),
+                              kv("ctype", ctype),
+                              kv("elemToItemCall", elemToItemCall),
+                              kv("itemToElemCall", itemToElemCall));
+    }
+
     private void writePythonSource() throws IOException {
         new TargetFile(BEAM_PYAPI_PY_SRCDIR, BEAM_PYAPI_NAME + ".py") {
             @Override
@@ -93,21 +197,21 @@ public class PyCModuleGenerator extends ModuleGenerator {
                 writer.printf("from _%s import *\n", BEAM_PYAPI_NAME);
                 writer.printf("\n");
                 writer.printf(eval(""
-                                      + "class JObject:\n"
-                                      + "    def __init__(self, obj):\n"
-                                      + "        try:\n"
-                                      + "            assert obj is not None\n"
-                                      + "            assert len(obj) == 2\n"
-                                      + "            assert type(obj[0]) == str\n"
-                                      + "            assert type(obj[1]) == int\n"
-                                      + "        except (TypeError, AssertionError):\n"
-                                      + "            raise TypeError('A tuple (<java-type-name>, <java-obj-pointer>) is required, but got:', obj)\n"
-                                      + "        self.${obj} = obj\n"
-                                      + "\n"
-                                      + "    def __del__(self):\n"
-                                      + "        if self.${obj} != None:\n"
-                                      + "            Object_delete(self.${obj})\n"
-                                      + "\n",
+                                           + "class JObject:\n"
+                                           + "    def __init__(self, obj):\n"
+                                           + "        try:\n"
+                                           + "            assert obj is not None\n"
+                                           + "            assert len(obj) == 2\n"
+                                           + "            assert type(obj[0]) == str\n"
+                                           + "            assert type(obj[1]) == int\n"
+                                           + "        except (TypeError, AssertionError):\n"
+                                           + "            raise TypeError('A tuple (<java-type-name>, <java-obj-pointer>) is required, but got:', obj)\n"
+                                           + "        self.${obj} = obj\n"
+                                           + "\n"
+                                           + "    def __del__(self):\n"
+                                           + "        if self.${obj} != None:\n"
+                                           + "            Object_delete(self.${obj})\n"
+                                           + "\n",
                                    kv("obj", SELF_OBJ_NAME)));
                 for (ApiClass apiClass : getApiInfo().getAllClasses()) {
                     writer.printf("class %s(JObject):\n", getClassName(apiClass.getType()));
@@ -222,7 +326,8 @@ public class PyCModuleGenerator extends ModuleGenerator {
                                      "    def newString(str):\n" +
                                      "        return String(String_newString(str))\n" +
                                      "\n");
-
+                // experimental
+                /*
                 writer.write("class Map:\n" +
                                      "    def __init__(self, obj):\n" +
                                      "        if obj == None:\n" +
@@ -233,7 +338,7 @@ public class PyCModuleGenerator extends ModuleGenerator {
                                      "    def newHashMap(dict):\n" +
                                      "        return Map(Map_newHashMap(dict))\n" +
                                      "\n");
-
+                */
             }
         }.create();
     }
@@ -257,106 +362,12 @@ public class PyCModuleGenerator extends ModuleGenerator {
         }
     }
 
-    private String getClassName(Type type) {
+    private static String getClassName(Type type) {
         return type.typeName().replace('.', '_');
     }
 
-    private boolean isObject(Type type) {
+    private static boolean isObject(Type type) {
         return !type.isPrimitive() && !JavadocHelpers.isString(type);
     }
 
-    private void writeWinDef() throws IOException {
-        new TargetFile(BEAM_PYAPI_C_SRCDIR, BEAM_PYAPI_NAME + ".def") {
-            @Override
-            protected void writeContent() throws IOException {
-                writeTemplateResource(writer, "PyCModuleGenerator-stub-init.def");
-            }
-        }.create();
-    }
-
-    private void writeCHeader() throws IOException {
-        new TargetCHeaderFile(BEAM_PYAPI_C_SRCDIR, BEAM_PYAPI_NAME + ".h") {
-            @Override
-            protected void writeContent() {
-                writer.println("#include \"../beampy_carray.h\"");
-            }
-        }.create();
-    }
-
-    private void writeCSource() throws IOException {
-        new TargetCFile(BEAM_PYAPI_C_SRCDIR, BEAM_PYAPI_NAME + ".c") {
-            @Override
-            protected void writeContent() throws IOException {
-
-                writeTemplateResource(writer, "PyCModuleGenerator-stub-init.c");
-                writer.printf("\n");
-
-                writer.printf("\n");
-                for (ApiClass apiClass : getApiClasses()) {
-                    for (FunctionGenerator generator : getFunctionGenerators(apiClass)) {
-                        writer.printf("%s;\n", generator.generateFunctionSignature(PyCModuleGenerator.this));
-                    }
-                }
-                writer.printf("\n");
-
-                writer.printf("\n");
-                writer.printf("static PyMethodDef BeamPy_Methods[] = {\n");
-
-                for (ApiClass apiClass : getApiClasses()) {
-                    for (FunctionGenerator generator : getFunctionGenerators(apiClass)) {
-                        writer.printf("    {\"%s\", %s, METH_VARARGS, \"%s\"},\n",
-                                      generator.generateFunctionName(cModuleGenerator),
-                                      generator.generateFunctionName(PyCModuleGenerator.this),
-                                      generator.generateDocText(PyCModuleGenerator.this));
-                    }
-                }
-                writer.printf("    {\"Object_delete\", BeamPyObject_delete, METH_VARARGS, \"Deletes global references to Java objects held by Python objects\"},\n");
-                writer.printf("    {\"String_newString\", BeamPyString_newString, METH_VARARGS, \"Converts a Python unicode string into a Java java.lang.String object\"},\n");
-                // experimental
-                // writer.printf("    {\"Map_newHashMap\", BeamPyMap_newHashMap, METH_VARARGS, \"Converts a Python dictionary into a Java java.utils.Map object\"},\n");
-                writer.printf("    {NULL, NULL, 0, NULL}  /* Sentinel */\n");
-                writer.printf("};\n");
-                writer.printf("\n");
-
-                writer.printf("\n");
-                writeTemplateResource(writer, "PyCModuleGenerator-stub-buffer.c");
-                writer.printf("\n");
-                writeTemplateResource(writer, "PyCModuleGenerator-stub-jobject.c");
-                writer.printf("\n");
-                writePrimitiveArrayConverters(writer);
-                writer.printf("\n");
-                writeTemplateResource(writer, "PyCModuleGenerator-stub-conv.c");
-                writer.printf("\n");
-
-                final FunctionWriter functionWriter = new FunctionWriter(PyCModuleGenerator.this, writer);
-                for (ApiClass apiClass : getApiClasses()) {
-                    for (FunctionGenerator generator : getFunctionGenerators(apiClass)) {
-                        functionWriter.writeFunctionDefinition(generator);
-                        writer.println();
-                    }
-                }
-
-                writer.printf("\n");
-            }
-        }.create();
-    }
-
-    private void writePrimitiveArrayConverters(PrintWriter writer) throws IOException {
-        writePrimitiveArrayConverter(writer, "Boolean", "boolean", "PyBool_FromLong(elems[i])", "(boolean)(PyLong_AsLong(item) != 0)");
-        writePrimitiveArrayConverter(writer, "Char", "char", "PyUnicode_FromFormat(\"%c\", elems[i])", "(char) PyLong_AsLong(item)");
-        writePrimitiveArrayConverter(writer, "Byte", "byte", "PyLong_FromLong(elems[i])", "(byte) PyLong_AsLong(item)");
-        writePrimitiveArrayConverter(writer, "Short", "short", "PyLong_FromLong(elems[i])", "(short) PyLong_AsLong(item)");
-        writePrimitiveArrayConverter(writer, "Int", "int", "PyLong_FromLong(elems[i])", "(int) PyLong_AsLong(item)");
-        writePrimitiveArrayConverter(writer, "Dlong", "dlong", "PyLong_FromLongLong(elems[i])", "PyLong_AsLongLong(item)");
-        writePrimitiveArrayConverter(writer, "Float", "float", "PyFloat_FromDouble(elems[i])", "(float) PyFloat_AsDouble(item)");
-        writePrimitiveArrayConverter(writer, "Double", "double", "PyFloat_FromDouble(elems[i])", "PyFloat_AsDouble(item)");
-    }
-
-    void writePrimitiveArrayConverter(PrintWriter writer, String typeName, String ctype, String elemToItemCall, String itemToElemCall) throws IOException {
-        writeTemplateResource(writer, "PyCModuleGenerator-stub-conv-primarr.c",
-                              kv("typeName", typeName),
-                              kv("ctype", ctype),
-                              kv("elemToItemCall", elemToItemCall),
-                              kv("itemToElemCall", itemToElemCall));
-    }
 }
