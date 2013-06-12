@@ -64,27 +64,16 @@ public class CModuleGenerator extends ModuleGenerator {
     }
 
     @Override
+    public String getFunctionNameFor(ApiMethod apiMethod) {
+        return functionNames.get(apiMethod);
+    }
+
+    @Override
     public void run() throws IOException {
         writeWinDef();
         writeCHeader();
         writeCSource();
         printStats();
-    }
-
-    @Override
-    public String getFunctionNameFor(ApiMethod apiMethod) {
-        return functionNames.get(apiMethod);
-    }
-
-    private static String getFunctionBaseName(ApiInfo apiInfo, ApiMethod apiMethod) {
-        String targetTypeName = getComponentCClassName(apiMethod.getEnclosingClass().getType());
-        String methodCName = apiInfo.getConfig().getFunctionName(apiMethod.getEnclosingClass().getType().qualifiedTypeName(),
-                                                                 apiMethod.getJavaName(),
-                                                                 apiMethod.getJavaSignature());
-        if (methodCName.equals("<init>")) {
-            methodCName = String.format("new%s", targetTypeName);
-        }
-        return String.format("%s_%s", targetTypeName, methodCName);
     }
 
     private void writeWinDef() throws IOException {
@@ -110,7 +99,7 @@ public class CModuleGenerator extends ModuleGenerator {
         }.create();
     }
 
-    Set<String> getCoreJavaClassNames() {
+    private Set<String> getCoreJavaClassNames() {
         Set<String> coreJavaClassNames = new HashSet<String>();
         for (String simpleClassName : JAVA_LANG_CLASSES) {
             coreJavaClassNames.add("java.lang." + simpleClassName);
@@ -173,7 +162,7 @@ public class CModuleGenerator extends ModuleGenerator {
         System.out.printf("}\n");
     }
 
-    protected void writeCHeaderContents(PrintWriter writer) throws IOException {
+    private void writeCHeaderContents(PrintWriter writer) throws IOException {
 
         writeTemplateResource(writer, "CModuleGenerator-stub-types.h");
 
@@ -415,6 +404,17 @@ public class CModuleGenerator extends ModuleGenerator {
             }
         }
         return sameTargetFunctionNames;
+    }
+
+    private static String getFunctionBaseName(ApiInfo apiInfo, ApiMethod apiMethod) {
+        String targetTypeName = getComponentCClassName(apiMethod.getEnclosingClass().getType());
+        String methodCName = apiInfo.getConfig().getFunctionName(apiMethod.getEnclosingClass().getType().qualifiedTypeName(),
+                                                                 apiMethod.getJavaName(),
+                                                                 apiMethod.getJavaSignature());
+        if (methodCName.equals("<init>")) {
+            methodCName = String.format("new%s", targetTypeName);
+        }
+        return String.format("%s_%s", targetTypeName, methodCName);
     }
 
 }
