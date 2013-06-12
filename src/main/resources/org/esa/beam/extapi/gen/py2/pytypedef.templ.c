@@ -1,3 +1,5 @@
+// Note: this is unused, experimental code
+
 /**
  * Implements the BeamPy_JObjectType class singleton.
  *

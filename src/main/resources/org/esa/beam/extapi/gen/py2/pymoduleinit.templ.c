@@ -1,3 +1,5 @@
+// Note: this is unused, experimental code
+
 static PyMethodDef BeamPy_Methods[] = {
     {"newString", BeamPy_newString, METH_VARARGS, "Converts a Python unicode string into a Java java.lang.String object"},
     {"newMap", BeamPy_newMap, METH_VARARGS, "Converts a Python dictionary into a Java java.utils.Map object"},

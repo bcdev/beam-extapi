@@ -6,9 +6,6 @@
 #include "../beam_util.h"
 #include "${libName}.h"
 
-static JavaVM* jvm = NULL;
-static JNIEnv* jenv = NULL;
-
 int beam_initApi();
 
 jobjectArray beam_newJStringArray(const char** array_elems, int array_length);

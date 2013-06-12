@@ -3,7 +3,7 @@
  * This code has been generated using org.esa.beam.extapi.gen.ApiGeneratorDoclet
  */
 
-// <<<<<<<< Begin include from CModuleGenerator-stubs-1.c
+// <<<<<<<< Begin include from CModuleGenerator-stub-init.c
 #include <stdlib.h>
 #include <string.h>
 
@@ -11,9 +11,6 @@
 
 #include "../beam_util.h"
 #include "beam_capi.h"
-
-static JavaVM* jvm = NULL;
-static JNIEnv* jenv = NULL;
 
 int beam_initApi();
 
@@ -36,7 +33,7 @@ dlong* beam_newCLongArray(jarray array, int* array_length);
 float* beam_newCFloatArray(jarray array, int* array_length);
 double* beam_newCDoubleArray(jarray array, int* array_length);
 
-// >>>>>>>> End include from CModuleGenerator-stubs-1.c
+// >>>>>>>> End include from CModuleGenerator-stub-init.c
 
 /* java.lang classes. */
 jclass classBoolean;
@@ -96,6 +93,7 @@ jclass classAffineTransform;
 jclass classArea;
 jclass classGeneralPath;
 jclass classPoint2D;
+jclass classRectangle2D;
 jclass classBufferedImage;
 jclass classComponentColorModel;
 jclass classIndexColorModel;
@@ -147,357 +145,10 @@ jclass classCoordinateReferenceSystem;
 jclass classMathTransform;
 
 
-/* Constants of GPF */
-const char* GPF_DISABLE_TILE_CACHE_PROPERTY = "beam.gpf.disableTileCache";
-const char* GPF_USE_FILE_TILE_CACHE_PROPERTY = "beam.gpf.useFileTileCache";
-const char* GPF_TILE_COMPUTATION_OBSERVER_PROPERTY = "beam.gpf.tileComputationObserver";
-const char* GPF_SOURCE_PRODUCT_FIELD_NAME = "sourceProduct";
-const char* GPF_TARGET_PRODUCT_FIELD_NAME = "targetProduct";
-const RenderingHints_Key GPF_KEY_TILE_SIZE = NULL;
-const Map GPF_NO_PARAMS = NULL;
-const Map GPF_NO_SOURCES = NULL;
-/* Constants of IndexCoding */
-const char* IndexCoding_PROPERTY_NAME_NAME = "name";
-const char* IndexCoding_PROPERTY_NAME_DESCRIPTION = "description";
-/* Constants of ProductIO */
-const char* ProductIO_DEFAULT_FORMAT_NAME = "BEAM-DIMAP";
-/* Constants of Placemark */
-const char* Placemark_PLACEMARK_FEATURE_TYPE_NAME = "Placemark";
-const char* Placemark_PROPERTY_NAME_LABEL = "label";
-const char* Placemark_PROPERTY_NAME_TEXT = "text";
-const char* Placemark_PROPERTY_NAME_PIXELPOS = "pixelPos";
-const char* Placemark_PROPERTY_NAME_GEOPOS = "geoPos";
-const char* Placemark_PROPERTY_NAME_DATETIME = "dateTime";
-const char* Placemark_PROPERTY_NAME_STYLE_CSS = "style_css";
-const char* Placemark_PROPERTY_NAME_NAME = "name";
-const char* Placemark_PROPERTY_NAME_DESCRIPTION = "description";
-/* Constants of MetadataElement */
-const char* MetadataElement_PROPERTY_NAME_NAME = "name";
-const char* MetadataElement_PROPERTY_NAME_DESCRIPTION = "description";
-/* Constants of Product */
-const char* Product_METADATA_ROOT_NAME = "metadata";
-const char* Product_HISTORY_ROOT_NAME = "history";
-const char* Product_PIN_MASK_NAME = "pins";
-const char* Product_GCP_MASK_NAME = "ground_control_points";
-const char* Product_PROPERTY_NAME_GEOCODING = "geoCoding";
-const char* Product_PROPERTY_NAME_PRODUCT_TYPE = "productType";
-const char* Product_GEOMETRY_FEATURE_TYPE_NAME = "org.esa.beam.Geometry";
-const char* Product_PROPERTY_NAME_NAME = "name";
-const char* Product_PROPERTY_NAME_DESCRIPTION = "description";
-/* Constants of ImageInfo */
-const Color ImageInfo_NO_COLOR = NULL;
-const char* ImageInfo_HISTOGRAM_MATCHING_OFF = "off";
-const char* ImageInfo_HISTOGRAM_MATCHING_EQUALIZE = "equalize";
-const char* ImageInfo_HISTOGRAM_MATCHING_NORMALIZE = "normalize";
-/* Constants of Band */
-const char* Band_PROPERTY_NAME_SAMPLE_CODING = "sampleCoding";
-const char* Band_PROPERTY_NAME_SOLAR_FLUX = "solarFlux";
-const char* Band_PROPERTY_NAME_SPECTRAL_BAND_INDEX = "spectralBandIndex";
-const char* Band_PROPERTY_NAME_SPECTRAL_BANDWIDTH = "spectralBandwidth";
-const char* Band_PROPERTY_NAME_SPECTRAL_WAVELENGTH = "spectralWavelength";
-const char* Band_VIEW_MODE_ORTHO = "ORTHO";
-const char* Band_VIEW_MODE_FORWARD = "FORWARD";
-const char* Band_VIEW_MODE_NADIR = "NADIR";
-const char* Band_PROPERTY_NAME_IMAGE_INFO = "imageInfo";
-const char* Band_PROPERTY_NAME_LOG_10_SCALED = "log10Scaled";
-const char* Band_PROPERTY_NAME_ROI_DEFINITION = "roiDefinition";
-const char* Band_PROPERTY_NAME_SCALING_FACTOR = "scalingFactor";
-const char* Band_PROPERTY_NAME_SCALING_OFFSET = "scalingOffset";
-const char* Band_PROPERTY_NAME_NO_DATA_VALUE = "noDataValue";
-const char* Band_PROPERTY_NAME_NO_DATA_VALUE_USED = "noDataValueUsed";
-const char* Band_PROPERTY_NAME_VALID_PIXEL_EXPRESSION = "validPixelExpression";
-const char* Band_PROPERTY_NAME_GEOCODING = "geoCoding";
-const char* Band_PROPERTY_NAME_STX = "stx";
-const char* Band_NO_DATA_TEXT = "NaN";
-const char* Band_INVALID_POS_TEXT = "Invalid pos.";
-const char* Band_IO_ERROR_TEXT = "I/O error";
-const char* Band_PROPERTY_NAME_DATA = "data";
-const char* Band_PROPERTY_NAME_READ_ONLY = "readOnly";
-const char* Band_PROPERTY_NAME_SYNTHETIC = "synthetic";
-const char* Band_PROPERTY_NAME_UNIT = "unit";
-const char* Band_PROPERTY_NAME_NAME = "name";
-const char* Band_PROPERTY_NAME_DESCRIPTION = "description";
-/* Constants of PlacemarkGroup */
-const char* PlacemarkGroup_PROPERTY_NAME_NAME = "name";
-const char* PlacemarkGroup_PROPERTY_NAME_DESCRIPTION = "description";
-/* Constants of TiePointGrid */
-const char* TiePointGrid_PROPERTY_NAME_IMAGE_INFO = "imageInfo";
-const char* TiePointGrid_PROPERTY_NAME_LOG_10_SCALED = "log10Scaled";
-const char* TiePointGrid_PROPERTY_NAME_ROI_DEFINITION = "roiDefinition";
-const char* TiePointGrid_PROPERTY_NAME_SCALING_FACTOR = "scalingFactor";
-const char* TiePointGrid_PROPERTY_NAME_SCALING_OFFSET = "scalingOffset";
-const char* TiePointGrid_PROPERTY_NAME_NO_DATA_VALUE = "noDataValue";
-const char* TiePointGrid_PROPERTY_NAME_NO_DATA_VALUE_USED = "noDataValueUsed";
-const char* TiePointGrid_PROPERTY_NAME_VALID_PIXEL_EXPRESSION = "validPixelExpression";
-const char* TiePointGrid_PROPERTY_NAME_GEOCODING = "geoCoding";
-const char* TiePointGrid_PROPERTY_NAME_STX = "stx";
-const char* TiePointGrid_NO_DATA_TEXT = "NaN";
-const char* TiePointGrid_INVALID_POS_TEXT = "Invalid pos.";
-const char* TiePointGrid_IO_ERROR_TEXT = "I/O error";
-const char* TiePointGrid_PROPERTY_NAME_DATA = "data";
-const char* TiePointGrid_PROPERTY_NAME_READ_ONLY = "readOnly";
-const char* TiePointGrid_PROPERTY_NAME_SYNTHETIC = "synthetic";
-const char* TiePointGrid_PROPERTY_NAME_UNIT = "unit";
-const char* TiePointGrid_PROPERTY_NAME_NAME = "name";
-const char* TiePointGrid_PROPERTY_NAME_DESCRIPTION = "description";
-/* Constants of FlagCoding */
-const char* FlagCoding_PROPERTY_NAME_NAME = "name";
-const char* FlagCoding_PROPERTY_NAME_DESCRIPTION = "description";
-/* Constants of ProductData */
-const int ProductData_TYPE_UNDEFINED = 0;
-const int ProductData_TYPE_INT8 = 10;
-const int ProductData_TYPE_INT16 = 11;
-const int ProductData_TYPE_INT32 = 12;
-const int ProductData_TYPE_UINT8 = 20;
-const int ProductData_TYPE_UINT16 = 21;
-const int ProductData_TYPE_UINT32 = 22;
-const int ProductData_TYPE_FLOAT32 = 30;
-const int ProductData_TYPE_FLOAT64 = 31;
-const int ProductData_TYPE_ASCII = 41;
-const int ProductData_TYPE_UTC = 51;
-const char* ProductData_TYPESTRING_INT8 = "int8";
-const char* ProductData_TYPESTRING_INT16 = "int16";
-const char* ProductData_TYPESTRING_INT32 = "int32";
-const char* ProductData_TYPESTRING_UINT8 = "uint8";
-const char* ProductData_TYPESTRING_UINT16 = "uint16";
-const char* ProductData_TYPESTRING_UINT32 = "uint32";
-const char* ProductData_TYPESTRING_FLOAT32 = "float32";
-const char* ProductData_TYPESTRING_FLOAT64 = "float64";
-const char* ProductData_TYPESTRING_ASCII = "ascii";
-const char* ProductData_TYPESTRING_UTC = "utc";
-/* Constants of ProductNodeGroup */
-const char* ProductNodeGroup_PROPERTY_NAME_NAME = "name";
-const char* ProductNodeGroup_PROPERTY_NAME_DESCRIPTION = "description";
-/* Constants of MetadataAttribute */
-const char* MetadataAttribute_PROPERTY_NAME_DATA = "data";
-const char* MetadataAttribute_PROPERTY_NAME_READ_ONLY = "readOnly";
-const char* MetadataAttribute_PROPERTY_NAME_SYNTHETIC = "synthetic";
-const char* MetadataAttribute_PROPERTY_NAME_UNIT = "unit";
-const char* MetadataAttribute_PROPERTY_NAME_NAME = "name";
-const char* MetadataAttribute_PROPERTY_NAME_DESCRIPTION = "description";
+// <<<<<<<< Begin include from CModuleGenerator-stub-jvm.c
 
-
-// <<<<<<<< Begin include from CModuleGenerator-stubs-2.c
-JavaVM* beam_getJavaVM()
-{
-    return jvm;
-}
-
-JNIEnv* beam_getJNIEnv()
-{
-    return jenv;
-}
-
-String String_newString(const char* chars)
-{
-    jstring str = (*jenv)->NewStringUTF(jenv, chars);
-    return (*jenv)->NewGlobalRef(jenv, str);
-}
-
-void Object_delete(Object object)
-{
-    if (object != NULL) {
-        (*jenv)->DeleteGlobalRef(jenv, object);
-    }
-}
-
-jobjectArray beam_newJStringArray(const char** array_elems, int array_length)
-{
-    jobjectArray array;
-    int i;
-
-    array = (*jenv)->NewObjectArray(jenv, array_length, classString, NULL);
-    for (i = 0; i < array_length; i++) {
-        jstring str = (*jenv)->NewStringUTF(jenv, array_elems[i]);
-        (*jenv)->SetObjectArrayElement(jenv, array, i, str);
-    }
-
-    return (*jenv)->NewGlobalRef(jenv, array);
-}
-
-jobjectArray beam_newJObjectArray(const jobject* array_elems, int array_length, jclass comp_class)
-{
-    jobjectArray array;
-    int i;
-
-    array = (*jenv)->NewObjectArray(jenv, array_length, comp_class, NULL);
-    for (i = 0; i < array_length; i++) {
-        (*jenv)->SetObjectArrayElement(jenv, array, i, array_elems[i]);
-    }
-
-    return (*jenv)->NewGlobalRef(jenv, array);
-}
-
-void beam_copyFromJArray(jarray array, void* elems, int array_length, int elem_size)
-{
-    void* addr = (*jenv)->GetPrimitiveArrayCritical(jenv, array, NULL);
-    memcpy(elems, addr, elem_size * array_length);
-    (*jenv)->ReleasePrimitiveArrayCritical(jenv, array, addr, 0);
-}
-
-void beam_copyToJArray(jarray array, const void* elems, int array_length, int elem_size)
-{
-    void* addr = (*jenv)->GetPrimitiveArrayCritical(jenv, array, NULL);
-    memcpy(addr, elems, elem_size * array_length);
-    (*jenv)->ReleasePrimitiveArrayCritical(jenv, array, addr, 0);
-}
-
-void* beam_newCPrimitiveArray(jarray array, int* array_length, int elem_size)
-{
-    void* elems;
-    int n;
-
-    n = (*jenv)->GetArrayLength(jenv, array);
-    elems = (boolean*) malloc(n * elem_size);
-    beam_copyFromJArray(array, elems, elem_size, n);
-    if (array_length != NULL) {
-        *array_length = n;
-    }
-
-    return elems;
-}
-
-boolean* beam_newCBooleanArray(jarray array, int* array_length)
-{
-    return (boolean*) beam_newCPrimitiveArray(array, array_length, sizeof (boolean));
-}
-
-char* beam_newCCharArray(jarray array, int* array_length)
-{
-    return (char*) beam_newCPrimitiveArray(array, array_length, sizeof (char));
-}
-
-byte* beam_newCByteArray(jarray array, int* array_length)
-{
-    return (byte*) beam_newCPrimitiveArray(array, array_length, sizeof (byte));
-}
-
-short* beam_newCShortArray(jarray array, int* array_length)
-{
-    return (short*) beam_newCPrimitiveArray(array, array_length, sizeof (short));
-}
-
-int* beam_newCIntArray(jarray array, int* array_length)
-{
-    return (int*) beam_newCPrimitiveArray(array, array_length, sizeof (int));
-}
-
-dlong* beam_newCLongArray(jarray array, int* array_length)
-{
-    return (dlong*) beam_newCPrimitiveArray(array, array_length, sizeof (dlong));
-}
-
-float* beam_newCFloatArray(jarray array, int* array_length)
-{
-    return (float*) beam_newCPrimitiveArray(array, array_length, sizeof (float));
-}
-
-double* beam_newCDoubleArray(jarray array, int* array_length)
-{
-    return (double*) beam_newCPrimitiveArray(array, array_length, sizeof (double));
-}
-
-Object* beam_newCObjectArray(jarray array, int* array_length)
-{
-    Object* array_elems;
-    jsize n;
-    jsize i;
-
-    n = (*jenv)->GetArrayLength(jenv, array);
-
-    array_elems = (Object*) malloc(n * sizeof (char*));
-    for (i = 0; i < n; i++) {
-        jobject elem = (*jenv)->GetObjectArrayElement(jenv, array, i);
-        array_elems[i] = (*jenv)->NewGlobalRef(jenv, elem);
-    }
-
-    if (array_length != NULL) {
-        *array_length = n;
-    }
-
-    return array_elems;
-}
-
-
-char* beam_newCString(jstring str)
-{
-    int len = (*jenv)->GetStringUTFLength(jenv, str);
-    const char* chars = (*jenv)->GetStringUTFChars(jenv, str, 0);
-    char* result = (char*) malloc((len + 1) * sizeof (char));
-    if (result != NULL) {
-        strcpy(result, chars);
-    }
-    (*jenv)->ReleaseStringUTFChars(jenv, str, chars);
-    return result;
-}
-
-void beam_deleteCString(char* chars)
-{
-    if (chars != NULL) {
-        free(chars);
-    }
-}
-
-char** beam_newCStringArray(jarray array, int* array_length)
-{
-    char** array_elems;
-    jsize n;
-    jsize i;
-
-    n = (*jenv)->GetArrayLength(jenv, array);
-
-    array_elems = (char**) malloc(n * sizeof (char*));
-    for (i = 0; i < n; i++) {
-        jstring str = (*jenv)->GetObjectArrayElement(jenv, array, i);
-        jsize len = (*jenv)->GetStringUTFLength(jenv, str);
-        const char* chars = (*jenv)->GetStringUTFChars(jenv, str, 0);
-
-        char* elems = (char*) malloc((len + 1) * sizeof (char));
-        strcpy(elems, chars);
-        (*jenv)->ReleaseStringUTFChars(jenv, str, chars);
-        array_elems[i] = elems;
-    }
-
-    if (array_length != NULL) {
-        *array_length = n;
-    }
-
-    return array_elems;
-}
-
-void beam_deleteCStringArray(char** array_elems, int array_length)
-{
-    if (array_elems != NULL) {
-        int i;
-        for (i = 0; i < array_length; i++) {
-            if (array_elems[i] != NULL) {
-                free(array_elems[i]);
-            }
-        }
-        free(array_elems);
-    }
-}
-
-void beam_deleteCObjectArray(void** array_elems, int array_length)
-{
-    if (array_elems != NULL) {
-        void* object;
-        int i;
-        for (i = 0; i < array_length; i++) {
-             object = array_elems[i];
-             (*jenv)->DeleteGlobalRef(jenv, object);
-        }
-        free(array_elems);
-    }
-}
-
-// array_length currently not used, but useful for debugging
-void beam_deleteCPrimitiveArray(void* array_elems, int array_length)
-{
-     if (array_elems != NULL) {
-          free(array_elems);
-     }
-}
+static JavaVM* jvm = NULL;
+static JNIEnv* jenv = NULL;
 
 /* Shared library callbacks (called if this module's code is linked into a shared library and loaded by a Java VM) */
 
@@ -518,12 +169,12 @@ JNIEXPORT void JNICALL JNI_OnUnload(JavaVM *vm, void *reserved)
 
 /* Java VM functions that must be used if this module is used in stand-alone mode (= not loaded as shared library by a Java VM) */
 
-jboolean beam_isJvmCreated()
+boolean beam_isJvmCreated()
 {
     return jvm != NULL;
 }
 
-jboolean beam_createJvm(const char* option_strings[], int option_count)
+boolean beam_createJvm(const char* option_strings[], int option_count)
 {
     JavaVMInitArgs vm_args; 
     JavaVMOption* options;
@@ -562,7 +213,7 @@ jboolean beam_createJvm(const char* option_strings[], int option_count)
     return JNI_TRUE;
 }
 
-jboolean beam_destroyJvm()
+boolean beam_destroyJvm()
 {
     jint res;
 
@@ -643,11 +294,11 @@ char* beam_createJvmClassPathOption()
 #undef OS_FILESEP
 #undef OS_PATHSEP
 
-jboolean beam_createJvmWithDefaults()
+boolean beam_createJvmWithDefaults()
 {
     const char* jvm_options[5];
     char* class_path_option;
-    jboolean result;
+    boolean result;
 
     class_path_option = beam_createJvmClassPathOption();
     if (class_path_option == NULL) {
@@ -688,7 +339,7 @@ jclass beam_findJvmClass(const char* classResourceName)
 
 
 
-// >>>>>>>> End include from CModuleGenerator-stubs-2.c
+// >>>>>>>> End include from CModuleGenerator-stub-jvm.c
 
 int beam_initApi()
 {
@@ -957,6 +608,350 @@ int beam_initApi()
     exitCode = 0;
     return exitCode;
 }
+
+
+// <<<<<<<< Begin include from CModuleGenerator-stub-conv.c
+
+String String_newString(const char* chars)
+{
+    jstring str = (*jenv)->NewStringUTF(jenv, chars);
+    return (*jenv)->NewGlobalRef(jenv, str);
+}
+
+void Object_delete(Object object)
+{
+    if (object != NULL) {
+        (*jenv)->DeleteGlobalRef(jenv, object);
+    }
+}
+
+jobjectArray beam_newJStringArray(const char** array_elems, int array_length)
+{
+    jobjectArray array;
+    int i;
+
+    array = (*jenv)->NewObjectArray(jenv, array_length, classString, NULL);
+    for (i = 0; i < array_length; i++) {
+        jstring str = (*jenv)->NewStringUTF(jenv, array_elems[i]);
+        (*jenv)->SetObjectArrayElement(jenv, array, i, str);
+    }
+
+    return (*jenv)->NewGlobalRef(jenv, array);
+}
+
+jobjectArray beam_newJObjectArray(const jobject* array_elems, int array_length, jclass comp_class)
+{
+    jobjectArray array;
+    int i;
+
+    array = (*jenv)->NewObjectArray(jenv, array_length, comp_class, NULL);
+    for (i = 0; i < array_length; i++) {
+        (*jenv)->SetObjectArrayElement(jenv, array, i, array_elems[i]);
+    }
+
+    return (*jenv)->NewGlobalRef(jenv, array);
+}
+
+void beam_copyFromJArray(jarray array, void* elems, int array_length, int elem_size)
+{
+    void* addr = (*jenv)->GetPrimitiveArrayCritical(jenv, array, NULL);
+    memcpy(elems, addr, elem_size * array_length);
+    (*jenv)->ReleasePrimitiveArrayCritical(jenv, array, addr, 0);
+}
+
+void beam_copyToJArray(jarray array, const void* elems, int array_length, int elem_size)
+{
+    void* addr = (*jenv)->GetPrimitiveArrayCritical(jenv, array, NULL);
+    memcpy(addr, elems, elem_size * array_length);
+    (*jenv)->ReleasePrimitiveArrayCritical(jenv, array, addr, 0);
+}
+
+void* beam_newCPrimitiveArray(jarray array, int* array_length, int elem_size)
+{
+    void* elems;
+    int n;
+
+    n = (*jenv)->GetArrayLength(jenv, array);
+    elems = (boolean*) malloc(n * elem_size);
+    beam_copyFromJArray(array, elems, elem_size, n);
+    if (array_length != NULL) {
+        *array_length = n;
+    }
+
+    return elems;
+}
+
+boolean* beam_newCBooleanArray(jarray array, int* array_length)
+{
+    return (boolean*) beam_newCPrimitiveArray(array, array_length, sizeof (boolean));
+}
+
+char* beam_newCCharArray(jarray array, int* array_length)
+{
+    return (char*) beam_newCPrimitiveArray(array, array_length, sizeof (char));
+}
+
+byte* beam_newCByteArray(jarray array, int* array_length)
+{
+    return (byte*) beam_newCPrimitiveArray(array, array_length, sizeof (byte));
+}
+
+short* beam_newCShortArray(jarray array, int* array_length)
+{
+    return (short*) beam_newCPrimitiveArray(array, array_length, sizeof (short));
+}
+
+int* beam_newCIntArray(jarray array, int* array_length)
+{
+    return (int*) beam_newCPrimitiveArray(array, array_length, sizeof (int));
+}
+
+dlong* beam_newCLongArray(jarray array, int* array_length)
+{
+    return (dlong*) beam_newCPrimitiveArray(array, array_length, sizeof (dlong));
+}
+
+float* beam_newCFloatArray(jarray array, int* array_length)
+{
+    return (float*) beam_newCPrimitiveArray(array, array_length, sizeof (float));
+}
+
+double* beam_newCDoubleArray(jarray array, int* array_length)
+{
+    return (double*) beam_newCPrimitiveArray(array, array_length, sizeof (double));
+}
+
+Object* beam_newCObjectArray(jarray array, int* array_length)
+{
+    Object* array_elems;
+    jsize n;
+    jsize i;
+
+    n = (*jenv)->GetArrayLength(jenv, array);
+
+    array_elems = (Object*) malloc(n * sizeof (char*));
+    for (i = 0; i < n; i++) {
+        jobject elem = (*jenv)->GetObjectArrayElement(jenv, array, i);
+        array_elems[i] = (*jenv)->NewGlobalRef(jenv, elem);
+    }
+
+    if (array_length != NULL) {
+        *array_length = n;
+    }
+
+    return array_elems;
+}
+
+
+char* beam_newCString(jstring str)
+{
+    int len = (*jenv)->GetStringUTFLength(jenv, str);
+    const char* chars = (*jenv)->GetStringUTFChars(jenv, str, 0);
+    char* result = (char*) malloc((len + 1) * sizeof (char));
+    if (result != NULL) {
+        strcpy(result, chars);
+    }
+    (*jenv)->ReleaseStringUTFChars(jenv, str, chars);
+    return result;
+}
+
+void beam_deleteCString(char* chars)
+{
+    if (chars != NULL) {
+        free(chars);
+    }
+}
+
+char** beam_newCStringArray(jarray array, int* array_length)
+{
+    char** array_elems;
+    jsize n;
+    jsize i;
+
+    n = (*jenv)->GetArrayLength(jenv, array);
+
+    array_elems = (char**) malloc(n * sizeof (char*));
+    for (i = 0; i < n; i++) {
+        jstring str = (*jenv)->GetObjectArrayElement(jenv, array, i);
+        jsize len = (*jenv)->GetStringUTFLength(jenv, str);
+        const char* chars = (*jenv)->GetStringUTFChars(jenv, str, 0);
+
+        char* elems = (char*) malloc((len + 1) * sizeof (char));
+        strcpy(elems, chars);
+        (*jenv)->ReleaseStringUTFChars(jenv, str, chars);
+        array_elems[i] = elems;
+    }
+
+    if (array_length != NULL) {
+        *array_length = n;
+    }
+
+    return array_elems;
+}
+
+void beam_deleteCStringArray(char** array_elems, int array_length)
+{
+    if (array_elems != NULL) {
+        int i;
+        for (i = 0; i < array_length; i++) {
+            if (array_elems[i] != NULL) {
+                free(array_elems[i]);
+            }
+        }
+        free(array_elems);
+    }
+}
+
+void beam_deleteCObjectArray(void** array_elems, int array_length)
+{
+    if (array_elems != NULL) {
+        void* object;
+        int i;
+        for (i = 0; i < array_length; i++) {
+             object = array_elems[i];
+             (*jenv)->DeleteGlobalRef(jenv, object);
+        }
+        free(array_elems);
+    }
+}
+
+// array_length currently not used, but useful for debugging
+void beam_deleteCPrimitiveArray(void* array_elems, int array_length)
+{
+     if (array_elems != NULL) {
+          free(array_elems);
+     }
+}
+// >>>>>>>> End include from CModuleGenerator-stub-conv.c
+
+/* Constants of GPF */
+const char* GPF_DISABLE_TILE_CACHE_PROPERTY = "beam.gpf.disableTileCache";
+const char* GPF_USE_FILE_TILE_CACHE_PROPERTY = "beam.gpf.useFileTileCache";
+const char* GPF_TILE_COMPUTATION_OBSERVER_PROPERTY = "beam.gpf.tileComputationObserver";
+const char* GPF_SOURCE_PRODUCT_FIELD_NAME = "sourceProduct";
+const char* GPF_TARGET_PRODUCT_FIELD_NAME = "targetProduct";
+const RenderingHints_Key GPF_KEY_TILE_SIZE = NULL;
+const Map GPF_NO_PARAMS = NULL;
+const Map GPF_NO_SOURCES = NULL;
+/* Constants of IndexCoding */
+const char* IndexCoding_PROPERTY_NAME_NAME = "name";
+const char* IndexCoding_PROPERTY_NAME_DESCRIPTION = "description";
+/* Constants of ProductIO */
+const char* ProductIO_DEFAULT_FORMAT_NAME = "BEAM-DIMAP";
+/* Constants of Placemark */
+const char* Placemark_PLACEMARK_FEATURE_TYPE_NAME = "Placemark";
+const char* Placemark_PROPERTY_NAME_LABEL = "label";
+const char* Placemark_PROPERTY_NAME_TEXT = "text";
+const char* Placemark_PROPERTY_NAME_PIXELPOS = "pixelPos";
+const char* Placemark_PROPERTY_NAME_GEOPOS = "geoPos";
+const char* Placemark_PROPERTY_NAME_DATETIME = "dateTime";
+const char* Placemark_PROPERTY_NAME_STYLE_CSS = "style_css";
+const char* Placemark_PROPERTY_NAME_NAME = "name";
+const char* Placemark_PROPERTY_NAME_DESCRIPTION = "description";
+/* Constants of MetadataElement */
+const char* MetadataElement_PROPERTY_NAME_NAME = "name";
+const char* MetadataElement_PROPERTY_NAME_DESCRIPTION = "description";
+/* Constants of Product */
+const char* Product_METADATA_ROOT_NAME = "metadata";
+const char* Product_HISTORY_ROOT_NAME = "history";
+const char* Product_PIN_MASK_NAME = "pins";
+const char* Product_GCP_MASK_NAME = "ground_control_points";
+const char* Product_PROPERTY_NAME_GEOCODING = "geoCoding";
+const char* Product_PROPERTY_NAME_PRODUCT_TYPE = "productType";
+const char* Product_GEOMETRY_FEATURE_TYPE_NAME = "org.esa.beam.Geometry";
+const char* Product_PROPERTY_NAME_NAME = "name";
+const char* Product_PROPERTY_NAME_DESCRIPTION = "description";
+/* Constants of ImageInfo */
+const Color ImageInfo_NO_COLOR = NULL;
+const char* ImageInfo_HISTOGRAM_MATCHING_OFF = "off";
+const char* ImageInfo_HISTOGRAM_MATCHING_EQUALIZE = "equalize";
+const char* ImageInfo_HISTOGRAM_MATCHING_NORMALIZE = "normalize";
+/* Constants of Band */
+const char* Band_PROPERTY_NAME_SAMPLE_CODING = "sampleCoding";
+const char* Band_PROPERTY_NAME_SOLAR_FLUX = "solarFlux";
+const char* Band_PROPERTY_NAME_SPECTRAL_BAND_INDEX = "spectralBandIndex";
+const char* Band_PROPERTY_NAME_SPECTRAL_BANDWIDTH = "spectralBandwidth";
+const char* Band_PROPERTY_NAME_SPECTRAL_WAVELENGTH = "spectralWavelength";
+const char* Band_VIEW_MODE_ORTHO = "ORTHO";
+const char* Band_VIEW_MODE_FORWARD = "FORWARD";
+const char* Band_VIEW_MODE_NADIR = "NADIR";
+const char* Band_PROPERTY_NAME_IMAGE_INFO = "imageInfo";
+const char* Band_PROPERTY_NAME_LOG_10_SCALED = "log10Scaled";
+const char* Band_PROPERTY_NAME_ROI_DEFINITION = "roiDefinition";
+const char* Band_PROPERTY_NAME_SCALING_FACTOR = "scalingFactor";
+const char* Band_PROPERTY_NAME_SCALING_OFFSET = "scalingOffset";
+const char* Band_PROPERTY_NAME_NO_DATA_VALUE = "noDataValue";
+const char* Band_PROPERTY_NAME_NO_DATA_VALUE_USED = "noDataValueUsed";
+const char* Band_PROPERTY_NAME_VALID_PIXEL_EXPRESSION = "validPixelExpression";
+const char* Band_PROPERTY_NAME_GEOCODING = "geoCoding";
+const char* Band_PROPERTY_NAME_STX = "stx";
+const char* Band_NO_DATA_TEXT = "NaN";
+const char* Band_INVALID_POS_TEXT = "Invalid pos.";
+const char* Band_IO_ERROR_TEXT = "I/O error";
+const char* Band_PROPERTY_NAME_DATA = "data";
+const char* Band_PROPERTY_NAME_READ_ONLY = "readOnly";
+const char* Band_PROPERTY_NAME_SYNTHETIC = "synthetic";
+const char* Band_PROPERTY_NAME_UNIT = "unit";
+const char* Band_PROPERTY_NAME_NAME = "name";
+const char* Band_PROPERTY_NAME_DESCRIPTION = "description";
+/* Constants of PlacemarkGroup */
+const char* PlacemarkGroup_PROPERTY_NAME_NAME = "name";
+const char* PlacemarkGroup_PROPERTY_NAME_DESCRIPTION = "description";
+/* Constants of TiePointGrid */
+const char* TiePointGrid_PROPERTY_NAME_IMAGE_INFO = "imageInfo";
+const char* TiePointGrid_PROPERTY_NAME_LOG_10_SCALED = "log10Scaled";
+const char* TiePointGrid_PROPERTY_NAME_ROI_DEFINITION = "roiDefinition";
+const char* TiePointGrid_PROPERTY_NAME_SCALING_FACTOR = "scalingFactor";
+const char* TiePointGrid_PROPERTY_NAME_SCALING_OFFSET = "scalingOffset";
+const char* TiePointGrid_PROPERTY_NAME_NO_DATA_VALUE = "noDataValue";
+const char* TiePointGrid_PROPERTY_NAME_NO_DATA_VALUE_USED = "noDataValueUsed";
+const char* TiePointGrid_PROPERTY_NAME_VALID_PIXEL_EXPRESSION = "validPixelExpression";
+const char* TiePointGrid_PROPERTY_NAME_GEOCODING = "geoCoding";
+const char* TiePointGrid_PROPERTY_NAME_STX = "stx";
+const char* TiePointGrid_NO_DATA_TEXT = "NaN";
+const char* TiePointGrid_INVALID_POS_TEXT = "Invalid pos.";
+const char* TiePointGrid_IO_ERROR_TEXT = "I/O error";
+const char* TiePointGrid_PROPERTY_NAME_DATA = "data";
+const char* TiePointGrid_PROPERTY_NAME_READ_ONLY = "readOnly";
+const char* TiePointGrid_PROPERTY_NAME_SYNTHETIC = "synthetic";
+const char* TiePointGrid_PROPERTY_NAME_UNIT = "unit";
+const char* TiePointGrid_PROPERTY_NAME_NAME = "name";
+const char* TiePointGrid_PROPERTY_NAME_DESCRIPTION = "description";
+/* Constants of FlagCoding */
+const char* FlagCoding_PROPERTY_NAME_NAME = "name";
+const char* FlagCoding_PROPERTY_NAME_DESCRIPTION = "description";
+/* Constants of ProductData */
+const int ProductData_TYPE_UNDEFINED = 0;
+const int ProductData_TYPE_INT8 = 10;
+const int ProductData_TYPE_INT16 = 11;
+const int ProductData_TYPE_INT32 = 12;
+const int ProductData_TYPE_UINT8 = 20;
+const int ProductData_TYPE_UINT16 = 21;
+const int ProductData_TYPE_UINT32 = 22;
+const int ProductData_TYPE_FLOAT32 = 30;
+const int ProductData_TYPE_FLOAT64 = 31;
+const int ProductData_TYPE_ASCII = 41;
+const int ProductData_TYPE_UTC = 51;
+const char* ProductData_TYPESTRING_INT8 = "int8";
+const char* ProductData_TYPESTRING_INT16 = "int16";
+const char* ProductData_TYPESTRING_INT32 = "int32";
+const char* ProductData_TYPESTRING_UINT8 = "uint8";
+const char* ProductData_TYPESTRING_UINT16 = "uint16";
+const char* ProductData_TYPESTRING_UINT32 = "uint32";
+const char* ProductData_TYPESTRING_FLOAT32 = "float32";
+const char* ProductData_TYPESTRING_FLOAT64 = "float64";
+const char* ProductData_TYPESTRING_ASCII = "ascii";
+const char* ProductData_TYPESTRING_UTC = "utc";
+/* Constants of ProductNodeGroup */
+const char* ProductNodeGroup_PROPERTY_NAME_NAME = "name";
+const char* ProductNodeGroup_PROPERTY_NAME_DESCRIPTION = "description";
+/* Constants of MetadataAttribute */
+const char* MetadataAttribute_PROPERTY_NAME_DATA = "data";
+const char* MetadataAttribute_PROPERTY_NAME_READ_ONLY = "readOnly";
+const char* MetadataAttribute_PROPERTY_NAME_SYNTHETIC = "synthetic";
+const char* MetadataAttribute_PROPERTY_NAME_UNIT = "unit";
+const char* MetadataAttribute_PROPERTY_NAME_NAME = "name";
+const char* MetadataAttribute_PROPERTY_NAME_DESCRIPTION = "description";
 
 boolean GeoCoding_isCrossingMeridianAt180(GeoCoding _this)
 {
@@ -5592,13 +5587,13 @@ MetadataElement Product_getMetadataRoot(Product _this)
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
-ProductNodeGroup Product_getBandGroup(Product _this)
+ProductNodeGroup Product_getGroups(Product _this)
 {
     static jmethodID _method = NULL;
     ProductNodeGroup _result = (ProductNodeGroup) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
-            _method = (*jenv)->GetMethodID(jenv, classProduct, "getBandGroup", "()Lorg/esa/beam/framework/datamodel/ProductNodeGroup;");
+            _method = (*jenv)->GetMethodID(jenv, classProduct, "getGroups", "()Lorg/esa/beam/framework/datamodel/ProductNodeGroup;");
             if (_method == NULL) {
                 /* Set global error */
             }
@@ -5608,6 +5603,28 @@ ProductNodeGroup Product_getBandGroup(Product _this)
         }
     }
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
+    return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
+}
+
+ProductNodeGroup Product_getGroup(Product _this, const char* name)
+{
+    static jmethodID _method = NULL;
+    jstring nameString = NULL;
+    ProductNodeGroup _result = (ProductNodeGroup) 0;
+    if (_method == NULL) {
+        if (beam_initApi() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProduct, "getGroup", "(Ljava/lang/String;)Lorg/esa/beam/framework/datamodel/ProductNodeGroup;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
+    }
+    nameString = (*jenv)->NewStringUTF(jenv, name);
+    _result = (*jenv)->CallObjectMethod(jenv, _this, _method, nameString);
+    (*jenv)->DeleteLocalRef(jenv, nameString);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
@@ -5790,6 +5807,25 @@ boolean Product_containsTiePointGrid(Product _this, const char* name)
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method, nameString);
     (*jenv)->DeleteLocalRef(jenv, nameString);
     return _result;
+}
+
+ProductNodeGroup Product_getBandGroup(Product _this)
+{
+    static jmethodID _method = NULL;
+    ProductNodeGroup _result = (ProductNodeGroup) 0;
+    if (_method == NULL) {
+        if (beam_initApi() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProduct, "getBandGroup", "()Lorg/esa/beam/framework/datamodel/ProductNodeGroup;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
+    }
+    _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
+    return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
 void Product_addBand(Product _this, Band band)
@@ -6198,6 +6234,42 @@ PlacemarkGroup Product_getPinGroup(Product _this)
     }
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
+}
+
+int Product_getNumResolutionsMax(Product _this)
+{
+    static jmethodID _method = NULL;
+    int _result = (int) 0;
+    if (_method == NULL) {
+        if (beam_initApi() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProduct, "getNumResolutionsMax", "()I");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
+    }
+    _result = (*jenv)->CallIntMethod(jenv, _this, _method);
+    return _result;
+}
+
+void Product_setNumResolutionsMax(Product _this, int numResolutionsMax)
+{
+    static jmethodID _method = NULL;
+    if (_method == NULL) {
+        if (beam_initApi() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProduct, "setNumResolutionsMax", "(I)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
+    }
+    (*jenv)->CallVoidMethod(jenv, _this, _method, numResolutionsMax);
 }
 
 boolean Product_isCompatibleProduct(Product _this, Product product, float eps)
@@ -8642,6 +8714,25 @@ ImageGeometry ImageGeometry_createCollocationTargetGeometry(Product targetProduc
         }
     }
     _result = (*jenv)->CallStaticObjectMethod(jenv, classImageGeometry, _method, targetProduct, collocationProduct);
+    return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
+}
+
+Rectangle2D ImageGeometry_createValidRect(Product product)
+{
+    static jmethodID _method = NULL;
+    Rectangle2D _result = (Rectangle2D) 0;
+    if (_method == NULL) {
+        if (beam_initApi() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classImageGeometry, "createValidRect", "(Lorg/esa/beam/framework/datamodel/Product;)Ljava/awt/geom/Rectangle2D;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
+    }
+    _result = (*jenv)->CallStaticObjectMethod(jenv, classImageGeometry, _method, product);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
@@ -19877,6 +19968,25 @@ GeoPos* ProductUtils_createGeoBoundary3(Product product, Rectangle region, int s
     _result = beam_newCObjectArray(_resultArray, resultArrayLength);
     (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
+}
+
+GeoPos ProductUtils_getClosestGeoPos(GeoCoding gc, PixelPos origPos, Rectangle region, int step)
+{
+    static jmethodID _method = NULL;
+    GeoPos _result = (GeoPos) 0;
+    if (_method == NULL) {
+        if (beam_initApi() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "getClosestGeoPos", "(Lorg/esa/beam/framework/datamodel/GeoCoding;Lorg/esa/beam/framework/datamodel/PixelPos;Ljava/awt/Rectangle;I)Lorg/esa/beam/framework/datamodel/GeoPos;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
+    }
+    _result = (*jenv)->CallStaticObjectMethod(jenv, classProductUtils, _method, gc, origPos, region, step);
+    return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
 GeoPos* ProductUtils_createGeoBoundary4(RasterDataNode raster, Rectangle region, int step, int* resultArrayLength)

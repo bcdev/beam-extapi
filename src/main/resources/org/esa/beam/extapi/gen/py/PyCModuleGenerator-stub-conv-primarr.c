@@ -1,5 +1,5 @@
 /*
- * Creates a Python sequence (a list) from a C-array of type ${typeName}.
+ * Creates a Python sequence (a list) from a C-array of primitive type ${typeName}.
  * Code generated from template. Parameters:
  *   typeName =       ${typeName}
  *   ctype =          ${ctype}
@@ -30,7 +30,7 @@ PyObject* beampy_newPySeqFromC${typeName}Array(const ${ctype}* elems, int length
 }
 
 /*
- * Creates C-array of type ${typeName} from a Python sequence.
+ * Creates C-array of primitive type ${typeName} from a Python sequence.
  * Code generated from template. Parameters:
  *   typeName =       ${typeName}
  *   ctype =          ${ctype}
