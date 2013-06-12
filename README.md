@@ -29,7 +29,7 @@ Example python scripts can be found in the examples directory. So, on Windows tr
     python beampy_ndvi.py <file>
 
 
-For Windows installations only: While running setup.py for for package installations Python 2.7 (and 3.3, Norman) searches for an installed Visual Studio 2008.
+For Windows installations only: While running setup.py for package installations Python 2.7 (and 3.3, Norman) searches for an installed Visual Studio 2008.
 You can trick Python to use newer Visual Studio by setting correct path in VS90COMNTOOLS environment variable before calling setup.py.
 (from http://stackoverflow.com/questions/6551724/how-do-i-point-easy-install-to-vcvarsall-bat)
 
