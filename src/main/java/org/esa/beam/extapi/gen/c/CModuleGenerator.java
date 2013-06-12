@@ -91,7 +91,7 @@ public class CModuleGenerator extends ModuleGenerator {
         new TargetFile(BEAM_CAPI_SRCDIR, BEAM_CAPI_NAME + ".def") {
             @Override
             protected void writeContent() throws IOException {
-                writeTemplateResource(writer, "CModuleGenerator-stubs.def");
+                writeTemplateResource(writer, "CModuleGenerator-stub-init.def");
                 for (ApiClass apiClass : getApiClasses()) {
                     for (FunctionGenerator generator : getFunctionGenerators(apiClass)) {
                         writer.printf("\t%s\n", getFunctionNameFor(generator.getApiMethod()));
@@ -175,9 +175,7 @@ public class CModuleGenerator extends ModuleGenerator {
 
     protected void writeCHeaderContents(PrintWriter writer) throws IOException {
 
-        writer.write("\n");
-        writeTemplateResource(writer, "CModuleGenerator-stubs-1.h");
-        writer.write("\n");
+        writeTemplateResource(writer, "CModuleGenerator-stub-types.h");
 
         writer.write("\n");
         writer.write("/* Wrapped API classes */\n");
@@ -196,9 +194,8 @@ public class CModuleGenerator extends ModuleGenerator {
         }
         writer.write("\n");
 
-        writer.write("\n");
-        writeTemplateResource(writer, "CModuleGenerator-stubs-2.h");
-        writer.write("\n");
+        writeTemplateResource(writer, "CModuleGenerator-stub-jvm.h");
+        writeTemplateResource(writer, "CModuleGenerator-stub-conv.h");
 
         /////////////////////////////////////////////////////////////////////////////////////
         // Generate function declarations
@@ -229,16 +226,18 @@ public class CModuleGenerator extends ModuleGenerator {
         new TargetCFile(BEAM_CAPI_SRCDIR, BEAM_CAPI_NAME + ".c") {
             @Override
             protected void writeContent() throws IOException {
-                writeTemplateResource(writer, "CModuleGenerator-stubs-1.c");
+                writeTemplateResource(writer, "CModuleGenerator-stub-init.c");
                 writer.printf("\n");
                 writeClassDefinitions(writer, false);
                 writer.printf("\n");
-                writeApiConstants(writer);
-                writer.write("\n");
-                writer.printf("\n");
-                writeTemplateResource(writer, "CModuleGenerator-stubs-2.c");
+                writeTemplateResource(writer, "CModuleGenerator-stub-jvm.c");
                 writer.printf("\n");
                 writeInitApiFunction(writer);
+                writer.printf("\n");
+                writeTemplateResource(writer, "CModuleGenerator-stub-conv.c");
+                writer.printf("\n");
+                writeApiConstants(writer);
+                writer.printf("\n");
                 writeApiFunctions(writer);
             }
         }.create();

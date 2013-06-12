@@ -5,19 +5,11 @@
 extern "C" {
 #endif
 
-
-// <<<<<<<< Begin include from CModuleGenerator-stubs-1.h
+// <<<<<<<< Begin include from CModuleGenerator-stub-types.h
 typedef char byte;
 typedef unsigned char boolean;
 typedef long long dlong;
-
-#ifdef _DEBUG
-#define BEAM_TRACE printf
-#else
-#define BEAM_TRACE //
-#endif
-// >>>>>>>> End include from CModuleGenerator-stubs-1.h
-
+// >>>>>>>> End include from CModuleGenerator-stub-types.h
 
 /* Wrapped API classes */
 typedef void* GeoCoding;
@@ -64,6 +56,7 @@ typedef void* AffineTransform;
 typedef void* Area;
 typedef void* GeneralPath;
 typedef void* Point2D;
+typedef void* Rectangle2D;
 typedef void* BufferedImage;
 typedef void* ComponentColorModel;
 typedef void* IndexColorModel;
@@ -116,29 +109,30 @@ typedef void* SimpleFeatureType;
 typedef void* CoordinateReferenceSystem;
 typedef void* MathTransform;
 
-
-// <<<<<<<< Begin include from CModuleGenerator-stubs-2.h
-
+// <<<<<<<< Begin include from CModuleGenerator-stub-jvm.h
 /*
  * Java VM functions that must be used if this module is used in stand-alone
  * mode (= not loaded as shared library by a Java VM).
  */
-
 boolean beam_isJvmCreated();
 boolean beam_createJvm(const char* option_strings[], int option_count);
 boolean beam_createJvmWithDefaults();
 boolean beam_destroyJvm();
 
+String String_newString(const char* chars);
+void Object_delete(Object object);
+// >>>>>>>> End include from CModuleGenerator-stub-jvm.h
+// <<<<<<<< Begin include from CModuleGenerator-stub-conv.h
+/*
+ * Functions that must be used after some BEAM C-API library calls in order to
+ * release allocated memory.
+ */
 void beam_deleteCString(char* chars);
 void beam_deleteCStringArray(char** array_elems, int array_length);
 void beam_deleteCObjectArray(void** array_elems, int array_length);
 void beam_deleteCPrimitiveArray(void* array_elems, int array_length);
 
-String String_newString(const char* chars);
-void Object_delete(Object object);
-
-// >>>>>>>> End include from CModuleGenerator-stubs-2.h
-
+// >>>>>>>> End include from CModuleGenerator-stub-conv.h
 
 /* Functions for class GeoCoding */
 
@@ -443,7 +437,8 @@ void Product_setStartTime(Product _this, ProductData_UTC startTime);
 ProductData_UTC Product_getEndTime(Product _this);
 void Product_setEndTime(Product _this, ProductData_UTC endTime);
 MetadataElement Product_getMetadataRoot(Product _this);
-ProductNodeGroup Product_getBandGroup(Product _this);
+ProductNodeGroup Product_getGroups(Product _this);
+ProductNodeGroup Product_getGroup(Product _this, const char* name);
 ProductNodeGroup Product_getTiePointGridGroup(Product _this);
 void Product_addTiePointGrid(Product _this, TiePointGrid tiePointGrid);
 boolean Product_removeTiePointGrid(Product _this, TiePointGrid tiePointGrid);
@@ -453,6 +448,7 @@ char** Product_getTiePointGridNames(Product _this, int* resultArrayLength);
 TiePointGrid* Product_getTiePointGrids(Product _this, int* resultArrayLength);
 TiePointGrid Product_getTiePointGrid(Product _this, const char* name);
 boolean Product_containsTiePointGrid(Product _this, const char* name);
+ProductNodeGroup Product_getBandGroup(Product _this);
 void Product_addBand(Product _this, Band band);
 Band Product_addNewBand(Product _this, const char* bandName, int dataType);
 Band Product_addComputedBand(Product _this, const char* bandName, const char* expression);
@@ -473,6 +469,8 @@ ProductNodeGroup Product_getIndexCodingGroup(Product _this);
 boolean Product_containsPixel(Product _this, float x, float y);
 PlacemarkGroup Product_getGcpGroup(Product _this);
 PlacemarkGroup Product_getPinGroup(Product _this);
+int Product_getNumResolutionsMax(Product _this);
+void Product_setNumResolutionsMax(Product _this, int numResolutionsMax);
 boolean Product_isCompatibleProduct(Product _this, Product product, float eps);
 Term Product_parseExpression(Product _this, const char* expression);
 void Product_acceptVisitor(Product _this, ProductVisitor visitor);
@@ -616,6 +614,7 @@ Point2D ImageGeometry_calculateEastingNorthing(Product sourceProduct, Coordinate
 Rectangle ImageGeometry_calculateProductSize(Product sourceProduct, CoordinateReferenceSystem targetCrs, double pixelSizeX, double pixelSizeY);
 ImageGeometry ImageGeometry_createTargetGeometry(Product sourceProduct, CoordinateReferenceSystem targetCrs, Double pixelSizeX, Double pixelSizeY, Integer width, Integer height, Double orientation, Double easting, Double northing, Double referencePixelX, Double referencePixelY);
 ImageGeometry ImageGeometry_createCollocationTargetGeometry(Product targetProduct, Product collocationProduct);
+Rectangle2D ImageGeometry_createValidRect(Product product);
 
 /* Constants of Band */
 extern const char* Band_PROPERTY_NAME_SAMPLE_CODING;
@@ -1304,6 +1303,7 @@ Point2D* ProductUtils_createMapBoundary(Product product, Rectangle rect, int ste
 GeoPos* ProductUtils_createGeoBoundary1(Product product, int step, int* resultArrayLength);
 GeoPos* ProductUtils_createGeoBoundary2(Product product, Rectangle region, int step, int* resultArrayLength);
 GeoPos* ProductUtils_createGeoBoundary3(Product product, Rectangle region, int step, boolean usePixelCenter, int* resultArrayLength);
+GeoPos ProductUtils_getClosestGeoPos(GeoCoding gc, PixelPos origPos, Rectangle region, int step);
 GeoPos* ProductUtils_createGeoBoundary4(RasterDataNode raster, Rectangle region, int step, int* resultArrayLength);
 GeneralPath* ProductUtils_createGeoBoundaryPaths1(Product product, int* resultArrayLength);
 GeneralPath* ProductUtils_createGeoBoundaryPaths2(Product product, Rectangle region, int step, int* resultArrayLength);

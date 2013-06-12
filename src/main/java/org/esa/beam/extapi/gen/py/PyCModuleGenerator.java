@@ -269,7 +269,7 @@ public class PyCModuleGenerator extends ModuleGenerator {
         new TargetFile(BEAM_PYAPI_C_SRCDIR, BEAM_PYAPI_NAME + ".def") {
             @Override
             protected void writeContent() throws IOException {
-                writeTemplateResource(writer, "PyCModuleGenerator-stubs.def");
+                writeTemplateResource(writer, "PyCModuleGenerator-stub-init.def");
             }
         }.create();
     }
@@ -288,10 +288,8 @@ public class PyCModuleGenerator extends ModuleGenerator {
             @Override
             protected void writeContent() throws IOException {
 
-                writeTemplateResource(writer, "PyCModuleGenerator-stubs-1.c");
+                writeTemplateResource(writer, "PyCModuleGenerator-stub-init.c");
                 writer.printf("\n");
-
-                writer.write("\n");
 
                 writer.printf("\n");
                 for (ApiClass apiClass : getApiClasses()) {
@@ -321,8 +319,13 @@ public class PyCModuleGenerator extends ModuleGenerator {
                 writer.printf("\n");
 
                 writer.printf("\n");
-                writeTemplateResource(writer, "PyCModuleGenerator-stubs-2a.c");
-                writeTemplateResource(writer, "PyCModuleGenerator-stubs-2b.c");
+                writeTemplateResource(writer, "PyCModuleGenerator-stub-buffer.c");
+                writer.printf("\n");
+                writeTemplateResource(writer, "PyCModuleGenerator-stub-jobject.c");
+                writer.printf("\n");
+                writePrimitiveArrayConverters(writer);
+                writer.printf("\n");
+                writeTemplateResource(writer, "PyCModuleGenerator-stub-conv.c");
                 writer.printf("\n");
 
                 final FunctionWriter functionWriter = new FunctionWriter(PyCModuleGenerator.this, writer);
@@ -334,25 +337,23 @@ public class PyCModuleGenerator extends ModuleGenerator {
                 }
 
                 writer.printf("\n");
-                writeArrayConverters(writer, "Boolean", "boolean", "PyBool_FromLong(elems[i])", "(boolean)(PyLong_AsLong(item) != 0)");
-                writeArrayConverters(writer, "Char", "char", "PyUnicode_FromFormat(\"%c\", elems[i])", "(char) PyLong_AsLong(item)");
-                writeArrayConverters(writer, "Byte", "byte", "PyLong_FromLong(elems[i])", "(byte) PyLong_AsLong(item)");
-                writeArrayConverters(writer, "Short", "short", "PyLong_FromLong(elems[i])", "(short) PyLong_AsLong(item)");
-                writeArrayConverters(writer, "Int", "int", "PyLong_FromLong(elems[i])", "(int) PyLong_AsLong(item)");
-                writeArrayConverters(writer, "Dlong", "dlong", "PyLong_FromLongLong(elems[i])", "PyLong_AsLongLong(item)");
-                writeArrayConverters(writer, "Float", "float", "PyFloat_FromDouble(elems[i])", "(float) PyFloat_AsDouble(item)");
-                writeArrayConverters(writer, "Double", "double", "PyFloat_FromDouble(elems[i])", "PyFloat_AsDouble(item)");
-                writer.printf("\n");
-
-                writeTemplateResource(writer, "PyCModuleGenerator-stubs-4.c");
-
-                writer.printf("\n");
             }
         }.create();
     }
 
-    void writeArrayConverters(PrintWriter writer, String typeName, String ctype, String elemToItemCall, String itemToElemCall) throws IOException {
-        writeTemplateResource(writer, "PyCModuleGenerator-stubs-3.c",
+    private void writePrimitiveArrayConverters(PrintWriter writer) throws IOException {
+        writePrimitiveArrayConverter(writer, "Boolean", "boolean", "PyBool_FromLong(elems[i])", "(boolean)(PyLong_AsLong(item) != 0)");
+        writePrimitiveArrayConverter(writer, "Char", "char", "PyUnicode_FromFormat(\"%c\", elems[i])", "(char) PyLong_AsLong(item)");
+        writePrimitiveArrayConverter(writer, "Byte", "byte", "PyLong_FromLong(elems[i])", "(byte) PyLong_AsLong(item)");
+        writePrimitiveArrayConverter(writer, "Short", "short", "PyLong_FromLong(elems[i])", "(short) PyLong_AsLong(item)");
+        writePrimitiveArrayConverter(writer, "Int", "int", "PyLong_FromLong(elems[i])", "(int) PyLong_AsLong(item)");
+        writePrimitiveArrayConverter(writer, "Dlong", "dlong", "PyLong_FromLongLong(elems[i])", "PyLong_AsLongLong(item)");
+        writePrimitiveArrayConverter(writer, "Float", "float", "PyFloat_FromDouble(elems[i])", "(float) PyFloat_AsDouble(item)");
+        writePrimitiveArrayConverter(writer, "Double", "double", "PyFloat_FromDouble(elems[i])", "PyFloat_AsDouble(item)");
+    }
+
+    void writePrimitiveArrayConverter(PrintWriter writer, String typeName, String ctype, String elemToItemCall, String itemToElemCall) throws IOException {
+        writeTemplateResource(writer, "PyCModuleGenerator-stub-conv-primarr.c",
                               kv("typeName", typeName),
                               kv("ctype", ctype),
                               kv("elemToItemCall", elemToItemCall),

@@ -2,8 +2,8 @@
 #include "${libName}.h"
 
 #include <Python.h>
-
 #include "structmember.h"
+#include <jni.h>
 
 
 static PyObject* BeamPy_Error;
