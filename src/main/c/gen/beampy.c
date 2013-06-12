@@ -3,7 +3,7 @@
  * This code has been generated using org.esa.beam.extapi.gen.ApiGeneratorDoclet
  */
 
-// << PyCModuleGenerator-stubs-1.c
+// <<<<<<<< Begin include from PyCModuleGenerator-stubs-1.c
 #include "beam_capi.h"
 #include "beampy.h"
 
@@ -42,7 +42,7 @@ PyObject* BeamPyString_newString(PyObject* self, PyObject* args);
 
 // experimental
 // PyObject* BeamPyMap_newHashMap(PyObject* self, PyObject* args);
-// >> PyCModuleGenerator-stubs-1.c
+// >>>>>>>> End include from PyCModuleGenerator-stubs-1.c
 
 
 
@@ -2165,7 +2165,7 @@ static PyMethodDef BeamPy_Methods[] = {
 };
 
 
-// << PyCModuleGenerator-stubs-2a.c
+// <<<<<<<< Begin include from PyCModuleGenerator-stubs-2a.c
 
 PyObject* beampy_getPrimitiveArrayBuffer(PyObject* obj, Py_buffer* view, int flags, const char* format, int len)
 {
@@ -2212,8 +2212,8 @@ PyObject* beampy_getPrimitiveArrayBufferWritable(PyObject* obj, Py_buffer* view,
 {
     return beampy_getPrimitiveArrayBuffer(obj, view, PyBUF_WRITABLE, format, len);
 }
-// >> PyCModuleGenerator-stubs-2a.c
-// << PyCModuleGenerator-stubs-2b.c
+// >>>>>>>> End include from PyCModuleGenerator-stubs-2a.c
+// <<<<<<<< Begin include from PyCModuleGenerator-stubs-2b.c
 /**
  * Represents an instance of the BeamPy_JObjectType class.
  * Used to represent Java JNI objects.
@@ -2414,7 +2414,7 @@ PyObject* BeamPyObject_delete(PyObject* self, PyObject* args)
     return Py_BuildValue("");
 }
 
-// >> PyCModuleGenerator-stubs-2b.c
+// >>>>>>>> End include from PyCModuleGenerator-stubs-2b.c
 
 PyObject* BeamPyGeoCoding_isCrossingMeridianAt180(PyObject* self, PyObject* args)
 {
@@ -19038,7 +19038,7 @@ PyObject* BeamPyMetadataAttribute_getExtension(PyObject* self, PyObject* args)
 }
 
 
-// << PyCModuleGenerator-stubs-3.c
+// <<<<<<<< Begin include from PyCModuleGenerator-stubs-3.c
 /*
  * Creates a Python sequence (a list) from a C-array of type boolean.
  * Code generated from template. Parameters:
@@ -19112,8 +19112,8 @@ boolean* beampy_newCbooleanArrayFromPySeq(PyObject* seq, int* length)
     *length = (int) size;
     return elems;
 }
-// >> PyCModuleGenerator-stubs-3.c
-// << PyCModuleGenerator-stubs-3.c
+// >>>>>>>> End include from PyCModuleGenerator-stubs-3.c
+// <<<<<<<< Begin include from PyCModuleGenerator-stubs-3.c
 /*
  * Creates a Python sequence (a list) from a C-array of type char.
  * Code generated from template. Parameters:
@@ -19187,8 +19187,8 @@ char* beampy_newCcharArrayFromPySeq(PyObject* seq, int* length)
     *length = (int) size;
     return elems;
 }
-// >> PyCModuleGenerator-stubs-3.c
-// << PyCModuleGenerator-stubs-3.c
+// >>>>>>>> End include from PyCModuleGenerator-stubs-3.c
+// <<<<<<<< Begin include from PyCModuleGenerator-stubs-3.c
 /*
  * Creates a Python sequence (a list) from a C-array of type byte.
  * Code generated from template. Parameters:
@@ -19262,8 +19262,8 @@ byte* beampy_newCbyteArrayFromPySeq(PyObject* seq, int* length)
     *length = (int) size;
     return elems;
 }
-// >> PyCModuleGenerator-stubs-3.c
-// << PyCModuleGenerator-stubs-3.c
+// >>>>>>>> End include from PyCModuleGenerator-stubs-3.c
+// <<<<<<<< Begin include from PyCModuleGenerator-stubs-3.c
 /*
  * Creates a Python sequence (a list) from a C-array of type short.
  * Code generated from template. Parameters:
@@ -19337,8 +19337,8 @@ short* beampy_newCshortArrayFromPySeq(PyObject* seq, int* length)
     *length = (int) size;
     return elems;
 }
-// >> PyCModuleGenerator-stubs-3.c
-// << PyCModuleGenerator-stubs-3.c
+// >>>>>>>> End include from PyCModuleGenerator-stubs-3.c
+// <<<<<<<< Begin include from PyCModuleGenerator-stubs-3.c
 /*
  * Creates a Python sequence (a list) from a C-array of type int.
  * Code generated from template. Parameters:
@@ -19412,8 +19412,8 @@ int* beampy_newCintArrayFromPySeq(PyObject* seq, int* length)
     *length = (int) size;
     return elems;
 }
-// >> PyCModuleGenerator-stubs-3.c
-// << PyCModuleGenerator-stubs-3.c
+// >>>>>>>> End include from PyCModuleGenerator-stubs-3.c
+// <<<<<<<< Begin include from PyCModuleGenerator-stubs-3.c
 /*
  * Creates a Python sequence (a list) from a C-array of type dlong.
  * Code generated from template. Parameters:
@@ -19487,8 +19487,8 @@ dlong* beampy_newCdlongArrayFromPySeq(PyObject* seq, int* length)
     *length = (int) size;
     return elems;
 }
-// >> PyCModuleGenerator-stubs-3.c
-// << PyCModuleGenerator-stubs-3.c
+// >>>>>>>> End include from PyCModuleGenerator-stubs-3.c
+// <<<<<<<< Begin include from PyCModuleGenerator-stubs-3.c
 /*
  * Creates a Python sequence (a list) from a C-array of type float.
  * Code generated from template. Parameters:
@@ -19562,8 +19562,8 @@ float* beampy_newCfloatArrayFromPySeq(PyObject* seq, int* length)
     *length = (int) size;
     return elems;
 }
-// >> PyCModuleGenerator-stubs-3.c
-// << PyCModuleGenerator-stubs-3.c
+// >>>>>>>> End include from PyCModuleGenerator-stubs-3.c
+// <<<<<<<< Begin include from PyCModuleGenerator-stubs-3.c
 /*
  * Creates a Python sequence (a list) from a C-array of type double.
  * Code generated from template. Parameters:
@@ -19637,9 +19637,9 @@ double* beampy_newCdoubleArrayFromPySeq(PyObject* seq, int* length)
     *length = (int) size;
     return elems;
 }
-// >> PyCModuleGenerator-stubs-3.c
+// >>>>>>>> End include from PyCModuleGenerator-stubs-3.c
 
-// << PyCModuleGenerator-stubs-4.c
+// <<<<<<<< Begin include from PyCModuleGenerator-stubs-4.c
 /*
  * Creates a Python sequence (a list) from a C-array of Java objects (type void*).
  */
@@ -19849,5 +19849,5 @@ PyObject* BeamPyMap_newHashMap(PyObject* self, PyObject* args)
 
 
 */
-// >> PyCModuleGenerator-stubs-4.c
+// >>>>>>>> End include from PyCModuleGenerator-stubs-4.c
 

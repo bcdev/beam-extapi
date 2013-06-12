@@ -1,6 +1,4 @@
-// << PyCModuleGenerator-stubs.def
 LIBRARY "_beampy.pyd"
 
 EXPORTS
 	PyInit__beampy
-// >> PyCModuleGenerator-stubs.def

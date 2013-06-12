@@ -1,4 +1,3 @@
-// << CModuleGenerator-stubs.def
 LIBRARY "beam_capi"
 
 EXPORTS
@@ -16,7 +15,6 @@ EXPORTS
 	Util_listDir
 	String_newString
 	Object_delete
-// >> CModuleGenerator-stubs.def
 	GeoCoding_isCrossingMeridianAt180
 	GeoCoding_canGetPixelPos
 	GeoCoding_canGetGeoPos

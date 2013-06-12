@@ -6,7 +6,7 @@ extern "C" {
 #endif
 
 
-// << CModuleGenerator-stubs-1.h
+// <<<<<<<< Begin include from CModuleGenerator-stubs-1.h
 typedef char byte;
 typedef unsigned char boolean;
 typedef long long dlong;
@@ -16,7 +16,7 @@ typedef long long dlong;
 #else
 #define BEAM_TRACE //
 #endif
-// >> CModuleGenerator-stubs-1.h
+// >>>>>>>> End include from CModuleGenerator-stubs-1.h
 
 
 /* Wrapped API classes */
@@ -117,7 +117,7 @@ typedef void* CoordinateReferenceSystem;
 typedef void* MathTransform;
 
 
-// << CModuleGenerator-stubs-2.h
+// <<<<<<<< Begin include from CModuleGenerator-stubs-2.h
 
 /*
  * Java VM functions that must be used if this module is used in stand-alone
@@ -137,7 +137,7 @@ void beam_deleteCPrimitiveArray(void* array_elems, int array_length);
 String String_newString(const char* chars);
 void Object_delete(Object object);
 
-// >> CModuleGenerator-stubs-2.h
+// >>>>>>>> End include from CModuleGenerator-stubs-2.h
 
 
 /* Functions for class GeoCoding */

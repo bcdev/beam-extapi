@@ -51,7 +51,7 @@ public abstract class ModuleGenerator implements GeneratorContext {
         return templateEval;
     }
 
-    public String format(String pattern, KV ... pairs) {
+    public String format(String pattern, KV... pairs) {
         return templateEval.add(pairs).eval(pattern);
     }
 
@@ -74,10 +74,11 @@ public abstract class ModuleGenerator implements GeneratorContext {
 
     protected void writeTemplateResource(Writer writer, String resourceName, KV... pairs) throws IOException {
         final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(resourceName)));
+        boolean isC = resourceName.endsWith(".h") || resourceName.endsWith(".c");
         try {
-            writer.write("// << " + resourceName + "\n");
+            if (isC) writer.write("// <<<<<<<< Begin include from " + resourceName + "\n");
             templateEval.add(pairs).eval(bufferedReader, writer);
-            writer.write("// >> " + resourceName + "\n");
+            if (isC) writer.write("// >>>>>>>> End include from " + resourceName + "\n");
         } finally {
             bufferedReader.close();
         }

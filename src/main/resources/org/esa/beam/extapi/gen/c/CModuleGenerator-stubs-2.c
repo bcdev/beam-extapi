@@ -309,7 +309,7 @@ jboolean beam_destroyJvm()
 #define OS_PATHSEP ":"
 #endif
 
-void beam_create_class_path_vm_option_handler(const char* parent_dir, const char* file_name, int is_dir, void* user_data)
+void beam_createJvmClassPathOptionHandler(const char* parent_dir, const char* file_name, int is_dir, void* user_data)
 {
     char** class_path = (char**) user_data;
 
@@ -328,7 +328,7 @@ void beam_create_class_path_vm_option_handler(const char* parent_dir, const char
     Util_appendString(class_path, file_name);
 }
 
-char* beam_create_class_path_vm_option()
+char* beam_createJvmClassPathOption()
 {
     const char* beam_home;
     char* path;
@@ -347,14 +347,14 @@ char* beam_create_class_path_vm_option()
     Util_appendString(&path, beam_home);
     Util_appendString(&path, OS_FILESEP);
     Util_appendString(&path, "lib");
-    Util_listDir(path, beam_create_class_path_vm_option_handler, &class_path);
+    Util_listDir(path, beam_createJvmClassPathOptionHandler, &class_path);
     free(path);
 
     path = NULL;
     Util_appendString(&path, beam_home);
     Util_appendString(&path, OS_FILESEP);
     Util_appendString(&path, "modules");
-    Util_listDir(path, beam_create_class_path_vm_option_handler, &class_path);
+    Util_listDir(path, beam_createJvmClassPathOptionHandler, &class_path);
     free(path);
 
     return class_path;
@@ -369,7 +369,7 @@ jboolean beam_createJvmWithDefaults()
     char* class_path_option;
     jboolean result;
 
-    class_path_option = beam_create_class_path_vm_option();
+    class_path_option = beam_createJvmClassPathOption();
     if (class_path_option == NULL) {
         const char* beam_home = getenv("BEAM_HOME");
         fprintf(stderr, "${libName}: failed to construct Java classpath\n");
@@ -397,7 +397,7 @@ jboolean beam_createJvmWithDefaults()
 }
 
 
-jclass beam_findClass(const char* classResourceName)
+jclass beam_findJvmClass(const char* classResourceName)
 {
     jclass c = (*jenv)->FindClass(jenv, classResourceName);
     if (c == NULL) {
