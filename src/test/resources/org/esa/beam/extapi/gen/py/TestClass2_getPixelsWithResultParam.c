@@ -31,7 +31,8 @@ PyObject* BeamPyTestClass2_getPixelsWithResultParam(PyObject* self, PyObject* ar
         return NULL;
     }
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, p1JObj, p2);
-    _resultPyObj = beampy_copyJFloatArrayToPyObject((jarray) _resultJObj, "f", p1PyObj);
+    beampy_copyJFloatArrayToBuffer((jarray) p1JObj, p1Data, p1Length);
+    _resultPyObj = p1PyObj;
     PyBuffer_Release(&p1Buf);
     (*jenv)->DeleteLocalRef(jenv, p1JObj);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);

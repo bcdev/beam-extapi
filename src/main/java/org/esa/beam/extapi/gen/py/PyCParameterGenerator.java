@@ -244,9 +244,8 @@ public abstract class PyCParameterGenerator implements ParameterGenerator {
 
         @Override
         public String generateJniArgFromTransformedTargetArgAssignment(GeneratorContext context) {
-            Type type = getType();
-            String typeName = type.simpleTypeName();
-            String format = PyCFunctionGenerator.getCArrayFormat(type);
+            String typeName = getType().simpleTypeName();
+            String format = PyCFunctionGenerator.getCArrayFormat(getType());
             String bufferMode;
             if (parameter.getModifier() == ApiParameter.Modifier.IN) {
                 bufferMode = "ReadOnly";
@@ -289,12 +288,17 @@ public abstract class PyCParameterGenerator implements ParameterGenerator {
             if (parameter.getModifier() == ApiParameter.Modifier.IN) {
                 return null;
             } else if (parameter.getModifier() == ApiParameter.Modifier.OUT) {
-                return eval("beam_copyFromJArray(${par}JObj, ${par}Data, ${par}Length, sizeof (${type}));" +
-                                    "",
-                            kv("par", getName()),
-                            kv("type", getType().simpleTypeName()));
+                String typeName = getType().simpleTypeName();
+                return eval("beampy_copyJ${typeUC}ArrayToBuffer((jarray) ${par}JObj, ${par}Data, ${par}Length);",
+                            kv("typeUC", firstCharToUpperCase(typeName)),
+                            kv("par", getName()));
             } else if (parameter.getModifier() == ApiParameter.Modifier.RETURN) {
-                return null;
+                String typeName = getType().simpleTypeName();
+                return eval("beampy_copyJ${typeUC}ArrayToBuffer((jarray) ${par}JObj, ${par}Data, ${par}Length);\n" +
+                                    "${res}PyObj = ${par}PyObj;",
+                            kv("typeUC", firstCharToUpperCase(typeName)),
+                            kv("par", getName()),
+                            kv("res", PyCModuleGenerator.RESULT_VAR_NAME));
             } else {
                 throw new IllegalStateException("Unknown modifier: " + parameter.getModifier());
             }

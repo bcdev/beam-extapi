@@ -338,19 +338,15 @@ public abstract class PyCFunctionGenerator extends AbstractFunctionGenerator {
 
         @Override
         public String generateTargetResultFromTransformedJniResultAssignment(GeneratorContext context) {
-            String carrayFormat = getCArrayFormat(getReturnType());
-            ApiParameter returnParameter = getReturnParameter(context);
-            String typeUC = firstCharToUpperCase(getReturnType().simpleTypeName());
-            if (returnParameter != null) {
-                return format("${res}PyObj = beampy_copyJ${typeUC}ArrayToPyObject((jarray) ${res}JObj, \"${carrayFormat}\", ${par}PyObj);",
-                              kv("typeUC", typeUC),
-                              kv("carrayFormat", carrayFormat),
-                              kv("par", returnParameter.getJavaName()));
-            } else {
-                return format("${res}PyObj = beampy_newPyObjectFromJ${typeUC}Array((jarray) ${res}JObj, \"${carrayFormat}\");",
-                              kv("typeUC", typeUC),
-                              kv("carrayFormat", carrayFormat));
+            if (hasReturnParameter(context)) {
+                // return value ${res}PyObj is already set by return parameter
+                return null;
             }
+            String typeUC = firstCharToUpperCase(getReturnType().simpleTypeName());
+            String carrayFormat = getCArrayFormat(getReturnType());
+            return format("${res}PyObj = beampy_newPyObjectFromJ${typeUC}Array((jarray) ${res}JObj, \"${carrayFormat}\");",
+                          kv("typeUC", typeUC),
+                          kv("carrayFormat", carrayFormat));
         }
     }
 
