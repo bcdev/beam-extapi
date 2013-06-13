@@ -21,12 +21,12 @@ print('Building a %s-bit library for a %s system' % ('64' if IS64 else '32', pla
 if WIN32 and os.environ.get('VS90COMNTOOLS', None) is None:
     print('Note: If you get an error saying "Unable to find vcvarsall.bat",')
     print('      you may need to set environment variable VS90COMNTOOLS.')
-    print('      If you use Visual Studio 10, then: SET VS90COMNTOOLS=%VS100COMNTOOLS%,')
-    print('      if you use Visual Studio 12, then: SET VS90COMNTOOLS=%VS110COMNTOOLS%.')
+    print('      If you use Visual Studio 2011, then: SET VS90COMNTOOLS=%VS100COMNTOOLS%,')
+    print('      if you use Visual Studio 2012, then: SET VS90COMNTOOLS=%VS110COMNTOOLS%.')
 
 if len(sys.argv) > 1 and sys.argv[1] == 'install':
     print('Note: In order to use the "beampy" module, you need to set BEAM_HOME')
-    print('      to a valid BEAM (>= v4.10) installation directory.')
+    print('      to a valid BEAM (>= v4.11) installation directory.')
     print('      Currently, BEAM_HOME =', os.environ.get('BEAM_HOME', None))
 
 sources = ['src/main/c/beam_util.c',
