@@ -1,20 +1,13 @@
 package org.esa.beam.extapi.gen.c;
 
 import com.sun.javadoc.Type;
-import org.esa.beam.extapi.gen.AbstractFunctionGenerator;
-import org.esa.beam.extapi.gen.ApiMethod;
-import org.esa.beam.extapi.gen.GeneratorContext;
-import org.esa.beam.extapi.gen.JavadocHelpers;
-import org.esa.beam.extapi.gen.ModuleGenerator;
-import org.esa.beam.extapi.gen.ParameterGenerator;
+import org.esa.beam.extapi.gen.*;
 
 import static org.esa.beam.extapi.gen.JavadocHelpers.firstCharToUpperCase;
 import static org.esa.beam.extapi.gen.JavadocHelpers.getComponentCTypeName;
 import static org.esa.beam.extapi.gen.TemplateEval.eval;
 import static org.esa.beam.extapi.gen.TemplateEval.kv;
-import static org.esa.beam.extapi.gen.c.CModuleGenerator.METHOD_VAR_NAME;
-import static org.esa.beam.extapi.gen.c.CModuleGenerator.RESULT_VAR_NAME;
-import static org.esa.beam.extapi.gen.c.CModuleGenerator.THIS_VAR_NAME;
+import static org.esa.beam.extapi.gen.c.CModuleGenerator.*;
 
 /**
  * @author Norman Fomferra
@@ -102,6 +95,14 @@ public abstract class CFunctionGenerator extends AbstractFunctionGenerator {
     protected String getDefaultObjectReturnStatement() {
         return format("return ${res} != NULL ? (*jenv)->NewGlobalRef(jenv, ${res}) : NULL;",
                       kv("res", RESULT_VAR_NAME));
+    }
+
+    protected String getJniObjectMethodCall(GeneratorContext context) {
+        return getJniMethodCall(context, "Object");
+    }
+
+    protected String getJniMethodCall(GeneratorContext context, String methodTypeName) {
+        return getJniMethodCall(context, methodTypeName, METHOD_VAR_NAME, THIS_VAR_NAME);
     }
 
     static class VoidMethod extends CFunctionGenerator {

@@ -37,7 +37,7 @@ EXPORTS
 	ProductWriter_setIncrementalMode
 	ProductWriter_deleteOutput
 	ProductWriter_removeBand
-	GPF_createProductFromNoSourceProducts
+	GPF_createProductWithoutSourceProducts
 	GPF_createProductFromSourceProduct
 	GPF_createProductFromSourceProducts
 	GPF_createProductFromNamedSourceProducts

@@ -179,7 +179,7 @@ extern const Map GPF_NO_SOURCES;
 
 /* Functions for class GPF */
 
-Product GPF_createProductFromNoSourceProducts(const char* operatorName, Map parameters);
+Product GPF_createProductWithoutSourceProducts(const char* operatorName, Map parameters);
 Product GPF_createProductFromSourceProduct(const char* operatorName, Map parameters, Product sourceProduct);
 Product GPF_createProductFromSourceProducts(const char* operatorName, Map parameters, const Product sourceProductsElems, int sourceProductsLength);
 Product GPF_createProductFromNamedSourceProducts(const char* operatorName, Map parameters, Map sourceProducts);

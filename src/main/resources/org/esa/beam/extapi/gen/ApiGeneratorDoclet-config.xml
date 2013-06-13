@@ -426,7 +426,7 @@
 
     <class name="org.esa.beam.framework.gpf.GPF">
         <method name="createProduct" sig="(Ljava/lang/String;Ljava/util/Map;)Lorg/esa/beam/framework/datamodel/Product;"
-                renameTo="createProductFromNoSourceProducts"/>
+                renameTo="createProductWithoutSourceProducts"/>
         <method name="createProduct" sig="(Ljava/lang/String;Ljava/util/Map;Ljava/util/Map;)Lorg/esa/beam/framework/datamodel/Product;"
                 renameTo="createProductFromNamedSourceProducts"/>
         <method name="createProduct" sig="(Ljava/lang/String;Ljava/util/Map;Lorg/esa/beam/framework/datamodel/Product;)Lorg/esa/beam/framework/datamodel/Product;"

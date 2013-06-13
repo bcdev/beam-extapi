@@ -12,6 +12,7 @@ PyObject* BeamPyTestClass2_getDuration(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "(sK):BeamPyTestClass2_getDuration", &_thisType, &_this)) {
         return NULL;
     }
-    _result = (*jenv)->CallLongMethod(jenv, _this, _method);
+    _thisJObj = (jobject) _this;
+    _result = (*jenv)->CallLongMethod(jenv, _thisJObj, _method);
     return PyLong_FromLongLong(_result);
 }

@@ -1355,7 +1355,7 @@ void ProductWriter_removeBand(ProductWriter _this, Band band)
     (*jenv)->CallVoidMethod(jenv, _this, _method, band);
 }
 
-Product GPF_createProductFromNoSourceProducts(const char* operatorName, Map parameters)
+Product GPF_createProductWithoutSourceProducts(const char* operatorName, Map parameters)
 {
     static jmethodID _method = NULL;
     jstring operatorNameString = NULL;
@@ -21863,4 +21863,5 @@ Object MetadataAttribute_getExtension(MetadataAttribute _this, Class arg0)
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, arg0);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
+
 

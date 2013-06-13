@@ -196,7 +196,7 @@ public abstract class PyCParameterGenerator implements ParameterGenerator {
 
         @Override
         public String generateJniCallArgs(GeneratorContext context) {
-            return eval("${par}JObj");
+            return eval("${par}JObj", kv("par", getName()));
         }
 
         @Override
@@ -267,7 +267,7 @@ public abstract class PyCParameterGenerator implements ParameterGenerator {
                                 "}\n" +
                                 "${par}Data = (${type}*) ${par}Buf.buf;\n" +
                                 "${par}Length = ${par}Buf.len / ${par}Buf.itemsize;\n" +
-                                "${par}JObj = beampy_newJ${typeUC}ArrayFromBuffer(${par}Data, ${par}Length);\n" +
+                                "${par}JObj = beampy_newJ${typeUC}Array(${par}Data, ${par}Length);\n" +
                                 "if (${par}JObj == NULL) {\n" +
                                 "    return NULL;\n" +  // todo - goto error label and release all buffers and JNI vars
                                 "}",
@@ -294,18 +294,7 @@ public abstract class PyCParameterGenerator implements ParameterGenerator {
                             kv("par", getName()),
                             kv("type", getType().simpleTypeName()));
             } else if (parameter.getModifier() == ApiParameter.Modifier.RETURN) {
-                String typeName = getType().simpleTypeName();
-                return eval("" +
-                                    "if (${par}Data != NULL && (*jenv)->IsSameObject(jenv, ${par}JObj, ${res}JObj)) {\n" +
-                                    "    beam_copyFromJArray(${res}JObj, ${par}Data, ${par}Length, sizeof (${type}));\n" +
-                                    "    ${res}PyObj = ${par}PyObj;\n" +
-                                    "} else {\n" +
-                                    "    ${res}PyObj = beampy_newJ${typeUC}Array(${res}Array, ${r}ArrayLength);\n" +
-                                    "}",
-                            kv("res", PyCModuleGenerator.RESULT_VAR_NAME),
-                            kv("par", getName()),
-                            kv("type", typeName),
-                            kv("typeUC", firstCharToUpperCase(typeName)));
+                return null;
             } else {
                 throw new IllegalStateException("Unknown modifier: " + parameter.getModifier());
             }

@@ -1,3 +1,65 @@
+jarray beampy_newJStringArrayFromPySeq(PyObject* seqPyObj)
+{
+    /*
+       todo - implement me!
+     */
+    PyErr_SetString(PyExc_NotImplementedError, "not implemented: beampy_newJStringArrayFromPySeq()");
+    return NULL;
+}
+PyObject* beampy_newPySeqFromJStringArray(jarray arrayJObj)
+{
+    /*
+       todo - implement me!
+     */
+    PyErr_SetString(PyExc_NotImplementedError, "not implemented: beampy_newPySeqFromJStringArray()");
+    return NULL;
+}
+
+
+
+
+
+jarray beampy_newJObjectArrayFromPySeq(PyObject* seqPyObj, const char* typeName)
+{
+    /*
+       todo - implement me!
+     */
+    PyErr_SetString(PyExc_NotImplementedError, "not implemented: beampy_newJObjectArrayFromPySeq()");
+    return NULL;
+}
+PyObject* beampy_newPySeqFromJObjectArray(jarray arrayJObj, const char* typeName)
+{
+    /*
+       todo - implement me!
+     */
+    PyErr_SetString(PyExc_NotImplementedError, "not implemented: beampy_newPySeqFromJObjectArray()");
+    return NULL;
+}
+
+
+
+
+
+PyObject* beampy_newPyStringFromJString(jstring jstr)
+{
+    /*
+       todo - implement me!
+     */
+    PyErr_SetString(PyExc_NotImplementedError, "not implemented: beampy_newPyStringFromJString()");
+    return NULL;
+}
+
+PyObject* beampy_newPyObjectFromJObject(jobject valueJObj)
+{
+    /*
+       todo - implement me!
+       Use char* PyUnicode_AsUTF8AndSize(PyObject *unicode, Py_ssize_t *size)
+       PyArg_ParseTuple(item, "(sK)", &itemType, &itemObj);
+     */
+    PyErr_SetString(PyExc_NotImplementedError, "not implemented: beampy_newPyObjectFromJObject()");
+    return NULL;
+}
+
 /*
  * Creates a Python sequence (a list) from a C-array of Java objects (type void*).
  */
@@ -31,10 +93,11 @@ PyObject* beampy_newPySeqFromCObjectArray(const char* type, const void** elems, 
 void** beampy_newCObjectArrayFromPySeq(const char* type, PyObject* seq, int* length)
 {
     /*
-       TODO: IMPLEMENT ME!
+       todo - implement me!
        Use char* PyUnicode_AsUTF8AndSize(PyObject *unicode, Py_ssize_t *size)
        PyArg_ParseTuple(item, "(sK)", &itemType, &itemObj);
-     */
+    */
+    PyErr_SetString(PyExc_NotImplementedError, "not implemented: beampy_newCObjectArrayFromPySeq()");
     return NULL;
 }
 
@@ -72,9 +135,10 @@ PyObject* beampy_newPySeqFromCStringArray(const char** elems, int length)
 char** beampy_newCStringArrayFromPySeq(PyObject* seq, int* length)
 {
     /*
-       TODO: IMPLEMENT ME!
+        todo - implement me!
        Use char* PyUnicode_AsUTF8AndSize(PyObject *unicode, Py_ssize_t *size)
-     */
+    */
+    PyErr_SetString(PyExc_NotImplementedError, "not implemented: beampy_newCStringArrayFromPySeq()");
     return NULL;
 }
 

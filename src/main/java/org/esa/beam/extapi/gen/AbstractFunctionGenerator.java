@@ -95,31 +95,34 @@ public abstract class AbstractFunctionGenerator implements FunctionGenerator {
         return false;
     }
 
-    protected String getJniObjectMethodCall(GeneratorContext context) {
-        return getJniMethodCall(context, "Object");
+    protected String getJniMethodCall(GeneratorContext context, String methodTypeName, String methodVarName, String thisVarName) {
+        String methodArgs = getJniMethodArgs(context, methodVarName, thisVarName);
+        if (getMemberDoc().isConstructor()) {
+            return format("(*jenv)->NewObject(jenv, ${args})",
+                          kv("args", methodArgs));
+        } else if (getMemberDoc().isStatic()) {
+            return format("(*jenv)->CallStatic${type}Method(jenv, ${args})",
+                          kv("type", methodTypeName),
+                          kv("args", methodArgs));
+        } else {
+            return format("(*jenv)->Call${type}Method(jenv, ${args})",
+                          kv("type", methodTypeName),
+                          kv("args", methodArgs));
+        }
     }
 
-    protected String getJniMethodCall(GeneratorContext context, String methodTypeName) {
+    protected String getJniMethodArgs(GeneratorContext context, String methodVarName, String thisVarName) {
 
-        final String functionName;
         final StringBuilder argumentList = new StringBuilder();
 
-        if (getMemberDoc().isConstructor()) {
-            functionName = "NewObject";
-            argumentList.append(ModuleGenerator.getComponentCClassVarName(getEnclosingClass().getType()));
-            argumentList.append(", ");
-            argumentList.append(ModuleGenerator.METHOD_VAR_NAME);
-        } else if (getMemberDoc().isStatic()) {
-            functionName = String.format("CallStatic%sMethod", methodTypeName);
-            argumentList.append(ModuleGenerator.getComponentCClassVarName(getEnclosingClass().getType()));
-            argumentList.append(", ");
-            argumentList.append(ModuleGenerator.METHOD_VAR_NAME);
+        if (isInstanceMethod()) {
+            argumentList.append(thisVarName);
         } else {
-            functionName = String.format("Call%sMethod", methodTypeName);
-            argumentList.append(ModuleGenerator.THIS_VAR_NAME);
-            argumentList.append(", ");
-            argumentList.append(ModuleGenerator.METHOD_VAR_NAME);
+            argumentList.append(ModuleGenerator.getComponentCClassVarName(getEnclosingClass().getType()));
         }
+
+        argumentList.append(", ");
+        argumentList.append(methodVarName);
 
         for (ParameterGenerator parameterGenerator : parameterGenerators) {
             if (argumentList.length() > 0) {
@@ -128,7 +131,6 @@ public abstract class AbstractFunctionGenerator implements FunctionGenerator {
             argumentList.append(parameterGenerator.generateJniCallArgs(context));
         }
 
-        return String.format("(*jenv)->%s(jenv, %s)", functionName, argumentList);
+        return argumentList.toString();
     }
-
 }

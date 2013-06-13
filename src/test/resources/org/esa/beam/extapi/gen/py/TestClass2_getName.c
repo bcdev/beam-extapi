@@ -13,7 +13,8 @@ PyObject* BeamPyTestClass2_getName(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "(sK):BeamPyTestClass2_getName", &_thisType, &_this)) {
         return NULL;
     }
-    _resultJObj = (*jenv)->CallObjectMethod(jenv, _this, _method);
+    _thisJObj = (jobject) _this;
+    _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
     _resultPyObj = beampy_newPyStringFromJString((jstring) _resultJObj);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;

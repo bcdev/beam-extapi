@@ -1,15 +1,12 @@
 package org.esa.beam.extapi.gen.py;
 
-import org.esa.beam.extapi.gen.AbstractFunctionGenerator;
-import org.esa.beam.extapi.gen.ApiMethod;
-import org.esa.beam.extapi.gen.ApiParameter;
-import org.esa.beam.extapi.gen.GeneratorContext;
-import org.esa.beam.extapi.gen.JavadocHelpers;
-import org.esa.beam.extapi.gen.ModuleGenerator;
+import org.esa.beam.extapi.gen.*;
 
 import java.util.HashMap;
 
 import static org.esa.beam.extapi.gen.JavadocHelpers.firstCharToUpperCase;
+import static org.esa.beam.extapi.gen.ModuleGenerator.METHOD_VAR_NAME;
+import static org.esa.beam.extapi.gen.ModuleGenerator.THIS_VAR_NAME;
 import static org.esa.beam.extapi.gen.TemplateEval.eval;
 import static org.esa.beam.extapi.gen.TemplateEval.kv;
 
@@ -119,35 +116,59 @@ public abstract class PyCFunctionGenerator extends AbstractFunctionGenerator {
 
     @Override
     public final String generateTargetArgsFromParsedParamsAssignment(GeneratorContext context) {
-        StringBuilder formatString = new StringBuilder();
-        StringBuilder argumentsStrings = new StringBuilder();
+        String parseFormats = getParseFormats(context);
+
+        if (parseFormats.isEmpty()) {
+            return null;
+        }
+
+        String parseArgs = getParseArgs(context);
+        String s = format("" +
+                                  "if (!PyArg_ParseTuple(args, \"${parseFormats}:${function}\", ${parseArgs})) {\n" +
+                                  "    return NULL;\n" +
+                                  "}\n",
+                          kv("parseFormats", parseFormats),
+                          kv("function", context.getFunctionNameFor(apiMethod)),
+                          kv("parseArgs", parseArgs));
         if (isInstanceMethod()) {
-            formatString.append("(sK)");
-            argumentsStrings.append(format("&${this}Type, &${this}"));
+            return s + format("${this}JObj = (jobject) ${this};");
+        } else {
+            return s;
         }
-        for (PyCParameterGenerator pyCParameterGenerator : getParameterGenerators()) {
-            String format = pyCParameterGenerator.getParseFormat(context);
-            if (format != null) {
-                formatString.append(format);
-            }
-            String args = pyCParameterGenerator.getParseArgs(context);
-            if (args != null) {
-                if (argumentsStrings.length() > 0) {
-                    argumentsStrings.append(", ");
-                }
-                argumentsStrings.append(args);
-            }
-        }
-        if (argumentsStrings.length() > 0) {
-            return String.format("if (!PyArg_ParseTuple(args, \"%s:%s\", %s)) {\n" +
-                                         "    return NULL;\n" +
-                                         "}",
-                                 formatString,
-                                 context.getFunctionNameFor(apiMethod),
-                                 argumentsStrings);
-        }
-        return null;
     }
+
+    private String getParseFormats(GeneratorContext context) {
+        StringBuilder parseFormats = new StringBuilder();
+        if (isInstanceMethod()) {
+            parseFormats.append("(sK)");
+        }
+        for (PyCParameterGenerator generator : getParameterGenerators()) {
+            String format = generator.getParseFormat(context);
+            if (format != null) {
+                parseFormats.append(format);
+            }
+        }
+        return parseFormats.toString();
+    }
+
+
+    private String getParseArgs(GeneratorContext context) {
+        StringBuilder parseArgs = new StringBuilder();
+        if (isInstanceMethod()) {
+            parseArgs.append(format("&${this}Type, &${this}"));
+        }
+        for (PyCParameterGenerator generator : getParameterGenerators()) {
+            String args = generator.getParseArgs(context);
+            if (args != null) {
+                if (parseArgs.length() > 0) {
+                    parseArgs.append(", ");
+                }
+                parseArgs.append(args);
+            }
+        }
+        return parseArgs.toString();
+    }
+
 
     static String getCArrayFormat(com.sun.javadoc.Type type) {
         String typeName = type.simpleTypeName();
@@ -171,45 +192,9 @@ public abstract class PyCFunctionGenerator extends AbstractFunctionGenerator {
         return getReturnParameter(context) != null;
     }
 
-    /*
-    protected String generateCApiCall(GeneratorContext context) {
-
-        final String functionName = getCApiFunctionName(context);
-
-        final StringBuilder argumentList = new StringBuilder();
-        if (isInstanceMethod()) {
-            argumentList.append(String.format("(%s) %s",
-                                              getComponentCTypeName(getEnclosingClass().getType()),
-                                              PyCModuleGenerator.THIS_VAR_NAME));
-        }
-        for (PyCParameterGenerator parameterGenerator : getParameterGenerators()) {
-            if (argumentList.length() > 0) {
-                argumentList.append(", ");
-            }
-            argumentList.append(parameterGenerator.generateJniCallArgs(context));
-        }
-
-        String extraArgs = generateExtraArgs();
-        if (extraArgs != null) {
-            if (argumentList.length() > 0) {
-                argumentList.append(", ");
-            }
-            argumentList.append(extraArgs);
-        }
-
-        return String.format("%s(%s)", functionName,
-                             argumentList);
+    protected String getJniMethodCall(GeneratorContext context, String methodTypeName) {
+        return getJniMethodCall(context, methodTypeName, METHOD_VAR_NAME, THIS_VAR_NAME + "JObj");
     }
-    protected String generateExtraArgs() {
-        return null;
-    }
-
-    private String getCApiFunctionName(GeneratorContext context) {
-        final PyCModuleGenerator pyCModuleGenerator = (PyCModuleGenerator) context;
-        final CModuleGenerator cModuleGenerator = pyCModuleGenerator.getCModuleGenerator();
-        return cModuleGenerator.getFunctionNameFor(apiMethod);
-    }
-     */
 
     static class VoidMethod extends PyCFunctionGenerator {
 
@@ -389,7 +374,7 @@ public abstract class PyCFunctionGenerator extends AbstractFunctionGenerator {
 
         @Override
         public String generateTargetResultFromTransformedJniResultAssignment(GeneratorContext context) {
-            return format("${res}PyObj = beampy_newPySeqFromJStringArray((jstringArray) ${res}JObj);");
+            return format("${res}PyObj = beampy_newPySeqFromJStringArray((jarray) ${res}JObj);");
         }
     }
 }

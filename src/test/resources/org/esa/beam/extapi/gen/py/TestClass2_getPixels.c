@@ -19,17 +19,18 @@ PyObject* BeamPyTestClass2_getPixels(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "(sK)Oi:BeamPyTestClass2_getPixels", &_thisType, &_this, &p1PyObj, &p2)) {
         return NULL;
     }
+    _thisJObj = (jobject) _this;
     p1PyObj = beampy_getPrimitiveArrayBufferReadOnly(p1PyObj, &p1Buf, "f", -1);
     if (p1PyObj == NULL) {
         return NULL;
     }
     p1Data = (float*) p1Buf.buf;
     p1Length = p1Buf.len / p1Buf.itemsize;
-    p1JObj = beampy_newJFloatArrayFromBuffer(p1Data, p1Length);
+    p1JObj = beampy_newJFloatArray(p1Data, p1Length);
     if (p1JObj == NULL) {
         return NULL;
     }
-    _resultJObj = (*jenv)->CallObjectMethod(jenv, _this, _method, p1JObj, p2);
+    _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, p1JObj, p2);
     _resultPyObj = beampy_newPyObjectFromJFloatArray((jarray) _resultJObj, "f");
     PyBuffer_Release(&p1Buf);
     (*jenv)->DeleteLocalRef(jenv, p1JObj);

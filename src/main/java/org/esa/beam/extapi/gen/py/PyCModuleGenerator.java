@@ -114,6 +114,9 @@ public class PyCModuleGenerator extends ModuleGenerator {
                 writePyMethodDefs(writer);
                 writer.printf("\n");
 
+                writeClassDefinitions(writer);
+                writer.printf("\n");
+
                 writeTemplateResource(writer, "PyCModuleGenerator-stub-buffer.c");
                 writer.printf("\n");
 
@@ -123,7 +126,13 @@ public class PyCModuleGenerator extends ModuleGenerator {
                 writeTemplateResource(writer, "/org/esa/beam/extapi/gen/c/CModuleGenerator-stub-jvm.c");
                 writer.printf("\n");
 
-                writeTemplateResource(writer, "/org/esa/beam/extapi/gen/c/CModuleGenerator-init-method.c");
+                writeInitApiFunction(writer);
+                writer.printf("\n");
+
+                writeTemplateResource(writer, "/org/esa/beam/extapi/gen/c/CModuleGenerator-stub-conv.c");
+                writer.printf("\n");
+
+                writeTemplateResource(writer, "PyCModuleGenerator-stub-init-method.c");
                 writer.printf("\n");
 
                 writePrimitiveArrayConverters(writer);
@@ -132,7 +141,7 @@ public class PyCModuleGenerator extends ModuleGenerator {
                 writeTemplateResource(writer, "PyCModuleGenerator-stub-conv.c");
                 writer.printf("\n");
 
-                //writeFunctionDefinitions(writer);
+                writeFunctionDefinitions(writer);
                 writer.printf("\n");
             }
         }.create();
@@ -175,20 +184,20 @@ public class PyCModuleGenerator extends ModuleGenerator {
     }
 
     private void writePrimitiveArrayConverters(PrintWriter writer) throws IOException {
-        writePrimitiveArrayConverter(writer, "Boolean", "boolean", "PyBool_FromLong(elems[i])", "(boolean)(PyLong_AsLong(item) != 0)");
-        writePrimitiveArrayConverter(writer, "Char", "char", "PyUnicode_FromFormat(\"%c\", elems[i])", "(char) PyLong_AsLong(item)");
-        writePrimitiveArrayConverter(writer, "Byte", "byte", "PyLong_FromLong(elems[i])", "(byte) PyLong_AsLong(item)");
-        writePrimitiveArrayConverter(writer, "Short", "short", "PyLong_FromLong(elems[i])", "(short) PyLong_AsLong(item)");
-        writePrimitiveArrayConverter(writer, "Int", "int", "PyLong_FromLong(elems[i])", "(int) PyLong_AsLong(item)");
-        writePrimitiveArrayConverter(writer, "Dlong", "dlong", "PyLong_FromLongLong(elems[i])", "PyLong_AsLongLong(item)");
-        writePrimitiveArrayConverter(writer, "Float", "float", "PyFloat_FromDouble(elems[i])", "(float) PyFloat_AsDouble(item)");
-        writePrimitiveArrayConverter(writer, "Double", "double", "PyFloat_FromDouble(elems[i])", "PyFloat_AsDouble(item)");
+        writePrimitiveArrayConverter(writer, "boolean", "PyBool_FromLong(data[i])", "(jboolean)(PyLong_AsLong(item) != 0)");
+        writePrimitiveArrayConverter(writer, "char", "PyUnicode_FromFormat(\"%c\", data[i])", "(jchar) PyLong_AsLong(item)");
+        writePrimitiveArrayConverter(writer, "byte", "PyLong_FromLong(data[i])", "(jbyte) PyLong_AsLong(item)");
+        writePrimitiveArrayConverter(writer, "short", "PyLong_FromLong(data[i])", "(jshort) PyLong_AsLong(item)");
+        writePrimitiveArrayConverter(writer, "int", "PyLong_FromLong(data[i])", "(jint) PyLong_AsLong(item)");
+        writePrimitiveArrayConverter(writer, "long", "PyLong_FromLongLong(data[i])", "(jlong) PyLong_AsLongLong(item)");
+        writePrimitiveArrayConverter(writer, "float", "PyFloat_FromDouble(data[i])", "(jfloat) PyFloat_AsDouble(item)");
+        writePrimitiveArrayConverter(writer, "double", "PyFloat_FromDouble(data[i])", "(jdouble) PyFloat_AsDouble(item)");
     }
 
-    void writePrimitiveArrayConverter(PrintWriter writer, String typeName, String ctype, String elemToItemCall, String itemToElemCall) throws IOException {
+    void writePrimitiveArrayConverter(PrintWriter writer, String type, String elemToItemCall, String itemToElemCall) throws IOException {
         writeTemplateResource(writer, "PyCModuleGenerator-stub-conv-primarr.c",
-                              kv("typeName", typeName),
-                              kv("ctype", ctype),
+                              kv("typeLC", type),
+                              kv("typeUC", JavadocHelpers.firstCharToUpperCase(type)),
                               kv("elemToItemCall", elemToItemCall),
                               kv("itemToElemCall", itemToElemCall));
     }

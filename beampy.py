@@ -12,11 +12,11 @@ class JObject:
             assert type(obj[1]) == int
         except (TypeError, AssertionError):
             raise TypeError('A tuple (<java-type-name>, <java-obj-pointer>) is required, but got:', obj)
-        self._obj = obj
+        self._jobj_ref = obj
 
     def __del__(self):
-        if self._obj != None:
-            Object_delete(self._obj)
+        if self._jobj_ref != None:
+            Object_delete(self._jobj_ref)
 
 class Shape(JObject):
     def __init__(self, obj):
@@ -47,36 +47,40 @@ class ImageGeometry(JObject):
 
     @staticmethod
     def newImageGeometry(bounds, mapCrs, image2map):
-        return ImageGeometry(ImageGeometry_newImageGeometry(bounds._obj, mapCrs._obj, image2map._obj))
+        return ImageGeometry(ImageGeometry_newImageGeometry(bounds._jobj_ref, mapCrs._jobj_ref, image2map._jobj_ref))
 
     def getImage2MapTransform(self):
-        return AffineTransform(ImageGeometry_getImage2MapTransform(self._obj))
+        return AffineTransform(ImageGeometry_getImage2MapTransform(self._jobj_ref))
 
     def getImageRect(self):
-        return Rectangle(ImageGeometry_getImageRect(self._obj))
+        return Rectangle(ImageGeometry_getImageRect(self._jobj_ref))
 
     def getMapCrs(self):
-        return CoordinateReferenceSystem(ImageGeometry_getMapCrs(self._obj))
+        return CoordinateReferenceSystem(ImageGeometry_getMapCrs(self._jobj_ref))
 
     def changeYAxisDirection(self):
-        ImageGeometry_changeYAxisDirection(self._obj)
+        ImageGeometry_changeYAxisDirection(self._jobj_ref)
         return
 
     @staticmethod
     def calculateEastingNorthing(sourceProduct, targetCrs, referencePixelX, referencePixelY, pixelSizeX, pixelSizeY):
-        return Point2D(ImageGeometry_calculateEastingNorthing(sourceProduct._obj, targetCrs._obj, referencePixelX, referencePixelY, pixelSizeX, pixelSizeY))
+        return Point2D(ImageGeometry_calculateEastingNorthing(sourceProduct._jobj_ref, targetCrs._jobj_ref, referencePixelX, referencePixelY, pixelSizeX, pixelSizeY))
 
     @staticmethod
     def calculateProductSize(sourceProduct, targetCrs, pixelSizeX, pixelSizeY):
-        return Rectangle(ImageGeometry_calculateProductSize(sourceProduct._obj, targetCrs._obj, pixelSizeX, pixelSizeY))
+        return Rectangle(ImageGeometry_calculateProductSize(sourceProduct._jobj_ref, targetCrs._jobj_ref, pixelSizeX, pixelSizeY))
 
     @staticmethod
     def createTargetGeometry(sourceProduct, targetCrs, pixelSizeX, pixelSizeY, width, height, orientation, easting, northing, referencePixelX, referencePixelY):
-        return ImageGeometry(ImageGeometry_createTargetGeometry(sourceProduct._obj, targetCrs._obj, pixelSizeX._obj, pixelSizeY._obj, width._obj, height._obj, orientation._obj, easting._obj, northing._obj, referencePixelX._obj, referencePixelY._obj))
+        return ImageGeometry(ImageGeometry_createTargetGeometry(sourceProduct._jobj_ref, targetCrs._jobj_ref, pixelSizeX._jobj_ref, pixelSizeY._jobj_ref, width._jobj_ref, height._jobj_ref, orientation._jobj_ref, easting._jobj_ref, northing._jobj_ref, referencePixelX._jobj_ref, referencePixelY._jobj_ref))
 
     @staticmethod
     def createCollocationTargetGeometry(targetProduct, collocationProduct):
-        return ImageGeometry(ImageGeometry_createCollocationTargetGeometry(targetProduct._obj, collocationProduct._obj))
+        return ImageGeometry(ImageGeometry_createCollocationTargetGeometry(targetProduct._jobj_ref, collocationProduct._jobj_ref))
+
+    @staticmethod
+    def createValidRect(product):
+        return Rectangle2D(ImageGeometry_createValidRect(product._jobj_ref))
 
 
 class Parser(JObject):
@@ -113,21 +117,21 @@ the {@link Object#equals(Object) equals()} and  {@link Object#hashCode() hashCod
            Checks whether or not the longitudes of this geo-coding cross the +/- 180 degree meridian.
            @return <code>true</code>, if so
         """
-        return GeoCoding_isCrossingMeridianAt180(self._obj)
+        return GeoCoding_isCrossingMeridianAt180(self._jobj_ref)
 
     def canGetPixelPos(self):
         """
            Checks whether or not this geo-coding can determine the pixel position from a geodetic position.
            @return <code>true</code>, if so
         """
-        return GeoCoding_canGetPixelPos(self._obj)
+        return GeoCoding_canGetPixelPos(self._jobj_ref)
 
     def canGetGeoPos(self):
         """
            Checks whether or not this geo-coding can determine the geodetic position from a pixel position.
            @return <code>true</code>, if so
         """
-        return GeoCoding_canGetGeoPos(self._obj)
+        return GeoCoding_canGetGeoPos(self._jobj_ref)
 
     def getPixelPos(self, geoPos, pixelPos):
         """
@@ -137,7 +141,7 @@ the {@link Object#equals(Object) equals()} and  {@link Object#hashCode() hashCod
            <code>null</code>, the method creates a new instance which it then returns.
            @return the pixel co-ordinates as x/y
         """
-        return PixelPos(GeoCoding_getPixelPos(self._obj, geoPos._obj, pixelPos._obj))
+        return PixelPos(GeoCoding_getPixelPos(self._jobj_ref, geoPos._jobj_ref, pixelPos._jobj_ref))
 
     def getGeoPos(self, pixelPos, geoPos):
         """
@@ -147,7 +151,7 @@ the {@link Object#equals(Object) equals()} and  {@link Object#hashCode() hashCod
            <code>null</code>, the method creates a new instance which it then returns.
            @return the geographical position as lat/lon in the coodinate system determined by {@link #getDatum()}
         """
-        return GeoPos(GeoCoding_getGeoPos(self._obj, pixelPos._obj, geoPos._obj))
+        return GeoPos(GeoCoding_getGeoPos(self._jobj_ref, pixelPos._jobj_ref, geoPos._jobj_ref))
 
     def getDatum(self):
         """
@@ -155,7 +159,7 @@ the {@link Object#equals(Object) equals()} and  {@link Object#hashCode() hashCod
            @return the datum
            @deprecated use the datum of the associated {@link #getMapCRS() map CRS}.
         """
-        return Datum(GeoCoding_getDatum(self._obj))
+        return Datum(GeoCoding_getDatum(self._jobj_ref))
 
     def dispose(self):
         """
@@ -165,7 +169,7 @@ the {@link Object#equals(Object) equals()} and  {@link Object#hashCode() hashCod
            This method should be called only if it is for sure that this object instance will never be used again. The
            results of referencing an instance of this class after a call to <code>dispose()</code> are undefined.
         """
-        GeoCoding_dispose(self._obj)
+        GeoCoding_dispose(self._jobj_ref)
         return
 
     def getImageCRS(self):
@@ -173,27 +177,27 @@ the {@link Object#equals(Object) equals()} and  {@link Object#hashCode() hashCod
            @return The image coordinate reference system (CRS). It is usually derived from the base CRS by including
            a linear or non-linear transformation from base (geodetic) coordinates to image coordinates.
         """
-        return CoordinateReferenceSystem(GeoCoding_getImageCRS(self._obj))
+        return CoordinateReferenceSystem(GeoCoding_getImageCRS(self._jobj_ref))
 
     def getMapCRS(self):
         """
            @return The map coordinate reference system (CRS). It may be either a geographical CRS (nominal case is
            "WGS-84") or a derived projected CRS, e.g. "UTM 32 - North".
         """
-        return CoordinateReferenceSystem(GeoCoding_getMapCRS(self._obj))
+        return CoordinateReferenceSystem(GeoCoding_getMapCRS(self._jobj_ref))
 
     def getGeoCRS(self):
         """
            @return The geographical coordinate reference system (CRS). It may be either "WGS-84" (nominal case) or
            any other geographical CRS.
         """
-        return CoordinateReferenceSystem(GeoCoding_getGeoCRS(self._obj))
+        return CoordinateReferenceSystem(GeoCoding_getGeoCRS(self._jobj_ref))
 
     def getImageToMapTransform(self):
         """
            @return The math transformation used to convert image coordinates to map coordinates.
         """
-        return MathTransform(GeoCoding_getImageToMapTransform(self._obj))
+        return MathTransform(GeoCoding_getImageToMapTransform(self._jobj_ref))
 
 
 class ProductData(JObject):
@@ -283,7 +287,7 @@ Where the transfer data type <code><b>Type</b></code> is one of <code>int</code>
            @return a new value instance, <code>null</code> if the given type is not known
            @throws IllegalArgumentException if one of the arguments is invalid
         """
-        return ProductData(ProductData_createInstance3(type, data._obj))
+        return ProductData(ProductData_createInstance3(type, data._jobj_ref))
 
     @staticmethod
     def createInstance5(elems):
@@ -329,7 +333,7 @@ Where the transfer data type <code><b>Type</b></code> is one of <code>int</code>
         """
            Returns this value's type ID.
         """
-        return ProductData_getType1(self._obj)
+        return ProductData_getType1(self._jobj_ref)
 
     @staticmethod
     def getElemSize2(type):
@@ -346,7 +350,7 @@ Where the transfer data type <code><b>Type</b></code> is one of <code>int</code>
            Gets the element size of an element of this product data in bytes.
            @return the size of a single element in bytes
         """
-        return ProductData_getElemSize1(self._obj)
+        return ProductData_getElemSize1(self._jobj_ref)
 
     @staticmethod
     def getTypeString2(type):
@@ -368,14 +372,14 @@ Where the transfer data type <code><b>Type</b></code> is one of <code>int</code>
         """
            Returns this value's data type String.
         """
-        return ProductData_getTypeString1(self._obj)
+        return ProductData_getTypeString1(self._jobj_ref)
 
     def isInt(self):
         """
            Tests whether this value has an integer.
            @return true, if so
         """
-        return ProductData_isInt(self._obj)
+        return ProductData_isInt(self._jobj_ref)
 
     @staticmethod
     def isIntType(type):
@@ -390,14 +394,14 @@ Where the transfer data type <code><b>Type</b></code> is one of <code>int</code>
            Tests whether the actual instance is an signed data type.
            @return true, if so
         """
-        return ProductData_isSigned(self._obj)
+        return ProductData_isSigned(self._jobj_ref)
 
     def isUnsigned(self):
         """
            Tests whether the actual instance is an unsigned data type.
            @return true, if so
         """
-        return ProductData_isUnsigned(self._obj)
+        return ProductData_isUnsigned(self._jobj_ref)
 
     @staticmethod
     def isUIntType(type):
@@ -420,13 +424,13 @@ Where the transfer data type <code><b>Type</b></code> is one of <code>int</code>
            Tests if this value is a scalar.
            @return true, if so
         """
-        return ProductData_isScalar(self._obj)
+        return ProductData_isScalar(self._jobj_ref)
 
     def getNumElems(self):
         """
            Returns the number of data elements this value has.
         """
-        return ProductData_getNumElems(self._obj)
+        return ProductData_getNumElems(self._jobj_ref)
 
     def getElemInt(self):
         """
@@ -434,7 +438,7 @@ Where the transfer data type <code><b>Type</b></code> is one of <code>int</code>
            returns <code>getElemIntAt(0)</code>.
            @see #getElemIntAt(int index)
         """
-        return ProductData_getElemInt(self._obj)
+        return ProductData_getElemInt(self._jobj_ref)
 
     def getElemUInt(self):
         """
@@ -442,7 +446,7 @@ Where the transfer data type <code><b>Type</b></code> is one of <code>int</code>
            value is a scalar and therefore simply returns <code>getElemUIntAt(0)</code>.
            @see #getElemUIntAt(int index)
         """
-        return ProductData_getElemUInt(self._obj)
+        return ProductData_getElemUInt(self._jobj_ref)
 
     def getElemFloat(self):
         """
@@ -450,7 +454,7 @@ Where the transfer data type <code><b>Type</b></code> is one of <code>int</code>
            simply returns <code>getElemFloatAt(0)</code>.
            @see #getElemFloatAt(int index)
         """
-        return ProductData_getElemFloat(self._obj)
+        return ProductData_getElemFloat(self._jobj_ref)
 
     def getElemDouble(self):
         """
@@ -458,7 +462,7 @@ Where the transfer data type <code><b>Type</b></code> is one of <code>int</code>
            simply returns <code>getElemDoubleAt(0)</code>.
            @see #getElemDoubleAt(int index)
         """
-        return ProductData_getElemDouble(self._obj)
+        return ProductData_getElemDouble(self._jobj_ref)
 
     def getElemString(self):
         """
@@ -466,7 +470,7 @@ Where the transfer data type <code><b>Type</b></code> is one of <code>int</code>
            in this value.
            @return a text representing this fields value, never <code>null</code>
         """
-        return ProductData_getElemString(self._obj)
+        return ProductData_getElemString(self._jobj_ref)
 
     def getElemBoolean(self):
         """
@@ -474,7 +478,7 @@ Where the transfer data type <code><b>Type</b></code> is one of <code>int</code>
            simply returns <code>getElemBooleanAt(0)</code>.
            @see #getElemBooleanAt(int index)
         """
-        return ProductData_getElemBoolean(self._obj)
+        return ProductData_getElemBoolean(self._jobj_ref)
 
     def getElemIntAt(self, index):
         """
@@ -482,7 +486,7 @@ Where the transfer data type <code><b>Type</b></code> is one of <code>int</code>
            @param index the value index, must be <code>&gt;=0</code> and <code>&lt;getNumDataElems()</code>
            @throws IndexOutOfBoundsException if the index is out of bounds
         """
-        return ProductData_getElemIntAt(self._obj, index)
+        return ProductData_getElemIntAt(self._jobj_ref, index)
 
     def getElemUIntAt(self, index):
         """
@@ -490,7 +494,7 @@ Where the transfer data type <code><b>Type</b></code> is one of <code>int</code>
            @param index the value index, must be <code>&gt;=0</code> and <code>&lt;getNumDataElems()</code>
            @throws IndexOutOfBoundsException if the index is out of bounds
         """
-        return ProductData_getElemUIntAt(self._obj, index)
+        return ProductData_getElemUIntAt(self._jobj_ref, index)
 
     def getElemFloatAt(self, index):
         """
@@ -498,7 +502,7 @@ Where the transfer data type <code><b>Type</b></code> is one of <code>int</code>
            @param index the value index, must be <code>&gt;=0</code> and <code>&lt;getNumDataElems()</code>
            @throws IndexOutOfBoundsException if the index is out of bounds
         """
-        return ProductData_getElemFloatAt(self._obj, index)
+        return ProductData_getElemFloatAt(self._jobj_ref, index)
 
     def getElemDoubleAt(self, index):
         """
@@ -506,7 +510,7 @@ Where the transfer data type <code><b>Type</b></code> is one of <code>int</code>
            @param index the value index, must be <code>&gt;=0</code> and <code>&lt;getNumDataElems()</code>
            @throws IndexOutOfBoundsException if the index is out of bounds
         """
-        return ProductData_getElemDoubleAt(self._obj, index)
+        return ProductData_getElemDoubleAt(self._jobj_ref, index)
 
     def getElemStringAt(self, index):
         """
@@ -514,7 +518,7 @@ Where the transfer data type <code><b>Type</b></code> is one of <code>int</code>
            @param index the value index, must be <code>&gt;=0</code> and <code>&lt;getNumDataElems()</code>
            @throws IndexOutOfBoundsException if the index is out of bounds
         """
-        return ProductData_getElemStringAt(self._obj, index)
+        return ProductData_getElemStringAt(self._jobj_ref, index)
 
     def getElemBooleanAt(self, index):
         """
@@ -522,7 +526,7 @@ Where the transfer data type <code><b>Type</b></code> is one of <code>int</code>
            @param index the value index, must be <code>&gt;=0</code> and <code>&lt;getNumDataElems()</code>
            @throws IndexOutOfBoundsException if the index is out of bounds
         """
-        return ProductData_getElemBooleanAt(self._obj, index)
+        return ProductData_getElemBooleanAt(self._jobj_ref, index)
 
     def setElemInt(self, value):
         """
@@ -531,7 +535,7 @@ Where the transfer data type <code><b>Type</b></code> is one of <code>int</code>
            @param value the value to be set
            @see #setElemIntAt(int index, int value)
         """
-        ProductData_setElemInt(self._obj, value)
+        ProductData_setElemInt(self._jobj_ref, value)
         return
 
     def setElemUInt(self, value):
@@ -541,7 +545,7 @@ Where the transfer data type <code><b>Type</b></code> is one of <code>int</code>
            @param value the value to be set
            @see #setElemUIntAt(int index, long value)
         """
-        ProductData_setElemUInt(self._obj, value)
+        ProductData_setElemUInt(self._jobj_ref, value)
         return
 
     def setElemFloat(self, value):
@@ -551,7 +555,7 @@ Where the transfer data type <code><b>Type</b></code> is one of <code>int</code>
            @param value the value to be set
            @see #setElemFloatAt(int index, float value)
         """
-        ProductData_setElemFloat(self._obj, value)
+        ProductData_setElemFloat(self._jobj_ref, value)
         return
 
     def setElemDouble(self, value):
@@ -561,7 +565,7 @@ Where the transfer data type <code><b>Type</b></code> is one of <code>int</code>
            @param value the value to be set
            @see #setElemDoubleAt(int index, double value)
         """
-        ProductData_setElemDouble(self._obj, value)
+        ProductData_setElemDouble(self._jobj_ref, value)
         return
 
     def setElemString(self, value):
@@ -571,7 +575,7 @@ Where the transfer data type <code><b>Type</b></code> is one of <code>int</code>
            @param value the value to be set
            @see #setElemStringAt
         """
-        ProductData_setElemString(self._obj, value)
+        ProductData_setElemString(self._jobj_ref, value)
         return
 
     def setElemBoolean(self, value):
@@ -581,7 +585,7 @@ Where the transfer data type <code><b>Type</b></code> is one of <code>int</code>
            @param value the value to be set
            @see #setElemBooleanAt(int index, boolean value)
         """
-        ProductData_setElemBoolean(self._obj, value)
+        ProductData_setElemBoolean(self._jobj_ref, value)
         return
 
     def setElemIntAt(self, index, value):
@@ -591,7 +595,7 @@ Where the transfer data type <code><b>Type</b></code> is one of <code>int</code>
            @param value the value to be set
            @throws IndexOutOfBoundsException if the index is out of bounds
         """
-        ProductData_setElemIntAt(self._obj, index, value)
+        ProductData_setElemIntAt(self._jobj_ref, index, value)
         return
 
     def setElemUIntAt(self, index, value):
@@ -601,7 +605,7 @@ Where the transfer data type <code><b>Type</b></code> is one of <code>int</code>
            @param value the value to be set
            @throws IndexOutOfBoundsException if the index is out of bounds
         """
-        ProductData_setElemUIntAt(self._obj, index, value)
+        ProductData_setElemUIntAt(self._jobj_ref, index, value)
         return
 
     def setElemFloatAt(self, index, value):
@@ -611,7 +615,7 @@ Where the transfer data type <code><b>Type</b></code> is one of <code>int</code>
            @param value the value to be set
            @throws IndexOutOfBoundsException if the index is out of bounds
         """
-        ProductData_setElemFloatAt(self._obj, index, value)
+        ProductData_setElemFloatAt(self._jobj_ref, index, value)
         return
 
     def setElemDoubleAt(self, index, value):
@@ -621,7 +625,7 @@ Where the transfer data type <code><b>Type</b></code> is one of <code>int</code>
            @param value the value to be set
            @throws IndexOutOfBoundsException if the index is out of bounds
         """
-        ProductData_setElemDoubleAt(self._obj, index, value)
+        ProductData_setElemDoubleAt(self._jobj_ref, index, value)
         return
 
     def setElemStringAt(self, index, value):
@@ -633,7 +637,7 @@ Where the transfer data type <code><b>Type</b></code> is one of <code>int</code>
            @param value the value to be set
            @throws IndexOutOfBoundsException if the index is out of bounds
         """
-        ProductData_setElemStringAt(self._obj, index, value)
+        ProductData_setElemStringAt(self._jobj_ref, index, value)
         return
 
     def setElemBooleanAt(self, index, value):
@@ -643,7 +647,7 @@ Where the transfer data type <code><b>Type</b></code> is one of <code>int</code>
            @param value the value to be set
            @throws IndexOutOfBoundsException if the index is out of bounds
         """
-        ProductData_setElemBooleanAt(self._obj, index, value)
+        ProductData_setElemBooleanAt(self._jobj_ref, index, value)
         return
 
     def getElems(self):
@@ -655,7 +659,7 @@ Where the transfer data type <code><b>Type</b></code> is one of <code>int</code>
            for signed 64-bit floating point fields</li> </ol>
            @return an array of one of the described types
         """
-        return Object(ProductData_getElems(self._obj))
+        return Object(ProductData_getElems(self._jobj_ref))
 
     def setElems(self, data):
         """
@@ -666,7 +670,7 @@ Where the transfer data type <code><b>Type</b></code> is one of <code>int</code>
            for signed 64-bit floating point fields</li> <li><code>String[]</code> - for all field types</li> </ol>
            @param data an array of one of the described types
         """
-        ProductData_setElems(self._obj, data._obj)
+        ProductData_setElems(self._jobj_ref, data._jobj_ref)
         return
 
     def readFrom4(self, input):
@@ -679,7 +683,7 @@ Where the transfer data type <code><b>Type</b></code> is one of <code>int</code>
            @param input a seekable data input stream
            @throws IOException if an I/O error occurs
         """
-        ProductData_readFrom4(self._obj, input._obj)
+        ProductData_readFrom4(self._jobj_ref, input._jobj_ref)
         return
 
     def readFrom3(self, pos, input):
@@ -692,7 +696,7 @@ Where the transfer data type <code><b>Type</b></code> is one of <code>int</code>
            @param input a seekable data input stream
            @throws IOException if an I/O error occurs
         """
-        ProductData_readFrom3(self._obj, pos, input._obj)
+        ProductData_readFrom3(self._jobj_ref, pos, input._jobj_ref)
         return
 
     def readFrom1(self, startPos, numElems, input):
@@ -707,7 +711,7 @@ Where the transfer data type <code><b>Type</b></code> is one of <code>int</code>
            @param input    a seekable data input stream
            @throws IOException if an I/O error occurs
         """
-        ProductData_readFrom1(self._obj, startPos, numElems, input._obj)
+        ProductData_readFrom1(self._jobj_ref, startPos, numElems, input._jobj_ref)
         return
 
     def readFrom2(self, startPos, numElems, input, inputPos):
@@ -724,7 +728,7 @@ Where the transfer data type <code><b>Type</b></code> is one of <code>int</code>
            @param inputPos the (zero-based) position in the data output stream where reading starts
            @throws IOException if an I/O error occurs
         """
-        ProductData_readFrom2(self._obj, startPos, numElems, input._obj, inputPos)
+        ProductData_readFrom2(self._jobj_ref, startPos, numElems, input._jobj_ref, inputPos)
         return
 
     def writeTo4(self, output):
@@ -737,7 +741,7 @@ Where the transfer data type <code><b>Type</b></code> is one of <code>int</code>
            @param output a seekable data output stream
            @throws IOException if an I/O error occurs
         """
-        ProductData_writeTo4(self._obj, output._obj)
+        ProductData_writeTo4(self._jobj_ref, output._jobj_ref)
         return
 
     def writeTo3(self, pos, output):
@@ -750,7 +754,7 @@ Where the transfer data type <code><b>Type</b></code> is one of <code>int</code>
            @param output a seekable data output stream
            @throws IOException if an I/O error occurs
         """
-        ProductData_writeTo3(self._obj, pos, output._obj)
+        ProductData_writeTo3(self._jobj_ref, pos, output._jobj_ref)
         return
 
     def writeTo1(self, startPos, numElems, output):
@@ -765,7 +769,7 @@ Where the transfer data type <code><b>Type</b></code> is one of <code>int</code>
            @param output   a seekable data output stream
            @throws IOException if an I/O error occurs
         """
-        ProductData_writeTo1(self._obj, startPos, numElems, output._obj)
+        ProductData_writeTo1(self._jobj_ref, startPos, numElems, output._jobj_ref)
         return
 
     def writeTo2(self, startPos, numElems, output, outputPos):
@@ -782,27 +786,27 @@ Where the transfer data type <code><b>Type</b></code> is one of <code>int</code>
            @param outputPos the position in the data output stream where writing starts
            @throws IOException if an I/O error occurs
         """
-        ProductData_writeTo2(self._obj, startPos, numElems, output._obj, outputPos)
+        ProductData_writeTo2(self._jobj_ref, startPos, numElems, output._jobj_ref, outputPos)
         return
 
     def toString(self):
         """
            Returns a string representation of this value which can be used for debugging purposes.
         """
-        return ProductData_toString(self._obj)
+        return ProductData_toString(self._jobj_ref)
 
     def hashCode(self):
         """
            Returns {@link Object#hashCode()}.
         """
-        return ProductData_hashCode(self._obj)
+        return ProductData_hashCode(self._jobj_ref)
 
     def equals(self, other):
         """
            Returns {@link Object#equals(Object)}.
            Use {@link #equalElems} in order to perform an element-wise comparision.
         """
-        return ProductData_equals(self._obj, other._obj)
+        return ProductData_equals(self._jobj_ref, other._jobj_ref)
 
     def equalElems(self, other):
         """
@@ -811,7 +815,7 @@ Where the transfer data type <code><b>Type</b></code> is one of <code>int</code>
            Otherwise the method behaves like {@link Object#equals(Object)}.
            @param other the other one
         """
-        return ProductData_equalElems(self._obj, other._obj)
+        return ProductData_equalElems(self._jobj_ref, other._jobj_ref)
 
     def dispose(self):
         """
@@ -821,7 +825,7 @@ Where the transfer data type <code><b>Type</b></code> is one of <code>int</code>
            This method should be called only if it is for sure that this object instance will never be used again. The
            results of referencing an instance of this class after a call to <code>dispose()</code> are undefined.
         """
-        ProductData_dispose(self._obj)
+        ProductData_dispose(self._jobj_ref)
         return
 
 
@@ -880,7 +884,7 @@ The current instance can be set by {@link #setDefaultInstance(GPF)}.
         JObject.__del__(self)
 
     @staticmethod
-    def createProductFromNoSourceProducts(operatorName, parameters):
+    def createProductWithoutSourceProducts(operatorName, parameters):
         """
            Creates a product by using the operator specified by the given name.
            The resulting product can be used as input product for a further call to {@code createProduct()}.
@@ -890,7 +894,7 @@ The current instance can be set by {@link #setDefaultInstance(GPF)}.
            @return the product created by the operator.
            @throws OperatorException if the product could not be created.
         """
-        return Product(GPF_createProductFromNoSourceProducts(operatorName, parameters._obj))
+        return Product(GPF_createProductWithoutSourceProducts(operatorName, parameters._jobj_ref))
 
     @staticmethod
     def createProductFromSourceProduct(operatorName, parameters, sourceProduct):
@@ -904,7 +908,7 @@ The current instance can be set by {@link #setDefaultInstance(GPF)}.
            @return the product created by the operator.
            @throws OperatorException if the product could not be created.
         """
-        return Product(GPF_createProductFromSourceProduct(operatorName, parameters._obj, sourceProduct._obj))
+        return Product(GPF_createProductFromSourceProduct(operatorName, parameters._jobj_ref, sourceProduct._jobj_ref))
 
     @staticmethod
     def createProductFromSourceProducts(operatorName, parameters, sourceProducts):
@@ -918,7 +922,7 @@ The current instance can be set by {@link #setDefaultInstance(GPF)}.
            @return the product created by the operator.
            @throws OperatorException if the product could not be created.
         """
-        return Product(GPF_createProductFromSourceProducts(operatorName, parameters._obj, sourceProducts._obj))
+        return Product(GPF_createProductFromSourceProducts(operatorName, parameters._jobj_ref, sourceProducts._jobj_ref))
 
     @staticmethod
     def createProductFromNamedSourceProducts(operatorName, parameters, sourceProducts):
@@ -932,7 +936,7 @@ The current instance can be set by {@link #setDefaultInstance(GPF)}.
            @return the product created by the operator.
            @throws OperatorException if the product could not be created.
         """
-        return Product(GPF_createProductFromNamedSourceProducts(operatorName, parameters._obj, sourceProducts._obj))
+        return Product(GPF_createProductFromNamedSourceProducts(operatorName, parameters._jobj_ref, sourceProducts._jobj_ref))
 
     def createProductNS(self, operatorName, parameters, sourceProducts, renderingHints):
         """
@@ -949,7 +953,7 @@ The current instance can be set by {@link #setDefaultInstance(GPF)}.
            @return the product created by the operator.
            @throws OperatorException if the product could not be created.
         """
-        return Product(GPF_createProductNS(self._obj, operatorName, parameters._obj, sourceProducts._obj, renderingHints._obj))
+        return Product(GPF_createProductNS(self._jobj_ref, operatorName, parameters._jobj_ref, sourceProducts._jobj_ref, renderingHints._jobj_ref))
 
     def createOperator(self, operatorName, parameters, sourceProducts, renderingHints):
         """
@@ -961,21 +965,21 @@ The current instance can be set by {@link #setDefaultInstance(GPF)}.
            @return the product created by the operator.
            @throws OperatorException if the product could not be created.
         """
-        return Operator(GPF_createOperator(self._obj, operatorName, parameters._obj, sourceProducts._obj, renderingHints._obj))
+        return Operator(GPF_createOperator(self._jobj_ref, operatorName, parameters._jobj_ref, sourceProducts._jobj_ref, renderingHints._jobj_ref))
 
     def getOperatorSpiRegistry(self):
         """
            Gets the registry for operator SPIs.
            @return the registry for operator SPIs.
         """
-        return OperatorSpiRegistry(GPF_getOperatorSpiRegistry(self._obj))
+        return OperatorSpiRegistry(GPF_getOperatorSpiRegistry(self._jobj_ref))
 
     def setOperatorSpiRegistry(self, spiRegistry):
         """
            Sets the registry for operator SPIs.
            @param spiRegistry the registry for operator SPIs.
         """
-        GPF_setOperatorSpiRegistry(self._obj, spiRegistry._obj)
+        GPF_setOperatorSpiRegistry(self._jobj_ref, spiRegistry._jobj_ref)
         return
 
     @staticmethod
@@ -992,7 +996,7 @@ The current instance can be set by {@link #setDefaultInstance(GPF)}.
            Sets the default GPF instance.
            @param defaultInstance the GPF default instance.
         """
-        GPF_setDefaultInstance(defaultInstance._obj)
+        GPF_setDefaultInstance(defaultInstance._jobj_ref)
         return
 
     @staticmethod
@@ -1006,7 +1010,7 @@ The current instance can be set by {@link #setDefaultInstance(GPF)}.
            @param incremental switch the product writer in incremental mode or not.
            @param pm          a monitor to inform the user about progress
         """
-        GPF_writeProduct(product._obj, file._obj, formatName, incremental, pm._obj)
+        GPF_writeProduct(product._jobj_ref, file._jobj_ref, formatName, incremental, pm._jobj_ref)
         return
 
 
@@ -1039,7 +1043,7 @@ represent index values (e.g. types, classes, categories).
            @param name the flag name
            @return a metadata attribute wich is the representation of the flag with the given name
         """
-        return MetadataAttribute(IndexCoding_getIndex(self._obj, name))
+        return MetadataAttribute(IndexCoding_getIndex(self._jobj_ref, name))
 
     def getIndexNames(self):
         """
@@ -1047,7 +1051,7 @@ represent index values (e.g. types, classes, categories).
            @return a string array which contains all names of this <code>FlagCoding</code>.<br> If this
            <code>FlagCoding</code> does not contain any flag, <code>null</code> is returned
         """
-        return IndexCoding_getIndexNames(self._obj)
+        return IndexCoding_getIndexNames(self._jobj_ref)
 
     def addIndex(self, name, value, description):
         """
@@ -1058,7 +1062,7 @@ represent index values (e.g. types, classes, categories).
            @throws IllegalArgumentException if <code>name</code> is null
            @return A new attribute representing the coded index.
         """
-        return MetadataAttribute(IndexCoding_addIndex(self._obj, name, value, description))
+        return MetadataAttribute(IndexCoding_addIndex(self._jobj_ref, name, value, description))
 
     def getIndexValue(self, name):
         """
@@ -1067,7 +1071,7 @@ represent index values (e.g. types, classes, categories).
            @return flagMask the flag's bit mask as a 32 bit integer
            @throws IllegalArgumentException if <code>name</code> is null, or a flag with the name does not exist
         """
-        return IndexCoding_getIndexValue(self._obj, name)
+        return IndexCoding_getIndexValue(self._jobj_ref, name)
 
     def acceptVisitor(self, visitor):
         """
@@ -1078,7 +1082,7 @@ represent index values (e.g. types, classes, categories).
            The method simply calls <code>visitor.visit(this)</code>.
            @param visitor the visitor, must not be <code>null</code>
         """
-        IndexCoding_acceptVisitor(self._obj, visitor._obj)
+        IndexCoding_acceptVisitor(self._jobj_ref, visitor._jobj_ref)
         return
 
     def addElement(self, element):
@@ -1087,7 +1091,7 @@ represent index values (e.g. types, classes, categories).
            because flag codings do not support inner elements.
            @param element the element to be added, always ignored
         """
-        IndexCoding_addElement(self._obj, element._obj)
+        IndexCoding_addElement(self._jobj_ref, element._jobj_ref)
         return
 
     def addAttribute(self, attribute):
@@ -1096,7 +1100,7 @@ represent index values (e.g. types, classes, categories).
            @param attribute the attribute to be added
            @throws IllegalArgumentException if the attribute added is not an integer or does not have a scalar value
         """
-        IndexCoding_addAttribute(self._obj, attribute._obj)
+        IndexCoding_addAttribute(self._jobj_ref, attribute._jobj_ref)
         return
 
     def addSample(self, name, value, description):
@@ -1108,14 +1112,14 @@ represent index values (e.g. types, classes, categories).
            @throws IllegalArgumentException if <code>name</code> is null
            @return A new attribute representing the coded sample.
         """
-        return MetadataAttribute(IndexCoding_addSample(self._obj, name, value, description))
+        return MetadataAttribute(IndexCoding_addSample(self._jobj_ref, name, value, description))
 
     def getSampleCount(self):
         """
            Gets the number of coded sample values.
            @return the number of coded sample values
         """
-        return IndexCoding_getSampleCount(self._obj)
+        return IndexCoding_getSampleCount(self._jobj_ref)
 
     def getSampleName(self, index):
         """
@@ -1123,7 +1127,7 @@ represent index values (e.g. types, classes, categories).
            @param index the attribute index.
            @return the sample name.
         """
-        return IndexCoding_getSampleName(self._obj, index)
+        return IndexCoding_getSampleName(self._jobj_ref, index)
 
     def getSampleValue(self, index):
         """
@@ -1131,17 +1135,17 @@ represent index values (e.g. types, classes, categories).
            @param index the attribute index.
            @return the sample value.
         """
-        return IndexCoding_getSampleValue(self._obj, index)
+        return IndexCoding_getSampleValue(self._jobj_ref, index)
 
     def getElementGroup(self):
         """
            Gets the group of child elements. The method returns null, if this element has no children.
            @return The child element group, may be null.
         """
-        return ProductNodeGroup(IndexCoding_getElementGroup(self._obj))
+        return ProductNodeGroup(IndexCoding_getElementGroup(self._jobj_ref))
 
     def getParentElement(self):
-        return MetadataElement(IndexCoding_getParentElement(self._obj))
+        return MetadataElement(IndexCoding_getParentElement(self._jobj_ref))
 
     def addElementAt(self, element, index):
         """
@@ -1149,7 +1153,7 @@ represent index values (e.g. types, classes, categories).
            @param element the element to added, ignored if <code>null</code>
            @param index   where to put it
         """
-        IndexCoding_addElementAt(self._obj, element._obj, index)
+        IndexCoding_addElementAt(self._jobj_ref, element._jobj_ref, index)
         return
 
     def removeElement(self, element):
@@ -1158,13 +1162,13 @@ represent index values (e.g. types, classes, categories).
            @param element the element to be removed, ignored if <code>null</code>
            @return true, if so
         """
-        return IndexCoding_removeElement(self._obj, element._obj)
+        return IndexCoding_removeElement(self._jobj_ref, element._jobj_ref)
 
     def getNumElements(self):
         """
            @return the number of elements contained in this element.
         """
-        return IndexCoding_getNumElements(self._obj)
+        return IndexCoding_getNumElements(self._jobj_ref)
 
     def getElementAt(self, index):
         """
@@ -1173,7 +1177,7 @@ represent index values (e.g. types, classes, categories).
            @return the element at the given index
            @throws IndexOutOfBoundsException if the index is out of bounds
         """
-        return MetadataElement(IndexCoding_getElementAt(self._obj, index))
+        return MetadataElement(IndexCoding_getElementAt(self._jobj_ref, index))
 
     def getElementNames(self):
         """
@@ -1181,7 +1185,7 @@ represent index values (e.g. types, classes, categories).
            @return a string array containing the names of the groups contained in this element. If this element has no
            groups a zero-length-array is returned.
         """
-        return IndexCoding_getElementNames(self._obj)
+        return IndexCoding_getElementNames(self._jobj_ref)
 
     def getElements(self):
         """
@@ -1189,7 +1193,7 @@ represent index values (e.g. types, classes, categories).
            @return an array of elements contained in this product. If this element has no elements a zero-length-array is
            returned.
         """
-        return MetadataElement(IndexCoding_getElements(self._obj))
+        return MetadataElement(IndexCoding_getElements(self._jobj_ref))
 
     def getElement(self, name):
         """
@@ -1198,7 +1202,7 @@ represent index values (e.g. types, classes, categories).
            @return the element with the given name or <code>null</code> if a element with the given name is not contained in
            this element.
         """
-        return MetadataElement(IndexCoding_getElement(self._obj, name))
+        return MetadataElement(IndexCoding_getElement(self._jobj_ref, name))
 
     def containsElement(self, name):
         """
@@ -1207,7 +1211,7 @@ represent index values (e.g. types, classes, categories).
            @return <code>true</code> if a element with the given name is contained in this element, <code>false</code>
            otherwise
         """
-        return IndexCoding_containsElement(self._obj, name)
+        return IndexCoding_containsElement(self._jobj_ref, name)
 
     def getElementIndex(self, element):
         """
@@ -1215,7 +1219,7 @@ represent index values (e.g. types, classes, categories).
            @param element The element .
            @return The element's index, or -1.
         """
-        return IndexCoding_getElementIndex(self._obj, element._obj)
+        return IndexCoding_getElementIndex(self._jobj_ref, element._jobj_ref)
 
     def removeAttribute(self, attribute):
         """
@@ -1224,14 +1228,14 @@ represent index values (e.g. types, classes, categories).
            @param attribute the attribute to be removed, <code>null</code> is ignored
            @return <code>true</code> if it was removed
         """
-        return IndexCoding_removeAttribute(self._obj, attribute._obj)
+        return IndexCoding_removeAttribute(self._jobj_ref, attribute._jobj_ref)
 
     def getNumAttributes(self):
         """
            Returns the number of attributes attaached to this node.
            @return the number of attributes
         """
-        return IndexCoding_getNumAttributes(self._obj)
+        return IndexCoding_getNumAttributes(self._jobj_ref)
 
     def getAttributeAt(self, index):
         """
@@ -1240,14 +1244,14 @@ represent index values (e.g. types, classes, categories).
            @return the attribute, or <code>null</code> if this node does not contain attributes
            @throws IndexOutOfBoundsException
         """
-        return MetadataAttribute(IndexCoding_getAttributeAt(self._obj, index))
+        return MetadataAttribute(IndexCoding_getAttributeAt(self._jobj_ref, index))
 
     def getAttributeNames(self):
         """
            Returns the names of all attributes of this node.
            @return the attribute name array, never <code>null</code>
         """
-        return IndexCoding_getAttributeNames(self._obj)
+        return IndexCoding_getAttributeNames(self._jobj_ref)
 
     def getAttributes(self):
         """
@@ -1255,7 +1259,7 @@ represent index values (e.g. types, classes, categories).
            @return an array of attributes contained in this product. If this element has no attributes a zero-length-array
            is returned.
         """
-        return MetadataAttribute(IndexCoding_getAttributes(self._obj))
+        return MetadataAttribute(IndexCoding_getAttributes(self._jobj_ref))
 
     def getAttribute(self, name):
         """
@@ -1263,7 +1267,7 @@ represent index values (e.g. types, classes, categories).
            @param name the attribute name
            @return the attribute with the given name or <code>null</code> if it could not be found
         """
-        return MetadataAttribute(IndexCoding_getAttribute(self._obj, name))
+        return MetadataAttribute(IndexCoding_getAttribute(self._jobj_ref, name))
 
     def containsAttribute(self, name):
         """
@@ -1271,7 +1275,7 @@ represent index values (e.g. types, classes, categories).
            @param name the attribute name
            @return <code>true</code> if so
         """
-        return IndexCoding_containsAttribute(self._obj, name)
+        return IndexCoding_containsAttribute(self._jobj_ref, name)
 
     def getAttributeIndex(self, attribute):
         """
@@ -1279,7 +1283,7 @@ represent index values (e.g. types, classes, categories).
            @param attribute The attribute.
            @return The attribute's index, or -1.
         """
-        return IndexCoding_getAttributeIndex(self._obj, attribute._obj)
+        return IndexCoding_getAttributeIndex(self._jobj_ref, attribute._jobj_ref)
 
     def getAttributeDouble(self, name, defaultValue):
         """
@@ -1290,7 +1294,7 @@ represent index values (e.g. types, classes, categories).
            @return the attribute value as double.
            @throws NumberFormatException if the attribute type is ASCII but cannot be converted to a number
         """
-        return IndexCoding_getAttributeDouble(self._obj, name, defaultValue)
+        return IndexCoding_getAttributeDouble(self._jobj_ref, name, defaultValue)
 
     def getAttributeUTC(self, name, defaultValue):
         """
@@ -1300,7 +1304,7 @@ represent index values (e.g. types, classes, categories).
            @param defaultValue the default value
            @return the attribute value as UTC.
         """
-        return ProductData_UTC(IndexCoding_getAttributeUTC(self._obj, name, defaultValue._obj))
+        return ProductData_UTC(IndexCoding_getAttributeUTC(self._jobj_ref, name, defaultValue._jobj_ref))
 
     def getAttributeInt(self, name, defaultValue):
         """
@@ -1311,7 +1315,7 @@ represent index values (e.g. types, classes, categories).
            @return the attribute value as integer.
            @throws NumberFormatException if the attribute type is ASCII but cannot be converted to a number
         """
-        return IndexCoding_getAttributeInt(self._obj, name, defaultValue)
+        return IndexCoding_getAttributeInt(self._jobj_ref, name, defaultValue)
 
     def setAttributeInt(self, name, value):
         """
@@ -1321,7 +1325,7 @@ represent index values (e.g. types, classes, categories).
            @param name  the attribute name
            @param value the new value
         """
-        IndexCoding_setAttributeInt(self._obj, name, value)
+        IndexCoding_setAttributeInt(self._jobj_ref, name, value)
         return
 
     def setAttributeDouble(self, name, value):
@@ -1332,7 +1336,7 @@ represent index values (e.g. types, classes, categories).
            @param name  the attribute name
            @param value the new value
         """
-        IndexCoding_setAttributeDouble(self._obj, name, value)
+        IndexCoding_setAttributeDouble(self._jobj_ref, name, value)
         return
 
     def setAttributeUTC(self, name, value):
@@ -1343,7 +1347,7 @@ represent index values (e.g. types, classes, categories).
            @param name  the attribute name
            @param value the new value
         """
-        IndexCoding_setAttributeUTC(self._obj, name, value._obj)
+        IndexCoding_setAttributeUTC(self._jobj_ref, name, value._jobj_ref)
         return
 
     def getAttributeString(self, name, defaultValue):
@@ -1354,7 +1358,7 @@ represent index values (e.g. types, classes, categories).
            @param defaultValue the default value
            @return the attribute value as integer.
         """
-        return IndexCoding_getAttributeString(self._obj, name, defaultValue)
+        return IndexCoding_getAttributeString(self._jobj_ref, name, defaultValue)
 
     def setAttributeString(self, name, value):
         """
@@ -1364,15 +1368,15 @@ represent index values (e.g. types, classes, categories).
            @param name  the attribute name
            @param value the new value
         """
-        IndexCoding_setAttributeString(self._obj, name, value)
+        IndexCoding_setAttributeString(self._jobj_ref, name, value)
         return
 
     def setModified(self, modified):
-        IndexCoding_setModified(self._obj, modified)
+        IndexCoding_setModified(self._jobj_ref, modified)
         return
 
     def createDeepClone(self):
-        return MetadataElement(IndexCoding_createDeepClone(self._obj))
+        return MetadataElement(IndexCoding_createDeepClone(self._jobj_ref))
 
     def dispose(self):
         """
@@ -1384,27 +1388,27 @@ represent index values (e.g. types, classes, categories).
            
            Overrides of this method should always call <code>super.dispose();</code> after disposing this instance.
         """
-        IndexCoding_dispose(self._obj)
+        IndexCoding_dispose(self._jobj_ref)
         return
 
     def getOwner(self):
         """
            @return The owner node of this node.
         """
-        return ProductNode(IndexCoding_getOwner(self._obj))
+        return ProductNode(IndexCoding_getOwner(self._jobj_ref))
 
     def getName(self):
         """
            @return This node's name.
         """
-        return IndexCoding_getName(self._obj)
+        return IndexCoding_getName(self._jobj_ref)
 
     def setName(self, name):
         """
            Sets this product's name.
            @param name The name.
         """
-        IndexCoding_setName(self._obj, name)
+        IndexCoding_setName(self._jobj_ref, name)
         return
 
     def getDescription(self):
@@ -1412,14 +1416,14 @@ represent index values (e.g. types, classes, categories).
            Returns a short textual description for this products node.
            @return a description or <code>null</code>
         """
-        return IndexCoding_getDescription(self._obj)
+        return IndexCoding_getDescription(self._jobj_ref)
 
     def setDescription(self, description):
         """
            Sets a short textual description for this products node.
            @param description a description, can be <code>null</code>
         """
-        IndexCoding_setDescription(self._obj, description)
+        IndexCoding_setDescription(self._jobj_ref, description)
         return
 
     def isModified(self):
@@ -1427,10 +1431,10 @@ represent index values (e.g. types, classes, categories).
            Returns whether or not this node is modified.
            @return <code>true</code> if so
         """
-        return IndexCoding_isModified(self._obj)
+        return IndexCoding_isModified(self._jobj_ref)
 
     def toString(self):
-        return IndexCoding_toString(self._obj)
+        return IndexCoding_toString(self._jobj_ref)
 
     @staticmethod
     def isValidNodeName(name):
@@ -1449,21 +1453,21 @@ represent index values (e.g. types, classes, categories).
            @return the product, or <code>null</code> if this node was not owned by a product at the time this method was
            called
         """
-        return Product(IndexCoding_getProduct(self._obj))
+        return Product(IndexCoding_getProduct(self._jobj_ref))
 
     def getProductReader(self):
         """
            Returns the product reader for the product to which this node belongs to.
            @return the product reader, or <code>null</code> if no such exists
         """
-        return ProductReader(IndexCoding_getProductReader(self._obj))
+        return ProductReader(IndexCoding_getProductReader(self._jobj_ref))
 
     def getProductWriter(self):
         """
            Returns the product writer for the product to which this node belongs to.
            @return the product writer, or <code>null</code> if no such exists
         """
-        return ProductWriter(IndexCoding_getProductWriter(self._obj))
+        return ProductWriter(IndexCoding_getProductWriter(self._jobj_ref))
 
     def getDisplayName(self):
         """
@@ -1474,7 +1478,7 @@ represent index values (e.g. types, classes, categories).
            <code>null</code>
            @see #getProductRefString
         """
-        return IndexCoding_getDisplayName(self._obj)
+        return IndexCoding_getDisplayName(self._jobj_ref)
 
     def getProductRefString(self):
         """
@@ -1484,7 +1488,7 @@ represent index values (e.g. types, classes, categories).
            @return the product reference string. <br>or <code>null</code> if this node has no product <br>or
            <code>null</code> if its product reference number was inactive
         """
-        return IndexCoding_getProductRefString(self._obj)
+        return IndexCoding_getProductRefString(self._jobj_ref)
 
     def updateExpression(self, oldExternalName, newExternalName):
         """
@@ -1494,7 +1498,7 @@ represent index values (e.g. types, classes, categories).
            @param oldExternalName The old node name.
            @param newExternalName The new node name.
         """
-        IndexCoding_updateExpression(self._obj, oldExternalName, newExternalName)
+        IndexCoding_updateExpression(self._jobj_ref, oldExternalName, newExternalName)
         return
 
     def removeFromFile(self, productWriter):
@@ -1503,11 +1507,11 @@ represent index values (e.g. types, classes, categories).
            does nothing.
            @param productWriter the product writer to be used to remove this node from the underlying file.
         """
-        IndexCoding_removeFromFile(self._obj, productWriter._obj)
+        IndexCoding_removeFromFile(self._jobj_ref, productWriter._jobj_ref)
         return
 
     def getExtension(self, arg0):
-        return Object(IndexCoding_getExtension(self._obj, arg0._obj))
+        return Object(IndexCoding_getExtension(self._jobj_ref, arg0._jobj_ref))
 
 
 class Term(JObject):
@@ -1598,34 +1602,34 @@ class PixelPos(JObject):
            Tests whether or not this pixel position is valid.
            @return true, if so
         """
-        return PixelPos_isValid(self._obj)
+        return PixelPos_isValid(self._jobj_ref)
 
     def setInvalid(self):
         """
            Sets this pixel position so that is becomes invalid.
         """
-        PixelPos_setInvalid(self._obj)
+        PixelPos_setInvalid(self._jobj_ref)
         return
 
     def getX(self):
-        return PixelPos_getX(self._obj)
+        return PixelPos_getX(self._jobj_ref)
 
     def getY(self):
-        return PixelPos_getY(self._obj)
+        return PixelPos_getY(self._jobj_ref)
 
     def setLocation1(self, arg0, arg1):
-        PixelPos_setLocation1(self._obj, arg0, arg1)
+        PixelPos_setLocation1(self._jobj_ref, arg0, arg1)
         return
 
     def setLocation2(self, arg0, arg1):
-        PixelPos_setLocation2(self._obj, arg0, arg1)
+        PixelPos_setLocation2(self._jobj_ref, arg0, arg1)
         return
 
     def toString(self):
-        return PixelPos_toString(self._obj)
+        return PixelPos_toString(self._jobj_ref)
 
     def setLocation3(self, arg0):
-        PixelPos_setLocation3(self._obj, arg0._obj)
+        PixelPos_setLocation3(self._jobj_ref, arg0._jobj_ref)
         return
 
     @staticmethod
@@ -1637,25 +1641,25 @@ class PixelPos(JObject):
         return PixelPos_distance2(arg0, arg1, arg2, arg3)
 
     def distanceSq1(self, arg0, arg1):
-        return PixelPos_distanceSq1(self._obj, arg0, arg1)
+        return PixelPos_distanceSq1(self._jobj_ref, arg0, arg1)
 
     def distanceSq3(self, arg0):
-        return PixelPos_distanceSq3(self._obj, arg0._obj)
+        return PixelPos_distanceSq3(self._jobj_ref, arg0._jobj_ref)
 
     def distance1(self, arg0, arg1):
-        return PixelPos_distance1(self._obj, arg0, arg1)
+        return PixelPos_distance1(self._jobj_ref, arg0, arg1)
 
     def distance3(self, arg0):
-        return PixelPos_distance3(self._obj, arg0._obj)
+        return PixelPos_distance3(self._jobj_ref, arg0._jobj_ref)
 
     def clone(self):
-        return Object(PixelPos_clone(self._obj))
+        return Object(PixelPos_clone(self._jobj_ref))
 
     def hashCode(self):
-        return PixelPos_hashCode(self._obj)
+        return PixelPos_hashCode(self._jobj_ref)
 
     def equals(self, arg0):
-        return PixelPos_equals(self._obj, arg0._obj)
+        return PixelPos_equals(self._jobj_ref, arg0._jobj_ref)
 
 
 class BitRaster(JObject):
@@ -1784,7 +1788,7 @@ ProductIO.writeProduct(product, "HDF5", "test.h5", null);
            @return a product reader for the given file or <code>null</code> if the file cannot be decoded.
            @deprecated Since BEAM 4.10. Use {@link #getProductReaderForInput(Object)} instead.
         """
-        return ProductReader(ProductIO_getProductReaderForFile(file._obj))
+        return ProductReader(ProductIO_getProductReaderForFile(file._jobj_ref))
 
     @staticmethod
     def getProductReaderForInput(input):
@@ -1801,7 +1805,7 @@ ProductIO.writeProduct(product, "HDF5", "test.h5", null);
            @see ProductReaderPlugIn#getDecodeQualification(Object)
            @see ProductReader#readProductNodes(Object, ProductSubsetDef)
         """
-        return ProductReader(ProductIO_getProductReaderForInput(input._obj))
+        return ProductReader(ProductIO_getProductReaderForInput(input._jobj_ref))
 
     @staticmethod
     def writeProduct(product, filePath, formatName):
@@ -1818,7 +1822,7 @@ ProductIO.writeProduct(product, "HDF5", "test.h5", null);
            "BEAM-DIMAP" will be used
            @throws IOException if an IOException occurs
         """
-        ProductIO_writeProduct(product._obj, filePath, formatName)
+        ProductIO_writeProduct(product._jobj_ref, filePath, formatName)
         return
 
 
@@ -1845,10 +1849,10 @@ class AngularDirection(JObject):
         return AngularDirection(AngularDirection_newAngularDirection(azimuth, zenith))
 
     def equals(self, obj):
-        return AngularDirection_equals(self._obj, obj._obj)
+        return AngularDirection_equals(self._jobj_ref, obj._jobj_ref)
 
     def toString(self):
-        return AngularDirection_toString(self._obj)
+        return AngularDirection_toString(self._jobj_ref)
 
 
 class SimpleFeatureType(JObject):
@@ -1894,21 +1898,21 @@ given data product as input source.
            Returns the plug-in which created this product reader.
            @return the product reader plug-in, should never be <code>null</code>
         """
-        return ProductReaderPlugIn(ProductReader_getReaderPlugIn(self._obj))
+        return ProductReaderPlugIn(ProductReader_getReaderPlugIn(self._jobj_ref))
 
     def getInput(self):
         """
            Retrives the current input destination object. Thie return value might be <code>null</code> if the
            <code>setInput</code> has not been called so far.
         """
-        return Object(ProductReader_getInput(self._obj))
+        return Object(ProductReader_getInput(self._jobj_ref))
 
     def getSubsetDef(self):
         """
            Returns the subset information with which this a data product is read from its physical source.
            @return the subset information, can be <code>null</code>
         """
-        return ProductSubsetDef(ProductReader_getSubsetDef(self._obj))
+        return ProductSubsetDef(ProductReader_getSubsetDef(self._jobj_ref))
 
     def readProductNodes(self, input, subsetDef):
         """
@@ -1928,7 +1932,7 @@ given data product as input source.
            @throws IOException                if an I/O error occurs
            @throws IllegalFileFormatException if the file format is illegal
         """
-        return Product(ProductReader_readProductNodes(self._obj, input._obj, subsetDef._obj))
+        return Product(ProductReader_readProductNodes(self._jobj_ref, input._jobj_ref, subsetDef._jobj_ref))
 
     def readBandRasterData(self, destBand, destOffsetX, destOffsetY, destWidth, destHeight, destBuffer, pm):
         """
@@ -1964,7 +1968,7 @@ given data product as input source.
            @see Band#getSceneRasterWidth()
            @see Band#getSceneRasterHeight()
         """
-        ProductReader_readBandRasterData(self._obj, destBand._obj, destOffsetX, destOffsetY, destWidth, destHeight, destBuffer._obj, pm._obj)
+        ProductReader_readBandRasterData(self._jobj_ref, destBand._jobj_ref, destOffsetX, destOffsetY, destWidth, destHeight, destBuffer._jobj_ref, pm._jobj_ref)
         return
 
     def close(self):
@@ -1978,7 +1982,7 @@ given data product as input source.
            Overrides of this method should always call <code>super.close();</code> after disposing this instance.
            @throws IOException if an I/O error occurs
         """
-        ProductReader_close(self._obj)
+        ProductReader_close(self._jobj_ref)
         return
 
 
@@ -2099,35 +2103,35 @@ and <code>writePixel</code> perform the inverse operations in this case.
            Gets the flag coding for this band.
            @return a non-null value if this band is a flag dataset, <code>null</code> otherwise
         """
-        return FlagCoding(Band_getFlagCoding(self._obj))
+        return FlagCoding(Band_getFlagCoding(self._jobj_ref))
 
     def isFlagBand(self):
         """
            Tests whether or not this band is a flag band (<code>getFlagCoding() != null</code>).
            @return <code>true</code> if so
         """
-        return Band_isFlagBand(self._obj)
+        return Band_isFlagBand(self._jobj_ref)
 
     def getIndexCoding(self):
         """
            Gets the index coding for this band.
            @return a non-null value if this band is a flag dataset, <code>null</code> otherwise
         """
-        return IndexCoding(Band_getIndexCoding(self._obj))
+        return IndexCoding(Band_getIndexCoding(self._jobj_ref))
 
     def isIndexBand(self):
         """
            Tests whether or not this band is an index band (<code>getIndexCoding() != null</code>).
            @return <code>true</code> if so
         """
-        return Band_isIndexBand(self._obj)
+        return Band_isIndexBand(self._jobj_ref)
 
     def getSampleCoding(self):
         """
            Gets the sample coding.
            @return the sample coding, or {@value null} if not set.
         """
-        return SampleCoding(Band_getSampleCoding(self._obj))
+        return SampleCoding(Band_getSampleCoding(self._jobj_ref))
 
     def setSampleCoding(self, sampleCoding):
         """
@@ -2135,7 +2139,7 @@ and <code>writePixel</code> perform the inverse operations in this case.
            @param sampleCoding the sample coding
            @throws IllegalArgumentException if this band does not contain integer pixels
         """
-        Band_setSampleCoding(self._obj, sampleCoding._obj)
+        Band_setSampleCoding(self._jobj_ref, sampleCoding._jobj_ref)
         return
 
     def getSpectralBandIndex(self):
@@ -2143,14 +2147,14 @@ and <code>writePixel</code> perform the inverse operations in this case.
            Gets the (zero-based) spectral band index.
            @return the (zero-based) spectral band index or <code>-1</code> if it is unknown
         """
-        return Band_getSpectralBandIndex(self._obj)
+        return Band_getSpectralBandIndex(self._jobj_ref)
 
     def setSpectralBandIndex(self, spectralBandIndex):
         """
            Sets the (zero-based) spectral band index.
            @param spectralBandIndex the (zero-based) spectral band index or <code>-1</code> if it is unknown
         """
-        Band_setSpectralBandIndex(self._obj, spectralBandIndex)
+        Band_setSpectralBandIndex(self._jobj_ref, spectralBandIndex)
         return
 
     def getSpectralWavelength(self):
@@ -2159,7 +2163,7 @@ and <code>writePixel</code> perform the inverse operations in this case.
            @return the wave length in nanometers of this band, or zero if this is not a spectral band or the wave length is
            not known.
         """
-        return Band_getSpectralWavelength(self._obj)
+        return Band_getSpectralWavelength(self._jobj_ref)
 
     def setSpectralWavelength(self, spectralWavelength):
         """
@@ -2167,7 +2171,7 @@ and <code>writePixel</code> perform the inverse operations in this case.
            @param spectralWavelength the wavelength in nanometers of this band, or zero if this is not a spectral band or
            the wavelength is not known.
         """
-        Band_setSpectralWavelength(self._obj, spectralWavelength)
+        Band_setSpectralWavelength(self._jobj_ref, spectralWavelength)
         return
 
     def getSpectralBandwidth(self):
@@ -2176,7 +2180,7 @@ and <code>writePixel</code> perform the inverse operations in this case.
            @return the bandwidth in nanometers of this band, or zero if this is not a spectral band or the bandwidth is not
            known.
         """
-        return Band_getSpectralBandwidth(self._obj)
+        return Band_getSpectralBandwidth(self._jobj_ref)
 
     def setSpectralBandwidth(self, spectralBandwidth):
         """
@@ -2184,7 +2188,7 @@ and <code>writePixel</code> perform the inverse operations in this case.
            @param spectralBandwidth the spectral bandwidth in nanometers of this band, or zero if this is not a spectral band
            or the spectral bandwidth is not known.
         """
-        Band_setSpectralBandwidth(self._obj, spectralBandwidth)
+        Band_setSpectralBandwidth(self._jobj_ref, spectralBandwidth)
         return
 
     def getSolarFlux(self):
@@ -2194,7 +2198,7 @@ and <code>writePixel</code> perform the inverse operations in this case.
            @return the solar flux for the wavelength of this band, or zero if this is not a spectral band or the solar flux
            is not known.
         """
-        return Band_getSolarFlux(self._obj)
+        return Band_getSolarFlux(self._jobj_ref)
 
     def setSolarFlux(self, solarFlux):
         """
@@ -2203,7 +2207,7 @@ and <code>writePixel</code> perform the inverse operations in this case.
            @param solarFlux the solar flux for the wavelength of this band, or zero if this is not a spectral band or the
            solar flux is not known.
         """
-        Band_setSolarFlux(self._obj, solarFlux)
+        Band_setSolarFlux(self._jobj_ref, solarFlux)
         return
 
     def acceptVisitor(self, visitor):
@@ -2215,17 +2219,17 @@ and <code>writePixel</code> perform the inverse operations in this case.
            The method simply calls <code>visitor.visit(this)</code>.
            @param visitor the visitor, must not be <code>null</code>
         """
-        Band_acceptVisitor(self._obj, visitor._obj)
+        Band_acceptVisitor(self._jobj_ref, visitor._jobj_ref)
         return
 
     def toString(self):
         """
            Creates a string defining this band object.
         """
-        return Band_toString(self._obj)
+        return Band_toString(self._jobj_ref)
 
     def removeFromFile(self, productWriter):
-        Band_removeFromFile(self._obj, productWriter._obj)
+        Band_removeFromFile(self._jobj_ref, productWriter._jobj_ref)
         return
 
     def dispose(self):
@@ -2238,11 +2242,11 @@ and <code>writePixel</code> perform the inverse operations in this case.
            
            Overrides of this method should always call <code>super.dispose();</code> after disposing this instance.
         """
-        Band_dispose(self._obj)
+        Band_dispose(self._jobj_ref)
         return
 
     def getViewModeId(self, bandName):
-        return Band_getViewModeId(self._obj, bandName)
+        return Band_getViewModeId(self._jobj_ref, bandName)
 
     def computeBand(self, expression, validMaskExpression, sourceProducts, defaultProductIndex, checkInvalids, useInvalidValue, noDataValue, pm):
         """
@@ -2263,7 +2267,7 @@ and <code>writePixel</code> perform the inverse operations in this case.
            @throws ParseException if the expression syntax is invalid
            @deprecated Since BEAM 4.10. Use {@link VirtualBand} or {@link org.esa.beam.jai.VirtualBandOpImage}.
         """
-        return Band_computeBand(self._obj, expression, validMaskExpression, sourceProducts._obj, defaultProductIndex, checkInvalids, useInvalidValue, noDataValue, pm._obj)
+        return Band_computeBand(self._jobj_ref, expression, validMaskExpression, sourceProducts._jobj_ref, defaultProductIndex, checkInvalids, useInvalidValue, noDataValue, pm._jobj_ref)
 
     def getSceneRasterData(self):
         """
@@ -2279,7 +2283,7 @@ and <code>writePixel</code> perform the inverse operations in this case.
            @see RasterDataNode#getSceneRasterHeight
            @deprecated since BEAM 4.11, use {@link #getSourceImage()} instead.
         """
-        return ProductData(Band_getSceneRasterData(self._obj))
+        return ProductData(Band_getSceneRasterData(self._jobj_ref))
 
     def getPixelInt(self, x, y):
         """
@@ -2291,7 +2295,7 @@ and <code>writePixel</code> perform the inverse operations in this case.
            if the co-ordinates are not in bounds
            @deprecated since BEAM 4.11, use {@link #getSampleInt(int, int)} instead.
         """
-        return Band_getPixelInt(self._obj, x, y)
+        return Band_getPixelInt(self._jobj_ref, x, y)
 
     def getPixelFloat(self, x, y):
         """
@@ -2303,7 +2307,7 @@ and <code>writePixel</code> perform the inverse operations in this case.
            if the co-ordinates are not in bounds
            @deprecated since BEAM 4.11, use {@link #getSampleFloat(int, int)} instead.
         """
-        return Band_getPixelFloat(self._obj, x, y)
+        return Band_getPixelFloat(self._jobj_ref, x, y)
 
     def getPixelDouble(self, x, y):
         """
@@ -2315,7 +2319,7 @@ and <code>writePixel</code> perform the inverse operations in this case.
            if the co-ordinates are not in bounds
            @deprecated since BEAM 4.11, use {@link #getSampleFloat(int, int)} instead.
         """
-        return Band_getPixelDouble(self._obj, x, y)
+        return Band_getPixelDouble(self._jobj_ref, x, y)
 
     def setPixelInt(self, x, y, pixelValue):
         """
@@ -2326,7 +2330,7 @@ and <code>writePixel</code> perform the inverse operations in this case.
            @throws NullPointerException if this band has no raster data
            @deprecated since BEAM 4.11. No replacement.
         """
-        Band_setPixelInt(self._obj, x, y, pixelValue)
+        Band_setPixelInt(self._jobj_ref, x, y, pixelValue)
         return
 
     def setPixelFloat(self, x, y, pixelValue):
@@ -2338,7 +2342,7 @@ and <code>writePixel</code> perform the inverse operations in this case.
            @throws NullPointerException if this band has no raster data
            @deprecated since BEAM 4.11. No replacement.
         """
-        Band_setPixelFloat(self._obj, x, y, pixelValue)
+        Band_setPixelFloat(self._jobj_ref, x, y, pixelValue)
         return
 
     def setPixelDouble(self, x, y, pixelValue):
@@ -2350,7 +2354,7 @@ and <code>writePixel</code> perform the inverse operations in this case.
            @throws NullPointerException if this band has no raster data
            @deprecated since BEAM 4.11. No replacement.
         """
-        Band_setPixelDouble(self._obj, x, y, pixelValue)
+        Band_setPixelDouble(self._jobj_ref, x, y, pixelValue)
         return
 
     def setPixelsInt(self, x, y, w, h, pixels):
@@ -2366,7 +2370,7 @@ and <code>writePixel</code> perform the inverse operations in this case.
            @deprecated since BEAM 4.11. Use {@link #setSourceImage setSourceImage()} or the various {@link #writePixels readPixels()}
            method variants to set or write raster data.
         """
-        Band_setPixelsInt(self._obj, x, y, w, h, pixels)
+        Band_setPixelsInt(self._jobj_ref, x, y, w, h, pixels)
         return
 
     def setPixelsFloat(self, x, y, w, h, pixels):
@@ -2382,7 +2386,7 @@ and <code>writePixel</code> perform the inverse operations in this case.
            @deprecated since BEAM 4.11. Use {@link #setSourceImage setSourceImage()} or the various {@link #writePixels readPixels()}
            method variants to set or write raster data.
         """
-        Band_setPixelsFloat(self._obj, x, y, w, h, pixels)
+        Band_setPixelsFloat(self._jobj_ref, x, y, w, h, pixels)
         return
 
     def setPixelsDouble(self, x, y, w, h, pixels):
@@ -2398,7 +2402,7 @@ and <code>writePixel</code> perform the inverse operations in this case.
            @deprecated since BEAM 4.11. Use {@link #setSourceImage setSourceImage()} or the various {@link #writePixels readPixels()}
            method variants to set or write raster data.
         """
-        Band_setPixelsDouble(self._obj, x, y, w, h, pixels)
+        Band_setPixelsDouble(self._jobj_ref, x, y, w, h, pixels)
         return
 
     def ensureRasterData(self):
@@ -2406,7 +2410,7 @@ and <code>writePixel</code> perform the inverse operations in this case.
            Ensures that raster data exists
            @deprecated since BEAM 4.11. No replacement.
         """
-        Band_ensureRasterData(self._obj)
+        Band_ensureRasterData(self._jobj_ref)
         return
 
     def unloadRasterData(self):
@@ -2419,7 +2423,7 @@ and <code>writePixel</code> perform the inverse operations in this case.
            @see #loadRasterData()
            @deprecated since BEAM 4.11. No replacement.
         """
-        Band_unloadRasterData(self._obj)
+        Band_unloadRasterData(self._jobj_ref)
         return
 
     def getSceneRasterWidth(self):
@@ -2428,7 +2432,7 @@ and <code>writePixel</code> perform the inverse operations in this case.
            returns <code>getRasterWidth()</code>.
            @return the scene width in pixels
         """
-        return Band_getSceneRasterWidth(self._obj)
+        return Band_getSceneRasterWidth(self._jobj_ref)
 
     def getSceneRasterHeight(self):
         """
@@ -2436,24 +2440,24 @@ and <code>writePixel</code> perform the inverse operations in this case.
            returns <code>getRasterHeight()</code>.
            @return the scene height in pixels
         """
-        return Band_getSceneRasterHeight(self._obj)
+        return Band_getSceneRasterHeight(self._jobj_ref)
 
     def getRasterWidth(self):
         """
            Returns the width of the raster used by this product raster.
            @return the width of the raster
         """
-        return Band_getRasterWidth(self._obj)
+        return Band_getRasterWidth(self._jobj_ref)
 
     def getRasterHeight(self):
         """
            Returns the height of the raster used by this product raster.
            @return the height of the raster
         """
-        return Band_getRasterHeight(self._obj)
+        return Band_getRasterHeight(self._jobj_ref)
 
     def setModified(self, modified):
-        Band_setModified(self._obj, modified)
+        Band_setModified(self._jobj_ref, modified)
         return
 
     def getGeoCoding(self):
@@ -2461,7 +2465,7 @@ and <code>writePixel</code> perform the inverse operations in this case.
            Returns the geo-coding of this {@link RasterDataNode}.
            @return the geo-coding
         """
-        return GeoCoding(Band_getGeoCoding(self._obj))
+        return GeoCoding(Band_getGeoCoding(self._jobj_ref))
 
     def setGeoCoding(self, geoCoding):
         """
@@ -2472,7 +2476,7 @@ and <code>writePixel</code> perform the inverse operations in this case.
            @param geoCoding the new geo-coding
            @see Product#setGeoCoding(GeoCoding)
         """
-        Band_setGeoCoding(self._obj, geoCoding._obj)
+        Band_setGeoCoding(self._jobj_ref, geoCoding._jobj_ref)
         return
 
     def getPointing(self):
@@ -2482,21 +2486,21 @@ and <code>writePixel</code> perform the inverse operations in this case.
            since the last creation of this raster's {@link Pointing} instance.
            @return the pointing object, or null if a pointing is not available
         """
-        return Pointing(Band_getPointing(self._obj))
+        return Pointing(Band_getPointing(self._jobj_ref))
 
     def canBeOrthorectified(self):
         """
            Tests if this raster data node can be orthorectified.
            @return true, if so
         """
-        return Band_canBeOrthorectified(self._obj)
+        return Band_canBeOrthorectified(self._jobj_ref)
 
     def isFloatingPointType(self):
         """
            Returns <code>true</code> if the pixel data contained in this band is "naturally" a floating point number type.
            @return true, if so
         """
-        return Band_isFloatingPointType(self._obj)
+        return Band_isFloatingPointType(self._jobj_ref)
 
     def getGeophysicalDataType(self):
         """
@@ -2506,7 +2510,7 @@ and <code>writePixel</code> perform the inverse operations in this case.
            @see ProductData
            @see #isScalingApplied()
         """
-        return Band_getGeophysicalDataType(self._obj)
+        return Band_getGeophysicalDataType(self._jobj_ref)
 
     def getScalingFactor(self):
         """
@@ -2515,7 +2519,7 @@ and <code>writePixel</code> perform the inverse operations in this case.
            @return the scaling factor
            @see #isScalingApplied()
         """
-        return Band_getScalingFactor(self._obj)
+        return Band_getScalingFactor(self._jobj_ref)
 
     def setScalingFactor(self, scalingFactor):
         """
@@ -2523,7 +2527,7 @@ and <code>writePixel</code> perform the inverse operations in this case.
            @param scalingFactor the scaling factor
            @see #isScalingApplied()
         """
-        Band_setScalingFactor(self._obj, scalingFactor)
+        Band_setScalingFactor(self._jobj_ref, scalingFactor)
         return
 
     def getScalingOffset(self):
@@ -2533,7 +2537,7 @@ and <code>writePixel</code> perform the inverse operations in this case.
            @return the scaling offset
            @see #isScalingApplied()
         """
-        return Band_getScalingOffset(self._obj)
+        return Band_getScalingOffset(self._jobj_ref)
 
     def setScalingOffset(self, scalingOffset):
         """
@@ -2541,7 +2545,7 @@ and <code>writePixel</code> perform the inverse operations in this case.
            @param scalingOffset the scaling offset
            @see #isScalingApplied()
         """
-        Band_setScalingOffset(self._obj, scalingOffset)
+        Band_setScalingOffset(self._jobj_ref, scalingOffset)
         return
 
     def isLog10Scaled(self):
@@ -2552,7 +2556,7 @@ and <code>writePixel</code> perform the inverse operations in this case.
            @return whether or not the data is logging-10 scaled
            @see #isScalingApplied()
         """
-        return Band_isLog10Scaled(self._obj)
+        return Band_isLog10Scaled(self._jobj_ref)
 
     def setLog10Scaled(self, log10Scaled):
         """
@@ -2561,7 +2565,7 @@ and <code>writePixel</code> perform the inverse operations in this case.
            @param log10Scaled whether or not the data is logging-10 scaled
            @see #isScalingApplied()
         """
-        Band_setLog10Scaled(self._obj, log10Scaled)
+        Band_setLog10Scaled(self._jobj_ref, log10Scaled)
         return
 
     def isScalingApplied(self):
@@ -2577,7 +2581,7 @@ and <code>writePixel</code> perform the inverse operations in this case.
            @see #getScalingFactor
            @see #isLog10Scaled
         """
-        return Band_isScalingApplied(self._obj)
+        return Band_isScalingApplied(self._jobj_ref)
 
     @staticmethod
     def isValidMaskProperty(propertyName):
@@ -2596,13 +2600,13 @@ and <code>writePixel</code> perform the inverse operations in this case.
            @see #isNoDataValueUsed()
            @see #setNoDataValue(double)
         """
-        return Band_isNoDataValueSet(self._obj)
+        return Band_isNoDataValueSet(self._jobj_ref)
 
     def clearNoDataValue(self):
         """
            Clears the no-data value, so that {@link #isNoDataValueSet()} will return <code>false</code>.
         """
-        Band_clearNoDataValue(self._obj)
+        Band_clearNoDataValue(self._jobj_ref)
         return
 
     def isNoDataValueUsed(self):
@@ -2615,7 +2619,7 @@ and <code>writePixel</code> perform the inverse operations in this case.
            @see #setNoDataValueUsed(boolean)
            @see #isNoDataValueSet()
         """
-        return Band_isNoDataValueUsed(self._obj)
+        return Band_isNoDataValueUsed(self._jobj_ref)
 
     def setNoDataValueUsed(self, noDataValueUsed):
         """
@@ -2630,7 +2634,7 @@ and <code>writePixel</code> perform the inverse operations in this case.
            @param noDataValueUsed true, if so
            @see #isNoDataValueUsed()
         """
-        Band_setNoDataValueUsed(self._obj, noDataValueUsed)
+        Band_setNoDataValueUsed(self._jobj_ref, noDataValueUsed)
         return
 
     def getNoDataValue(self):
@@ -2646,7 +2650,7 @@ and <code>writePixel</code> perform the inverse operations in this case.
            @see #setNoDataValue(double)
            @see #isNoDataValueSet()
         """
-        return Band_getNoDataValue(self._obj)
+        return Band_getNoDataValue(self._jobj_ref)
 
     def setNoDataValue(self, noDataValue):
         """
@@ -2663,7 +2667,7 @@ and <code>writePixel</code> perform the inverse operations in this case.
            @see #getNoDataValue()
            @see #isNoDataValueSet()
         """
-        Band_setNoDataValue(self._obj, noDataValue)
+        Band_setNoDataValue(self._jobj_ref, noDataValue)
         return
 
     def getGeophysicalNoDataValue(self):
@@ -2676,7 +2680,7 @@ and <code>writePixel</code> perform the inverse operations in this case.
            @return the geophysical no-data value
            @see #setGeophysicalNoDataValue(double)
         """
-        return Band_getGeophysicalNoDataValue(self._obj)
+        return Band_getGeophysicalNoDataValue(self._jobj_ref)
 
     def setGeophysicalNoDataValue(self, noDataValue):
         """
@@ -2691,7 +2695,7 @@ and <code>writePixel</code> perform the inverse operations in this case.
            @see #setGeophysicalNoDataValue(double)
            @see #isNoDataValueSet()
         """
-        Band_setGeophysicalNoDataValue(self._obj, noDataValue)
+        Band_setGeophysicalNoDataValue(self._jobj_ref, noDataValue)
         return
 
     def getValidPixelExpression(self):
@@ -2702,7 +2706,7 @@ and <code>writePixel</code> perform the inverse operations in this case.
            method.
            @return the valid mask expression.
         """
-        return Band_getValidPixelExpression(self._obj)
+        return Band_getValidPixelExpression(self._jobj_ref)
 
     def setValidPixelExpression(self, validPixelExpression):
         """
@@ -2714,7 +2718,7 @@ and <code>writePixel</code> perform the inverse operations in this case.
            name {@link #PROPERTY_NAME_VALID_PIXEL_EXPRESSION}.
            @param validPixelExpression the valid mask expression, can be null
         """
-        Band_setValidPixelExpression(self._obj, validPixelExpression)
+        Band_setValidPixelExpression(self._jobj_ref, validPixelExpression)
         return
 
     def isValidMaskUsed(self):
@@ -2726,14 +2730,14 @@ and <code>writePixel</code> perform the inverse operations in this case.
            method.
            @return true, if so
         """
-        return Band_isValidMaskUsed(self._obj)
+        return Band_isValidMaskUsed(self._jobj_ref)
 
     def resetValidMask(self):
         """
            Resets the valid mask of this raster.
            The mask will be lazily regenerated when requested the next time.
         """
-        Band_resetValidMask(self._obj)
+        Band_resetValidMask(self._jobj_ref)
         return
 
     def getValidMaskExpression(self):
@@ -2747,13 +2751,13 @@ and <code>writePixel</code> perform the inverse operations in this case.
            @see #getValidPixelExpression()
            @see #getNoDataValue()
         """
-        return Band_getValidMaskExpression(self._obj)
+        return Band_getValidMaskExpression(self._jobj_ref)
 
     def updateExpression(self, oldExternalName, newExternalName):
         """
            {@inheritDoc}
         """
-        Band_updateExpression(self._obj, oldExternalName, newExternalName)
+        Band_updateExpression(self._jobj_ref, oldExternalName, newExternalName)
         return
 
     def hasRasterData(self):
@@ -2763,7 +2767,7 @@ and <code>writePixel</code> perform the inverse operations in this case.
            @return true, if so.
            @deprecated since BEAM 4.11. No replacement.
         """
-        return Band_hasRasterData(self._obj)
+        return Band_hasRasterData(self._jobj_ref)
 
     def getRasterData(self):
         """
@@ -2773,7 +2777,7 @@ and <code>writePixel</code> perform the inverse operations in this case.
            @deprecated Since BEAM 4.11. Use {@link #getSourceImage()} or the various {@link #readPixels readPixels()}
            method variants to retrieve or read raster data.
         """
-        return ProductData(Band_getRasterData(self._obj))
+        return ProductData(Band_getRasterData(self._jobj_ref))
 
     def setRasterData(self, rasterData):
         """
@@ -2787,7 +2791,7 @@ and <code>writePixel</code> perform the inverse operations in this case.
            @deprecated Since BEAM 4.11. Use {@link #setSourceImage setSourceImage()} or the various {@link #writePixels readPixels()}
            method variants to set or write raster data.
         """
-        Band_setRasterData(self._obj, rasterData._obj)
+        Band_setRasterData(self._jobj_ref, rasterData._jobj_ref)
         return
 
     def loadRasterData(self):
@@ -2796,7 +2800,7 @@ and <code>writePixel</code> perform the inverse operations in this case.
            @see #loadRasterData(com.bc.ceres.core.ProgressMonitor)
            @deprecated since BEAM 4.11. No replacement.
         """
-        Band_loadRasterData(self._obj)
+        Band_loadRasterData(self._jobj_ref)
         return
 
     def isPixelValid(self, x, y):
@@ -2817,7 +2821,7 @@ and <code>writePixel</code> perform the inverse operations in this case.
            @see #setNoDataValue(double)
            @see #setValidPixelExpression(String)
         """
-        return Band_isPixelValid(self._obj, x, y)
+        return Band_isPixelValid(self._jobj_ref, x, y)
 
     def getSampleInt(self, x, y):
         """
@@ -2829,7 +2833,7 @@ and <code>writePixel</code> perform the inverse operations in this case.
            @param y pixel Y coordinate
            @return The geo-physical sample value.
         """
-        return Band_getSampleInt(self._obj, x, y)
+        return Band_getSampleInt(self._jobj_ref, x, y)
 
     def getSampleFloat(self, x, y):
         """
@@ -2841,75 +2845,75 @@ and <code>writePixel</code> perform the inverse operations in this case.
            @param y pixel Y coordinate
            @return The geo-physical sample value.
         """
-        return Band_getSampleFloat(self._obj, x, y)
+        return Band_getSampleFloat(self._jobj_ref, x, y)
 
     def getPixelsInt(self, x, y, w, h, pixels):
         """
            @see #getPixels(int, int, int, int, int[], ProgressMonitor)
            @deprecated since BEAM 4.11. Use {@link #getSourceImage()} instead.
         """
-        return Band_getPixelsInt(self._obj, x, y, w, h, pixels)
+        return Band_getPixelsInt(self._jobj_ref, x, y, w, h, pixels)
 
     def getPixelsFloat(self, x, y, w, h, pixels):
         """
            @see #getPixels(int, int, int, int, float[], ProgressMonitor)
            @deprecated since BEAM 4.11. Use {@link #getSourceImage()} instead.
         """
-        return Band_getPixelsFloat(self._obj, x, y, w, h, pixels)
+        return Band_getPixelsFloat(self._jobj_ref, x, y, w, h, pixels)
 
     def getPixelsDouble(self, x, y, w, h, pixels):
         """
            @see #getPixels(int, int, int, int, double[], ProgressMonitor)
            @deprecated since BEAM 4.11. Use {@link #getSourceImage()} instead.
         """
-        return Band_getPixelsDouble(self._obj, x, y, w, h, pixels)
+        return Band_getPixelsDouble(self._jobj_ref, x, y, w, h, pixels)
 
     def readPixelsInt(self, x, y, w, h, pixels):
         """
            @see #readPixels(int, int, int, int, int[], ProgressMonitor)
         """
-        return Band_readPixelsInt(self._obj, x, y, w, h, pixels)
+        return Band_readPixelsInt(self._jobj_ref, x, y, w, h, pixels)
 
     def readPixelsFloat(self, x, y, w, h, pixels):
         """
            @see #readPixels(int, int, int, int, float[], ProgressMonitor)
            @deprecated since BEAM 4.11. Use {@link #getSourceImage()} instead.
         """
-        return Band_readPixelsFloat(self._obj, x, y, w, h, pixels)
+        return Band_readPixelsFloat(self._jobj_ref, x, y, w, h, pixels)
 
     def readPixelsDouble(self, x, y, w, h, pixels):
         """
            @see #readPixels(int, int, int, int, double[], ProgressMonitor)
            @deprecated since BEAM 4.11. Use {@link #getSourceImage()} instead.
         """
-        return Band_readPixelsDouble(self._obj, x, y, w, h, pixels)
+        return Band_readPixelsDouble(self._jobj_ref, x, y, w, h, pixels)
 
     def writePixelsInt(self, x, y, w, h, pixels):
         """
            @see #writePixels(int, int, int, int, int[], ProgressMonitor)
         """
-        Band_writePixelsInt(self._obj, x, y, w, h, pixels)
+        Band_writePixelsInt(self._jobj_ref, x, y, w, h, pixels)
         return
 
     def writePixelsFloat(self, x, y, w, h, pixels):
         """
            @see #writePixels(int, int, int, int, float[], ProgressMonitor)
         """
-        Band_writePixelsFloat(self._obj, x, y, w, h, pixels)
+        Band_writePixelsFloat(self._jobj_ref, x, y, w, h, pixels)
         return
 
     def writePixelsDouble(self, x, y, w, h, pixels):
         """
            @see #writePixels(int, int, int, int, double[], ProgressMonitor)
         """
-        Band_writePixelsDouble(self._obj, x, y, w, h, pixels)
+        Band_writePixelsDouble(self._jobj_ref, x, y, w, h, pixels)
         return
 
     def readValidMask(self, x, y, w, h, validMask):
-        return Band_readValidMask(self._obj, x, y, w, h, validMask)
+        return Band_readValidMask(self._jobj_ref, x, y, w, h, validMask)
 
     def writeRasterDataFully(self):
-        Band_writeRasterDataFully(self._obj)
+        Band_writeRasterDataFully(self._jobj_ref)
         return
 
     def writeRasterData(self, offsetX, offsetY, width, height, rasterData):
@@ -2917,7 +2921,7 @@ and <code>writePixel</code> perform the inverse operations in this case.
            @deprecated since BEAM 4.11. Use {@link #setSourceImage setSourceImage()} or the various {@link #writePixels
            readPixels()} method variants to set or write raster data.
         """
-        Band_writeRasterData(self._obj, offsetX, offsetY, width, height, rasterData._obj)
+        Band_writeRasterData(self._jobj_ref, offsetX, offsetY, width, height, rasterData._jobj_ref)
         return
 
     def createCompatibleRasterData(self):
@@ -2927,7 +2931,7 @@ and <code>writePixel</code> perform the inverse operations in this case.
            @return raster data compatible with this product raster
            @see #createCompatibleSceneRasterData
         """
-        return ProductData(Band_createCompatibleRasterData(self._obj))
+        return ProductData(Band_createCompatibleRasterData(self._jobj_ref))
 
     def createCompatibleSceneRasterData(self):
         """
@@ -2936,7 +2940,7 @@ and <code>writePixel</code> perform the inverse operations in this case.
            @return raster data compatible with this product raster
            @see #createCompatibleRasterData
         """
-        return ProductData(Band_createCompatibleSceneRasterData(self._obj))
+        return ProductData(Band_createCompatibleSceneRasterData(self._jobj_ref))
 
     def createCompatibleRasterDataForRect(self, width, height):
         """
@@ -2948,7 +2952,7 @@ and <code>writePixel</code> perform the inverse operations in this case.
            @see #createCompatibleRasterData
            @see #createCompatibleSceneRasterData
         """
-        return ProductData(Band_createCompatibleRasterDataForRect(self._obj, width, height))
+        return ProductData(Band_createCompatibleRasterDataForRect(self._jobj_ref, width, height))
 
     def isCompatibleRasterData(self, rasterData, w, h):
         """
@@ -2959,7 +2963,7 @@ and <code>writePixel</code> perform the inverse operations in this case.
            @return {@code true} if so
            @deprecated since BEAM 4.11. No replacement.
         """
-        return Band_isCompatibleRasterData(self._obj, rasterData._obj, w, h)
+        return Band_isCompatibleRasterData(self._jobj_ref, rasterData._jobj_ref, w, h)
 
     def checkCompatibleRasterData(self, rasterData, w, h):
         """
@@ -2969,7 +2973,7 @@ and <code>writePixel</code> perform the inverse operations in this case.
            @param h          the raster height
            @deprecated since BEAM 4.11. No replacement.
         """
-        Band_checkCompatibleRasterData(self._obj, rasterData._obj, w, h)
+        Band_checkCompatibleRasterData(self._jobj_ref, rasterData._jobj_ref, w, h)
         return
 
     def hasIntPixels(self):
@@ -2977,7 +2981,7 @@ and <code>writePixel</code> perform the inverse operations in this case.
            Determines whether this raster data node contains integer samples.
            @return true if this raster data node contains integer samples.
         """
-        return Band_hasIntPixels(self._obj)
+        return Band_hasIntPixels(self._jobj_ref)
 
     def createTransectProfileData(self, shape):
         """
@@ -2986,28 +2990,28 @@ and <code>writePixel</code> perform the inverse operations in this case.
            @return the profile data
            @throws IOException if an I/O error occurs
         """
-        return TransectProfileData(Band_createTransectProfileData(self._obj, shape._obj))
+        return TransectProfileData(Band_createTransectProfileData(self._jobj_ref, shape._jobj_ref))
 
     def getImageInfo(self):
         """
            Gets the image information for image display.
            @return the image info or null
         """
-        return ImageInfo(Band_getImageInfo(self._obj))
+        return ImageInfo(Band_getImageInfo(self._jobj_ref))
 
     def setImageInfo(self, imageInfo):
         """
            Sets the image information for image display.
            @param imageInfo the image info, can be null
         """
-        Band_setImageInfo(self._obj, imageInfo._obj)
+        Band_setImageInfo(self._jobj_ref, imageInfo._jobj_ref)
         return
 
     def fireImageInfoChanged(self):
         """
            Notifies listeners that the image (display) information has changed.
         """
-        Band_fireImageInfoChanged(self._obj)
+        Band_fireImageInfoChanged(self._jobj_ref)
         return
 
     def createDefaultImageInfo(self, histoSkipAreas, histogram):
@@ -3022,13 +3026,13 @@ and <code>writePixel</code> perform the inverse operations in this case.
            @param histogram      the histogram to create the image information.
            @return a valid image information instance, never <code>null</code>.
         """
-        return ImageInfo(Band_createDefaultImageInfo(self._obj, histoSkipAreas, histogram._obj))
+        return ImageInfo(Band_createDefaultImageInfo(self._jobj_ref, histoSkipAreas, histogram._jobj_ref))
 
     def getOverlayMaskGroup(self):
         """
            @return The overlay mask group.
         """
-        return ProductNodeGroup(Band_getOverlayMaskGroup(self._obj))
+        return ProductNodeGroup(Band_getOverlayMaskGroup(self._jobj_ref))
 
     def createColorIndexedImage(self, pm):
         """
@@ -3039,7 +3043,7 @@ and <code>writePixel</code> perform the inverse operations in this case.
            @throws IOException if the raster data is not loaded so far and reload causes an I/O error
            @see #setImageInfo(ImageInfo)
         """
-        return BufferedImage(Band_createColorIndexedImage(self._obj, pm._obj))
+        return BufferedImage(Band_createColorIndexedImage(self._jobj_ref, pm._jobj_ref))
 
     def createRgbImage(self, pm):
         """
@@ -3049,7 +3053,7 @@ and <code>writePixel</code> perform the inverse operations in this case.
            @throws IOException if the raster data is not loaded so far and reload causes an I/O error
            @see #setImageInfo(ImageInfo)
         """
-        return BufferedImage(Band_createRgbImage(self._obj, pm._obj))
+        return BufferedImage(Band_createRgbImage(self._jobj_ref, pm._jobj_ref))
 
     def createPixelValidator(self, lineOffset, roi):
         """
@@ -3059,7 +3063,7 @@ and <code>writePixel</code> perform the inverse operations in this case.
            @return a new validator instance, never null
            @throws IOException if an I/O error occurs
         """
-        return IndexValidator(Band_createPixelValidator(self._obj, lineOffset, roi._obj))
+        return IndexValidator(Band_createPixelValidator(self._jobj_ref, lineOffset, roi._jobj_ref))
 
     def scale(self, v):
         """
@@ -3069,7 +3073,7 @@ and <code>writePixel</code> perform the inverse operations in this case.
            @param v the input value
            @return the scaled value
         """
-        return Band_scale(self._obj, v)
+        return Band_scale(self._jobj_ref, v)
 
     def scaleInverse(self, v):
         """
@@ -3079,7 +3083,7 @@ and <code>writePixel</code> perform the inverse operations in this case.
            @param v the input value
            @return the scaled value
         """
-        return Band_scaleInverse(self._obj, v)
+        return Band_scaleInverse(self._jobj_ref, v)
 
     def getPixelString(self, x, y):
         """
@@ -3088,7 +3092,7 @@ and <code>writePixel</code> perform the inverse operations in this case.
            @param y the Y co-ordinate of the pixel location
            @return the pixel value at (x,y) as string or an error message text
         """
-        return Band_getPixelString(self._obj, x, y)
+        return Band_getPixelString(self._jobj_ref, x, y)
 
     def isSourceImageSet(self):
         """
@@ -3099,7 +3103,7 @@ and <code>writePixel</code> perform the inverse operations in this case.
            @see #setSourceImage(com.bc.ceres.glevel.MultiLevelImage)
            @see #createSourceImage()
         """
-        return Band_isSourceImageSet(self._obj)
+        return Band_isSourceImageSet(self._jobj_ref)
 
     def getSourceImage(self):
         """
@@ -3109,7 +3113,7 @@ and <code>writePixel</code> perform the inverse operations in this case.
            @see #createSourceImage()
            @see #isSourceImageSet()
         """
-        return MultiLevelImage(Band_getSourceImage(self._obj))
+        return MultiLevelImage(Band_getSourceImage(self._jobj_ref))
 
     def isGeophysicalImageSet(self):
         """
@@ -3118,30 +3122,30 @@ and <code>writePixel</code> perform the inverse operations in this case.
            This method belongs to preliminary API and may be removed or changed in the future.
            @return whether the geophysical image is set.
         """
-        return Band_isGeophysicalImageSet(self._obj)
+        return Band_isGeophysicalImageSet(self._jobj_ref)
 
     def getGeophysicalImage(self):
         """
            @return The geophysical source image.
         """
-        return MultiLevelImage(Band_getGeophysicalImage(self._obj))
+        return MultiLevelImage(Band_getGeophysicalImage(self._jobj_ref))
 
     def isValidMaskImageSet(self):
         """
            Returns wether the valid mask image is set on this {@code RasterDataNode}.
            @return Wether the source image is set.
         """
-        return Band_isValidMaskImageSet(self._obj)
+        return Band_isValidMaskImageSet(self._jobj_ref)
 
     def getValidMaskImage(self):
         """
            Gets the valid-mask image associated with this {@code RasterDataNode}.
            @return The rendered image.
         """
-        return MultiLevelImage(Band_getValidMaskImage(self._obj))
+        return MultiLevelImage(Band_getValidMaskImage(self._jobj_ref))
 
     def isStxSet(self):
-        return Band_isStxSet(self._obj)
+        return Band_isStxSet(self._jobj_ref)
 
     def getStx(self):
         """
@@ -3156,7 +3160,7 @@ and <code>writePixel</code> perform the inverse operations in this case.
            @see #getStx(boolean, com.bc.ceres.core.ProgressMonitor)
            @see #setStx(Stx)
         """
-        return Stx(Band_getStx(self._obj))
+        return Stx(Band_getStx(self._jobj_ref))
 
     def setStx(self, stx):
         """
@@ -3166,7 +3170,7 @@ and <code>writePixel</code> perform the inverse operations in this case.
            This method belongs to preliminary API and may be removed or changed in the future.
            @param stx The statistics.
         """
-        Band_setStx(self._obj, stx._obj)
+        Band_setStx(self._jobj_ref, stx._jobj_ref)
         return
 
     def getValidShape(self):
@@ -3175,47 +3179,48 @@ and <code>writePixel</code> perform the inverse operations in this case.
            The method returns <code>null</code>, if the entire raster contains valid samples.
            @return The shape of the area where the raster data has samples, can be {@code null}.
         """
-        return Shape(Band_getValidShape(self._obj))
+        return Shape(Band_getValidShape(self._jobj_ref))
 
     def getRoiMaskGroup(self):
         """
            @return The roi mask group.
            @deprecated since BEAM 4.10 (no replacement)
         """
-        return ProductNodeGroup(Band_getRoiMaskGroup(self._obj))
+        return ProductNodeGroup(Band_getRoiMaskGroup(self._jobj_ref))
 
     def getDataType(self):
         """
            Gets the data type of this data node.
            @return the data type which is always one of the multiple <code>ProductData.TYPE_<i>X</i></code> constants
         """
-        return Band_getDataType(self._obj)
+        return Band_getDataType(self._jobj_ref)
 
     def getNumDataElems(self):
         """
            Gets the number of data elements in this data node.
         """
-        return Band_getNumDataElems(self._obj)
+        return Band_getNumDataElems(self._jobj_ref)
 
     def setData(self, data):
         """
            Sets the data of this data node.
         """
-        Band_setData(self._obj, data._obj)
+        Band_setData(self._jobj_ref, data._jobj_ref)
         return
 
     def getData(self):
         """
            Gets the data of this data node.
         """
-        return ProductData(Band_getData(self._obj))
+        return ProductData(Band_getData(self._jobj_ref))
 
     def setDataElems(self, elems):
         """
            Sets the data elements of this data node.
+           @deprecated since 5.0
            @see ProductData#setElems(Object)
         """
-        Band_setDataElems(self._obj, elems._obj)
+        Band_setDataElems(self._jobj_ref, elems._jobj_ref)
         return
 
     def getDataElems(self):
@@ -3223,47 +3228,47 @@ and <code>writePixel</code> perform the inverse operations in this case.
            Gets the data elements of this data node.
            @see ProductData#getElems()
         """
-        return Object(Band_getDataElems(self._obj))
+        return Object(Band_getDataElems(self._jobj_ref))
 
     def getDataElemSize(self):
         """
            Gets the data element size in bytes.
            @see ProductData#getElemSize(int)
         """
-        return Band_getDataElemSize(self._obj)
+        return Band_getDataElemSize(self._jobj_ref)
 
     def setReadOnly(self, readOnly):
-        Band_setReadOnly(self._obj, readOnly)
+        Band_setReadOnly(self._jobj_ref, readOnly)
         return
 
     def isReadOnly(self):
-        return Band_isReadOnly(self._obj)
+        return Band_isReadOnly(self._jobj_ref)
 
     def setUnit(self, unit):
-        Band_setUnit(self._obj, unit)
+        Band_setUnit(self._jobj_ref, unit)
         return
 
     def getUnit(self):
-        return Band_getUnit(self._obj)
+        return Band_getUnit(self._jobj_ref)
 
     def isSynthetic(self):
         """
            @deprecated since BEAM 4.10 (not used, no replacement)
         """
-        return Band_isSynthetic(self._obj)
+        return Band_isSynthetic(self._jobj_ref)
 
     def setSynthetic(self, synthetic):
         """
            @deprecated since BEAM 4.10 (not used, no replacement)
         """
-        Band_setSynthetic(self._obj, synthetic)
+        Band_setSynthetic(self._jobj_ref, synthetic)
         return
 
     def fireProductNodeDataChanged(self):
         """
            Fires a node data changed event. This method is called after the data of this data node changed.
         """
-        Band_fireProductNodeDataChanged(self._obj)
+        Band_fireProductNodeDataChanged(self._jobj_ref)
         return
 
     def createCompatibleProductData(self, numElems):
@@ -3273,26 +3278,26 @@ and <code>writePixel</code> perform the inverse operations in this case.
            @param numElems the number of elements, must not be less than one
            @return product data compatible with this data node
         """
-        return ProductData(Band_createCompatibleProductData(self._obj, numElems))
+        return ProductData(Band_createCompatibleProductData(self._jobj_ref, numElems))
 
     def getOwner(self):
         """
            @return The owner node of this node.
         """
-        return ProductNode(Band_getOwner(self._obj))
+        return ProductNode(Band_getOwner(self._jobj_ref))
 
     def getName(self):
         """
            @return This node's name.
         """
-        return Band_getName(self._obj)
+        return Band_getName(self._jobj_ref)
 
     def setName(self, name):
         """
            Sets this product's name.
            @param name The name.
         """
-        Band_setName(self._obj, name)
+        Band_setName(self._jobj_ref, name)
         return
 
     def getDescription(self):
@@ -3300,14 +3305,14 @@ and <code>writePixel</code> perform the inverse operations in this case.
            Returns a short textual description for this products node.
            @return a description or <code>null</code>
         """
-        return Band_getDescription(self._obj)
+        return Band_getDescription(self._jobj_ref)
 
     def setDescription(self, description):
         """
            Sets a short textual description for this products node.
            @param description a description, can be <code>null</code>
         """
-        Band_setDescription(self._obj, description)
+        Band_setDescription(self._jobj_ref, description)
         return
 
     def isModified(self):
@@ -3315,7 +3320,7 @@ and <code>writePixel</code> perform the inverse operations in this case.
            Returns whether or not this node is modified.
            @return <code>true</code> if so
         """
-        return Band_isModified(self._obj)
+        return Band_isModified(self._jobj_ref)
 
     @staticmethod
     def isValidNodeName(name):
@@ -3334,21 +3339,21 @@ and <code>writePixel</code> perform the inverse operations in this case.
            @return the product, or <code>null</code> if this node was not owned by a product at the time this method was
            called
         """
-        return Product(Band_getProduct(self._obj))
+        return Product(Band_getProduct(self._jobj_ref))
 
     def getProductReader(self):
         """
            Returns the product reader for the product to which this node belongs to.
            @return the product reader, or <code>null</code> if no such exists
         """
-        return ProductReader(Band_getProductReader(self._obj))
+        return ProductReader(Band_getProductReader(self._jobj_ref))
 
     def getProductWriter(self):
         """
            Returns the product writer for the product to which this node belongs to.
            @return the product writer, or <code>null</code> if no such exists
         """
-        return ProductWriter(Band_getProductWriter(self._obj))
+        return ProductWriter(Band_getProductWriter(self._jobj_ref))
 
     def getDisplayName(self):
         """
@@ -3359,7 +3364,7 @@ and <code>writePixel</code> perform the inverse operations in this case.
            <code>null</code>
            @see #getProductRefString
         """
-        return Band_getDisplayName(self._obj)
+        return Band_getDisplayName(self._jobj_ref)
 
     def getProductRefString(self):
         """
@@ -3369,10 +3374,10 @@ and <code>writePixel</code> perform the inverse operations in this case.
            @return the product reference string. <br>or <code>null</code> if this node has no product <br>or
            <code>null</code> if its product reference number was inactive
         """
-        return Band_getProductRefString(self._obj)
+        return Band_getProductRefString(self._jobj_ref)
 
     def getExtension(self, arg0):
-        return Object(Band_getExtension(self._obj, arg0._obj))
+        return Object(Band_getExtension(self._jobj_ref, arg0._jobj_ref))
 
 
 class ColorPaletteDef_Point(JObject):
@@ -3422,7 +3427,7 @@ the placemarks of a product can be imported and exported.
            @param descriptor The placemark descriptor that created this placemark.
            @param feature    The wrapped feature.
         """
-        return Placemark(Placemark_newPlacemark(descriptor._obj, feature._obj))
+        return Placemark(Placemark_newPlacemark(descriptor._jobj_ref, feature._jobj_ref))
 
     @staticmethod
     def createPointPlacemark(descriptor, name, label, text, pixelPos, geoPos, geoCoding):
@@ -3437,19 +3442,19 @@ the placemarks of a product can be imported and exported.
            @param geoCoding  The placemark's geo-coding. Used to compute {@code pixelPos} from {@code geoPos}, if {@code pixelPos} is {@code null}.
            @return A new point placemark.
         """
-        return Placemark(Placemark_createPointPlacemark(descriptor._obj, name, label, text, pixelPos._obj, geoPos._obj, geoCoding._obj))
+        return Placemark(Placemark_createPointPlacemark(descriptor._jobj_ref, name, label, text, pixelPos._jobj_ref, geoPos._jobj_ref, geoCoding._jobj_ref))
 
     def getDescriptor(self):
         """
            @return The placemark descriptor that created this placemark.
         """
-        return PlacemarkDescriptor(Placemark_getDescriptor(self._obj))
+        return PlacemarkDescriptor(Placemark_getDescriptor(self._jobj_ref))
 
     def getFeature(self):
         """
            @return The wrapped {@link SimpleFeature} underlying this placemark.
         """
-        return SimpleFeature(Placemark_getFeature(self._obj))
+        return SimpleFeature(Placemark_getFeature(self._jobj_ref))
 
     def getAttributeValue(self, attributeName):
         """
@@ -3457,7 +3462,7 @@ the placemarks of a product can be imported and exported.
            @param attributeName The feature's attribute name.
            @return The feature's attribute value, may be {@code null}.
         """
-        return Object(Placemark_getAttributeValue(self._obj, attributeName))
+        return Object(Placemark_getAttributeValue(self._jobj_ref, attributeName))
 
     def setAttributeValue(self, attributeName, attributeValue):
         """
@@ -3465,7 +3470,7 @@ the placemarks of a product can be imported and exported.
            @param attributeName  The feature's attribute name.
            @param attributeValue The feature's attribute value, may be {@code null}.
         """
-        Placemark_setAttributeValue(self._obj, attributeName, attributeValue._obj)
+        Placemark_setAttributeValue(self._jobj_ref, attributeName, attributeValue._jobj_ref)
         return
 
     def setLabel(self, label):
@@ -3473,42 +3478,42 @@ the placemarks of a product can be imported and exported.
            Sets this placemark's label.
            @param label the label, if {@code null} an empty label is set.
         """
-        Placemark_setLabel(self._obj, label)
+        Placemark_setLabel(self._jobj_ref, label)
         return
 
     def getLabel(self):
         """
            @return This placemark's label, cannot be {@code null}.
         """
-        return Placemark_getLabel(self._obj)
+        return Placemark_getLabel(self._jobj_ref)
 
     def setText(self, text):
         """
            Sets this placemark's (XHTML) text.
            @param text The text, if {@code null} an empty text is set.
         """
-        Placemark_setText(self._obj, text)
+        Placemark_setText(self._jobj_ref, text)
         return
 
     def getText(self):
         """
            @return This placemark's (XHTML) text, cannot be {@code null}.
         """
-        return Placemark_getText(self._obj)
+        return Placemark_getText(self._jobj_ref)
 
     def setStyleCss(self, styleCss):
         """
            Sets this placemark's CSS style.
            @param styleCss The text, if {@code null} an empty text is set.
         """
-        Placemark_setStyleCss(self._obj, styleCss)
+        Placemark_setStyleCss(self._jobj_ref, styleCss)
         return
 
     def getStyleCss(self):
         """
            @return This placemark's CSS style, cannot be {@code null}.
         """
-        return Placemark_getStyleCss(self._obj)
+        return Placemark_getStyleCss(self._jobj_ref)
 
     def acceptVisitor(self, visitor):
         """
@@ -3517,28 +3522,28 @@ the placemarks of a product can be imported and exported.
            to it. The new operation is implemented by the visitor.
            @param visitor the visitor
         """
-        Placemark_acceptVisitor(self._obj, visitor._obj)
+        Placemark_acceptVisitor(self._jobj_ref, visitor._jobj_ref)
         return
 
     def getPixelPos(self):
-        return PixelPos(Placemark_getPixelPos(self._obj))
+        return PixelPos(Placemark_getPixelPos(self._jobj_ref))
 
     def setPixelPos(self, pixelPos):
-        Placemark_setPixelPos(self._obj, pixelPos._obj)
+        Placemark_setPixelPos(self._jobj_ref, pixelPos._jobj_ref)
         return
 
     def getGeoPos(self):
-        return GeoPos(Placemark_getGeoPos(self._obj))
+        return GeoPos(Placemark_getGeoPos(self._jobj_ref))
 
     def setGeoPos(self, geoPos):
-        Placemark_setGeoPos(self._obj, geoPos._obj)
+        Placemark_setGeoPos(self._jobj_ref, geoPos._jobj_ref)
         return
 
     def updatePositions(self):
         """
            Updates pixel and geo position according to the current geometry (model coordinates).
         """
-        Placemark_updatePositions(self._obj)
+        Placemark_updatePositions(self._jobj_ref)
         return
 
     @staticmethod
@@ -3561,20 +3566,20 @@ the placemarks of a product can be imported and exported.
         """
            @return The owner node of this node.
         """
-        return ProductNode(Placemark_getOwner(self._obj))
+        return ProductNode(Placemark_getOwner(self._jobj_ref))
 
     def getName(self):
         """
            @return This node's name.
         """
-        return Placemark_getName(self._obj)
+        return Placemark_getName(self._jobj_ref)
 
     def setName(self, name):
         """
            Sets this product's name.
            @param name The name.
         """
-        Placemark_setName(self._obj, name)
+        Placemark_setName(self._jobj_ref, name)
         return
 
     def getDescription(self):
@@ -3582,14 +3587,14 @@ the placemarks of a product can be imported and exported.
            Returns a short textual description for this products node.
            @return a description or <code>null</code>
         """
-        return Placemark_getDescription(self._obj)
+        return Placemark_getDescription(self._jobj_ref)
 
     def setDescription(self, description):
         """
            Sets a short textual description for this products node.
            @param description a description, can be <code>null</code>
         """
-        Placemark_setDescription(self._obj, description)
+        Placemark_setDescription(self._jobj_ref, description)
         return
 
     def isModified(self):
@@ -3597,7 +3602,7 @@ the placemarks of a product can be imported and exported.
            Returns whether or not this node is modified.
            @return <code>true</code> if so
         """
-        return Placemark_isModified(self._obj)
+        return Placemark_isModified(self._jobj_ref)
 
     def setModified(self, modified):
         """
@@ -3608,11 +3613,11 @@ the placemarks of a product can be imported and exported.
            @param modified whether or not this node is beeing marked as modified.
            @see Product#fireNodeChanged
         """
-        Placemark_setModified(self._obj, modified)
+        Placemark_setModified(self._jobj_ref, modified)
         return
 
     def toString(self):
-        return Placemark_toString(self._obj)
+        return Placemark_toString(self._jobj_ref)
 
     def dispose(self):
         """
@@ -3624,7 +3629,7 @@ the placemarks of a product can be imported and exported.
            
            Overrides of this method should always call <code>super.dispose();</code> after disposing this instance.
         """
-        Placemark_dispose(self._obj)
+        Placemark_dispose(self._jobj_ref)
         return
 
     @staticmethod
@@ -3644,21 +3649,21 @@ the placemarks of a product can be imported and exported.
            @return the product, or <code>null</code> if this node was not owned by a product at the time this method was
            called
         """
-        return Product(Placemark_getProduct(self._obj))
+        return Product(Placemark_getProduct(self._jobj_ref))
 
     def getProductReader(self):
         """
            Returns the product reader for the product to which this node belongs to.
            @return the product reader, or <code>null</code> if no such exists
         """
-        return ProductReader(Placemark_getProductReader(self._obj))
+        return ProductReader(Placemark_getProductReader(self._jobj_ref))
 
     def getProductWriter(self):
         """
            Returns the product writer for the product to which this node belongs to.
            @return the product writer, or <code>null</code> if no such exists
         """
-        return ProductWriter(Placemark_getProductWriter(self._obj))
+        return ProductWriter(Placemark_getProductWriter(self._jobj_ref))
 
     def getDisplayName(self):
         """
@@ -3669,7 +3674,7 @@ the placemarks of a product can be imported and exported.
            <code>null</code>
            @see #getProductRefString
         """
-        return Placemark_getDisplayName(self._obj)
+        return Placemark_getDisplayName(self._jobj_ref)
 
     def getProductRefString(self):
         """
@@ -3679,7 +3684,7 @@ the placemarks of a product can be imported and exported.
            @return the product reference string. <br>or <code>null</code> if this node has no product <br>or
            <code>null</code> if its product reference number was inactive
         """
-        return Placemark_getProductRefString(self._obj)
+        return Placemark_getProductRefString(self._jobj_ref)
 
     def updateExpression(self, oldExternalName, newExternalName):
         """
@@ -3689,7 +3694,7 @@ the placemarks of a product can be imported and exported.
            @param oldExternalName The old node name.
            @param newExternalName The new node name.
         """
-        Placemark_updateExpression(self._obj, oldExternalName, newExternalName)
+        Placemark_updateExpression(self._jobj_ref, oldExternalName, newExternalName)
         return
 
     def removeFromFile(self, productWriter):
@@ -3698,11 +3703,11 @@ the placemarks of a product can be imported and exported.
            does nothing.
            @param productWriter the product writer to be used to remove this node from the underlying file.
         """
-        Placemark_removeFromFile(self._obj, productWriter._obj)
+        Placemark_removeFromFile(self._jobj_ref, productWriter._jobj_ref)
         return
 
     def getExtension(self, arg0):
-        return Object(Placemark_getExtension(self._obj, arg0._obj))
+        return Object(Placemark_getExtension(self._jobj_ref, arg0._jobj_ref))
 
 
 class IndexValidator(JObject):
@@ -3774,6 +3779,14 @@ a classpath scan.
         JObject.__del__(self)
 
 
+class Rectangle2D(JObject):
+    def __init__(self, obj):
+        JObject.__init__(self, obj)
+
+    def __del__(self):
+        JObject.__del__(self)
+
+
 class File(JObject):
     def __init__(self, obj):
         JObject.__init__(self, obj)
@@ -3805,14 +3818,14 @@ class GeoPos(JObject):
            Gets the latitude value.
            @return the geographical latitude in decimal degree
         """
-        return GeoPos_getLat(self._obj)
+        return GeoPos_getLat(self._jobj_ref)
 
     def getLon(self):
         """
            Gets the longitude value.
            @return the geographical longitude in decimal degree
         """
-        return GeoPos_getLon(self._obj)
+        return GeoPos_getLon(self._jobj_ref)
 
     def setLocation(self, lat, lon):
         """
@@ -3820,7 +3833,7 @@ class GeoPos(JObject):
            @param lat the geographical latitude in decimal degree, valid range is -90 to +90
            @param lon the geographical longitude in decimal degree, valid range is -180 to +180
         """
-        GeoPos_setLocation(self._obj, lat, lon)
+        GeoPos_setLocation(self._jobj_ref, lat, lon)
         return
 
     def isValid(self):
@@ -3828,7 +3841,7 @@ class GeoPos(JObject):
            Tests whether or not this geo-position is valid.
            @return true, if so
         """
-        return GeoPos_isValid(self._obj)
+        return GeoPos_isValid(self._jobj_ref)
 
     @staticmethod
     def areValid(a):
@@ -3836,13 +3849,13 @@ class GeoPos(JObject):
            Tests whether or not all given geo-positions are valid.
            @return true, if so
         """
-        return GeoPos_areValid(a._obj)
+        return GeoPos_areValid(a._jobj_ref)
 
     def setInvalid(self):
         """
            Sets the lat/lon fields so that {@link #isValid()} will return false.
         """
-        GeoPos_setInvalid(self._obj)
+        GeoPos_setInvalid(self._jobj_ref)
         return
 
     def equals(self, obj):
@@ -3851,14 +3864,14 @@ class GeoPos(JObject):
            @param obj the reference object with which to compare.
            @return <code>true</code> if this object is the same as the obj argument; <code>false</code> otherwise.
         """
-        return GeoPos_equals(self._obj, obj._obj)
+        return GeoPos_equals(self._jobj_ref, obj._jobj_ref)
 
     def hashCode(self):
         """
            Returns a hash code value for the object.
            @return a hash code value for this object.
         """
-        return GeoPos_hashCode(self._obj)
+        return GeoPos_hashCode(self._jobj_ref)
 
     def toString(self):
         """
@@ -3866,13 +3879,13 @@ class GeoPos(JObject):
            "textually represents" this object.
            @return a string representation of the object.
         """
-        return GeoPos_toString(self._obj)
+        return GeoPos_toString(self._jobj_ref)
 
     def normalize(self):
         """
            Normalizes this position so that its longitude is in the range -180 to +180 degree.
         """
-        GeoPos_normalize(self._obj)
+        GeoPos_normalize(self._jobj_ref)
         return
 
     @staticmethod
@@ -3890,14 +3903,14 @@ class GeoPos(JObject):
            Returns a string representation of the latitude value.
            @return a string of the form DDD°[MM'[SS"]] [N|S].
         """
-        return GeoPos_getLatString(self._obj)
+        return GeoPos_getLatString(self._jobj_ref)
 
     def getLonString(self):
         """
            Returns a string representation of the latitude value.
            @return a string of the form DDD°[MM'[SS"]] [W|E].
         """
-        return GeoPos_getLonString(self._obj)
+        return GeoPos_getLonString(self._jobj_ref)
 
 
 class ProductNodeGroup(JObject):
@@ -3925,20 +3938,20 @@ class ProductNodeGroup(JObject):
         """
            @return {@code true}, if child nodes will have this group as owner after adding.
         """
-        return ProductNodeGroup_isTakingOverNodeOwnership(self._obj)
+        return ProductNodeGroup_isTakingOverNodeOwnership(self._jobj_ref)
 
     def getNodeCount(self):
         """
            @return The number of product nodes in this product group.
         """
-        return ProductNodeGroup_getNodeCount(self._obj)
+        return ProductNodeGroup_getNodeCount(self._jobj_ref)
 
     def getAt(self, index):
         """
            @param index The node index.
            @return The product node at the given index.
         """
-        return ProductNode(ProductNodeGroup_getAt(self._obj, index))
+        return ProductNode(ProductNodeGroup_getAt(self._jobj_ref, index))
 
     def getNodeDisplayNames(self):
         """
@@ -3946,34 +3959,34 @@ class ProductNodeGroup(JObject):
            @return an array containing the display names, never <code>null</code>, but the array can have zero length
            @see ProductNode#getDisplayName()
         """
-        return ProductNodeGroup_getNodeDisplayNames(self._obj)
+        return ProductNodeGroup_getNodeDisplayNames(self._jobj_ref)
 
     def getNodeNames(self):
         """
            Returns the names of all products currently managed.
            @return an array containing the names, never <code>null</code>, but the array can have zero length
         """
-        return ProductNodeGroup_getNodeNames(self._obj)
+        return ProductNodeGroup_getNodeNames(self._jobj_ref)
 
     def indexOfName(self, name):
-        return ProductNodeGroup_indexOfName(self._obj, name)
+        return ProductNodeGroup_indexOfName(self._jobj_ref, name)
 
     def indexOf(self, element):
-        return ProductNodeGroup_indexOf(self._obj, element._obj)
+        return ProductNodeGroup_indexOf(self._jobj_ref, element._jobj_ref)
 
     def getByDisplayName(self, displayName):
         """
            @param displayName the display name
            @return the product node with the given display name.
         """
-        return ProductNode(ProductNodeGroup_getByDisplayName(self._obj, displayName))
+        return ProductNode(ProductNodeGroup_getByDisplayName(self._jobj_ref, displayName))
 
     def get(self, name):
         """
            @param name the name
            @return the product node with the given name.
         """
-        return ProductNode(ProductNodeGroup_get(self._obj, name))
+        return ProductNode(ProductNodeGroup_get(self._jobj_ref, name))
 
     def containsName(self, name):
         """
@@ -3981,7 +3994,7 @@ class ProductNodeGroup(JObject):
            @param name the name
            @return true, if so
         """
-        return ProductNodeGroup_containsName(self._obj, name)
+        return ProductNodeGroup_containsName(self._jobj_ref, name)
 
     def contains(self, node):
         """
@@ -3989,7 +4002,7 @@ class ProductNodeGroup(JObject):
            @param node the node
            @return true, if so
         """
-        return ProductNodeGroup_contains(self._obj, node._obj)
+        return ProductNodeGroup_contains(self._jobj_ref, node._jobj_ref)
 
     def add(self, node):
         """
@@ -3997,7 +4010,7 @@ class ProductNodeGroup(JObject):
            @param node the node to be added, ignored if <code>null</code>
            @return true, if the node has been added
         """
-        return ProductNodeGroup_add(self._obj, node._obj)
+        return ProductNodeGroup_add(self._jobj_ref, node._jobj_ref)
 
     def addAt(self, index, node):
         """
@@ -4005,7 +4018,7 @@ class ProductNodeGroup(JObject):
            @param index the index.
            @param node  the node to be added, ignored if <code>null</code>
         """
-        ProductNodeGroup_addAt(self._obj, index, node._obj)
+        ProductNodeGroup_addAt(self._jobj_ref, index, node._jobj_ref)
         return
 
     def remove(self, node):
@@ -4014,17 +4027,17 @@ class ProductNodeGroup(JObject):
            @param node the node to be removed
            @return true, if the node was removed
         """
-        return ProductNodeGroup_remove(self._obj, node._obj)
+        return ProductNodeGroup_remove(self._jobj_ref, node._jobj_ref)
 
     def removeAll(self):
         """
            Removes all nodes from this group.
         """
-        ProductNodeGroup_removeAll(self._obj)
+        ProductNodeGroup_removeAll(self._jobj_ref)
         return
 
     def clearRemovedList(self):
-        ProductNodeGroup_clearRemovedList(self._obj)
+        ProductNodeGroup_clearRemovedList(self._jobj_ref)
         return
 
     def getRemovedNodes(self):
@@ -4032,42 +4045,42 @@ class ProductNodeGroup(JObject):
            Gets all removed node nodes.
            @return a collection of all removed node nodes.
         """
-        return Collection(ProductNodeGroup_getRemovedNodes(self._obj))
+        return Collection(ProductNodeGroup_getRemovedNodes(self._jobj_ref))
 
     def setModified(self, modified):
-        ProductNodeGroup_setModified(self._obj, modified)
+        ProductNodeGroup_setModified(self._jobj_ref, modified)
         return
 
     def acceptVisitor(self, visitor):
-        ProductNodeGroup_acceptVisitor(self._obj, visitor._obj)
+        ProductNodeGroup_acceptVisitor(self._jobj_ref, visitor._jobj_ref)
         return
 
     def dispose(self):
-        ProductNodeGroup_dispose(self._obj)
+        ProductNodeGroup_dispose(self._jobj_ref)
         return
 
     def updateExpression(self, oldExternalName, newExternalName):
-        ProductNodeGroup_updateExpression(self._obj, oldExternalName, newExternalName)
+        ProductNodeGroup_updateExpression(self._jobj_ref, oldExternalName, newExternalName)
         return
 
     def getOwner(self):
         """
            @return The owner node of this node.
         """
-        return ProductNode(ProductNodeGroup_getOwner(self._obj))
+        return ProductNode(ProductNodeGroup_getOwner(self._jobj_ref))
 
     def getName(self):
         """
            @return This node's name.
         """
-        return ProductNodeGroup_getName(self._obj)
+        return ProductNodeGroup_getName(self._jobj_ref)
 
     def setName(self, name):
         """
            Sets this product's name.
            @param name The name.
         """
-        ProductNodeGroup_setName(self._obj, name)
+        ProductNodeGroup_setName(self._jobj_ref, name)
         return
 
     def getDescription(self):
@@ -4075,14 +4088,14 @@ class ProductNodeGroup(JObject):
            Returns a short textual description for this products node.
            @return a description or <code>null</code>
         """
-        return ProductNodeGroup_getDescription(self._obj)
+        return ProductNodeGroup_getDescription(self._jobj_ref)
 
     def setDescription(self, description):
         """
            Sets a short textual description for this products node.
            @param description a description, can be <code>null</code>
         """
-        ProductNodeGroup_setDescription(self._obj, description)
+        ProductNodeGroup_setDescription(self._jobj_ref, description)
         return
 
     def isModified(self):
@@ -4090,10 +4103,10 @@ class ProductNodeGroup(JObject):
            Returns whether or not this node is modified.
            @return <code>true</code> if so
         """
-        return ProductNodeGroup_isModified(self._obj)
+        return ProductNodeGroup_isModified(self._jobj_ref)
 
     def toString(self):
-        return ProductNodeGroup_toString(self._obj)
+        return ProductNodeGroup_toString(self._jobj_ref)
 
     @staticmethod
     def isValidNodeName(name):
@@ -4112,21 +4125,21 @@ class ProductNodeGroup(JObject):
            @return the product, or <code>null</code> if this node was not owned by a product at the time this method was
            called
         """
-        return Product(ProductNodeGroup_getProduct(self._obj))
+        return Product(ProductNodeGroup_getProduct(self._jobj_ref))
 
     def getProductReader(self):
         """
            Returns the product reader for the product to which this node belongs to.
            @return the product reader, or <code>null</code> if no such exists
         """
-        return ProductReader(ProductNodeGroup_getProductReader(self._obj))
+        return ProductReader(ProductNodeGroup_getProductReader(self._jobj_ref))
 
     def getProductWriter(self):
         """
            Returns the product writer for the product to which this node belongs to.
            @return the product writer, or <code>null</code> if no such exists
         """
-        return ProductWriter(ProductNodeGroup_getProductWriter(self._obj))
+        return ProductWriter(ProductNodeGroup_getProductWriter(self._jobj_ref))
 
     def getDisplayName(self):
         """
@@ -4137,7 +4150,7 @@ class ProductNodeGroup(JObject):
            <code>null</code>
            @see #getProductRefString
         """
-        return ProductNodeGroup_getDisplayName(self._obj)
+        return ProductNodeGroup_getDisplayName(self._jobj_ref)
 
     def getProductRefString(self):
         """
@@ -4147,7 +4160,7 @@ class ProductNodeGroup(JObject):
            @return the product reference string. <br>or <code>null</code> if this node has no product <br>or
            <code>null</code> if its product reference number was inactive
         """
-        return ProductNodeGroup_getProductRefString(self._obj)
+        return ProductNodeGroup_getProductRefString(self._jobj_ref)
 
     def removeFromFile(self, productWriter):
         """
@@ -4155,11 +4168,11 @@ class ProductNodeGroup(JObject):
            does nothing.
            @param productWriter the product writer to be used to remove this node from the underlying file.
         """
-        ProductNodeGroup_removeFromFile(self._obj, productWriter._obj)
+        ProductNodeGroup_removeFromFile(self._jobj_ref, productWriter._jobj_ref)
         return
 
     def getExtension(self, arg0):
-        return Object(ProductNodeGroup_getExtension(self._obj, arg0._obj))
+        return Object(ProductNodeGroup_getExtension(self._jobj_ref, arg0._jobj_ref))
 
 
 class MapProjection(JObject):
@@ -4196,7 +4209,7 @@ class ProductManager(JObject):
         """
            @return The number of products in this product manager.
         """
-        return ProductManager_getProductCount(self._obj)
+        return ProductManager_getProductCount(self._jobj_ref)
 
     def getProduct(self, index):
         """
@@ -4204,7 +4217,7 @@ class ProductManager(JObject):
            @param index the index
            @return The product at the given index.
         """
-        return Product(ProductManager_getProduct(self._obj, index))
+        return Product(ProductManager_getProduct(self._jobj_ref, index))
 
     def getProductDisplayNames(self):
         """
@@ -4212,45 +4225,45 @@ class ProductManager(JObject):
            @return an array containing the display names, never <code>null</code>, but the array can have zero length
            @see ProductNode#getDisplayName()
         """
-        return ProductManager_getProductDisplayNames(self._obj)
+        return ProductManager_getProductDisplayNames(self._jobj_ref)
 
     def getProductNames(self):
         """
            Returns the names of all products currently managed.
            @return an array containing the names, never <code>null</code>, but the array can have zero length
         """
-        return ProductManager_getProductNames(self._obj)
+        return ProductManager_getProductNames(self._jobj_ref)
 
     def getProducts(self):
         """
            Returns an array of all products currently managed.
            @return an array containing the products, never <code>null</code>, but the array can have zero length
         """
-        return Product(ProductManager_getProducts(self._obj))
+        return Product(ProductManager_getProducts(self._jobj_ref))
 
     def getProductByDisplayName(self, displayName):
         """
            @param displayName The product's display name.
            @return The product with the given display name.
         """
-        return Product(ProductManager_getProductByDisplayName(self._obj, displayName))
+        return Product(ProductManager_getProductByDisplayName(self._jobj_ref, displayName))
 
     def getProductByRefNo(self, refNo):
         """
            @param refNo The reference number.
            @return The product with the given reference number.
         """
-        return Product(ProductManager_getProductByRefNo(self._obj, refNo))
+        return Product(ProductManager_getProductByRefNo(self._jobj_ref, refNo))
 
     def getProductByName(self, name):
         """
            @param name The product name.
            @return The product with the given name.
         """
-        return Product(ProductManager_getProductByName(self._obj, name))
+        return Product(ProductManager_getProductByName(self._jobj_ref, name))
 
     def getProductIndex(self, product):
-        return ProductManager_getProductIndex(self._obj, product._obj)
+        return ProductManager_getProductIndex(self._jobj_ref, product._jobj_ref)
 
     def containsProduct(self, name):
         """
@@ -4258,7 +4271,7 @@ class ProductManager(JObject):
            @param name the product name
            @return true, if so
         """
-        return ProductManager_containsProduct(self._obj, name)
+        return ProductManager_containsProduct(self._jobj_ref, name)
 
     def contains(self, product):
         """
@@ -4266,7 +4279,7 @@ class ProductManager(JObject):
            @param product The product.
            @return {@code true} if so.
         """
-        return ProductManager_contains(self._obj, product._obj)
+        return ProductManager_contains(self._jobj_ref, product._jobj_ref)
 
     def addProduct(self, product):
         """
@@ -4274,7 +4287,7 @@ class ProductManager(JObject):
            biger than the greatest reference number in this product manager.
            @param product the product to be added, ignored if <code>null</code>
         """
-        ProductManager_addProduct(self._obj, product._obj)
+        ProductManager_addProduct(self._jobj_ref, product._jobj_ref)
         return
 
     def removeProduct(self, product):
@@ -4283,13 +4296,13 @@ class ProductManager(JObject):
            @param product the product to be removed, ignored if <code>null</code>
            @return true, if the product was removed
         """
-        return ProductManager_removeProduct(self._obj, product._obj)
+        return ProductManager_removeProduct(self._jobj_ref, product._jobj_ref)
 
     def removeAllProducts(self):
         """
            Removes all product from this list.
         """
-        ProductManager_removeAllProducts(self._obj)
+        ProductManager_removeAllProducts(self._jobj_ref)
         return
 
     def addListener(self, listener):
@@ -4299,7 +4312,7 @@ class ProductManager(JObject):
            @param listener the listener to be added.
            @return true if the listener was added, otherwise false.
         """
-        return ProductManager_addListener(self._obj, listener._obj)
+        return ProductManager_addListener(self._jobj_ref, listener._jobj_ref)
 
     def removeListener(self, listener):
         """
@@ -4307,7 +4320,7 @@ class ProductManager(JObject):
            @param listener The listener.
            @return true, if the listener was removed, otherwise false.
         """
-        return ProductManager_removeListener(self._obj, listener._obj)
+        return ProductManager_removeListener(self._jobj_ref, listener._jobj_ref)
 
 
 class FlagCoding(JObject):
@@ -4339,7 +4352,7 @@ are combined of single flags (bit indexes).
            @param name the flag name
            @return a metadata attribute wich is the representation of the flag with the given name
         """
-        return MetadataAttribute(FlagCoding_getFlag(self._obj, name))
+        return MetadataAttribute(FlagCoding_getFlag(self._jobj_ref, name))
 
     def getFlagNames(self):
         """
@@ -4347,7 +4360,7 @@ are combined of single flags (bit indexes).
            @return a string array which contains all names of this <code>FlagCoding</code>.<br> If this
            <code>FlagCoding</code> does not contain any flag, <code>null</code> is returned
         """
-        return FlagCoding_getFlagNames(self._obj)
+        return FlagCoding_getFlagNames(self._jobj_ref)
 
     def addFlag(self, name, flagMask, description):
         """
@@ -4358,7 +4371,7 @@ are combined of single flags (bit indexes).
            @throws IllegalArgumentException if <code>name</code> is null
            @return A new attribute representing the flag.
         """
-        return MetadataAttribute(FlagCoding_addFlag(self._obj, name, flagMask, description))
+        return MetadataAttribute(FlagCoding_addFlag(self._jobj_ref, name, flagMask, description))
 
     def getFlagMask(self, name):
         """
@@ -4367,7 +4380,7 @@ are combined of single flags (bit indexes).
            @return flagMask the flag's bit mask as a 32 bit integer
            @throws IllegalArgumentException if <code>name</code> is null, or a flag with the name does not exist
         """
-        return FlagCoding_getFlagMask(self._obj, name)
+        return FlagCoding_getFlagMask(self._jobj_ref, name)
 
     def acceptVisitor(self, visitor):
         """
@@ -4378,7 +4391,7 @@ are combined of single flags (bit indexes).
            The method simply calls <code>visitor.visit(this)</code>.
            @param visitor the visitor, must not be <code>null</code>
         """
-        FlagCoding_acceptVisitor(self._obj, visitor._obj)
+        FlagCoding_acceptVisitor(self._jobj_ref, visitor._jobj_ref)
         return
 
     def addElement(self, element):
@@ -4387,7 +4400,7 @@ are combined of single flags (bit indexes).
            because flag codings do not support inner elements.
            @param element the element to be added, always ignored
         """
-        FlagCoding_addElement(self._obj, element._obj)
+        FlagCoding_addElement(self._jobj_ref, element._jobj_ref)
         return
 
     def addAttribute(self, attribute):
@@ -4396,7 +4409,7 @@ are combined of single flags (bit indexes).
            @param attribute the attribute to be added
            @throws IllegalArgumentException if the attribute added is not an integer or does not have a scalar value
         """
-        FlagCoding_addAttribute(self._obj, attribute._obj)
+        FlagCoding_addAttribute(self._jobj_ref, attribute._jobj_ref)
         return
 
     def addSample(self, name, value, description):
@@ -4408,14 +4421,14 @@ are combined of single flags (bit indexes).
            @throws IllegalArgumentException if <code>name</code> is null
            @return A new attribute representing the coded sample.
         """
-        return MetadataAttribute(FlagCoding_addSample(self._obj, name, value, description))
+        return MetadataAttribute(FlagCoding_addSample(self._jobj_ref, name, value, description))
 
     def getSampleCount(self):
         """
            Gets the number of coded sample values.
            @return the number of coded sample values
         """
-        return FlagCoding_getSampleCount(self._obj)
+        return FlagCoding_getSampleCount(self._jobj_ref)
 
     def getSampleName(self, index):
         """
@@ -4423,7 +4436,7 @@ are combined of single flags (bit indexes).
            @param index the attribute index.
            @return the sample name.
         """
-        return FlagCoding_getSampleName(self._obj, index)
+        return FlagCoding_getSampleName(self._jobj_ref, index)
 
     def getSampleValue(self, index):
         """
@@ -4431,17 +4444,17 @@ are combined of single flags (bit indexes).
            @param index the attribute index.
            @return the sample value.
         """
-        return FlagCoding_getSampleValue(self._obj, index)
+        return FlagCoding_getSampleValue(self._jobj_ref, index)
 
     def getElementGroup(self):
         """
            Gets the group of child elements. The method returns null, if this element has no children.
            @return The child element group, may be null.
         """
-        return ProductNodeGroup(FlagCoding_getElementGroup(self._obj))
+        return ProductNodeGroup(FlagCoding_getElementGroup(self._jobj_ref))
 
     def getParentElement(self):
-        return MetadataElement(FlagCoding_getParentElement(self._obj))
+        return MetadataElement(FlagCoding_getParentElement(self._jobj_ref))
 
     def addElementAt(self, element, index):
         """
@@ -4449,7 +4462,7 @@ are combined of single flags (bit indexes).
            @param element the element to added, ignored if <code>null</code>
            @param index   where to put it
         """
-        FlagCoding_addElementAt(self._obj, element._obj, index)
+        FlagCoding_addElementAt(self._jobj_ref, element._jobj_ref, index)
         return
 
     def removeElement(self, element):
@@ -4458,13 +4471,13 @@ are combined of single flags (bit indexes).
            @param element the element to be removed, ignored if <code>null</code>
            @return true, if so
         """
-        return FlagCoding_removeElement(self._obj, element._obj)
+        return FlagCoding_removeElement(self._jobj_ref, element._jobj_ref)
 
     def getNumElements(self):
         """
            @return the number of elements contained in this element.
         """
-        return FlagCoding_getNumElements(self._obj)
+        return FlagCoding_getNumElements(self._jobj_ref)
 
     def getElementAt(self, index):
         """
@@ -4473,7 +4486,7 @@ are combined of single flags (bit indexes).
            @return the element at the given index
            @throws IndexOutOfBoundsException if the index is out of bounds
         """
-        return MetadataElement(FlagCoding_getElementAt(self._obj, index))
+        return MetadataElement(FlagCoding_getElementAt(self._jobj_ref, index))
 
     def getElementNames(self):
         """
@@ -4481,7 +4494,7 @@ are combined of single flags (bit indexes).
            @return a string array containing the names of the groups contained in this element. If this element has no
            groups a zero-length-array is returned.
         """
-        return FlagCoding_getElementNames(self._obj)
+        return FlagCoding_getElementNames(self._jobj_ref)
 
     def getElements(self):
         """
@@ -4489,7 +4502,7 @@ are combined of single flags (bit indexes).
            @return an array of elements contained in this product. If this element has no elements a zero-length-array is
            returned.
         """
-        return MetadataElement(FlagCoding_getElements(self._obj))
+        return MetadataElement(FlagCoding_getElements(self._jobj_ref))
 
     def getElement(self, name):
         """
@@ -4498,7 +4511,7 @@ are combined of single flags (bit indexes).
            @return the element with the given name or <code>null</code> if a element with the given name is not contained in
            this element.
         """
-        return MetadataElement(FlagCoding_getElement(self._obj, name))
+        return MetadataElement(FlagCoding_getElement(self._jobj_ref, name))
 
     def containsElement(self, name):
         """
@@ -4507,7 +4520,7 @@ are combined of single flags (bit indexes).
            @return <code>true</code> if a element with the given name is contained in this element, <code>false</code>
            otherwise
         """
-        return FlagCoding_containsElement(self._obj, name)
+        return FlagCoding_containsElement(self._jobj_ref, name)
 
     def getElementIndex(self, element):
         """
@@ -4515,7 +4528,7 @@ are combined of single flags (bit indexes).
            @param element The element .
            @return The element's index, or -1.
         """
-        return FlagCoding_getElementIndex(self._obj, element._obj)
+        return FlagCoding_getElementIndex(self._jobj_ref, element._jobj_ref)
 
     def removeAttribute(self, attribute):
         """
@@ -4524,14 +4537,14 @@ are combined of single flags (bit indexes).
            @param attribute the attribute to be removed, <code>null</code> is ignored
            @return <code>true</code> if it was removed
         """
-        return FlagCoding_removeAttribute(self._obj, attribute._obj)
+        return FlagCoding_removeAttribute(self._jobj_ref, attribute._jobj_ref)
 
     def getNumAttributes(self):
         """
            Returns the number of attributes attaached to this node.
            @return the number of attributes
         """
-        return FlagCoding_getNumAttributes(self._obj)
+        return FlagCoding_getNumAttributes(self._jobj_ref)
 
     def getAttributeAt(self, index):
         """
@@ -4540,14 +4553,14 @@ are combined of single flags (bit indexes).
            @return the attribute, or <code>null</code> if this node does not contain attributes
            @throws IndexOutOfBoundsException
         """
-        return MetadataAttribute(FlagCoding_getAttributeAt(self._obj, index))
+        return MetadataAttribute(FlagCoding_getAttributeAt(self._jobj_ref, index))
 
     def getAttributeNames(self):
         """
            Returns the names of all attributes of this node.
            @return the attribute name array, never <code>null</code>
         """
-        return FlagCoding_getAttributeNames(self._obj)
+        return FlagCoding_getAttributeNames(self._jobj_ref)
 
     def getAttributes(self):
         """
@@ -4555,7 +4568,7 @@ are combined of single flags (bit indexes).
            @return an array of attributes contained in this product. If this element has no attributes a zero-length-array
            is returned.
         """
-        return MetadataAttribute(FlagCoding_getAttributes(self._obj))
+        return MetadataAttribute(FlagCoding_getAttributes(self._jobj_ref))
 
     def getAttribute(self, name):
         """
@@ -4563,7 +4576,7 @@ are combined of single flags (bit indexes).
            @param name the attribute name
            @return the attribute with the given name or <code>null</code> if it could not be found
         """
-        return MetadataAttribute(FlagCoding_getAttribute(self._obj, name))
+        return MetadataAttribute(FlagCoding_getAttribute(self._jobj_ref, name))
 
     def containsAttribute(self, name):
         """
@@ -4571,7 +4584,7 @@ are combined of single flags (bit indexes).
            @param name the attribute name
            @return <code>true</code> if so
         """
-        return FlagCoding_containsAttribute(self._obj, name)
+        return FlagCoding_containsAttribute(self._jobj_ref, name)
 
     def getAttributeIndex(self, attribute):
         """
@@ -4579,7 +4592,7 @@ are combined of single flags (bit indexes).
            @param attribute The attribute.
            @return The attribute's index, or -1.
         """
-        return FlagCoding_getAttributeIndex(self._obj, attribute._obj)
+        return FlagCoding_getAttributeIndex(self._jobj_ref, attribute._jobj_ref)
 
     def getAttributeDouble(self, name, defaultValue):
         """
@@ -4590,7 +4603,7 @@ are combined of single flags (bit indexes).
            @return the attribute value as double.
            @throws NumberFormatException if the attribute type is ASCII but cannot be converted to a number
         """
-        return FlagCoding_getAttributeDouble(self._obj, name, defaultValue)
+        return FlagCoding_getAttributeDouble(self._jobj_ref, name, defaultValue)
 
     def getAttributeUTC(self, name, defaultValue):
         """
@@ -4600,7 +4613,7 @@ are combined of single flags (bit indexes).
            @param defaultValue the default value
            @return the attribute value as UTC.
         """
-        return ProductData_UTC(FlagCoding_getAttributeUTC(self._obj, name, defaultValue._obj))
+        return ProductData_UTC(FlagCoding_getAttributeUTC(self._jobj_ref, name, defaultValue._jobj_ref))
 
     def getAttributeInt(self, name, defaultValue):
         """
@@ -4611,7 +4624,7 @@ are combined of single flags (bit indexes).
            @return the attribute value as integer.
            @throws NumberFormatException if the attribute type is ASCII but cannot be converted to a number
         """
-        return FlagCoding_getAttributeInt(self._obj, name, defaultValue)
+        return FlagCoding_getAttributeInt(self._jobj_ref, name, defaultValue)
 
     def setAttributeInt(self, name, value):
         """
@@ -4621,7 +4634,7 @@ are combined of single flags (bit indexes).
            @param name  the attribute name
            @param value the new value
         """
-        FlagCoding_setAttributeInt(self._obj, name, value)
+        FlagCoding_setAttributeInt(self._jobj_ref, name, value)
         return
 
     def setAttributeDouble(self, name, value):
@@ -4632,7 +4645,7 @@ are combined of single flags (bit indexes).
            @param name  the attribute name
            @param value the new value
         """
-        FlagCoding_setAttributeDouble(self._obj, name, value)
+        FlagCoding_setAttributeDouble(self._jobj_ref, name, value)
         return
 
     def setAttributeUTC(self, name, value):
@@ -4643,7 +4656,7 @@ are combined of single flags (bit indexes).
            @param name  the attribute name
            @param value the new value
         """
-        FlagCoding_setAttributeUTC(self._obj, name, value._obj)
+        FlagCoding_setAttributeUTC(self._jobj_ref, name, value._jobj_ref)
         return
 
     def getAttributeString(self, name, defaultValue):
@@ -4654,7 +4667,7 @@ are combined of single flags (bit indexes).
            @param defaultValue the default value
            @return the attribute value as integer.
         """
-        return FlagCoding_getAttributeString(self._obj, name, defaultValue)
+        return FlagCoding_getAttributeString(self._jobj_ref, name, defaultValue)
 
     def setAttributeString(self, name, value):
         """
@@ -4664,15 +4677,15 @@ are combined of single flags (bit indexes).
            @param name  the attribute name
            @param value the new value
         """
-        FlagCoding_setAttributeString(self._obj, name, value)
+        FlagCoding_setAttributeString(self._jobj_ref, name, value)
         return
 
     def setModified(self, modified):
-        FlagCoding_setModified(self._obj, modified)
+        FlagCoding_setModified(self._jobj_ref, modified)
         return
 
     def createDeepClone(self):
-        return MetadataElement(FlagCoding_createDeepClone(self._obj))
+        return MetadataElement(FlagCoding_createDeepClone(self._jobj_ref))
 
     def dispose(self):
         """
@@ -4684,27 +4697,27 @@ are combined of single flags (bit indexes).
            
            Overrides of this method should always call <code>super.dispose();</code> after disposing this instance.
         """
-        FlagCoding_dispose(self._obj)
+        FlagCoding_dispose(self._jobj_ref)
         return
 
     def getOwner(self):
         """
            @return The owner node of this node.
         """
-        return ProductNode(FlagCoding_getOwner(self._obj))
+        return ProductNode(FlagCoding_getOwner(self._jobj_ref))
 
     def getName(self):
         """
            @return This node's name.
         """
-        return FlagCoding_getName(self._obj)
+        return FlagCoding_getName(self._jobj_ref)
 
     def setName(self, name):
         """
            Sets this product's name.
            @param name The name.
         """
-        FlagCoding_setName(self._obj, name)
+        FlagCoding_setName(self._jobj_ref, name)
         return
 
     def getDescription(self):
@@ -4712,14 +4725,14 @@ are combined of single flags (bit indexes).
            Returns a short textual description for this products node.
            @return a description or <code>null</code>
         """
-        return FlagCoding_getDescription(self._obj)
+        return FlagCoding_getDescription(self._jobj_ref)
 
     def setDescription(self, description):
         """
            Sets a short textual description for this products node.
            @param description a description, can be <code>null</code>
         """
-        FlagCoding_setDescription(self._obj, description)
+        FlagCoding_setDescription(self._jobj_ref, description)
         return
 
     def isModified(self):
@@ -4727,10 +4740,10 @@ are combined of single flags (bit indexes).
            Returns whether or not this node is modified.
            @return <code>true</code> if so
         """
-        return FlagCoding_isModified(self._obj)
+        return FlagCoding_isModified(self._jobj_ref)
 
     def toString(self):
-        return FlagCoding_toString(self._obj)
+        return FlagCoding_toString(self._jobj_ref)
 
     @staticmethod
     def isValidNodeName(name):
@@ -4749,21 +4762,21 @@ are combined of single flags (bit indexes).
            @return the product, or <code>null</code> if this node was not owned by a product at the time this method was
            called
         """
-        return Product(FlagCoding_getProduct(self._obj))
+        return Product(FlagCoding_getProduct(self._jobj_ref))
 
     def getProductReader(self):
         """
            Returns the product reader for the product to which this node belongs to.
            @return the product reader, or <code>null</code> if no such exists
         """
-        return ProductReader(FlagCoding_getProductReader(self._obj))
+        return ProductReader(FlagCoding_getProductReader(self._jobj_ref))
 
     def getProductWriter(self):
         """
            Returns the product writer for the product to which this node belongs to.
            @return the product writer, or <code>null</code> if no such exists
         """
-        return ProductWriter(FlagCoding_getProductWriter(self._obj))
+        return ProductWriter(FlagCoding_getProductWriter(self._jobj_ref))
 
     def getDisplayName(self):
         """
@@ -4774,7 +4787,7 @@ are combined of single flags (bit indexes).
            <code>null</code>
            @see #getProductRefString
         """
-        return FlagCoding_getDisplayName(self._obj)
+        return FlagCoding_getDisplayName(self._jobj_ref)
 
     def getProductRefString(self):
         """
@@ -4784,7 +4797,7 @@ are combined of single flags (bit indexes).
            @return the product reference string. <br>or <code>null</code> if this node has no product <br>or
            <code>null</code> if its product reference number was inactive
         """
-        return FlagCoding_getProductRefString(self._obj)
+        return FlagCoding_getProductRefString(self._jobj_ref)
 
     def updateExpression(self, oldExternalName, newExternalName):
         """
@@ -4794,7 +4807,7 @@ are combined of single flags (bit indexes).
            @param oldExternalName The old node name.
            @param newExternalName The new node name.
         """
-        FlagCoding_updateExpression(self._obj, oldExternalName, newExternalName)
+        FlagCoding_updateExpression(self._jobj_ref, oldExternalName, newExternalName)
         return
 
     def removeFromFile(self, productWriter):
@@ -4803,11 +4816,11 @@ are combined of single flags (bit indexes).
            does nothing.
            @param productWriter the product writer to be used to remove this node from the underlying file.
         """
-        FlagCoding_removeFromFile(self._obj, productWriter._obj)
+        FlagCoding_removeFromFile(self._jobj_ref, productWriter._jobj_ref)
         return
 
     def getExtension(self, arg0):
-        return Object(FlagCoding_getExtension(self._obj, arg0._obj))
+        return Object(FlagCoding_getExtension(self._jobj_ref, arg0._jobj_ref))
 
 
 class IndexColorModel(JObject):
@@ -4932,7 +4945,7 @@ class ProductUtils(JObject):
            @return image information
            @throws IOException if an I/O error occurs
         """
-        return ImageInfo(ProductUtils_createImageInfo(rasters._obj, assignMissingImageInfos, pm._obj))
+        return ImageInfo(ProductUtils_createImageInfo(rasters._jobj_ref, assignMissingImageInfos, pm._jobj_ref))
 
     @staticmethod
     def createRgbImage(rasters, imageInfo, pm):
@@ -4947,7 +4960,7 @@ class ProductUtils(JObject):
            @throws IOException if the given raster data is not loaded and reload causes an I/O error
            @see RasterDataNode#setImageInfo(ImageInfo)
         """
-        return BufferedImage(ProductUtils_createRgbImage(rasters._obj, imageInfo._obj, pm._obj))
+        return BufferedImage(ProductUtils_createRgbImage(rasters._jobj_ref, imageInfo._jobj_ref, pm._jobj_ref))
 
     @staticmethod
     def createColorIndexedImage(rasterDataNode, pm):
@@ -4962,7 +4975,7 @@ class ProductUtils(JObject):
            @throws IOException if the given raster data is not loaded and reload causes an I/O error
            @see RasterDataNode#getImageInfo()
         """
-        return BufferedImage(ProductUtils_createColorIndexedImage(rasterDataNode._obj, pm._obj))
+        return BufferedImage(ProductUtils_createColorIndexedImage(rasterDataNode._jobj_ref, pm._jobj_ref))
 
     @staticmethod
     def createSuitableMapInfo1(product, rect, mapProjection):
@@ -4976,7 +4989,7 @@ class ProductUtils(JObject):
            @param mapProjection the map projection, must not be <code>null</code>
            @return the map information instance
         """
-        return MapInfo(ProductUtils_createSuitableMapInfo1(product._obj, rect._obj, mapProjection._obj))
+        return MapInfo(ProductUtils_createSuitableMapInfo1(product._jobj_ref, rect._jobj_ref, mapProjection._jobj_ref))
 
     @staticmethod
     def createSuitableMapInfo2(product, mapProjection, orientation, noDataValue):
@@ -4989,11 +5002,11 @@ class ProductUtils(JObject):
            @param noDataValue   the no-data value to be used
            @return the map information instance
         """
-        return MapInfo(ProductUtils_createSuitableMapInfo2(product._obj, mapProjection._obj, orientation, noDataValue))
+        return MapInfo(ProductUtils_createSuitableMapInfo2(product._jobj_ref, mapProjection._jobj_ref, orientation, noDataValue))
 
     @staticmethod
     def getOutputRasterSize(product, rect, mapTransform, pixelSizeX, pixelSizeY):
-        return Dimension(ProductUtils_getOutputRasterSize(product._obj, rect._obj, mapTransform._obj, pixelSizeX, pixelSizeY))
+        return Dimension(ProductUtils_getOutputRasterSize(product._jobj_ref, rect._jobj_ref, mapTransform._jobj_ref, pixelSizeX, pixelSizeY))
 
     @staticmethod
     def createMapEnvelope2(product, rect, mapTransform):
@@ -5008,7 +5021,7 @@ class ProductUtils(JObject):
            @param mapTransform The map transformation.
            @return The boundary in map coordinates for the given product.
         """
-        return Point2D(ProductUtils_createMapEnvelope2(product._obj, rect._obj, mapTransform._obj))
+        return Point2D(ProductUtils_createMapEnvelope2(product._jobj_ref, rect._jobj_ref, mapTransform._jobj_ref))
 
     @staticmethod
     def createMapEnvelope1(product, rect, step, mapTransform):
@@ -5024,15 +5037,15 @@ class ProductUtils(JObject):
            @param mapTransform The map transformation.
            @return The boundary in map coordinates for the given product.
         """
-        return Point2D(ProductUtils_createMapEnvelope1(product._obj, rect._obj, step, mapTransform._obj))
+        return Point2D(ProductUtils_createMapEnvelope1(product._jobj_ref, rect._jobj_ref, step, mapTransform._jobj_ref))
 
     @staticmethod
     def getMinMax(boundary):
-        return Point2D(ProductUtils_getMinMax(boundary._obj))
+        return Point2D(ProductUtils_getMinMax(boundary._jobj_ref))
 
     @staticmethod
     def createMapBoundary(product, rect, step, mapTransform):
-        return Point2D(ProductUtils_createMapBoundary(product._obj, rect._obj, step, mapTransform._obj))
+        return Point2D(ProductUtils_createMapBoundary(product._jobj_ref, rect._jobj_ref, step, mapTransform._jobj_ref))
 
     @staticmethod
     def createGeoBoundary1(product, step):
@@ -5043,7 +5056,7 @@ class ProductUtils(JObject):
            @return an array of geographical coordinates
            @throws IllegalArgumentException if product is null or if the product's {@link GeoCoding} is null
         """
-        return GeoPos(ProductUtils_createGeoBoundary1(product._obj, step))
+        return GeoPos(ProductUtils_createGeoBoundary1(product._jobj_ref, step))
 
     @staticmethod
     def createGeoBoundary2(product, region, step):
@@ -5059,7 +5072,7 @@ class ProductUtils(JObject):
            @throws IllegalArgumentException if product is null or if the product's {@link GeoCoding} is null
            @see #createPixelBoundary(RasterDataNode, java.awt.Rectangle, int)
         """
-        return GeoPos(ProductUtils_createGeoBoundary2(product._obj, region._obj, step))
+        return GeoPos(ProductUtils_createGeoBoundary2(product._jobj_ref, region._jobj_ref, step))
 
     @staticmethod
     def createGeoBoundary3(product, region, step, usePixelCenter):
@@ -5074,7 +5087,22 @@ class ProductUtils(JObject):
            @throws IllegalArgumentException if product is null or if the product's {@link GeoCoding} is null
            @see #createPixelBoundary(Product, java.awt.Rectangle, int, boolean)
         """
-        return GeoPos(ProductUtils_createGeoBoundary3(product._obj, region._obj, step, usePixelCenter))
+        return GeoPos(ProductUtils_createGeoBoundary3(product._jobj_ref, region._jobj_ref, step, usePixelCenter))
+
+    @staticmethod
+    def getClosestGeoPos(gc, origPos, region, step):
+        """
+           Searches for a valid GeoPos by considering the vicinity of a {@link PixelPos}. It does not check
+           the original pixel position, but uses it for determining which pixel positions to examine.
+           @param gc      the GeoCoding, must not be null
+           @param origPos the original pixel position, must not be null
+           @param region  the rectangle which determines the valid pixel positions, must not be null
+           @param step    determines the step size between pixels which is used in the search process. Small step
+           sizes will increase the accuracy, but need more computational time
+           @return a {@link GeoPos}. This will be valid if the search was successful. If not, a {@link GeoPos} with
+           NaN-values for latitude and longitude will be returned.
+        """
+        return GeoPos(ProductUtils_getClosestGeoPos(gc._jobj_ref, origPos._jobj_ref, region._jobj_ref, step))
 
     @staticmethod
     def createGeoBoundary4(raster, region, step):
@@ -5088,7 +5116,7 @@ class ProductUtils(JObject):
            @throws IllegalArgumentException if raster is null or if the raster has no {@link GeoCoding} is null
            @see #createPixelBoundary(RasterDataNode, java.awt.Rectangle, int)
         """
-        return GeoPos(ProductUtils_createGeoBoundary4(raster._obj, region._obj, step))
+        return GeoPos(ProductUtils_createGeoBoundary4(raster._jobj_ref, region._jobj_ref, step))
 
     @staticmethod
     def createGeoBoundaryPaths1(product):
@@ -5103,7 +5131,7 @@ class ProductUtils(JObject):
            @throws IllegalArgumentException if product is null or if the product's {@link GeoCoding} is null
            @see #createGeoBoundary(Product, int)
         """
-        return GeneralPath(ProductUtils_createGeoBoundaryPaths1(product._obj))
+        return GeneralPath(ProductUtils_createGeoBoundaryPaths1(product._jobj_ref))
 
     @staticmethod
     def createGeoBoundaryPaths2(product, region, step):
@@ -5123,7 +5151,7 @@ class ProductUtils(JObject):
            @throws IllegalArgumentException if product is null or if the product's {@link GeoCoding} is null
            @see #createGeoBoundary(Product, java.awt.Rectangle, int)
         """
-        return GeneralPath(ProductUtils_createGeoBoundaryPaths2(product._obj, region._obj, step))
+        return GeneralPath(ProductUtils_createGeoBoundaryPaths2(product._jobj_ref, region._jobj_ref, step))
 
     @staticmethod
     def createGeoBoundaryPaths3(product, region, step, usePixelCenter):
@@ -5141,7 +5169,7 @@ class ProductUtils(JObject):
            @throws IllegalArgumentException if product is null or if the product's {@link GeoCoding} is null
            @see #createGeoBoundary(Product, java.awt.Rectangle, int, boolean)
         """
-        return GeneralPath(ProductUtils_createGeoBoundaryPaths3(product._obj, region._obj, step, usePixelCenter))
+        return GeneralPath(ProductUtils_createGeoBoundaryPaths3(product._jobj_ref, region._jobj_ref, step, usePixelCenter))
 
     @staticmethod
     def createPixelBoundary1(product, rect, step):
@@ -5159,7 +5187,7 @@ class ProductUtils(JObject):
            @param step    the mean distance from one pixel position to the other in the returned array
            @return the rectangular boundary
         """
-        return PixelPos(ProductUtils_createPixelBoundary1(product._obj, rect._obj, step))
+        return PixelPos(ProductUtils_createPixelBoundary1(product._jobj_ref, rect._jobj_ref, step))
 
     @staticmethod
     def createPixelBoundary2(product, rect, step, usePixelCenter):
@@ -5176,7 +5204,7 @@ class ProductUtils(JObject):
            @param usePixelCenter <code>true</code> if the pixel center should be used to create the boundary
            @return the rectangular boundary
         """
-        return PixelPos(ProductUtils_createPixelBoundary2(product._obj, rect._obj, step, usePixelCenter))
+        return PixelPos(ProductUtils_createPixelBoundary2(product._jobj_ref, rect._jobj_ref, step, usePixelCenter))
 
     @staticmethod
     def createPixelBoundary3(raster, rect, step):
@@ -5192,7 +5220,7 @@ class ProductUtils(JObject):
            @param step   the mean distance from one pixel position to the other in the returned array
            @return the rectangular boundary
         """
-        return PixelPos(ProductUtils_createPixelBoundary3(raster._obj, rect._obj, step))
+        return PixelPos(ProductUtils_createPixelBoundary3(raster._jobj_ref, rect._jobj_ref, step))
 
     @staticmethod
     def createRectBoundary1(rect, step):
@@ -5208,7 +5236,7 @@ class ProductUtils(JObject):
            @param step the mean distance from one pixel position to the other in the returned array
            @return the rectangular boundary
         """
-        return PixelPos(ProductUtils_createRectBoundary1(rect._obj, step))
+        return PixelPos(ProductUtils_createRectBoundary1(rect._jobj_ref, step))
 
     @staticmethod
     def createRectBoundary2(rect, step, usePixelCenter):
@@ -5225,7 +5253,7 @@ class ProductUtils(JObject):
            @param usePixelCenter <code>true</code> if the pixel center should be used
            @return the rectangular boundary
         """
-        return PixelPos(ProductUtils_createRectBoundary2(rect._obj, step, usePixelCenter))
+        return PixelPos(ProductUtils_createRectBoundary2(rect._jobj_ref, step, usePixelCenter))
 
     @staticmethod
     def copyFlagCodings(source, target):
@@ -5234,7 +5262,7 @@ class ProductUtils(JObject):
            @param source the source product
            @param target the target product
         """
-        ProductUtils_copyFlagCodings(source._obj, target._obj)
+        ProductUtils_copyFlagCodings(source._jobj_ref, target._jobj_ref)
         return
 
     @staticmethod
@@ -5246,7 +5274,7 @@ class ProductUtils(JObject):
            @param target           the target product
            @return The flag coding.
         """
-        return FlagCoding(ProductUtils_copyFlagCoding(sourceFlagCoding._obj, target._obj))
+        return FlagCoding(ProductUtils_copyFlagCoding(sourceFlagCoding._jobj_ref, target._jobj_ref))
 
     @staticmethod
     def copyIndexCoding(sourceIndexCoding, target):
@@ -5257,7 +5285,7 @@ class ProductUtils(JObject):
            @param target            the target product
            @return The index coding.
         """
-        return IndexCoding(ProductUtils_copyIndexCoding(sourceIndexCoding._obj, target._obj))
+        return IndexCoding(ProductUtils_copyIndexCoding(sourceIndexCoding._jobj_ref, target._jobj_ref))
 
     @staticmethod
     def copyMasks(sourceProduct, targetProduct):
@@ -5272,7 +5300,7 @@ class ProductUtils(JObject):
            @param sourceProduct the source product
            @param targetProduct the target product
         """
-        ProductUtils_copyMasks(sourceProduct._obj, targetProduct._obj)
+        ProductUtils_copyMasks(sourceProduct._jobj_ref, targetProduct._jobj_ref)
         return
 
     @staticmethod
@@ -5288,7 +5316,7 @@ class ProductUtils(JObject):
            @param sourceProduct the source product
            @param targetProduct the target product
         """
-        ProductUtils_copyOverlayMasks(sourceProduct._obj, targetProduct._obj)
+        ProductUtils_copyOverlayMasks(sourceProduct._jobj_ref, targetProduct._jobj_ref)
         return
 
     @staticmethod
@@ -5305,7 +5333,7 @@ class ProductUtils(JObject):
            @param targetProduct the target product
            @deprecated since BEAM 4.10 (no replacement)
         """
-        ProductUtils_copyRoiMasks(sourceProduct._obj, targetProduct._obj)
+        ProductUtils_copyRoiMasks(sourceProduct._jobj_ref, targetProduct._jobj_ref)
         return
 
     @staticmethod
@@ -5316,7 +5344,7 @@ class ProductUtils(JObject):
            @param targetProduct   the target product
            @param copySourceImage whether the source image of the source band should be copied.
         """
-        ProductUtils_copyFlagBands2(sourceProduct._obj, targetProduct._obj, copySourceImage)
+        ProductUtils_copyFlagBands2(sourceProduct._jobj_ref, targetProduct._jobj_ref, copySourceImage)
         return
 
     @staticmethod
@@ -5327,7 +5355,7 @@ class ProductUtils(JObject):
            @param targetProduct the target product
            @deprecated since BEAM 4.10, use {@link #copyFlagBands(Product, Product, boolean)} instead.
         """
-        ProductUtils_copyFlagBands1(sourceProduct._obj, targetProduct._obj)
+        ProductUtils_copyFlagBands1(sourceProduct._jobj_ref, targetProduct._jobj_ref)
         return
 
     @staticmethod
@@ -5339,7 +5367,7 @@ class ProductUtils(JObject):
            @param targetProduct the target product
            @return the copied tie-point grid, or <code>null</code> if the sourceProduct does not contain a tie-point grid with the given name.
         """
-        return TiePointGrid(ProductUtils_copyTiePointGrid(gridName, sourceProduct._obj, targetProduct._obj))
+        return TiePointGrid(ProductUtils_copyTiePointGrid(gridName, sourceProduct._jobj_ref, targetProduct._jobj_ref))
 
     @staticmethod
     def copyBand4(sourceBandName, sourceProduct, targetProduct, copySourceImage):
@@ -5351,7 +5379,7 @@ class ProductUtils(JObject):
            @param copySourceImage whether the source image of the source band should be copied.
            @return the copy of the band, or <code>null</code> if the sourceProduct does not contain a band with the given name.
         """
-        return Band(ProductUtils_copyBand4(sourceBandName, sourceProduct._obj, targetProduct._obj, copySourceImage))
+        return Band(ProductUtils_copyBand4(sourceBandName, sourceProduct._jobj_ref, targetProduct._jobj_ref, copySourceImage))
 
     @staticmethod
     def copyBand2(sourceBandName, sourceProduct, targetBandName, targetProduct, copySourceImage):
@@ -5364,7 +5392,7 @@ class ProductUtils(JObject):
            @param copySourceImage whether the source image of the source band should be copied.
            @return the copy of the band, or <code>null</code> if the sourceProduct does not contain a band with the given name.
         """
-        return Band(ProductUtils_copyBand2(sourceBandName, sourceProduct._obj, targetBandName, targetProduct._obj, copySourceImage))
+        return Band(ProductUtils_copyBand2(sourceBandName, sourceProduct._jobj_ref, targetBandName, targetProduct._jobj_ref, copySourceImage))
 
     @staticmethod
     def copyRasterDataNodeProperties(sourceRaster, targetRaster):
@@ -5374,7 +5402,7 @@ class ProductUtils(JObject):
            @param targetRaster the target band
            @see #copySpectralBandProperties(Band, Band)
         """
-        ProductUtils_copyRasterDataNodeProperties(sourceRaster._obj, targetRaster._obj)
+        ProductUtils_copyRasterDataNodeProperties(sourceRaster._jobj_ref, targetRaster._jobj_ref)
         return
 
     @staticmethod
@@ -5387,7 +5415,7 @@ class ProductUtils(JObject):
            @return the copy of the band, or <code>null</code> if the sourceProduct does not contain a band with the given name.
            @deprecated since BEAM 4.10, use {@link #copyBand(String, Product, Product, boolean)} instead.
         """
-        return Band(ProductUtils_copyBand3(sourceBandName, sourceProduct._obj, targetProduct._obj))
+        return Band(ProductUtils_copyBand3(sourceBandName, sourceProduct._jobj_ref, targetProduct._jobj_ref))
 
     @staticmethod
     def copyBand1(sourceBandName, sourceProduct, targetBandName, targetProduct):
@@ -5400,7 +5428,7 @@ class ProductUtils(JObject):
            @return the copy of the band, or <code>null</code> if the sourceProduct does not contain a band with the given name.
            @deprecated since BEAM 4.10, use {@link #copyBand(String, Product, String, Product, boolean)} instead.
         """
-        return Band(ProductUtils_copyBand1(sourceBandName, sourceProduct._obj, targetBandName, targetProduct._obj))
+        return Band(ProductUtils_copyBand1(sourceBandName, sourceProduct._jobj_ref, targetBandName, targetProduct._jobj_ref))
 
     @staticmethod
     def copySpectralBandProperties(sourceBand, targetBand):
@@ -5416,7 +5444,7 @@ class ProductUtils(JObject):
            @param targetBand the target band
            @see #copyRasterDataNodeProperties(RasterDataNode, RasterDataNode)
         """
-        ProductUtils_copySpectralBandProperties(sourceBand._obj, targetBand._obj)
+        ProductUtils_copySpectralBandProperties(sourceBand._jobj_ref, targetBand._jobj_ref)
         return
 
     @staticmethod
@@ -5427,7 +5455,7 @@ class ProductUtils(JObject):
            @param targetProduct the target product
            @throws IllegalArgumentException if one of the params is <code>null</code>.
         """
-        ProductUtils_copyGeoCoding(sourceProduct._obj, targetProduct._obj)
+        ProductUtils_copyGeoCoding(sourceProduct._jobj_ref, targetProduct._jobj_ref)
         return
 
     @staticmethod
@@ -5437,12 +5465,12 @@ class ProductUtils(JObject):
            @param sourceProduct the source product
            @param targetProduct the target product
         """
-        ProductUtils_copyTiePointGrids(sourceProduct._obj, targetProduct._obj)
+        ProductUtils_copyTiePointGrids(sourceProduct._jobj_ref, targetProduct._jobj_ref)
         return
 
     @staticmethod
     def copyVectorData(sourceProduct, targetProduct):
-        ProductUtils_copyVectorData(sourceProduct._obj, targetProduct._obj)
+        ProductUtils_copyVectorData(sourceProduct._jobj_ref, targetProduct._jobj_ref)
         return
 
     @staticmethod
@@ -5452,7 +5480,7 @@ class ProductUtils(JObject):
            @param product the product to be checked
            @return <code>true</code> if the given product can return a pixel position
         """
-        return ProductUtils_canGetPixelPos1(product._obj)
+        return ProductUtils_canGetPixelPos1(product._jobj_ref)
 
     @staticmethod
     def canGetPixelPos2(raster):
@@ -5461,7 +5489,7 @@ class ProductUtils(JObject):
            @param raster the raster to be checked
            @return <code>true</code> if the given raster can return a pixel position
         """
-        return ProductUtils_canGetPixelPos2(raster._obj)
+        return ProductUtils_canGetPixelPos2(raster._jobj_ref)
 
     @staticmethod
     def createDensityPlotImage(raster1, sampleMin1, sampleMax1, raster2, sampleMin2, sampleMax2, roiMask, width, height, background, image, pm):
@@ -5482,7 +5510,7 @@ class ProductUtils(JObject):
            @return the density plot image
            @throws java.io.IOException when an error occurred.
         """
-        return BufferedImage(ProductUtils_createDensityPlotImage(raster1._obj, sampleMin1, sampleMax1, raster2._obj, sampleMin2, sampleMax2, roiMask._obj, width, height, background._obj, image._obj, pm._obj))
+        return BufferedImage(ProductUtils_createDensityPlotImage(raster1._jobj_ref, sampleMin1, sampleMax1, raster2._jobj_ref, sampleMin2, sampleMax2, roiMask._jobj_ref, width, height, background._jobj_ref, image._jobj_ref, pm._jobj_ref))
 
     @staticmethod
     def overlayMasks(raster, overlayBIm, pm):
@@ -5494,11 +5522,11 @@ class ProductUtils(JObject):
            @return the modified given overlayBImm which contains all the activated masks.
            @see RasterDataNode#getOverlayMaskGroup()
         """
-        return BufferedImage(ProductUtils_overlayMasks(raster._obj, overlayBIm._obj, pm._obj))
+        return BufferedImage(ProductUtils_overlayMasks(raster._jobj_ref, overlayBIm._jobj_ref, pm._jobj_ref))
 
     @staticmethod
     def getCenterGeoPos(product):
-        return GeoPos(ProductUtils_getCenterGeoPos(product._obj))
+        return GeoPos(ProductUtils_getCenterGeoPos(product._jobj_ref))
 
     @staticmethod
     def normalizeGeoPolygon(polygon):
@@ -5510,11 +5538,11 @@ class ProductUtils(JObject):
            normalizing has been applied, 2 if positive and negative normalising has been applied
            @see #denormalizeGeoPolygon(GeoPos[])
         """
-        return ProductUtils_normalizeGeoPolygon(polygon._obj)
+        return ProductUtils_normalizeGeoPolygon(polygon._jobj_ref)
 
     @staticmethod
     def normalizeGeoPolygon_old(polygon):
-        return ProductUtils_normalizeGeoPolygon_old(polygon._obj)
+        return ProductUtils_normalizeGeoPolygon_old(polygon._jobj_ref)
 
     @staticmethod
     def denormalizeGeoPolygon(polygon):
@@ -5524,26 +5552,26 @@ class ProductUtils(JObject):
            method operates only on the longitude values of the given polygon.
            @param polygon a geographical, closed polygon
         """
-        ProductUtils_denormalizeGeoPolygon(polygon._obj)
+        ProductUtils_denormalizeGeoPolygon(polygon._jobj_ref)
         return
 
     @staticmethod
     def denormalizeGeoPos(geoPos):
-        ProductUtils_denormalizeGeoPos(geoPos._obj)
+        ProductUtils_denormalizeGeoPos(geoPos._jobj_ref)
         return
 
     @staticmethod
     def denormalizeGeoPos_old(geoPos):
-        ProductUtils_denormalizeGeoPos_old(geoPos._obj)
+        ProductUtils_denormalizeGeoPos_old(geoPos._jobj_ref)
         return
 
     @staticmethod
     def getRotationDirection(polygon):
-        return ProductUtils_getRotationDirection(polygon._obj)
+        return ProductUtils_getRotationDirection(polygon._jobj_ref)
 
     @staticmethod
     def getAngleSum(polygon):
-        return ProductUtils_getAngleSum(polygon._obj)
+        return ProductUtils_getAngleSum(polygon._jobj_ref)
 
     @staticmethod
     def convertToPixelPath(geoPath, geoCoding):
@@ -5559,7 +5587,7 @@ class ProductUtils(JObject):
            contains only SEG_MOVETO, SEG_LINETO, and SEG_CLOSE point types.
            @see #convertToGeoPath(Shape, GeoCoding)
         """
-        return GeneralPath(ProductUtils_convertToPixelPath(geoPath._obj, geoCoding._obj))
+        return GeneralPath(ProductUtils_convertToPixelPath(geoPath._jobj_ref, geoCoding._jobj_ref))
 
     @staticmethod
     def convertToGeoPath(shape, geoCoding):
@@ -5576,7 +5604,7 @@ class ProductUtils(JObject):
            double)} returnes only SEG_MOVETO, SEG_LINETO, and SEG_CLOSE point types.
            @see GeoCoding#canGetGeoPos()
         """
-        return GeneralPath(ProductUtils_convertToGeoPath(shape._obj, geoCoding._obj))
+        return GeneralPath(ProductUtils_convertToGeoPath(shape._jobj_ref, geoCoding._jobj_ref))
 
     @staticmethod
     def copyMetadata2(source, target):
@@ -5587,7 +5615,7 @@ class ProductUtils(JObject):
            @param target the target product.
            @throws NullPointerException if the source or the target product is {@code null}.
         """
-        ProductUtils_copyMetadata2(source._obj, target._obj)
+        ProductUtils_copyMetadata2(source._jobj_ref, target._jobj_ref)
         return
 
     @staticmethod
@@ -5599,7 +5627,7 @@ class ProductUtils(JObject):
            @param target the target element.
            @throws NullPointerException if the source or the target element is {@code null}.
         """
-        ProductUtils_copyMetadata1(source._obj, target._obj)
+        ProductUtils_copyMetadata1(source._jobj_ref, target._jobj_ref)
         return
 
     @staticmethod
@@ -5609,20 +5637,20 @@ class ProductUtils(JObject):
            @param sourceProduct The source product.
            @param targetProduct The target product.
         """
-        ProductUtils_copyPreferredTileSize(sourceProduct._obj, targetProduct._obj)
+        ProductUtils_copyPreferredTileSize(sourceProduct._jobj_ref, targetProduct._jobj_ref)
         return
 
     @staticmethod
     def createGeoTIFFMetadata2(product):
-        return GeoTIFFMetadata(ProductUtils_createGeoTIFFMetadata2(product._obj))
+        return GeoTIFFMetadata(ProductUtils_createGeoTIFFMetadata2(product._jobj_ref))
 
     @staticmethod
     def createGeoTIFFMetadata1(geoCoding, width, height):
-        return GeoTIFFMetadata(ProductUtils_createGeoTIFFMetadata1(geoCoding._obj, width, height))
+        return GeoTIFFMetadata(ProductUtils_createGeoTIFFMetadata1(geoCoding._jobj_ref, width, height))
 
     @staticmethod
     def areaToPath(negativeArea, deltaX):
-        return GeneralPath(ProductUtils_areaToPath(negativeArea._obj, deltaX))
+        return GeneralPath(ProductUtils_areaToPath(negativeArea._jobj_ref, deltaX))
 
     @staticmethod
     def addElementToHistory(product, elem):
@@ -5632,7 +5660,7 @@ class ProductUtils(JObject):
            @param product the product to add the history element.
            @param elem    the element to add to the products history. If <code>null</code> nothing will be added.
         """
-        ProductUtils_addElementToHistory(product._obj, elem._obj)
+        ProductUtils_addElementToHistory(product._jobj_ref, elem._jobj_ref)
         return
 
     @staticmethod
@@ -5643,7 +5671,7 @@ class ProductUtils(JObject):
            @param product the (output) product to be cleaned up
            @return an array of messages which changes are done to the given product.
         """
-        return ProductUtils_removeInvalidExpressions(product._obj)
+        return ProductUtils_removeInvalidExpressions(product._jobj_ref)
 
     @staticmethod
     def findSuitableQuicklookBandName(product):
@@ -5653,11 +5681,11 @@ class ProductUtils(JObject):
            @param product the product to be searched
            @return the name of a suitable band or null if the given product does not contain any bands
         """
-        return ProductUtils_findSuitableQuicklookBandName(product._obj)
+        return ProductUtils_findSuitableQuicklookBandName(product._jobj_ref)
 
     @staticmethod
     def computeSourcePixelCoordinates(sourceGeoCoding, sourceWidth, sourceHeight, destGeoCoding, destArea):
-        return PixelPos(ProductUtils_computeSourcePixelCoordinates(sourceGeoCoding._obj, sourceWidth, sourceHeight, destGeoCoding._obj, destArea._obj))
+        return PixelPos(ProductUtils_computeSourcePixelCoordinates(sourceGeoCoding._jobj_ref, sourceWidth, sourceHeight, destGeoCoding._jobj_ref, destArea._jobj_ref))
 
     @staticmethod
     def computeMinMaxY(pixelPositions):
@@ -5670,7 +5698,7 @@ class ProductUtils(JObject):
            empty.
            @throws IllegalArgumentException if the given pixelPositions are <code>null</code>.
         """
-        return ProductUtils_computeMinMaxY(pixelPositions._obj)
+        return ProductUtils_computeMinMaxY(pixelPositions._jobj_ref)
 
     @staticmethod
     def copyBandsForGeomTransform1(sourceProduct, targetProduct, defaultNoDataValue, addedRasterDataNodes):
@@ -5678,7 +5706,7 @@ class ProductUtils(JObject):
            Copies only the bands from source to target.
            @see #copyBandsForGeomTransform(Product, Product, boolean, double, java.util.Map)
         """
-        ProductUtils_copyBandsForGeomTransform1(sourceProduct._obj, targetProduct._obj, defaultNoDataValue, addedRasterDataNodes._obj)
+        ProductUtils_copyBandsForGeomTransform1(sourceProduct._jobj_ref, targetProduct._jobj_ref, defaultNoDataValue, addedRasterDataNodes._jobj_ref)
         return
 
     @staticmethod
@@ -5709,20 +5737,20 @@ class ProductUtils(JObject):
            @param defaultNoDataValue   the default, geophysical no-data value to be used if no no-data value is used by the source band.
            @param targetToSourceMap    a mapping from a target band to a source raster data node, can be {@code null}
         """
-        ProductUtils_copyBandsForGeomTransform2(sourceProduct._obj, targetProduct._obj, includeTiePointGrids, defaultNoDataValue, targetToSourceMap._obj)
+        ProductUtils_copyBandsForGeomTransform2(sourceProduct._jobj_ref, targetProduct._jobj_ref, includeTiePointGrids, defaultNoDataValue, targetToSourceMap._jobj_ref)
         return
 
     @staticmethod
     def getScanLineTime(product, y):
-        return ProductData_UTC(ProductUtils_getScanLineTime(product._obj, y))
+        return ProductData_UTC(ProductUtils_getScanLineTime(product._jobj_ref, y))
 
     @staticmethod
     def getGeophysicalSampleDouble(band, pixelX, pixelY, level):
-        return ProductUtils_getGeophysicalSampleDouble(band._obj, pixelX, pixelY, level)
+        return ProductUtils_getGeophysicalSampleDouble(band._jobj_ref, pixelX, pixelY, level)
 
     @staticmethod
     def getGeophysicalSampleLong(band, pixelX, pixelY, level):
-        return ProductUtils_getGeophysicalSampleLong(band._obj, pixelX, pixelY, level)
+        return ProductUtils_getGeophysicalSampleLong(band._jobj_ref, pixelX, pixelY, level)
 
 
 class MetadataElement(JObject):
@@ -5752,17 +5780,17 @@ metadata attributes of the type {@link MetadataAttribute} and any number of inne
            Gets the group of child elements. The method returns null, if this element has no children.
            @return The child element group, may be null.
         """
-        return ProductNodeGroup(MetadataElement_getElementGroup(self._obj))
+        return ProductNodeGroup(MetadataElement_getElementGroup(self._jobj_ref))
 
     def getParentElement(self):
-        return MetadataElement(MetadataElement_getParentElement(self._obj))
+        return MetadataElement(MetadataElement_getParentElement(self._jobj_ref))
 
     def addElement(self, element):
         """
            Adds the given element to this element.
            @param element the element to added, ignored if <code>null</code>
         """
-        MetadataElement_addElement(self._obj, element._obj)
+        MetadataElement_addElement(self._jobj_ref, element._jobj_ref)
         return
 
     def addElementAt(self, element, index):
@@ -5771,7 +5799,7 @@ metadata attributes of the type {@link MetadataAttribute} and any number of inne
            @param element the element to added, ignored if <code>null</code>
            @param index   where to put it
         """
-        MetadataElement_addElementAt(self._obj, element._obj, index)
+        MetadataElement_addElementAt(self._jobj_ref, element._jobj_ref, index)
         return
 
     def removeElement(self, element):
@@ -5780,13 +5808,13 @@ metadata attributes of the type {@link MetadataAttribute} and any number of inne
            @param element the element to be removed, ignored if <code>null</code>
            @return true, if so
         """
-        return MetadataElement_removeElement(self._obj, element._obj)
+        return MetadataElement_removeElement(self._jobj_ref, element._jobj_ref)
 
     def getNumElements(self):
         """
            @return the number of elements contained in this element.
         """
-        return MetadataElement_getNumElements(self._obj)
+        return MetadataElement_getNumElements(self._jobj_ref)
 
     def getElementAt(self, index):
         """
@@ -5795,7 +5823,7 @@ metadata attributes of the type {@link MetadataAttribute} and any number of inne
            @return the element at the given index
            @throws IndexOutOfBoundsException if the index is out of bounds
         """
-        return MetadataElement(MetadataElement_getElementAt(self._obj, index))
+        return MetadataElement(MetadataElement_getElementAt(self._jobj_ref, index))
 
     def getElementNames(self):
         """
@@ -5803,7 +5831,7 @@ metadata attributes of the type {@link MetadataAttribute} and any number of inne
            @return a string array containing the names of the groups contained in this element. If this element has no
            groups a zero-length-array is returned.
         """
-        return MetadataElement_getElementNames(self._obj)
+        return MetadataElement_getElementNames(self._jobj_ref)
 
     def getElements(self):
         """
@@ -5811,7 +5839,7 @@ metadata attributes of the type {@link MetadataAttribute} and any number of inne
            @return an array of elements contained in this product. If this element has no elements a zero-length-array is
            returned.
         """
-        return MetadataElement(MetadataElement_getElements(self._obj))
+        return MetadataElement(MetadataElement_getElements(self._jobj_ref))
 
     def getElement(self, name):
         """
@@ -5820,7 +5848,7 @@ metadata attributes of the type {@link MetadataAttribute} and any number of inne
            @return the element with the given name or <code>null</code> if a element with the given name is not contained in
            this element.
         """
-        return MetadataElement(MetadataElement_getElement(self._obj, name))
+        return MetadataElement(MetadataElement_getElement(self._jobj_ref, name))
 
     def containsElement(self, name):
         """
@@ -5829,7 +5857,7 @@ metadata attributes of the type {@link MetadataAttribute} and any number of inne
            @return <code>true</code> if a element with the given name is contained in this element, <code>false</code>
            otherwise
         """
-        return MetadataElement_containsElement(self._obj, name)
+        return MetadataElement_containsElement(self._jobj_ref, name)
 
     def getElementIndex(self, element):
         """
@@ -5837,14 +5865,14 @@ metadata attributes of the type {@link MetadataAttribute} and any number of inne
            @param element The element .
            @return The element's index, or -1.
         """
-        return MetadataElement_getElementIndex(self._obj, element._obj)
+        return MetadataElement_getElementIndex(self._jobj_ref, element._jobj_ref)
 
     def addAttribute(self, attribute):
         """
            Adds an attribute to this node.
            @param attribute the attribute to be added, <code>null</code> is ignored
         """
-        MetadataElement_addAttribute(self._obj, attribute._obj)
+        MetadataElement_addAttribute(self._jobj_ref, attribute._jobj_ref)
         return
 
     def removeAttribute(self, attribute):
@@ -5854,14 +5882,14 @@ metadata attributes of the type {@link MetadataAttribute} and any number of inne
            @param attribute the attribute to be removed, <code>null</code> is ignored
            @return <code>true</code> if it was removed
         """
-        return MetadataElement_removeAttribute(self._obj, attribute._obj)
+        return MetadataElement_removeAttribute(self._jobj_ref, attribute._jobj_ref)
 
     def getNumAttributes(self):
         """
            Returns the number of attributes attaached to this node.
            @return the number of attributes
         """
-        return MetadataElement_getNumAttributes(self._obj)
+        return MetadataElement_getNumAttributes(self._jobj_ref)
 
     def getAttributeAt(self, index):
         """
@@ -5870,14 +5898,14 @@ metadata attributes of the type {@link MetadataAttribute} and any number of inne
            @return the attribute, or <code>null</code> if this node does not contain attributes
            @throws IndexOutOfBoundsException
         """
-        return MetadataAttribute(MetadataElement_getAttributeAt(self._obj, index))
+        return MetadataAttribute(MetadataElement_getAttributeAt(self._jobj_ref, index))
 
     def getAttributeNames(self):
         """
            Returns the names of all attributes of this node.
            @return the attribute name array, never <code>null</code>
         """
-        return MetadataElement_getAttributeNames(self._obj)
+        return MetadataElement_getAttributeNames(self._jobj_ref)
 
     def getAttributes(self):
         """
@@ -5885,7 +5913,7 @@ metadata attributes of the type {@link MetadataAttribute} and any number of inne
            @return an array of attributes contained in this product. If this element has no attributes a zero-length-array
            is returned.
         """
-        return MetadataAttribute(MetadataElement_getAttributes(self._obj))
+        return MetadataAttribute(MetadataElement_getAttributes(self._jobj_ref))
 
     def getAttribute(self, name):
         """
@@ -5893,7 +5921,7 @@ metadata attributes of the type {@link MetadataAttribute} and any number of inne
            @param name the attribute name
            @return the attribute with the given name or <code>null</code> if it could not be found
         """
-        return MetadataAttribute(MetadataElement_getAttribute(self._obj, name))
+        return MetadataAttribute(MetadataElement_getAttribute(self._jobj_ref, name))
 
     def containsAttribute(self, name):
         """
@@ -5901,7 +5929,7 @@ metadata attributes of the type {@link MetadataAttribute} and any number of inne
            @param name the attribute name
            @return <code>true</code> if so
         """
-        return MetadataElement_containsAttribute(self._obj, name)
+        return MetadataElement_containsAttribute(self._jobj_ref, name)
 
     def getAttributeIndex(self, attribute):
         """
@@ -5909,7 +5937,7 @@ metadata attributes of the type {@link MetadataAttribute} and any number of inne
            @param attribute The attribute.
            @return The attribute's index, or -1.
         """
-        return MetadataElement_getAttributeIndex(self._obj, attribute._obj)
+        return MetadataElement_getAttributeIndex(self._jobj_ref, attribute._jobj_ref)
 
     def getAttributeDouble(self, name, defaultValue):
         """
@@ -5920,7 +5948,7 @@ metadata attributes of the type {@link MetadataAttribute} and any number of inne
            @return the attribute value as double.
            @throws NumberFormatException if the attribute type is ASCII but cannot be converted to a number
         """
-        return MetadataElement_getAttributeDouble(self._obj, name, defaultValue)
+        return MetadataElement_getAttributeDouble(self._jobj_ref, name, defaultValue)
 
     def getAttributeUTC(self, name, defaultValue):
         """
@@ -5930,7 +5958,7 @@ metadata attributes of the type {@link MetadataAttribute} and any number of inne
            @param defaultValue the default value
            @return the attribute value as UTC.
         """
-        return ProductData_UTC(MetadataElement_getAttributeUTC(self._obj, name, defaultValue._obj))
+        return ProductData_UTC(MetadataElement_getAttributeUTC(self._jobj_ref, name, defaultValue._jobj_ref))
 
     def getAttributeInt(self, name, defaultValue):
         """
@@ -5941,7 +5969,7 @@ metadata attributes of the type {@link MetadataAttribute} and any number of inne
            @return the attribute value as integer.
            @throws NumberFormatException if the attribute type is ASCII but cannot be converted to a number
         """
-        return MetadataElement_getAttributeInt(self._obj, name, defaultValue)
+        return MetadataElement_getAttributeInt(self._jobj_ref, name, defaultValue)
 
     def setAttributeInt(self, name, value):
         """
@@ -5951,7 +5979,7 @@ metadata attributes of the type {@link MetadataAttribute} and any number of inne
            @param name  the attribute name
            @param value the new value
         """
-        MetadataElement_setAttributeInt(self._obj, name, value)
+        MetadataElement_setAttributeInt(self._jobj_ref, name, value)
         return
 
     def setAttributeDouble(self, name, value):
@@ -5962,7 +5990,7 @@ metadata attributes of the type {@link MetadataAttribute} and any number of inne
            @param name  the attribute name
            @param value the new value
         """
-        MetadataElement_setAttributeDouble(self._obj, name, value)
+        MetadataElement_setAttributeDouble(self._jobj_ref, name, value)
         return
 
     def setAttributeUTC(self, name, value):
@@ -5973,7 +6001,7 @@ metadata attributes of the type {@link MetadataAttribute} and any number of inne
            @param name  the attribute name
            @param value the new value
         """
-        MetadataElement_setAttributeUTC(self._obj, name, value._obj)
+        MetadataElement_setAttributeUTC(self._jobj_ref, name, value._jobj_ref)
         return
 
     def getAttributeString(self, name, defaultValue):
@@ -5984,7 +6012,7 @@ metadata attributes of the type {@link MetadataAttribute} and any number of inne
            @param defaultValue the default value
            @return the attribute value as integer.
         """
-        return MetadataElement_getAttributeString(self._obj, name, defaultValue)
+        return MetadataElement_getAttributeString(self._jobj_ref, name, defaultValue)
 
     def setAttributeString(self, name, value):
         """
@@ -5994,11 +6022,11 @@ metadata attributes of the type {@link MetadataAttribute} and any number of inne
            @param name  the attribute name
            @param value the new value
         """
-        MetadataElement_setAttributeString(self._obj, name, value)
+        MetadataElement_setAttributeString(self._jobj_ref, name, value)
         return
 
     def setModified(self, modified):
-        MetadataElement_setModified(self._obj, modified)
+        MetadataElement_setModified(self._jobj_ref, modified)
         return
 
     def acceptVisitor(self, visitor):
@@ -6011,11 +6039,11 @@ metadata attributes of the type {@link MetadataAttribute} and any number of inne
            visits all attributes. Finally the method calls <code>visitor.visit(this)</code>.
            @param visitor the visitor
         """
-        MetadataElement_acceptVisitor(self._obj, visitor._obj)
+        MetadataElement_acceptVisitor(self._jobj_ref, visitor._jobj_ref)
         return
 
     def createDeepClone(self):
-        return MetadataElement(MetadataElement_createDeepClone(self._obj))
+        return MetadataElement(MetadataElement_createDeepClone(self._jobj_ref))
 
     def dispose(self):
         """
@@ -6027,27 +6055,27 @@ metadata attributes of the type {@link MetadataAttribute} and any number of inne
            
            Overrides of this method should always call <code>super.dispose();</code> after disposing this instance.
         """
-        MetadataElement_dispose(self._obj)
+        MetadataElement_dispose(self._jobj_ref)
         return
 
     def getOwner(self):
         """
            @return The owner node of this node.
         """
-        return ProductNode(MetadataElement_getOwner(self._obj))
+        return ProductNode(MetadataElement_getOwner(self._jobj_ref))
 
     def getName(self):
         """
            @return This node's name.
         """
-        return MetadataElement_getName(self._obj)
+        return MetadataElement_getName(self._jobj_ref)
 
     def setName(self, name):
         """
            Sets this product's name.
            @param name The name.
         """
-        MetadataElement_setName(self._obj, name)
+        MetadataElement_setName(self._jobj_ref, name)
         return
 
     def getDescription(self):
@@ -6055,14 +6083,14 @@ metadata attributes of the type {@link MetadataAttribute} and any number of inne
            Returns a short textual description for this products node.
            @return a description or <code>null</code>
         """
-        return MetadataElement_getDescription(self._obj)
+        return MetadataElement_getDescription(self._jobj_ref)
 
     def setDescription(self, description):
         """
            Sets a short textual description for this products node.
            @param description a description, can be <code>null</code>
         """
-        MetadataElement_setDescription(self._obj, description)
+        MetadataElement_setDescription(self._jobj_ref, description)
         return
 
     def isModified(self):
@@ -6070,10 +6098,10 @@ metadata attributes of the type {@link MetadataAttribute} and any number of inne
            Returns whether or not this node is modified.
            @return <code>true</code> if so
         """
-        return MetadataElement_isModified(self._obj)
+        return MetadataElement_isModified(self._jobj_ref)
 
     def toString(self):
-        return MetadataElement_toString(self._obj)
+        return MetadataElement_toString(self._jobj_ref)
 
     @staticmethod
     def isValidNodeName(name):
@@ -6092,21 +6120,21 @@ metadata attributes of the type {@link MetadataAttribute} and any number of inne
            @return the product, or <code>null</code> if this node was not owned by a product at the time this method was
            called
         """
-        return Product(MetadataElement_getProduct(self._obj))
+        return Product(MetadataElement_getProduct(self._jobj_ref))
 
     def getProductReader(self):
         """
            Returns the product reader for the product to which this node belongs to.
            @return the product reader, or <code>null</code> if no such exists
         """
-        return ProductReader(MetadataElement_getProductReader(self._obj))
+        return ProductReader(MetadataElement_getProductReader(self._jobj_ref))
 
     def getProductWriter(self):
         """
            Returns the product writer for the product to which this node belongs to.
            @return the product writer, or <code>null</code> if no such exists
         """
-        return ProductWriter(MetadataElement_getProductWriter(self._obj))
+        return ProductWriter(MetadataElement_getProductWriter(self._jobj_ref))
 
     def getDisplayName(self):
         """
@@ -6117,7 +6145,7 @@ metadata attributes of the type {@link MetadataAttribute} and any number of inne
            <code>null</code>
            @see #getProductRefString
         """
-        return MetadataElement_getDisplayName(self._obj)
+        return MetadataElement_getDisplayName(self._jobj_ref)
 
     def getProductRefString(self):
         """
@@ -6127,7 +6155,7 @@ metadata attributes of the type {@link MetadataAttribute} and any number of inne
            @return the product reference string. <br>or <code>null</code> if this node has no product <br>or
            <code>null</code> if its product reference number was inactive
         """
-        return MetadataElement_getProductRefString(self._obj)
+        return MetadataElement_getProductRefString(self._jobj_ref)
 
     def updateExpression(self, oldExternalName, newExternalName):
         """
@@ -6137,7 +6165,7 @@ metadata attributes of the type {@link MetadataAttribute} and any number of inne
            @param oldExternalName The old node name.
            @param newExternalName The new node name.
         """
-        MetadataElement_updateExpression(self._obj, oldExternalName, newExternalName)
+        MetadataElement_updateExpression(self._jobj_ref, oldExternalName, newExternalName)
         return
 
     def removeFromFile(self, productWriter):
@@ -6146,11 +6174,11 @@ metadata attributes of the type {@link MetadataAttribute} and any number of inne
            does nothing.
            @param productWriter the product writer to be used to remove this node from the underlying file.
         """
-        MetadataElement_removeFromFile(self._obj, productWriter._obj)
+        MetadataElement_removeFromFile(self._jobj_ref, productWriter._jobj_ref)
         return
 
     def getExtension(self, arg0):
-        return Object(MetadataElement_getExtension(self._obj, arg0._obj))
+        return Object(MetadataElement_getExtension(self._jobj_ref, arg0._jobj_ref))
 
 
 class Datum(JObject):
@@ -6246,43 +6274,43 @@ class PlacemarkGroup(JObject):
         JObject.__del__(self)
 
     def getVectorDataNode(self):
-        return VectorDataNode(PlacemarkGroup_getVectorDataNode(self._obj))
+        return VectorDataNode(PlacemarkGroup_getVectorDataNode(self._jobj_ref))
 
     def getPlacemark(self, feature):
-        return Placemark(PlacemarkGroup_getPlacemark(self._obj, feature._obj))
+        return Placemark(PlacemarkGroup_getPlacemark(self._jobj_ref, feature._jobj_ref))
 
     def add3(self, placemark):
-        return PlacemarkGroup_add3(self._obj, placemark._obj)
+        return PlacemarkGroup_add3(self._jobj_ref, placemark._jobj_ref)
 
     def add1(self, index, placemark):
-        PlacemarkGroup_add1(self._obj, index, placemark._obj)
+        PlacemarkGroup_add1(self._jobj_ref, index, placemark._jobj_ref)
         return
 
     def remove1(self, placemark):
-        return PlacemarkGroup_remove1(self._obj, placemark._obj)
+        return PlacemarkGroup_remove1(self._jobj_ref, placemark._jobj_ref)
 
     def dispose(self):
-        PlacemarkGroup_dispose(self._obj)
+        PlacemarkGroup_dispose(self._jobj_ref)
         return
 
     def isTakingOverNodeOwnership(self):
         """
            @return {@code true}, if child nodes will have this group as owner after adding.
         """
-        return PlacemarkGroup_isTakingOverNodeOwnership(self._obj)
+        return PlacemarkGroup_isTakingOverNodeOwnership(self._jobj_ref)
 
     def getNodeCount(self):
         """
            @return The number of product nodes in this product group.
         """
-        return PlacemarkGroup_getNodeCount(self._obj)
+        return PlacemarkGroup_getNodeCount(self._jobj_ref)
 
     def get1(self, index):
         """
            @param index The node index.
            @return The product node at the given index.
         """
-        return ProductNode(PlacemarkGroup_get1(self._obj, index))
+        return ProductNode(PlacemarkGroup_get1(self._jobj_ref, index))
 
     def getNodeDisplayNames(self):
         """
@@ -6290,21 +6318,21 @@ class PlacemarkGroup(JObject):
            @return an array containing the display names, never <code>null</code>, but the array can have zero length
            @see ProductNode#getDisplayName()
         """
-        return PlacemarkGroup_getNodeDisplayNames(self._obj)
+        return PlacemarkGroup_getNodeDisplayNames(self._jobj_ref)
 
     def getNodeNames(self):
         """
            Returns the names of all products currently managed.
            @return an array containing the names, never <code>null</code>, but the array can have zero length
         """
-        return PlacemarkGroup_getNodeNames(self._obj)
+        return PlacemarkGroup_getNodeNames(self._jobj_ref)
 
     def toArray1(self):
         """
            Returns an array of all products currently managed.
            @return an array containing the products, never <code>null</code>, but the array can have zero length
         """
-        return ProductNode(PlacemarkGroup_toArray1(self._obj))
+        return ProductNode(PlacemarkGroup_toArray1(self._jobj_ref))
 
     def toArray2(self, array):
         """
@@ -6312,27 +6340,27 @@ class PlacemarkGroup(JObject):
            new array of the same runtime type is allocated for this purpose.
            @return an array containing the product nodes, never <code>null</code>, but the array can have zero length
         """
-        return ProductNode(PlacemarkGroup_toArray2(self._obj, array._obj))
+        return ProductNode(PlacemarkGroup_toArray2(self._jobj_ref, array._jobj_ref))
 
     def indexOf1(self, name):
-        return PlacemarkGroup_indexOf1(self._obj, name)
+        return PlacemarkGroup_indexOf1(self._jobj_ref, name)
 
     def indexOf2(self, element):
-        return PlacemarkGroup_indexOf2(self._obj, element._obj)
+        return PlacemarkGroup_indexOf2(self._jobj_ref, element._jobj_ref)
 
     def getByDisplayName(self, displayName):
         """
            @param displayName the display name
            @return the product node with the given display name.
         """
-        return ProductNode(PlacemarkGroup_getByDisplayName(self._obj, displayName))
+        return ProductNode(PlacemarkGroup_getByDisplayName(self._jobj_ref, displayName))
 
     def get2(self, name):
         """
            @param name the name
            @return the product node with the given name.
         """
-        return ProductNode(PlacemarkGroup_get2(self._obj, name))
+        return ProductNode(PlacemarkGroup_get2(self._jobj_ref, name))
 
     def contains1(self, name):
         """
@@ -6340,7 +6368,7 @@ class PlacemarkGroup(JObject):
            @param name the name
            @return true, if so
         """
-        return PlacemarkGroup_contains1(self._obj, name)
+        return PlacemarkGroup_contains1(self._jobj_ref, name)
 
     def contains2(self, node):
         """
@@ -6348,7 +6376,7 @@ class PlacemarkGroup(JObject):
            @param node the node
            @return true, if so
         """
-        return PlacemarkGroup_contains2(self._obj, node._obj)
+        return PlacemarkGroup_contains2(self._jobj_ref, node._jobj_ref)
 
     def add4(self, node):
         """
@@ -6356,7 +6384,7 @@ class PlacemarkGroup(JObject):
            @param node the node to be added, ignored if <code>null</code>
            @return true, if the node has been added
         """
-        return PlacemarkGroup_add4(self._obj, node._obj)
+        return PlacemarkGroup_add4(self._jobj_ref, node._jobj_ref)
 
     def add2(self, index, node):
         """
@@ -6364,7 +6392,7 @@ class PlacemarkGroup(JObject):
            @param index the index.
            @param node  the node to be added, ignored if <code>null</code>
         """
-        PlacemarkGroup_add2(self._obj, index, node._obj)
+        PlacemarkGroup_add2(self._jobj_ref, index, node._jobj_ref)
         return
 
     def remove2(self, node):
@@ -6373,17 +6401,17 @@ class PlacemarkGroup(JObject):
            @param node the node to be removed
            @return true, if the node was removed
         """
-        return PlacemarkGroup_remove2(self._obj, node._obj)
+        return PlacemarkGroup_remove2(self._jobj_ref, node._jobj_ref)
 
     def removeAll(self):
         """
            Removes all nodes from this group.
         """
-        PlacemarkGroup_removeAll(self._obj)
+        PlacemarkGroup_removeAll(self._jobj_ref)
         return
 
     def clearRemovedList(self):
-        PlacemarkGroup_clearRemovedList(self._obj)
+        PlacemarkGroup_clearRemovedList(self._jobj_ref)
         return
 
     def getRemovedNodes(self):
@@ -6391,41 +6419,41 @@ class PlacemarkGroup(JObject):
            Gets all removed node nodes.
            @return a collection of all removed node nodes.
         """
-        return Collection(PlacemarkGroup_getRemovedNodes(self._obj))
+        return Collection(PlacemarkGroup_getRemovedNodes(self._jobj_ref))
 
     def getRawStorageSize2(self, subsetDef):
-        return PlacemarkGroup_getRawStorageSize2(self._obj, subsetDef._obj)
+        return PlacemarkGroup_getRawStorageSize2(self._jobj_ref, subsetDef._jobj_ref)
 
     def setModified(self, modified):
-        PlacemarkGroup_setModified(self._obj, modified)
+        PlacemarkGroup_setModified(self._jobj_ref, modified)
         return
 
     def acceptVisitor(self, visitor):
-        PlacemarkGroup_acceptVisitor(self._obj, visitor._obj)
+        PlacemarkGroup_acceptVisitor(self._jobj_ref, visitor._jobj_ref)
         return
 
     def updateExpression(self, oldExternalName, newExternalName):
-        PlacemarkGroup_updateExpression(self._obj, oldExternalName, newExternalName)
+        PlacemarkGroup_updateExpression(self._jobj_ref, oldExternalName, newExternalName)
         return
 
     def getOwner(self):
         """
            @return The owner node of this node.
         """
-        return ProductNode(PlacemarkGroup_getOwner(self._obj))
+        return ProductNode(PlacemarkGroup_getOwner(self._jobj_ref))
 
     def getName(self):
         """
            @return This node's name.
         """
-        return PlacemarkGroup_getName(self._obj)
+        return PlacemarkGroup_getName(self._jobj_ref)
 
     def setName(self, name):
         """
            Sets this product's name.
            @param name The name.
         """
-        PlacemarkGroup_setName(self._obj, name)
+        PlacemarkGroup_setName(self._jobj_ref, name)
         return
 
     def getDescription(self):
@@ -6433,14 +6461,14 @@ class PlacemarkGroup(JObject):
            Returns a short textual description for this products node.
            @return a description or <code>null</code>
         """
-        return PlacemarkGroup_getDescription(self._obj)
+        return PlacemarkGroup_getDescription(self._jobj_ref)
 
     def setDescription(self, description):
         """
            Sets a short textual description for this products node.
            @param description a description, can be <code>null</code>
         """
-        PlacemarkGroup_setDescription(self._obj, description)
+        PlacemarkGroup_setDescription(self._jobj_ref, description)
         return
 
     def isModified(self):
@@ -6448,10 +6476,10 @@ class PlacemarkGroup(JObject):
            Returns whether or not this node is modified.
            @return <code>true</code> if so
         """
-        return PlacemarkGroup_isModified(self._obj)
+        return PlacemarkGroup_isModified(self._jobj_ref)
 
     def toString(self):
-        return PlacemarkGroup_toString(self._obj)
+        return PlacemarkGroup_toString(self._jobj_ref)
 
     @staticmethod
     def isValidNodeName(name):
@@ -6470,21 +6498,21 @@ class PlacemarkGroup(JObject):
            @return the product, or <code>null</code> if this node was not owned by a product at the time this method was
            called
         """
-        return Product(PlacemarkGroup_getProduct(self._obj))
+        return Product(PlacemarkGroup_getProduct(self._jobj_ref))
 
     def getProductReader(self):
         """
            Returns the product reader for the product to which this node belongs to.
            @return the product reader, or <code>null</code> if no such exists
         """
-        return ProductReader(PlacemarkGroup_getProductReader(self._obj))
+        return ProductReader(PlacemarkGroup_getProductReader(self._jobj_ref))
 
     def getProductWriter(self):
         """
            Returns the product writer for the product to which this node belongs to.
            @return the product writer, or <code>null</code> if no such exists
         """
-        return ProductWriter(PlacemarkGroup_getProductWriter(self._obj))
+        return ProductWriter(PlacemarkGroup_getProductWriter(self._jobj_ref))
 
     def getDisplayName(self):
         """
@@ -6495,7 +6523,7 @@ class PlacemarkGroup(JObject):
            <code>null</code>
            @see #getProductRefString
         """
-        return PlacemarkGroup_getDisplayName(self._obj)
+        return PlacemarkGroup_getDisplayName(self._jobj_ref)
 
     def getProductRefString(self):
         """
@@ -6505,21 +6533,21 @@ class PlacemarkGroup(JObject):
            @return the product reference string. <br>or <code>null</code> if this node has no product <br>or
            <code>null</code> if its product reference number was inactive
         """
-        return PlacemarkGroup_getProductRefString(self._obj)
+        return PlacemarkGroup_getProductRefString(self._jobj_ref)
 
     def getRawStorageSize1(self):
         """
            Gets an estimated, raw storage size in bytes of this product node.
            @return the size in bytes.
         """
-        return PlacemarkGroup_getRawStorageSize1(self._obj)
+        return PlacemarkGroup_getRawStorageSize1(self._jobj_ref)
 
     def fireProductNodeChanged1(self, propertyName):
-        PlacemarkGroup_fireProductNodeChanged1(self._obj, propertyName)
+        PlacemarkGroup_fireProductNodeChanged1(self._jobj_ref, propertyName)
         return
 
     def fireProductNodeChanged2(self, propertyName, oldValue, newValue):
-        PlacemarkGroup_fireProductNodeChanged2(self._obj, propertyName, oldValue._obj, newValue._obj)
+        PlacemarkGroup_fireProductNodeChanged2(self._jobj_ref, propertyName, oldValue._jobj_ref, newValue._jobj_ref)
         return
 
     def removeFromFile(self, productWriter):
@@ -6528,11 +6556,11 @@ class PlacemarkGroup(JObject):
            does nothing.
            @param productWriter the product writer to be used to remove this node from the underlying file.
         """
-        PlacemarkGroup_removeFromFile(self._obj, productWriter._obj)
+        PlacemarkGroup_removeFromFile(self._jobj_ref, productWriter._jobj_ref)
         return
 
     def getExtension(self, arg0):
-        return Object(PlacemarkGroup_getExtension(self._obj, arg0._obj))
+        return Object(PlacemarkGroup_getExtension(self._jobj_ref, arg0._jobj_ref))
 
 
 class Product(JObject):
@@ -6580,14 +6608,14 @@ necessarily store data in the same format. Furthermore, it is not mandatory for 
            disk location (pure virtual memory product)
            @return the file location, may be <code>null</code>
         """
-        return File(Product_getFileLocation(self._obj))
+        return File(Product_getFileLocation(self._jobj_ref))
 
     def setFileLocation(self, fileLocation):
         """
            Sets the file location for this product.
            @param fileLocation the file location, may be <code>null</code>
         """
-        Product_setFileLocation(self._obj, fileLocation._obj)
+        Product_setFileLocation(self._jobj_ref, fileLocation._jobj_ref)
         return
 
     def getProductType(self):
@@ -6595,14 +6623,14 @@ necessarily store data in the same format. Furthermore, it is not mandatory for 
            Gets the product type string.
            @return the product type string
         """
-        return Product_getProductType(self._obj)
+        return Product_getProductType(self._jobj_ref)
 
     def setProductType(self, productType):
         """
            Sets the product type of this product.
            @param productType the product type.
         """
-        Product_setProductType(self._obj, productType)
+        Product_setProductType(self._jobj_ref, productType)
         return
 
     def setProductReader(self, reader):
@@ -6612,7 +6640,7 @@ necessarily store data in the same format. Furthermore, it is not mandatory for 
            @param reader the product reader.
            @throws IllegalArgumentException if the given reader is null.
         """
-        Product_setProductReader(self._obj, reader._obj)
+        Product_setProductReader(self._jobj_ref, reader._jobj_ref)
         return
 
     def getProductReader(self):
@@ -6621,7 +6649,7 @@ necessarily store data in the same format. Furthermore, it is not mandatory for 
            will be used to (re-)load band rasters.
            @return the product reader, can be <code>null</code>
         """
-        return ProductReader(Product_getProductReader(self._obj))
+        return ProductReader(Product_getProductReader(self._jobj_ref))
 
     def setProductWriter(self, writer):
         """
@@ -6629,7 +6657,7 @@ necessarily store data in the same format. Furthermore, it is not mandatory for 
            destination.
            @param writer the product writer, can be <code>null</code>
         """
-        Product_setProductWriter(self._obj, writer._obj)
+        Product_setProductWriter(self._jobj_ref, writer._jobj_ref)
         return
 
     def getProductWriter(self):
@@ -6638,7 +6666,7 @@ necessarily store data in the same format. Furthermore, it is not mandatory for 
            external destination.
            @return the product writer, can be <code>null</code>
         """
-        return ProductWriter(Product_getProductWriter(self._obj))
+        return ProductWriter(Product_getProductWriter(self._jobj_ref))
 
     def writeHeader(self, output):
         """
@@ -6649,7 +6677,7 @@ necessarily store data in the same format. Furthermore, it is not mandatory for 
            supported output types.
            @throws IOException              if an I/O error occurs
         """
-        Product_writeHeader(self._obj, output._obj)
+        Product_writeHeader(self._jobj_ref, output._jobj_ref)
         return
 
     def closeProductReader(self):
@@ -6658,7 +6686,7 @@ necessarily store data in the same format. Furthermore, it is not mandatory for 
            @throws IOException if an I/O error occurs
            @see #closeIO
         """
-        Product_closeProductReader(self._obj)
+        Product_closeProductReader(self._jobj_ref)
         return
 
     def closeProductWriter(self):
@@ -6667,7 +6695,7 @@ necessarily store data in the same format. Furthermore, it is not mandatory for 
            @throws IOException if an I/O error occurs
            @see #closeIO
         """
-        Product_closeProductWriter(self._obj)
+        Product_closeProductWriter(self._jobj_ref)
         return
 
     def closeIO(self):
@@ -6680,7 +6708,7 @@ necessarily store data in the same format. Furthermore, it is not mandatory for 
            @see #closeProductWriter
            @see #dispose
         """
-        Product_closeIO(self._obj)
+        Product_closeIO(self._jobj_ref)
         return
 
     def dispose(self):
@@ -6695,7 +6723,7 @@ necessarily store data in the same format. Furthermore, it is not mandatory for 
            
            This implementation also calls the <code>closeIO</code> in order to release all open I/O resources.
         """
-        Product_dispose(self._obj)
+        Product_dispose(self._jobj_ref)
         return
 
     def getPointingFactory(self):
@@ -6703,14 +6731,14 @@ necessarily store data in the same format. Furthermore, it is not mandatory for 
            Gets the pointing factory associated with this data product.
            @return the pointing factory or null, if none
         """
-        return PointingFactory(Product_getPointingFactory(self._obj))
+        return PointingFactory(Product_getPointingFactory(self._jobj_ref))
 
     def setPointingFactory(self, pointingFactory):
         """
            Sets the pointing factory for this data product.
            @param pointingFactory the pointing factory
         """
-        Product_setPointingFactory(self._obj, pointingFactory._obj)
+        Product_setPointingFactory(self._jobj_ref, pointingFactory._jobj_ref)
         return
 
     def setGeoCoding(self, geoCoding):
@@ -6726,7 +6754,7 @@ necessarily store data in the same format. Furthermore, it is not mandatory for 
            is not equal to this products <code>sceneRasterWidth</code> or
            <code>sceneRasterHeight</code>
         """
-        Product_setGeoCoding(self._obj, geoCoding._obj)
+        Product_setGeoCoding(self._jobj_ref, geoCoding._jobj_ref)
         return
 
     def getGeoCoding(self):
@@ -6734,7 +6762,7 @@ necessarily store data in the same format. Furthermore, it is not mandatory for 
            Returns the geo-coding used for this data product.
            @return the geo-coding, can be <code>null</code> if this product is not geo-coded.
         """
-        return GeoCoding(Product_getGeoCoding(self._obj))
+        return GeoCoding(Product_getGeoCoding(self._jobj_ref))
 
     def isUsingSingleGeoCoding(self):
         """
@@ -6743,7 +6771,7 @@ necessarily store data in the same format. Furthermore, it is not mandatory for 
            If this product does not have a geo-coding, the method returns false.
            @return true, if so
         """
-        return Product_isUsingSingleGeoCoding(self._obj)
+        return Product_isUsingSingleGeoCoding(self._jobj_ref)
 
     def transferGeoCodingTo(self, destProduct, subsetDef):
         """
@@ -6753,21 +6781,21 @@ necessarily store data in the same format. Furthermore, it is not mandatory for 
            @param subsetDef   the definition of the subset, may be <code>null</code>
            @return true, if the geo-coding could be transferred.
         """
-        return Product_transferGeoCodingTo(self._obj, destProduct._obj, subsetDef._obj)
+        return Product_transferGeoCodingTo(self._jobj_ref, destProduct._jobj_ref, subsetDef._jobj_ref)
 
     def getSceneRasterWidth(self):
         """
            Returns the scene width in pixels for this data product.
            @return the scene width in pixels for this data product.
         """
-        return Product_getSceneRasterWidth(self._obj)
+        return Product_getSceneRasterWidth(self._jobj_ref)
 
     def getSceneRasterHeight(self):
         """
            Returns the scene height in pixels for this data product.
            @return the scene height in pixels for this data product.
         """
-        return Product_getSceneRasterHeight(self._obj)
+        return Product_getSceneRasterHeight(self._jobj_ref)
 
     def getStartTime(self):
         """
@@ -6779,7 +6807,7 @@ necessarily store data in the same format. Furthermore, it is not mandatory for 
            contributing data.
            @return the sensing start time, can be null e.g. for non-swath products
         """
-        return ProductData_UTC(Product_getStartTime(self._obj))
+        return ProductData_UTC(Product_getStartTime(self._jobj_ref))
 
     def setStartTime(self, startTime):
         """
@@ -6791,7 +6819,7 @@ necessarily store data in the same format. Furthermore, it is not mandatory for 
            contributing data.
            @param startTime the sensing start time, can be null
         """
-        Product_setStartTime(self._obj, startTime._obj)
+        Product_setStartTime(self._jobj_ref, startTime._jobj_ref)
         return
 
     def getEndTime(self):
@@ -6804,7 +6832,7 @@ necessarily store data in the same format. Furthermore, it is not mandatory for 
            contributing data.
            @return the stop time , can be null e.g. for non-swath products
         """
-        return ProductData_UTC(Product_getEndTime(self._obj))
+        return ProductData_UTC(Product_getEndTime(self._jobj_ref))
 
     def setEndTime(self, endTime):
         """
@@ -6816,7 +6844,7 @@ necessarily store data in the same format. Furthermore, it is not mandatory for 
            contributing data.
            @param endTime the sensing stop time, can be null
         """
-        Product_setEndTime(self._obj, endTime._obj)
+        Product_setEndTime(self._jobj_ref, endTime._jobj_ref)
         return
 
     def getMetadataRoot(self):
@@ -6824,28 +6852,34 @@ necessarily store data in the same format. Furthermore, it is not mandatory for 
            Gets the root element of the associated metadata.
            @return the metadata root element
         """
-        return MetadataElement(Product_getMetadataRoot(self._obj))
+        return MetadataElement(Product_getMetadataRoot(self._jobj_ref))
 
-    def getBandGroup(self):
+    def getGroups(self):
         """
-           Gets the band group of this product.
-           @return The group of all bands.
+           @return The group which contains all other product node groups.
         """
-        return ProductNodeGroup(Product_getBandGroup(self._obj))
+        return ProductNodeGroup(Product_getGroups(self._jobj_ref))
+
+    def getGroup(self, name):
+        """
+           @param name The group name.
+           @return The group with the given name, or {@code null} if no such group exists.
+        """
+        return ProductNodeGroup(Product_getGroup(self._jobj_ref, name))
 
     def getTiePointGridGroup(self):
         """
            Gets the tie-point grid group of this product.
            @return The group of all tie-point grids.
         """
-        return ProductNodeGroup(Product_getTiePointGridGroup(self._obj))
+        return ProductNodeGroup(Product_getTiePointGridGroup(self._jobj_ref))
 
     def addTiePointGrid(self, tiePointGrid):
         """
            Adds the given tie-point grid to this product.
            @param tiePointGrid the tie-point grid to added, ignored if <code>null</code>
         """
-        Product_addTiePointGrid(self._obj, tiePointGrid._obj)
+        Product_addTiePointGrid(self._jobj_ref, tiePointGrid._jobj_ref)
         return
 
     def removeTiePointGrid(self, tiePointGrid):
@@ -6854,14 +6888,14 @@ necessarily store data in the same format. Furthermore, it is not mandatory for 
            @param tiePointGrid the tie-point grid to be removed, ignored if <code>null</code>
            @return <code>true</code> if node could be removed
         """
-        return Product_removeTiePointGrid(self._obj, tiePointGrid._obj)
+        return Product_removeTiePointGrid(self._jobj_ref, tiePointGrid._jobj_ref)
 
     def getNumTiePointGrids(self):
         """
            Returns the number of tie-point grids contained in this product
            @return the number of tie-point grids
         """
-        return Product_getNumTiePointGrids(self._obj)
+        return Product_getNumTiePointGrids(self._jobj_ref)
 
     def getTiePointGridAt(self, index):
         """
@@ -6870,7 +6904,7 @@ necessarily store data in the same format. Furthermore, it is not mandatory for 
            @return the tie-point grid at the given index
            @throws IndexOutOfBoundsException if the index is out of bounds
         """
-        return TiePointGrid(Product_getTiePointGridAt(self._obj, index))
+        return TiePointGrid(Product_getTiePointGridAt(self._jobj_ref, index))
 
     def getTiePointGridNames(self):
         """
@@ -6878,7 +6912,7 @@ necessarily store data in the same format. Furthermore, it is not mandatory for 
            @return a string array containing the names of the tie-point grids contained in this product. If this product has
            no tie-point grids a zero-length-array is returned.
         """
-        return Product_getTiePointGridNames(self._obj)
+        return Product_getTiePointGridNames(self._jobj_ref)
 
     def getTiePointGrids(self):
         """
@@ -6886,7 +6920,7 @@ necessarily store data in the same format. Furthermore, it is not mandatory for 
            @return an array of tie-point grids contained in this product. If this product has no  tie-point grids a
            zero-length-array is returned.
         """
-        return TiePointGrid(Product_getTiePointGrids(self._obj))
+        return TiePointGrid(Product_getTiePointGrids(self._jobj_ref))
 
     def getTiePointGrid(self, name):
         """
@@ -6895,7 +6929,7 @@ necessarily store data in the same format. Furthermore, it is not mandatory for 
            @return the tie-point grid with the given name or <code>null</code> if a tie-point grid with the given name is
            not contained in this product.
         """
-        return TiePointGrid(Product_getTiePointGrid(self._obj, name))
+        return TiePointGrid(Product_getTiePointGrid(self._jobj_ref, name))
 
     def containsTiePointGrid(self, name):
         """
@@ -6904,14 +6938,21 @@ necessarily store data in the same format. Furthermore, it is not mandatory for 
            @return <code>true</code> if a tie-point grid with the given name is contained in this product,
            <code>false</code> otherwise
         """
-        return Product_containsTiePointGrid(self._obj, name)
+        return Product_containsTiePointGrid(self._jobj_ref, name)
+
+    def getBandGroup(self):
+        """
+           Gets the band group of this product.
+           @return The group of all bands.
+        """
+        return ProductNodeGroup(Product_getBandGroup(self._jobj_ref))
 
     def addBand(self, band):
         """
            Adds the given band to this product.
            @param band the band to added, must not be <code>null</code>
         """
-        Product_addBand(self._obj, band._obj)
+        Product_addBand(self._jobj_ref, band._jobj_ref)
         return
 
     def addNewBand(self, bandName, dataType):
@@ -6922,7 +6963,7 @@ necessarily store data in the same format. Furthermore, it is not mandatory for 
            constants
            @return the new band which has just been added
         """
-        return Band(Product_addNewBand(self._obj, bandName, dataType))
+        return Band(Product_addNewBand(self._jobj_ref, bandName, dataType))
 
     def addComputedBand(self, bandName, expression):
         """
@@ -6932,7 +6973,7 @@ necessarily store data in the same format. Furthermore, it is not mandatory for 
            @param expression the band maths expression
            @return the new band which has just been added
         """
-        return Band(Product_addComputedBand(self._obj, bandName, expression))
+        return Band(Product_addComputedBand(self._jobj_ref, bandName, expression))
 
     def removeBand(self, band):
         """
@@ -6940,13 +6981,13 @@ necessarily store data in the same format. Furthermore, it is not mandatory for 
            @param band the band to be removed, ignored if <code>null</code>
            @return {@code true} if removed succesfully, otherwise {@code false}
         """
-        return Product_removeBand(self._obj, band._obj)
+        return Product_removeBand(self._jobj_ref, band._jobj_ref)
 
     def getNumBands(self):
         """
            @return the number of bands contained in this product.
         """
-        return Product_getNumBands(self._obj)
+        return Product_getNumBands(self._jobj_ref)
 
     def getBandAt(self, index):
         """
@@ -6955,7 +6996,7 @@ necessarily store data in the same format. Furthermore, it is not mandatory for 
            @return the band at the given index
            @throws IndexOutOfBoundsException if the index is out of bounds
         """
-        return Band(Product_getBandAt(self._obj, index))
+        return Band(Product_getBandAt(self._jobj_ref, index))
 
     def getBandNames(self):
         """
@@ -6963,7 +7004,7 @@ necessarily store data in the same format. Furthermore, it is not mandatory for 
            @return a string array containing the names of the bands contained in this product. If this product has no bands
            a zero-length-array is returned.
         """
-        return Product_getBandNames(self._obj)
+        return Product_getBandNames(self._jobj_ref)
 
     def getBands(self):
         """
@@ -6971,7 +7012,7 @@ necessarily store data in the same format. Furthermore, it is not mandatory for 
            @return an array of bands contained in this product. If this product has no bands a zero-length-array is
            returned.
         """
-        return Band(Product_getBands(self._obj))
+        return Band(Product_getBands(self._jobj_ref))
 
     def getBand(self, name):
         """
@@ -6981,7 +7022,7 @@ necessarily store data in the same format. Furthermore, it is not mandatory for 
            product.
            @throws IllegalArgumentException if the given name is <code>null</code> or empty.
         """
-        return Band(Product_getBand(self._obj, name))
+        return Band(Product_getBand(self._jobj_ref, name))
 
     def getBandIndex(self, name):
         """
@@ -6990,7 +7031,7 @@ necessarily store data in the same format. Furthermore, it is not mandatory for 
            @return the band index or <code>-1</code> if a band with the given name is not contained in this product.
            @throws IllegalArgumentException if the given name is <code>null</code> or empty.
         """
-        return Product_getBandIndex(self._obj, name)
+        return Product_getBandIndex(self._jobj_ref, name)
 
     def containsBand(self, name):
         """
@@ -7000,7 +7041,7 @@ necessarily store data in the same format. Furthermore, it is not mandatory for 
            otherwise
            @throws IllegalArgumentException if the given name is <code>null</code> or empty.
         """
-        return Product_containsBand(self._obj, name)
+        return Product_containsBand(self._jobj_ref, name)
 
     def containsRasterDataNode(self, name):
         """
@@ -7010,7 +7051,7 @@ necessarily store data in the same format. Furthermore, it is not mandatory for 
            @return <code>true</code> if a raster data node with the given name is contained in this product,
            <code>false</code> otherwise
         """
-        return Product_containsRasterDataNode(self._obj, name)
+        return Product_containsRasterDataNode(self._jobj_ref, name)
 
     def getRasterDataNode(self, name):
         """
@@ -7020,19 +7061,19 @@ necessarily store data in the same format. Furthermore, it is not mandatory for 
            @return the raster data node with the given name or <code>null</code> if a raster data node with the given name
            is not contained in this product.
         """
-        return RasterDataNode(Product_getRasterDataNode(self._obj, name))
+        return RasterDataNode(Product_getRasterDataNode(self._jobj_ref, name))
 
     def getMaskGroup(self):
-        return ProductNodeGroup(Product_getMaskGroup(self._obj))
+        return ProductNodeGroup(Product_getMaskGroup(self._jobj_ref))
 
     def getVectorDataGroup(self):
-        return ProductNodeGroup(Product_getVectorDataGroup(self._obj))
+        return ProductNodeGroup(Product_getVectorDataGroup(self._jobj_ref))
 
     def getFlagCodingGroup(self):
-        return ProductNodeGroup(Product_getFlagCodingGroup(self._obj))
+        return ProductNodeGroup(Product_getFlagCodingGroup(self._jobj_ref))
 
     def getIndexCodingGroup(self):
-        return ProductNodeGroup(Product_getIndexCodingGroup(self._obj))
+        return ProductNodeGroup(Product_getIndexCodingGroup(self._jobj_ref))
 
     def containsPixel(self, x, y):
         """
@@ -7042,7 +7083,7 @@ necessarily store data in the same format. Furthermore, it is not mandatory for 
            @return true, if so
            @see #containsPixel(PixelPos)
         """
-        return Product_containsPixel(self._obj, x, y)
+        return Product_containsPixel(self._jobj_ref, x, y)
 
     def getGcpGroup(self):
         """
@@ -7050,7 +7091,7 @@ necessarily store data in the same format. Furthermore, it is not mandatory for 
            Note that this method will create the group, if none exists already.
            @return the GCP group.
         """
-        return PlacemarkGroup(Product_getGcpGroup(self._obj))
+        return PlacemarkGroup(Product_getGcpGroup(self._jobj_ref))
 
     def getPinGroup(self):
         """
@@ -7058,7 +7099,22 @@ necessarily store data in the same format. Furthermore, it is not mandatory for 
            Note that this method will create the group, if none exists already.
            @return the pin group.
         """
-        return PlacemarkGroup(Product_getPinGroup(self._obj))
+        return PlacemarkGroup(Product_getPinGroup(self._jobj_ref))
+
+    def getNumResolutionsMax(self):
+        """
+           @return The maximum number of resolution levels common to all band images.
+           If less than or equal to zero, the  number of resolution levels is considered to be unknown.
+        """
+        return Product_getNumResolutionsMax(self._jobj_ref)
+
+    def setNumResolutionsMax(self, numResolutionsMax):
+        """
+           @param numResolutionsMax The maximum number of resolution levels common to all band images.
+           If less than or equal to zero, the  number of resolution levels is considered to be unknown.
+        """
+        Product_setNumResolutionsMax(self._jobj_ref, numResolutionsMax)
+        return
 
     def isCompatibleProduct(self, product, eps):
         """
@@ -7067,7 +7123,7 @@ necessarily store data in the same format. Furthermore, it is not mandatory for 
            @param eps     the maximum lat/lon error in degree
            @return <code>false</code> if the scene dimensions or geocoding are different, <code>true</code> otherwise.
         """
-        return Product_isCompatibleProduct(self._obj, product._obj, eps)
+        return Product_isCompatibleProduct(self._jobj_ref, product._jobj_ref, eps)
 
     def parseExpression(self, expression):
         """
@@ -7076,7 +7132,7 @@ necessarily store data in the same format. Furthermore, it is not mandatory for 
            @return a term parsed from the given expression string
            @throws ParseException if the expression could not successfully be parsed
         """
-        return Term(Product_parseExpression(self._obj, expression))
+        return Term(Product_parseExpression(self._jobj_ref, expression))
 
     def acceptVisitor(self, visitor):
         """
@@ -7088,7 +7144,7 @@ necessarily store data in the same format. Furthermore, it is not mandatory for 
            codings. Finally it visits product metadata root element and calls <code>visitor.visit(this)</code>.
            @param visitor the visitor, must not be <code>null</code>
         """
-        Product_acceptVisitor(self._obj, visitor._obj)
+        Product_acceptVisitor(self._jobj_ref, visitor._jobj_ref)
         return
 
     def addProductNodeListener(self, listener):
@@ -7098,24 +7154,24 @@ necessarily store data in the same format. Furthermore, it is not mandatory for 
            @param listener the listener to be added
            @return boolean if listener was added or not
         """
-        return Product_addProductNodeListener(self._obj, listener._obj)
+        return Product_addProductNodeListener(self._jobj_ref, listener._jobj_ref)
 
     def removeProductNodeListener(self, listener):
         """
            Removes a <code>ProductNodeListener</code> from this product.
            @param listener the listener to be removed.
         """
-        Product_removeProductNodeListener(self._obj, listener._obj)
+        Product_removeProductNodeListener(self._jobj_ref, listener._jobj_ref)
         return
 
     def getProductNodeListeners(self):
-        return ProductNodeListener(Product_getProductNodeListeners(self._obj))
+        return ProductNodeListener(Product_getProductNodeListeners(self._jobj_ref))
 
     def getRefNo(self):
         """
            @return The reference number of this product.
         """
-        return Product_getRefNo(self._obj)
+        return Product_getRefNo(self._jobj_ref)
 
     def setRefNo(self, refNo):
         """
@@ -7124,11 +7180,11 @@ necessarily store data in the same format. Furthermore, it is not mandatory for 
            @throws IllegalArgumentException if the refNo is out of range
            @throws IllegalStateException
         """
-        Product_setRefNo(self._obj, refNo)
+        Product_setRefNo(self._jobj_ref, refNo)
         return
 
     def resetRefNo(self):
-        Product_resetRefNo(self._obj)
+        Product_resetRefNo(self._jobj_ref)
         return
 
     def getProductManager(self):
@@ -7136,7 +7192,7 @@ necessarily store data in the same format. Furthermore, it is not mandatory for 
            Returns the product manager for this product.
            @return this product's manager, can be <code>null</code>
         """
-        return ProductManager(Product_getProductManager(self._obj))
+        return ProductManager(Product_getProductManager(self._jobj_ref))
 
     def createBandArithmeticParser(self):
         """
@@ -7144,7 +7200,7 @@ necessarily store data in the same format. Furthermore, it is not mandatory for 
            The parser created will use a namespace comprising all tie-point grids, bands and flags of this product.
            @return a parser for band arithmetic expressions for this product, never null
         """
-        return Parser(Product_createBandArithmeticParser(self._obj))
+        return Parser(Product_createBandArithmeticParser(self._jobj_ref))
 
     def createBandArithmeticDefaultNamespace(self):
         """
@@ -7152,7 +7208,7 @@ necessarily store data in the same format. Furthermore, it is not mandatory for 
            The namespace created comprises all tie-point grids, bands and flags of this product.
            @return a namespace, never null
         """
-        return WritableNamespace(Product_createBandArithmeticDefaultNamespace(self._obj))
+        return WritableNamespace(Product_createBandArithmeticDefaultNamespace(self._jobj_ref))
 
     def createSubset(self, subsetDef, name, desc):
         """
@@ -7165,7 +7221,7 @@ necessarily store data in the same format. Furthermore, it is not mandatory for 
            @return the product subset, or <code>null</code> if the product/subset combination is not valid
            @throws IOException if an I/O error occurs
         """
-        return Product(Product_createSubset(self._obj, subsetDef._obj, name, desc))
+        return Product(Product_createSubset(self._jobj_ref, subsetDef._jobj_ref, name, desc))
 
     def createFlippedProduct(self, flipType, name, desc):
         """
@@ -7176,10 +7232,10 @@ necessarily store data in the same format. Furthermore, it is not mandatory for 
            @return the product subset, or <code>null</code> if the product/subset combination is not valid
            @throws IOException if an I/O error occurs
         """
-        return Product(Product_createFlippedProduct(self._obj, flipType, name, desc))
+        return Product(Product_createFlippedProduct(self._jobj_ref, flipType, name, desc))
 
     def setModified(self, modified):
-        Product_setModified(self._obj, modified)
+        Product_setModified(self._jobj_ref, modified)
         return
 
     def getQuicklookBandName(self):
@@ -7187,14 +7243,14 @@ necessarily store data in the same format. Furthermore, it is not mandatory for 
            Gets the name of the band suitable for quicklook generation.
            @return the name of the quicklook band, or null if none has been defined
         """
-        return Product_getQuicklookBandName(self._obj)
+        return Product_getQuicklookBandName(self._jobj_ref)
 
     def setQuicklookBandName(self, quicklookBandName):
         """
            Sets the name of the band suitable for quicklook generation.
            @param quicklookBandName the name of the quicklook band, or null
         """
-        Product_setQuicklookBandName(self._obj, quicklookBandName)
+        Product_setQuicklookBandName(self._jobj_ref, quicklookBandName)
         return
 
     def createPixelInfoString(self, pixelX, pixelY):
@@ -7205,20 +7261,20 @@ necessarily store data in the same format. Furthermore, it is not mandatory for 
            @param pixelY the pixel Y co-ordinate
            @return the info string at the given position
         """
-        return Product_createPixelInfoString(self._obj, pixelX, pixelY)
+        return Product_createPixelInfoString(self._jobj_ref, pixelX, pixelY)
 
     def getRemovedChildNodes(self):
         """
            @return All removed child nodes. Array may be empty.
         """
-        return ProductNode(Product_getRemovedChildNodes(self._obj))
+        return ProductNode(Product_getRemovedChildNodes(self._jobj_ref))
 
     def canBeOrthorectified(self):
         """
            Checks whether or not this product can be ortorectified.
            @return true if {@link Band#canBeOrthorectified()} returns true for all bands, false otherwise
         """
-        return Product_canBeOrthorectified(self._obj)
+        return Product_canBeOrthorectified(self._jobj_ref)
 
     def getPreferredTileSize(self):
         """
@@ -7228,7 +7284,7 @@ necessarily store data in the same format. Furthermore, it is not mandatory for 
            @see RasterDataNode#getSourceImage()
            @see RasterDataNode# setSourceImage (java.awt.image.RenderedImage)
         """
-        return Dimension(Product_getPreferredTileSize(self._obj))
+        return Dimension(Product_getPreferredTileSize(self._jobj_ref))
 
     def setPreferredTileSize(self, tileWidth, tileHeight):
         """
@@ -7238,7 +7294,7 @@ necessarily store data in the same format. Furthermore, it is not mandatory for 
            @param tileHeight the preferred tile height
            @see #setPreferredTileSize(java.awt.Dimension)
         """
-        Product_setPreferredTileSize(self._obj, tileWidth, tileHeight)
+        Product_setPreferredTileSize(self._jobj_ref, tileWidth, tileHeight)
         return
 
     def getAllFlagNames(self):
@@ -7254,14 +7310,14 @@ necessarily store data in the same format. Furthermore, it is not mandatory for 
            never <code>null</code>.
            @see #parseExpression(String)
         """
-        return Product_getAllFlagNames(self._obj)
+        return Product_getAllFlagNames(self._jobj_ref)
 
     def getAutoGrouping(self):
         """
            Gets the auto-grouping applicable to product nodes contained in this product.
            @return The auto-grouping or {@code null}.
         """
-        return Product_AutoGrouping(Product_getAutoGrouping(self._obj))
+        return Product_AutoGrouping(Product_getAutoGrouping(self._jobj_ref))
 
     def setAutoGrouping(self, pattern):
         """
@@ -7279,7 +7335,7 @@ necessarily store data in the same format. Furthermore, it is not mandatory for 
            </pre>
            @param pattern The auto-grouping pattern.
         """
-        Product_setAutoGrouping(self._obj, pattern)
+        Product_setAutoGrouping(self._jobj_ref, pattern)
         return
 
     def addComputedMask(self, maskName, expression, description, color, transparency):
@@ -7293,7 +7349,7 @@ necessarily store data in the same format. Furthermore, it is not mandatory for 
            @param transparency the display transparency
            @return the new mask which has just been added
         """
-        return Mask(Product_addComputedMask(self._obj, maskName, expression, description, color._obj, transparency))
+        return Mask(Product_addComputedMask(self._jobj_ref, maskName, expression, description, color._jobj_ref, transparency))
 
     def addBitmaskDef(self, bitmaskDef):
         """
@@ -7301,7 +7357,7 @@ necessarily store data in the same format. Furthermore, it is not mandatory for 
            @param bitmaskDef the bitmask definition to added, ignored if <code>null</code>
            @deprecated since BEAM 4.7, use {@link #getMaskGroup()} instead
         """
-        Product_addBitmaskDef(self._obj, bitmaskDef._obj)
+        Product_addBitmaskDef(self._jobj_ref, bitmaskDef._jobj_ref)
         return
 
     def getBitmaskDefNames(self):
@@ -7311,7 +7367,7 @@ necessarily store data in the same format. Furthermore, it is not mandatory for 
            has no bitmask definitions a zero-length-array is returned.
            @deprecated since BEAM 4.7, use {@link #getMaskGroup()} instead
         """
-        return Product_getBitmaskDefNames(self._obj)
+        return Product_getBitmaskDefNames(self._jobj_ref)
 
     def getBitmaskDef(self, name):
         """
@@ -7321,7 +7377,7 @@ necessarily store data in the same format. Furthermore, it is not mandatory for 
            name is not contained in this product.
            @deprecated since BEAM 4.7, use {@link #getMaskGroup()} instead
         """
-        return BitmaskDef(Product_getBitmaskDef(self._obj, name))
+        return BitmaskDef(Product_getBitmaskDef(self._jobj_ref, name))
 
     def getValidMask(self, id):
         """
@@ -7331,7 +7387,7 @@ necessarily store data in the same format. Furthermore, it is not mandatory for 
            @see #createValidMask(String, com.bc.ceres.core.ProgressMonitor)
            @deprecated since BEAM 4.7, use {@link #getMaskGroup()} instead
         """
-        return BitRaster(Product_getValidMask(self._obj, id))
+        return BitRaster(Product_getValidMask(self._jobj_ref, id))
 
     def setValidMask(self, id, validMask):
         """
@@ -7341,7 +7397,7 @@ necessarily store data in the same format. Furthermore, it is not mandatory for 
            @see #createValidMask(String, com.bc.ceres.core.ProgressMonitor)
            @deprecated since BEAM 4.7, use {@link #getMaskGroup()} instead
         """
-        Product_setValidMask(self._obj, id, validMask._obj)
+        Product_setValidMask(self._jobj_ref, id, validMask._jobj_ref)
         return
 
     def createValidMask2(self, expression, pm):
@@ -7356,7 +7412,7 @@ necessarily store data in the same format. Furthermore, it is not mandatory for 
            @see #parseExpression(String)
            @deprecated since BEAM 4.7, use {@link #getMaskGroup()} instead
         """
-        return BitRaster(Product_createValidMask2(self._obj, expression, pm._obj))
+        return BitRaster(Product_createValidMask2(self._jobj_ref, expression, pm._jobj_ref))
 
     def createValidMask1(self, term, pm):
         """
@@ -7370,7 +7426,7 @@ necessarily store data in the same format. Furthermore, it is not mandatory for 
            @see #createValidMask(String, com.bc.ceres.core.ProgressMonitor)
            @deprecated since BEAM 4.7, use {@link #getMaskGroup()} instead
         """
-        return BitRaster(Product_createValidMask1(self._obj, term._obj, pm._obj))
+        return BitRaster(Product_createValidMask1(self._jobj_ref, term._jobj_ref, pm._jobj_ref))
 
     def readBitmask2(self, offsetX, offsetY, width, height, bitmaskTerm, bitmask, pm):
         """
@@ -7399,7 +7455,7 @@ necessarily store data in the same format. Furthermore, it is not mandatory for 
            @see #parseExpression(String)
            @deprecated since BEAM 4.7, use {@link #getMaskGroup()} instead
         """
-        Product_readBitmask2(self._obj, offsetX, offsetY, width, height, bitmaskTerm._obj, bitmask, pm._obj)
+        Product_readBitmask2(self._jobj_ref, offsetX, offsetY, width, height, bitmaskTerm._jobj_ref, bitmask, pm._jobj_ref)
         return
 
     def readBitmask1(self, offsetX, offsetY, width, height, bitmaskTerm, bitmask, trueValue, falseValue, pm):
@@ -7431,27 +7487,27 @@ necessarily store data in the same format. Furthermore, it is not mandatory for 
            @see #parseExpression(String)
            @deprecated since BEAM 4.7, use {@link #getMaskGroup()} instead
         """
-        Product_readBitmask1(self._obj, offsetX, offsetY, width, height, bitmaskTerm._obj, bitmask, trueValue, falseValue, pm._obj)
+        Product_readBitmask1(self._jobj_ref, offsetX, offsetY, width, height, bitmaskTerm._jobj_ref, bitmask, trueValue, falseValue, pm._jobj_ref)
         return
 
     def getOwner(self):
         """
            @return The owner node of this node.
         """
-        return ProductNode(Product_getOwner(self._obj))
+        return ProductNode(Product_getOwner(self._jobj_ref))
 
     def getName(self):
         """
            @return This node's name.
         """
-        return Product_getName(self._obj)
+        return Product_getName(self._jobj_ref)
 
     def setName(self, name):
         """
            Sets this product's name.
            @param name The name.
         """
-        Product_setName(self._obj, name)
+        Product_setName(self._jobj_ref, name)
         return
 
     def getDescription(self):
@@ -7459,14 +7515,14 @@ necessarily store data in the same format. Furthermore, it is not mandatory for 
            Returns a short textual description for this products node.
            @return a description or <code>null</code>
         """
-        return Product_getDescription(self._obj)
+        return Product_getDescription(self._jobj_ref)
 
     def setDescription(self, description):
         """
            Sets a short textual description for this products node.
            @param description a description, can be <code>null</code>
         """
-        Product_setDescription(self._obj, description)
+        Product_setDescription(self._jobj_ref, description)
         return
 
     def isModified(self):
@@ -7474,10 +7530,10 @@ necessarily store data in the same format. Furthermore, it is not mandatory for 
            Returns whether or not this node is modified.
            @return <code>true</code> if so
         """
-        return Product_isModified(self._obj)
+        return Product_isModified(self._jobj_ref)
 
     def toString(self):
-        return Product_toString(self._obj)
+        return Product_toString(self._jobj_ref)
 
     @staticmethod
     def isValidNodeName(name):
@@ -7496,7 +7552,7 @@ necessarily store data in the same format. Furthermore, it is not mandatory for 
            @return the product, or <code>null</code> if this node was not owned by a product at the time this method was
            called
         """
-        return Product(Product_getProduct(self._obj))
+        return Product(Product_getProduct(self._jobj_ref))
 
     def getDisplayName(self):
         """
@@ -7507,7 +7563,7 @@ necessarily store data in the same format. Furthermore, it is not mandatory for 
            <code>null</code>
            @see #getProductRefString
         """
-        return Product_getDisplayName(self._obj)
+        return Product_getDisplayName(self._jobj_ref)
 
     def getProductRefString(self):
         """
@@ -7517,7 +7573,7 @@ necessarily store data in the same format. Furthermore, it is not mandatory for 
            @return the product reference string. <br>or <code>null</code> if this node has no product <br>or
            <code>null</code> if its product reference number was inactive
         """
-        return Product_getProductRefString(self._obj)
+        return Product_getProductRefString(self._jobj_ref)
 
     def updateExpression(self, oldExternalName, newExternalName):
         """
@@ -7527,7 +7583,7 @@ necessarily store data in the same format. Furthermore, it is not mandatory for 
            @param oldExternalName The old node name.
            @param newExternalName The new node name.
         """
-        Product_updateExpression(self._obj, oldExternalName, newExternalName)
+        Product_updateExpression(self._jobj_ref, oldExternalName, newExternalName)
         return
 
     def removeFromFile(self, productWriter):
@@ -7536,11 +7592,11 @@ necessarily store data in the same format. Furthermore, it is not mandatory for 
            does nothing.
            @param productWriter the product writer to be used to remove this node from the underlying file.
         """
-        Product_removeFromFile(self._obj, productWriter._obj)
+        Product_removeFromFile(self._jobj_ref, productWriter._jobj_ref)
         return
 
     def getExtension(self, arg0):
-        return Object(Product_getExtension(self._obj, arg0._obj))
+        return Object(Product_getExtension(self._jobj_ref, arg0._jobj_ref))
 
 
 class Point2D(JObject):
@@ -7653,53 +7709,53 @@ values even if the curve points are used to create color gradient palettes.
 
     @staticmethod
     def newColorPaletteDef(points, numColors):
-        return ColorPaletteDef(ColorPaletteDef_newColorPaletteDefFromPoints(points._obj, numColors))
+        return ColorPaletteDef(ColorPaletteDef_newColorPaletteDefFromPoints(points._jobj_ref, numColors))
 
     def isDiscrete(self):
-        return ColorPaletteDef_isDiscrete(self._obj)
+        return ColorPaletteDef_isDiscrete(self._jobj_ref)
 
     def setDiscrete(self, discrete):
-        ColorPaletteDef_setDiscrete(self._obj, discrete)
+        ColorPaletteDef_setDiscrete(self._jobj_ref, discrete)
         return
 
     def getNumColors(self):
-        return ColorPaletteDef_getNumColors(self._obj)
+        return ColorPaletteDef_getNumColors(self._jobj_ref)
 
     def setNumColors(self, numColors):
-        ColorPaletteDef_setNumColors(self._obj, numColors)
+        ColorPaletteDef_setNumColors(self._jobj_ref, numColors)
         return
 
     def getNumPoints(self):
-        return ColorPaletteDef_getNumPoints(self._obj)
+        return ColorPaletteDef_getNumPoints(self._jobj_ref)
 
     def setNumPoints(self, numPoints):
-        ColorPaletteDef_setNumPoints(self._obj, numPoints)
+        ColorPaletteDef_setNumPoints(self._jobj_ref, numPoints)
         return
 
     def isAutoDistribute(self):
-        return ColorPaletteDef_isAutoDistribute(self._obj)
+        return ColorPaletteDef_isAutoDistribute(self._jobj_ref)
 
     def setAutoDistribute(self, autoDistribute):
-        ColorPaletteDef_setAutoDistribute(self._obj, autoDistribute)
+        ColorPaletteDef_setAutoDistribute(self._jobj_ref, autoDistribute)
         return
 
     def getPointAt(self, index):
-        return ColorPaletteDef_Point(ColorPaletteDef_getPointAt(self._obj, index))
+        return ColorPaletteDef_Point(ColorPaletteDef_getPointAt(self._jobj_ref, index))
 
     def getFirstPoint(self):
-        return ColorPaletteDef_Point(ColorPaletteDef_getFirstPoint(self._obj))
+        return ColorPaletteDef_Point(ColorPaletteDef_getFirstPoint(self._jobj_ref))
 
     def getLastPoint(self):
-        return ColorPaletteDef_Point(ColorPaletteDef_getLastPoint(self._obj))
+        return ColorPaletteDef_Point(ColorPaletteDef_getLastPoint(self._jobj_ref))
 
     def getMinDisplaySample(self):
-        return ColorPaletteDef_getMinDisplaySample(self._obj)
+        return ColorPaletteDef_getMinDisplaySample(self._jobj_ref)
 
     def getMaxDisplaySample(self):
-        return ColorPaletteDef_getMaxDisplaySample(self._obj)
+        return ColorPaletteDef_getMaxDisplaySample(self._jobj_ref)
 
     def insertPointAfter(self, index, point):
-        ColorPaletteDef_insertPointAfter(self._obj, index, point._obj)
+        ColorPaletteDef_insertPointAfter(self._jobj_ref, index, point._jobj_ref)
         return
 
     def createPointAfter(self, index, scaling):
@@ -7709,7 +7765,7 @@ values even if the curve points are used to create color gradient palettes.
            @param scaling the scaling
            @return true, if a point has been inserted
         """
-        return ColorPaletteDef_createPointAfter(self._obj, index, scaling._obj)
+        return ColorPaletteDef_createPointAfter(self._jobj_ref, index, scaling._jobj_ref)
 
     @staticmethod
     def getCenterColor(c1, c2):
@@ -7719,31 +7775,31 @@ values even if the curve points are used to create color gradient palettes.
            @param c2 2nd color
            @return the center color
         """
-        return Color(ColorPaletteDef_getCenterColor(c1._obj, c2._obj))
+        return Color(ColorPaletteDef_getCenterColor(c1._jobj_ref, c2._jobj_ref))
 
     def removePointAt(self, index):
-        ColorPaletteDef_removePointAt(self._obj, index)
+        ColorPaletteDef_removePointAt(self._jobj_ref, index)
         return
 
     def addPoint(self, point):
-        ColorPaletteDef_addPoint(self._obj, point._obj)
+        ColorPaletteDef_addPoint(self._jobj_ref, point._jobj_ref)
         return
 
     def getPoints(self):
-        return ColorPaletteDef_Point(ColorPaletteDef_getPoints(self._obj))
+        return ColorPaletteDef_Point(ColorPaletteDef_getPoints(self._jobj_ref))
 
     def setPoints(self, points):
-        ColorPaletteDef_setPoints(self._obj, points._obj)
+        ColorPaletteDef_setPoints(self._jobj_ref, points._jobj_ref)
         return
 
     def getIterator(self):
-        return Iterator(ColorPaletteDef_getIterator(self._obj))
+        return Iterator(ColorPaletteDef_getIterator(self._jobj_ref))
 
     def clone(self):
-        return Object(ColorPaletteDef_clone(self._obj))
+        return Object(ColorPaletteDef_clone(self._jobj_ref))
 
     def createDeepCopy(self):
-        return ColorPaletteDef(ColorPaletteDef_createDeepCopy(self._obj))
+        return ColorPaletteDef(ColorPaletteDef_createDeepCopy(self._jobj_ref))
 
     @staticmethod
     def loadColorPaletteDef(file):
@@ -7753,7 +7809,7 @@ values even if the curve points are used to create color gradient palettes.
            @return the color palette definition, never null
            @throws IOException if an I/O error occurs
         """
-        return ColorPaletteDef(ColorPaletteDef_loadColorPaletteDef(file._obj))
+        return ColorPaletteDef(ColorPaletteDef_loadColorPaletteDef(file._jobj_ref))
 
     @staticmethod
     def storeColorPaletteDef(colorPaletteDef, file):
@@ -7763,7 +7819,7 @@ values even if the curve points are used to create color gradient palettes.
            @param file            the file
            @throws IOException if an I/O error occurs
         """
-        ColorPaletteDef_storeColorPaletteDef(colorPaletteDef._obj, file._obj)
+        ColorPaletteDef_storeColorPaletteDef(colorPaletteDef._jobj_ref, file._jobj_ref)
         return
 
     def dispose(self):
@@ -7776,17 +7832,17 @@ values even if the curve points are used to create color gradient palettes.
            
            Overrides of this method should always call <code>super.dispose();</code> after disposing this instance.
         """
-        ColorPaletteDef_dispose(self._obj)
+        ColorPaletteDef_dispose(self._jobj_ref)
         return
 
     def getColors(self):
-        return Color(ColorPaletteDef_getColors(self._obj))
+        return Color(ColorPaletteDef_getColors(self._jobj_ref))
 
     def createColorPalette(self, scaling):
-        return Color(ColorPaletteDef_createColorPalette(self._obj, scaling._obj))
+        return Color(ColorPaletteDef_createColorPalette(self._jobj_ref, scaling._jobj_ref))
 
     def computeColor(self, scaling, sample):
-        return Color(ColorPaletteDef_computeColor(self._obj, scaling._obj, sample))
+        return Color(ColorPaletteDef_computeColor(self._jobj_ref, scaling._jobj_ref, sample))
 
 
 class MapInfo(JObject):
@@ -7823,7 +7879,7 @@ class ImageInfo(JObject):
            Constructs a new image information instance.
            @param colorPaletteDef the color palette definition
         """
-        return ImageInfo(ImageInfo_newImageInfoPalette(colorPaletteDef._obj))
+        return ImageInfo(ImageInfo_newImageInfoPalette(colorPaletteDef._jobj_ref))
 
     @staticmethod
     def newImageInfo(rgbChannelDef):
@@ -7831,7 +7887,7 @@ class ImageInfo(JObject):
            Constructs a new RGB image information instance.
            @param rgbChannelDef the RGB channel definition
         """
-        return ImageInfo(ImageInfo_newImageInfoRGB(rgbChannelDef._obj))
+        return ImageInfo(ImageInfo_newImageInfoRGB(rgbChannelDef._jobj_ref))
 
     def getColorPaletteDef(self):
         """
@@ -7839,7 +7895,7 @@ class ImageInfo(JObject):
            @return The color palette definition. Can be {@code null}.
            In this case {@link #getRgbChannelDef()} is non-null.
         """
-        return ColorPaletteDef(ImageInfo_getColorPaletteDef(self._obj))
+        return ColorPaletteDef(ImageInfo_getColorPaletteDef(self._jobj_ref))
 
     def getRgbChannelDef(self):
         """
@@ -7847,48 +7903,48 @@ class ImageInfo(JObject):
            @return The RGB(A) channel definition.
            Can be {@code null}. In this case {@link #getColorPaletteDef()} is non-null.
         """
-        return RGBChannelDef(ImageInfo_getRgbChannelDef(self._obj))
+        return RGBChannelDef(ImageInfo_getRgbChannelDef(self._jobj_ref))
 
     def getNoDataColor(self):
-        return Color(ImageInfo_getNoDataColor(self._obj))
+        return Color(ImageInfo_getNoDataColor(self._jobj_ref))
 
     def setNoDataColor(self, noDataColor):
-        ImageInfo_setNoDataColor(self._obj, noDataColor._obj)
+        ImageInfo_setNoDataColor(self._jobj_ref, noDataColor._jobj_ref)
         return
 
     def setHistogramMatching(self, histogramMatching):
-        ImageInfo_setHistogramMatching(self._obj, histogramMatching._obj)
+        ImageInfo_setHistogramMatching(self._jobj_ref, histogramMatching._jobj_ref)
         return
 
     def isLogScaled(self):
-        return ImageInfo_isLogScaled(self._obj)
+        return ImageInfo_isLogScaled(self._jobj_ref)
 
     def setLogScaled(self, logScaled):
-        ImageInfo_setLogScaled(self._obj, logScaled)
+        ImageInfo_setLogScaled(self._jobj_ref, logScaled)
         return
 
     def getColors(self):
-        return Color(ImageInfo_getColors(self._obj))
+        return Color(ImageInfo_getColors(self._jobj_ref))
 
     def getColorComponentCount(self):
         """
            Gets the number of color components the image shall have using an instance of this {@code ImageInfo}.
            @return {@code 3} for RGB images, {@code 4} for RGB images with an alpha channel (transparency)
         """
-        return ImageInfo_getColorComponentCount(self._obj)
+        return ImageInfo_getColorComponentCount(self._jobj_ref)
 
     def createIndexColorModel(self, scaling):
-        return IndexColorModel(ImageInfo_createIndexColorModel(self._obj, scaling._obj))
+        return IndexColorModel(ImageInfo_createIndexColorModel(self._jobj_ref, scaling._jobj_ref))
 
     def createComponentColorModel(self):
-        return ComponentColorModel(ImageInfo_createComponentColorModel(self._obj))
+        return ComponentColorModel(ImageInfo_createComponentColorModel(self._jobj_ref))
 
     def clone(self):
         """
            Creates and returns a copy of this object.
            @return a copy of this object
         """
-        return Object(ImageInfo_clone(self._obj))
+        return Object(ImageInfo_clone(self._jobj_ref))
 
     def createDeepCopy(self):
         """
@@ -7896,7 +7952,7 @@ class ImageInfo(JObject):
            {@link #clone()}.
            @return a copy of this object
         """
-        return ImageInfo(ImageInfo_createDeepCopy(self._obj))
+        return ImageInfo(ImageInfo_createDeepCopy(self._jobj_ref))
 
     def dispose(self):
         """
@@ -7908,7 +7964,7 @@ class ImageInfo(JObject):
            
            Overrides of this method should always call <code>super.dispose();</code> after disposing this instance.
         """
-        ImageInfo_dispose(self._obj)
+        ImageInfo_dispose(self._jobj_ref)
         return
 
     def setColors(self, colors):
@@ -7916,7 +7972,7 @@ class ImageInfo(JObject):
            Sets the colours of the colour palette of this image info.
            @param colors the new colours
         """
-        ImageInfo_setColors(self._obj, colors._obj)
+        ImageInfo_setColors(self._jobj_ref, colors._jobj_ref)
         return
 
     def setColorPaletteDef(self, colorPaletteDef, minSample, maxSample, autoDistribute):
@@ -7927,7 +7983,7 @@ class ImageInfo(JObject):
            @param maxSample       the maximum allowed sample value in the new colour palette
            @param autoDistribute  if true, points are distributed between minSample/maxSample.
         """
-        ImageInfo_setColorPaletteDef(self._obj, colorPaletteDef._obj, minSample, maxSample, autoDistribute)
+        ImageInfo_setColorPaletteDef(self._jobj_ref, colorPaletteDef._jobj_ref, minSample, maxSample, autoDistribute)
         return
 
     @staticmethod
@@ -7978,48 +8034,48 @@ class RGBChannelDef(JObject):
         return RGBChannelDef(RGBChannelDef_newRGBChannelDef())
 
     def getSourceName(self, index):
-        return RGBChannelDef_getSourceName(self._obj, index)
+        return RGBChannelDef_getSourceName(self._jobj_ref, index)
 
     def setSourceName(self, index, sourceName):
-        RGBChannelDef_setSourceName(self._obj, index, sourceName)
+        RGBChannelDef_setSourceName(self._jobj_ref, index, sourceName)
         return
 
     def getSourceNames(self):
-        return RGBChannelDef_getSourceNames(self._obj)
+        return RGBChannelDef_getSourceNames(self._jobj_ref)
 
     def setSourceNames(self, bandNames):
-        RGBChannelDef_setSourceNames(self._obj, bandNames)
+        RGBChannelDef_setSourceNames(self._jobj_ref, bandNames)
         return
 
     def isAlphaUsed(self):
-        return RGBChannelDef_isAlphaUsed(self._obj)
+        return RGBChannelDef_isAlphaUsed(self._jobj_ref)
 
     def isGammaUsed(self, index):
-        return RGBChannelDef_isGammaUsed(self._obj, index)
+        return RGBChannelDef_isGammaUsed(self._jobj_ref, index)
 
     def getGamma(self, index):
-        return RGBChannelDef_getGamma(self._obj, index)
+        return RGBChannelDef_getGamma(self._jobj_ref, index)
 
     def setGamma(self, index, gamma):
-        RGBChannelDef_setGamma(self._obj, index, gamma)
+        RGBChannelDef_setGamma(self._jobj_ref, index, gamma)
         return
 
     def getMinDisplaySample(self, index):
-        return RGBChannelDef_getMinDisplaySample(self._obj, index)
+        return RGBChannelDef_getMinDisplaySample(self._jobj_ref, index)
 
     def setMinDisplaySample(self, index, min):
-        RGBChannelDef_setMinDisplaySample(self._obj, index, min)
+        RGBChannelDef_setMinDisplaySample(self._jobj_ref, index, min)
         return
 
     def getMaxDisplaySample(self, index):
-        return RGBChannelDef_getMaxDisplaySample(self._obj, index)
+        return RGBChannelDef_getMaxDisplaySample(self._jobj_ref, index)
 
     def setMaxDisplaySample(self, index, max):
-        RGBChannelDef_setMaxDisplaySample(self._obj, index, max)
+        RGBChannelDef_setMaxDisplaySample(self._jobj_ref, index, max)
         return
 
     def clone(self):
-        return Object(RGBChannelDef_clone(self._obj))
+        return Object(RGBChannelDef_clone(self._jobj_ref))
 
 
 class TiePointGrid(JObject):
@@ -8124,7 +8180,7 @@ Usually, tie-point grids are a sub-sampling of a data product's scene resolution
            @return the angular discontinuity, will always be either {@link #DISCONT_NONE} or {@link #DISCONT_AT_180} or
            {@link #DISCONT_AT_360}
         """
-        return TiePointGrid_getDiscontinuity1(self._obj)
+        return TiePointGrid_getDiscontinuity1(self._jobj_ref)
 
     def setDiscontinuity(self, discontinuity):
         """
@@ -8132,7 +8188,7 @@ Usually, tie-point grids are a sub-sampling of a data product's scene resolution
            @param discontinuity angular discontinuity, can be either {@link #DISCONT_NONE} or {@link #DISCONT_AT_180} or
            {@link #DISCONT_AT_360}
         """
-        TiePointGrid_setDiscontinuity(self._obj, discontinuity)
+        TiePointGrid_setDiscontinuity(self._jobj_ref, discontinuity)
         return
 
     def isFloatingPointType(self):
@@ -8140,7 +8196,7 @@ Usually, tie-point grids are a sub-sampling of a data product's scene resolution
            Returns <code>true</code>
            @return true
         """
-        return TiePointGrid_isFloatingPointType(self._obj)
+        return TiePointGrid_isFloatingPointType(self._jobj_ref)
 
     def getGeophysicalDataType(self):
         """
@@ -8149,7 +8205,7 @@ Usually, tie-point grids are a sub-sampling of a data product's scene resolution
            @return the geophysical data type
            @see ProductData
         """
-        return TiePointGrid_getGeophysicalDataType(self._obj)
+        return TiePointGrid_getGeophysicalDataType(self._jobj_ref)
 
     def getSceneRasterData(self):
         """
@@ -8165,7 +8221,7 @@ Usually, tie-point grids are a sub-sampling of a data product's scene resolution
            @see #getSceneRasterWidth
            @see #getSceneRasterHeight
         """
-        return ProductData(TiePointGrid_getSceneRasterData(self._obj))
+        return ProductData(TiePointGrid_getSceneRasterData(self._jobj_ref))
 
     def getSceneRasterWidth(self):
         """
@@ -8173,7 +8229,7 @@ Usually, tie-point grids are a sub-sampling of a data product's scene resolution
            <code>(getRasterWidth() - 1) * getSubSamplingX() + 1</code>
            @return the scene width in pixels
         """
-        return TiePointGrid_getSceneRasterWidth(self._obj)
+        return TiePointGrid_getSceneRasterWidth(self._jobj_ref)
 
     def getSceneRasterHeight(self):
         """
@@ -8181,19 +8237,19 @@ Usually, tie-point grids are a sub-sampling of a data product's scene resolution
            <code>(getRasterHeight() - 1) * getSubSamplingY() + 1</code>
            @return the scene height in pixels
         """
-        return TiePointGrid_getSceneRasterHeight(self._obj)
+        return TiePointGrid_getSceneRasterHeight(self._jobj_ref)
 
     def getOffsetX(self):
         """
            Retrieves the x co-ordinate of the first (upper-left) tie-point in pixels.
         """
-        return TiePointGrid_getOffsetX(self._obj)
+        return TiePointGrid_getOffsetX(self._jobj_ref)
 
     def getOffsetY(self):
         """
            Retrieves the y co-ordinate of the first (upper-left) tie-point in pixels.
         """
-        return TiePointGrid_getOffsetY(self._obj)
+        return TiePointGrid_getOffsetY(self._jobj_ref)
 
     def getSubSamplingX(self):
         """
@@ -8201,7 +8257,7 @@ Usually, tie-point grids are a sub-sampling of a data product's scene resolution
            tie-pint grid belongs to.
            @return the sub-sampling in X-direction, never less than one.
         """
-        return TiePointGrid_getSubSamplingX(self._obj)
+        return TiePointGrid_getSubSamplingX(self._jobj_ref)
 
     def getSubSamplingY(self):
         """
@@ -8209,7 +8265,7 @@ Usually, tie-point grids are a sub-sampling of a data product's scene resolution
            tie-pint grid belongs to.
            @return the sub-sampling in Y-direction, never less than one.
         """
-        return TiePointGrid_getSubSamplingY(self._obj)
+        return TiePointGrid_getSubSamplingY(self._jobj_ref)
 
     def getTiePoints(self):
         """
@@ -8217,7 +8273,7 @@ Usually, tie-point grids are a sub-sampling of a data product's scene resolution
            @return the data array for this band, or <code>null</code> if no data has been loaded
            @see ProductData#getElems
         """
-        return TiePointGrid_getTiePoints(self._obj)
+        return TiePointGrid_getTiePoints(self._jobj_ref)
 
     def getPixelInt(self, x, y):
         """
@@ -8228,10 +8284,10 @@ Usually, tie-point grids are a sub-sampling of a data product's scene resolution
            @param y The Y co-ordinate of the pixel location
            @throws ArrayIndexOutOfBoundsException if the co-ordinates are not in bounds
         """
-        return TiePointGrid_getPixelInt(self._obj, x, y)
+        return TiePointGrid_getPixelInt(self._jobj_ref, x, y)
 
     def dispose(self):
-        TiePointGrid_dispose(self._obj)
+        TiePointGrid_dispose(self._jobj_ref)
         return
 
     def getPixelFloat2(self, x, y):
@@ -8245,7 +8301,7 @@ Usually, tie-point grids are a sub-sampling of a data product's scene resolution
            this tie-pint grid belongs to.
            @throws ArrayIndexOutOfBoundsException if the co-ordinates are not in bounds
         """
-        return TiePointGrid_getPixelFloat2(self._obj, x, y)
+        return TiePointGrid_getPixelFloat2(self._jobj_ref, x, y)
 
     def getPixelFloat1(self, x, y):
         """
@@ -8258,7 +8314,7 @@ Usually, tie-point grids are a sub-sampling of a data product's scene resolution
            this tie-pint grid belongs to.
            @throws ArrayIndexOutOfBoundsException if the co-ordinates are not in bounds
         """
-        return TiePointGrid_getPixelFloat1(self._obj, x, y)
+        return TiePointGrid_getPixelFloat1(self._jobj_ref, x, y)
 
     def getPixelDouble(self, x, y):
         """
@@ -8271,27 +8327,27 @@ Usually, tie-point grids are a sub-sampling of a data product's scene resolution
            this tie-pint grid belongs to.
            @throws ArrayIndexOutOfBoundsException if the co-ordinates are not in bounds
         """
-        return TiePointGrid_getPixelDouble(self._obj, x, y)
+        return TiePointGrid_getPixelDouble(self._jobj_ref, x, y)
 
     def setPixelInt(self, x, y, pixelValue):
         """
            This method is not implemented because pixels are read-only in tie-point grids.
         """
-        TiePointGrid_setPixelInt(self._obj, x, y, pixelValue)
+        TiePointGrid_setPixelInt(self._jobj_ref, x, y, pixelValue)
         return
 
     def setPixelFloat(self, x, y, pixelValue):
         """
            This method is not implemented because pixels are read-only in tie-point grids.
         """
-        TiePointGrid_setPixelFloat(self._obj, x, y, pixelValue)
+        TiePointGrid_setPixelFloat(self._jobj_ref, x, y, pixelValue)
         return
 
     def setPixelDouble(self, x, y, pixelValue):
         """
            This method is not implemented because pixels are read-only in tie-point grids.
         """
-        TiePointGrid_setPixelDouble(self._obj, x, y, pixelValue)
+        TiePointGrid_setPixelDouble(self._jobj_ref, x, y, pixelValue)
         return
 
     def getPixels6(self, x, y, w, h, pixels, pm):
@@ -8306,7 +8362,7 @@ Usually, tie-point grids are a sub-sampling of a data product's scene resolution
            @param pm     a monitor to inform the user about progress
            @throws IllegalArgumentException if the length of the given array is less than <code>w*h</code>.
         """
-        return TiePointGrid_getPixels6(self._obj, x, y, w, h, pixels, pm._obj)
+        return TiePointGrid_getPixels6(self._jobj_ref, x, y, w, h, pixels, pm._jobj_ref)
 
     def getPixels4(self, x, y, w, h, pixels, pm):
         """
@@ -8320,7 +8376,7 @@ Usually, tie-point grids are a sub-sampling of a data product's scene resolution
            @param pm     a monitor to inform the user about progress
            @throws IllegalArgumentException if the length of the given array is less than <code>w*h</code>.
         """
-        return TiePointGrid_getPixels4(self._obj, x, y, w, h, pixels, pm._obj)
+        return TiePointGrid_getPixels4(self._jobj_ref, x, y, w, h, pixels, pm._jobj_ref)
 
     def getPixels2(self, x, y, w, h, pixels, pm):
         """
@@ -8333,27 +8389,27 @@ Usually, tie-point grids are a sub-sampling of a data product's scene resolution
            @param pixels the double array to be filled with data
            @throws IllegalArgumentException if the length of the given array is less than <code>w*h</code>.
         """
-        return TiePointGrid_getPixels2(self._obj, x, y, w, h, pixels, pm._obj)
+        return TiePointGrid_getPixels2(self._jobj_ref, x, y, w, h, pixels, pm._jobj_ref)
 
     def setPixels3(self, x, y, w, h, pixels):
         """
            This method is not implemented because pixels are read-only in tie-point grids.
         """
-        TiePointGrid_setPixels3(self._obj, x, y, w, h, pixels)
+        TiePointGrid_setPixels3(self._jobj_ref, x, y, w, h, pixels)
         return
 
     def setPixels2(self, x, y, w, h, pixels):
         """
            This method is not implemented because pixels are read-only in tie-point grids.
         """
-        TiePointGrid_setPixels2(self._obj, x, y, w, h, pixels)
+        TiePointGrid_setPixels2(self._jobj_ref, x, y, w, h, pixels)
         return
 
     def setPixels1(self, x, y, w, h, pixels):
         """
            This method is not implemented because pixels are read-only in tie-point grids.
         """
-        TiePointGrid_setPixels1(self._obj, x, y, w, h, pixels)
+        TiePointGrid_setPixels1(self._jobj_ref, x, y, w, h, pixels)
         return
 
     def readPixels6(self, x, y, w, h, pixels, pm):
@@ -8367,7 +8423,7 @@ Usually, tie-point grids are a sub-sampling of a data product's scene resolution
            @param pixels the integer array to be filled with data
            @throws IllegalArgumentException if the length of the given array is less than <code>w*h</code>.
         """
-        return TiePointGrid_readPixels6(self._obj, x, y, w, h, pixels, pm._obj)
+        return TiePointGrid_readPixels6(self._jobj_ref, x, y, w, h, pixels, pm._jobj_ref)
 
     def readPixels4(self, x, y, w, h, pixels, pm):
         """
@@ -8381,7 +8437,7 @@ Usually, tie-point grids are a sub-sampling of a data product's scene resolution
            @param pm     a monitor to inform the user about progress
            @throws IllegalArgumentException if the length of the given array is less than <code>w*h</code>.
         """
-        return TiePointGrid_readPixels4(self._obj, x, y, w, h, pixels, pm._obj)
+        return TiePointGrid_readPixels4(self._jobj_ref, x, y, w, h, pixels, pm._jobj_ref)
 
     def readPixels2(self, x, y, w, h, pixels, pm):
         """
@@ -8395,27 +8451,27 @@ Usually, tie-point grids are a sub-sampling of a data product's scene resolution
            @param pm     a monitor to inform the user about progress
            @throws IllegalArgumentException if the length of the given array is less than <code>w*h</code>.
         """
-        return TiePointGrid_readPixels2(self._obj, x, y, w, h, pixels, pm._obj)
+        return TiePointGrid_readPixels2(self._jobj_ref, x, y, w, h, pixels, pm._jobj_ref)
 
     def writePixels6(self, x, y, w, h, pixels, pm):
         """
            This method is not implemented because pixels are read-only in tie-point grids.
         """
-        TiePointGrid_writePixels6(self._obj, x, y, w, h, pixels, pm._obj)
+        TiePointGrid_writePixels6(self._jobj_ref, x, y, w, h, pixels, pm._jobj_ref)
         return
 
     def writePixels4(self, x, y, w, h, pixels, pm):
         """
            This method is not implemented because pixels are read-only in tie-point grids.
         """
-        TiePointGrid_writePixels4(self._obj, x, y, w, h, pixels, pm._obj)
+        TiePointGrid_writePixels4(self._jobj_ref, x, y, w, h, pixels, pm._jobj_ref)
         return
 
     def writePixels2(self, x, y, w, h, pixels, pm):
         """
            This method is not implemented because pixels are read-only in tie-point grids.
         """
-        TiePointGrid_writePixels2(self._obj, x, y, w, h, pixels, pm._obj)
+        TiePointGrid_writePixels2(self._jobj_ref, x, y, w, h, pixels, pm._jobj_ref)
         return
 
     def readRasterData2(self, offsetX, offsetY, width, height, rasterData, pm):
@@ -8436,28 +8492,28 @@ Usually, tie-point grids are a sub-sampling of a data product's scene resolution
            which this product raster belongs to, has no associated product reader
            @see ProductReader#readBandRasterData(Band, int, int, int, int, ProductData, com.bc.ceres.core.ProgressMonitor)
         """
-        TiePointGrid_readRasterData2(self._obj, offsetX, offsetY, width, height, rasterData._obj, pm._obj)
+        TiePointGrid_readRasterData2(self._jobj_ref, offsetX, offsetY, width, height, rasterData._jobj_ref, pm._jobj_ref)
         return
 
     def readRasterDataFully2(self, pm):
         """
            {@inheritDoc}
         """
-        TiePointGrid_readRasterDataFully2(self._obj, pm._obj)
+        TiePointGrid_readRasterDataFully2(self._jobj_ref, pm._jobj_ref)
         return
 
     def writeRasterData2(self, offsetX, offsetY, width, height, rasterData, pm):
         """
            {@inheritDoc}
         """
-        TiePointGrid_writeRasterData2(self._obj, offsetX, offsetY, width, height, rasterData._obj, pm._obj)
+        TiePointGrid_writeRasterData2(self._jobj_ref, offsetX, offsetY, width, height, rasterData._jobj_ref, pm._jobj_ref)
         return
 
     def writeRasterDataFully2(self, pm):
         """
            {@inheritDoc}
         """
-        TiePointGrid_writeRasterDataFully2(self._obj, pm._obj)
+        TiePointGrid_writeRasterDataFully2(self._jobj_ref, pm._jobj_ref)
         return
 
     def acceptVisitor(self, visitor):
@@ -8469,36 +8525,36 @@ Usually, tie-point grids are a sub-sampling of a data product's scene resolution
            The method simply calls <code>visitor.visit(this)</code>.
            @param visitor the visitor
         """
-        TiePointGrid_acceptVisitor(self._obj, visitor._obj)
+        TiePointGrid_acceptVisitor(self._jobj_ref, visitor._jobj_ref)
         return
 
     def cloneTiePointGrid(self):
-        return TiePointGrid(TiePointGrid_cloneTiePointGrid(self._obj))
+        return TiePointGrid(TiePointGrid_cloneTiePointGrid(self._jobj_ref))
 
     @staticmethod
     def createZenithFromElevationAngleTiePointGrid(elevationAngleGrid):
-        return TiePointGrid(TiePointGrid_createZenithFromElevationAngleTiePointGrid(elevationAngleGrid._obj))
+        return TiePointGrid(TiePointGrid_createZenithFromElevationAngleTiePointGrid(elevationAngleGrid._jobj_ref))
 
     @staticmethod
     def createSubset(sourceTiePointGrid, subsetDef):
-        return TiePointGrid(TiePointGrid_createSubset(sourceTiePointGrid._obj, subsetDef._obj))
+        return TiePointGrid(TiePointGrid_createSubset(sourceTiePointGrid._jobj_ref, subsetDef._jobj_ref))
 
     def getRasterWidth(self):
         """
            Returns the width of the raster used by this product raster.
            @return the width of the raster
         """
-        return TiePointGrid_getRasterWidth(self._obj)
+        return TiePointGrid_getRasterWidth(self._jobj_ref)
 
     def getRasterHeight(self):
         """
            Returns the height of the raster used by this product raster.
            @return the height of the raster
         """
-        return TiePointGrid_getRasterHeight(self._obj)
+        return TiePointGrid_getRasterHeight(self._jobj_ref)
 
     def setModified(self, modified):
-        TiePointGrid_setModified(self._obj, modified)
+        TiePointGrid_setModified(self._jobj_ref, modified)
         return
 
     def getGeoCoding(self):
@@ -8506,7 +8562,7 @@ Usually, tie-point grids are a sub-sampling of a data product's scene resolution
            Returns the geo-coding of this {@link RasterDataNode}.
            @return the geo-coding
         """
-        return GeoCoding(TiePointGrid_getGeoCoding(self._obj))
+        return GeoCoding(TiePointGrid_getGeoCoding(self._jobj_ref))
 
     def setGeoCoding(self, geoCoding):
         """
@@ -8517,7 +8573,7 @@ Usually, tie-point grids are a sub-sampling of a data product's scene resolution
            @param geoCoding the new geo-coding
            @see Product#setGeoCoding(GeoCoding)
         """
-        TiePointGrid_setGeoCoding(self._obj, geoCoding._obj)
+        TiePointGrid_setGeoCoding(self._jobj_ref, geoCoding._jobj_ref)
         return
 
     def getPointing(self):
@@ -8527,14 +8583,14 @@ Usually, tie-point grids are a sub-sampling of a data product's scene resolution
            since the last creation of this raster's {@link Pointing} instance.
            @return the pointing object, or null if a pointing is not available
         """
-        return Pointing(TiePointGrid_getPointing(self._obj))
+        return Pointing(TiePointGrid_getPointing(self._jobj_ref))
 
     def canBeOrthorectified(self):
         """
            Tests if this raster data node can be orthorectified.
            @return true, if so
         """
-        return TiePointGrid_canBeOrthorectified(self._obj)
+        return TiePointGrid_canBeOrthorectified(self._jobj_ref)
 
     def getScalingFactor(self):
         """
@@ -8543,7 +8599,7 @@ Usually, tie-point grids are a sub-sampling of a data product's scene resolution
            @return the scaling factor
            @see #isScalingApplied()
         """
-        return TiePointGrid_getScalingFactor(self._obj)
+        return TiePointGrid_getScalingFactor(self._jobj_ref)
 
     def setScalingFactor(self, scalingFactor):
         """
@@ -8551,7 +8607,7 @@ Usually, tie-point grids are a sub-sampling of a data product's scene resolution
            @param scalingFactor the scaling factor
            @see #isScalingApplied()
         """
-        TiePointGrid_setScalingFactor(self._obj, scalingFactor)
+        TiePointGrid_setScalingFactor(self._jobj_ref, scalingFactor)
         return
 
     def getScalingOffset(self):
@@ -8561,7 +8617,7 @@ Usually, tie-point grids are a sub-sampling of a data product's scene resolution
            @return the scaling offset
            @see #isScalingApplied()
         """
-        return TiePointGrid_getScalingOffset(self._obj)
+        return TiePointGrid_getScalingOffset(self._jobj_ref)
 
     def setScalingOffset(self, scalingOffset):
         """
@@ -8569,7 +8625,7 @@ Usually, tie-point grids are a sub-sampling of a data product's scene resolution
            @param scalingOffset the scaling offset
            @see #isScalingApplied()
         """
-        TiePointGrid_setScalingOffset(self._obj, scalingOffset)
+        TiePointGrid_setScalingOffset(self._jobj_ref, scalingOffset)
         return
 
     def isLog10Scaled(self):
@@ -8580,7 +8636,7 @@ Usually, tie-point grids are a sub-sampling of a data product's scene resolution
            @return whether or not the data is logging-10 scaled
            @see #isScalingApplied()
         """
-        return TiePointGrid_isLog10Scaled(self._obj)
+        return TiePointGrid_isLog10Scaled(self._jobj_ref)
 
     def setLog10Scaled(self, log10Scaled):
         """
@@ -8589,7 +8645,7 @@ Usually, tie-point grids are a sub-sampling of a data product's scene resolution
            @param log10Scaled whether or not the data is logging-10 scaled
            @see #isScalingApplied()
         """
-        TiePointGrid_setLog10Scaled(self._obj, log10Scaled)
+        TiePointGrid_setLog10Scaled(self._jobj_ref, log10Scaled)
         return
 
     def isScalingApplied(self):
@@ -8605,7 +8661,7 @@ Usually, tie-point grids are a sub-sampling of a data product's scene resolution
            @see #getScalingFactor
            @see #isLog10Scaled
         """
-        return TiePointGrid_isScalingApplied(self._obj)
+        return TiePointGrid_isScalingApplied(self._jobj_ref)
 
     @staticmethod
     def isValidMaskProperty(propertyName):
@@ -8624,13 +8680,13 @@ Usually, tie-point grids are a sub-sampling of a data product's scene resolution
            @see #isNoDataValueUsed()
            @see #setNoDataValue(double)
         """
-        return TiePointGrid_isNoDataValueSet(self._obj)
+        return TiePointGrid_isNoDataValueSet(self._jobj_ref)
 
     def clearNoDataValue(self):
         """
            Clears the no-data value, so that {@link #isNoDataValueSet()} will return <code>false</code>.
         """
-        TiePointGrid_clearNoDataValue(self._obj)
+        TiePointGrid_clearNoDataValue(self._jobj_ref)
         return
 
     def isNoDataValueUsed(self):
@@ -8643,7 +8699,7 @@ Usually, tie-point grids are a sub-sampling of a data product's scene resolution
            @see #setNoDataValueUsed(boolean)
            @see #isNoDataValueSet()
         """
-        return TiePointGrid_isNoDataValueUsed(self._obj)
+        return TiePointGrid_isNoDataValueUsed(self._jobj_ref)
 
     def setNoDataValueUsed(self, noDataValueUsed):
         """
@@ -8658,7 +8714,7 @@ Usually, tie-point grids are a sub-sampling of a data product's scene resolution
            @param noDataValueUsed true, if so
            @see #isNoDataValueUsed()
         """
-        TiePointGrid_setNoDataValueUsed(self._obj, noDataValueUsed)
+        TiePointGrid_setNoDataValueUsed(self._jobj_ref, noDataValueUsed)
         return
 
     def getNoDataValue(self):
@@ -8674,7 +8730,7 @@ Usually, tie-point grids are a sub-sampling of a data product's scene resolution
            @see #setNoDataValue(double)
            @see #isNoDataValueSet()
         """
-        return TiePointGrid_getNoDataValue(self._obj)
+        return TiePointGrid_getNoDataValue(self._jobj_ref)
 
     def setNoDataValue(self, noDataValue):
         """
@@ -8691,7 +8747,7 @@ Usually, tie-point grids are a sub-sampling of a data product's scene resolution
            @see #getNoDataValue()
            @see #isNoDataValueSet()
         """
-        TiePointGrid_setNoDataValue(self._obj, noDataValue)
+        TiePointGrid_setNoDataValue(self._jobj_ref, noDataValue)
         return
 
     def getGeophysicalNoDataValue(self):
@@ -8704,7 +8760,7 @@ Usually, tie-point grids are a sub-sampling of a data product's scene resolution
            @return the geophysical no-data value
            @see #setGeophysicalNoDataValue(double)
         """
-        return TiePointGrid_getGeophysicalNoDataValue(self._obj)
+        return TiePointGrid_getGeophysicalNoDataValue(self._jobj_ref)
 
     def setGeophysicalNoDataValue(self, noDataValue):
         """
@@ -8719,7 +8775,7 @@ Usually, tie-point grids are a sub-sampling of a data product's scene resolution
            @see #setGeophysicalNoDataValue(double)
            @see #isNoDataValueSet()
         """
-        TiePointGrid_setGeophysicalNoDataValue(self._obj, noDataValue)
+        TiePointGrid_setGeophysicalNoDataValue(self._jobj_ref, noDataValue)
         return
 
     def getValidPixelExpression(self):
@@ -8730,7 +8786,7 @@ Usually, tie-point grids are a sub-sampling of a data product's scene resolution
            method.
            @return the valid mask expression.
         """
-        return TiePointGrid_getValidPixelExpression(self._obj)
+        return TiePointGrid_getValidPixelExpression(self._jobj_ref)
 
     def setValidPixelExpression(self, validPixelExpression):
         """
@@ -8742,7 +8798,7 @@ Usually, tie-point grids are a sub-sampling of a data product's scene resolution
            name {@link #PROPERTY_NAME_VALID_PIXEL_EXPRESSION}.
            @param validPixelExpression the valid mask expression, can be null
         """
-        TiePointGrid_setValidPixelExpression(self._obj, validPixelExpression)
+        TiePointGrid_setValidPixelExpression(self._jobj_ref, validPixelExpression)
         return
 
     def isValidMaskUsed(self):
@@ -8754,14 +8810,14 @@ Usually, tie-point grids are a sub-sampling of a data product's scene resolution
            method.
            @return true, if so
         """
-        return TiePointGrid_isValidMaskUsed(self._obj)
+        return TiePointGrid_isValidMaskUsed(self._jobj_ref)
 
     def resetValidMask(self):
         """
            Resets the valid mask of this raster.
            The mask will be lazily regenerated when requested the next time.
         """
-        TiePointGrid_resetValidMask(self._obj)
+        TiePointGrid_resetValidMask(self._jobj_ref)
         return
 
     def getValidMaskExpression(self):
@@ -8775,13 +8831,13 @@ Usually, tie-point grids are a sub-sampling of a data product's scene resolution
            @see #getValidPixelExpression()
            @see #getNoDataValue()
         """
-        return TiePointGrid_getValidMaskExpression(self._obj)
+        return TiePointGrid_getValidMaskExpression(self._jobj_ref)
 
     def updateExpression(self, oldExternalName, newExternalName):
         """
            {@inheritDoc}
         """
-        TiePointGrid_updateExpression(self._obj, oldExternalName, newExternalName)
+        TiePointGrid_updateExpression(self._jobj_ref, oldExternalName, newExternalName)
         return
 
     def hasRasterData(self):
@@ -8791,7 +8847,7 @@ Usually, tie-point grids are a sub-sampling of a data product's scene resolution
            @return true, if so.
            @deprecated since BEAM 4.11. No replacement.
         """
-        return TiePointGrid_hasRasterData(self._obj)
+        return TiePointGrid_hasRasterData(self._jobj_ref)
 
     def getRasterData(self):
         """
@@ -8801,7 +8857,7 @@ Usually, tie-point grids are a sub-sampling of a data product's scene resolution
            @deprecated Since BEAM 4.11. Use {@link #getSourceImage()} or the various {@link #readPixels readPixels()}
            method variants to retrieve or read raster data.
         """
-        return ProductData(TiePointGrid_getRasterData(self._obj))
+        return ProductData(TiePointGrid_getRasterData(self._jobj_ref))
 
     def setRasterData(self, rasterData):
         """
@@ -8815,7 +8871,7 @@ Usually, tie-point grids are a sub-sampling of a data product's scene resolution
            @deprecated Since BEAM 4.11. Use {@link #setSourceImage setSourceImage()} or the various {@link #writePixels readPixels()}
            method variants to set or write raster data.
         """
-        TiePointGrid_setRasterData(self._obj, rasterData._obj)
+        TiePointGrid_setRasterData(self._jobj_ref, rasterData._jobj_ref)
         return
 
     def loadRasterData1(self):
@@ -8824,7 +8880,7 @@ Usually, tie-point grids are a sub-sampling of a data product's scene resolution
            @see #loadRasterData(com.bc.ceres.core.ProgressMonitor)
            @deprecated since BEAM 4.11. No replacement.
         """
-        TiePointGrid_loadRasterData1(self._obj)
+        TiePointGrid_loadRasterData1(self._jobj_ref)
         return
 
     def loadRasterData2(self, pm):
@@ -8840,7 +8896,7 @@ Usually, tie-point grids are a sub-sampling of a data product's scene resolution
            @see #unloadRasterData()
            @deprecated since BEAM 4.11. No replacement.
         """
-        TiePointGrid_loadRasterData2(self._obj, pm._obj)
+        TiePointGrid_loadRasterData2(self._jobj_ref, pm._jobj_ref)
         return
 
     def unloadRasterData(self):
@@ -8854,7 +8910,7 @@ Usually, tie-point grids are a sub-sampling of a data product's scene resolution
            @see #loadRasterData()
            @deprecated since BEAM 4.11. No replacement.
         """
-        TiePointGrid_unloadRasterData(self._obj)
+        TiePointGrid_unloadRasterData(self._jobj_ref)
         return
 
     def isPixelValid2(self, x, y):
@@ -8875,7 +8931,7 @@ Usually, tie-point grids are a sub-sampling of a data product's scene resolution
            @see #setNoDataValue(double)
            @see #setValidPixelExpression(String)
         """
-        return TiePointGrid_isPixelValid2(self._obj, x, y)
+        return TiePointGrid_isPixelValid2(self._jobj_ref, x, y)
 
     def getSampleInt(self, x, y):
         """
@@ -8887,7 +8943,7 @@ Usually, tie-point grids are a sub-sampling of a data product's scene resolution
            @param y pixel Y coordinate
            @return The geo-physical sample value.
         """
-        return TiePointGrid_getSampleInt(self._obj, x, y)
+        return TiePointGrid_getSampleInt(self._jobj_ref, x, y)
 
     def getSampleFloat(self, x, y):
         """
@@ -8899,7 +8955,7 @@ Usually, tie-point grids are a sub-sampling of a data product's scene resolution
            @param y pixel Y coordinate
            @return The geo-physical sample value.
         """
-        return TiePointGrid_getSampleFloat(self._obj, x, y)
+        return TiePointGrid_getSampleFloat(self._jobj_ref, x, y)
 
     def isPixelValid1(self, pixelIndex):
         """
@@ -8914,7 +8970,7 @@ Usually, tie-point grids are a sub-sampling of a data product's scene resolution
            @see #setNoDataValue(double)
            @see #setValidPixelExpression(String)
         """
-        return TiePointGrid_isPixelValid1(self._obj, pixelIndex)
+        return TiePointGrid_isPixelValid1(self._jobj_ref, pixelIndex)
 
     def isPixelValid3(self, x, y, roi):
         """
@@ -8931,72 +8987,72 @@ Usually, tie-point grids are a sub-sampling of a data product's scene resolution
            @see #setNoDataValue(double)
            @see #setValidPixelExpression(String)
         """
-        return TiePointGrid_isPixelValid3(self._obj, x, y, roi._obj)
+        return TiePointGrid_isPixelValid3(self._jobj_ref, x, y, roi._jobj_ref)
 
     def getPixels5(self, x, y, w, h, pixels):
         """
            @see #getPixels(int, int, int, int, int[], ProgressMonitor)
            @deprecated since BEAM 4.11. Use {@link #getSourceImage()} instead.
         """
-        return TiePointGrid_getPixels5(self._obj, x, y, w, h, pixels)
+        return TiePointGrid_getPixels5(self._jobj_ref, x, y, w, h, pixels)
 
     def getPixels3(self, x, y, w, h, pixels):
         """
            @see #getPixels(int, int, int, int, float[], ProgressMonitor)
            @deprecated since BEAM 4.11. Use {@link #getSourceImage()} instead.
         """
-        return TiePointGrid_getPixels3(self._obj, x, y, w, h, pixels)
+        return TiePointGrid_getPixels3(self._jobj_ref, x, y, w, h, pixels)
 
     def getPixels1(self, x, y, w, h, pixels):
         """
            @see #getPixels(int, int, int, int, double[], ProgressMonitor)
            @deprecated since BEAM 4.11. Use {@link #getSourceImage()} instead.
         """
-        return TiePointGrid_getPixels1(self._obj, x, y, w, h, pixels)
+        return TiePointGrid_getPixels1(self._jobj_ref, x, y, w, h, pixels)
 
     def readPixels5(self, x, y, w, h, pixels):
         """
            @see #readPixels(int, int, int, int, int[], ProgressMonitor)
         """
-        return TiePointGrid_readPixels5(self._obj, x, y, w, h, pixels)
+        return TiePointGrid_readPixels5(self._jobj_ref, x, y, w, h, pixels)
 
     def readPixels3(self, x, y, w, h, pixels):
         """
            @see #readPixels(int, int, int, int, float[], ProgressMonitor)
            @deprecated since BEAM 4.11. Use {@link #getSourceImage()} instead.
         """
-        return TiePointGrid_readPixels3(self._obj, x, y, w, h, pixels)
+        return TiePointGrid_readPixels3(self._jobj_ref, x, y, w, h, pixels)
 
     def readPixels1(self, x, y, w, h, pixels):
         """
            @see #readPixels(int, int, int, int, double[], ProgressMonitor)
            @deprecated since BEAM 4.11. Use {@link #getSourceImage()} instead.
         """
-        return TiePointGrid_readPixels1(self._obj, x, y, w, h, pixels)
+        return TiePointGrid_readPixels1(self._jobj_ref, x, y, w, h, pixels)
 
     def writePixels5(self, x, y, w, h, pixels):
         """
            @see #writePixels(int, int, int, int, int[], ProgressMonitor)
         """
-        TiePointGrid_writePixels5(self._obj, x, y, w, h, pixels)
+        TiePointGrid_writePixels5(self._jobj_ref, x, y, w, h, pixels)
         return
 
     def writePixels3(self, x, y, w, h, pixels):
         """
            @see #writePixels(int, int, int, int, float[], ProgressMonitor)
         """
-        TiePointGrid_writePixels3(self._obj, x, y, w, h, pixels)
+        TiePointGrid_writePixels3(self._jobj_ref, x, y, w, h, pixels)
         return
 
     def writePixels1(self, x, y, w, h, pixels):
         """
            @see #writePixels(int, int, int, int, double[], ProgressMonitor)
         """
-        TiePointGrid_writePixels1(self._obj, x, y, w, h, pixels)
+        TiePointGrid_writePixels1(self._jobj_ref, x, y, w, h, pixels)
         return
 
     def readValidMask(self, x, y, w, h, validMask):
-        return TiePointGrid_readValidMask(self._obj, x, y, w, h, validMask)
+        return TiePointGrid_readValidMask(self._jobj_ref, x, y, w, h, validMask)
 
     def readRasterDataFully1(self):
         """
@@ -9004,7 +9060,7 @@ Usually, tie-point grids are a sub-sampling of a data product's scene resolution
            @see #readRasterDataFully(ProgressMonitor)
            @deprecated since BEAM 4.11. Use {@link #getSourceImage()} instead.
         """
-        TiePointGrid_readRasterDataFully1(self._obj)
+        TiePointGrid_readRasterDataFully1(self._jobj_ref)
         return
 
     def readRasterData1(self, offsetX, offsetY, width, height, rasterData):
@@ -9023,11 +9079,11 @@ Usually, tie-point grids are a sub-sampling of a data product's scene resolution
            @see ProductReader#readBandRasterData(Band, int, int, int, int, ProductData, com.bc.ceres.core.ProgressMonitor)
            @deprecated since BEAM 4.11. Use {@link #getSourceImage()} instead.
         """
-        TiePointGrid_readRasterData1(self._obj, offsetX, offsetY, width, height, rasterData._obj)
+        TiePointGrid_readRasterData1(self._jobj_ref, offsetX, offsetY, width, height, rasterData._jobj_ref)
         return
 
     def writeRasterDataFully1(self):
-        TiePointGrid_writeRasterDataFully1(self._obj)
+        TiePointGrid_writeRasterDataFully1(self._jobj_ref)
         return
 
     def writeRasterData1(self, offsetX, offsetY, width, height, rasterData):
@@ -9035,7 +9091,7 @@ Usually, tie-point grids are a sub-sampling of a data product's scene resolution
            @deprecated since BEAM 4.11. Use {@link #setSourceImage setSourceImage()} or the various {@link #writePixels
            readPixels()} method variants to set or write raster data.
         """
-        TiePointGrid_writeRasterData1(self._obj, offsetX, offsetY, width, height, rasterData._obj)
+        TiePointGrid_writeRasterData1(self._jobj_ref, offsetX, offsetY, width, height, rasterData._jobj_ref)
         return
 
     def createCompatibleRasterData1(self):
@@ -9045,7 +9101,7 @@ Usually, tie-point grids are a sub-sampling of a data product's scene resolution
            @return raster data compatible with this product raster
            @see #createCompatibleSceneRasterData
         """
-        return ProductData(TiePointGrid_createCompatibleRasterData1(self._obj))
+        return ProductData(TiePointGrid_createCompatibleRasterData1(self._jobj_ref))
 
     def createCompatibleSceneRasterData(self):
         """
@@ -9054,7 +9110,7 @@ Usually, tie-point grids are a sub-sampling of a data product's scene resolution
            @return raster data compatible with this product raster
            @see #createCompatibleRasterData
         """
-        return ProductData(TiePointGrid_createCompatibleSceneRasterData(self._obj))
+        return ProductData(TiePointGrid_createCompatibleSceneRasterData(self._jobj_ref))
 
     def createCompatibleRasterData2(self, width, height):
         """
@@ -9066,7 +9122,7 @@ Usually, tie-point grids are a sub-sampling of a data product's scene resolution
            @see #createCompatibleRasterData
            @see #createCompatibleSceneRasterData
         """
-        return ProductData(TiePointGrid_createCompatibleRasterData2(self._obj, width, height))
+        return ProductData(TiePointGrid_createCompatibleRasterData2(self._jobj_ref, width, height))
 
     def isCompatibleRasterData(self, rasterData, w, h):
         """
@@ -9077,7 +9133,7 @@ Usually, tie-point grids are a sub-sampling of a data product's scene resolution
            @return {@code true} if so
            @deprecated since BEAM 4.11. No replacement.
         """
-        return TiePointGrid_isCompatibleRasterData(self._obj, rasterData._obj, w, h)
+        return TiePointGrid_isCompatibleRasterData(self._jobj_ref, rasterData._jobj_ref, w, h)
 
     def checkCompatibleRasterData(self, rasterData, w, h):
         """
@@ -9087,7 +9143,7 @@ Usually, tie-point grids are a sub-sampling of a data product's scene resolution
            @param h          the raster height
            @deprecated since BEAM 4.11. No replacement.
         """
-        TiePointGrid_checkCompatibleRasterData(self._obj, rasterData._obj, w, h)
+        TiePointGrid_checkCompatibleRasterData(self._jobj_ref, rasterData._jobj_ref, w, h)
         return
 
     def hasIntPixels(self):
@@ -9095,7 +9151,7 @@ Usually, tie-point grids are a sub-sampling of a data product's scene resolution
            Determines whether this raster data node contains integer samples.
            @return true if this raster data node contains integer samples.
         """
-        return TiePointGrid_hasIntPixels(self._obj)
+        return TiePointGrid_hasIntPixels(self._jobj_ref)
 
     def createTransectProfileData(self, shape):
         """
@@ -9104,28 +9160,28 @@ Usually, tie-point grids are a sub-sampling of a data product's scene resolution
            @return the profile data
            @throws IOException if an I/O error occurs
         """
-        return TransectProfileData(TiePointGrid_createTransectProfileData(self._obj, shape._obj))
+        return TransectProfileData(TiePointGrid_createTransectProfileData(self._jobj_ref, shape._jobj_ref))
 
     def getImageInfo1(self):
         """
            Gets the image information for image display.
            @return the image info or null
         """
-        return ImageInfo(TiePointGrid_getImageInfo1(self._obj))
+        return ImageInfo(TiePointGrid_getImageInfo1(self._jobj_ref))
 
     def setImageInfo(self, imageInfo):
         """
            Sets the image information for image display.
            @param imageInfo the image info, can be null
         """
-        TiePointGrid_setImageInfo(self._obj, imageInfo._obj)
+        TiePointGrid_setImageInfo(self._jobj_ref, imageInfo._jobj_ref)
         return
 
     def fireImageInfoChanged(self):
         """
            Notifies listeners that the image (display) information has changed.
         """
-        TiePointGrid_fireImageInfoChanged(self._obj)
+        TiePointGrid_fireImageInfoChanged(self._jobj_ref)
         return
 
     def getImageInfo2(self, pm):
@@ -9137,7 +9193,7 @@ Usually, tie-point grids are a sub-sampling of a data product's scene resolution
            @return A valid image information instance.
            @see #getImageInfo(double[], ProgressMonitor)
         """
-        return ImageInfo(TiePointGrid_getImageInfo2(self._obj, pm._obj))
+        return ImageInfo(TiePointGrid_getImageInfo2(self._jobj_ref, pm._jobj_ref))
 
     def getImageInfo3(self, histoSkipAreas, pm):
         """
@@ -9150,7 +9206,7 @@ Usually, tie-point grids are a sub-sampling of a data product's scene resolution
            @param pm             A progress monitor.
            @return The image creation information.
         """
-        return ImageInfo(TiePointGrid_getImageInfo3(self._obj, histoSkipAreas, pm._obj))
+        return ImageInfo(TiePointGrid_getImageInfo3(self._jobj_ref, histoSkipAreas, pm._jobj_ref))
 
     def createDefaultImageInfo1(self, histoSkipAreas, pm):
         """
@@ -9164,7 +9220,7 @@ Usually, tie-point grids are a sub-sampling of a data product's scene resolution
            @param pm             a monitor to inform the user about progress
            @return a valid image information instance, never <code>null</code>.
         """
-        return ImageInfo(TiePointGrid_createDefaultImageInfo1(self._obj, histoSkipAreas, pm._obj))
+        return ImageInfo(TiePointGrid_createDefaultImageInfo1(self._jobj_ref, histoSkipAreas, pm._jobj_ref))
 
     def createDefaultImageInfo2(self, histoSkipAreas, histogram):
         """
@@ -9178,13 +9234,13 @@ Usually, tie-point grids are a sub-sampling of a data product's scene resolution
            @param histogram      the histogram to create the image information.
            @return a valid image information instance, never <code>null</code>.
         """
-        return ImageInfo(TiePointGrid_createDefaultImageInfo2(self._obj, histoSkipAreas, histogram._obj))
+        return ImageInfo(TiePointGrid_createDefaultImageInfo2(self._jobj_ref, histoSkipAreas, histogram._jobj_ref))
 
     def getOverlayMaskGroup(self):
         """
            @return The overlay mask group.
         """
-        return ProductNodeGroup(TiePointGrid_getOverlayMaskGroup(self._obj))
+        return ProductNodeGroup(TiePointGrid_getOverlayMaskGroup(self._jobj_ref))
 
     def createColorIndexedImage(self, pm):
         """
@@ -9195,7 +9251,7 @@ Usually, tie-point grids are a sub-sampling of a data product's scene resolution
            @throws IOException if the raster data is not loaded so far and reload causes an I/O error
            @see #setImageInfo(ImageInfo)
         """
-        return BufferedImage(TiePointGrid_createColorIndexedImage(self._obj, pm._obj))
+        return BufferedImage(TiePointGrid_createColorIndexedImage(self._jobj_ref, pm._jobj_ref))
 
     def createRgbImage(self, pm):
         """
@@ -9205,13 +9261,13 @@ Usually, tie-point grids are a sub-sampling of a data product's scene resolution
            @throws IOException if the raster data is not loaded so far and reload causes an I/O error
            @see #setImageInfo(ImageInfo)
         """
-        return BufferedImage(TiePointGrid_createRgbImage(self._obj, pm._obj))
+        return BufferedImage(TiePointGrid_createRgbImage(self._jobj_ref, pm._jobj_ref))
 
     def quantizeRasterData1(self, newMin, newMax, gamma, pm):
-        return TiePointGrid_quantizeRasterData1(self._obj, newMin, newMax, gamma, pm._obj)
+        return TiePointGrid_quantizeRasterData1(self._jobj_ref, newMin, newMax, gamma, pm._jobj_ref)
 
     def quantizeRasterData2(self, newMin, newMax, gamma, samples, offset, stride, pm):
-        TiePointGrid_quantizeRasterData2(self._obj, newMin, newMax, gamma, samples, offset, stride, pm._obj)
+        TiePointGrid_quantizeRasterData2(self._jobj_ref, newMin, newMax, gamma, samples, offset, stride, pm._jobj_ref)
         return
 
     def createPixelValidator(self, lineOffset, roi):
@@ -9222,7 +9278,7 @@ Usually, tie-point grids are a sub-sampling of a data product's scene resolution
            @return a new validator instance, never null
            @throws IOException if an I/O error occurs
         """
-        return IndexValidator(TiePointGrid_createPixelValidator(self._obj, lineOffset, roi._obj))
+        return IndexValidator(TiePointGrid_createPixelValidator(self._jobj_ref, lineOffset, roi._jobj_ref))
 
     def scale(self, v):
         """
@@ -9232,7 +9288,7 @@ Usually, tie-point grids are a sub-sampling of a data product's scene resolution
            @param v the input value
            @return the scaled value
         """
-        return TiePointGrid_scale(self._obj, v)
+        return TiePointGrid_scale(self._jobj_ref, v)
 
     def scaleInverse(self, v):
         """
@@ -9242,7 +9298,7 @@ Usually, tie-point grids are a sub-sampling of a data product's scene resolution
            @param v the input value
            @return the scaled value
         """
-        return TiePointGrid_scaleInverse(self._obj, v)
+        return TiePointGrid_scaleInverse(self._jobj_ref, v)
 
     def getPixelString(self, x, y):
         """
@@ -9251,7 +9307,7 @@ Usually, tie-point grids are a sub-sampling of a data product's scene resolution
            @param y the Y co-ordinate of the pixel location
            @return the pixel value at (x,y) as string or an error message text
         """
-        return TiePointGrid_getPixelString(self._obj, x, y)
+        return TiePointGrid_getPixelString(self._jobj_ref, x, y)
 
     def isSourceImageSet(self):
         """
@@ -9262,7 +9318,7 @@ Usually, tie-point grids are a sub-sampling of a data product's scene resolution
            @see #setSourceImage(com.bc.ceres.glevel.MultiLevelImage)
            @see #createSourceImage()
         """
-        return TiePointGrid_isSourceImageSet(self._obj)
+        return TiePointGrid_isSourceImageSet(self._jobj_ref)
 
     def getSourceImage(self):
         """
@@ -9272,7 +9328,7 @@ Usually, tie-point grids are a sub-sampling of a data product's scene resolution
            @see #createSourceImage()
            @see #isSourceImageSet()
         """
-        return MultiLevelImage(TiePointGrid_getSourceImage(self._obj))
+        return MultiLevelImage(TiePointGrid_getSourceImage(self._jobj_ref))
 
     def setSourceImage2(self, sourceImage):
         """
@@ -9280,7 +9336,7 @@ Usually, tie-point grids are a sub-sampling of a data product's scene resolution
            @param sourceImage The source image.
            Can be {@code null}. If so, {@link #isSourceImageSet()} will return {@code false}.
         """
-        TiePointGrid_setSourceImage2(self._obj, sourceImage._obj)
+        TiePointGrid_setSourceImage2(self._jobj_ref, sourceImage._jobj_ref)
         return
 
     def setSourceImage1(self, sourceImage):
@@ -9289,7 +9345,7 @@ Usually, tie-point grids are a sub-sampling of a data product's scene resolution
            @param sourceImage The source image.
            Can be {@code null}. If so, {@link #isSourceImageSet()} will return {@code false}.
         """
-        TiePointGrid_setSourceImage1(self._obj, sourceImage._obj)
+        TiePointGrid_setSourceImage1(self._jobj_ref, sourceImage._jobj_ref)
         return
 
     def isGeophysicalImageSet(self):
@@ -9299,30 +9355,30 @@ Usually, tie-point grids are a sub-sampling of a data product's scene resolution
            This method belongs to preliminary API and may be removed or changed in the future.
            @return whether the geophysical image is set.
         """
-        return TiePointGrid_isGeophysicalImageSet(self._obj)
+        return TiePointGrid_isGeophysicalImageSet(self._jobj_ref)
 
     def getGeophysicalImage(self):
         """
            @return The geophysical source image.
         """
-        return MultiLevelImage(TiePointGrid_getGeophysicalImage(self._obj))
+        return MultiLevelImage(TiePointGrid_getGeophysicalImage(self._jobj_ref))
 
     def isValidMaskImageSet(self):
         """
            Returns wether the valid mask image is set on this {@code RasterDataNode}.
            @return Wether the source image is set.
         """
-        return TiePointGrid_isValidMaskImageSet(self._obj)
+        return TiePointGrid_isValidMaskImageSet(self._jobj_ref)
 
     def getValidMaskImage(self):
         """
            Gets the valid-mask image associated with this {@code RasterDataNode}.
            @return The rendered image.
         """
-        return MultiLevelImage(TiePointGrid_getValidMaskImage(self._obj))
+        return MultiLevelImage(TiePointGrid_getValidMaskImage(self._jobj_ref))
 
     def isStxSet(self):
-        return TiePointGrid_isStxSet(self._obj)
+        return TiePointGrid_isStxSet(self._jobj_ref)
 
     def getStx1(self):
         """
@@ -9337,7 +9393,7 @@ Usually, tie-point grids are a sub-sampling of a data product's scene resolution
            @see #getStx(boolean, com.bc.ceres.core.ProgressMonitor)
            @see #setStx(Stx)
         """
-        return Stx(TiePointGrid_getStx1(self._obj))
+        return Stx(TiePointGrid_getStx1(self._jobj_ref))
 
     def getStx2(self, accurate, pm):
         """
@@ -9348,7 +9404,7 @@ Usually, tie-point grids are a sub-sampling of a data product's scene resolution
            @param pm       A progress monitor which is used to compute the new statistics, if required.
            @return The statistics.
         """
-        return Stx(TiePointGrid_getStx2(self._obj, accurate, pm._obj))
+        return Stx(TiePointGrid_getStx2(self._jobj_ref, accurate, pm._jobj_ref))
 
     def setStx(self, stx):
         """
@@ -9358,7 +9414,7 @@ Usually, tie-point grids are a sub-sampling of a data product's scene resolution
            This method belongs to preliminary API and may be removed or changed in the future.
            @param stx The statistics.
         """
-        TiePointGrid_setStx(self._obj, stx._obj)
+        TiePointGrid_setStx(self._jobj_ref, stx._jobj_ref)
         return
 
     def getValidShape(self):
@@ -9367,47 +9423,48 @@ Usually, tie-point grids are a sub-sampling of a data product's scene resolution
            The method returns <code>null</code>, if the entire raster contains valid samples.
            @return The shape of the area where the raster data has samples, can be {@code null}.
         """
-        return Shape(TiePointGrid_getValidShape(self._obj))
+        return Shape(TiePointGrid_getValidShape(self._jobj_ref))
 
     def getRoiMaskGroup(self):
         """
            @return The roi mask group.
            @deprecated since BEAM 4.10 (no replacement)
         """
-        return ProductNodeGroup(TiePointGrid_getRoiMaskGroup(self._obj))
+        return ProductNodeGroup(TiePointGrid_getRoiMaskGroup(self._jobj_ref))
 
     def getDataType(self):
         """
            Gets the data type of this data node.
            @return the data type which is always one of the multiple <code>ProductData.TYPE_<i>X</i></code> constants
         """
-        return TiePointGrid_getDataType(self._obj)
+        return TiePointGrid_getDataType(self._jobj_ref)
 
     def getNumDataElems(self):
         """
            Gets the number of data elements in this data node.
         """
-        return TiePointGrid_getNumDataElems(self._obj)
+        return TiePointGrid_getNumDataElems(self._jobj_ref)
 
     def setData(self, data):
         """
            Sets the data of this data node.
         """
-        TiePointGrid_setData(self._obj, data._obj)
+        TiePointGrid_setData(self._jobj_ref, data._jobj_ref)
         return
 
     def getData(self):
         """
            Gets the data of this data node.
         """
-        return ProductData(TiePointGrid_getData(self._obj))
+        return ProductData(TiePointGrid_getData(self._jobj_ref))
 
     def setDataElems(self, elems):
         """
            Sets the data elements of this data node.
+           @deprecated since 5.0
            @see ProductData#setElems(Object)
         """
-        TiePointGrid_setDataElems(self._obj, elems._obj)
+        TiePointGrid_setDataElems(self._jobj_ref, elems._jobj_ref)
         return
 
     def getDataElems(self):
@@ -9415,47 +9472,47 @@ Usually, tie-point grids are a sub-sampling of a data product's scene resolution
            Gets the data elements of this data node.
            @see ProductData#getElems()
         """
-        return Object(TiePointGrid_getDataElems(self._obj))
+        return Object(TiePointGrid_getDataElems(self._jobj_ref))
 
     def getDataElemSize(self):
         """
            Gets the data element size in bytes.
            @see ProductData#getElemSize(int)
         """
-        return TiePointGrid_getDataElemSize(self._obj)
+        return TiePointGrid_getDataElemSize(self._jobj_ref)
 
     def setReadOnly(self, readOnly):
-        TiePointGrid_setReadOnly(self._obj, readOnly)
+        TiePointGrid_setReadOnly(self._jobj_ref, readOnly)
         return
 
     def isReadOnly(self):
-        return TiePointGrid_isReadOnly(self._obj)
+        return TiePointGrid_isReadOnly(self._jobj_ref)
 
     def setUnit(self, unit):
-        TiePointGrid_setUnit(self._obj, unit)
+        TiePointGrid_setUnit(self._jobj_ref, unit)
         return
 
     def getUnit(self):
-        return TiePointGrid_getUnit(self._obj)
+        return TiePointGrid_getUnit(self._jobj_ref)
 
     def isSynthetic(self):
         """
            @deprecated since BEAM 4.10 (not used, no replacement)
         """
-        return TiePointGrid_isSynthetic(self._obj)
+        return TiePointGrid_isSynthetic(self._jobj_ref)
 
     def setSynthetic(self, synthetic):
         """
            @deprecated since BEAM 4.10 (not used, no replacement)
         """
-        TiePointGrid_setSynthetic(self._obj, synthetic)
+        TiePointGrid_setSynthetic(self._jobj_ref, synthetic)
         return
 
     def fireProductNodeDataChanged(self):
         """
            Fires a node data changed event. This method is called after the data of this data node changed.
         """
-        TiePointGrid_fireProductNodeDataChanged(self._obj)
+        TiePointGrid_fireProductNodeDataChanged(self._jobj_ref)
         return
 
     def getRawStorageSize2(self, subsetDef):
@@ -9464,7 +9521,7 @@ Usually, tie-point grids are a sub-sampling of a data product's scene resolution
            @param subsetDef if not <code>null</code> the subset may limit the size returned
            @return the size in bytes.
         """
-        return TiePointGrid_getRawStorageSize2(self._obj, subsetDef._obj)
+        return TiePointGrid_getRawStorageSize2(self._jobj_ref, subsetDef._jobj_ref)
 
     def createCompatibleProductData(self, numElems):
         """
@@ -9473,26 +9530,26 @@ Usually, tie-point grids are a sub-sampling of a data product's scene resolution
            @param numElems the number of elements, must not be less than one
            @return product data compatible with this data node
         """
-        return ProductData(TiePointGrid_createCompatibleProductData(self._obj, numElems))
+        return ProductData(TiePointGrid_createCompatibleProductData(self._jobj_ref, numElems))
 
     def getOwner(self):
         """
            @return The owner node of this node.
         """
-        return ProductNode(TiePointGrid_getOwner(self._obj))
+        return ProductNode(TiePointGrid_getOwner(self._jobj_ref))
 
     def getName(self):
         """
            @return This node's name.
         """
-        return TiePointGrid_getName(self._obj)
+        return TiePointGrid_getName(self._jobj_ref)
 
     def setName(self, name):
         """
            Sets this product's name.
            @param name The name.
         """
-        TiePointGrid_setName(self._obj, name)
+        TiePointGrid_setName(self._jobj_ref, name)
         return
 
     def getDescription(self):
@@ -9500,14 +9557,14 @@ Usually, tie-point grids are a sub-sampling of a data product's scene resolution
            Returns a short textual description for this products node.
            @return a description or <code>null</code>
         """
-        return TiePointGrid_getDescription(self._obj)
+        return TiePointGrid_getDescription(self._jobj_ref)
 
     def setDescription(self, description):
         """
            Sets a short textual description for this products node.
            @param description a description, can be <code>null</code>
         """
-        TiePointGrid_setDescription(self._obj, description)
+        TiePointGrid_setDescription(self._jobj_ref, description)
         return
 
     def isModified(self):
@@ -9515,10 +9572,10 @@ Usually, tie-point grids are a sub-sampling of a data product's scene resolution
            Returns whether or not this node is modified.
            @return <code>true</code> if so
         """
-        return TiePointGrid_isModified(self._obj)
+        return TiePointGrid_isModified(self._jobj_ref)
 
     def toString(self):
-        return TiePointGrid_toString(self._obj)
+        return TiePointGrid_toString(self._jobj_ref)
 
     @staticmethod
     def isValidNodeName(name):
@@ -9537,21 +9594,21 @@ Usually, tie-point grids are a sub-sampling of a data product's scene resolution
            @return the product, or <code>null</code> if this node was not owned by a product at the time this method was
            called
         """
-        return Product(TiePointGrid_getProduct(self._obj))
+        return Product(TiePointGrid_getProduct(self._jobj_ref))
 
     def getProductReader(self):
         """
            Returns the product reader for the product to which this node belongs to.
            @return the product reader, or <code>null</code> if no such exists
         """
-        return ProductReader(TiePointGrid_getProductReader(self._obj))
+        return ProductReader(TiePointGrid_getProductReader(self._jobj_ref))
 
     def getProductWriter(self):
         """
            Returns the product writer for the product to which this node belongs to.
            @return the product writer, or <code>null</code> if no such exists
         """
-        return ProductWriter(TiePointGrid_getProductWriter(self._obj))
+        return ProductWriter(TiePointGrid_getProductWriter(self._jobj_ref))
 
     def getDisplayName(self):
         """
@@ -9562,7 +9619,7 @@ Usually, tie-point grids are a sub-sampling of a data product's scene resolution
            <code>null</code>
            @see #getProductRefString
         """
-        return TiePointGrid_getDisplayName(self._obj)
+        return TiePointGrid_getDisplayName(self._jobj_ref)
 
     def getProductRefString(self):
         """
@@ -9572,21 +9629,21 @@ Usually, tie-point grids are a sub-sampling of a data product's scene resolution
            @return the product reference string. <br>or <code>null</code> if this node has no product <br>or
            <code>null</code> if its product reference number was inactive
         """
-        return TiePointGrid_getProductRefString(self._obj)
+        return TiePointGrid_getProductRefString(self._jobj_ref)
 
     def getRawStorageSize1(self):
         """
            Gets an estimated, raw storage size in bytes of this product node.
            @return the size in bytes.
         """
-        return TiePointGrid_getRawStorageSize1(self._obj)
+        return TiePointGrid_getRawStorageSize1(self._jobj_ref)
 
     def fireProductNodeChanged1(self, propertyName):
-        TiePointGrid_fireProductNodeChanged1(self._obj, propertyName)
+        TiePointGrid_fireProductNodeChanged1(self._jobj_ref, propertyName)
         return
 
     def fireProductNodeChanged2(self, propertyName, oldValue, newValue):
-        TiePointGrid_fireProductNodeChanged2(self._obj, propertyName, oldValue._obj, newValue._obj)
+        TiePointGrid_fireProductNodeChanged2(self._jobj_ref, propertyName, oldValue._jobj_ref, newValue._jobj_ref)
         return
 
     def removeFromFile(self, productWriter):
@@ -9595,11 +9652,11 @@ Usually, tie-point grids are a sub-sampling of a data product's scene resolution
            does nothing.
            @param productWriter the product writer to be used to remove this node from the underlying file.
         """
-        TiePointGrid_removeFromFile(self._obj, productWriter._obj)
+        TiePointGrid_removeFromFile(self._jobj_ref, productWriter._jobj_ref)
         return
 
     def getExtension(self, arg0):
-        return Object(TiePointGrid_getExtension(self._obj, arg0._obj))
+        return Object(TiePointGrid_getExtension(self._jobj_ref, arg0._jobj_ref))
 
 
 class SimpleFeature(JObject):
@@ -9638,7 +9695,7 @@ class ProductWriter(JObject):
            Returns the plug-in which created this product writer.
            @return the product writer plug-in, should never be <code>null</code>
         """
-        return ProductWriterPlugIn(ProductWriter_getWriterPlugIn(self._obj))
+        return ProductWriterPlugIn(ProductWriter_getWriterPlugIn(self._jobj_ref))
 
     def getOutput(self):
         """
@@ -9646,7 +9703,7 @@ class ProductWriter(JObject):
            <code>setOutput</code> has not been called so far.
            @return the output
         """
-        return Object(ProductWriter_getOutput(self._obj))
+        return Object(ProductWriter_getOutput(self._jobj_ref))
 
     def writeProductNodes(self, product, output):
         """
@@ -9661,7 +9718,7 @@ class ProductWriter(JObject):
            supported output sources.
            @throws IOException              if an I/O error occurs
         """
-        ProductWriter_writeProductNodes(self._obj, product._obj, output._obj)
+        ProductWriter_writeProductNodes(self._jobj_ref, product._jobj_ref, output._jobj_ref)
         return
 
     def writeBandRasterData(self, sourceBand, sourceOffsetX, sourceOffsetY, sourceWidth, sourceHeight, sourceBuffer, pm):
@@ -9695,7 +9752,7 @@ class ProductWriter(JObject):
            @see Band#getRasterWidth()
            @see Band#getRasterHeight()
         """
-        ProductWriter_writeBandRasterData(self._obj, sourceBand._obj, sourceOffsetX, sourceOffsetY, sourceWidth, sourceHeight, sourceBuffer._obj, pm._obj)
+        ProductWriter_writeBandRasterData(self._jobj_ref, sourceBand._jobj_ref, sourceOffsetX, sourceOffsetY, sourceWidth, sourceHeight, sourceBuffer._jobj_ref, pm._jobj_ref)
         return
 
     def flush(self):
@@ -9703,7 +9760,7 @@ class ProductWriter(JObject):
            Writes all data in memory to the data sink(s) associated with this writer.
            @throws IOException if an I/O error occurs
         """
-        ProductWriter_flush(self._obj)
+        ProductWriter_flush(self._jobj_ref)
         return
 
     def close(self):
@@ -9712,7 +9769,7 @@ class ProductWriter(JObject):
            performing the actual close-operation.
            @throws IOException if an I/O error occurs
         """
-        ProductWriter_close(self._obj)
+        ProductWriter_close(self._jobj_ref)
         return
 
     def shouldWrite(self, node):
@@ -9721,14 +9778,14 @@ class ProductWriter(JObject):
            @param node the product node
            @return <code>true</code> if so
         """
-        return ProductWriter_shouldWrite(self._obj, node._obj)
+        return ProductWriter_shouldWrite(self._jobj_ref, node._jobj_ref)
 
     def isIncrementalMode(self):
         """
            Returns whether this product writer writes only modified product nodes.
            @return <code>true</code> if so
         """
-        return ProductWriter_isIncrementalMode(self._obj)
+        return ProductWriter_isIncrementalMode(self._jobj_ref)
 
     def setIncrementalMode(self, enabled):
         """
@@ -9736,7 +9793,7 @@ class ProductWriter(JObject):
            listening.
            @param enabled enables or disables progress listening.
         """
-        ProductWriter_setIncrementalMode(self._obj, enabled)
+        ProductWriter_setIncrementalMode(self._jobj_ref, enabled)
         return
 
     def deleteOutput(self):
@@ -9744,7 +9801,7 @@ class ProductWriter(JObject):
            Complete deletes the physical representation of the given product from the file system.
            @throws IOException if an I/O error occurs
         """
-        ProductWriter_deleteOutput(self._obj)
+        ProductWriter_deleteOutput(self._jobj_ref)
         return
 
     def removeBand(self, band):
@@ -9752,7 +9809,7 @@ class ProductWriter(JObject):
            Physically deletes a <code>Band</code> in a product writer's output.
            @param band The band to delete.
         """
-        ProductWriter_removeBand(self._obj, band._obj)
+        ProductWriter_removeBand(self._jobj_ref, band._jobj_ref)
         return
 
 
@@ -9775,13 +9832,13 @@ class MetadataAttribute(JObject):
 
     @staticmethod
     def newMetadataAttribute(name, data, readOnly):
-        return MetadataAttribute(MetadataAttribute_newMetadataAttribute(name, data._obj, readOnly))
+        return MetadataAttribute(MetadataAttribute_newMetadataAttribute(name, data._jobj_ref, readOnly))
 
     def getParentElement(self):
-        return MetadataElement(MetadataAttribute_getParentElement(self._obj))
+        return MetadataElement(MetadataAttribute_getParentElement(self._jobj_ref))
 
     def equals(self, object):
-        return MetadataAttribute_equals(self._obj, object._obj)
+        return MetadataAttribute_equals(self._jobj_ref, object._jobj_ref)
 
     def acceptVisitor(self, visitor):
         """
@@ -9792,51 +9849,52 @@ class MetadataAttribute(JObject):
            The method simply calls <code>visitor.visit(this)</code>.
            @param visitor the visitor
         """
-        MetadataAttribute_acceptVisitor(self._obj, visitor._obj)
+        MetadataAttribute_acceptVisitor(self._jobj_ref, visitor._jobj_ref)
         return
 
     def createDeepClone(self):
-        return MetadataAttribute(MetadataAttribute_createDeepClone(self._obj))
+        return MetadataAttribute(MetadataAttribute_createDeepClone(self._jobj_ref))
 
     def getDataType(self):
         """
            Gets the data type of this data node.
            @return the data type which is always one of the multiple <code>ProductData.TYPE_<i>X</i></code> constants
         """
-        return MetadataAttribute_getDataType(self._obj)
+        return MetadataAttribute_getDataType(self._jobj_ref)
 
     def isFloatingPointType(self):
         """
            Tests whether the data type of this node is a floating point type.
            @return true, if so
         """
-        return MetadataAttribute_isFloatingPointType(self._obj)
+        return MetadataAttribute_isFloatingPointType(self._jobj_ref)
 
     def getNumDataElems(self):
         """
            Gets the number of data elements in this data node.
         """
-        return MetadataAttribute_getNumDataElems(self._obj)
+        return MetadataAttribute_getNumDataElems(self._jobj_ref)
 
     def setData(self, data):
         """
            Sets the data of this data node.
         """
-        MetadataAttribute_setData(self._obj, data._obj)
+        MetadataAttribute_setData(self._jobj_ref, data._jobj_ref)
         return
 
     def getData(self):
         """
            Gets the data of this data node.
         """
-        return ProductData(MetadataAttribute_getData(self._obj))
+        return ProductData(MetadataAttribute_getData(self._jobj_ref))
 
     def setDataElems(self, elems):
         """
            Sets the data elements of this data node.
+           @deprecated since 5.0
            @see ProductData#setElems(Object)
         """
-        MetadataAttribute_setDataElems(self._obj, elems._obj)
+        MetadataAttribute_setDataElems(self._jobj_ref, elems._jobj_ref)
         return
 
     def getDataElems(self):
@@ -9844,47 +9902,47 @@ class MetadataAttribute(JObject):
            Gets the data elements of this data node.
            @see ProductData#getElems()
         """
-        return Object(MetadataAttribute_getDataElems(self._obj))
+        return Object(MetadataAttribute_getDataElems(self._jobj_ref))
 
     def getDataElemSize(self):
         """
            Gets the data element size in bytes.
            @see ProductData#getElemSize(int)
         """
-        return MetadataAttribute_getDataElemSize(self._obj)
+        return MetadataAttribute_getDataElemSize(self._jobj_ref)
 
     def setReadOnly(self, readOnly):
-        MetadataAttribute_setReadOnly(self._obj, readOnly)
+        MetadataAttribute_setReadOnly(self._jobj_ref, readOnly)
         return
 
     def isReadOnly(self):
-        return MetadataAttribute_isReadOnly(self._obj)
+        return MetadataAttribute_isReadOnly(self._jobj_ref)
 
     def setUnit(self, unit):
-        MetadataAttribute_setUnit(self._obj, unit)
+        MetadataAttribute_setUnit(self._jobj_ref, unit)
         return
 
     def getUnit(self):
-        return MetadataAttribute_getUnit(self._obj)
+        return MetadataAttribute_getUnit(self._jobj_ref)
 
     def isSynthetic(self):
         """
            @deprecated since BEAM 4.10 (not used, no replacement)
         """
-        return MetadataAttribute_isSynthetic(self._obj)
+        return MetadataAttribute_isSynthetic(self._jobj_ref)
 
     def setSynthetic(self, synthetic):
         """
            @deprecated since BEAM 4.10 (not used, no replacement)
         """
-        MetadataAttribute_setSynthetic(self._obj, synthetic)
+        MetadataAttribute_setSynthetic(self._jobj_ref, synthetic)
         return
 
     def fireProductNodeDataChanged(self):
         """
            Fires a node data changed event. This method is called after the data of this data node changed.
         """
-        MetadataAttribute_fireProductNodeDataChanged(self._obj)
+        MetadataAttribute_fireProductNodeDataChanged(self._jobj_ref)
         return
 
     def dispose(self):
@@ -9897,7 +9955,7 @@ class MetadataAttribute(JObject):
            
            Overrides of this method should always call <code>super.dispose();</code> after disposing this instance.
         """
-        MetadataAttribute_dispose(self._obj)
+        MetadataAttribute_dispose(self._jobj_ref)
         return
 
     def createCompatibleProductData(self, numElems):
@@ -9907,26 +9965,26 @@ class MetadataAttribute(JObject):
            @param numElems the number of elements, must not be less than one
            @return product data compatible with this data node
         """
-        return ProductData(MetadataAttribute_createCompatibleProductData(self._obj, numElems))
+        return ProductData(MetadataAttribute_createCompatibleProductData(self._jobj_ref, numElems))
 
     def getOwner(self):
         """
            @return The owner node of this node.
         """
-        return ProductNode(MetadataAttribute_getOwner(self._obj))
+        return ProductNode(MetadataAttribute_getOwner(self._jobj_ref))
 
     def getName(self):
         """
            @return This node's name.
         """
-        return MetadataAttribute_getName(self._obj)
+        return MetadataAttribute_getName(self._jobj_ref)
 
     def setName(self, name):
         """
            Sets this product's name.
            @param name The name.
         """
-        MetadataAttribute_setName(self._obj, name)
+        MetadataAttribute_setName(self._jobj_ref, name)
         return
 
     def getDescription(self):
@@ -9934,14 +9992,14 @@ class MetadataAttribute(JObject):
            Returns a short textual description for this products node.
            @return a description or <code>null</code>
         """
-        return MetadataAttribute_getDescription(self._obj)
+        return MetadataAttribute_getDescription(self._jobj_ref)
 
     def setDescription(self, description):
         """
            Sets a short textual description for this products node.
            @param description a description, can be <code>null</code>
         """
-        MetadataAttribute_setDescription(self._obj, description)
+        MetadataAttribute_setDescription(self._jobj_ref, description)
         return
 
     def isModified(self):
@@ -9949,7 +10007,7 @@ class MetadataAttribute(JObject):
            Returns whether or not this node is modified.
            @return <code>true</code> if so
         """
-        return MetadataAttribute_isModified(self._obj)
+        return MetadataAttribute_isModified(self._jobj_ref)
 
     def setModified(self, modified):
         """
@@ -9960,11 +10018,11 @@ class MetadataAttribute(JObject):
            @param modified whether or not this node is beeing marked as modified.
            @see Product#fireNodeChanged
         """
-        MetadataAttribute_setModified(self._obj, modified)
+        MetadataAttribute_setModified(self._jobj_ref, modified)
         return
 
     def toString(self):
-        return MetadataAttribute_toString(self._obj)
+        return MetadataAttribute_toString(self._jobj_ref)
 
     @staticmethod
     def isValidNodeName(name):
@@ -9983,21 +10041,21 @@ class MetadataAttribute(JObject):
            @return the product, or <code>null</code> if this node was not owned by a product at the time this method was
            called
         """
-        return Product(MetadataAttribute_getProduct(self._obj))
+        return Product(MetadataAttribute_getProduct(self._jobj_ref))
 
     def getProductReader(self):
         """
            Returns the product reader for the product to which this node belongs to.
            @return the product reader, or <code>null</code> if no such exists
         """
-        return ProductReader(MetadataAttribute_getProductReader(self._obj))
+        return ProductReader(MetadataAttribute_getProductReader(self._jobj_ref))
 
     def getProductWriter(self):
         """
            Returns the product writer for the product to which this node belongs to.
            @return the product writer, or <code>null</code> if no such exists
         """
-        return ProductWriter(MetadataAttribute_getProductWriter(self._obj))
+        return ProductWriter(MetadataAttribute_getProductWriter(self._jobj_ref))
 
     def getDisplayName(self):
         """
@@ -10008,7 +10066,7 @@ class MetadataAttribute(JObject):
            <code>null</code>
            @see #getProductRefString
         """
-        return MetadataAttribute_getDisplayName(self._obj)
+        return MetadataAttribute_getDisplayName(self._jobj_ref)
 
     def getProductRefString(self):
         """
@@ -10018,7 +10076,7 @@ class MetadataAttribute(JObject):
            @return the product reference string. <br>or <code>null</code> if this node has no product <br>or
            <code>null</code> if its product reference number was inactive
         """
-        return MetadataAttribute_getProductRefString(self._obj)
+        return MetadataAttribute_getProductRefString(self._jobj_ref)
 
     def updateExpression(self, oldExternalName, newExternalName):
         """
@@ -10028,7 +10086,7 @@ class MetadataAttribute(JObject):
            @param oldExternalName The old node name.
            @param newExternalName The new node name.
         """
-        MetadataAttribute_updateExpression(self._obj, oldExternalName, newExternalName)
+        MetadataAttribute_updateExpression(self._jobj_ref, oldExternalName, newExternalName)
         return
 
     def removeFromFile(self, productWriter):
@@ -10037,11 +10095,11 @@ class MetadataAttribute(JObject):
            does nothing.
            @param productWriter the product writer to be used to remove this node from the underlying file.
         """
-        MetadataAttribute_removeFromFile(self._obj, productWriter._obj)
+        MetadataAttribute_removeFromFile(self._jobj_ref, productWriter._jobj_ref)
         return
 
     def getExtension(self, arg0):
-        return Object(MetadataAttribute_getExtension(self._obj, arg0._obj))
+        return Object(MetadataAttribute_getExtension(self._jobj_ref, arg0._jobj_ref))
 
 
 class ProgressMonitor(JObject):

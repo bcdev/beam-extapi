@@ -14,6 +14,7 @@ PyObject* BeamPyTestClass2_getPixel1(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "(sK)ii:BeamPyTestClass2_getPixel1", &_thisType, &_this, &p1, &p2)) {
         return NULL;
     }
-    _result = (*jenv)->CallFloatMethod(jenv, _this, _method, p1, p2);
+    _thisJObj = (jobject) _this;
+    _result = (*jenv)->CallFloatMethod(jenv, _thisJObj, _method, p1, p2);
     return PyFloat_FromDouble(_result);
 }
