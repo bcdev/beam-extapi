@@ -1,13 +1,19 @@
 PyObject* BeamPyTestClass2_getPixel1(PyObject* self, PyObject* args)
 {
-    int p1;
-    int p2;
-    const char* thisObjType;
-    unsigned PY_LONG_LONG thisObj;
-    float result;
-    if (!PyArg_ParseTuple(args, "(sK)ii:TestClass2_getPixel1", &thisObjType, &thisObj, &p1, &p2)) {
+    static jmethodID _method = NULL;
+    
+    const char* _thisType = NULL;
+    unsigned PY_LONG_LONG _this = 0;
+    jobject _thisJObj = NULL;
+    jint p1 = (jint) 0;
+    jint p2 = (jint) 0;
+    jfloat _result = (jfloat) 0;
+    if (!beampy_initJMethod(&_method, classTestClass2, "org.esa.beam.extapi.gen.test.TestClass2", "getPixel", "(II)F", 0)) {
         return NULL;
     }
-    result = TestClass2_getPixel1((TestClass2) thisObj, p1, p2);
-    return PyFloat_FromDouble(result);
+    if (!PyArg_ParseTuple(args, "(sK)ii:BeamPyTestClass2_getPixel1", &_thisType, &_this, &p1, &p2)) {
+        return NULL;
+    }
+    _result = (*jenv)->CallFloatMethod(jenv, _this, _method, p1, p2);
+    return PyFloat_FromDouble(_result);
 }
