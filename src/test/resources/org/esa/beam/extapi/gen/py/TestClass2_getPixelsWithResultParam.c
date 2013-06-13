@@ -5,10 +5,10 @@ PyObject* BeamPyTestClass2_getPixelsWithResultParam(PyObject* self, PyObject* ar
     const char* _thisType = NULL;
     unsigned PY_LONG_LONG _this = 0;
     jobject _thisJObj = NULL;
-    float*   p1Data = NULL;
-    int        p1Length = 0;
-    PyObject*  p1PyObj = NULL;
-    Py_buffer  p1Buf;
+    jfloat* p1Data = NULL;
+    int p1Length = 0;
+    PyObject* p1PyObj = NULL;
+    Py_buffer p1Buf;
     jarray p1JObj = NULL;
     jint p2 = (jint) 0;
     PyObject* _resultPyObj = NULL;
@@ -24,15 +24,18 @@ PyObject* BeamPyTestClass2_getPixelsWithResultParam(PyObject* self, PyObject* ar
     if (p1PyObj == NULL) {
         return NULL;
     }
-    p1Data = (float*) p1Buf.buf;
+    p1Data = (jfloat*) p1Buf.buf;
     p1Length = p1Buf.len / p1Buf.itemsize;
-    p1JObj = beampy_newJFloatArray(p1Data, p1Length);
+    p1JObj = beampy_newJFloatArrayFromBuffer(p1Data, p1Length);
     if (p1JObj == NULL) {
         return NULL;
     }
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, p1JObj, p2);
-    beampy_copyJFloatArrayToBuffer((jarray) p1JObj, p1Data, p1Length);
-    _resultPyObj = p1PyObj;
+    if (p1Data != NULL && (*jenv)->IsSameObject(jenv, _resultJObj, p1JObj)) {
+        _resultPyObj = beampy_copyJFloatArrayToBuffer((jarray) p1JObj, p1Data, p1Length, p1PyObj);
+    } else {
+        _resultPyObj = beampy_newPyObjectFromJFloatArray((jarray) p1JObj);
+    }
     PyBuffer_Release(&p1Buf);
     (*jenv)->DeleteLocalRef(jenv, p1JObj);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);

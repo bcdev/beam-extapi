@@ -19,7 +19,7 @@ PyObject* BeamPyTestClass2_getPixelsForRect(PyObject* self, PyObject* args)
     _thisJObj = (jobject) _this;
     p1JObj = (jobject) p1;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, p1JObj);
-    _resultPyObj = beampy_newPyObjectFromJFloatArray((jarray) _resultJObj, "f");
+    _resultPyObj = beampy_newPyObjectFromJFloatArray((jarray) _resultJObj);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }

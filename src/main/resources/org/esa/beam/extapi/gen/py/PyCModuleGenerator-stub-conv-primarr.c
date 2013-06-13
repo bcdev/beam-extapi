@@ -8,25 +8,28 @@
 
 
 // Used in /org/esa/beam/extapi/gen/py/PyCParameterGenerator.java, PrimitiveArray
-jarray beampy_newJ${typeUC}Array(const j${typeLC}* data, jint length)
+jarray beampy_newJ${typeUC}ArrayFromBuffer(const j${typeLC}* buffer, jint length)
 {
     jarray arrayJObj = (*jenv)->New${typeUC}Array(jenv, length);
     if (arrayJObj != NULL) {
-        beam_copyToJArray(arrayJObj, data, length, sizeof (j${typeLC}));
+        beam_copyToJArray(arrayJObj, buffer, length, sizeof (j${typeLC}));
     }
     return arrayJObj;
 }
 
-// Used in /org/esa/beam/extapi/gen/py/PyCFunctionGenerator.java, PrimitiveArrayMethod
-PyObject* beampy_copyJ${typeUC}ArrayToPyObject(jarray arrayJObj, const char* carrayFormat, PyObject* resultPyObj)
+
+// Used in /org/esa/beam/extapi/gen/py/PyCParameterGenerator.java, PrimitiveArray
+PyObject* beampy_copyJ${typeUC}ArrayToBuffer(jarray arrayJObj, j${typeLC}* buffer, jint length, PyObject* bufferPyObj)
 {
     // todo - implement me!
-    PyErr_SetString(PyExc_NotImplementedError, "not implemented: beampy_copyJ${typeUC}ArrayToPyObject()");
+    PyErr_SetString(PyExc_NotImplementedError, "not implemented: beampy_copyJ${typeUC}ArrayToBuffer()");
+    // todo return bufferPyObj;
     return NULL;
 }
 
-// Used in /org/esa/beam/extapi/gen/py/PyCFunctionGenerator.java, PrimitiveArrayMethod
-PyObject* beampy_newPyObjectFromJ${typeUC}Array(jarray arrayJObj, const char* carrayFormat)
+
+// Used in /org/esa/beam/extapi/gen/py/PyCParameterGenerator.java, PrimitiveArray
+PyObject* beampy_newPyObjectFromJ${typeUC}Array(jarray arrayJObj)
 {
     // todo - implement me!
     PyErr_SetString(PyExc_NotImplementedError, "not implemented: beampy_newPyObjectFromJ${typeUC}Array()");

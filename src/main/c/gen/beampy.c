@@ -2570,13 +2570,13 @@ PyMODINIT_FUNC PyInit__beampy()
     Py_INCREF(&BeamPyJObject_Type);
     PyModule_AddObject(beampy_module, "JObject", (PyObject*) &BeamPyJObject_Type);
 
-    // TODO - use the new BeamPy_JObjectType object instead of the currently used (sK) tuples. (nf, 29.04.2013)
+    // todo - use the new BeamPy_JObjectType object instead of the currently used (sK) tuples. (nf, 29.04.2013)
     // // JObject instances shall be created using the following pattern:
     // PyObject* arg = PyLong_FromVoidPtr(ptr); // ptr is the JNI Java object
     // PyObject* obj = PyObject_Call(BeamPy_JObjectType, arg, NULL);
     // Py_DECREF(arg);
     //
-    // TODO - in BeamPyJObject_init use the following pattern:  (nf, 29.04.2013)
+    // todo - in BeamPyJObject_init use the following pattern:  (nf, 29.04.2013)
     // self->jobject = PyLong_AsVoidPtr(args);
 
     /////////////////////////////////////////////////////////////////////////
@@ -3352,25 +3352,28 @@ boolean beampy_initJMethod(jmethodID* methodPtr, jclass cls, const char* classNa
 
 
 // Used in /org/esa/beam/extapi/gen/py/PyCParameterGenerator.java, PrimitiveArray
-jarray beampy_newJBooleanArray(const jboolean* data, jint length)
+jarray beampy_newJBooleanArrayFromBuffer(const jboolean* buffer, jint length)
 {
     jarray arrayJObj = (*jenv)->NewBooleanArray(jenv, length);
     if (arrayJObj != NULL) {
-        beam_copyToJArray(arrayJObj, data, length, sizeof (jboolean));
+        beam_copyToJArray(arrayJObj, buffer, length, sizeof (jboolean));
     }
     return arrayJObj;
 }
 
-// Used in /org/esa/beam/extapi/gen/py/PyCFunctionGenerator.java, PrimitiveArrayMethod
-PyObject* beampy_copyJBooleanArrayToPyObject(jarray arrayJObj, const char* carrayFormat, PyObject* resultPyObj)
+
+// Used in /org/esa/beam/extapi/gen/py/PyCParameterGenerator.java, PrimitiveArray
+PyObject* beampy_copyJBooleanArrayToBuffer(jarray arrayJObj, jboolean* buffer, jint length, PyObject* bufferPyObj)
 {
     // todo - implement me!
-    PyErr_SetString(PyExc_NotImplementedError, "not implemented: beampy_copyJBooleanArrayToPyObject()");
+    PyErr_SetString(PyExc_NotImplementedError, "not implemented: beampy_copyJBooleanArrayToBuffer()");
+    // todo return bufferPyObj;
     return NULL;
 }
 
-// Used in /org/esa/beam/extapi/gen/py/PyCFunctionGenerator.java, PrimitiveArrayMethod
-PyObject* beampy_newPyObjectFromJBooleanArray(jarray arrayJObj, const char* carrayFormat)
+
+// Used in /org/esa/beam/extapi/gen/py/PyCParameterGenerator.java, PrimitiveArray
+PyObject* beampy_newPyObjectFromJBooleanArray(jarray arrayJObj)
 {
     // todo - implement me!
     PyErr_SetString(PyExc_NotImplementedError, "not implemented: beampy_newPyObjectFromJBooleanArray()");
@@ -3471,25 +3474,28 @@ PyObject* beampy_newPyListFromJBooleanArray(jarray arrayJObj)
 
 
 // Used in /org/esa/beam/extapi/gen/py/PyCParameterGenerator.java, PrimitiveArray
-jarray beampy_newJCharArray(const jchar* data, jint length)
+jarray beampy_newJCharArrayFromBuffer(const jchar* buffer, jint length)
 {
     jarray arrayJObj = (*jenv)->NewCharArray(jenv, length);
     if (arrayJObj != NULL) {
-        beam_copyToJArray(arrayJObj, data, length, sizeof (jchar));
+        beam_copyToJArray(arrayJObj, buffer, length, sizeof (jchar));
     }
     return arrayJObj;
 }
 
-// Used in /org/esa/beam/extapi/gen/py/PyCFunctionGenerator.java, PrimitiveArrayMethod
-PyObject* beampy_copyJCharArrayToPyObject(jarray arrayJObj, const char* carrayFormat, PyObject* resultPyObj)
+
+// Used in /org/esa/beam/extapi/gen/py/PyCParameterGenerator.java, PrimitiveArray
+PyObject* beampy_copyJCharArrayToBuffer(jarray arrayJObj, jchar* buffer, jint length, PyObject* bufferPyObj)
 {
     // todo - implement me!
-    PyErr_SetString(PyExc_NotImplementedError, "not implemented: beampy_copyJCharArrayToPyObject()");
+    PyErr_SetString(PyExc_NotImplementedError, "not implemented: beampy_copyJCharArrayToBuffer()");
+    // todo return bufferPyObj;
     return NULL;
 }
 
-// Used in /org/esa/beam/extapi/gen/py/PyCFunctionGenerator.java, PrimitiveArrayMethod
-PyObject* beampy_newPyObjectFromJCharArray(jarray arrayJObj, const char* carrayFormat)
+
+// Used in /org/esa/beam/extapi/gen/py/PyCParameterGenerator.java, PrimitiveArray
+PyObject* beampy_newPyObjectFromJCharArray(jarray arrayJObj)
 {
     // todo - implement me!
     PyErr_SetString(PyExc_NotImplementedError, "not implemented: beampy_newPyObjectFromJCharArray()");
@@ -3590,25 +3596,28 @@ PyObject* beampy_newPyListFromJCharArray(jarray arrayJObj)
 
 
 // Used in /org/esa/beam/extapi/gen/py/PyCParameterGenerator.java, PrimitiveArray
-jarray beampy_newJByteArray(const jbyte* data, jint length)
+jarray beampy_newJByteArrayFromBuffer(const jbyte* buffer, jint length)
 {
     jarray arrayJObj = (*jenv)->NewByteArray(jenv, length);
     if (arrayJObj != NULL) {
-        beam_copyToJArray(arrayJObj, data, length, sizeof (jbyte));
+        beam_copyToJArray(arrayJObj, buffer, length, sizeof (jbyte));
     }
     return arrayJObj;
 }
 
-// Used in /org/esa/beam/extapi/gen/py/PyCFunctionGenerator.java, PrimitiveArrayMethod
-PyObject* beampy_copyJByteArrayToPyObject(jarray arrayJObj, const char* carrayFormat, PyObject* resultPyObj)
+
+// Used in /org/esa/beam/extapi/gen/py/PyCParameterGenerator.java, PrimitiveArray
+PyObject* beampy_copyJByteArrayToBuffer(jarray arrayJObj, jbyte* buffer, jint length, PyObject* bufferPyObj)
 {
     // todo - implement me!
-    PyErr_SetString(PyExc_NotImplementedError, "not implemented: beampy_copyJByteArrayToPyObject()");
+    PyErr_SetString(PyExc_NotImplementedError, "not implemented: beampy_copyJByteArrayToBuffer()");
+    // todo return bufferPyObj;
     return NULL;
 }
 
-// Used in /org/esa/beam/extapi/gen/py/PyCFunctionGenerator.java, PrimitiveArrayMethod
-PyObject* beampy_newPyObjectFromJByteArray(jarray arrayJObj, const char* carrayFormat)
+
+// Used in /org/esa/beam/extapi/gen/py/PyCParameterGenerator.java, PrimitiveArray
+PyObject* beampy_newPyObjectFromJByteArray(jarray arrayJObj)
 {
     // todo - implement me!
     PyErr_SetString(PyExc_NotImplementedError, "not implemented: beampy_newPyObjectFromJByteArray()");
@@ -3709,25 +3718,28 @@ PyObject* beampy_newPyListFromJByteArray(jarray arrayJObj)
 
 
 // Used in /org/esa/beam/extapi/gen/py/PyCParameterGenerator.java, PrimitiveArray
-jarray beampy_newJShortArray(const jshort* data, jint length)
+jarray beampy_newJShortArrayFromBuffer(const jshort* buffer, jint length)
 {
     jarray arrayJObj = (*jenv)->NewShortArray(jenv, length);
     if (arrayJObj != NULL) {
-        beam_copyToJArray(arrayJObj, data, length, sizeof (jshort));
+        beam_copyToJArray(arrayJObj, buffer, length, sizeof (jshort));
     }
     return arrayJObj;
 }
 
-// Used in /org/esa/beam/extapi/gen/py/PyCFunctionGenerator.java, PrimitiveArrayMethod
-PyObject* beampy_copyJShortArrayToPyObject(jarray arrayJObj, const char* carrayFormat, PyObject* resultPyObj)
+
+// Used in /org/esa/beam/extapi/gen/py/PyCParameterGenerator.java, PrimitiveArray
+PyObject* beampy_copyJShortArrayToBuffer(jarray arrayJObj, jshort* buffer, jint length, PyObject* bufferPyObj)
 {
     // todo - implement me!
-    PyErr_SetString(PyExc_NotImplementedError, "not implemented: beampy_copyJShortArrayToPyObject()");
+    PyErr_SetString(PyExc_NotImplementedError, "not implemented: beampy_copyJShortArrayToBuffer()");
+    // todo return bufferPyObj;
     return NULL;
 }
 
-// Used in /org/esa/beam/extapi/gen/py/PyCFunctionGenerator.java, PrimitiveArrayMethod
-PyObject* beampy_newPyObjectFromJShortArray(jarray arrayJObj, const char* carrayFormat)
+
+// Used in /org/esa/beam/extapi/gen/py/PyCParameterGenerator.java, PrimitiveArray
+PyObject* beampy_newPyObjectFromJShortArray(jarray arrayJObj)
 {
     // todo - implement me!
     PyErr_SetString(PyExc_NotImplementedError, "not implemented: beampy_newPyObjectFromJShortArray()");
@@ -3828,25 +3840,28 @@ PyObject* beampy_newPyListFromJShortArray(jarray arrayJObj)
 
 
 // Used in /org/esa/beam/extapi/gen/py/PyCParameterGenerator.java, PrimitiveArray
-jarray beampy_newJIntArray(const jint* data, jint length)
+jarray beampy_newJIntArrayFromBuffer(const jint* buffer, jint length)
 {
     jarray arrayJObj = (*jenv)->NewIntArray(jenv, length);
     if (arrayJObj != NULL) {
-        beam_copyToJArray(arrayJObj, data, length, sizeof (jint));
+        beam_copyToJArray(arrayJObj, buffer, length, sizeof (jint));
     }
     return arrayJObj;
 }
 
-// Used in /org/esa/beam/extapi/gen/py/PyCFunctionGenerator.java, PrimitiveArrayMethod
-PyObject* beampy_copyJIntArrayToPyObject(jarray arrayJObj, const char* carrayFormat, PyObject* resultPyObj)
+
+// Used in /org/esa/beam/extapi/gen/py/PyCParameterGenerator.java, PrimitiveArray
+PyObject* beampy_copyJIntArrayToBuffer(jarray arrayJObj, jint* buffer, jint length, PyObject* bufferPyObj)
 {
     // todo - implement me!
-    PyErr_SetString(PyExc_NotImplementedError, "not implemented: beampy_copyJIntArrayToPyObject()");
+    PyErr_SetString(PyExc_NotImplementedError, "not implemented: beampy_copyJIntArrayToBuffer()");
+    // todo return bufferPyObj;
     return NULL;
 }
 
-// Used in /org/esa/beam/extapi/gen/py/PyCFunctionGenerator.java, PrimitiveArrayMethod
-PyObject* beampy_newPyObjectFromJIntArray(jarray arrayJObj, const char* carrayFormat)
+
+// Used in /org/esa/beam/extapi/gen/py/PyCParameterGenerator.java, PrimitiveArray
+PyObject* beampy_newPyObjectFromJIntArray(jarray arrayJObj)
 {
     // todo - implement me!
     PyErr_SetString(PyExc_NotImplementedError, "not implemented: beampy_newPyObjectFromJIntArray()");
@@ -3947,25 +3962,28 @@ PyObject* beampy_newPyListFromJIntArray(jarray arrayJObj)
 
 
 // Used in /org/esa/beam/extapi/gen/py/PyCParameterGenerator.java, PrimitiveArray
-jarray beampy_newJLongArray(const jlong* data, jint length)
+jarray beampy_newJLongArrayFromBuffer(const jlong* buffer, jint length)
 {
     jarray arrayJObj = (*jenv)->NewLongArray(jenv, length);
     if (arrayJObj != NULL) {
-        beam_copyToJArray(arrayJObj, data, length, sizeof (jlong));
+        beam_copyToJArray(arrayJObj, buffer, length, sizeof (jlong));
     }
     return arrayJObj;
 }
 
-// Used in /org/esa/beam/extapi/gen/py/PyCFunctionGenerator.java, PrimitiveArrayMethod
-PyObject* beampy_copyJLongArrayToPyObject(jarray arrayJObj, const char* carrayFormat, PyObject* resultPyObj)
+
+// Used in /org/esa/beam/extapi/gen/py/PyCParameterGenerator.java, PrimitiveArray
+PyObject* beampy_copyJLongArrayToBuffer(jarray arrayJObj, jlong* buffer, jint length, PyObject* bufferPyObj)
 {
     // todo - implement me!
-    PyErr_SetString(PyExc_NotImplementedError, "not implemented: beampy_copyJLongArrayToPyObject()");
+    PyErr_SetString(PyExc_NotImplementedError, "not implemented: beampy_copyJLongArrayToBuffer()");
+    // todo return bufferPyObj;
     return NULL;
 }
 
-// Used in /org/esa/beam/extapi/gen/py/PyCFunctionGenerator.java, PrimitiveArrayMethod
-PyObject* beampy_newPyObjectFromJLongArray(jarray arrayJObj, const char* carrayFormat)
+
+// Used in /org/esa/beam/extapi/gen/py/PyCParameterGenerator.java, PrimitiveArray
+PyObject* beampy_newPyObjectFromJLongArray(jarray arrayJObj)
 {
     // todo - implement me!
     PyErr_SetString(PyExc_NotImplementedError, "not implemented: beampy_newPyObjectFromJLongArray()");
@@ -4066,25 +4084,28 @@ PyObject* beampy_newPyListFromJLongArray(jarray arrayJObj)
 
 
 // Used in /org/esa/beam/extapi/gen/py/PyCParameterGenerator.java, PrimitiveArray
-jarray beampy_newJFloatArray(const jfloat* data, jint length)
+jarray beampy_newJFloatArrayFromBuffer(const jfloat* buffer, jint length)
 {
     jarray arrayJObj = (*jenv)->NewFloatArray(jenv, length);
     if (arrayJObj != NULL) {
-        beam_copyToJArray(arrayJObj, data, length, sizeof (jfloat));
+        beam_copyToJArray(arrayJObj, buffer, length, sizeof (jfloat));
     }
     return arrayJObj;
 }
 
-// Used in /org/esa/beam/extapi/gen/py/PyCFunctionGenerator.java, PrimitiveArrayMethod
-PyObject* beampy_copyJFloatArrayToPyObject(jarray arrayJObj, const char* carrayFormat, PyObject* resultPyObj)
+
+// Used in /org/esa/beam/extapi/gen/py/PyCParameterGenerator.java, PrimitiveArray
+PyObject* beampy_copyJFloatArrayToBuffer(jarray arrayJObj, jfloat* buffer, jint length, PyObject* bufferPyObj)
 {
     // todo - implement me!
-    PyErr_SetString(PyExc_NotImplementedError, "not implemented: beampy_copyJFloatArrayToPyObject()");
+    PyErr_SetString(PyExc_NotImplementedError, "not implemented: beampy_copyJFloatArrayToBuffer()");
+    // todo return bufferPyObj;
     return NULL;
 }
 
-// Used in /org/esa/beam/extapi/gen/py/PyCFunctionGenerator.java, PrimitiveArrayMethod
-PyObject* beampy_newPyObjectFromJFloatArray(jarray arrayJObj, const char* carrayFormat)
+
+// Used in /org/esa/beam/extapi/gen/py/PyCParameterGenerator.java, PrimitiveArray
+PyObject* beampy_newPyObjectFromJFloatArray(jarray arrayJObj)
 {
     // todo - implement me!
     PyErr_SetString(PyExc_NotImplementedError, "not implemented: beampy_newPyObjectFromJFloatArray()");
@@ -4185,25 +4206,28 @@ PyObject* beampy_newPyListFromJFloatArray(jarray arrayJObj)
 
 
 // Used in /org/esa/beam/extapi/gen/py/PyCParameterGenerator.java, PrimitiveArray
-jarray beampy_newJDoubleArray(const jdouble* data, jint length)
+jarray beampy_newJDoubleArrayFromBuffer(const jdouble* buffer, jint length)
 {
     jarray arrayJObj = (*jenv)->NewDoubleArray(jenv, length);
     if (arrayJObj != NULL) {
-        beam_copyToJArray(arrayJObj, data, length, sizeof (jdouble));
+        beam_copyToJArray(arrayJObj, buffer, length, sizeof (jdouble));
     }
     return arrayJObj;
 }
 
-// Used in /org/esa/beam/extapi/gen/py/PyCFunctionGenerator.java, PrimitiveArrayMethod
-PyObject* beampy_copyJDoubleArrayToPyObject(jarray arrayJObj, const char* carrayFormat, PyObject* resultPyObj)
+
+// Used in /org/esa/beam/extapi/gen/py/PyCParameterGenerator.java, PrimitiveArray
+PyObject* beampy_copyJDoubleArrayToBuffer(jarray arrayJObj, jdouble* buffer, jint length, PyObject* bufferPyObj)
 {
     // todo - implement me!
-    PyErr_SetString(PyExc_NotImplementedError, "not implemented: beampy_copyJDoubleArrayToPyObject()");
+    PyErr_SetString(PyExc_NotImplementedError, "not implemented: beampy_copyJDoubleArrayToBuffer()");
+    // todo return bufferPyObj;
     return NULL;
 }
 
-// Used in /org/esa/beam/extapi/gen/py/PyCFunctionGenerator.java, PrimitiveArrayMethod
-PyObject* beampy_newPyObjectFromJDoubleArray(jarray arrayJObj, const char* carrayFormat)
+
+// Used in /org/esa/beam/extapi/gen/py/PyCParameterGenerator.java, PrimitiveArray
+PyObject* beampy_newPyObjectFromJDoubleArray(jarray arrayJObj)
 {
     // todo - implement me!
     PyErr_SetString(PyExc_NotImplementedError, "not implemented: beampy_newPyObjectFromJDoubleArray()");
@@ -11373,10 +11397,10 @@ PyObject* BeamPyProduct_readBitmask2(PyObject* self, PyObject* args)
     const char* bitmaskTermType = NULL;
     unsigned PY_LONG_LONG bitmaskTerm = 0;
     jobject bitmaskTermJObj = NULL;
-    boolean*   bitmaskData = NULL;
-    int        bitmaskLength = 0;
-    PyObject*  bitmaskPyObj = NULL;
-    Py_buffer  bitmaskBuf;
+    jboolean* bitmaskData = NULL;
+    int bitmaskLength = 0;
+    PyObject* bitmaskPyObj = NULL;
+    Py_buffer bitmaskBuf;
     jarray bitmaskJObj = NULL;
     const char* pmType = NULL;
     unsigned PY_LONG_LONG pm = 0;
@@ -11393,9 +11417,9 @@ PyObject* BeamPyProduct_readBitmask2(PyObject* self, PyObject* args)
     if (bitmaskPyObj == NULL) {
         return NULL;
     }
-    bitmaskData = (boolean*) bitmaskBuf.buf;
+    bitmaskData = (jboolean*) bitmaskBuf.buf;
     bitmaskLength = bitmaskBuf.len / bitmaskBuf.itemsize;
-    bitmaskJObj = beampy_newJBooleanArray(bitmaskData, bitmaskLength);
+    bitmaskJObj = beampy_newJBooleanArrayFromBuffer(bitmaskData, bitmaskLength);
     if (bitmaskJObj == NULL) {
         return NULL;
     }
@@ -11420,10 +11444,10 @@ PyObject* BeamPyProduct_readBitmask1(PyObject* self, PyObject* args)
     const char* bitmaskTermType = NULL;
     unsigned PY_LONG_LONG bitmaskTerm = 0;
     jobject bitmaskTermJObj = NULL;
-    byte*   bitmaskData = NULL;
-    int        bitmaskLength = 0;
-    PyObject*  bitmaskPyObj = NULL;
-    Py_buffer  bitmaskBuf;
+    jbyte* bitmaskData = NULL;
+    int bitmaskLength = 0;
+    PyObject* bitmaskPyObj = NULL;
+    Py_buffer bitmaskBuf;
     jarray bitmaskJObj = NULL;
     jbyte trueValue = (jbyte) 0;
     jbyte falseValue = (jbyte) 0;
@@ -11442,9 +11466,9 @@ PyObject* BeamPyProduct_readBitmask1(PyObject* self, PyObject* args)
     if (bitmaskPyObj == NULL) {
         return NULL;
     }
-    bitmaskData = (byte*) bitmaskBuf.buf;
+    bitmaskData = (jbyte*) bitmaskBuf.buf;
     bitmaskLength = bitmaskBuf.len / bitmaskBuf.itemsize;
-    bitmaskJObj = beampy_newJByteArray(bitmaskData, bitmaskLength);
+    bitmaskJObj = beampy_newJByteArrayFromBuffer(bitmaskData, bitmaskLength);
     if (bitmaskJObj == NULL) {
         return NULL;
     }
@@ -14102,10 +14126,10 @@ PyObject* BeamPyBand_setPixelsInt(PyObject* self, PyObject* args)
     jint y = (jint) 0;
     jint w = (jint) 0;
     jint h = (jint) 0;
-    int*   pixelsData = NULL;
-    int        pixelsLength = 0;
-    PyObject*  pixelsPyObj = NULL;
-    Py_buffer  pixelsBuf;
+    jint* pixelsData = NULL;
+    int pixelsLength = 0;
+    PyObject* pixelsPyObj = NULL;
+    Py_buffer pixelsBuf;
     jarray pixelsJObj = NULL;
     if (!beampy_initJMethod(&_method, classBand, "org.esa.beam.framework.datamodel.Band", "setPixels", "(IIII[I)V", 0)) {
         return NULL;
@@ -14118,9 +14142,9 @@ PyObject* BeamPyBand_setPixelsInt(PyObject* self, PyObject* args)
     if (pixelsPyObj == NULL) {
         return NULL;
     }
-    pixelsData = (int*) pixelsBuf.buf;
+    pixelsData = (jint*) pixelsBuf.buf;
     pixelsLength = pixelsBuf.len / pixelsBuf.itemsize;
-    pixelsJObj = beampy_newJIntArray(pixelsData, pixelsLength);
+    pixelsJObj = beampy_newJIntArrayFromBuffer(pixelsData, pixelsLength);
     if (pixelsJObj == NULL) {
         return NULL;
     }
@@ -14141,10 +14165,10 @@ PyObject* BeamPyBand_setPixelsFloat(PyObject* self, PyObject* args)
     jint y = (jint) 0;
     jint w = (jint) 0;
     jint h = (jint) 0;
-    float*   pixelsData = NULL;
-    int        pixelsLength = 0;
-    PyObject*  pixelsPyObj = NULL;
-    Py_buffer  pixelsBuf;
+    jfloat* pixelsData = NULL;
+    int pixelsLength = 0;
+    PyObject* pixelsPyObj = NULL;
+    Py_buffer pixelsBuf;
     jarray pixelsJObj = NULL;
     if (!beampy_initJMethod(&_method, classBand, "org.esa.beam.framework.datamodel.Band", "setPixels", "(IIII[F)V", 0)) {
         return NULL;
@@ -14157,9 +14181,9 @@ PyObject* BeamPyBand_setPixelsFloat(PyObject* self, PyObject* args)
     if (pixelsPyObj == NULL) {
         return NULL;
     }
-    pixelsData = (float*) pixelsBuf.buf;
+    pixelsData = (jfloat*) pixelsBuf.buf;
     pixelsLength = pixelsBuf.len / pixelsBuf.itemsize;
-    pixelsJObj = beampy_newJFloatArray(pixelsData, pixelsLength);
+    pixelsJObj = beampy_newJFloatArrayFromBuffer(pixelsData, pixelsLength);
     if (pixelsJObj == NULL) {
         return NULL;
     }
@@ -14180,10 +14204,10 @@ PyObject* BeamPyBand_setPixelsDouble(PyObject* self, PyObject* args)
     jint y = (jint) 0;
     jint w = (jint) 0;
     jint h = (jint) 0;
-    double*   pixelsData = NULL;
-    int        pixelsLength = 0;
-    PyObject*  pixelsPyObj = NULL;
-    Py_buffer  pixelsBuf;
+    jdouble* pixelsData = NULL;
+    int pixelsLength = 0;
+    PyObject* pixelsPyObj = NULL;
+    Py_buffer pixelsBuf;
     jarray pixelsJObj = NULL;
     if (!beampy_initJMethod(&_method, classBand, "org.esa.beam.framework.datamodel.Band", "setPixels", "(IIII[D)V", 0)) {
         return NULL;
@@ -14196,9 +14220,9 @@ PyObject* BeamPyBand_setPixelsDouble(PyObject* self, PyObject* args)
     if (pixelsPyObj == NULL) {
         return NULL;
     }
-    pixelsData = (double*) pixelsBuf.buf;
+    pixelsData = (jdouble*) pixelsBuf.buf;
     pixelsLength = pixelsBuf.len / pixelsBuf.itemsize;
-    pixelsJObj = beampy_newJDoubleArray(pixelsData, pixelsLength);
+    pixelsJObj = beampy_newJDoubleArrayFromBuffer(pixelsData, pixelsLength);
     if (pixelsJObj == NULL) {
         return NULL;
     }
@@ -15048,10 +15072,10 @@ PyObject* BeamPyBand_getPixelsInt(PyObject* self, PyObject* args)
     jint y = (jint) 0;
     jint w = (jint) 0;
     jint h = (jint) 0;
-    int*   pixelsData = NULL;
-    int        pixelsLength = 0;
-    PyObject*  pixelsPyObj = NULL;
-    Py_buffer  pixelsBuf;
+    jint* pixelsData = NULL;
+    int pixelsLength = 0;
+    PyObject* pixelsPyObj = NULL;
+    Py_buffer pixelsBuf;
     jarray pixelsJObj = NULL;
     PyObject* _resultPyObj = NULL;
     jobject _resultJObj = NULL;
@@ -15066,14 +15090,14 @@ PyObject* BeamPyBand_getPixelsInt(PyObject* self, PyObject* args)
     if (pixelsPyObj == NULL) {
         return NULL;
     }
-    pixelsData = (int*) pixelsBuf.buf;
+    pixelsData = (jint*) pixelsBuf.buf;
     pixelsLength = pixelsBuf.len / pixelsBuf.itemsize;
-    pixelsJObj = beampy_newJIntArray(pixelsData, pixelsLength);
+    pixelsJObj = beampy_newJIntArrayFromBuffer(pixelsData, pixelsLength);
     if (pixelsJObj == NULL) {
         return NULL;
     }
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, x, y, w, h, pixelsJObj);
-    _resultPyObj = beampy_newPyObjectFromJIntArray((jarray) _resultJObj, "i");
+    _resultPyObj = beampy_newPyObjectFromJIntArray((jarray) _resultJObj);
     PyBuffer_Release(&pixelsBuf);
     (*jenv)->DeleteLocalRef(jenv, pixelsJObj);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
@@ -15091,10 +15115,10 @@ PyObject* BeamPyBand_getPixelsFloat(PyObject* self, PyObject* args)
     jint y = (jint) 0;
     jint w = (jint) 0;
     jint h = (jint) 0;
-    float*   pixelsData = NULL;
-    int        pixelsLength = 0;
-    PyObject*  pixelsPyObj = NULL;
-    Py_buffer  pixelsBuf;
+    jfloat* pixelsData = NULL;
+    int pixelsLength = 0;
+    PyObject* pixelsPyObj = NULL;
+    Py_buffer pixelsBuf;
     jarray pixelsJObj = NULL;
     PyObject* _resultPyObj = NULL;
     jobject _resultJObj = NULL;
@@ -15109,14 +15133,14 @@ PyObject* BeamPyBand_getPixelsFloat(PyObject* self, PyObject* args)
     if (pixelsPyObj == NULL) {
         return NULL;
     }
-    pixelsData = (float*) pixelsBuf.buf;
+    pixelsData = (jfloat*) pixelsBuf.buf;
     pixelsLength = pixelsBuf.len / pixelsBuf.itemsize;
-    pixelsJObj = beampy_newJFloatArray(pixelsData, pixelsLength);
+    pixelsJObj = beampy_newJFloatArrayFromBuffer(pixelsData, pixelsLength);
     if (pixelsJObj == NULL) {
         return NULL;
     }
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, x, y, w, h, pixelsJObj);
-    _resultPyObj = beampy_newPyObjectFromJFloatArray((jarray) _resultJObj, "f");
+    _resultPyObj = beampy_newPyObjectFromJFloatArray((jarray) _resultJObj);
     PyBuffer_Release(&pixelsBuf);
     (*jenv)->DeleteLocalRef(jenv, pixelsJObj);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
@@ -15134,10 +15158,10 @@ PyObject* BeamPyBand_getPixelsDouble(PyObject* self, PyObject* args)
     jint y = (jint) 0;
     jint w = (jint) 0;
     jint h = (jint) 0;
-    double*   pixelsData = NULL;
-    int        pixelsLength = 0;
-    PyObject*  pixelsPyObj = NULL;
-    Py_buffer  pixelsBuf;
+    jdouble* pixelsData = NULL;
+    int pixelsLength = 0;
+    PyObject* pixelsPyObj = NULL;
+    Py_buffer pixelsBuf;
     jarray pixelsJObj = NULL;
     PyObject* _resultPyObj = NULL;
     jobject _resultJObj = NULL;
@@ -15152,14 +15176,14 @@ PyObject* BeamPyBand_getPixelsDouble(PyObject* self, PyObject* args)
     if (pixelsPyObj == NULL) {
         return NULL;
     }
-    pixelsData = (double*) pixelsBuf.buf;
+    pixelsData = (jdouble*) pixelsBuf.buf;
     pixelsLength = pixelsBuf.len / pixelsBuf.itemsize;
-    pixelsJObj = beampy_newJDoubleArray(pixelsData, pixelsLength);
+    pixelsJObj = beampy_newJDoubleArrayFromBuffer(pixelsData, pixelsLength);
     if (pixelsJObj == NULL) {
         return NULL;
     }
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, x, y, w, h, pixelsJObj);
-    _resultPyObj = beampy_newPyObjectFromJDoubleArray((jarray) _resultJObj, "d");
+    _resultPyObj = beampy_newPyObjectFromJDoubleArray((jarray) _resultJObj);
     PyBuffer_Release(&pixelsBuf);
     (*jenv)->DeleteLocalRef(jenv, pixelsJObj);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
@@ -15177,10 +15201,10 @@ PyObject* BeamPyBand_readPixelsInt(PyObject* self, PyObject* args)
     jint y = (jint) 0;
     jint w = (jint) 0;
     jint h = (jint) 0;
-    int*   pixelsData = NULL;
-    int        pixelsLength = 0;
-    PyObject*  pixelsPyObj = NULL;
-    Py_buffer  pixelsBuf;
+    jint* pixelsData = NULL;
+    int pixelsLength = 0;
+    PyObject* pixelsPyObj = NULL;
+    Py_buffer pixelsBuf;
     jarray pixelsJObj = NULL;
     PyObject* _resultPyObj = NULL;
     jobject _resultJObj = NULL;
@@ -15195,14 +15219,18 @@ PyObject* BeamPyBand_readPixelsInt(PyObject* self, PyObject* args)
     if (pixelsPyObj == NULL) {
         return NULL;
     }
-    pixelsData = (int*) pixelsBuf.buf;
+    pixelsData = (jint*) pixelsBuf.buf;
     pixelsLength = pixelsBuf.len / pixelsBuf.itemsize;
-    pixelsJObj = beampy_newJIntArray(pixelsData, pixelsLength);
+    pixelsJObj = beampy_newJIntArrayFromBuffer(pixelsData, pixelsLength);
     if (pixelsJObj == NULL) {
         return NULL;
     }
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, x, y, w, h, pixelsJObj);
-    _resultPyObj = beampy_copyJIntArrayToPyObject((jarray) _resultJObj, "i", pixelsPyObj);
+    if (pixelsData != NULL && (*jenv)->IsSameObject(jenv, _resultJObj, pixelsJObj)) {
+        _resultPyObj = beampy_copyJIntArrayToBuffer((jarray) pixelsJObj, pixelsData, pixelsLength, pixelsPyObj);
+    } else {
+        _resultPyObj = beampy_newPyObjectFromJIntArray((jarray) pixelsJObj);
+    }
     PyBuffer_Release(&pixelsBuf);
     (*jenv)->DeleteLocalRef(jenv, pixelsJObj);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
@@ -15220,10 +15248,10 @@ PyObject* BeamPyBand_readPixelsFloat(PyObject* self, PyObject* args)
     jint y = (jint) 0;
     jint w = (jint) 0;
     jint h = (jint) 0;
-    float*   pixelsData = NULL;
-    int        pixelsLength = 0;
-    PyObject*  pixelsPyObj = NULL;
-    Py_buffer  pixelsBuf;
+    jfloat* pixelsData = NULL;
+    int pixelsLength = 0;
+    PyObject* pixelsPyObj = NULL;
+    Py_buffer pixelsBuf;
     jarray pixelsJObj = NULL;
     PyObject* _resultPyObj = NULL;
     jobject _resultJObj = NULL;
@@ -15238,14 +15266,18 @@ PyObject* BeamPyBand_readPixelsFloat(PyObject* self, PyObject* args)
     if (pixelsPyObj == NULL) {
         return NULL;
     }
-    pixelsData = (float*) pixelsBuf.buf;
+    pixelsData = (jfloat*) pixelsBuf.buf;
     pixelsLength = pixelsBuf.len / pixelsBuf.itemsize;
-    pixelsJObj = beampy_newJFloatArray(pixelsData, pixelsLength);
+    pixelsJObj = beampy_newJFloatArrayFromBuffer(pixelsData, pixelsLength);
     if (pixelsJObj == NULL) {
         return NULL;
     }
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, x, y, w, h, pixelsJObj);
-    _resultPyObj = beampy_copyJFloatArrayToPyObject((jarray) _resultJObj, "f", pixelsPyObj);
+    if (pixelsData != NULL && (*jenv)->IsSameObject(jenv, _resultJObj, pixelsJObj)) {
+        _resultPyObj = beampy_copyJFloatArrayToBuffer((jarray) pixelsJObj, pixelsData, pixelsLength, pixelsPyObj);
+    } else {
+        _resultPyObj = beampy_newPyObjectFromJFloatArray((jarray) pixelsJObj);
+    }
     PyBuffer_Release(&pixelsBuf);
     (*jenv)->DeleteLocalRef(jenv, pixelsJObj);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
@@ -15263,10 +15295,10 @@ PyObject* BeamPyBand_readPixelsDouble(PyObject* self, PyObject* args)
     jint y = (jint) 0;
     jint w = (jint) 0;
     jint h = (jint) 0;
-    double*   pixelsData = NULL;
-    int        pixelsLength = 0;
-    PyObject*  pixelsPyObj = NULL;
-    Py_buffer  pixelsBuf;
+    jdouble* pixelsData = NULL;
+    int pixelsLength = 0;
+    PyObject* pixelsPyObj = NULL;
+    Py_buffer pixelsBuf;
     jarray pixelsJObj = NULL;
     PyObject* _resultPyObj = NULL;
     jobject _resultJObj = NULL;
@@ -15281,14 +15313,18 @@ PyObject* BeamPyBand_readPixelsDouble(PyObject* self, PyObject* args)
     if (pixelsPyObj == NULL) {
         return NULL;
     }
-    pixelsData = (double*) pixelsBuf.buf;
+    pixelsData = (jdouble*) pixelsBuf.buf;
     pixelsLength = pixelsBuf.len / pixelsBuf.itemsize;
-    pixelsJObj = beampy_newJDoubleArray(pixelsData, pixelsLength);
+    pixelsJObj = beampy_newJDoubleArrayFromBuffer(pixelsData, pixelsLength);
     if (pixelsJObj == NULL) {
         return NULL;
     }
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, x, y, w, h, pixelsJObj);
-    _resultPyObj = beampy_copyJDoubleArrayToPyObject((jarray) _resultJObj, "d", pixelsPyObj);
+    if (pixelsData != NULL && (*jenv)->IsSameObject(jenv, _resultJObj, pixelsJObj)) {
+        _resultPyObj = beampy_copyJDoubleArrayToBuffer((jarray) pixelsJObj, pixelsData, pixelsLength, pixelsPyObj);
+    } else {
+        _resultPyObj = beampy_newPyObjectFromJDoubleArray((jarray) pixelsJObj);
+    }
     PyBuffer_Release(&pixelsBuf);
     (*jenv)->DeleteLocalRef(jenv, pixelsJObj);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
@@ -15306,10 +15342,10 @@ PyObject* BeamPyBand_writePixelsInt(PyObject* self, PyObject* args)
     jint y = (jint) 0;
     jint w = (jint) 0;
     jint h = (jint) 0;
-    int*   pixelsData = NULL;
-    int        pixelsLength = 0;
-    PyObject*  pixelsPyObj = NULL;
-    Py_buffer  pixelsBuf;
+    jint* pixelsData = NULL;
+    int pixelsLength = 0;
+    PyObject* pixelsPyObj = NULL;
+    Py_buffer pixelsBuf;
     jarray pixelsJObj = NULL;
     if (!beampy_initJMethod(&_method, classBand, "org.esa.beam.framework.datamodel.Band", "writePixels", "(IIII[I)V", 0)) {
         return NULL;
@@ -15322,9 +15358,9 @@ PyObject* BeamPyBand_writePixelsInt(PyObject* self, PyObject* args)
     if (pixelsPyObj == NULL) {
         return NULL;
     }
-    pixelsData = (int*) pixelsBuf.buf;
+    pixelsData = (jint*) pixelsBuf.buf;
     pixelsLength = pixelsBuf.len / pixelsBuf.itemsize;
-    pixelsJObj = beampy_newJIntArray(pixelsData, pixelsLength);
+    pixelsJObj = beampy_newJIntArrayFromBuffer(pixelsData, pixelsLength);
     if (pixelsJObj == NULL) {
         return NULL;
     }
@@ -15345,10 +15381,10 @@ PyObject* BeamPyBand_writePixelsFloat(PyObject* self, PyObject* args)
     jint y = (jint) 0;
     jint w = (jint) 0;
     jint h = (jint) 0;
-    float*   pixelsData = NULL;
-    int        pixelsLength = 0;
-    PyObject*  pixelsPyObj = NULL;
-    Py_buffer  pixelsBuf;
+    jfloat* pixelsData = NULL;
+    int pixelsLength = 0;
+    PyObject* pixelsPyObj = NULL;
+    Py_buffer pixelsBuf;
     jarray pixelsJObj = NULL;
     if (!beampy_initJMethod(&_method, classBand, "org.esa.beam.framework.datamodel.Band", "writePixels", "(IIII[F)V", 0)) {
         return NULL;
@@ -15361,9 +15397,9 @@ PyObject* BeamPyBand_writePixelsFloat(PyObject* self, PyObject* args)
     if (pixelsPyObj == NULL) {
         return NULL;
     }
-    pixelsData = (float*) pixelsBuf.buf;
+    pixelsData = (jfloat*) pixelsBuf.buf;
     pixelsLength = pixelsBuf.len / pixelsBuf.itemsize;
-    pixelsJObj = beampy_newJFloatArray(pixelsData, pixelsLength);
+    pixelsJObj = beampy_newJFloatArrayFromBuffer(pixelsData, pixelsLength);
     if (pixelsJObj == NULL) {
         return NULL;
     }
@@ -15384,10 +15420,10 @@ PyObject* BeamPyBand_writePixelsDouble(PyObject* self, PyObject* args)
     jint y = (jint) 0;
     jint w = (jint) 0;
     jint h = (jint) 0;
-    double*   pixelsData = NULL;
-    int        pixelsLength = 0;
-    PyObject*  pixelsPyObj = NULL;
-    Py_buffer  pixelsBuf;
+    jdouble* pixelsData = NULL;
+    int pixelsLength = 0;
+    PyObject* pixelsPyObj = NULL;
+    Py_buffer pixelsBuf;
     jarray pixelsJObj = NULL;
     if (!beampy_initJMethod(&_method, classBand, "org.esa.beam.framework.datamodel.Band", "writePixels", "(IIII[D)V", 0)) {
         return NULL;
@@ -15400,9 +15436,9 @@ PyObject* BeamPyBand_writePixelsDouble(PyObject* self, PyObject* args)
     if (pixelsPyObj == NULL) {
         return NULL;
     }
-    pixelsData = (double*) pixelsBuf.buf;
+    pixelsData = (jdouble*) pixelsBuf.buf;
     pixelsLength = pixelsBuf.len / pixelsBuf.itemsize;
-    pixelsJObj = beampy_newJDoubleArray(pixelsData, pixelsLength);
+    pixelsJObj = beampy_newJDoubleArrayFromBuffer(pixelsData, pixelsLength);
     if (pixelsJObj == NULL) {
         return NULL;
     }
@@ -15423,10 +15459,10 @@ PyObject* BeamPyBand_readValidMask(PyObject* self, PyObject* args)
     jint y = (jint) 0;
     jint w = (jint) 0;
     jint h = (jint) 0;
-    boolean*   validMaskData = NULL;
-    int        validMaskLength = 0;
-    PyObject*  validMaskPyObj = NULL;
-    Py_buffer  validMaskBuf;
+    jboolean* validMaskData = NULL;
+    int validMaskLength = 0;
+    PyObject* validMaskPyObj = NULL;
+    Py_buffer validMaskBuf;
     jarray validMaskJObj = NULL;
     PyObject* _resultPyObj = NULL;
     jobject _resultJObj = NULL;
@@ -15441,14 +15477,18 @@ PyObject* BeamPyBand_readValidMask(PyObject* self, PyObject* args)
     if (validMaskPyObj == NULL) {
         return NULL;
     }
-    validMaskData = (boolean*) validMaskBuf.buf;
+    validMaskData = (jboolean*) validMaskBuf.buf;
     validMaskLength = validMaskBuf.len / validMaskBuf.itemsize;
-    validMaskJObj = beampy_newJBooleanArray(validMaskData, validMaskLength);
+    validMaskJObj = beampy_newJBooleanArrayFromBuffer(validMaskData, validMaskLength);
     if (validMaskJObj == NULL) {
         return NULL;
     }
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, x, y, w, h, validMaskJObj);
-    _resultPyObj = beampy_copyJBooleanArrayToPyObject((jarray) _resultJObj, "b", validMaskPyObj);
+    if (validMaskData != NULL && (*jenv)->IsSameObject(jenv, _resultJObj, validMaskJObj)) {
+        _resultPyObj = beampy_copyJBooleanArrayToBuffer((jarray) validMaskJObj, validMaskData, validMaskLength, validMaskPyObj);
+    } else {
+        _resultPyObj = beampy_newPyObjectFromJBooleanArray((jarray) validMaskJObj);
+    }
     PyBuffer_Release(&validMaskBuf);
     (*jenv)->DeleteLocalRef(jenv, validMaskJObj);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
@@ -15730,10 +15770,10 @@ PyObject* BeamPyBand_createDefaultImageInfo(PyObject* self, PyObject* args)
     const char* _thisType = NULL;
     unsigned PY_LONG_LONG _this = 0;
     jobject _thisJObj = NULL;
-    double*   histoSkipAreasData = NULL;
-    int        histoSkipAreasLength = 0;
-    PyObject*  histoSkipAreasPyObj = NULL;
-    Py_buffer  histoSkipAreasBuf;
+    jdouble* histoSkipAreasData = NULL;
+    int histoSkipAreasLength = 0;
+    PyObject* histoSkipAreasPyObj = NULL;
+    Py_buffer histoSkipAreasBuf;
     jarray histoSkipAreasJObj = NULL;
     const char* histogramType = NULL;
     unsigned PY_LONG_LONG histogram = 0;
@@ -15751,9 +15791,9 @@ PyObject* BeamPyBand_createDefaultImageInfo(PyObject* self, PyObject* args)
     if (histoSkipAreasPyObj == NULL) {
         return NULL;
     }
-    histoSkipAreasData = (double*) histoSkipAreasBuf.buf;
+    histoSkipAreasData = (jdouble*) histoSkipAreasBuf.buf;
     histoSkipAreasLength = histoSkipAreasBuf.len / histoSkipAreasBuf.itemsize;
-    histoSkipAreasJObj = beampy_newJDoubleArray(histoSkipAreasData, histoSkipAreasLength);
+    histoSkipAreasJObj = beampy_newJDoubleArrayFromBuffer(histoSkipAreasData, histoSkipAreasLength);
     if (histoSkipAreasJObj == NULL) {
         return NULL;
     }
@@ -17811,10 +17851,10 @@ PyObject* BeamPyTiePointGrid_newTiePointGrid1(PyObject* self, PyObject* args)
     jfloat offsetY = (jfloat) 0;
     jfloat subSamplingX = (jfloat) 0;
     jfloat subSamplingY = (jfloat) 0;
-    float*   tiePointsData = NULL;
-    int        tiePointsLength = 0;
-    PyObject*  tiePointsPyObj = NULL;
-    Py_buffer  tiePointsBuf;
+    jfloat* tiePointsData = NULL;
+    int tiePointsLength = 0;
+    PyObject* tiePointsPyObj = NULL;
+    Py_buffer tiePointsBuf;
     jarray tiePointsJObj = NULL;
     PyObject* _resultPyObj = NULL;
     jobject _resultJObj = NULL;
@@ -17829,9 +17869,9 @@ PyObject* BeamPyTiePointGrid_newTiePointGrid1(PyObject* self, PyObject* args)
     if (tiePointsPyObj == NULL) {
         return NULL;
     }
-    tiePointsData = (float*) tiePointsBuf.buf;
+    tiePointsData = (jfloat*) tiePointsBuf.buf;
     tiePointsLength = tiePointsBuf.len / tiePointsBuf.itemsize;
-    tiePointsJObj = beampy_newJFloatArray(tiePointsData, tiePointsLength);
+    tiePointsJObj = beampy_newJFloatArrayFromBuffer(tiePointsData, tiePointsLength);
     if (tiePointsJObj == NULL) {
         return NULL;
     }
@@ -17855,10 +17895,10 @@ PyObject* BeamPyTiePointGrid_newTiePointGrid2(PyObject* self, PyObject* args)
     jfloat offsetY = (jfloat) 0;
     jfloat subSamplingX = (jfloat) 0;
     jfloat subSamplingY = (jfloat) 0;
-    float*   tiePointsData = NULL;
-    int        tiePointsLength = 0;
-    PyObject*  tiePointsPyObj = NULL;
-    Py_buffer  tiePointsBuf;
+    jfloat* tiePointsData = NULL;
+    int tiePointsLength = 0;
+    PyObject* tiePointsPyObj = NULL;
+    Py_buffer tiePointsBuf;
     jarray tiePointsJObj = NULL;
     jint discontinuity = (jint) 0;
     PyObject* _resultPyObj = NULL;
@@ -17874,9 +17914,9 @@ PyObject* BeamPyTiePointGrid_newTiePointGrid2(PyObject* self, PyObject* args)
     if (tiePointsPyObj == NULL) {
         return NULL;
     }
-    tiePointsData = (float*) tiePointsBuf.buf;
+    tiePointsData = (jfloat*) tiePointsBuf.buf;
     tiePointsLength = tiePointsBuf.len / tiePointsBuf.itemsize;
-    tiePointsJObj = beampy_newJFloatArray(tiePointsData, tiePointsLength);
+    tiePointsJObj = beampy_newJFloatArrayFromBuffer(tiePointsData, tiePointsLength);
     if (tiePointsJObj == NULL) {
         return NULL;
     }
@@ -17900,10 +17940,10 @@ PyObject* BeamPyTiePointGrid_newTiePointGrid3(PyObject* self, PyObject* args)
     jfloat offsetY = (jfloat) 0;
     jfloat subSamplingX = (jfloat) 0;
     jfloat subSamplingY = (jfloat) 0;
-    float*   tiePointsData = NULL;
-    int        tiePointsLength = 0;
-    PyObject*  tiePointsPyObj = NULL;
-    Py_buffer  tiePointsBuf;
+    jfloat* tiePointsData = NULL;
+    int tiePointsLength = 0;
+    PyObject* tiePointsPyObj = NULL;
+    Py_buffer tiePointsBuf;
     jarray tiePointsJObj = NULL;
     jboolean containsAngles = (jboolean) 0;
     PyObject* _resultPyObj = NULL;
@@ -17919,9 +17959,9 @@ PyObject* BeamPyTiePointGrid_newTiePointGrid3(PyObject* self, PyObject* args)
     if (tiePointsPyObj == NULL) {
         return NULL;
     }
-    tiePointsData = (float*) tiePointsBuf.buf;
+    tiePointsData = (jfloat*) tiePointsBuf.buf;
     tiePointsLength = tiePointsBuf.len / tiePointsBuf.itemsize;
-    tiePointsJObj = beampy_newJFloatArray(tiePointsData, tiePointsLength);
+    tiePointsJObj = beampy_newJFloatArrayFromBuffer(tiePointsData, tiePointsLength);
     if (tiePointsJObj == NULL) {
         return NULL;
     }
@@ -17937,10 +17977,10 @@ PyObject* BeamPyTiePointGrid_newTiePointGrid3(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_getDiscontinuity2(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    float*   tiePointsData = NULL;
-    int        tiePointsLength = 0;
-    PyObject*  tiePointsPyObj = NULL;
-    Py_buffer  tiePointsBuf;
+    jfloat* tiePointsData = NULL;
+    int tiePointsLength = 0;
+    PyObject* tiePointsPyObj = NULL;
+    Py_buffer tiePointsBuf;
     jarray tiePointsJObj = NULL;
     jint _result = (jint) 0;
     if (!beampy_initJMethod(&_method, classTiePointGrid, "org.esa.beam.framework.datamodel.TiePointGrid", "getDiscontinuity", "([F)I", 1)) {
@@ -17953,9 +17993,9 @@ PyObject* BeamPyTiePointGrid_getDiscontinuity2(PyObject* self, PyObject* args)
     if (tiePointsPyObj == NULL) {
         return NULL;
     }
-    tiePointsData = (float*) tiePointsBuf.buf;
+    tiePointsData = (jfloat*) tiePointsBuf.buf;
     tiePointsLength = tiePointsBuf.len / tiePointsBuf.itemsize;
-    tiePointsJObj = beampy_newJFloatArray(tiePointsData, tiePointsLength);
+    tiePointsJObj = beampy_newJFloatArrayFromBuffer(tiePointsData, tiePointsLength);
     if (tiePointsJObj == NULL) {
         return NULL;
     }
@@ -18194,7 +18234,7 @@ PyObject* BeamPyTiePointGrid_getTiePoints(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJFloatArray((jarray) _resultJObj, "f");
+    _resultPyObj = beampy_newPyObjectFromJFloatArray((jarray) _resultJObj);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -18375,10 +18415,10 @@ PyObject* BeamPyTiePointGrid_getPixels6(PyObject* self, PyObject* args)
     jint y = (jint) 0;
     jint w = (jint) 0;
     jint h = (jint) 0;
-    int*   pixelsData = NULL;
-    int        pixelsLength = 0;
-    PyObject*  pixelsPyObj = NULL;
-    Py_buffer  pixelsBuf;
+    jint* pixelsData = NULL;
+    int pixelsLength = 0;
+    PyObject* pixelsPyObj = NULL;
+    Py_buffer pixelsBuf;
     jarray pixelsJObj = NULL;
     const char* pmType = NULL;
     unsigned PY_LONG_LONG pm = 0;
@@ -18396,15 +18436,15 @@ PyObject* BeamPyTiePointGrid_getPixels6(PyObject* self, PyObject* args)
     if (pixelsPyObj == NULL) {
         return NULL;
     }
-    pixelsData = (int*) pixelsBuf.buf;
+    pixelsData = (jint*) pixelsBuf.buf;
     pixelsLength = pixelsBuf.len / pixelsBuf.itemsize;
-    pixelsJObj = beampy_newJIntArray(pixelsData, pixelsLength);
+    pixelsJObj = beampy_newJIntArrayFromBuffer(pixelsData, pixelsLength);
     if (pixelsJObj == NULL) {
         return NULL;
     }
     pmJObj = (jobject) pm;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, x, y, w, h, pixelsJObj, pmJObj);
-    _resultPyObj = beampy_newPyObjectFromJIntArray((jarray) _resultJObj, "i");
+    _resultPyObj = beampy_newPyObjectFromJIntArray((jarray) _resultJObj);
     PyBuffer_Release(&pixelsBuf);
     (*jenv)->DeleteLocalRef(jenv, pixelsJObj);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
@@ -18422,10 +18462,10 @@ PyObject* BeamPyTiePointGrid_getPixels4(PyObject* self, PyObject* args)
     jint y = (jint) 0;
     jint w = (jint) 0;
     jint h = (jint) 0;
-    float*   pixelsData = NULL;
-    int        pixelsLength = 0;
-    PyObject*  pixelsPyObj = NULL;
-    Py_buffer  pixelsBuf;
+    jfloat* pixelsData = NULL;
+    int pixelsLength = 0;
+    PyObject* pixelsPyObj = NULL;
+    Py_buffer pixelsBuf;
     jarray pixelsJObj = NULL;
     const char* pmType = NULL;
     unsigned PY_LONG_LONG pm = 0;
@@ -18443,15 +18483,15 @@ PyObject* BeamPyTiePointGrid_getPixels4(PyObject* self, PyObject* args)
     if (pixelsPyObj == NULL) {
         return NULL;
     }
-    pixelsData = (float*) pixelsBuf.buf;
+    pixelsData = (jfloat*) pixelsBuf.buf;
     pixelsLength = pixelsBuf.len / pixelsBuf.itemsize;
-    pixelsJObj = beampy_newJFloatArray(pixelsData, pixelsLength);
+    pixelsJObj = beampy_newJFloatArrayFromBuffer(pixelsData, pixelsLength);
     if (pixelsJObj == NULL) {
         return NULL;
     }
     pmJObj = (jobject) pm;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, x, y, w, h, pixelsJObj, pmJObj);
-    _resultPyObj = beampy_newPyObjectFromJFloatArray((jarray) _resultJObj, "f");
+    _resultPyObj = beampy_newPyObjectFromJFloatArray((jarray) _resultJObj);
     PyBuffer_Release(&pixelsBuf);
     (*jenv)->DeleteLocalRef(jenv, pixelsJObj);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
@@ -18469,10 +18509,10 @@ PyObject* BeamPyTiePointGrid_getPixels2(PyObject* self, PyObject* args)
     jint y = (jint) 0;
     jint w = (jint) 0;
     jint h = (jint) 0;
-    double*   pixelsData = NULL;
-    int        pixelsLength = 0;
-    PyObject*  pixelsPyObj = NULL;
-    Py_buffer  pixelsBuf;
+    jdouble* pixelsData = NULL;
+    int pixelsLength = 0;
+    PyObject* pixelsPyObj = NULL;
+    Py_buffer pixelsBuf;
     jarray pixelsJObj = NULL;
     const char* pmType = NULL;
     unsigned PY_LONG_LONG pm = 0;
@@ -18490,15 +18530,15 @@ PyObject* BeamPyTiePointGrid_getPixels2(PyObject* self, PyObject* args)
     if (pixelsPyObj == NULL) {
         return NULL;
     }
-    pixelsData = (double*) pixelsBuf.buf;
+    pixelsData = (jdouble*) pixelsBuf.buf;
     pixelsLength = pixelsBuf.len / pixelsBuf.itemsize;
-    pixelsJObj = beampy_newJDoubleArray(pixelsData, pixelsLength);
+    pixelsJObj = beampy_newJDoubleArrayFromBuffer(pixelsData, pixelsLength);
     if (pixelsJObj == NULL) {
         return NULL;
     }
     pmJObj = (jobject) pm;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, x, y, w, h, pixelsJObj, pmJObj);
-    _resultPyObj = beampy_newPyObjectFromJDoubleArray((jarray) _resultJObj, "d");
+    _resultPyObj = beampy_newPyObjectFromJDoubleArray((jarray) _resultJObj);
     PyBuffer_Release(&pixelsBuf);
     (*jenv)->DeleteLocalRef(jenv, pixelsJObj);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
@@ -18516,10 +18556,10 @@ PyObject* BeamPyTiePointGrid_setPixels3(PyObject* self, PyObject* args)
     jint y = (jint) 0;
     jint w = (jint) 0;
     jint h = (jint) 0;
-    int*   pixelsData = NULL;
-    int        pixelsLength = 0;
-    PyObject*  pixelsPyObj = NULL;
-    Py_buffer  pixelsBuf;
+    jint* pixelsData = NULL;
+    int pixelsLength = 0;
+    PyObject* pixelsPyObj = NULL;
+    Py_buffer pixelsBuf;
     jarray pixelsJObj = NULL;
     if (!beampy_initJMethod(&_method, classTiePointGrid, "org.esa.beam.framework.datamodel.TiePointGrid", "setPixels", "(IIII[I)V", 0)) {
         return NULL;
@@ -18532,9 +18572,9 @@ PyObject* BeamPyTiePointGrid_setPixels3(PyObject* self, PyObject* args)
     if (pixelsPyObj == NULL) {
         return NULL;
     }
-    pixelsData = (int*) pixelsBuf.buf;
+    pixelsData = (jint*) pixelsBuf.buf;
     pixelsLength = pixelsBuf.len / pixelsBuf.itemsize;
-    pixelsJObj = beampy_newJIntArray(pixelsData, pixelsLength);
+    pixelsJObj = beampy_newJIntArrayFromBuffer(pixelsData, pixelsLength);
     if (pixelsJObj == NULL) {
         return NULL;
     }
@@ -18555,10 +18595,10 @@ PyObject* BeamPyTiePointGrid_setPixels2(PyObject* self, PyObject* args)
     jint y = (jint) 0;
     jint w = (jint) 0;
     jint h = (jint) 0;
-    float*   pixelsData = NULL;
-    int        pixelsLength = 0;
-    PyObject*  pixelsPyObj = NULL;
-    Py_buffer  pixelsBuf;
+    jfloat* pixelsData = NULL;
+    int pixelsLength = 0;
+    PyObject* pixelsPyObj = NULL;
+    Py_buffer pixelsBuf;
     jarray pixelsJObj = NULL;
     if (!beampy_initJMethod(&_method, classTiePointGrid, "org.esa.beam.framework.datamodel.TiePointGrid", "setPixels", "(IIII[F)V", 0)) {
         return NULL;
@@ -18571,9 +18611,9 @@ PyObject* BeamPyTiePointGrid_setPixels2(PyObject* self, PyObject* args)
     if (pixelsPyObj == NULL) {
         return NULL;
     }
-    pixelsData = (float*) pixelsBuf.buf;
+    pixelsData = (jfloat*) pixelsBuf.buf;
     pixelsLength = pixelsBuf.len / pixelsBuf.itemsize;
-    pixelsJObj = beampy_newJFloatArray(pixelsData, pixelsLength);
+    pixelsJObj = beampy_newJFloatArrayFromBuffer(pixelsData, pixelsLength);
     if (pixelsJObj == NULL) {
         return NULL;
     }
@@ -18594,10 +18634,10 @@ PyObject* BeamPyTiePointGrid_setPixels1(PyObject* self, PyObject* args)
     jint y = (jint) 0;
     jint w = (jint) 0;
     jint h = (jint) 0;
-    double*   pixelsData = NULL;
-    int        pixelsLength = 0;
-    PyObject*  pixelsPyObj = NULL;
-    Py_buffer  pixelsBuf;
+    jdouble* pixelsData = NULL;
+    int pixelsLength = 0;
+    PyObject* pixelsPyObj = NULL;
+    Py_buffer pixelsBuf;
     jarray pixelsJObj = NULL;
     if (!beampy_initJMethod(&_method, classTiePointGrid, "org.esa.beam.framework.datamodel.TiePointGrid", "setPixels", "(IIII[D)V", 0)) {
         return NULL;
@@ -18610,9 +18650,9 @@ PyObject* BeamPyTiePointGrid_setPixels1(PyObject* self, PyObject* args)
     if (pixelsPyObj == NULL) {
         return NULL;
     }
-    pixelsData = (double*) pixelsBuf.buf;
+    pixelsData = (jdouble*) pixelsBuf.buf;
     pixelsLength = pixelsBuf.len / pixelsBuf.itemsize;
-    pixelsJObj = beampy_newJDoubleArray(pixelsData, pixelsLength);
+    pixelsJObj = beampy_newJDoubleArrayFromBuffer(pixelsData, pixelsLength);
     if (pixelsJObj == NULL) {
         return NULL;
     }
@@ -18633,10 +18673,10 @@ PyObject* BeamPyTiePointGrid_readPixels6(PyObject* self, PyObject* args)
     jint y = (jint) 0;
     jint w = (jint) 0;
     jint h = (jint) 0;
-    int*   pixelsData = NULL;
-    int        pixelsLength = 0;
-    PyObject*  pixelsPyObj = NULL;
-    Py_buffer  pixelsBuf;
+    jint* pixelsData = NULL;
+    int pixelsLength = 0;
+    PyObject* pixelsPyObj = NULL;
+    Py_buffer pixelsBuf;
     jarray pixelsJObj = NULL;
     const char* pmType = NULL;
     unsigned PY_LONG_LONG pm = 0;
@@ -18654,15 +18694,15 @@ PyObject* BeamPyTiePointGrid_readPixels6(PyObject* self, PyObject* args)
     if (pixelsPyObj == NULL) {
         return NULL;
     }
-    pixelsData = (int*) pixelsBuf.buf;
+    pixelsData = (jint*) pixelsBuf.buf;
     pixelsLength = pixelsBuf.len / pixelsBuf.itemsize;
-    pixelsJObj = beampy_newJIntArray(pixelsData, pixelsLength);
+    pixelsJObj = beampy_newJIntArrayFromBuffer(pixelsData, pixelsLength);
     if (pixelsJObj == NULL) {
         return NULL;
     }
     pmJObj = (jobject) pm;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, x, y, w, h, pixelsJObj, pmJObj);
-    _resultPyObj = beampy_newPyObjectFromJIntArray((jarray) _resultJObj, "i");
+    _resultPyObj = beampy_newPyObjectFromJIntArray((jarray) _resultJObj);
     PyBuffer_Release(&pixelsBuf);
     (*jenv)->DeleteLocalRef(jenv, pixelsJObj);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
@@ -18680,10 +18720,10 @@ PyObject* BeamPyTiePointGrid_readPixels4(PyObject* self, PyObject* args)
     jint y = (jint) 0;
     jint w = (jint) 0;
     jint h = (jint) 0;
-    float*   pixelsData = NULL;
-    int        pixelsLength = 0;
-    PyObject*  pixelsPyObj = NULL;
-    Py_buffer  pixelsBuf;
+    jfloat* pixelsData = NULL;
+    int pixelsLength = 0;
+    PyObject* pixelsPyObj = NULL;
+    Py_buffer pixelsBuf;
     jarray pixelsJObj = NULL;
     const char* pmType = NULL;
     unsigned PY_LONG_LONG pm = 0;
@@ -18701,15 +18741,15 @@ PyObject* BeamPyTiePointGrid_readPixels4(PyObject* self, PyObject* args)
     if (pixelsPyObj == NULL) {
         return NULL;
     }
-    pixelsData = (float*) pixelsBuf.buf;
+    pixelsData = (jfloat*) pixelsBuf.buf;
     pixelsLength = pixelsBuf.len / pixelsBuf.itemsize;
-    pixelsJObj = beampy_newJFloatArray(pixelsData, pixelsLength);
+    pixelsJObj = beampy_newJFloatArrayFromBuffer(pixelsData, pixelsLength);
     if (pixelsJObj == NULL) {
         return NULL;
     }
     pmJObj = (jobject) pm;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, x, y, w, h, pixelsJObj, pmJObj);
-    _resultPyObj = beampy_newPyObjectFromJFloatArray((jarray) _resultJObj, "f");
+    _resultPyObj = beampy_newPyObjectFromJFloatArray((jarray) _resultJObj);
     PyBuffer_Release(&pixelsBuf);
     (*jenv)->DeleteLocalRef(jenv, pixelsJObj);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
@@ -18727,10 +18767,10 @@ PyObject* BeamPyTiePointGrid_readPixels2(PyObject* self, PyObject* args)
     jint y = (jint) 0;
     jint w = (jint) 0;
     jint h = (jint) 0;
-    double*   pixelsData = NULL;
-    int        pixelsLength = 0;
-    PyObject*  pixelsPyObj = NULL;
-    Py_buffer  pixelsBuf;
+    jdouble* pixelsData = NULL;
+    int pixelsLength = 0;
+    PyObject* pixelsPyObj = NULL;
+    Py_buffer pixelsBuf;
     jarray pixelsJObj = NULL;
     const char* pmType = NULL;
     unsigned PY_LONG_LONG pm = 0;
@@ -18748,15 +18788,15 @@ PyObject* BeamPyTiePointGrid_readPixels2(PyObject* self, PyObject* args)
     if (pixelsPyObj == NULL) {
         return NULL;
     }
-    pixelsData = (double*) pixelsBuf.buf;
+    pixelsData = (jdouble*) pixelsBuf.buf;
     pixelsLength = pixelsBuf.len / pixelsBuf.itemsize;
-    pixelsJObj = beampy_newJDoubleArray(pixelsData, pixelsLength);
+    pixelsJObj = beampy_newJDoubleArrayFromBuffer(pixelsData, pixelsLength);
     if (pixelsJObj == NULL) {
         return NULL;
     }
     pmJObj = (jobject) pm;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, x, y, w, h, pixelsJObj, pmJObj);
-    _resultPyObj = beampy_newPyObjectFromJDoubleArray((jarray) _resultJObj, "d");
+    _resultPyObj = beampy_newPyObjectFromJDoubleArray((jarray) _resultJObj);
     PyBuffer_Release(&pixelsBuf);
     (*jenv)->DeleteLocalRef(jenv, pixelsJObj);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
@@ -18774,10 +18814,10 @@ PyObject* BeamPyTiePointGrid_writePixels6(PyObject* self, PyObject* args)
     jint y = (jint) 0;
     jint w = (jint) 0;
     jint h = (jint) 0;
-    int*   pixelsData = NULL;
-    int        pixelsLength = 0;
-    PyObject*  pixelsPyObj = NULL;
-    Py_buffer  pixelsBuf;
+    jint* pixelsData = NULL;
+    int pixelsLength = 0;
+    PyObject* pixelsPyObj = NULL;
+    Py_buffer pixelsBuf;
     jarray pixelsJObj = NULL;
     const char* pmType = NULL;
     unsigned PY_LONG_LONG pm = 0;
@@ -18793,9 +18833,9 @@ PyObject* BeamPyTiePointGrid_writePixels6(PyObject* self, PyObject* args)
     if (pixelsPyObj == NULL) {
         return NULL;
     }
-    pixelsData = (int*) pixelsBuf.buf;
+    pixelsData = (jint*) pixelsBuf.buf;
     pixelsLength = pixelsBuf.len / pixelsBuf.itemsize;
-    pixelsJObj = beampy_newJIntArray(pixelsData, pixelsLength);
+    pixelsJObj = beampy_newJIntArrayFromBuffer(pixelsData, pixelsLength);
     if (pixelsJObj == NULL) {
         return NULL;
     }
@@ -18817,10 +18857,10 @@ PyObject* BeamPyTiePointGrid_writePixels4(PyObject* self, PyObject* args)
     jint y = (jint) 0;
     jint w = (jint) 0;
     jint h = (jint) 0;
-    float*   pixelsData = NULL;
-    int        pixelsLength = 0;
-    PyObject*  pixelsPyObj = NULL;
-    Py_buffer  pixelsBuf;
+    jfloat* pixelsData = NULL;
+    int pixelsLength = 0;
+    PyObject* pixelsPyObj = NULL;
+    Py_buffer pixelsBuf;
     jarray pixelsJObj = NULL;
     const char* pmType = NULL;
     unsigned PY_LONG_LONG pm = 0;
@@ -18836,9 +18876,9 @@ PyObject* BeamPyTiePointGrid_writePixels4(PyObject* self, PyObject* args)
     if (pixelsPyObj == NULL) {
         return NULL;
     }
-    pixelsData = (float*) pixelsBuf.buf;
+    pixelsData = (jfloat*) pixelsBuf.buf;
     pixelsLength = pixelsBuf.len / pixelsBuf.itemsize;
-    pixelsJObj = beampy_newJFloatArray(pixelsData, pixelsLength);
+    pixelsJObj = beampy_newJFloatArrayFromBuffer(pixelsData, pixelsLength);
     if (pixelsJObj == NULL) {
         return NULL;
     }
@@ -18860,10 +18900,10 @@ PyObject* BeamPyTiePointGrid_writePixels2(PyObject* self, PyObject* args)
     jint y = (jint) 0;
     jint w = (jint) 0;
     jint h = (jint) 0;
-    double*   pixelsData = NULL;
-    int        pixelsLength = 0;
-    PyObject*  pixelsPyObj = NULL;
-    Py_buffer  pixelsBuf;
+    jdouble* pixelsData = NULL;
+    int pixelsLength = 0;
+    PyObject* pixelsPyObj = NULL;
+    Py_buffer pixelsBuf;
     jarray pixelsJObj = NULL;
     const char* pmType = NULL;
     unsigned PY_LONG_LONG pm = 0;
@@ -18879,9 +18919,9 @@ PyObject* BeamPyTiePointGrid_writePixels2(PyObject* self, PyObject* args)
     if (pixelsPyObj == NULL) {
         return NULL;
     }
-    pixelsData = (double*) pixelsBuf.buf;
+    pixelsData = (jdouble*) pixelsBuf.buf;
     pixelsLength = pixelsBuf.len / pixelsBuf.itemsize;
-    pixelsJObj = beampy_newJDoubleArray(pixelsData, pixelsLength);
+    pixelsJObj = beampy_newJDoubleArrayFromBuffer(pixelsData, pixelsLength);
     if (pixelsJObj == NULL) {
         return NULL;
     }
@@ -19899,10 +19939,10 @@ PyObject* BeamPyTiePointGrid_getPixels5(PyObject* self, PyObject* args)
     jint y = (jint) 0;
     jint w = (jint) 0;
     jint h = (jint) 0;
-    int*   pixelsData = NULL;
-    int        pixelsLength = 0;
-    PyObject*  pixelsPyObj = NULL;
-    Py_buffer  pixelsBuf;
+    jint* pixelsData = NULL;
+    int pixelsLength = 0;
+    PyObject* pixelsPyObj = NULL;
+    Py_buffer pixelsBuf;
     jarray pixelsJObj = NULL;
     PyObject* _resultPyObj = NULL;
     jobject _resultJObj = NULL;
@@ -19917,14 +19957,14 @@ PyObject* BeamPyTiePointGrid_getPixels5(PyObject* self, PyObject* args)
     if (pixelsPyObj == NULL) {
         return NULL;
     }
-    pixelsData = (int*) pixelsBuf.buf;
+    pixelsData = (jint*) pixelsBuf.buf;
     pixelsLength = pixelsBuf.len / pixelsBuf.itemsize;
-    pixelsJObj = beampy_newJIntArray(pixelsData, pixelsLength);
+    pixelsJObj = beampy_newJIntArrayFromBuffer(pixelsData, pixelsLength);
     if (pixelsJObj == NULL) {
         return NULL;
     }
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, x, y, w, h, pixelsJObj);
-    _resultPyObj = beampy_newPyObjectFromJIntArray((jarray) _resultJObj, "i");
+    _resultPyObj = beampy_newPyObjectFromJIntArray((jarray) _resultJObj);
     PyBuffer_Release(&pixelsBuf);
     (*jenv)->DeleteLocalRef(jenv, pixelsJObj);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
@@ -19942,10 +19982,10 @@ PyObject* BeamPyTiePointGrid_getPixels3(PyObject* self, PyObject* args)
     jint y = (jint) 0;
     jint w = (jint) 0;
     jint h = (jint) 0;
-    float*   pixelsData = NULL;
-    int        pixelsLength = 0;
-    PyObject*  pixelsPyObj = NULL;
-    Py_buffer  pixelsBuf;
+    jfloat* pixelsData = NULL;
+    int pixelsLength = 0;
+    PyObject* pixelsPyObj = NULL;
+    Py_buffer pixelsBuf;
     jarray pixelsJObj = NULL;
     PyObject* _resultPyObj = NULL;
     jobject _resultJObj = NULL;
@@ -19960,14 +20000,14 @@ PyObject* BeamPyTiePointGrid_getPixels3(PyObject* self, PyObject* args)
     if (pixelsPyObj == NULL) {
         return NULL;
     }
-    pixelsData = (float*) pixelsBuf.buf;
+    pixelsData = (jfloat*) pixelsBuf.buf;
     pixelsLength = pixelsBuf.len / pixelsBuf.itemsize;
-    pixelsJObj = beampy_newJFloatArray(pixelsData, pixelsLength);
+    pixelsJObj = beampy_newJFloatArrayFromBuffer(pixelsData, pixelsLength);
     if (pixelsJObj == NULL) {
         return NULL;
     }
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, x, y, w, h, pixelsJObj);
-    _resultPyObj = beampy_newPyObjectFromJFloatArray((jarray) _resultJObj, "f");
+    _resultPyObj = beampy_newPyObjectFromJFloatArray((jarray) _resultJObj);
     PyBuffer_Release(&pixelsBuf);
     (*jenv)->DeleteLocalRef(jenv, pixelsJObj);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
@@ -19985,10 +20025,10 @@ PyObject* BeamPyTiePointGrid_getPixels1(PyObject* self, PyObject* args)
     jint y = (jint) 0;
     jint w = (jint) 0;
     jint h = (jint) 0;
-    double*   pixelsData = NULL;
-    int        pixelsLength = 0;
-    PyObject*  pixelsPyObj = NULL;
-    Py_buffer  pixelsBuf;
+    jdouble* pixelsData = NULL;
+    int pixelsLength = 0;
+    PyObject* pixelsPyObj = NULL;
+    Py_buffer pixelsBuf;
     jarray pixelsJObj = NULL;
     PyObject* _resultPyObj = NULL;
     jobject _resultJObj = NULL;
@@ -20003,14 +20043,14 @@ PyObject* BeamPyTiePointGrid_getPixels1(PyObject* self, PyObject* args)
     if (pixelsPyObj == NULL) {
         return NULL;
     }
-    pixelsData = (double*) pixelsBuf.buf;
+    pixelsData = (jdouble*) pixelsBuf.buf;
     pixelsLength = pixelsBuf.len / pixelsBuf.itemsize;
-    pixelsJObj = beampy_newJDoubleArray(pixelsData, pixelsLength);
+    pixelsJObj = beampy_newJDoubleArrayFromBuffer(pixelsData, pixelsLength);
     if (pixelsJObj == NULL) {
         return NULL;
     }
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, x, y, w, h, pixelsJObj);
-    _resultPyObj = beampy_newPyObjectFromJDoubleArray((jarray) _resultJObj, "d");
+    _resultPyObj = beampy_newPyObjectFromJDoubleArray((jarray) _resultJObj);
     PyBuffer_Release(&pixelsBuf);
     (*jenv)->DeleteLocalRef(jenv, pixelsJObj);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
@@ -20028,10 +20068,10 @@ PyObject* BeamPyTiePointGrid_readPixels5(PyObject* self, PyObject* args)
     jint y = (jint) 0;
     jint w = (jint) 0;
     jint h = (jint) 0;
-    int*   pixelsData = NULL;
-    int        pixelsLength = 0;
-    PyObject*  pixelsPyObj = NULL;
-    Py_buffer  pixelsBuf;
+    jint* pixelsData = NULL;
+    int pixelsLength = 0;
+    PyObject* pixelsPyObj = NULL;
+    Py_buffer pixelsBuf;
     jarray pixelsJObj = NULL;
     PyObject* _resultPyObj = NULL;
     jobject _resultJObj = NULL;
@@ -20046,14 +20086,14 @@ PyObject* BeamPyTiePointGrid_readPixels5(PyObject* self, PyObject* args)
     if (pixelsPyObj == NULL) {
         return NULL;
     }
-    pixelsData = (int*) pixelsBuf.buf;
+    pixelsData = (jint*) pixelsBuf.buf;
     pixelsLength = pixelsBuf.len / pixelsBuf.itemsize;
-    pixelsJObj = beampy_newJIntArray(pixelsData, pixelsLength);
+    pixelsJObj = beampy_newJIntArrayFromBuffer(pixelsData, pixelsLength);
     if (pixelsJObj == NULL) {
         return NULL;
     }
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, x, y, w, h, pixelsJObj);
-    _resultPyObj = beampy_newPyObjectFromJIntArray((jarray) _resultJObj, "i");
+    _resultPyObj = beampy_newPyObjectFromJIntArray((jarray) _resultJObj);
     PyBuffer_Release(&pixelsBuf);
     (*jenv)->DeleteLocalRef(jenv, pixelsJObj);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
@@ -20071,10 +20111,10 @@ PyObject* BeamPyTiePointGrid_readPixels3(PyObject* self, PyObject* args)
     jint y = (jint) 0;
     jint w = (jint) 0;
     jint h = (jint) 0;
-    float*   pixelsData = NULL;
-    int        pixelsLength = 0;
-    PyObject*  pixelsPyObj = NULL;
-    Py_buffer  pixelsBuf;
+    jfloat* pixelsData = NULL;
+    int pixelsLength = 0;
+    PyObject* pixelsPyObj = NULL;
+    Py_buffer pixelsBuf;
     jarray pixelsJObj = NULL;
     PyObject* _resultPyObj = NULL;
     jobject _resultJObj = NULL;
@@ -20089,14 +20129,14 @@ PyObject* BeamPyTiePointGrid_readPixels3(PyObject* self, PyObject* args)
     if (pixelsPyObj == NULL) {
         return NULL;
     }
-    pixelsData = (float*) pixelsBuf.buf;
+    pixelsData = (jfloat*) pixelsBuf.buf;
     pixelsLength = pixelsBuf.len / pixelsBuf.itemsize;
-    pixelsJObj = beampy_newJFloatArray(pixelsData, pixelsLength);
+    pixelsJObj = beampy_newJFloatArrayFromBuffer(pixelsData, pixelsLength);
     if (pixelsJObj == NULL) {
         return NULL;
     }
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, x, y, w, h, pixelsJObj);
-    _resultPyObj = beampy_newPyObjectFromJFloatArray((jarray) _resultJObj, "f");
+    _resultPyObj = beampy_newPyObjectFromJFloatArray((jarray) _resultJObj);
     PyBuffer_Release(&pixelsBuf);
     (*jenv)->DeleteLocalRef(jenv, pixelsJObj);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
@@ -20114,10 +20154,10 @@ PyObject* BeamPyTiePointGrid_readPixels1(PyObject* self, PyObject* args)
     jint y = (jint) 0;
     jint w = (jint) 0;
     jint h = (jint) 0;
-    double*   pixelsData = NULL;
-    int        pixelsLength = 0;
-    PyObject*  pixelsPyObj = NULL;
-    Py_buffer  pixelsBuf;
+    jdouble* pixelsData = NULL;
+    int pixelsLength = 0;
+    PyObject* pixelsPyObj = NULL;
+    Py_buffer pixelsBuf;
     jarray pixelsJObj = NULL;
     PyObject* _resultPyObj = NULL;
     jobject _resultJObj = NULL;
@@ -20132,14 +20172,14 @@ PyObject* BeamPyTiePointGrid_readPixels1(PyObject* self, PyObject* args)
     if (pixelsPyObj == NULL) {
         return NULL;
     }
-    pixelsData = (double*) pixelsBuf.buf;
+    pixelsData = (jdouble*) pixelsBuf.buf;
     pixelsLength = pixelsBuf.len / pixelsBuf.itemsize;
-    pixelsJObj = beampy_newJDoubleArray(pixelsData, pixelsLength);
+    pixelsJObj = beampy_newJDoubleArrayFromBuffer(pixelsData, pixelsLength);
     if (pixelsJObj == NULL) {
         return NULL;
     }
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, x, y, w, h, pixelsJObj);
-    _resultPyObj = beampy_newPyObjectFromJDoubleArray((jarray) _resultJObj, "d");
+    _resultPyObj = beampy_newPyObjectFromJDoubleArray((jarray) _resultJObj);
     PyBuffer_Release(&pixelsBuf);
     (*jenv)->DeleteLocalRef(jenv, pixelsJObj);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
@@ -20157,10 +20197,10 @@ PyObject* BeamPyTiePointGrid_writePixels5(PyObject* self, PyObject* args)
     jint y = (jint) 0;
     jint w = (jint) 0;
     jint h = (jint) 0;
-    int*   pixelsData = NULL;
-    int        pixelsLength = 0;
-    PyObject*  pixelsPyObj = NULL;
-    Py_buffer  pixelsBuf;
+    jint* pixelsData = NULL;
+    int pixelsLength = 0;
+    PyObject* pixelsPyObj = NULL;
+    Py_buffer pixelsBuf;
     jarray pixelsJObj = NULL;
     if (!beampy_initJMethod(&_method, classTiePointGrid, "org.esa.beam.framework.datamodel.TiePointGrid", "writePixels", "(IIII[I)V", 0)) {
         return NULL;
@@ -20173,9 +20213,9 @@ PyObject* BeamPyTiePointGrid_writePixels5(PyObject* self, PyObject* args)
     if (pixelsPyObj == NULL) {
         return NULL;
     }
-    pixelsData = (int*) pixelsBuf.buf;
+    pixelsData = (jint*) pixelsBuf.buf;
     pixelsLength = pixelsBuf.len / pixelsBuf.itemsize;
-    pixelsJObj = beampy_newJIntArray(pixelsData, pixelsLength);
+    pixelsJObj = beampy_newJIntArrayFromBuffer(pixelsData, pixelsLength);
     if (pixelsJObj == NULL) {
         return NULL;
     }
@@ -20196,10 +20236,10 @@ PyObject* BeamPyTiePointGrid_writePixels3(PyObject* self, PyObject* args)
     jint y = (jint) 0;
     jint w = (jint) 0;
     jint h = (jint) 0;
-    float*   pixelsData = NULL;
-    int        pixelsLength = 0;
-    PyObject*  pixelsPyObj = NULL;
-    Py_buffer  pixelsBuf;
+    jfloat* pixelsData = NULL;
+    int pixelsLength = 0;
+    PyObject* pixelsPyObj = NULL;
+    Py_buffer pixelsBuf;
     jarray pixelsJObj = NULL;
     if (!beampy_initJMethod(&_method, classTiePointGrid, "org.esa.beam.framework.datamodel.TiePointGrid", "writePixels", "(IIII[F)V", 0)) {
         return NULL;
@@ -20212,9 +20252,9 @@ PyObject* BeamPyTiePointGrid_writePixels3(PyObject* self, PyObject* args)
     if (pixelsPyObj == NULL) {
         return NULL;
     }
-    pixelsData = (float*) pixelsBuf.buf;
+    pixelsData = (jfloat*) pixelsBuf.buf;
     pixelsLength = pixelsBuf.len / pixelsBuf.itemsize;
-    pixelsJObj = beampy_newJFloatArray(pixelsData, pixelsLength);
+    pixelsJObj = beampy_newJFloatArrayFromBuffer(pixelsData, pixelsLength);
     if (pixelsJObj == NULL) {
         return NULL;
     }
@@ -20235,10 +20275,10 @@ PyObject* BeamPyTiePointGrid_writePixels1(PyObject* self, PyObject* args)
     jint y = (jint) 0;
     jint w = (jint) 0;
     jint h = (jint) 0;
-    double*   pixelsData = NULL;
-    int        pixelsLength = 0;
-    PyObject*  pixelsPyObj = NULL;
-    Py_buffer  pixelsBuf;
+    jdouble* pixelsData = NULL;
+    int pixelsLength = 0;
+    PyObject* pixelsPyObj = NULL;
+    Py_buffer pixelsBuf;
     jarray pixelsJObj = NULL;
     if (!beampy_initJMethod(&_method, classTiePointGrid, "org.esa.beam.framework.datamodel.TiePointGrid", "writePixels", "(IIII[D)V", 0)) {
         return NULL;
@@ -20251,9 +20291,9 @@ PyObject* BeamPyTiePointGrid_writePixels1(PyObject* self, PyObject* args)
     if (pixelsPyObj == NULL) {
         return NULL;
     }
-    pixelsData = (double*) pixelsBuf.buf;
+    pixelsData = (jdouble*) pixelsBuf.buf;
     pixelsLength = pixelsBuf.len / pixelsBuf.itemsize;
-    pixelsJObj = beampy_newJDoubleArray(pixelsData, pixelsLength);
+    pixelsJObj = beampy_newJDoubleArrayFromBuffer(pixelsData, pixelsLength);
     if (pixelsJObj == NULL) {
         return NULL;
     }
@@ -20274,10 +20314,10 @@ PyObject* BeamPyTiePointGrid_readValidMask(PyObject* self, PyObject* args)
     jint y = (jint) 0;
     jint w = (jint) 0;
     jint h = (jint) 0;
-    boolean*   validMaskData = NULL;
-    int        validMaskLength = 0;
-    PyObject*  validMaskPyObj = NULL;
-    Py_buffer  validMaskBuf;
+    jboolean* validMaskData = NULL;
+    int validMaskLength = 0;
+    PyObject* validMaskPyObj = NULL;
+    Py_buffer validMaskBuf;
     jarray validMaskJObj = NULL;
     PyObject* _resultPyObj = NULL;
     jobject _resultJObj = NULL;
@@ -20292,14 +20332,14 @@ PyObject* BeamPyTiePointGrid_readValidMask(PyObject* self, PyObject* args)
     if (validMaskPyObj == NULL) {
         return NULL;
     }
-    validMaskData = (boolean*) validMaskBuf.buf;
+    validMaskData = (jboolean*) validMaskBuf.buf;
     validMaskLength = validMaskBuf.len / validMaskBuf.itemsize;
-    validMaskJObj = beampy_newJBooleanArray(validMaskData, validMaskLength);
+    validMaskJObj = beampy_newJBooleanArrayFromBuffer(validMaskData, validMaskLength);
     if (validMaskJObj == NULL) {
         return NULL;
     }
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, x, y, w, h, validMaskJObj);
-    _resultPyObj = beampy_newPyObjectFromJBooleanArray((jarray) _resultJObj, "b");
+    _resultPyObj = beampy_newPyObjectFromJBooleanArray((jarray) _resultJObj);
     PyBuffer_Release(&validMaskBuf);
     (*jenv)->DeleteLocalRef(jenv, validMaskJObj);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
@@ -20651,10 +20691,10 @@ PyObject* BeamPyTiePointGrid_getImageInfo3(PyObject* self, PyObject* args)
     const char* _thisType = NULL;
     unsigned PY_LONG_LONG _this = 0;
     jobject _thisJObj = NULL;
-    double*   histoSkipAreasData = NULL;
-    int        histoSkipAreasLength = 0;
-    PyObject*  histoSkipAreasPyObj = NULL;
-    Py_buffer  histoSkipAreasBuf;
+    jdouble* histoSkipAreasData = NULL;
+    int histoSkipAreasLength = 0;
+    PyObject* histoSkipAreasPyObj = NULL;
+    Py_buffer histoSkipAreasBuf;
     jarray histoSkipAreasJObj = NULL;
     const char* pmType = NULL;
     unsigned PY_LONG_LONG pm = 0;
@@ -20672,9 +20712,9 @@ PyObject* BeamPyTiePointGrid_getImageInfo3(PyObject* self, PyObject* args)
     if (histoSkipAreasPyObj == NULL) {
         return NULL;
     }
-    histoSkipAreasData = (double*) histoSkipAreasBuf.buf;
+    histoSkipAreasData = (jdouble*) histoSkipAreasBuf.buf;
     histoSkipAreasLength = histoSkipAreasBuf.len / histoSkipAreasBuf.itemsize;
-    histoSkipAreasJObj = beampy_newJDoubleArray(histoSkipAreasData, histoSkipAreasLength);
+    histoSkipAreasJObj = beampy_newJDoubleArrayFromBuffer(histoSkipAreasData, histoSkipAreasLength);
     if (histoSkipAreasJObj == NULL) {
         return NULL;
     }
@@ -20694,10 +20734,10 @@ PyObject* BeamPyTiePointGrid_createDefaultImageInfo1(PyObject* self, PyObject* a
     const char* _thisType = NULL;
     unsigned PY_LONG_LONG _this = 0;
     jobject _thisJObj = NULL;
-    double*   histoSkipAreasData = NULL;
-    int        histoSkipAreasLength = 0;
-    PyObject*  histoSkipAreasPyObj = NULL;
-    Py_buffer  histoSkipAreasBuf;
+    jdouble* histoSkipAreasData = NULL;
+    int histoSkipAreasLength = 0;
+    PyObject* histoSkipAreasPyObj = NULL;
+    Py_buffer histoSkipAreasBuf;
     jarray histoSkipAreasJObj = NULL;
     const char* pmType = NULL;
     unsigned PY_LONG_LONG pm = 0;
@@ -20715,9 +20755,9 @@ PyObject* BeamPyTiePointGrid_createDefaultImageInfo1(PyObject* self, PyObject* a
     if (histoSkipAreasPyObj == NULL) {
         return NULL;
     }
-    histoSkipAreasData = (double*) histoSkipAreasBuf.buf;
+    histoSkipAreasData = (jdouble*) histoSkipAreasBuf.buf;
     histoSkipAreasLength = histoSkipAreasBuf.len / histoSkipAreasBuf.itemsize;
-    histoSkipAreasJObj = beampy_newJDoubleArray(histoSkipAreasData, histoSkipAreasLength);
+    histoSkipAreasJObj = beampy_newJDoubleArrayFromBuffer(histoSkipAreasData, histoSkipAreasLength);
     if (histoSkipAreasJObj == NULL) {
         return NULL;
     }
@@ -20737,10 +20777,10 @@ PyObject* BeamPyTiePointGrid_createDefaultImageInfo2(PyObject* self, PyObject* a
     const char* _thisType = NULL;
     unsigned PY_LONG_LONG _this = 0;
     jobject _thisJObj = NULL;
-    double*   histoSkipAreasData = NULL;
-    int        histoSkipAreasLength = 0;
-    PyObject*  histoSkipAreasPyObj = NULL;
-    Py_buffer  histoSkipAreasBuf;
+    jdouble* histoSkipAreasData = NULL;
+    int histoSkipAreasLength = 0;
+    PyObject* histoSkipAreasPyObj = NULL;
+    Py_buffer histoSkipAreasBuf;
     jarray histoSkipAreasJObj = NULL;
     const char* histogramType = NULL;
     unsigned PY_LONG_LONG histogram = 0;
@@ -20758,9 +20798,9 @@ PyObject* BeamPyTiePointGrid_createDefaultImageInfo2(PyObject* self, PyObject* a
     if (histoSkipAreasPyObj == NULL) {
         return NULL;
     }
-    histoSkipAreasData = (double*) histoSkipAreasBuf.buf;
+    histoSkipAreasData = (jdouble*) histoSkipAreasBuf.buf;
     histoSkipAreasLength = histoSkipAreasBuf.len / histoSkipAreasBuf.itemsize;
-    histoSkipAreasJObj = beampy_newJDoubleArray(histoSkipAreasData, histoSkipAreasLength);
+    histoSkipAreasJObj = beampy_newJDoubleArrayFromBuffer(histoSkipAreasData, histoSkipAreasLength);
     if (histoSkipAreasJObj == NULL) {
         return NULL;
     }
@@ -20871,7 +20911,7 @@ PyObject* BeamPyTiePointGrid_quantizeRasterData1(PyObject* self, PyObject* args)
     _thisJObj = (jobject) _this;
     pmJObj = (jobject) pm;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, newMin, newMax, gamma, pmJObj);
-    _resultPyObj = beampy_newPyObjectFromJByteArray((jarray) _resultJObj, "b");
+    _resultPyObj = beampy_newPyObjectFromJByteArray((jarray) _resultJObj);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -20886,10 +20926,10 @@ PyObject* BeamPyTiePointGrid_quantizeRasterData2(PyObject* self, PyObject* args)
     jdouble newMin = (jdouble) 0;
     jdouble newMax = (jdouble) 0;
     jdouble gamma = (jdouble) 0;
-    byte*   samplesData = NULL;
-    int        samplesLength = 0;
-    PyObject*  samplesPyObj = NULL;
-    Py_buffer  samplesBuf;
+    jbyte* samplesData = NULL;
+    int samplesLength = 0;
+    PyObject* samplesPyObj = NULL;
+    Py_buffer samplesBuf;
     jarray samplesJObj = NULL;
     jint offset = (jint) 0;
     jint stride = (jint) 0;
@@ -20907,9 +20947,9 @@ PyObject* BeamPyTiePointGrid_quantizeRasterData2(PyObject* self, PyObject* args)
     if (samplesPyObj == NULL) {
         return NULL;
     }
-    samplesData = (byte*) samplesBuf.buf;
+    samplesData = (jbyte*) samplesBuf.buf;
     samplesLength = samplesBuf.len / samplesBuf.itemsize;
-    samplesJObj = beampy_newJByteArray(samplesData, samplesLength);
+    samplesJObj = beampy_newJByteArrayFromBuffer(samplesData, samplesLength);
     if (samplesJObj == NULL) {
         return NULL;
     }
@@ -23930,10 +23970,10 @@ PyObject* BeamPyProductData_createInstance3(PyObject* self, PyObject* args)
 PyObject* BeamPyProductData_createInstance5(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    byte*   elemsData = NULL;
-    int        elemsLength = 0;
-    PyObject*  elemsPyObj = NULL;
-    Py_buffer  elemsBuf;
+    jbyte* elemsData = NULL;
+    int elemsLength = 0;
+    PyObject* elemsPyObj = NULL;
+    Py_buffer elemsBuf;
     jarray elemsJObj = NULL;
     PyObject* _resultPyObj = NULL;
     jobject _resultJObj = NULL;
@@ -23947,9 +23987,9 @@ PyObject* BeamPyProductData_createInstance5(PyObject* self, PyObject* args)
     if (elemsPyObj == NULL) {
         return NULL;
     }
-    elemsData = (byte*) elemsBuf.buf;
+    elemsData = (jbyte*) elemsBuf.buf;
     elemsLength = elemsBuf.len / elemsBuf.itemsize;
-    elemsJObj = beampy_newJByteArray(elemsData, elemsLength);
+    elemsJObj = beampy_newJByteArrayFromBuffer(elemsData, elemsLength);
     if (elemsJObj == NULL) {
         return NULL;
     }
@@ -23964,10 +24004,10 @@ PyObject* BeamPyProductData_createInstance5(PyObject* self, PyObject* args)
 PyObject* BeamPyProductData_createUnsignedInstance1(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    byte*   elemsData = NULL;
-    int        elemsLength = 0;
-    PyObject*  elemsPyObj = NULL;
-    Py_buffer  elemsBuf;
+    jbyte* elemsData = NULL;
+    int elemsLength = 0;
+    PyObject* elemsPyObj = NULL;
+    Py_buffer elemsBuf;
     jarray elemsJObj = NULL;
     PyObject* _resultPyObj = NULL;
     jobject _resultJObj = NULL;
@@ -23981,9 +24021,9 @@ PyObject* BeamPyProductData_createUnsignedInstance1(PyObject* self, PyObject* ar
     if (elemsPyObj == NULL) {
         return NULL;
     }
-    elemsData = (byte*) elemsBuf.buf;
+    elemsData = (jbyte*) elemsBuf.buf;
     elemsLength = elemsBuf.len / elemsBuf.itemsize;
-    elemsJObj = beampy_newJByteArray(elemsData, elemsLength);
+    elemsJObj = beampy_newJByteArrayFromBuffer(elemsData, elemsLength);
     if (elemsJObj == NULL) {
         return NULL;
     }
@@ -23998,10 +24038,10 @@ PyObject* BeamPyProductData_createUnsignedInstance1(PyObject* self, PyObject* ar
 PyObject* BeamPyProductData_createInstance10(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    short*   elemsData = NULL;
-    int        elemsLength = 0;
-    PyObject*  elemsPyObj = NULL;
-    Py_buffer  elemsBuf;
+    jshort* elemsData = NULL;
+    int elemsLength = 0;
+    PyObject* elemsPyObj = NULL;
+    Py_buffer elemsBuf;
     jarray elemsJObj = NULL;
     PyObject* _resultPyObj = NULL;
     jobject _resultJObj = NULL;
@@ -24015,9 +24055,9 @@ PyObject* BeamPyProductData_createInstance10(PyObject* self, PyObject* args)
     if (elemsPyObj == NULL) {
         return NULL;
     }
-    elemsData = (short*) elemsBuf.buf;
+    elemsData = (jshort*) elemsBuf.buf;
     elemsLength = elemsBuf.len / elemsBuf.itemsize;
-    elemsJObj = beampy_newJShortArray(elemsData, elemsLength);
+    elemsJObj = beampy_newJShortArrayFromBuffer(elemsData, elemsLength);
     if (elemsJObj == NULL) {
         return NULL;
     }
@@ -24032,10 +24072,10 @@ PyObject* BeamPyProductData_createInstance10(PyObject* self, PyObject* args)
 PyObject* BeamPyProductData_createUnsignedInstance3(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    short*   elemsData = NULL;
-    int        elemsLength = 0;
-    PyObject*  elemsPyObj = NULL;
-    Py_buffer  elemsBuf;
+    jshort* elemsData = NULL;
+    int elemsLength = 0;
+    PyObject* elemsPyObj = NULL;
+    Py_buffer elemsBuf;
     jarray elemsJObj = NULL;
     PyObject* _resultPyObj = NULL;
     jobject _resultJObj = NULL;
@@ -24049,9 +24089,9 @@ PyObject* BeamPyProductData_createUnsignedInstance3(PyObject* self, PyObject* ar
     if (elemsPyObj == NULL) {
         return NULL;
     }
-    elemsData = (short*) elemsBuf.buf;
+    elemsData = (jshort*) elemsBuf.buf;
     elemsLength = elemsBuf.len / elemsBuf.itemsize;
-    elemsJObj = beampy_newJShortArray(elemsData, elemsLength);
+    elemsJObj = beampy_newJShortArrayFromBuffer(elemsData, elemsLength);
     if (elemsJObj == NULL) {
         return NULL;
     }
@@ -24066,10 +24106,10 @@ PyObject* BeamPyProductData_createUnsignedInstance3(PyObject* self, PyObject* ar
 PyObject* BeamPyProductData_createInstance8(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    int*   elemsData = NULL;
-    int        elemsLength = 0;
-    PyObject*  elemsPyObj = NULL;
-    Py_buffer  elemsBuf;
+    jint* elemsData = NULL;
+    int elemsLength = 0;
+    PyObject* elemsPyObj = NULL;
+    Py_buffer elemsBuf;
     jarray elemsJObj = NULL;
     PyObject* _resultPyObj = NULL;
     jobject _resultJObj = NULL;
@@ -24083,9 +24123,9 @@ PyObject* BeamPyProductData_createInstance8(PyObject* self, PyObject* args)
     if (elemsPyObj == NULL) {
         return NULL;
     }
-    elemsData = (int*) elemsBuf.buf;
+    elemsData = (jint*) elemsBuf.buf;
     elemsLength = elemsBuf.len / elemsBuf.itemsize;
-    elemsJObj = beampy_newJIntArray(elemsData, elemsLength);
+    elemsJObj = beampy_newJIntArrayFromBuffer(elemsData, elemsLength);
     if (elemsJObj == NULL) {
         return NULL;
     }
@@ -24100,10 +24140,10 @@ PyObject* BeamPyProductData_createInstance8(PyObject* self, PyObject* args)
 PyObject* BeamPyProductData_createUnsignedInstance2(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    int*   elemsData = NULL;
-    int        elemsLength = 0;
-    PyObject*  elemsPyObj = NULL;
-    Py_buffer  elemsBuf;
+    jint* elemsData = NULL;
+    int elemsLength = 0;
+    PyObject* elemsPyObj = NULL;
+    Py_buffer elemsBuf;
     jarray elemsJObj = NULL;
     PyObject* _resultPyObj = NULL;
     jobject _resultJObj = NULL;
@@ -24117,9 +24157,9 @@ PyObject* BeamPyProductData_createUnsignedInstance2(PyObject* self, PyObject* ar
     if (elemsPyObj == NULL) {
         return NULL;
     }
-    elemsData = (int*) elemsBuf.buf;
+    elemsData = (jint*) elemsBuf.buf;
     elemsLength = elemsBuf.len / elemsBuf.itemsize;
-    elemsJObj = beampy_newJIntArray(elemsData, elemsLength);
+    elemsJObj = beampy_newJIntArrayFromBuffer(elemsData, elemsLength);
     if (elemsJObj == NULL) {
         return NULL;
     }
@@ -24134,10 +24174,10 @@ PyObject* BeamPyProductData_createUnsignedInstance2(PyObject* self, PyObject* ar
 PyObject* BeamPyProductData_createInstance9(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    long*   elemsData = NULL;
-    int        elemsLength = 0;
-    PyObject*  elemsPyObj = NULL;
-    Py_buffer  elemsBuf;
+    jlong* elemsData = NULL;
+    int elemsLength = 0;
+    PyObject* elemsPyObj = NULL;
+    Py_buffer elemsBuf;
     jarray elemsJObj = NULL;
     PyObject* _resultPyObj = NULL;
     jobject _resultJObj = NULL;
@@ -24151,9 +24191,9 @@ PyObject* BeamPyProductData_createInstance9(PyObject* self, PyObject* args)
     if (elemsPyObj == NULL) {
         return NULL;
     }
-    elemsData = (long*) elemsBuf.buf;
+    elemsData = (jlong*) elemsBuf.buf;
     elemsLength = elemsBuf.len / elemsBuf.itemsize;
-    elemsJObj = beampy_newJLongArray(elemsData, elemsLength);
+    elemsJObj = beampy_newJLongArrayFromBuffer(elemsData, elemsLength);
     if (elemsJObj == NULL) {
         return NULL;
     }
@@ -24189,10 +24229,10 @@ PyObject* BeamPyProductData_createInstance4(PyObject* self, PyObject* args)
 PyObject* BeamPyProductData_createInstance7(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    float*   elemsData = NULL;
-    int        elemsLength = 0;
-    PyObject*  elemsPyObj = NULL;
-    Py_buffer  elemsBuf;
+    jfloat* elemsData = NULL;
+    int elemsLength = 0;
+    PyObject* elemsPyObj = NULL;
+    Py_buffer elemsBuf;
     jarray elemsJObj = NULL;
     PyObject* _resultPyObj = NULL;
     jobject _resultJObj = NULL;
@@ -24206,9 +24246,9 @@ PyObject* BeamPyProductData_createInstance7(PyObject* self, PyObject* args)
     if (elemsPyObj == NULL) {
         return NULL;
     }
-    elemsData = (float*) elemsBuf.buf;
+    elemsData = (jfloat*) elemsBuf.buf;
     elemsLength = elemsBuf.len / elemsBuf.itemsize;
-    elemsJObj = beampy_newJFloatArray(elemsData, elemsLength);
+    elemsJObj = beampy_newJFloatArrayFromBuffer(elemsData, elemsLength);
     if (elemsJObj == NULL) {
         return NULL;
     }
@@ -24223,10 +24263,10 @@ PyObject* BeamPyProductData_createInstance7(PyObject* self, PyObject* args)
 PyObject* BeamPyProductData_createInstance6(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    double*   elemsData = NULL;
-    int        elemsLength = 0;
-    PyObject*  elemsPyObj = NULL;
-    Py_buffer  elemsBuf;
+    jdouble* elemsData = NULL;
+    int elemsLength = 0;
+    PyObject* elemsPyObj = NULL;
+    Py_buffer elemsBuf;
     jarray elemsJObj = NULL;
     PyObject* _resultPyObj = NULL;
     jobject _resultJObj = NULL;
@@ -24240,9 +24280,9 @@ PyObject* BeamPyProductData_createInstance6(PyObject* self, PyObject* args)
     if (elemsPyObj == NULL) {
         return NULL;
     }
-    elemsData = (double*) elemsBuf.buf;
+    elemsData = (jdouble*) elemsBuf.buf;
     elemsLength = elemsBuf.len / elemsBuf.itemsize;
-    elemsJObj = beampy_newJDoubleArray(elemsData, elemsLength);
+    elemsJObj = beampy_newJDoubleArrayFromBuffer(elemsData, elemsLength);
     if (elemsJObj == NULL) {
         return NULL;
     }
@@ -28035,7 +28075,7 @@ PyObject* BeamPyProductUtils_computeMinMaxY(PyObject* self, PyObject* args)
         return NULL;
     }
     _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, classProductUtils, _method, pixelPositionsJObj);
-    _resultPyObj = beampy_newPyObjectFromJFloatArray((jarray) _resultJObj, "f");
+    _resultPyObj = beampy_newPyObjectFromJFloatArray((jarray) _resultJObj);
     (*jenv)->DeleteLocalRef(jenv, pixelPositionsJObj);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;

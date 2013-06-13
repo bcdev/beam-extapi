@@ -219,10 +219,10 @@ public abstract class PyCParameterGenerator implements ParameterGenerator {
         @Override
         public String generateTargetArgDeclaration(GeneratorContext context) {
             return eval("" +
-                                "${type}*   ${par}Data = NULL;\n" +
-                                "int        ${par}Length = 0;\n" +
-                                "PyObject*  ${par}PyObj = NULL;\n" +
-                                "Py_buffer  ${par}Buf;\n",
+                                "j${type}* ${par}Data = NULL;\n" +
+                                "int ${par}Length = 0;\n" +
+                                "PyObject* ${par}PyObj = NULL;\n" +
+                                "Py_buffer ${par}Buf;\n",
                         kv("type", getType().simpleTypeName()),
                         kv("par", getName()));
         }
@@ -264,9 +264,9 @@ public abstract class PyCParameterGenerator implements ParameterGenerator {
                                 "if (${par}PyObj == NULL) {\n" +
                                 "    return NULL;\n" +  // todo - goto error label and release all buffers and JNI vars
                                 "}\n" +
-                                "${par}Data = (${type}*) ${par}Buf.buf;\n" +
+                                "${par}Data = (j${type}*) ${par}Buf.buf;\n" +
                                 "${par}Length = ${par}Buf.len / ${par}Buf.itemsize;\n" +
-                                "${par}JObj = beampy_newJ${typeUC}Array(${par}Data, ${par}Length);\n" +
+                                "${par}JObj = beampy_newJ${typeUC}ArrayFromBuffer(${par}Data, ${par}Length);\n" +
                                 "if (${par}JObj == NULL) {\n" +
                                 "    return NULL;\n" +  // todo - goto error label and release all buffers and JNI vars
                                 "}",
@@ -289,13 +289,17 @@ public abstract class PyCParameterGenerator implements ParameterGenerator {
                 return null;
             } else if (parameter.getModifier() == ApiParameter.Modifier.OUT) {
                 String typeName = getType().simpleTypeName();
-                return eval("beampy_copyJ${typeUC}ArrayToBuffer((jarray) ${par}JObj, ${par}Data, ${par}Length);",
+                return eval("beampy_copyJ${typeUC}ArrayToBuffer((jarray) ${par}JObj, ${par}Data, ${par}Length, ${par}PyObj);",
                             kv("typeUC", firstCharToUpperCase(typeName)),
                             kv("par", getName()));
             } else if (parameter.getModifier() == ApiParameter.Modifier.RETURN) {
                 String typeName = getType().simpleTypeName();
-                return eval("beampy_copyJ${typeUC}ArrayToBuffer((jarray) ${par}JObj, ${par}Data, ${par}Length);\n" +
-                                    "${res}PyObj = ${par}PyObj;",
+                return eval("" +
+                                    "if (${par}Data != NULL && (*jenv)->IsSameObject(jenv, ${res}JObj, ${par}JObj)) {\n" +
+                                    "    ${res}PyObj = beampy_copyJ${typeUC}ArrayToBuffer((jarray) ${par}JObj, ${par}Data, ${par}Length, ${par}PyObj);\n" +
+                                    "} else {\n" +
+                                    "    ${res}PyObj = beampy_newPyObjectFromJ${typeUC}Array((jarray) ${par}JObj);\n" +
+                                    "}",
                             kv("typeUC", firstCharToUpperCase(typeName)),
                             kv("par", getName()),
                             kv("res", PyCModuleGenerator.RESULT_VAR_NAME));

@@ -18,15 +18,15 @@ public abstract class PyCFunctionGenerator extends AbstractFunctionGenerator {
     final static HashMap<String, String> CARRAY_FORMATS = new HashMap<String, String>();
 
     static {
-        CARRAY_FORMATS.put(Byte.TYPE.getName(), "b");
-        CARRAY_FORMATS.put(Boolean.TYPE.getName(), "b");
-        CARRAY_FORMATS.put(Character.TYPE.getName(), "h");
-        CARRAY_FORMATS.put(Short.TYPE.getName(), "h");
-        CARRAY_FORMATS.put(Integer.TYPE.getName(), "i");
-        CARRAY_FORMATS.put(Long.TYPE.getName(), "l");
-        CARRAY_FORMATS.put(Long.TYPE.getName(), "l");
-        CARRAY_FORMATS.put(Float.TYPE.getName(), "f");
-        CARRAY_FORMATS.put(Double.TYPE.getName(), "d");
+        // todo - make sure that the following type mappings match in number of bytes
+        CARRAY_FORMATS.put(Byte.TYPE.getName(), "b"); // 1 byte
+        CARRAY_FORMATS.put(Boolean.TYPE.getName(), "b");  // 1 byte
+        CARRAY_FORMATS.put(Character.TYPE.getName(), "h");  // 2 byte
+        CARRAY_FORMATS.put(Short.TYPE.getName(), "h"); // 2 byte
+        CARRAY_FORMATS.put(Integer.TYPE.getName(), "i"); // 4 byte
+        CARRAY_FORMATS.put(Long.TYPE.getName(), "l"); // 8 byte
+        CARRAY_FORMATS.put(Float.TYPE.getName(), "f"); // 4 byte
+        CARRAY_FORMATS.put(Double.TYPE.getName(), "d"); // 8 byte
     }
 
     protected PyCFunctionGenerator(ApiMethod apiMethod, PyCParameterGenerator[] parameterGenerators) {
@@ -343,10 +343,8 @@ public abstract class PyCFunctionGenerator extends AbstractFunctionGenerator {
                 return null;
             }
             String typeUC = firstCharToUpperCase(getReturnType().simpleTypeName());
-            String carrayFormat = getCArrayFormat(getReturnType());
-            return format("${res}PyObj = beampy_newPyObjectFromJ${typeUC}Array((jarray) ${res}JObj, \"${carrayFormat}\");",
-                          kv("typeUC", typeUC),
-                          kv("carrayFormat", carrayFormat));
+            return format("${res}PyObj = beampy_newPyObjectFromJ${typeUC}Array((jarray) ${res}JObj);",
+                          kv("typeUC", typeUC));
         }
     }
 
