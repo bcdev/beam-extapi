@@ -4,12 +4,11 @@ import com.sun.javadoc.Type;
 import org.esa.beam.extapi.gen.ApiInfo;
 import org.esa.beam.extapi.gen.ApiParameter;
 import org.esa.beam.extapi.gen.GeneratorContext;
-import org.esa.beam.extapi.gen.ModuleGenerator;
 import org.esa.beam.extapi.gen.ParameterGenerator;
 
+import static org.esa.beam.extapi.gen.JavadocHelpers.firstCharToUpperCase;
 import static org.esa.beam.extapi.gen.TemplateEval.eval;
 import static org.esa.beam.extapi.gen.TemplateEval.kv;
-import static org.esa.beam.extapi.gen.JavadocHelpers.getComponentCTypeName;
 
 /**
  * @author Norman Fomferra
@@ -32,46 +31,20 @@ public abstract class PyCParameterGenerator implements ParameterGenerator {
     }
 
     @Override
-    public String generateJniArgDeclaration(GeneratorContext context) {
-        return null;
-    }
-
-    @Override
-    public String generateTargetArgDeclaration(GeneratorContext context) {
-        String typeName = getComponentCTypeName(getType());
-        return String.format("%s %s;", typeName, getName());
-    }
-
-    @Override
-    public String generateJniCallArgs(GeneratorContext context) {
-        // todo - Python-C code shall directly call JNI, but we still call the C-API here
-        return getName();
-    }
-
-    @Override
-    public String generateJniArgDeref(GeneratorContext context) {
-        // todo - Python-C code shall directly call JNI, but we still call the C-API here
-        return null;
-    }
-
-    @Override
     public String generateFunctionParamDeclaration(GeneratorContext context) {
+        // We have a fixed function signature: PyObject* <function>(PyObject* self, PyObject* args)
         return null;
     }
 
-    @Override
-    public String generateJniArgFromTransformedTargetArgAssignment(GeneratorContext context) {
-        return null;
-    }
+    /**
+     * @return The format string for the ParseTuple() Python function.
+     */
+    public abstract String getParseFormat(GeneratorContext context);
 
-    @Override
-    public String generateTargetResultFromTransformedJniResultAssignment(GeneratorContext context) {
-        return null;
-    }
-
-    public abstract String generateParseFormat(GeneratorContext context);
-
-    public abstract String generateParseArgs(GeneratorContext context);
+    /**
+     * @return The argument(s) for the ParseTuple() Python function.
+     */
+    public abstract String getParseArgs(GeneratorContext context);
 
     static class PrimitiveScalar extends PyCParameterGenerator {
         PrimitiveScalar(ApiParameter parameter) {
@@ -79,7 +52,21 @@ public abstract class PyCParameterGenerator implements ParameterGenerator {
         }
 
         @Override
-        public String generateParseFormat(GeneratorContext context) {
+        public String generateTargetArgDeclaration(GeneratorContext context) {
+            // Not needed, because primitive parameter type should automatically match JNI type
+            return null;
+        }
+
+        @Override
+        public String generateJniArgDeclaration(GeneratorContext context) {
+            // Not needed, because primitive parameter type should automatically match JNI type
+            return eval("j${type} ${par} = (j${type}) 0;\n",
+                        kv("type", getType().simpleTypeName()),
+                        kv("par", getName()));
+        }
+
+        @Override
+        public String getParseFormat(GeneratorContext context) {
             String s = getType().typeName();
             if (s.equals("boolean")) {
                 return "b";
@@ -103,8 +90,30 @@ public abstract class PyCParameterGenerator implements ParameterGenerator {
         }
 
         @Override
-        public String generateParseArgs(GeneratorContext context) {
-            return "&" + getName();
+        public String getParseArgs(GeneratorContext context) {
+            return eval("&${par}", kv("par", getName()));
+        }
+
+        @Override
+        public String generateJniArgFromTransformedTargetArgAssignment(GeneratorContext context) {
+            // Not needed, because primitive parameter type should automatically match JNI type
+            return null;
+        }
+
+        @Override
+        public String generateJniCallArgs(GeneratorContext context) {
+            return getName();
+        }
+
+        @Override
+        public String generateTargetArgFromTransformedJniArgAssignment(GeneratorContext context) {
+            return null;
+        }
+
+        @Override
+        public String generateJniArgDeref(GeneratorContext context) {
+            // Not needed, because parameter is primitive
+            return null;
         }
     }
 
@@ -115,22 +124,43 @@ public abstract class PyCParameterGenerator implements ParameterGenerator {
 
         @Override
         public String generateTargetArgDeclaration(GeneratorContext context) {
-            return PyCFunctionGenerator.generateObjectTypeDecl(getName());
+            return PyCFunctionGenerator.generateJObjectTargetArgDecl(getName());
         }
 
         @Override
-        public String generateJniCallArgs(GeneratorContext context) {
-            return String.format("(%s) %s", ModuleGenerator.getComponentCClassName(getType()), getName());
+        public String generateJniArgDeclaration(GeneratorContext context) {
+            return eval("jobject ${par}JObj = NULL;", kv("par", getName()));
         }
 
         @Override
-        public String generateParseFormat(GeneratorContext context) {
+        public String getParseFormat(GeneratorContext context) {
             return "(sK)";
         }
 
         @Override
-        public String generateParseArgs(GeneratorContext context) {
-            return String.format("&%sType, &%s", getName(), getName());
+        public String getParseArgs(GeneratorContext context) {
+            return eval("&${par}Type, &${par}", kv("par", getName()));
+        }
+
+        @Override
+        public String generateJniArgFromTransformedTargetArgAssignment(GeneratorContext context) {
+            return eval("${par}JObj = (jobject) ${par};", kv("par", getName()));
+        }
+
+        @Override
+        public String generateJniCallArgs(GeneratorContext context) {
+            return eval("${par}JObj", kv("par", getName()));
+        }
+
+        @Override
+        public String generateTargetArgFromTransformedJniArgAssignment(GeneratorContext context) {
+            return null;
+        }
+
+        @Override
+        public String generateJniArgDeref(GeneratorContext context) {
+            // not needed, because we parameter is a JNI global reference
+            return null;
         }
     }
 
@@ -141,17 +171,42 @@ public abstract class PyCParameterGenerator implements ParameterGenerator {
 
         @Override
         public String generateTargetArgDeclaration(GeneratorContext context) {
-            return String.format("const char* %s;", getName());
+            return eval("const char* ${par} = NULL;", kv("par", getName()));
         }
 
         @Override
-        public String generateParseFormat(GeneratorContext context) {
+        public String generateJniArgDeclaration(GeneratorContext context) {
+            return eval("jstring ${par}JObj = NULL;", kv("par", getName()));
+        }
+
+        @Override
+        public String getParseFormat(GeneratorContext context) {
             return "s";
         }
 
         @Override
-        public String generateParseArgs(GeneratorContext context) {
-            return "&" + getName();
+        public String getParseArgs(GeneratorContext context) {
+            return eval("&${par}", kv("par", getName()));
+        }
+
+        @Override
+        public String generateJniArgFromTransformedTargetArgAssignment(GeneratorContext context) {
+            return eval("${par}JObj =(*jenv)->NewStringUTF(jenv, ${par});", kv("par", getName()));
+        }
+
+        @Override
+        public String generateJniCallArgs(GeneratorContext context) {
+            return eval("${par}JObj");
+        }
+
+        @Override
+        public String generateTargetArgFromTransformedJniArgAssignment(GeneratorContext context) {
+            return null;
+        }
+
+        @Override
+        public String generateJniArgDeref(GeneratorContext context) {
+            return eval("(*jenv)->DeleteLocalRef(jenv, ${par}JObj);", kv("par", getName()));
         }
     }
 
@@ -163,28 +218,35 @@ public abstract class PyCParameterGenerator implements ParameterGenerator {
 
         @Override
         public String generateTargetArgDeclaration(GeneratorContext context) {
-            return eval("${t}* ${p};\n" +
-                                "int ${p}Length;\n" +
-                                "PyObject* ${p}Obj;\n" +
-                                "Py_buffer ${p}Buf;\n",
-                        kv("t", getComponentCTypeName(getType())),
-                        kv("p", getName()));
-/* Sequence solution:
-            return eval("${t}* ${p};\n" +
-                                "int ${p}Length;\n" +
-                                "PyObject* ${p}Seq;",
-                        kv("t", getComponentCTypeName(getType())),
-                        kv("p", getName()));
-*/
+            return eval("" +
+                                "${type}*   ${par}Data = NULL;\n" +
+                                "int        ${par}Length = 0;\n" +
+                                "PyObject*  ${par}PyObj = NULL;\n" +
+                                "Py_buffer  ${par}Buf;\n",
+                        kv("type", getType().simpleTypeName()),
+                        kv("par", getName()));
+        }
+
+        @Override
+        public String generateJniArgDeclaration(GeneratorContext context) {
+            return eval("jarray ${par}JObj = NULL;", kv("par", getName()));
+        }
+
+        @Override
+        public String getParseFormat(GeneratorContext context) {
+            return "O";
+        }
+
+        @Override
+        public String getParseArgs(GeneratorContext context) {
+            return eval("&${par}PyObj", kv("par", getName()));
         }
 
         @Override
         public String generateJniArgFromTransformedTargetArgAssignment(GeneratorContext context) {
-            String typeName = getComponentCTypeName(getType());
-            String format = PyCFunctionGenerator.CARRAY_TYPE_CODES.get(typeName);
-            if (format == null) {
-                throw new IllegalStateException("format == null for typeName == " + typeName);
-            }
+            Type type = getType();
+            String typeName = type.simpleTypeName();
+            String format = PyCFunctionGenerator.getCArrayFormat(type);
             String bufferMode;
             if (parameter.getModifier() == ApiParameter.Modifier.IN) {
                 bufferMode = "ReadOnly";
@@ -195,46 +257,66 @@ public abstract class PyCParameterGenerator implements ParameterGenerator {
             if (lengthExpr == null) {
                 lengthExpr = "-1";
             }
+            // todo - we should actually check if the Python parameter supports the buffer protocol.
+            //        If it is not a buffer, but a sequence, we could try converting the sequence into a primitive Java array.
+            //        If bufferMode="Writable", we could check if the Python parameter is a list of appropriate size an set its items.
             return eval("" +
-                                "${p}Obj = beampy_getPrimitiveArrayBuffer${bm}(${p}Obj, &${p}Buf, \"${tf}\", ${le});\n" +
-                                "if (${p}Obj == NULL) {\n" +
-                                "    return NULL;\n" +
+                                "${par}PyObj = beampy_getPrimitiveArrayBuffer${bufferMode}(${par}PyObj, &${par}Buf, \"${format}\", ${lengthExpr});\n" +
+                                "if (${par}PyObj == NULL) {\n" +
+                                "    return NULL;\n" +  // todo - goto error label and release all buffers and JNI vars
                                 "}\n" +
-                                "${p} = (${t}*) ${p}Buf.buf;\n" +
-                                "${p}Length = ${p}Buf.len / ${p}Buf.itemsize;",
-                        kv("p", getName()),
-                        kv("t", typeName),
-                        kv("le", lengthExpr),
-                        kv("bm", bufferMode),
-                        kv("tf", format));
-
-/* Sequence solution:
-            return eval("${p} = beam_new_${t}_array_from_pyseq(${p}Seq, &${p}Length);",
-                        kv("p", getName()),
-                        kv("t", getComponentCTypeName(getType())));
-*/
+                                "${par}Data = (${type}*) ${par}Buf.buf;\n" +
+                                "${par}Length = ${par}Buf.len / ${par}Buf.itemsize;\n" +
+                                "${par}JObj = beampy_newJ${typeUC}ArrayFromBuffer(${par}Data, ${par}Length);\n" +
+                                "if (${par}JObj == NULL) {\n" +
+                                "    return NULL;\n" +  // todo - goto error label and release all buffers and JNI vars
+                                "}",
+                        kv("par", getName()),
+                        kv("type", typeName),
+                        kv("typeUC", firstCharToUpperCase(typeName)),
+                        kv("lengthExpr", lengthExpr),
+                        kv("bufferMode", bufferMode),
+                        kv("format", format));
         }
 
         @Override
         public String generateJniCallArgs(GeneratorContext context) {
-            return eval("${p}, ${p}Length",
-                        kv("p", getName()));
+            return eval("${par}JObj", kv("par", getName()));
         }
 
         @Override
-        public String generateTargetResultFromTransformedJniResultAssignment(GeneratorContext context) {
-            return eval("PyBuffer_Release(&${p}Buf);",
-                        kv("p", getName()));
+        public String generateTargetArgFromTransformedJniArgAssignment(GeneratorContext context) {
+            if (parameter.getModifier() == ApiParameter.Modifier.IN) {
+                return null;
+            } else if (parameter.getModifier() == ApiParameter.Modifier.OUT) {
+                return eval("beam_copyFromJArray(${par}JObj, ${par}Data, ${par}Length, sizeof (${type}));" +
+                                    "",
+                            kv("par", getName()),
+                            kv("type", getType().simpleTypeName()));
+            } else if (parameter.getModifier() == ApiParameter.Modifier.RETURN) {
+                String typeName = getType().simpleTypeName();
+                return eval("" +
+                                    "if (${par}Data != NULL && (*jenv)->IsSameObject(jenv, ${par}JObj, ${res}JObj)) {\n" +
+                                    "    beam_copyFromJArray(${res}JObj, ${par}Data, ${par}Length, sizeof (${type}));\n" +
+                                    "    ${res}PyObj = ${par}PyObj;\n" +
+                                    "} else {\n" +
+                                    "    ${res}PyObj = beampy_newJ${typeUC}Array(${res}Array, ${r}ArrayLength);\n" +
+                                    "}",
+                            kv("res", PyCModuleGenerator.RESULT_VAR_NAME),
+                            kv("par", getName()),
+                            kv("type", typeName),
+                            kv("typeUC", firstCharToUpperCase(typeName)));
+            } else {
+                throw new IllegalStateException("Unknown modifier: " + parameter.getModifier());
+            }
         }
 
         @Override
-        public String generateParseArgs(GeneratorContext context) {
-            return eval("&${p}Obj", kv("p", getName()));
-        }
-
-        @Override
-        public String generateParseFormat(GeneratorContext context) {
-            return "O";
+        public String generateJniArgDeref(GeneratorContext context) {
+            return eval(""
+                                + "PyBuffer_Release(&${par}Buf);\n"
+                                + "(*jenv)->DeleteLocalRef(jenv, ${par}JObj);",
+                        kv("par", getName()));
         }
     }
 
@@ -247,34 +329,48 @@ public abstract class PyCParameterGenerator implements ParameterGenerator {
 
         @Override
         public String generateTargetArgDeclaration(GeneratorContext context) {
-            return eval("${t} ${p};\n" +
-                                "int ${p}Length;\n" +
-                                "PyObject* ${p}Seq;",
-                        kv("t", ModuleGenerator.getComponentCClassName(getType())),
-                        kv("p", getName()));
+            return eval("PyObject* ${par}PyObj = NULL;", kv("par", getName()));
         }
 
         @Override
-        public String generateJniCallArgs(GeneratorContext context) {
-            return eval("${p}, ${p}Length",
-                        kv("p", getName()));
+        public String generateJniArgDeclaration(GeneratorContext context) {
+            return eval("jarray ${par}JObj = NULL;", kv("par", getName()));
+        }
+
+        @Override
+        public String getParseArgs(GeneratorContext context) {
+            return eval("&${par}PyObj", kv("par", getName()));
+        }
+
+        @Override
+        public String getParseFormat(GeneratorContext context) {
+            return "O";
         }
 
         @Override
         public String generateJniArgFromTransformedTargetArgAssignment(GeneratorContext context) {
-            return eval("${p} = beampy_newCObjectArrayFromPySeq(\"${t}\", ${p}Seq, &${p}Length);",
-                        kv("p", getName()),
-                        kv("t", getComponentCTypeName(getType())));
+            return eval(""
+                                + "${par}JObj = beampy_newJObjectArrayFromPySeq(${par}PyObj, \"${type}\");\n"
+                                + "if (${par}JObj == NULL) {\n"
+                                + "    return NULL;\n" // todo - goto error label and deref all JNI vars
+                                + "}",
+                        kv("par", getName()),
+                        kv("type", getType().simpleTypeName()));
         }
 
         @Override
-        public String generateParseArgs(GeneratorContext context) {
-            return eval("&${p}Seq", kv("p", getName()));
+        public String generateJniCallArgs(GeneratorContext context) {
+            return eval("${par}JObj", kv("par", getName()));
         }
 
         @Override
-        public String generateParseFormat(GeneratorContext context) {
-            return "O";
+        public String generateTargetArgFromTransformedJniArgAssignment(GeneratorContext context) {
+            return null;
+        }
+
+        @Override
+        public String generateJniArgDeref(GeneratorContext context) {
+            return eval("(*jenv)->DeleteLocalRef(jenv, ${par}JObj);", kv("par", getName()));
         }
     }
 
@@ -286,33 +382,49 @@ public abstract class PyCParameterGenerator implements ParameterGenerator {
 
         @Override
         public String generateTargetArgDeclaration(GeneratorContext context) {
-            return eval("char** ${p};\n" +
-                                "int ${p}Length;\n" +
-                                "PyObject* ${p}Seq;",
-                        kv("p", getName()));
+            return eval("PyObject* ${par}PyObj = NULL;", kv("par", getName()));
+        }
+
+        @Override
+        public String generateJniArgDeclaration(GeneratorContext context) {
+            return eval("jarray ${par}JObj = NULL;", kv("par", getName()));
+        }
+
+        @Override
+        public String getParseArgs(GeneratorContext context) {
+            return eval("&${par}PyObj", kv("par", getName()));
+        }
+
+        @Override
+        public String getParseFormat(GeneratorContext context) {
+            return "O";
         }
 
         @Override
         public String generateJniArgFromTransformedTargetArgAssignment(GeneratorContext context) {
-            return eval("${p} = beampy_newCStringArrayFromPySeq(${p}Seq, &${p}Length);",
-                        kv("p", getName()),
-                        kv("c", ModuleGenerator.getComponentCClassVarName(getType())));
+            return eval(""
+                                + "${par}JObj = beampy_newJStringArrayFromPySeq(${par}PyObj);\n"
+                                + "if (${par}JObj == NULL) {\n"
+                                + "    return NULL;\n" // todo - goto error label and deref all JNI vars
+                                + "}",
+                        kv("par", getName()),
+                        kv("type", getType().simpleTypeName()));
         }
 
         @Override
         public String generateJniCallArgs(GeneratorContext context) {
-            return eval("${p}, ${p}Length",
-                        kv("p", getName()));
+            return eval("${par}JObj", kv("par", getName()));
         }
 
         @Override
-        public String generateParseArgs(GeneratorContext context) {
-            return eval("&${p}Seq", kv("p", getName()));
+        public String generateTargetArgFromTransformedJniArgAssignment(GeneratorContext context) {
+            return null;
         }
 
         @Override
-        public String generateParseFormat(GeneratorContext context) {
-            return "O";
+        public String generateJniArgDeref(GeneratorContext context) {
+            return eval("(*jenv)->DeleteLocalRef(jenv, ${par}JObj);", kv("par", getName()));
         }
+
     }
 }

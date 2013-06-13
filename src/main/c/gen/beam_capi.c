@@ -93,7 +93,6 @@ jclass classAffineTransform;
 jclass classArea;
 jclass classGeneralPath;
 jclass classPoint2D;
-jclass classRectangle2D;
 jclass classBufferedImage;
 jclass classComponentColorModel;
 jclass classIndexColorModel;
@@ -338,6 +337,20 @@ jclass beam_findJvmClass(const char* classResourceName)
 }
 
 
+
+
+String String_newString(const char* chars)
+{
+    jstring str = (*jenv)->NewStringUTF(jenv, chars);
+    return (*jenv)->NewGlobalRef(jenv, str);
+}
+
+void Object_delete(Object object)
+{
+    if (object != NULL) {
+        (*jenv)->DeleteGlobalRef(jenv, object);
+    }
+}
 
 // >>>>>>>> End include from CModuleGenerator-stub-jvm.c
 
@@ -611,20 +624,6 @@ int beam_initApi()
 
 
 // <<<<<<<< Begin include from CModuleGenerator-stub-conv.c
-
-String String_newString(const char* chars)
-{
-    jstring str = (*jenv)->NewStringUTF(jenv, chars);
-    return (*jenv)->NewGlobalRef(jenv, str);
-}
-
-void Object_delete(Object object)
-{
-    if (object != NULL) {
-        (*jenv)->DeleteGlobalRef(jenv, object);
-    }
-}
-
 jobjectArray beam_newJStringArray(const char** array_elems, int array_length)
 {
     jobjectArray array;
@@ -1626,7 +1625,7 @@ MetadataAttribute IndexCoding_getIndex(IndexCoding _this, const char* name)
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
-char** IndexCoding_getIndexNames(IndexCoding _this, int* resultArrayLength)
+char** IndexCoding_getIndexNames(IndexCoding _this, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
     char** _result = (char**) 0;
@@ -1643,7 +1642,7 @@ char** IndexCoding_getIndexNames(IndexCoding _this, int* resultArrayLength)
         }
     }
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method);
-    _result = beam_newCStringArray(_resultArray, resultArrayLength);
+    _result = beam_newCStringArray(_resultArray, _resultArrayLength);
     (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
@@ -1943,7 +1942,7 @@ MetadataElement IndexCoding_getElementAt(IndexCoding _this, int index)
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
-char** IndexCoding_getElementNames(IndexCoding _this, int* resultArrayLength)
+char** IndexCoding_getElementNames(IndexCoding _this, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
     char** _result = (char**) 0;
@@ -1960,12 +1959,12 @@ char** IndexCoding_getElementNames(IndexCoding _this, int* resultArrayLength)
         }
     }
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method);
-    _result = beam_newCStringArray(_resultArray, resultArrayLength);
+    _result = beam_newCStringArray(_resultArray, _resultArrayLength);
     (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
 
-MetadataElement* IndexCoding_getElements(IndexCoding _this, int* resultArrayLength)
+MetadataElement* IndexCoding_getElements(IndexCoding _this, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
     MetadataElement* _result = (MetadataElement*) 0;
@@ -1982,7 +1981,7 @@ MetadataElement* IndexCoding_getElements(IndexCoding _this, int* resultArrayLeng
         }
     }
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method);
-    _result = beam_newCObjectArray(_resultArray, resultArrayLength);
+    _result = beam_newCObjectArray(_resultArray, _resultArrayLength);
     (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
@@ -2107,7 +2106,7 @@ MetadataAttribute IndexCoding_getAttributeAt(IndexCoding _this, int index)
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
-char** IndexCoding_getAttributeNames(IndexCoding _this, int* resultArrayLength)
+char** IndexCoding_getAttributeNames(IndexCoding _this, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
     char** _result = (char**) 0;
@@ -2124,12 +2123,12 @@ char** IndexCoding_getAttributeNames(IndexCoding _this, int* resultArrayLength)
         }
     }
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method);
-    _result = beam_newCStringArray(_resultArray, resultArrayLength);
+    _result = beam_newCStringArray(_resultArray, _resultArrayLength);
     (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
 
-MetadataAttribute* IndexCoding_getAttributes(IndexCoding _this, int* resultArrayLength)
+MetadataAttribute* IndexCoding_getAttributes(IndexCoding _this, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
     MetadataAttribute* _result = (MetadataAttribute*) 0;
@@ -2146,7 +2145,7 @@ MetadataAttribute* IndexCoding_getAttributes(IndexCoding _this, int* resultArray
         }
     }
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method);
-    _result = beam_newCObjectArray(_resultArray, resultArrayLength);
+    _result = beam_newCObjectArray(_resultArray, _resultArrayLength);
     (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
@@ -3148,7 +3147,7 @@ ProductReader ProductIO_getProductReader(const char* formatName)
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
-char** ProductIO_getProductWriterExtensions(const char* formatName, int* resultArrayLength)
+char** ProductIO_getProductWriterExtensions(const char* formatName, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
     jstring formatNameString = NULL;
@@ -3167,7 +3166,7 @@ char** ProductIO_getProductWriterExtensions(const char* formatName, int* resultA
     }
     formatNameString = (*jenv)->NewStringUTF(jenv, formatName);
     _resultArray = (*jenv)->CallStaticObjectMethod(jenv, classProductIO, _method, formatNameString);
-    _result = beam_newCStringArray(_resultArray, resultArrayLength);
+    _result = beam_newCStringArray(_resultArray, _resultArrayLength);
     (*jenv)->DeleteLocalRef(jenv, formatNameString);
     (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
@@ -4227,7 +4226,7 @@ MetadataElement MetadataElement_getElementAt(MetadataElement _this, int index)
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
-char** MetadataElement_getElementNames(MetadataElement _this, int* resultArrayLength)
+char** MetadataElement_getElementNames(MetadataElement _this, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
     char** _result = (char**) 0;
@@ -4244,12 +4243,12 @@ char** MetadataElement_getElementNames(MetadataElement _this, int* resultArrayLe
         }
     }
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method);
-    _result = beam_newCStringArray(_resultArray, resultArrayLength);
+    _result = beam_newCStringArray(_resultArray, _resultArrayLength);
     (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
 
-MetadataElement* MetadataElement_getElements(MetadataElement _this, int* resultArrayLength)
+MetadataElement* MetadataElement_getElements(MetadataElement _this, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
     MetadataElement* _result = (MetadataElement*) 0;
@@ -4266,7 +4265,7 @@ MetadataElement* MetadataElement_getElements(MetadataElement _this, int* resultA
         }
     }
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method);
-    _result = beam_newCObjectArray(_resultArray, resultArrayLength);
+    _result = beam_newCObjectArray(_resultArray, _resultArrayLength);
     (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
@@ -4408,7 +4407,7 @@ MetadataAttribute MetadataElement_getAttributeAt(MetadataElement _this, int inde
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
-char** MetadataElement_getAttributeNames(MetadataElement _this, int* resultArrayLength)
+char** MetadataElement_getAttributeNames(MetadataElement _this, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
     char** _result = (char**) 0;
@@ -4425,12 +4424,12 @@ char** MetadataElement_getAttributeNames(MetadataElement _this, int* resultArray
         }
     }
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method);
-    _result = beam_newCStringArray(_resultArray, resultArrayLength);
+    _result = beam_newCStringArray(_resultArray, _resultArrayLength);
     (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
 
-MetadataAttribute* MetadataElement_getAttributes(MetadataElement _this, int* resultArrayLength)
+MetadataAttribute* MetadataElement_getAttributes(MetadataElement _this, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
     MetadataAttribute* _result = (MetadataAttribute*) 0;
@@ -4447,7 +4446,7 @@ MetadataAttribute* MetadataElement_getAttributes(MetadataElement _this, int* res
         }
     }
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method);
-    _result = beam_newCObjectArray(_resultArray, resultArrayLength);
+    _result = beam_newCObjectArray(_resultArray, _resultArrayLength);
     (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
@@ -5587,13 +5586,13 @@ MetadataElement Product_getMetadataRoot(Product _this)
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
-ProductNodeGroup Product_getGroups(Product _this)
+ProductNodeGroup Product_getBandGroup(Product _this)
 {
     static jmethodID _method = NULL;
     ProductNodeGroup _result = (ProductNodeGroup) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
-            _method = (*jenv)->GetMethodID(jenv, classProduct, "getGroups", "()Lorg/esa/beam/framework/datamodel/ProductNodeGroup;");
+            _method = (*jenv)->GetMethodID(jenv, classProduct, "getBandGroup", "()Lorg/esa/beam/framework/datamodel/ProductNodeGroup;");
             if (_method == NULL) {
                 /* Set global error */
             }
@@ -5603,28 +5602,6 @@ ProductNodeGroup Product_getGroups(Product _this)
         }
     }
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
-    return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
-}
-
-ProductNodeGroup Product_getGroup(Product _this, const char* name)
-{
-    static jmethodID _method = NULL;
-    jstring nameString = NULL;
-    ProductNodeGroup _result = (ProductNodeGroup) 0;
-    if (_method == NULL) {
-        if (beam_initApi() == 0) {
-            _method = (*jenv)->GetMethodID(jenv, classProduct, "getGroup", "(Ljava/lang/String;)Lorg/esa/beam/framework/datamodel/ProductNodeGroup;");
-            if (_method == NULL) {
-                /* Set global error */
-            }
-        }
-        if (_method == NULL) {
-            return _result;
-        }
-    }
-    nameString = (*jenv)->NewStringUTF(jenv, name);
-    _result = (*jenv)->CallObjectMethod(jenv, _this, _method, nameString);
-    (*jenv)->DeleteLocalRef(jenv, nameString);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
@@ -5721,7 +5698,7 @@ TiePointGrid Product_getTiePointGridAt(Product _this, int index)
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
-char** Product_getTiePointGridNames(Product _this, int* resultArrayLength)
+char** Product_getTiePointGridNames(Product _this, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
     char** _result = (char**) 0;
@@ -5738,12 +5715,12 @@ char** Product_getTiePointGridNames(Product _this, int* resultArrayLength)
         }
     }
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method);
-    _result = beam_newCStringArray(_resultArray, resultArrayLength);
+    _result = beam_newCStringArray(_resultArray, _resultArrayLength);
     (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
 
-TiePointGrid* Product_getTiePointGrids(Product _this, int* resultArrayLength)
+TiePointGrid* Product_getTiePointGrids(Product _this, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
     TiePointGrid* _result = (TiePointGrid*) 0;
@@ -5760,7 +5737,7 @@ TiePointGrid* Product_getTiePointGrids(Product _this, int* resultArrayLength)
         }
     }
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method);
-    _result = beam_newCObjectArray(_resultArray, resultArrayLength);
+    _result = beam_newCObjectArray(_resultArray, _resultArrayLength);
     (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
@@ -5807,25 +5784,6 @@ boolean Product_containsTiePointGrid(Product _this, const char* name)
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method, nameString);
     (*jenv)->DeleteLocalRef(jenv, nameString);
     return _result;
-}
-
-ProductNodeGroup Product_getBandGroup(Product _this)
-{
-    static jmethodID _method = NULL;
-    ProductNodeGroup _result = (ProductNodeGroup) 0;
-    if (_method == NULL) {
-        if (beam_initApi() == 0) {
-            _method = (*jenv)->GetMethodID(jenv, classProduct, "getBandGroup", "()Lorg/esa/beam/framework/datamodel/ProductNodeGroup;");
-            if (_method == NULL) {
-                /* Set global error */
-            }
-        }
-        if (_method == NULL) {
-            return _result;
-        }
-    }
-    _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
-    return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
 void Product_addBand(Product _this, Band band)
@@ -5949,7 +5907,7 @@ Band Product_getBandAt(Product _this, int index)
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
-char** Product_getBandNames(Product _this, int* resultArrayLength)
+char** Product_getBandNames(Product _this, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
     char** _result = (char**) 0;
@@ -5966,12 +5924,12 @@ char** Product_getBandNames(Product _this, int* resultArrayLength)
         }
     }
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method);
-    _result = beam_newCStringArray(_resultArray, resultArrayLength);
+    _result = beam_newCStringArray(_resultArray, _resultArrayLength);
     (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
 
-Band* Product_getBands(Product _this, int* resultArrayLength)
+Band* Product_getBands(Product _this, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
     Band* _result = (Band*) 0;
@@ -5988,7 +5946,7 @@ Band* Product_getBands(Product _this, int* resultArrayLength)
         }
     }
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method);
-    _result = beam_newCObjectArray(_resultArray, resultArrayLength);
+    _result = beam_newCObjectArray(_resultArray, _resultArrayLength);
     (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
@@ -6236,42 +6194,6 @@ PlacemarkGroup Product_getPinGroup(Product _this)
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
-int Product_getNumResolutionsMax(Product _this)
-{
-    static jmethodID _method = NULL;
-    int _result = (int) 0;
-    if (_method == NULL) {
-        if (beam_initApi() == 0) {
-            _method = (*jenv)->GetMethodID(jenv, classProduct, "getNumResolutionsMax", "()I");
-            if (_method == NULL) {
-                /* Set global error */
-            }
-        }
-        if (_method == NULL) {
-            return _result;
-        }
-    }
-    _result = (*jenv)->CallIntMethod(jenv, _this, _method);
-    return _result;
-}
-
-void Product_setNumResolutionsMax(Product _this, int numResolutionsMax)
-{
-    static jmethodID _method = NULL;
-    if (_method == NULL) {
-        if (beam_initApi() == 0) {
-            _method = (*jenv)->GetMethodID(jenv, classProduct, "setNumResolutionsMax", "(I)V");
-            if (_method == NULL) {
-                /* Set global error */
-            }
-        }
-        if (_method == NULL) {
-            return;
-        }
-    }
-    (*jenv)->CallVoidMethod(jenv, _this, _method, numResolutionsMax);
-}
-
 boolean Product_isCompatibleProduct(Product _this, Product product, float eps)
 {
     static jmethodID _method = NULL;
@@ -6366,7 +6288,7 @@ void Product_removeProductNodeListener(Product _this, ProductNodeListener listen
     (*jenv)->CallVoidMethod(jenv, _this, _method, listener);
 }
 
-ProductNodeListener* Product_getProductNodeListeners(Product _this, int* resultArrayLength)
+ProductNodeListener* Product_getProductNodeListeners(Product _this, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
     ProductNodeListener* _result = (ProductNodeListener*) 0;
@@ -6383,7 +6305,7 @@ ProductNodeListener* Product_getProductNodeListeners(Product _this, int* resultA
         }
     }
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method);
-    _result = beam_newCObjectArray(_resultArray, resultArrayLength);
+    _result = beam_newCObjectArray(_resultArray, _resultArrayLength);
     (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
@@ -6629,7 +6551,7 @@ char* Product_createPixelInfoString(Product _this, int pixelX, int pixelY)
     return _result;
 }
 
-ProductNode* Product_getRemovedChildNodes(Product _this, int* resultArrayLength)
+ProductNode* Product_getRemovedChildNodes(Product _this, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
     ProductNode* _result = (ProductNode*) 0;
@@ -6646,7 +6568,7 @@ ProductNode* Product_getRemovedChildNodes(Product _this, int* resultArrayLength)
         }
     }
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method);
-    _result = beam_newCObjectArray(_resultArray, resultArrayLength);
+    _result = beam_newCObjectArray(_resultArray, _resultArrayLength);
     (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
@@ -6706,7 +6628,7 @@ void Product_setPreferredTileSize(Product _this, int tileWidth, int tileHeight)
     (*jenv)->CallVoidMethod(jenv, _this, _method, tileWidth, tileHeight);
 }
 
-char** Product_getAllFlagNames(Product _this, int* resultArrayLength)
+char** Product_getAllFlagNames(Product _this, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
     char** _result = (char**) 0;
@@ -6723,7 +6645,7 @@ char** Product_getAllFlagNames(Product _this, int* resultArrayLength)
         }
     }
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method);
-    _result = beam_newCStringArray(_resultArray, resultArrayLength);
+    _result = beam_newCStringArray(_resultArray, _resultArrayLength);
     (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
@@ -6812,7 +6734,7 @@ void Product_addBitmaskDef(Product _this, BitmaskDef bitmaskDef)
     (*jenv)->CallVoidMethod(jenv, _this, _method, bitmaskDef);
 }
 
-char** Product_getBitmaskDefNames(Product _this, int* resultArrayLength)
+char** Product_getBitmaskDefNames(Product _this, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
     char** _result = (char**) 0;
@@ -6829,7 +6751,7 @@ char** Product_getBitmaskDefNames(Product _this, int* resultArrayLength)
         }
     }
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method);
-    _result = beam_newCStringArray(_resultArray, resultArrayLength);
+    _result = beam_newCStringArray(_resultArray, _resultArrayLength);
     (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
@@ -7638,7 +7560,7 @@ void ColorPaletteDef_addPoint(ColorPaletteDef _this, ColorPaletteDef_Point point
     (*jenv)->CallVoidMethod(jenv, _this, _method, point);
 }
 
-ColorPaletteDef_Point* ColorPaletteDef_getPoints(ColorPaletteDef _this, int* resultArrayLength)
+ColorPaletteDef_Point* ColorPaletteDef_getPoints(ColorPaletteDef _this, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
     ColorPaletteDef_Point* _result = (ColorPaletteDef_Point*) 0;
@@ -7655,7 +7577,7 @@ ColorPaletteDef_Point* ColorPaletteDef_getPoints(ColorPaletteDef _this, int* res
         }
     }
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method);
-    _result = beam_newCObjectArray(_resultArray, resultArrayLength);
+    _result = beam_newCObjectArray(_resultArray, _resultArrayLength);
     (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
@@ -7790,7 +7712,7 @@ void ColorPaletteDef_dispose(ColorPaletteDef _this)
     (*jenv)->CallVoidMethod(jenv, _this, _method);
 }
 
-Color* ColorPaletteDef_getColors(ColorPaletteDef _this, int* resultArrayLength)
+Color* ColorPaletteDef_getColors(ColorPaletteDef _this, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
     Color* _result = (Color*) 0;
@@ -7807,12 +7729,12 @@ Color* ColorPaletteDef_getColors(ColorPaletteDef _this, int* resultArrayLength)
         }
     }
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method);
-    _result = beam_newCObjectArray(_resultArray, resultArrayLength);
+    _result = beam_newCObjectArray(_resultArray, _resultArrayLength);
     (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
 
-Color* ColorPaletteDef_createColorPalette(ColorPaletteDef _this, Scaling scaling, int* resultArrayLength)
+Color* ColorPaletteDef_createColorPalette(ColorPaletteDef _this, Scaling scaling, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
     Color* _result = (Color*) 0;
@@ -7829,7 +7751,7 @@ Color* ColorPaletteDef_createColorPalette(ColorPaletteDef _this, Scaling scaling
         }
     }
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method, scaling);
-    _result = beam_newCObjectArray(_resultArray, resultArrayLength);
+    _result = beam_newCObjectArray(_resultArray, _resultArrayLength);
     (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
@@ -8018,7 +7940,7 @@ void ImageInfo_setLogScaled(ImageInfo _this, boolean logScaled)
     (*jenv)->CallVoidMethod(jenv, _this, _method, logScaled);
 }
 
-Color* ImageInfo_getColors(ImageInfo _this, int* resultArrayLength)
+Color* ImageInfo_getColors(ImageInfo _this, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
     Color* _result = (Color*) 0;
@@ -8035,7 +7957,7 @@ Color* ImageInfo_getColors(ImageInfo _this, int* resultArrayLength)
         }
     }
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method);
-    _result = beam_newCObjectArray(_resultArray, resultArrayLength);
+    _result = beam_newCObjectArray(_resultArray, _resultArrayLength);
     (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
@@ -8268,7 +8190,7 @@ Product ProductManager_getProduct(ProductManager _this, int index)
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
-char** ProductManager_getProductDisplayNames(ProductManager _this, int* resultArrayLength)
+char** ProductManager_getProductDisplayNames(ProductManager _this, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
     char** _result = (char**) 0;
@@ -8285,12 +8207,12 @@ char** ProductManager_getProductDisplayNames(ProductManager _this, int* resultAr
         }
     }
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method);
-    _result = beam_newCStringArray(_resultArray, resultArrayLength);
+    _result = beam_newCStringArray(_resultArray, _resultArrayLength);
     (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
 
-char** ProductManager_getProductNames(ProductManager _this, int* resultArrayLength)
+char** ProductManager_getProductNames(ProductManager _this, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
     char** _result = (char**) 0;
@@ -8307,12 +8229,12 @@ char** ProductManager_getProductNames(ProductManager _this, int* resultArrayLeng
         }
     }
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method);
-    _result = beam_newCStringArray(_resultArray, resultArrayLength);
+    _result = beam_newCStringArray(_resultArray, _resultArrayLength);
     (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
 
-Product* ProductManager_getProducts(ProductManager _this, int* resultArrayLength)
+Product* ProductManager_getProducts(ProductManager _this, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
     Product* _result = (Product*) 0;
@@ -8329,7 +8251,7 @@ Product* ProductManager_getProducts(ProductManager _this, int* resultArrayLength
         }
     }
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method);
-    _result = beam_newCObjectArray(_resultArray, resultArrayLength);
+    _result = beam_newCObjectArray(_resultArray, _resultArrayLength);
     (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
@@ -8714,25 +8636,6 @@ ImageGeometry ImageGeometry_createCollocationTargetGeometry(Product targetProduc
         }
     }
     _result = (*jenv)->CallStaticObjectMethod(jenv, classImageGeometry, _method, targetProduct, collocationProduct);
-    return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
-}
-
-Rectangle2D ImageGeometry_createValidRect(Product product)
-{
-    static jmethodID _method = NULL;
-    Rectangle2D _result = (Rectangle2D) 0;
-    if (_method == NULL) {
-        if (beam_initApi() == 0) {
-            _method = (*jenv)->GetStaticMethodID(jenv, classImageGeometry, "createValidRect", "(Lorg/esa/beam/framework/datamodel/Product;)Ljava/awt/geom/Rectangle2D;");
-            if (_method == NULL) {
-                /* Set global error */
-            }
-        }
-        if (_method == NULL) {
-            return _result;
-        }
-    }
-    _result = (*jenv)->CallStaticObjectMethod(jenv, classImageGeometry, _method, product);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
@@ -10114,7 +10017,7 @@ float Band_getSampleFloat(Band _this, int x, int y)
     return _result;
 }
 
-int* Band_getPixelsInt(Band _this, int x, int y, int w, int h, const int* pixelsElems, int pixelsLength, int* resultArrayLength)
+int* Band_getPixelsInt(Band _this, int x, int y, int w, int h, const int* pixelsElems, int pixelsLength, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
     jarray pixelsArray = NULL;
@@ -10134,13 +10037,13 @@ int* Band_getPixelsInt(Band _this, int x, int y, int w, int h, const int* pixels
     pixelsArray = (*jenv)->NewIntArray(jenv, pixelsLength);
     beam_copyToJArray(pixelsArray, pixelsElems, pixelsLength, sizeof (int));
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method, x, y, w, h, pixelsArray);
-    _result = beam_newCIntArray(_resultArray, resultArrayLength);
+    _result = beam_newCIntArray(_resultArray, _resultArrayLength);
     (*jenv)->DeleteLocalRef(jenv, pixelsArray);
     (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
 
-float* Band_getPixelsFloat(Band _this, int x, int y, int w, int h, const float* pixelsElems, int pixelsLength, int* resultArrayLength)
+float* Band_getPixelsFloat(Band _this, int x, int y, int w, int h, const float* pixelsElems, int pixelsLength, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
     jarray pixelsArray = NULL;
@@ -10160,13 +10063,13 @@ float* Band_getPixelsFloat(Band _this, int x, int y, int w, int h, const float* 
     pixelsArray = (*jenv)->NewFloatArray(jenv, pixelsLength);
     beam_copyToJArray(pixelsArray, pixelsElems, pixelsLength, sizeof (float));
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method, x, y, w, h, pixelsArray);
-    _result = beam_newCFloatArray(_resultArray, resultArrayLength);
+    _result = beam_newCFloatArray(_resultArray, _resultArrayLength);
     (*jenv)->DeleteLocalRef(jenv, pixelsArray);
     (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
 
-double* Band_getPixelsDouble(Band _this, int x, int y, int w, int h, const double* pixelsElems, int pixelsLength, int* resultArrayLength)
+double* Band_getPixelsDouble(Band _this, int x, int y, int w, int h, const double* pixelsElems, int pixelsLength, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
     jarray pixelsArray = NULL;
@@ -10186,13 +10089,13 @@ double* Band_getPixelsDouble(Band _this, int x, int y, int w, int h, const doubl
     pixelsArray = (*jenv)->NewDoubleArray(jenv, pixelsLength);
     beam_copyToJArray(pixelsArray, pixelsElems, pixelsLength, sizeof (double));
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method, x, y, w, h, pixelsArray);
-    _result = beam_newCDoubleArray(_resultArray, resultArrayLength);
+    _result = beam_newCDoubleArray(_resultArray, _resultArrayLength);
     (*jenv)->DeleteLocalRef(jenv, pixelsArray);
     (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
 
-int* Band_readPixelsInt(Band _this, int x, int y, int w, int h, int* pixelsElems, int pixelsLength, int* resultArrayLength)
+int* Band_readPixelsInt(Band _this, int x, int y, int w, int h, int* pixelsElems, int pixelsLength, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
     jarray pixelsArray = NULL;
@@ -10214,18 +10117,18 @@ int* Band_readPixelsInt(Band _this, int x, int y, int w, int h, int* pixelsElems
     if (pixelsElems != NULL && (*jenv)->IsSameObject(jenv, pixelsArray, _resultArray)) {
         beam_copyFromJArray(_resultArray, pixelsElems, pixelsLength, sizeof (int));
         _result = pixelsElems;
-        if (resultArrayLength != NULL) {
-            *resultArrayLength = pixelsLength;
+        if (_resultArrayLength != NULL) {
+            *_resultArrayLength = pixelsLength;
         }
     } else {
-        _result = beam_newCIntArray(_resultArray, resultArrayLength);
+        _result = beam_newCIntArray(_resultArray, _resultArrayLength);
     }
     (*jenv)->DeleteLocalRef(jenv, pixelsArray);
     (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
 
-float* Band_readPixelsFloat(Band _this, int x, int y, int w, int h, float* pixelsElems, int pixelsLength, int* resultArrayLength)
+float* Band_readPixelsFloat(Band _this, int x, int y, int w, int h, float* pixelsElems, int pixelsLength, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
     jarray pixelsArray = NULL;
@@ -10247,18 +10150,18 @@ float* Band_readPixelsFloat(Band _this, int x, int y, int w, int h, float* pixel
     if (pixelsElems != NULL && (*jenv)->IsSameObject(jenv, pixelsArray, _resultArray)) {
         beam_copyFromJArray(_resultArray, pixelsElems, pixelsLength, sizeof (float));
         _result = pixelsElems;
-        if (resultArrayLength != NULL) {
-            *resultArrayLength = pixelsLength;
+        if (_resultArrayLength != NULL) {
+            *_resultArrayLength = pixelsLength;
         }
     } else {
-        _result = beam_newCFloatArray(_resultArray, resultArrayLength);
+        _result = beam_newCFloatArray(_resultArray, _resultArrayLength);
     }
     (*jenv)->DeleteLocalRef(jenv, pixelsArray);
     (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
 
-double* Band_readPixelsDouble(Band _this, int x, int y, int w, int h, double* pixelsElems, int pixelsLength, int* resultArrayLength)
+double* Band_readPixelsDouble(Band _this, int x, int y, int w, int h, double* pixelsElems, int pixelsLength, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
     jarray pixelsArray = NULL;
@@ -10280,11 +10183,11 @@ double* Band_readPixelsDouble(Band _this, int x, int y, int w, int h, double* pi
     if (pixelsElems != NULL && (*jenv)->IsSameObject(jenv, pixelsArray, _resultArray)) {
         beam_copyFromJArray(_resultArray, pixelsElems, pixelsLength, sizeof (double));
         _result = pixelsElems;
-        if (resultArrayLength != NULL) {
-            *resultArrayLength = pixelsLength;
+        if (_resultArrayLength != NULL) {
+            *_resultArrayLength = pixelsLength;
         }
     } else {
-        _result = beam_newCDoubleArray(_resultArray, resultArrayLength);
+        _result = beam_newCDoubleArray(_resultArray, _resultArrayLength);
     }
     (*jenv)->DeleteLocalRef(jenv, pixelsArray);
     (*jenv)->DeleteLocalRef(jenv, _resultArray);
@@ -10354,7 +10257,7 @@ void Band_writePixelsDouble(Band _this, int x, int y, int w, int h, const double
     (*jenv)->DeleteLocalRef(jenv, pixelsArray);
 }
 
-boolean* Band_readValidMask(Band _this, int x, int y, int w, int h, boolean* validMaskElems, int validMaskLength, int* resultArrayLength)
+boolean* Band_readValidMask(Band _this, int x, int y, int w, int h, boolean* validMaskElems, int validMaskLength, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
     jarray validMaskArray = NULL;
@@ -10376,11 +10279,11 @@ boolean* Band_readValidMask(Band _this, int x, int y, int w, int h, boolean* val
     if (validMaskElems != NULL && (*jenv)->IsSameObject(jenv, validMaskArray, _resultArray)) {
         beam_copyFromJArray(_resultArray, validMaskElems, validMaskLength, sizeof (boolean));
         _result = validMaskElems;
-        if (resultArrayLength != NULL) {
-            *resultArrayLength = validMaskLength;
+        if (_resultArrayLength != NULL) {
+            *_resultArrayLength = validMaskLength;
         }
     } else {
-        _result = beam_newCBooleanArray(_resultArray, resultArrayLength);
+        _result = beam_newCBooleanArray(_resultArray, _resultArrayLength);
     }
     (*jenv)->DeleteLocalRef(jenv, validMaskArray);
     (*jenv)->DeleteLocalRef(jenv, _resultArray);
@@ -11681,7 +11584,7 @@ ProductNode PlacemarkGroup_get1(PlacemarkGroup _this, int index)
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
-char** PlacemarkGroup_getNodeDisplayNames(PlacemarkGroup _this, int* resultArrayLength)
+char** PlacemarkGroup_getNodeDisplayNames(PlacemarkGroup _this, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
     char** _result = (char**) 0;
@@ -11698,12 +11601,12 @@ char** PlacemarkGroup_getNodeDisplayNames(PlacemarkGroup _this, int* resultArray
         }
     }
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method);
-    _result = beam_newCStringArray(_resultArray, resultArrayLength);
+    _result = beam_newCStringArray(_resultArray, _resultArrayLength);
     (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
 
-char** PlacemarkGroup_getNodeNames(PlacemarkGroup _this, int* resultArrayLength)
+char** PlacemarkGroup_getNodeNames(PlacemarkGroup _this, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
     char** _result = (char**) 0;
@@ -11720,12 +11623,12 @@ char** PlacemarkGroup_getNodeNames(PlacemarkGroup _this, int* resultArrayLength)
         }
     }
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method);
-    _result = beam_newCStringArray(_resultArray, resultArrayLength);
+    _result = beam_newCStringArray(_resultArray, _resultArrayLength);
     (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
 
-ProductNode* PlacemarkGroup_toArray1(PlacemarkGroup _this, int* resultArrayLength)
+ProductNode* PlacemarkGroup_toArray1(PlacemarkGroup _this, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
     ProductNode* _result = (ProductNode*) 0;
@@ -11742,7 +11645,7 @@ ProductNode* PlacemarkGroup_toArray1(PlacemarkGroup _this, int* resultArrayLengt
         }
     }
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method);
-    _result = beam_newCObjectArray(_resultArray, resultArrayLength);
+    _result = beam_newCObjectArray(_resultArray, _resultArrayLength);
     (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
@@ -12749,7 +12652,7 @@ float TiePointGrid_getSubSamplingY(TiePointGrid _this)
     return _result;
 }
 
-float* TiePointGrid_getTiePoints(TiePointGrid _this, int* resultArrayLength)
+float* TiePointGrid_getTiePoints(TiePointGrid _this, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
     float* _result = (float*) 0;
@@ -12766,7 +12669,7 @@ float* TiePointGrid_getTiePoints(TiePointGrid _this, int* resultArrayLength)
         }
     }
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method);
-    _result = beam_newCFloatArray(_resultArray, resultArrayLength);
+    _result = beam_newCFloatArray(_resultArray, _resultArrayLength);
     (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
@@ -12915,7 +12818,7 @@ void TiePointGrid_setPixelDouble(TiePointGrid _this, int x, int y, double pixelV
     (*jenv)->CallVoidMethod(jenv, _this, _method, x, y, pixelValue);
 }
 
-int* TiePointGrid_getPixels6(TiePointGrid _this, int x, int y, int w, int h, const int* pixelsElems, int pixelsLength, ProgressMonitor pm, int* resultArrayLength)
+int* TiePointGrid_getPixels6(TiePointGrid _this, int x, int y, int w, int h, const int* pixelsElems, int pixelsLength, ProgressMonitor pm, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
     jarray pixelsArray = NULL;
@@ -12935,13 +12838,13 @@ int* TiePointGrid_getPixels6(TiePointGrid _this, int x, int y, int w, int h, con
     pixelsArray = (*jenv)->NewIntArray(jenv, pixelsLength);
     beam_copyToJArray(pixelsArray, pixelsElems, pixelsLength, sizeof (int));
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method, x, y, w, h, pixelsArray, pm);
-    _result = beam_newCIntArray(_resultArray, resultArrayLength);
+    _result = beam_newCIntArray(_resultArray, _resultArrayLength);
     (*jenv)->DeleteLocalRef(jenv, pixelsArray);
     (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
 
-float* TiePointGrid_getPixels4(TiePointGrid _this, int x, int y, int w, int h, const float* pixelsElems, int pixelsLength, ProgressMonitor pm, int* resultArrayLength)
+float* TiePointGrid_getPixels4(TiePointGrid _this, int x, int y, int w, int h, const float* pixelsElems, int pixelsLength, ProgressMonitor pm, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
     jarray pixelsArray = NULL;
@@ -12961,13 +12864,13 @@ float* TiePointGrid_getPixels4(TiePointGrid _this, int x, int y, int w, int h, c
     pixelsArray = (*jenv)->NewFloatArray(jenv, pixelsLength);
     beam_copyToJArray(pixelsArray, pixelsElems, pixelsLength, sizeof (float));
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method, x, y, w, h, pixelsArray, pm);
-    _result = beam_newCFloatArray(_resultArray, resultArrayLength);
+    _result = beam_newCFloatArray(_resultArray, _resultArrayLength);
     (*jenv)->DeleteLocalRef(jenv, pixelsArray);
     (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
 
-double* TiePointGrid_getPixels2(TiePointGrid _this, int x, int y, int w, int h, const double* pixelsElems, int pixelsLength, ProgressMonitor pm, int* resultArrayLength)
+double* TiePointGrid_getPixels2(TiePointGrid _this, int x, int y, int w, int h, const double* pixelsElems, int pixelsLength, ProgressMonitor pm, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
     jarray pixelsArray = NULL;
@@ -12987,7 +12890,7 @@ double* TiePointGrid_getPixels2(TiePointGrid _this, int x, int y, int w, int h, 
     pixelsArray = (*jenv)->NewDoubleArray(jenv, pixelsLength);
     beam_copyToJArray(pixelsArray, pixelsElems, pixelsLength, sizeof (double));
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method, x, y, w, h, pixelsArray, pm);
-    _result = beam_newCDoubleArray(_resultArray, resultArrayLength);
+    _result = beam_newCDoubleArray(_resultArray, _resultArrayLength);
     (*jenv)->DeleteLocalRef(jenv, pixelsArray);
     (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
@@ -13056,7 +12959,7 @@ void TiePointGrid_setPixels1(TiePointGrid _this, int x, int y, int w, int h, con
     (*jenv)->DeleteLocalRef(jenv, pixelsArray);
 }
 
-int* TiePointGrid_readPixels6(TiePointGrid _this, int x, int y, int w, int h, const int* pixelsElems, int pixelsLength, ProgressMonitor pm, int* resultArrayLength)
+int* TiePointGrid_readPixels6(TiePointGrid _this, int x, int y, int w, int h, const int* pixelsElems, int pixelsLength, ProgressMonitor pm, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
     jarray pixelsArray = NULL;
@@ -13076,13 +12979,13 @@ int* TiePointGrid_readPixels6(TiePointGrid _this, int x, int y, int w, int h, co
     pixelsArray = (*jenv)->NewIntArray(jenv, pixelsLength);
     beam_copyToJArray(pixelsArray, pixelsElems, pixelsLength, sizeof (int));
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method, x, y, w, h, pixelsArray, pm);
-    _result = beam_newCIntArray(_resultArray, resultArrayLength);
+    _result = beam_newCIntArray(_resultArray, _resultArrayLength);
     (*jenv)->DeleteLocalRef(jenv, pixelsArray);
     (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
 
-float* TiePointGrid_readPixels4(TiePointGrid _this, int x, int y, int w, int h, const float* pixelsElems, int pixelsLength, ProgressMonitor pm, int* resultArrayLength)
+float* TiePointGrid_readPixels4(TiePointGrid _this, int x, int y, int w, int h, const float* pixelsElems, int pixelsLength, ProgressMonitor pm, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
     jarray pixelsArray = NULL;
@@ -13102,13 +13005,13 @@ float* TiePointGrid_readPixels4(TiePointGrid _this, int x, int y, int w, int h, 
     pixelsArray = (*jenv)->NewFloatArray(jenv, pixelsLength);
     beam_copyToJArray(pixelsArray, pixelsElems, pixelsLength, sizeof (float));
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method, x, y, w, h, pixelsArray, pm);
-    _result = beam_newCFloatArray(_resultArray, resultArrayLength);
+    _result = beam_newCFloatArray(_resultArray, _resultArrayLength);
     (*jenv)->DeleteLocalRef(jenv, pixelsArray);
     (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
 
-double* TiePointGrid_readPixels2(TiePointGrid _this, int x, int y, int w, int h, const double* pixelsElems, int pixelsLength, ProgressMonitor pm, int* resultArrayLength)
+double* TiePointGrid_readPixels2(TiePointGrid _this, int x, int y, int w, int h, const double* pixelsElems, int pixelsLength, ProgressMonitor pm, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
     jarray pixelsArray = NULL;
@@ -13128,7 +13031,7 @@ double* TiePointGrid_readPixels2(TiePointGrid _this, int x, int y, int w, int h,
     pixelsArray = (*jenv)->NewDoubleArray(jenv, pixelsLength);
     beam_copyToJArray(pixelsArray, pixelsElems, pixelsLength, sizeof (double));
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method, x, y, w, h, pixelsArray, pm);
-    _result = beam_newCDoubleArray(_resultArray, resultArrayLength);
+    _result = beam_newCDoubleArray(_resultArray, _resultArrayLength);
     (*jenv)->DeleteLocalRef(jenv, pixelsArray);
     (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
@@ -14085,7 +13988,7 @@ boolean TiePointGrid_isPixelValid3(TiePointGrid _this, int x, int y, ROI roi)
     return _result;
 }
 
-int* TiePointGrid_getPixels5(TiePointGrid _this, int x, int y, int w, int h, const int* pixelsElems, int pixelsLength, int* resultArrayLength)
+int* TiePointGrid_getPixels5(TiePointGrid _this, int x, int y, int w, int h, const int* pixelsElems, int pixelsLength, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
     jarray pixelsArray = NULL;
@@ -14105,13 +14008,13 @@ int* TiePointGrid_getPixels5(TiePointGrid _this, int x, int y, int w, int h, con
     pixelsArray = (*jenv)->NewIntArray(jenv, pixelsLength);
     beam_copyToJArray(pixelsArray, pixelsElems, pixelsLength, sizeof (int));
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method, x, y, w, h, pixelsArray);
-    _result = beam_newCIntArray(_resultArray, resultArrayLength);
+    _result = beam_newCIntArray(_resultArray, _resultArrayLength);
     (*jenv)->DeleteLocalRef(jenv, pixelsArray);
     (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
 
-float* TiePointGrid_getPixels3(TiePointGrid _this, int x, int y, int w, int h, const float* pixelsElems, int pixelsLength, int* resultArrayLength)
+float* TiePointGrid_getPixels3(TiePointGrid _this, int x, int y, int w, int h, const float* pixelsElems, int pixelsLength, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
     jarray pixelsArray = NULL;
@@ -14131,13 +14034,13 @@ float* TiePointGrid_getPixels3(TiePointGrid _this, int x, int y, int w, int h, c
     pixelsArray = (*jenv)->NewFloatArray(jenv, pixelsLength);
     beam_copyToJArray(pixelsArray, pixelsElems, pixelsLength, sizeof (float));
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method, x, y, w, h, pixelsArray);
-    _result = beam_newCFloatArray(_resultArray, resultArrayLength);
+    _result = beam_newCFloatArray(_resultArray, _resultArrayLength);
     (*jenv)->DeleteLocalRef(jenv, pixelsArray);
     (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
 
-double* TiePointGrid_getPixels1(TiePointGrid _this, int x, int y, int w, int h, const double* pixelsElems, int pixelsLength, int* resultArrayLength)
+double* TiePointGrid_getPixels1(TiePointGrid _this, int x, int y, int w, int h, const double* pixelsElems, int pixelsLength, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
     jarray pixelsArray = NULL;
@@ -14157,13 +14060,13 @@ double* TiePointGrid_getPixels1(TiePointGrid _this, int x, int y, int w, int h, 
     pixelsArray = (*jenv)->NewDoubleArray(jenv, pixelsLength);
     beam_copyToJArray(pixelsArray, pixelsElems, pixelsLength, sizeof (double));
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method, x, y, w, h, pixelsArray);
-    _result = beam_newCDoubleArray(_resultArray, resultArrayLength);
+    _result = beam_newCDoubleArray(_resultArray, _resultArrayLength);
     (*jenv)->DeleteLocalRef(jenv, pixelsArray);
     (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
 
-int* TiePointGrid_readPixels5(TiePointGrid _this, int x, int y, int w, int h, const int* pixelsElems, int pixelsLength, int* resultArrayLength)
+int* TiePointGrid_readPixels5(TiePointGrid _this, int x, int y, int w, int h, const int* pixelsElems, int pixelsLength, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
     jarray pixelsArray = NULL;
@@ -14183,13 +14086,13 @@ int* TiePointGrid_readPixels5(TiePointGrid _this, int x, int y, int w, int h, co
     pixelsArray = (*jenv)->NewIntArray(jenv, pixelsLength);
     beam_copyToJArray(pixelsArray, pixelsElems, pixelsLength, sizeof (int));
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method, x, y, w, h, pixelsArray);
-    _result = beam_newCIntArray(_resultArray, resultArrayLength);
+    _result = beam_newCIntArray(_resultArray, _resultArrayLength);
     (*jenv)->DeleteLocalRef(jenv, pixelsArray);
     (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
 
-float* TiePointGrid_readPixels3(TiePointGrid _this, int x, int y, int w, int h, const float* pixelsElems, int pixelsLength, int* resultArrayLength)
+float* TiePointGrid_readPixels3(TiePointGrid _this, int x, int y, int w, int h, const float* pixelsElems, int pixelsLength, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
     jarray pixelsArray = NULL;
@@ -14209,13 +14112,13 @@ float* TiePointGrid_readPixels3(TiePointGrid _this, int x, int y, int w, int h, 
     pixelsArray = (*jenv)->NewFloatArray(jenv, pixelsLength);
     beam_copyToJArray(pixelsArray, pixelsElems, pixelsLength, sizeof (float));
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method, x, y, w, h, pixelsArray);
-    _result = beam_newCFloatArray(_resultArray, resultArrayLength);
+    _result = beam_newCFloatArray(_resultArray, _resultArrayLength);
     (*jenv)->DeleteLocalRef(jenv, pixelsArray);
     (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
 
-double* TiePointGrid_readPixels1(TiePointGrid _this, int x, int y, int w, int h, const double* pixelsElems, int pixelsLength, int* resultArrayLength)
+double* TiePointGrid_readPixels1(TiePointGrid _this, int x, int y, int w, int h, const double* pixelsElems, int pixelsLength, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
     jarray pixelsArray = NULL;
@@ -14235,7 +14138,7 @@ double* TiePointGrid_readPixels1(TiePointGrid _this, int x, int y, int w, int h,
     pixelsArray = (*jenv)->NewDoubleArray(jenv, pixelsLength);
     beam_copyToJArray(pixelsArray, pixelsElems, pixelsLength, sizeof (double));
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method, x, y, w, h, pixelsArray);
-    _result = beam_newCDoubleArray(_resultArray, resultArrayLength);
+    _result = beam_newCDoubleArray(_resultArray, _resultArrayLength);
     (*jenv)->DeleteLocalRef(jenv, pixelsArray);
     (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
@@ -14304,7 +14207,7 @@ void TiePointGrid_writePixels1(TiePointGrid _this, int x, int y, int w, int h, c
     (*jenv)->DeleteLocalRef(jenv, pixelsArray);
 }
 
-boolean* TiePointGrid_readValidMask(TiePointGrid _this, int x, int y, int w, int h, const boolean* validMaskElems, int validMaskLength, int* resultArrayLength)
+boolean* TiePointGrid_readValidMask(TiePointGrid _this, int x, int y, int w, int h, const boolean* validMaskElems, int validMaskLength, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
     jarray validMaskArray = NULL;
@@ -14324,7 +14227,7 @@ boolean* TiePointGrid_readValidMask(TiePointGrid _this, int x, int y, int w, int
     validMaskArray = (*jenv)->NewBooleanArray(jenv, validMaskLength);
     beam_copyToJArray(validMaskArray, validMaskElems, validMaskLength, sizeof (boolean));
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method, x, y, w, h, validMaskArray);
-    _result = beam_newCBooleanArray(_resultArray, resultArrayLength);
+    _result = beam_newCBooleanArray(_resultArray, _resultArrayLength);
     (*jenv)->DeleteLocalRef(jenv, validMaskArray);
     (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
@@ -14727,7 +14630,7 @@ BufferedImage TiePointGrid_createRgbImage(TiePointGrid _this, ProgressMonitor pm
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
-byte* TiePointGrid_quantizeRasterData1(TiePointGrid _this, double newMin, double newMax, double gamma, ProgressMonitor pm, int* resultArrayLength)
+byte* TiePointGrid_quantizeRasterData1(TiePointGrid _this, double newMin, double newMax, double gamma, ProgressMonitor pm, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
     byte* _result = (byte*) 0;
@@ -14744,7 +14647,7 @@ byte* TiePointGrid_quantizeRasterData1(TiePointGrid _this, double newMin, double
         }
     }
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method, newMin, newMax, gamma, pm);
-    _result = beam_newCByteArray(_resultArray, resultArrayLength);
+    _result = beam_newCByteArray(_resultArray, _resultArrayLength);
     (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
@@ -15873,7 +15776,7 @@ MetadataAttribute FlagCoding_getFlag(FlagCoding _this, const char* name)
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
-char** FlagCoding_getFlagNames(FlagCoding _this, int* resultArrayLength)
+char** FlagCoding_getFlagNames(FlagCoding _this, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
     char** _result = (char**) 0;
@@ -15890,7 +15793,7 @@ char** FlagCoding_getFlagNames(FlagCoding _this, int* resultArrayLength)
         }
     }
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method);
-    _result = beam_newCStringArray(_resultArray, resultArrayLength);
+    _result = beam_newCStringArray(_resultArray, _resultArrayLength);
     (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
@@ -16190,7 +16093,7 @@ MetadataElement FlagCoding_getElementAt(FlagCoding _this, int index)
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
-char** FlagCoding_getElementNames(FlagCoding _this, int* resultArrayLength)
+char** FlagCoding_getElementNames(FlagCoding _this, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
     char** _result = (char**) 0;
@@ -16207,12 +16110,12 @@ char** FlagCoding_getElementNames(FlagCoding _this, int* resultArrayLength)
         }
     }
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method);
-    _result = beam_newCStringArray(_resultArray, resultArrayLength);
+    _result = beam_newCStringArray(_resultArray, _resultArrayLength);
     (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
 
-MetadataElement* FlagCoding_getElements(FlagCoding _this, int* resultArrayLength)
+MetadataElement* FlagCoding_getElements(FlagCoding _this, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
     MetadataElement* _result = (MetadataElement*) 0;
@@ -16229,7 +16132,7 @@ MetadataElement* FlagCoding_getElements(FlagCoding _this, int* resultArrayLength
         }
     }
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method);
-    _result = beam_newCObjectArray(_resultArray, resultArrayLength);
+    _result = beam_newCObjectArray(_resultArray, _resultArrayLength);
     (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
@@ -16354,7 +16257,7 @@ MetadataAttribute FlagCoding_getAttributeAt(FlagCoding _this, int index)
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
-char** FlagCoding_getAttributeNames(FlagCoding _this, int* resultArrayLength)
+char** FlagCoding_getAttributeNames(FlagCoding _this, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
     char** _result = (char**) 0;
@@ -16371,12 +16274,12 @@ char** FlagCoding_getAttributeNames(FlagCoding _this, int* resultArrayLength)
         }
     }
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method);
-    _result = beam_newCStringArray(_resultArray, resultArrayLength);
+    _result = beam_newCStringArray(_resultArray, _resultArrayLength);
     (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
 
-MetadataAttribute* FlagCoding_getAttributes(FlagCoding _this, int* resultArrayLength)
+MetadataAttribute* FlagCoding_getAttributes(FlagCoding _this, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
     MetadataAttribute* _result = (MetadataAttribute*) 0;
@@ -16393,7 +16296,7 @@ MetadataAttribute* FlagCoding_getAttributes(FlagCoding _this, int* resultArrayLe
         }
     }
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method);
-    _result = beam_newCObjectArray(_resultArray, resultArrayLength);
+    _result = beam_newCObjectArray(_resultArray, _resultArrayLength);
     (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
@@ -17188,7 +17091,7 @@ void RGBChannelDef_setSourceName(RGBChannelDef _this, int index, const char* sou
     (*jenv)->DeleteLocalRef(jenv, sourceNameString);
 }
 
-char** RGBChannelDef_getSourceNames(RGBChannelDef _this, int* resultArrayLength)
+char** RGBChannelDef_getSourceNames(RGBChannelDef _this, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
     char** _result = (char**) 0;
@@ -17205,7 +17108,7 @@ char** RGBChannelDef_getSourceNames(RGBChannelDef _this, int* resultArrayLength)
         }
     }
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method);
-    _result = beam_newCStringArray(_resultArray, resultArrayLength);
+    _result = beam_newCStringArray(_resultArray, _resultArrayLength);
     (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
@@ -19019,7 +18922,7 @@ ProductNode ProductNodeGroup_getAt(ProductNodeGroup _this, int index)
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
-char** ProductNodeGroup_getNodeDisplayNames(ProductNodeGroup _this, int* resultArrayLength)
+char** ProductNodeGroup_getNodeDisplayNames(ProductNodeGroup _this, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
     char** _result = (char**) 0;
@@ -19036,12 +18939,12 @@ char** ProductNodeGroup_getNodeDisplayNames(ProductNodeGroup _this, int* resultA
         }
     }
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method);
-    _result = beam_newCStringArray(_resultArray, resultArrayLength);
+    _result = beam_newCStringArray(_resultArray, _resultArrayLength);
     (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
 
-char** ProductNodeGroup_getNodeNames(ProductNodeGroup _this, int* resultArrayLength)
+char** ProductNodeGroup_getNodeNames(ProductNodeGroup _this, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
     char** _result = (char**) 0;
@@ -19058,7 +18961,7 @@ char** ProductNodeGroup_getNodeNames(ProductNodeGroup _this, int* resultArrayLen
         }
     }
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method);
-    _result = beam_newCStringArray(_resultArray, resultArrayLength);
+    _result = beam_newCStringArray(_resultArray, _resultArrayLength);
     (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
@@ -19813,7 +19716,7 @@ Dimension ProductUtils_getOutputRasterSize(Product product, Rectangle rect, MapT
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
-Point2D* ProductUtils_createMapEnvelope2(Product product, Rectangle rect, MapTransform mapTransform, int* resultArrayLength)
+Point2D* ProductUtils_createMapEnvelope2(Product product, Rectangle rect, MapTransform mapTransform, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
     Point2D* _result = (Point2D*) 0;
@@ -19830,12 +19733,12 @@ Point2D* ProductUtils_createMapEnvelope2(Product product, Rectangle rect, MapTra
         }
     }
     _resultArray = (*jenv)->CallStaticObjectMethod(jenv, classProductUtils, _method, product, rect, mapTransform);
-    _result = beam_newCObjectArray(_resultArray, resultArrayLength);
+    _result = beam_newCObjectArray(_resultArray, _resultArrayLength);
     (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
 
-Point2D* ProductUtils_createMapEnvelope1(Product product, Rectangle rect, int step, MapTransform mapTransform, int* resultArrayLength)
+Point2D* ProductUtils_createMapEnvelope1(Product product, Rectangle rect, int step, MapTransform mapTransform, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
     Point2D* _result = (Point2D*) 0;
@@ -19852,12 +19755,12 @@ Point2D* ProductUtils_createMapEnvelope1(Product product, Rectangle rect, int st
         }
     }
     _resultArray = (*jenv)->CallStaticObjectMethod(jenv, classProductUtils, _method, product, rect, step, mapTransform);
-    _result = beam_newCObjectArray(_resultArray, resultArrayLength);
+    _result = beam_newCObjectArray(_resultArray, _resultArrayLength);
     (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
 
-Point2D* ProductUtils_getMinMax(const Point2D boundaryElems, int boundaryLength, int* resultArrayLength)
+Point2D* ProductUtils_getMinMax(const Point2D boundaryElems, int boundaryLength, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
     jarray boundaryArray = NULL;
@@ -19876,13 +19779,13 @@ Point2D* ProductUtils_getMinMax(const Point2D boundaryElems, int boundaryLength,
     }
     boundaryArray = beam_newJObjectArray(boundaryElems, boundaryLength, classPoint2D);
     _resultArray = (*jenv)->CallStaticObjectMethod(jenv, classProductUtils, _method, boundaryArray);
-    _result = beam_newCObjectArray(_resultArray, resultArrayLength);
+    _result = beam_newCObjectArray(_resultArray, _resultArrayLength);
     (*jenv)->DeleteLocalRef(jenv, boundaryArray);
     (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
 
-Point2D* ProductUtils_createMapBoundary(Product product, Rectangle rect, int step, MapTransform mapTransform, int* resultArrayLength)
+Point2D* ProductUtils_createMapBoundary(Product product, Rectangle rect, int step, MapTransform mapTransform, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
     Point2D* _result = (Point2D*) 0;
@@ -19899,12 +19802,12 @@ Point2D* ProductUtils_createMapBoundary(Product product, Rectangle rect, int ste
         }
     }
     _resultArray = (*jenv)->CallStaticObjectMethod(jenv, classProductUtils, _method, product, rect, step, mapTransform);
-    _result = beam_newCObjectArray(_resultArray, resultArrayLength);
+    _result = beam_newCObjectArray(_resultArray, _resultArrayLength);
     (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
 
-GeoPos* ProductUtils_createGeoBoundary1(Product product, int step, int* resultArrayLength)
+GeoPos* ProductUtils_createGeoBoundary1(Product product, int step, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
     GeoPos* _result = (GeoPos*) 0;
@@ -19921,12 +19824,12 @@ GeoPos* ProductUtils_createGeoBoundary1(Product product, int step, int* resultAr
         }
     }
     _resultArray = (*jenv)->CallStaticObjectMethod(jenv, classProductUtils, _method, product, step);
-    _result = beam_newCObjectArray(_resultArray, resultArrayLength);
+    _result = beam_newCObjectArray(_resultArray, _resultArrayLength);
     (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
 
-GeoPos* ProductUtils_createGeoBoundary2(Product product, Rectangle region, int step, int* resultArrayLength)
+GeoPos* ProductUtils_createGeoBoundary2(Product product, Rectangle region, int step, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
     GeoPos* _result = (GeoPos*) 0;
@@ -19943,12 +19846,12 @@ GeoPos* ProductUtils_createGeoBoundary2(Product product, Rectangle region, int s
         }
     }
     _resultArray = (*jenv)->CallStaticObjectMethod(jenv, classProductUtils, _method, product, region, step);
-    _result = beam_newCObjectArray(_resultArray, resultArrayLength);
+    _result = beam_newCObjectArray(_resultArray, _resultArrayLength);
     (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
 
-GeoPos* ProductUtils_createGeoBoundary3(Product product, Rectangle region, int step, boolean usePixelCenter, int* resultArrayLength)
+GeoPos* ProductUtils_createGeoBoundary3(Product product, Rectangle region, int step, boolean usePixelCenter, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
     GeoPos* _result = (GeoPos*) 0;
@@ -19965,31 +19868,12 @@ GeoPos* ProductUtils_createGeoBoundary3(Product product, Rectangle region, int s
         }
     }
     _resultArray = (*jenv)->CallStaticObjectMethod(jenv, classProductUtils, _method, product, region, step, usePixelCenter);
-    _result = beam_newCObjectArray(_resultArray, resultArrayLength);
+    _result = beam_newCObjectArray(_resultArray, _resultArrayLength);
     (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
 
-GeoPos ProductUtils_getClosestGeoPos(GeoCoding gc, PixelPos origPos, Rectangle region, int step)
-{
-    static jmethodID _method = NULL;
-    GeoPos _result = (GeoPos) 0;
-    if (_method == NULL) {
-        if (beam_initApi() == 0) {
-            _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "getClosestGeoPos", "(Lorg/esa/beam/framework/datamodel/GeoCoding;Lorg/esa/beam/framework/datamodel/PixelPos;Ljava/awt/Rectangle;I)Lorg/esa/beam/framework/datamodel/GeoPos;");
-            if (_method == NULL) {
-                /* Set global error */
-            }
-        }
-        if (_method == NULL) {
-            return _result;
-        }
-    }
-    _result = (*jenv)->CallStaticObjectMethod(jenv, classProductUtils, _method, gc, origPos, region, step);
-    return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
-}
-
-GeoPos* ProductUtils_createGeoBoundary4(RasterDataNode raster, Rectangle region, int step, int* resultArrayLength)
+GeoPos* ProductUtils_createGeoBoundary4(RasterDataNode raster, Rectangle region, int step, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
     GeoPos* _result = (GeoPos*) 0;
@@ -20006,12 +19890,12 @@ GeoPos* ProductUtils_createGeoBoundary4(RasterDataNode raster, Rectangle region,
         }
     }
     _resultArray = (*jenv)->CallStaticObjectMethod(jenv, classProductUtils, _method, raster, region, step);
-    _result = beam_newCObjectArray(_resultArray, resultArrayLength);
+    _result = beam_newCObjectArray(_resultArray, _resultArrayLength);
     (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
 
-GeneralPath* ProductUtils_createGeoBoundaryPaths1(Product product, int* resultArrayLength)
+GeneralPath* ProductUtils_createGeoBoundaryPaths1(Product product, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
     GeneralPath* _result = (GeneralPath*) 0;
@@ -20028,12 +19912,12 @@ GeneralPath* ProductUtils_createGeoBoundaryPaths1(Product product, int* resultAr
         }
     }
     _resultArray = (*jenv)->CallStaticObjectMethod(jenv, classProductUtils, _method, product);
-    _result = beam_newCObjectArray(_resultArray, resultArrayLength);
+    _result = beam_newCObjectArray(_resultArray, _resultArrayLength);
     (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
 
-GeneralPath* ProductUtils_createGeoBoundaryPaths2(Product product, Rectangle region, int step, int* resultArrayLength)
+GeneralPath* ProductUtils_createGeoBoundaryPaths2(Product product, Rectangle region, int step, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
     GeneralPath* _result = (GeneralPath*) 0;
@@ -20050,12 +19934,12 @@ GeneralPath* ProductUtils_createGeoBoundaryPaths2(Product product, Rectangle reg
         }
     }
     _resultArray = (*jenv)->CallStaticObjectMethod(jenv, classProductUtils, _method, product, region, step);
-    _result = beam_newCObjectArray(_resultArray, resultArrayLength);
+    _result = beam_newCObjectArray(_resultArray, _resultArrayLength);
     (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
 
-GeneralPath* ProductUtils_createGeoBoundaryPaths3(Product product, Rectangle region, int step, boolean usePixelCenter, int* resultArrayLength)
+GeneralPath* ProductUtils_createGeoBoundaryPaths3(Product product, Rectangle region, int step, boolean usePixelCenter, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
     GeneralPath* _result = (GeneralPath*) 0;
@@ -20072,12 +19956,12 @@ GeneralPath* ProductUtils_createGeoBoundaryPaths3(Product product, Rectangle reg
         }
     }
     _resultArray = (*jenv)->CallStaticObjectMethod(jenv, classProductUtils, _method, product, region, step, usePixelCenter);
-    _result = beam_newCObjectArray(_resultArray, resultArrayLength);
+    _result = beam_newCObjectArray(_resultArray, _resultArrayLength);
     (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
 
-PixelPos* ProductUtils_createPixelBoundary1(Product product, Rectangle rect, int step, int* resultArrayLength)
+PixelPos* ProductUtils_createPixelBoundary1(Product product, Rectangle rect, int step, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
     PixelPos* _result = (PixelPos*) 0;
@@ -20094,12 +19978,12 @@ PixelPos* ProductUtils_createPixelBoundary1(Product product, Rectangle rect, int
         }
     }
     _resultArray = (*jenv)->CallStaticObjectMethod(jenv, classProductUtils, _method, product, rect, step);
-    _result = beam_newCObjectArray(_resultArray, resultArrayLength);
+    _result = beam_newCObjectArray(_resultArray, _resultArrayLength);
     (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
 
-PixelPos* ProductUtils_createPixelBoundary2(Product product, Rectangle rect, int step, boolean usePixelCenter, int* resultArrayLength)
+PixelPos* ProductUtils_createPixelBoundary2(Product product, Rectangle rect, int step, boolean usePixelCenter, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
     PixelPos* _result = (PixelPos*) 0;
@@ -20116,12 +20000,12 @@ PixelPos* ProductUtils_createPixelBoundary2(Product product, Rectangle rect, int
         }
     }
     _resultArray = (*jenv)->CallStaticObjectMethod(jenv, classProductUtils, _method, product, rect, step, usePixelCenter);
-    _result = beam_newCObjectArray(_resultArray, resultArrayLength);
+    _result = beam_newCObjectArray(_resultArray, _resultArrayLength);
     (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
 
-PixelPos* ProductUtils_createPixelBoundary3(RasterDataNode raster, Rectangle rect, int step, int* resultArrayLength)
+PixelPos* ProductUtils_createPixelBoundary3(RasterDataNode raster, Rectangle rect, int step, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
     PixelPos* _result = (PixelPos*) 0;
@@ -20138,12 +20022,12 @@ PixelPos* ProductUtils_createPixelBoundary3(RasterDataNode raster, Rectangle rec
         }
     }
     _resultArray = (*jenv)->CallStaticObjectMethod(jenv, classProductUtils, _method, raster, rect, step);
-    _result = beam_newCObjectArray(_resultArray, resultArrayLength);
+    _result = beam_newCObjectArray(_resultArray, _resultArrayLength);
     (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
 
-PixelPos* ProductUtils_createRectBoundary1(Rectangle rect, int step, int* resultArrayLength)
+PixelPos* ProductUtils_createRectBoundary1(Rectangle rect, int step, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
     PixelPos* _result = (PixelPos*) 0;
@@ -20160,12 +20044,12 @@ PixelPos* ProductUtils_createRectBoundary1(Rectangle rect, int step, int* result
         }
     }
     _resultArray = (*jenv)->CallStaticObjectMethod(jenv, classProductUtils, _method, rect, step);
-    _result = beam_newCObjectArray(_resultArray, resultArrayLength);
+    _result = beam_newCObjectArray(_resultArray, _resultArrayLength);
     (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
 
-PixelPos* ProductUtils_createRectBoundary2(Rectangle rect, int step, boolean usePixelCenter, int* resultArrayLength)
+PixelPos* ProductUtils_createRectBoundary2(Rectangle rect, int step, boolean usePixelCenter, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
     PixelPos* _result = (PixelPos*) 0;
@@ -20182,7 +20066,7 @@ PixelPos* ProductUtils_createRectBoundary2(Rectangle rect, int step, boolean use
         }
     }
     _resultArray = (*jenv)->CallStaticObjectMethod(jenv, classProductUtils, _method, rect, step, usePixelCenter);
-    _result = beam_newCObjectArray(_resultArray, resultArrayLength);
+    _result = beam_newCObjectArray(_resultArray, _resultArrayLength);
     (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
@@ -20928,7 +20812,7 @@ void ProductUtils_addElementToHistory(Product product, MetadataElement elem)
     (*jenv)->CallStaticVoidMethod(jenv, classProductUtils, _method, product, elem);
 }
 
-char** ProductUtils_removeInvalidExpressions(Product product, int* resultArrayLength)
+char** ProductUtils_removeInvalidExpressions(Product product, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
     char** _result = (char**) 0;
@@ -20945,7 +20829,7 @@ char** ProductUtils_removeInvalidExpressions(Product product, int* resultArrayLe
         }
     }
     _resultArray = (*jenv)->CallStaticObjectMethod(jenv, classProductUtils, _method, product);
-    _result = beam_newCStringArray(_resultArray, resultArrayLength);
+    _result = beam_newCStringArray(_resultArray, _resultArrayLength);
     (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
@@ -20972,7 +20856,7 @@ char* ProductUtils_findSuitableQuicklookBandName(Product product)
     return _result;
 }
 
-PixelPos* ProductUtils_computeSourcePixelCoordinates(GeoCoding sourceGeoCoding, int sourceWidth, int sourceHeight, GeoCoding destGeoCoding, Rectangle destArea, int* resultArrayLength)
+PixelPos* ProductUtils_computeSourcePixelCoordinates(GeoCoding sourceGeoCoding, int sourceWidth, int sourceHeight, GeoCoding destGeoCoding, Rectangle destArea, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
     PixelPos* _result = (PixelPos*) 0;
@@ -20989,12 +20873,12 @@ PixelPos* ProductUtils_computeSourcePixelCoordinates(GeoCoding sourceGeoCoding, 
         }
     }
     _resultArray = (*jenv)->CallStaticObjectMethod(jenv, classProductUtils, _method, sourceGeoCoding, sourceWidth, sourceHeight, destGeoCoding, destArea);
-    _result = beam_newCObjectArray(_resultArray, resultArrayLength);
+    _result = beam_newCObjectArray(_resultArray, _resultArrayLength);
     (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
 
-float* ProductUtils_computeMinMaxY(const PixelPos pixelPositionsElems, int pixelPositionsLength, int* resultArrayLength)
+float* ProductUtils_computeMinMaxY(const PixelPos pixelPositionsElems, int pixelPositionsLength, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
     jarray pixelPositionsArray = NULL;
@@ -21013,7 +20897,7 @@ float* ProductUtils_computeMinMaxY(const PixelPos pixelPositionsElems, int pixel
     }
     pixelPositionsArray = beam_newJObjectArray(pixelPositionsElems, pixelPositionsLength, classPixelPos);
     _resultArray = (*jenv)->CallStaticObjectMethod(jenv, classProductUtils, _method, pixelPositionsArray);
-    _result = beam_newCFloatArray(_resultArray, resultArrayLength);
+    _result = beam_newCFloatArray(_resultArray, _resultArrayLength);
     (*jenv)->DeleteLocalRef(jenv, pixelPositionsArray);
     (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;

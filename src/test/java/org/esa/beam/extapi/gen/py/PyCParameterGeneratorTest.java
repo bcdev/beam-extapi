@@ -224,7 +224,7 @@ public class PyCParameterGeneratorTest {
         assertEquals(localVarDecl, parameterGenerator.generateTargetArgDeclaration(context));
         assertEquals(preCallCode, parameterGenerator.generateJniArgFromTransformedTargetArgAssignment(context));
         assertEquals(callArgExpr, parameterGenerator.generateJniCallArgs(context));
-        assertEquals(postCallCode, parameterGenerator.generateTargetResultFromTransformedJniResultAssignment(context));
+        assertEquals(postCallCode, parameterGenerator.generateTargetArgFromTransformedJniArgAssignment(context));
     }
 
     private ApiParameter createParam(String name, Class<?> type, Modifier modifier) {

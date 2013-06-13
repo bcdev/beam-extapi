@@ -1,4 +1,4 @@
-float* TestClass2_getPixelsWithResultParam(TestClass2 _this, float* p1Elems, int p1Length, int p2, int* resultArrayLength)
+float* TestClass2_getPixelsWithResultParam(TestClass2 _this, float* p1Elems, int p1Length, int p2, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
     jarray p1Array = NULL;
@@ -20,11 +20,11 @@ float* TestClass2_getPixelsWithResultParam(TestClass2 _this, float* p1Elems, int
     if (p1Elems != NULL && (*jenv)->IsSameObject(jenv, p1Array, _resultArray)) {
         beam_copyFromJArray(_resultArray, p1Elems, p1Length, sizeof (float));
         _result = p1Elems;
-        if (resultArrayLength != NULL) {
-            *resultArrayLength = p1Length;
+        if (_resultArrayLength != NULL) {
+            *_resultArrayLength = p1Length;
         }
     } else {
-        _result = beam_newCFloatArray(_resultArray, resultArrayLength);
+        _result = beam_newCFloatArray(_resultArray, _resultArrayLength);
     }
     (*jenv)->DeleteLocalRef(jenv, p1Array);
     (*jenv)->DeleteLocalRef(jenv, _resultArray);

@@ -35,7 +35,11 @@ import static org.esa.beam.extapi.gen.TemplateEval.KV;
  */
 public abstract class ModuleGenerator implements GeneratorContext {
 
+    public static final String THIS_VAR_NAME = "_this";
+    public static final String METHOD_VAR_NAME = "_method";
+    public static final String RESULT_VAR_NAME = "_result";
     public static final String CLASS_VAR_NAME_PATTERN = "class%s";
+
     private final ApiInfo apiInfo;
     private final Map<ApiClass, List<FunctionGenerator>> functionGenerators;
     private final TemplateEval templateEval;

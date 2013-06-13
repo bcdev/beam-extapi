@@ -1,4 +1,4 @@
-File* TestClass2_getFiles(TestClass2 _this, const char* p1, int* resultArrayLength)
+File* TestClass2_getFiles(TestClass2 _this, const char* p1, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
     jstring p1String = NULL;
@@ -17,7 +17,7 @@ File* TestClass2_getFiles(TestClass2 _this, const char* p1, int* resultArrayLeng
     }
     p1String = (*jenv)->NewStringUTF(jenv, p1);
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method, p1String);
-    _result = beam_newCObjectArray(_resultArray, resultArrayLength);
+    _result = beam_newCObjectArray(_resultArray, _resultArrayLength);
     (*jenv)->DeleteLocalRef(jenv, p1String);
     (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;

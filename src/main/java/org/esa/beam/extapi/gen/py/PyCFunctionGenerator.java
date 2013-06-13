@@ -1,133 +1,124 @@
 package org.esa.beam.extapi.gen.py;
 
-import com.sun.javadoc.ExecutableMemberDoc;
-import com.sun.javadoc.Type;
-import org.esa.beam.extapi.gen.*;
-import org.esa.beam.extapi.gen.c.CModuleGenerator;
+import org.esa.beam.extapi.gen.AbstractFunctionGenerator;
+import org.esa.beam.extapi.gen.ApiMethod;
+import org.esa.beam.extapi.gen.ApiParameter;
+import org.esa.beam.extapi.gen.GeneratorContext;
+import org.esa.beam.extapi.gen.JavadocHelpers;
+import org.esa.beam.extapi.gen.ModuleGenerator;
 
 import java.util.HashMap;
 
-import static org.esa.beam.extapi.gen.JavadocHelpers.getComponentCTypeName;
+import static org.esa.beam.extapi.gen.JavadocHelpers.firstCharToUpperCase;
 import static org.esa.beam.extapi.gen.TemplateEval.eval;
 import static org.esa.beam.extapi.gen.TemplateEval.kv;
-import static org.esa.beam.extapi.gen.py.PyCModuleGenerator.RESULT_VAR_NAME;
-import static org.esa.beam.extapi.gen.py.PyCModuleGenerator.THIS_VAR_NAME;
 
 /**
  * @author Norman Fomferra
  */
-public abstract class PyCFunctionGenerator implements FunctionGenerator {
-    // TODO - put into ApiGeneratorDoclet-config.xml, whether a method shall return a CArray or a Python List object. (nf)
-    private final static boolean USE_CARRAY = true;
+public abstract class PyCFunctionGenerator extends AbstractFunctionGenerator {
 
-    final static HashMap<String, String> CARRAY_TYPE_CODES = new HashMap<String, String>();
+    final static HashMap<String, String> CARRAY_FORMATS = new HashMap<String, String>();
 
     static {
-        CARRAY_TYPE_CODES.put(Byte.TYPE.getName(), "b");
-        CARRAY_TYPE_CODES.put(Boolean.TYPE.getName(), "b");
-        CARRAY_TYPE_CODES.put(Character.TYPE.getName(), "h");
-        CARRAY_TYPE_CODES.put(Short.TYPE.getName(), "h");
-        CARRAY_TYPE_CODES.put(Integer.TYPE.getName(), "i");
-        CARRAY_TYPE_CODES.put("dlong", "l");
-        CARRAY_TYPE_CODES.put(Long.TYPE.getName(), "l");
-        CARRAY_TYPE_CODES.put(Float.TYPE.getName(), "f");
-        CARRAY_TYPE_CODES.put(Double.TYPE.getName(), "d");
+        CARRAY_FORMATS.put(Byte.TYPE.getName(), "b");
+        CARRAY_FORMATS.put(Boolean.TYPE.getName(), "b");
+        CARRAY_FORMATS.put(Character.TYPE.getName(), "h");
+        CARRAY_FORMATS.put(Short.TYPE.getName(), "h");
+        CARRAY_FORMATS.put(Integer.TYPE.getName(), "i");
+        CARRAY_FORMATS.put(Long.TYPE.getName(), "l");
+        CARRAY_FORMATS.put(Long.TYPE.getName(), "l");
+        CARRAY_FORMATS.put(Float.TYPE.getName(), "f");
+        CARRAY_FORMATS.put(Double.TYPE.getName(), "d");
     }
-
-    protected final ApiMethod apiMethod;
-    protected final PyCParameterGenerator[] parameterGenerators;
-    protected final TemplateEval templateEval;
 
     protected PyCFunctionGenerator(ApiMethod apiMethod, PyCParameterGenerator[] parameterGenerators) {
-        this.apiMethod = apiMethod;
-        this.parameterGenerators = parameterGenerators;
-        templateEval = TemplateEval.create(kv("res", RESULT_VAR_NAME),
-                                           kv("this", THIS_VAR_NAME));
+        super(apiMethod, parameterGenerators);
+        templateEval.add(kv("res", ModuleGenerator.RESULT_VAR_NAME),
+                         kv("this", ModuleGenerator.THIS_VAR_NAME));
     }
 
     @Override
-    public ApiMethod getApiMethod() {
-        return apiMethod;
-    }
-
-    public ApiClass getEnclosingClass() {
-        return getApiMethod().getEnclosingClass();
-    }
-
-    public ExecutableMemberDoc getMemberDoc() {
-        return getApiMethod().getMemberDoc();
-    }
-
-    public Type getReturnType() {
-        return getApiMethod().getReturnType();
+    public final PyCParameterGenerator[] getParameterGenerators() {
+        return (PyCParameterGenerator[]) super.getParameterGenerators();
     }
 
     @Override
-    public String generateFunctionName(GeneratorContext context) {
+    public String generateDocText(GeneratorContext context) {
+        // TODO: generate Python-style documentation
+        final String text = JavadocHelpers.encodeCCodeString(apiMethod.getMemberDoc().getRawCommentText());
+        if (isInstanceMethod()) {
+            final String thisParamText = String.format("@param this The %s object.", apiMethod.getEnclosingClass().getType().simpleTypeName());
+            final int i = text.indexOf("@param");
+            if (i > 0) {
+                return String.format("%s\\n%s\\n%s", text.substring(0, i), thisParamText, text.substring(i));
+            } else {
+                return String.format("%s\\n%s", text, thisParamText);
+            }
+        }
+        return text;
+    }
+
+    @Override
+    public final String generateFunctionName(GeneratorContext context) {
         return context.getFunctionNameFor(getApiMethod());
     }
 
     @Override
-    public PyCParameterGenerator[] getParameterGenerators() {
-        return parameterGenerators;
-    }
-
-    @Override
-    public String generateFunctionSignature(GeneratorContext context) {
+    public final String generateFunctionSignature(GeneratorContext context) {
+        // We have a fixed function signature: PyObject* <function>(PyObject* self, PyObject* args)
         return String.format("PyObject* %s(PyObject* self, PyObject* args)",
                              context.getFunctionNameFor(getApiMethod()));
     }
 
     @Override
-    public String generateEnterCode(GeneratorContext context) {
+    public final String generateExtraFunctionParamDeclaration(GeneratorContext context) {
+        // We have a fixed function signature: PyObject* <function>(PyObject* self, PyObject* args)
         return null;
     }
 
-    @Override
-    public String generateExitCode(GeneratorContext context) {
-        return null;
-    }
 
     @Override
-    public final String generateTargetResultDeclaration(GeneratorContext context) {
-        StringBuilder sb = new StringBuilder();
+    public final String generateLocalVarDeclarations(GeneratorContext context) {
+        final String methodVarDecl = super.generateLocalVarDeclarations(context);
         if (isInstanceMethod()) {
-            sb.append(generateObjectTypeDecl(PyCModuleGenerator.THIS_VAR_NAME));
+            return format("" +
+                                  "${methodVarDecl}\n" +
+                                  "${thisVarDecl}\n" +
+                                  "jobject ${this}JObj = NULL;",
+                          kv("methodVarDecl", methodVarDecl),
+                          kv("thisVarDecl", generateJObjectTargetArgDecl(ModuleGenerator.THIS_VAR_NAME)));
+        } else {
+            return methodVarDecl;
         }
-        String localVarDecl = generateTargetResultDeclaration0(context);
-        if (localVarDecl != null) {
-            if (sb.length() > 0) {
-                sb.append("\n");
-            }
-            sb.append(localVarDecl);
-        }
-        return sb.toString();
     }
 
-    @Override
-    public String generateJniResultDeclaration(GeneratorContext context) {
-        return null;
-    }
-
-    protected abstract String generateTargetResultDeclaration0(GeneratorContext context);
-
-    String format(String pattern, TemplateEval.KV... pairs) {
-        return templateEval.add(pairs).eval(pattern);
-    }
-
-    static String generateObjectTypeDecl(String varName) {
-        return eval("const char* ${var}Type;\n" +
-                            "unsigned PY_LONG_LONG ${var};",
+    static String generateJObjectTargetArgDecl(String varName) {
+        return eval("" +
+                            "const char* ${var}Type = NULL;\n" +
+                            "unsigned PY_LONG_LONG ${var} = 0;",
                     kv("var", varName));
     }
 
     @Override
-    public String generateExtraFunctionParamDeclaration(GeneratorContext context) {
-        return null;
+    public String generateEnterCode(GeneratorContext context) {
+        final ApiMethod apiMethod = getApiMethod();
+
+        return eval(""
+                            + "if (!beampy_initJMethod(&${method}, ${classVar}, \"${class}\", \"${methodName}\", \"${methodSig}\", ${static})) {\n"
+                            + "    return NULL;\n"
+                            + "}\n",
+                    kv("method", ModuleGenerator.METHOD_VAR_NAME),
+                    kv("static", apiMethod.getMemberDoc().isStatic() ? "1" : "0"),
+                    kv("classVar", ModuleGenerator.getComponentCClassVarName(apiMethod.getEnclosingClass().getType())),
+                    kv("class", apiMethod.getEnclosingClass().getType().qualifiedTypeName()),
+                    kv("methodName", apiMethod.getJavaName()),
+                    kv("methodSig", apiMethod.getJavaSignature()));
     }
 
+
     @Override
-    public String generateTargetArgsFromParsedParamsAssignment(GeneratorContext context) {
+    public final String generateTargetArgsFromParsedParamsAssignment(GeneratorContext context) {
         StringBuilder formatString = new StringBuilder();
         StringBuilder argumentsStrings = new StringBuilder();
         if (isInstanceMethod()) {
@@ -135,11 +126,11 @@ public abstract class PyCFunctionGenerator implements FunctionGenerator {
             argumentsStrings.append(format("&${this}Type, &${this}"));
         }
         for (PyCParameterGenerator pyCParameterGenerator : getParameterGenerators()) {
-            String format = pyCParameterGenerator.generateParseFormat(context);
+            String format = pyCParameterGenerator.getParseFormat(context);
             if (format != null) {
                 formatString.append(format);
             }
-            String args = pyCParameterGenerator.generateParseArgs(context);
+            String args = pyCParameterGenerator.getParseArgs(context);
             if (args != null) {
                 if (argumentsStrings.length() > 0) {
                     argumentsStrings.append(", ");
@@ -152,31 +143,22 @@ public abstract class PyCFunctionGenerator implements FunctionGenerator {
                                          "    return NULL;\n" +
                                          "}",
                                  formatString,
-                                 getCApiFunctionName(context),
+                                 context.getFunctionNameFor(apiMethod),
                                  argumentsStrings);
         }
         return null;
     }
 
-    @Override
-    public String generateTargetResultFromTransformedJniResultAssignment(GeneratorContext context) {
-        // todo - Python-C code shall directly call JNI, but we still call the C-API here
-        return null;
+    static String getCArrayFormat(com.sun.javadoc.Type type) {
+        String typeName = type.simpleTypeName();
+        String format = PyCFunctionGenerator.CARRAY_FORMATS.get(typeName);
+        if (format == null) {
+            throw new IllegalArgumentException("Illegal type: " + type.qualifiedTypeName());
+        }
+        return format;
     }
 
-    @Override
-    public String generateJniResultDeref(GeneratorContext context) {
-        // todo - Python-C code shall directly call JNI, but we still call the C-API here
-        return null;
-    }
-
-    @Override
-    public String generateLocalVarDeclarations(GeneratorContext context) {
-        // todo - Python-C code shall directly call JNI, but we still call the C-API here
-        return null;
-    }
-
-    protected ApiParameter getReturnParameter(GeneratorContext context) {
+    final ApiParameter getReturnParameter(GeneratorContext context) {
         for (ApiParameter parameter : context.getParametersFor(getApiMethod())) {
             if (parameter.getModifier() == ApiParameter.Modifier.RETURN) {
                 return parameter;
@@ -189,6 +171,7 @@ public abstract class PyCFunctionGenerator implements FunctionGenerator {
         return getReturnParameter(context) != null;
     }
 
+    /*
     protected String generateCApiCall(GeneratorContext context) {
 
         final String functionName = getCApiFunctionName(context);
@@ -199,7 +182,7 @@ public abstract class PyCFunctionGenerator implements FunctionGenerator {
                                               getComponentCTypeName(getEnclosingClass().getType()),
                                               PyCModuleGenerator.THIS_VAR_NAME));
         }
-        for (PyCParameterGenerator parameterGenerator : parameterGenerators) {
+        for (PyCParameterGenerator parameterGenerator : getParameterGenerators()) {
             if (argumentList.length() > 0) {
                 argumentList.append(", ");
             }
@@ -217,7 +200,6 @@ public abstract class PyCFunctionGenerator implements FunctionGenerator {
         return String.format("%s(%s)", functionName,
                              argumentList);
     }
-
     protected String generateExtraArgs() {
         return null;
     }
@@ -227,26 +209,7 @@ public abstract class PyCFunctionGenerator implements FunctionGenerator {
         final CModuleGenerator cModuleGenerator = pyCModuleGenerator.getCModuleGenerator();
         return cModuleGenerator.getFunctionNameFor(apiMethod);
     }
-
-    private boolean isInstanceMethod() {
-        return JavadocHelpers.isInstance(getMemberDoc());
-    }
-
-    @Override
-    public String generateDocText(GeneratorContext context) {
-        // TODO: generate Python-style documentation
-        final String text = JavadocHelpers.encodeCCodeString(apiMethod.getMemberDoc().getRawCommentText());
-        if (isInstanceMethod()) {
-            final String thisParamText = String.format("@param this The %s object.", JavadocHelpers.getComponentCTypeName(apiMethod.getEnclosingClass().getType()));
-            final int i = text.indexOf("@param");
-            if (i > 0) {
-                return String.format("%s\\n%s\\n%s", text.substring(0, i), thisParamText, text.substring(i));
-            } else {
-                return String.format("%s\\n%s", text, thisParamText);
-            }
-        }
-        return text;
-    }
+     */
 
     static class VoidMethod extends PyCFunctionGenerator {
 
@@ -255,14 +218,21 @@ public abstract class PyCFunctionGenerator implements FunctionGenerator {
         }
 
         @Override
-        public String generateTargetResultDeclaration0(GeneratorContext context) {
+        public String generateJniResultDeclaration(GeneratorContext context) {
+            // void
+            return null;
+        }
+
+        @Override
+        public String generateTargetResultDeclaration(GeneratorContext context) {
+            // void
             return null;
         }
 
         @Override
         public String generateJniResultFromJniCallAssignment(GeneratorContext context) {
             return format("${call};",
-                          kv("call", generateCApiCall(context)));
+                          kv("call", getJniMethodCall(context, "Void")));
         }
 
         @Override
@@ -271,38 +241,28 @@ public abstract class PyCFunctionGenerator implements FunctionGenerator {
         }
     }
 
-    static abstract class ReturnValueCallable extends PyCFunctionGenerator {
-        ReturnValueCallable(ApiMethod apiMethod, PyCParameterGenerator[] parameterGenerators) {
+    static class PrimitiveMethod extends PyCFunctionGenerator {
+        PrimitiveMethod(ApiMethod apiMethod, PyCParameterGenerator[] parameterGenerators) {
             super(apiMethod, parameterGenerators);
         }
 
         @Override
-        public String generateTargetResultDeclaration0(GeneratorContext context) {
-            return format("${type} ${res};",
-                          kv("type", JavadocHelpers.getCTypeName(getReturnType())));
+        public String generateTargetResultDeclaration(GeneratorContext context) {
+            // Not needed, because primitive parameter type should automatically match JNI type
+            return null;
+        }
+
+        @Override
+        public String generateJniResultDeclaration(GeneratorContext context) {
+            return format("j${type} ${res} = (j${type}) 0;",
+                          kv("type", getReturnType().simpleTypeName()));
         }
 
         @Override
         public String generateJniResultFromJniCallAssignment(GeneratorContext context) {
+            String typeName = firstCharToUpperCase(getReturnType().simpleTypeName());
             return format("${res} = ${call};",
-                          kv("call", generateCApiCall(context)));
-        }
-
-        @Override
-        public String generateReturnStatement(GeneratorContext context) {
-            return format("return ${res};");
-        }
-    }
-
-    static abstract class ValueMethod extends ReturnValueCallable {
-        ValueMethod(ApiMethod apiMethod, PyCParameterGenerator[] parameterGenerators) {
-            super(apiMethod, parameterGenerators);
-        }
-    }
-
-    static class PrimitiveMethod extends ValueMethod {
-        PrimitiveMethod(ApiMethod apiMethod, PyCParameterGenerator[] parameterGenerators) {
-            super(apiMethod, parameterGenerators);
+                          kv("call", getJniMethodCall(context, typeName)));
         }
 
         @Override
@@ -329,32 +289,43 @@ public abstract class PyCFunctionGenerator implements FunctionGenerator {
                 throw new IllegalArgumentException("can't deal with type '" + s + "'");
             }
         }
+
     }
 
-    static class ObjectMethod extends ValueMethod {
+    static class ObjectMethod extends PyCFunctionGenerator {
         ObjectMethod(ApiMethod apiMethod, PyCParameterGenerator[] parameterGenerators) {
             super(apiMethod, parameterGenerators);
         }
 
         @Override
-        public String generateTargetResultDeclaration0(GeneratorContext context) {
-            return format("void* ${res};");
+        public String generateJniResultDeclaration(GeneratorContext context) {
+            return format("jobject ${res}JObj = NULL;");
+        }
+
+        @Override
+        public String generateTargetResultDeclaration(GeneratorContext context) {
+            return format("PyObject* ${res}PyObj = NULL;");
         }
 
         @Override
         public String generateJniResultFromJniCallAssignment(GeneratorContext context) {
-            return format("${res} = ${call};",
-                          kv("call", generateCApiCall(context)));
+            return format("${res}JObj = ${call};",
+                          kv("call", getJniMethodCall(context, "Object")));
+        }
+
+        @Override
+        public String generateTargetResultFromTransformedJniResultAssignment(GeneratorContext context) {
+            return format("${res}PyObj = beampy_newPyObjectFromJObject(${res}JObj);");
+        }
+
+        @Override
+        public String generateJniResultDeref(GeneratorContext context) {
+            return format("(*jenv)->DeleteLocalRef(jenv, ${res}JObj);");
         }
 
         @Override
         public String generateReturnStatement(GeneratorContext context) {
-            return format("if (${res} != NULL) {\n" +
-                                  "    return Py_BuildValue(\"(sK)\", \"${type}\", (unsigned PY_LONG_LONG) ${res});\n" +
-                                  "} else {\n" +
-                                  "    return Py_BuildValue(\"\");\n" +
-                                  "}",
-                          kv("type", JavadocHelpers.getCTypeName(getReturnType())));
+            return format("return ${res}PyObj;");
         }
     }
 
@@ -364,37 +335,14 @@ public abstract class PyCFunctionGenerator implements FunctionGenerator {
         }
 
         @Override
-        public String generateTargetResultDeclaration0(GeneratorContext context) {
-            return format("char* ${res};\n" +
-                                  "PyObject* ${res}Str;");
-        }
-
-        @Override
-        public String generateJniResultFromJniCallAssignment(GeneratorContext context) {
-            return format("${res} = ${call};",
-                          kv("call", generateCApiCall(context)));
-        }
-
-        @Override
-        public String generateReturnStatement(GeneratorContext context) {
-            return format("if (${res} != NULL) {\n" +
-                                  "    ${res}Str = PyUnicode_FromString(${res});\n" +
-                                  "    beam_deleteCString(${res});\n" +
-                                  "    return ${res}Str;\n" +
-                                  "} else {\n" +
-                                  "    return Py_BuildValue(\"\");\n" +
-                                  "}\n");
+        public String generateTargetResultFromTransformedJniResultAssignment(GeneratorContext context) {
+            return format("${res}PyObj = beampy_newPyStringFromJString((jstring) ${res}JObj);");
         }
     }
 
     static abstract class ArrayMethod extends ObjectMethod {
         ArrayMethod(ApiMethod apiMethod, PyCParameterGenerator[] parameterGenerators) {
             super(apiMethod, parameterGenerators);
-        }
-
-        @Override
-        protected String generateExtraArgs() {
-            return format("&${res}Length");
         }
     }
 
@@ -404,62 +352,20 @@ public abstract class PyCFunctionGenerator implements FunctionGenerator {
         }
 
         @Override
-        public String generateTargetResultDeclaration0(GeneratorContext context) {
+        public String generateTargetResultFromTransformedJniResultAssignment(GeneratorContext context) {
+            String carrayFormat = getCArrayFormat(getReturnType());
             ApiParameter returnParameter = getReturnParameter(context);
+            String typeUC = firstCharToUpperCase(getReturnType().simpleTypeName());
             if (returnParameter != null) {
-                return format("${t}* ${res};\n" +
-                                      "int ${res}Length;",
-                              kv("t", getComponentCTypeName(getReturnType())));
+                return format("${res}PyObj = beampy_copyJ${typeUC}ArrayToPyObject((jarray) ${res}JObj, \"${carrayTypeCode}\", ${par}PyObj);",
+                              kv("typeUC", typeUC),
+                              kv("carrayFormat", carrayFormat),
+                              kv("par", returnParameter.getJavaName()));
             } else {
-                return format("${t}* ${res};\n" +
-                                      "int ${res}Length;\n" +
-                                      "PyObject* ${res}Obj;",
-                              kv("t", getComponentCTypeName(getReturnType())));
+                return format("${res}PyObj = beampy_newPyObjectFromJ${typeUC}Array((jarray) ${res}JObj, \"${carrayTypeCode}\");",
+                              kv("typeUC", typeUC),
+                              kv("carrayFormat", carrayFormat));
             }
-        }
-
-        @Override
-        public String generateReturnStatement(GeneratorContext context) {
-            String typeName = getComponentCTypeName(getReturnType());
-            String typeCode = CARRAY_TYPE_CODES.get(typeName);
-            if (typeCode == null) {
-                throw new IllegalStateException("type " + typeName);
-            }
-            ApiParameter returnParameter = getReturnParameter(context);
-            if (returnParameter != null) {
-                return format("" +
-                                      "if (${res} != NULL) {\n" +
-                                      "    Py_INCREF(${p}Obj);\n" +
-                                      "    return ${p}Obj;\n" +
-                                      "} else {\n" +
-                                      "    return Py_BuildValue(\"\");\n" +
-                                      "}\n",
-                              kv("p", returnParameter.getJavaName()),
-                              kv("type", typeName),
-                              kv("typeCode", typeCode));
-
-            } else {
-                return format("" +
-                                      "if (${res} != NULL) {\n" +
-                                      "    ${res}Obj = CArray_createFromItems(\"${typeCode}\", ${res}, ${res}Length, beam_deleteCPrimitiveArray);\n" +
-                                      "    Py_INCREF(${res}Obj);\n" +
-                                      "    return ${res}Obj;\n" +
-                                      "} else {\n" +
-                                      "    return Py_BuildValue(\"\");\n" +
-                                      "}\n",
-                              kv("type", typeName),
-                              kv("typeCode", typeCode));
-            }
-/* this code returns a python list
-                return format("if (${res} != NULL) {\n" +
-                                      "    ${res}Seq = beampy_newPySeqFromC${type}Array(${res}, ${res}Length);\n" +
-                                      "    beam_deleteCPrimitiveArray(${res}, ${res}Length);\n" +
-                                      "    return ${res}Seq;\n" +
-                                      "} else {\n" +
-                                      "    return Py_BuildValue(\"\");\n" +
-                                      "}\n",
-                              kv("type", typeName));
-*/
         }
     }
 
@@ -469,23 +375,9 @@ public abstract class PyCFunctionGenerator implements FunctionGenerator {
         }
 
         @Override
-        public String generateTargetResultDeclaration0(GeneratorContext context) {
-            return format("${t}* ${res};\n" +
-                                  "int ${res}Length;\n" +
-                                  "PyObject* ${res}Seq;",
-                          kv("t", getComponentCTypeName(getReturnType())));
-        }
-
-        @Override
-        public String generateReturnStatement(GeneratorContext context) {
-            String typeName = getComponentCTypeName(getReturnType());
-            return format("if (${res} != NULL) {\n" +
-                                  "    ${res}Seq = beampy_newPySeqFromCObjectArray(\"${type}\", ${res}, ${res}Length);\n" +
-                                  "    beam_deleteCObjectArray(${res}, ${res}Length);\n" +
-                                  "    return ${res}Seq;\n" +
-                                  "} else {\n" +
-                                  "    return Py_BuildValue(\"\");\n" +
-                                  "}\n",
+        public String generateTargetResultFromTransformedJniResultAssignment(GeneratorContext context) {
+            String typeName = getReturnType().simpleTypeName();
+            return format("${res}PyObj = beampy_newPySeqFromJObjectArray((jarray) ${res}JObj, \"${type}\");",
                           kv("type", typeName));
         }
     }
@@ -496,22 +388,8 @@ public abstract class PyCFunctionGenerator implements FunctionGenerator {
         }
 
         @Override
-        public String generateTargetResultDeclaration0(GeneratorContext context) {
-            return format("${t}* ${res};\n" +
-                                  "int ${res}Length;\n" +
-                                  "PyObject* ${res}Seq;",
-                          kv("t", getComponentCTypeName(getReturnType())));
-        }
-
-        @Override
-        public String generateReturnStatement(GeneratorContext context) {
-            return format("if (${res} != NULL) {\n" +
-                                  "    ${res}Seq = beampy_newPySeqFromCStringArray(${res}, ${res}Length);\n" +
-                                  "    beam_deleteCStringArray(${res}, ${res}Length);\n" +
-                                  "    return ${res}Seq;\n" +
-                                  "} else {\n" +
-                                  "    return Py_BuildValue(\"\");\n" +
-                                  "}\n");
+        public String generateTargetResultFromTransformedJniResultAssignment(GeneratorContext context) {
+            return format("${res}PyObj = beampy_newPySeqFromJStringArray((jstringArray) ${res}JObj);");
         }
     }
 }

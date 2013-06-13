@@ -53,7 +53,7 @@ public abstract class CParameterGenerator implements ParameterGenerator {
     }
 
     @Override
-    public String generateTargetResultFromTransformedJniResultAssignment(GeneratorContext context) {
+    public String generateTargetArgFromTransformedJniArgAssignment(GeneratorContext context) {
         return null;
     }
 
@@ -180,7 +180,7 @@ public abstract class CParameterGenerator implements ParameterGenerator {
         }
 
         @Override
-        public String generateTargetResultFromTransformedJniResultAssignment(GeneratorContext context) {
+        public String generateTargetArgFromTransformedJniArgAssignment(GeneratorContext context) {
             if (parameter.getModifier() == ApiParameter.Modifier.IN) {
                 return null;
             } else if (parameter.getModifier() == ApiParameter.Modifier.OUT) {
@@ -194,11 +194,11 @@ public abstract class CParameterGenerator implements ParameterGenerator {
                                     "if (${p}Elems != NULL && (*jenv)->IsSameObject(jenv, ${p}Array, ${r}Array)) {\n" +
                                     "    beam_copyFromJArray(${r}Array, ${p}Elems, ${p}Length, sizeof (${t}));\n" +
                                     "    ${r} = ${p}Elems;\n" +
-                                    "    if (resultArrayLength != NULL) {\n" +
-                                    "        *resultArrayLength = ${p}Length;\n" +
+                                    "    if (${r}ArrayLength != NULL) {\n" +
+                                    "        *${r}ArrayLength = ${p}Length;\n" +
                                     "    }\n" +
                                     "} else {\n" +
-                                    "    ${r} = beam_newC${tuc}Array(${r}Array, resultArrayLength);\n" +
+                                    "    ${r} = beam_newC${tuc}Array(${r}Array, ${r}ArrayLength);\n" +
                                     "}",
                             kv("r", RESULT_VAR_NAME),
                             kv("p", getName()),

@@ -94,11 +94,11 @@ public class CParameterGeneratorTest {
                            "if (dataElems != NULL && (*jenv)->IsSameObject(jenv, dataArray, _resultArray)) {\n" +
                                    "    beam_copyFromJArray(_resultArray, dataElems, dataLength, sizeof (float));\n" +
                                    "    _result = dataElems;\n" +
-                                   "    if (resultArrayLength != NULL) {\n" +
-                                   "        *resultArrayLength = dataLength;\n" +
+                                   "    if (_resultArrayLength != NULL) {\n" +
+                                   "        *_resultArrayLength = dataLength;\n" +
                                    "    }\n" +
                                    "} else {\n" +
-                                   "    _result = beam_newCFloatArray(_resultArray, resultArrayLength);\n" +
+                                   "    _result = beam_newCFloatArray(_resultArray, _resultArrayLength);\n" +
                                    "}");
     }
 
@@ -228,7 +228,7 @@ public class CParameterGeneratorTest {
         assertEquals(jniArgDecl, parameterGenerator.generateJniArgDeclaration(context));
         assertEquals(preCallCode, parameterGenerator.generateJniArgFromTransformedTargetArgAssignment(context));
         assertEquals(callArgExpr, parameterGenerator.generateJniCallArgs(context));
-        assertEquals(postCallCode, parameterGenerator.generateTargetResultFromTransformedJniResultAssignment(context));
+        assertEquals(postCallCode, parameterGenerator.generateTargetArgFromTransformedJniArgAssignment(context));
     }
 
     private ApiParameter createParam(String name, Class<?> type, Modifier modifier) {

@@ -7,7 +7,12 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.io.*;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.List;
 import java.util.Set;
 
@@ -19,8 +24,9 @@ import static org.junit.Assert.assertNotNull;
  */
 public abstract class ModuleGeneratorTest {
     public static final Class<TestClass2> TEST_CLASS_2 = TestClass2.class;
-    public static ApiInfo API_INFO;
+    public static ApiInfo apiInfo;
     private ModuleGenerator moduleGenerator;
+    private ApiClass testClass2;
 
     @BeforeClass
     public static void beforeClass() throws Exception {
@@ -30,38 +36,77 @@ public abstract class ModuleGeneratorTest {
                 ApiParameter.Modifier.IN
         });
         RootDoc rootDoc = DocMock.createRootDoc(TEST_CLASS_2);
-        API_INFO = ApiInfo.create(config, rootDoc);
+        apiInfo = ApiInfo.create(config, rootDoc);
     }
 
     @Before
     public void before() throws Exception {
+        testClass2 = findApiClass(TEST_CLASS_2.getName());
         moduleGenerator = createModuleGenerator();
     }
 
     protected abstract ModuleGenerator createModuleGenerator();
 
     @Test
-    public void testFunctionGeneratorsForTestClass2() throws Exception {
-        ApiClass apiClass = findApiClass(TEST_CLASS_2.getName());
-        dumpAllMethods(apiClass);
+    public void testFunctionGenerators_TestClass2_init() throws Exception {
+        testFunctionGenerator(testClass2, "TestClass2_init.c", "<init>", "()V");
+    }
 
-        testFunctionGenerator(apiClass, "TestClass2_init.c", "<init>", "()V");
-        testFunctionGenerator(apiClass, "TestClass2_getPixel1.c", "getPixel", "(II)F");
-        testFunctionGenerator(apiClass, "TestClass2_getPixel2.c", "getPixel", "(III)F");
-        testFunctionGenerator(apiClass, "TestClass2_getTimestamp.c", "getTimestamp", "()Ljava/util/Date;");
-        testFunctionGenerator(apiClass, "TestClass2_getDuration.c", "getDuration", "()J");
-        testFunctionGenerator(apiClass, "TestClass2_getPixels.c", "getPixels", "([FI)[F");
-        testFunctionGenerator(apiClass, "TestClass2_getPixelsWithResultParam.c", "getPixelsWithResultParam", "([FI)[F");
-        testFunctionGenerator(apiClass, "TestClass2_getName.c", "getName", "()Ljava/lang/String;");
-        testFunctionGenerator(apiClass, "TestClass2_getFiles.c", "getFiles", "(Ljava/lang/String;)[Ljava/io/File;");
-        testFunctionGenerator(apiClass, "TestClass2_getPixelsForType.c", "getPixelsForType", "(Ljava/lang/Class;)Ljava/lang/Object;");
-        testFunctionGenerator(apiClass, "TestClass2_getPixelsForRect.c", "getPixelsForRect", "(Ljava/awt/geom/Rectangle2D;)[F");
+    @Test
+    public void testFunctionGenerators_TestClass2_getName() throws Exception {
+        testFunctionGenerator(testClass2, "TestClass2_getName.c", "getName", "()Ljava/lang/String;");
+    }
+
+    @Test
+    public void testFunctionGenerators_TestClass2_getFiles() throws Exception {
+        testFunctionGenerator(testClass2, "TestClass2_getFiles.c", "getFiles", "(Ljava/lang/String;)[Ljava/io/File;");
+    }
+
+    @Test
+    public void testFunctionGenerators_TestClass2_getPixel1() throws Exception {
+        testFunctionGenerator(testClass2, "TestClass2_getPixel1.c", "getPixel", "(II)F");
+    }
+
+    @Test
+    public void testFunctionGenerators_TestClass2_getPixel2() throws Exception {
+        testFunctionGenerator(testClass2, "TestClass2_getPixel2.c", "getPixel", "(III)F");
+    }
+
+    @Test
+    public void testFunctionGenerators_TestClass2_getTimestamp() throws Exception {
+        testFunctionGenerator(testClass2, "TestClass2_getTimestamp.c", "getTimestamp", "()Ljava/util/Date;");
+    }
+
+    @Test
+    public void testFunctionGenerators_TestClass2_getDuration() throws Exception {
+        testFunctionGenerator(testClass2, "TestClass2_getDuration.c", "getDuration", "()J");
+    }
+
+    @Test
+    public void testFunctionGenerators_TestClass2_getPixels() throws Exception {
+        testFunctionGenerator(testClass2, "TestClass2_getPixels.c", "getPixels", "([FI)[F");
+    }
+
+    @Test
+    public void testFunctionGenerators_TestClass2_getPixelsWithResultParam() throws Exception {
+        testFunctionGenerator(testClass2, "TestClass2_getPixelsWithResultParam.c", "getPixelsWithResultParam", "([FI)[F");
+    }
+
+    @Test
+    public void testFunctionGenerators_TestClass2_getPixelsForType() throws Exception {
+        testFunctionGenerator(testClass2, "TestClass2_getPixelsForType.c", "getPixelsForType", "(Ljava/lang/Class;)Ljava/lang/Object;");
+    }
+
+    @Test
+    public void testFunctionGenerators_TestClass2_getPixelsForRect() throws Exception {
+        testFunctionGenerator(testClass2, "TestClass2_getPixelsForRect.c", "getPixelsForRect", "(Ljava/awt/geom/Rectangle2D;)[F");
     }
 
     private void testFunctionGenerator(ApiClass apiClass, String resourceName, String name, String sig) throws IOException {
-        FunctionGenerator fg1 = findFunctionGenerator(apiClass, name, sig);
-        assertNotNull(fg1);
-        assertEquals(loadTextResource(resourceName), generateFunctionDefinition(fg1));
+        FunctionGenerator generator = findFunctionGenerator(apiClass, name, sig);
+        assertNotNull(generator);
+        dumpGeneratedFunction(generator);
+        assertEquals(loadTextResource(resourceName), generateFunctionDefinition(generator));
     }
 
     private String loadTextResource(String resourceName) {
@@ -84,11 +129,16 @@ public abstract class ModuleGeneratorTest {
     private void dumpAllMethods(ApiClass apiClass) throws IOException {
         List<FunctionGenerator> functionGenerators = moduleGenerator.getFunctionGenerators(apiClass);
         for (FunctionGenerator functionGenerator : functionGenerators) {
-            String javaName = functionGenerator.getApiMethod().getJavaName();
-            String javaSignature = functionGenerator.getApiMethod().getJavaSignature();
-            System.out.println("\nMethod " + javaName + " " + javaSignature + "\n");
-            System.out.println(generateFunctionDefinition(functionGenerator));
+            dumpGeneratedFunction(functionGenerator);
         }
+    }
+
+    private void dumpGeneratedFunction(FunctionGenerator functionGenerator) throws IOException {
+        final String className = functionGenerator.getApiMethod().getEnclosingClass().getType().simpleTypeName();
+        String javaName = functionGenerator.getApiMethod().getJavaName();
+        String javaSignature = functionGenerator.getApiMethod().getJavaSignature();
+        System.out.println("\n//////// " + className + "." + javaName + " " + javaSignature + " ////////\n");
+        System.out.println(generateFunctionDefinition(functionGenerator));
     }
 
     private String generateFunctionDefinition(FunctionGenerator functionGenerator) throws IOException {
@@ -100,7 +150,7 @@ public abstract class ModuleGeneratorTest {
 
 
     public static ApiClass findApiClass(String name) {
-        Set<ApiClass> apiClasses1 = API_INFO.getApiClasses();
+        Set<ApiClass> apiClasses1 = apiInfo.getApiClasses();
         for (ApiClass apiClass : apiClasses1) {
             if (apiClass.getJavaName().equals(name)) {
                 return apiClass;
@@ -122,7 +172,7 @@ public abstract class ModuleGeneratorTest {
 
 
     public static ApiMethod findApiMethod(ApiClass apiClass, String name, String sig) {
-        List<ApiMethod> apiMethods = API_INFO.getMethodsOf(apiClass);
+        List<ApiMethod> apiMethods = apiInfo.getMethodsOf(apiClass);
         for (ApiMethod apiMethod : apiMethods) {
             if (apiMethod.getJavaName().equals(name)
                     && apiMethod.getJavaSignature().equals(sig)) {

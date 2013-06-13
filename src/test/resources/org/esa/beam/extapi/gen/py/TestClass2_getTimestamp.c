@@ -1,15 +1,20 @@
 PyObject* BeamPyTestClass2_getTimestamp(PyObject* self, PyObject* args)
 {
-    const char* thisObjType;
-    unsigned PY_LONG_LONG thisObj;
-    void* result;
-    if (!PyArg_ParseTuple(args, "(sK):TestClass2_getTimestamp", &thisObjType, &thisObj)) {
+    static jmethodID _method = NULL;
+    
+    const char* _thisType = NULL;
+    unsigned PY_LONG_LONG _this = 0;
+    jobject _thisJObj = NULL;
+    PyObject* _resultPyObj = NULL;
+    jobject _resultJObj = NULL;
+    if (!beampy_initJMethod(&_method, classTestClass2, "org.esa.beam.extapi.gen.test.TestClass2", "getTimestamp", "()Ljava/util/Date;", 0)) {
         return NULL;
     }
-    result = TestClass2_getTimestamp((TestClass2) thisObj);
-    if (result != NULL) {
-        return Py_BuildValue("(sK)", "Date", (unsigned PY_LONG_LONG) result);
-    } else {
-        return Py_BuildValue("");
+    if (!PyArg_ParseTuple(args, "(sK):BeamPyTestClass2_getTimestamp", &_thisType, &_this)) {
+        return NULL;
     }
+    _resultJObj = (*jenv)->CallObjectMethod(jenv, _this, _method);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    (*jenv)->DeleteLocalRef(jenv, _resultJObj);
+    return _resultPyObj;
 }

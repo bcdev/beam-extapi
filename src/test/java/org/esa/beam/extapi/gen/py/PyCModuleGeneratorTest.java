@@ -11,6 +11,6 @@ public class PyCModuleGeneratorTest extends ModuleGeneratorTest {
 
     @Override
     protected ModuleGenerator createModuleGenerator() {
-        return new PyCModuleGenerator(new CModuleGenerator(API_INFO));
+        return new PyCModuleGenerator(new CModuleGenerator(apiInfo));
     }
 }

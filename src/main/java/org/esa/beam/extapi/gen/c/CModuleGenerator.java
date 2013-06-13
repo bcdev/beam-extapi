@@ -48,9 +48,6 @@ public class CModuleGenerator extends ModuleGenerator {
     // TODO: move the following constants into ApiGeneratorDoclet-config.xml (nf, 29.04.2013)
     public static final String BEAM_CAPI_SRCDIR = "src/main/c/gen";
     public static final String BEAM_CAPI_NAME = "beam_capi";
-    public static final String THIS_VAR_NAME = "_this";
-    public static final String METHOD_VAR_NAME = "_method";
-    public static final String RESULT_VAR_NAME = "_result";
     public static final String[] JAVA_LANG_CLASSES = new String[]{"Boolean", "Byte", "Character", "Short", "Integer", "Long", "Float", "Double", "String"};
     public static final String[] JAVA_UTIL_CLASSES = new String[]{"HashMap", "HashSet"};
 

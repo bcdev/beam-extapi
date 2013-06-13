@@ -1,4 +1,4 @@
-float* TestClass2_getPixels(TestClass2 _this, const float* p1Elems, int p1Length, int p2, int* resultArrayLength)
+float* TestClass2_getPixels(TestClass2 _this, const float* p1Elems, int p1Length, int p2, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
     jarray p1Array = NULL;
@@ -18,7 +18,7 @@ float* TestClass2_getPixels(TestClass2 _this, const float* p1Elems, int p1Length
     p1Array = (*jenv)->NewFloatArray(jenv, p1Length);
     beam_copyToJArray(p1Array, p1Elems, p1Length, sizeof (float));
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method, p1Array, p2);
-    _result = beam_newCFloatArray(_resultArray, resultArrayLength);
+    _result = beam_newCFloatArray(_resultArray, _resultArrayLength);
     (*jenv)->DeleteLocalRef(jenv, p1Array);
     (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;

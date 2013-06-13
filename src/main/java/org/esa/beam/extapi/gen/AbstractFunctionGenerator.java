@@ -5,7 +5,6 @@ import com.sun.javadoc.Type;
 
 import static org.esa.beam.extapi.gen.TemplateEval.eval;
 import static org.esa.beam.extapi.gen.TemplateEval.kv;
-import static org.esa.beam.extapi.gen.c.CModuleGenerator.*;
 
 /**
  * @author Norman Fomferra
@@ -14,10 +13,12 @@ public abstract class AbstractFunctionGenerator implements FunctionGenerator {
 
     protected final ApiMethod apiMethod;
     protected final ParameterGenerator[] parameterGenerators;
+    protected final TemplateEval templateEval;
 
     protected AbstractFunctionGenerator(ApiMethod apiMethod, ParameterGenerator[] parameterGenerators) {
         this.apiMethod = apiMethod;
         this.parameterGenerators = parameterGenerators;
+        this.templateEval = TemplateEval.create();
     }
 
     @Override
@@ -30,12 +31,16 @@ public abstract class AbstractFunctionGenerator implements FunctionGenerator {
         return parameterGenerators;
     }
 
+    protected String format(String pattern, TemplateEval.KV... pairs) {
+        return templateEval.add(pairs).eval(pattern);
+    }
+
     public ApiClass getEnclosingClass() {
         return getApiMethod().getEnclosingClass();
     }
 
     public boolean isInstanceMethod() {
-        return !getMemberDoc().isStatic() && !getMemberDoc().isConstructor();
+        return JavadocHelpers.isInstance(getMemberDoc());
     }
 
     public ExecutableMemberDoc getMemberDoc() {
@@ -53,36 +58,12 @@ public abstract class AbstractFunctionGenerator implements FunctionGenerator {
 
     @Override
     public String generateLocalVarDeclarations(GeneratorContext context) {
-        return eval("static jmethodID ${mv} = NULL;\n", kv("mv", METHOD_VAR_NAME));
+        return eval("static jmethodID ${method} = NULL;\n", kv("method", ModuleGenerator.METHOD_VAR_NAME));
     }
 
     @Override
     public String generateExtraFunctionParamDeclaration(GeneratorContext context) {
         return null;
-    }
-
-    @Override
-    public String generateEnterCode(GeneratorContext context) {
-        final ApiMethod apiMethod = getApiMethod();
-
-        return eval("" +
-                            "if (${mv} == NULL) {\n"
-                            + "    if (beam_initApi() == 0) {\n"
-                            + "        ${mv} = (*jenv)->${f}(jenv, ${c}, \"${name}\", \"${sig}\");\n"
-                            + "        if (${mv} == NULL) {\n"
-                            + "            /* Set global error */\n"
-                            + "        }\n"
-                            + "    }\n"
-                            + "    if (${mv} == NULL) {\n"
-                            + "        " + (JavadocHelpers.isVoid(apiMethod.getReturnType()) ? "return" : "return ${r}") + ";\n"
-                            + "    }\n"
-                            + "}\n",
-                    kv("mv", METHOD_VAR_NAME),
-                    kv("r", RESULT_VAR_NAME),
-                    kv("f", apiMethod.getMemberDoc().isStatic() ? "GetStaticMethodID" : "GetMethodID"),
-                    kv("c", ModuleGenerator.getComponentCClassVarName(apiMethod.getEnclosingClass().getType())),
-                    kv("name", apiMethod.getJavaName()),
-                    kv("sig", apiMethod.getJavaSignature()));
     }
 
     @Override
@@ -127,17 +108,17 @@ public abstract class AbstractFunctionGenerator implements FunctionGenerator {
             functionName = "NewObject";
             argumentList.append(ModuleGenerator.getComponentCClassVarName(getEnclosingClass().getType()));
             argumentList.append(", ");
-            argumentList.append(METHOD_VAR_NAME);
+            argumentList.append(ModuleGenerator.METHOD_VAR_NAME);
         } else if (getMemberDoc().isStatic()) {
             functionName = String.format("CallStatic%sMethod", methodTypeName);
             argumentList.append(ModuleGenerator.getComponentCClassVarName(getEnclosingClass().getType()));
             argumentList.append(", ");
-            argumentList.append(METHOD_VAR_NAME);
+            argumentList.append(ModuleGenerator.METHOD_VAR_NAME);
         } else {
             functionName = String.format("Call%sMethod", methodTypeName);
-            argumentList.append(THIS_VAR_NAME);
+            argumentList.append(ModuleGenerator.THIS_VAR_NAME);
             argumentList.append(", ");
-            argumentList.append(METHOD_VAR_NAME);
+            argumentList.append(ModuleGenerator.METHOD_VAR_NAME);
         }
 
         for (ParameterGenerator parameterGenerator : parameterGenerators) {

@@ -48,9 +48,7 @@ public class PyCModuleGenerator extends ModuleGenerator {
     public static final String BEAM_PYAPI_PY_SRCDIR = ".";
     public static final String BEAM_PYAPI_NAME = "beampy";
     public static final String BEAM_PYAPI_VARNAMEPREFIX = "BeamPy";
-    public static final String THIS_VAR_NAME = "thisObj";
-    public static final String RESULT_VAR_NAME = "result";
-    public static final String SELF_OBJ_NAME = "_obj";
+    public static final String SELF_OBJ_NAME = "_jobj_ref";
 
     private final CModuleGenerator cModuleGenerator;
 
@@ -123,6 +121,9 @@ public class PyCModuleGenerator extends ModuleGenerator {
                 writer.printf("\n");
 
                 writeTemplateResource(writer, "/org/esa/beam/extapi/gen/c/CModuleGenerator-stub-jvm.c");
+                writer.printf("\n");
+
+                writeTemplateResource(writer, "/org/esa/beam/extapi/gen/c/CModuleGenerator-init-method.c");
                 writer.printf("\n");
 
                 writePrimitiveArrayConverters(writer);

@@ -1,10 +1,13 @@
 PyObject* BeamPyTestClass2_newTestClass2(PyObject* self, PyObject* args)
 {
-    void* result;
-    result = TestClass2_newTestClass2();
-    if (result != NULL) {
-        return Py_BuildValue("(sK)", "TestClass2", (unsigned PY_LONG_LONG) result);
-    } else {
-        return Py_BuildValue("");
+    static jmethodID _method = NULL;
+    PyObject* _resultPyObj = NULL;
+    jobject _resultJObj = NULL;
+    if (!beampy_initJMethod(&_method, classTestClass2, "org.esa.beam.extapi.gen.test.TestClass2", "<init>", "()V", 0)) {
+        return NULL;
     }
+    _resultJObj = (*jenv)->NewObject(jenv, classTestClass2, _method);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    (*jenv)->DeleteLocalRef(jenv, _resultJObj);
+    return _resultPyObj;
 }

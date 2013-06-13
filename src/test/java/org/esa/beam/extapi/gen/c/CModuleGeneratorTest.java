@@ -9,6 +9,6 @@ import org.esa.beam.extapi.gen.ModuleGeneratorTest;
 public class CModuleGeneratorTest extends ModuleGeneratorTest {
     @Override
     protected ModuleGenerator createModuleGenerator() {
-        return new CModuleGenerator(API_INFO);
+        return new CModuleGenerator(apiInfo);
     }
 }

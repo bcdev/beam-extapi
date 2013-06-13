@@ -28,5 +28,5 @@ public interface ParameterGenerator {
     /**
      * Parameters may be return values
      */
-    String generateTargetResultFromTransformedJniResultAssignment(GeneratorContext context);
+    String generateTargetArgFromTransformedJniArgAssignment(GeneratorContext context);
 }

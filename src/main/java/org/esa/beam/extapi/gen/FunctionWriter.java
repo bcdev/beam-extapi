@@ -37,7 +37,7 @@ public class FunctionWriter {
         writeFunctionBodyCode(functionGenerator.generateJniResultFromJniCallAssignment(context));
         writeFunctionBodyCode(functionGenerator.generateTargetResultFromTransformedJniResultAssignment(context));
         for (ParameterGenerator parameterGenerator : functionGenerator.getParameterGenerators()) {
-            writeFunctionBodyCode(parameterGenerator.generateTargetResultFromTransformedJniResultAssignment(context));
+            writeFunctionBodyCode(parameterGenerator.generateTargetArgFromTransformedJniArgAssignment(context));
             writeFunctionBodyCode(parameterGenerator.generateJniArgDeref(context));
         }
         writeFunctionBodyCode(functionGenerator.generateJniResultDeref(context));

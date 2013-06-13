@@ -1,4 +1,4 @@
-float* TestClass2_getPixelsForRect(TestClass2 _this, Rectangle2D p1, int* resultArrayLength)
+float* TestClass2_getPixelsForRect(TestClass2 _this, Rectangle2D p1, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
     float* _result = (float*) 0;
@@ -15,7 +15,7 @@ float* TestClass2_getPixelsForRect(TestClass2 _this, Rectangle2D p1, int* result
         }
     }
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method, p1);
-    _result = beam_newCFloatArray(_resultArray, resultArrayLength);
+    _result = beam_newCFloatArray(_resultArray, _resultArrayLength);
     (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
