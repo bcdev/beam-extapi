@@ -117,7 +117,7 @@ jmethodID beam_GetMethodID(jclass cls, const char* name, const char* sig)
 }
 
 
-// TODO - this is experimental code, move to beam_init_api() once we know it is ok (nf, 29.04.2013)
+// this is experimental code, move to beam_init_api() once we know it is ok (nf, 29.04.2013)
 void beam_init_java_core() {
     static init = 0;
     if (init == 0) {

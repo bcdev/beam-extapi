@@ -45,7 +45,6 @@ import java.util.TreeSet;
  */
 public class CModuleGenerator extends ModuleGenerator {
 
-    // TODO: move the following constants into ApiGeneratorDoclet-config.xml (nf, 29.04.2013)
     public static final String BEAM_CAPI_SRCDIR = "src/main/c/gen";
     public static final String BEAM_CAPI_NAME = "beam_capi";
 

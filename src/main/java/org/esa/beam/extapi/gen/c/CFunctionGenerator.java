@@ -20,7 +20,7 @@ public abstract class CFunctionGenerator extends AbstractFunctionGenerator {
 
     @Override
     public String generateDocText(GeneratorContext context) {
-        // todo: generate C Doxygen-style documentation
+        // todo: generate Doxygen-style C documentation string
         return JavadocHelpers.convertToDoxygenDoc(context.getApiInfo(), apiMethod.getMemberDoc());
     }
 
@@ -144,7 +144,6 @@ public abstract class CFunctionGenerator extends AbstractFunctionGenerator {
 
         @Override
         public String generateJniResultDeclaration(GeneratorContext context) {
-            // todo - make sure we always have a JniResultDeclaration here for all function types.
             return null;
         }
     }

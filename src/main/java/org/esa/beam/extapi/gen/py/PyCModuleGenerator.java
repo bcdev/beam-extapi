@@ -43,7 +43,6 @@ import static org.esa.beam.extapi.gen.TemplateEval.kv;
  */
 public class PyCModuleGenerator extends ModuleGenerator {
 
-    // TODO: move the following constants into ApiGeneratorDoclet-config.xml (nf, 29.04.2013)
     public static final String BEAM_PYAPI_C_SRCDIR = "src/main/c/gen";
     public static final String BEAM_PYAPI_PY_SRCDIR = ".";
     public static final String BEAM_PYAPI_NAME = "beampy";

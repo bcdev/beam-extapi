@@ -134,13 +134,13 @@ PyMODINIT_FUNC PyInit__${libName}()
     Py_INCREF(&BeamPyJObject_Type);
     PyModule_AddObject(beampy_module, "JObject", (PyObject*) &BeamPyJObject_Type);
 
-    // TODO - use the new BeamPy_JObjectType object instead of the currently used (sK) tuples. (nf, 29.04.2013)
+    // todo - use the new BeamPy_JObjectType object instead of the currently used (sK) tuples. (nf, 29.04.2013)
     // // JObject instances shall be created using the following pattern:
     // PyObject* arg = PyLong_FromVoidPtr(ptr); // ptr is the JNI Java object
     // PyObject* obj = PyObject_Call(BeamPy_JObjectType, arg, NULL);
     // Py_DECREF(arg);
     //
-    // TODO - in BeamPyJObject_init use the following pattern:  (nf, 29.04.2013)
+    // todo - in BeamPyJObject_init use the following pattern:  (nf, 29.04.2013)
     // self->jobject = PyLong_AsVoidPtr(args);
 
     /////////////////////////////////////////////////////////////////////////

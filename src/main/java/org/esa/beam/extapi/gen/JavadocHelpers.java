@@ -72,7 +72,6 @@ public class JavadocHelpers {
         if (text.isEmpty()) {
             return "";
         }
-        // todo: generate Python-style documentation
         return text;
     }
 

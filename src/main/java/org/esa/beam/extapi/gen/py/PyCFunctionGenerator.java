@@ -42,7 +42,7 @@ public abstract class PyCFunctionGenerator extends AbstractFunctionGenerator {
 
     @Override
     public String generateDocText(GeneratorContext context) {
-        // TODO: generate Python-style documentation
+        // todo: generate Python-style documentation string
         final String text = JavadocHelpers.encodeCCodeString(apiMethod.getMemberDoc().getRawCommentText());
         if (isInstanceMethod()) {
             final String thisParamText = String.format("@param this The %s object.", apiMethod.getEnclosingClass().getType().simpleTypeName());
