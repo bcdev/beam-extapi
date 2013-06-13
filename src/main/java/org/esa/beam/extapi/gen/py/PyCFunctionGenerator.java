@@ -357,12 +357,12 @@ public abstract class PyCFunctionGenerator extends AbstractFunctionGenerator {
             ApiParameter returnParameter = getReturnParameter(context);
             String typeUC = firstCharToUpperCase(getReturnType().simpleTypeName());
             if (returnParameter != null) {
-                return format("${res}PyObj = beampy_copyJ${typeUC}ArrayToPyObject((jarray) ${res}JObj, \"${carrayTypeCode}\", ${par}PyObj);",
+                return format("${res}PyObj = beampy_copyJ${typeUC}ArrayToPyObject((jarray) ${res}JObj, \"${carrayFormat}\", ${par}PyObj);",
                               kv("typeUC", typeUC),
                               kv("carrayFormat", carrayFormat),
                               kv("par", returnParameter.getJavaName()));
             } else {
-                return format("${res}PyObj = beampy_newPyObjectFromJ${typeUC}Array((jarray) ${res}JObj, \"${carrayTypeCode}\");",
+                return format("${res}PyObj = beampy_newPyObjectFromJ${typeUC}Array((jarray) ${res}JObj, \"${carrayFormat}\");",
                               kv("typeUC", typeUC),
                               kv("carrayFormat", carrayFormat));
             }
