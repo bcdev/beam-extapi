@@ -90,8 +90,9 @@ public class PyCModuleGenerator extends ModuleGenerator {
     private void writeCHeader() throws IOException {
         new TargetCHeaderFile(BEAM_PYAPI_C_SRCDIR, BEAM_PYAPI_NAME + ".h") {
             @Override
-            protected void writeContent() {
+            protected void writeContent() throws IOException {
                 writer.println("#include \"../beampy_carray.h\"");
+                writeTemplateResource(writer, "/org/esa/beam/extapi/gen/c/CModuleGenerator-stub-types.h");
             }
         }.create();
     }
@@ -101,6 +102,12 @@ public class PyCModuleGenerator extends ModuleGenerator {
             @Override
             protected void writeContent() throws IOException {
                 writeTemplateResource(writer, "PyCModuleGenerator-stub-init.c");
+                writer.printf("\n");
+
+                cModuleGenerator.writeClassTypedefs(writer);
+                writer.printf("\n");
+
+                writeTemplateResource(writer, "/org/esa/beam/extapi/gen/c/CModuleGenerator-stub-jvm.h");
                 writer.printf("\n");
 
                 writeFunctionDeclarations(writer);
@@ -115,13 +122,16 @@ public class PyCModuleGenerator extends ModuleGenerator {
                 writeTemplateResource(writer, "PyCModuleGenerator-stub-jobject.c");
                 writer.printf("\n");
 
+                writeTemplateResource(writer, "/org/esa/beam/extapi/gen/c/CModuleGenerator-stub-jvm.c");
+                writer.printf("\n");
+
                 writePrimitiveArrayConverters(writer);
                 writer.printf("\n");
 
                 writeTemplateResource(writer, "PyCModuleGenerator-stub-conv.c");
                 writer.printf("\n");
 
-                writeFunctionDefinitions(writer);
+                //writeFunctionDefinitions(writer);
                 writer.printf("\n");
             }
         }.create();

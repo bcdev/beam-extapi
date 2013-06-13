@@ -1,10 +1,11 @@
-#include "beam_capi.h"
+// #include "beam_capi.h"
 #include "${libName}.h"
 
 #include <Python.h>
 #include "structmember.h"
 #include <jni.h>
 
+#include "../beam_util.h"
 
 static PyObject* BeamPy_Error;
 

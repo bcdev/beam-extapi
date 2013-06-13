@@ -32,7 +32,7 @@ if len(sys.argv) > 1 and sys.argv[1] == 'install':
 sources = ['src/main/c/beam_util.c',
            #'src/main/c/beam_jvm.c',
            'src/main/c/beampy_carray.c',
-           'src/main/c/gen/beam_capi.c',
+           #'src/main/c/gen/beam_capi.c',
            'src/main/c/gen/beampy.c']
 include_dirs = ['src/main/c',
                 'src/main/c/gen']

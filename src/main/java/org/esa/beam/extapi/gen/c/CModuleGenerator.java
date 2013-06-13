@@ -163,32 +163,18 @@ public class CModuleGenerator extends ModuleGenerator {
     }
 
     private void writeCHeaderContents(PrintWriter writer) throws IOException {
-
         writeTemplateResource(writer, "CModuleGenerator-stub-types.h");
-
         writer.write("\n");
-        writer.write("/* Wrapped API classes */\n");
-        for (ApiClass apiClass : getApiClasses()) {
-            writer.write(String.format("typedef void* %s;\n", getComponentCClassName(apiClass.getType())));
-        }
+        writeClassTypedefs(writer);
         writer.write("\n");
-
-        writer.write("\n");
-        writer.write("/* Non-API classes used in the API */\n");
-        writer.write("typedef void* String;\n");
-        for (ApiClass usedApiClass : getApiInfo().getUsedNonApiClasses()) {
-            if (!JavadocHelpers.isString(usedApiClass.getType())) {
-                writer.write(String.format("typedef void* %s;\n", getComponentCClassName(usedApiClass.getType())));
-            }
-        }
-        writer.write("\n");
-
         writeTemplateResource(writer, "CModuleGenerator-stub-jvm.h");
+        writer.write("\n");
         writeTemplateResource(writer, "CModuleGenerator-stub-conv.h");
+        writer.write("\n");
+        writeClassConstantAndFunctionDefinitions(writer);
+    }
 
-        /////////////////////////////////////////////////////////////////////////////////////
-        // Generate function declarations
-        //
+    private void writeClassConstantAndFunctionDefinitions(PrintWriter writer) {
         for (ApiClass apiClass : getApiClasses()) {
             List<ApiConstant> constants = getApiInfo().getConstantsOf(apiClass);
             if (!constants.isEmpty()) {
@@ -207,6 +193,23 @@ public class CModuleGenerator extends ModuleGenerator {
             final FunctionWriter functionWriter = new FunctionWriter(this, writer);
             for (FunctionGenerator generator : getFunctionGenerators(apiClass)) {
                 functionWriter.writeFunctionDeclaration(generator);
+            }
+        }
+    }
+
+    public void writeClassTypedefs(PrintWriter writer) {
+        writer.write("/* Wrapped API classes */\n");
+        for (ApiClass apiClass : getApiClasses()) {
+            writer.write(String.format("typedef void* %s;\n", getComponentCClassName(apiClass.getType())));
+        }
+        writer.write("\n");
+
+        writer.write("\n");
+        writer.write("/* Non-API classes used in the API */\n");
+        writer.write("typedef void* String;\n");
+        for (ApiClass usedApiClass : getApiInfo().getUsedNonApiClasses()) {
+            if (!JavadocHelpers.isString(usedApiClass.getType())) {
+                writer.write(String.format("typedef void* %s;\n", getComponentCClassName(usedApiClass.getType())));
             }
         }
     }
