@@ -12,9 +12,9 @@ public interface ParameterGenerator {
 
     String generateFunctionParamDeclaration(GeneratorContext context);
 
-    String generateJniArgDeclaration(GeneratorContext context);
-
     String generateTargetArgDeclaration(GeneratorContext context);
+
+    String generateJniArgDeclaration(GeneratorContext context);
 
     String generateJniArgFromTransformedTargetArgAssignment(GeneratorContext context);
 
