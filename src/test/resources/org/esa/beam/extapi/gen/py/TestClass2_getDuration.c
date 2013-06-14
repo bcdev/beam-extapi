@@ -6,6 +6,9 @@ PyObject* BeamPyTestClass2_getDuration(PyObject* self, PyObject* args)
     unsigned PY_LONG_LONG _this = 0;
     jobject _thisJObj = NULL;
     jlong _result = (jlong) 0;
+    if (!beampy_initApi()) {
+        return NULL;
+    }
     if (!beampy_initJMethod(&_method, classTestClass2, "org.esa.beam.extapi.gen.test.TestClass2", "getDuration", "()J", 0)) {
         return NULL;
     }

@@ -60,7 +60,7 @@ public abstract class PyCParameterGenerator implements ParameterGenerator {
         @Override
         public String generateJniArgDeclaration(GeneratorContext context) {
             // Not needed, because primitive parameter type should automatically match JNI type
-            return eval("j${type} ${par} = (j${type}) 0;\n",
+            return eval("j${type} ${par} = (j${type}) 0;",
                         kv("type", getType().simpleTypeName()),
                         kv("par", getName()));
         }
@@ -222,7 +222,7 @@ public abstract class PyCParameterGenerator implements ParameterGenerator {
                                 "j${type}* ${par}Data = NULL;\n" +
                                 "int ${par}Length = 0;\n" +
                                 "PyObject* ${par}PyObj = NULL;\n" +
-                                "Py_buffer ${par}Buf;\n",
+                                "Py_buffer ${par}Buf;",
                         kv("type", getType().simpleTypeName()),
                         kv("par", getName()));
         }

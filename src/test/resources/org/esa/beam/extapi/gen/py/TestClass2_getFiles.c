@@ -9,6 +9,9 @@ PyObject* BeamPyTestClass2_getFiles(PyObject* self, PyObject* args)
     jstring p1JObj = NULL;
     PyObject* _resultPyObj = NULL;
     jobject _resultJObj = NULL;
+    if (!beampy_initApi()) {
+        return NULL;
+    }
     if (!beampy_initJMethod(&_method, classTestClass2, "org.esa.beam.extapi.gen.test.TestClass2", "getFiles", "(Ljava/lang/String;)[Ljava/io/File;", 0)) {
         return NULL;
     }

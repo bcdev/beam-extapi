@@ -7,6 +7,9 @@ PyObject* BeamPyTestClass2_getTimestamp(PyObject* self, PyObject* args)
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
     jobject _resultJObj = NULL;
+    if (!beampy_initApi()) {
+        return NULL;
+    }
     if (!beampy_initJMethod(&_method, classTestClass2, "org.esa.beam.extapi.gen.test.TestClass2", "getTimestamp", "()Ljava/util/Date;", 0)) {
         return NULL;
     }

@@ -10,6 +10,9 @@ PyObject* BeamPyTestClass2_getPixelsForRect(PyObject* self, PyObject* args)
     jobject p1JObj = NULL;
     PyObject* _resultPyObj = NULL;
     jobject _resultJObj = NULL;
+    if (!beampy_initApi()) {
+        return NULL;
+    }
     if (!beampy_initJMethod(&_method, classTestClass2, "org.esa.beam.extapi.gen.test.TestClass2", "getPixelsForRect", "(Ljava/awt/geom/Rectangle2D;)[F", 0)) {
         return NULL;
     }

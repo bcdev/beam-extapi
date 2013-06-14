@@ -10,6 +10,9 @@ PyObject* BeamPyTestClass2_getPixelsForType(PyObject* self, PyObject* args)
     jobject p1JObj = NULL;
     PyObject* _resultPyObj = NULL;
     jobject _resultJObj = NULL;
+    if (!beampy_initApi()) {
+        return NULL;
+    }
     if (!beampy_initJMethod(&_method, classTestClass2, "org.esa.beam.extapi.gen.test.TestClass2", "getPixelsForType", "(Ljava/lang/Class;)Ljava/lang/Object;", 0)) {
         return NULL;
     }

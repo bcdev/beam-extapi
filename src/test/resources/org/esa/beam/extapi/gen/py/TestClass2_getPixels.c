@@ -13,6 +13,9 @@ PyObject* BeamPyTestClass2_getPixels(PyObject* self, PyObject* args)
     jint p2 = (jint) 0;
     PyObject* _resultPyObj = NULL;
     jobject _resultJObj = NULL;
+    if (!beampy_initApi()) {
+        return NULL;
+    }
     if (!beampy_initJMethod(&_method, classTestClass2, "org.esa.beam.extapi.gen.test.TestClass2", "getPixels", "([FI)[F", 0)) {
         return NULL;
     }

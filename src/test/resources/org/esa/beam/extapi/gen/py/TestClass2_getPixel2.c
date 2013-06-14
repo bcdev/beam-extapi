@@ -9,6 +9,9 @@ PyObject* BeamPyTestClass2_getPixel2(PyObject* self, PyObject* args)
     jint p2 = (jint) 0;
     jint p3 = (jint) 0;
     jfloat _result = (jfloat) 0;
+    if (!beampy_initApi()) {
+        return NULL;
+    }
     if (!beampy_initJMethod(&_method, classTestClass2, "org.esa.beam.extapi.gen.test.TestClass2", "getPixel", "(III)F", 0)) {
         return NULL;
     }
