@@ -245,7 +245,7 @@ public abstract class PyCParameterGenerator implements ParameterGenerator {
         @Override
         public String generateJniArgFromTransformedTargetArgAssignment(GeneratorContext context) {
             String typeName = getType().simpleTypeName();
-            String format = PyCFunctionGenerator.getCArrayFormat(getType());
+            String format = PyCModuleGenerator.getCArrayFormat(typeName);
             String bufferMode;
             if (parameter.getModifier() == ApiParameter.Modifier.IN) {
                 bufferMode = "ReadOnly";

@@ -1,8 +1,11 @@
 package org.esa.beam.extapi.gen.py;
 
-import org.esa.beam.extapi.gen.*;
-
-import java.util.HashMap;
+import org.esa.beam.extapi.gen.AbstractFunctionGenerator;
+import org.esa.beam.extapi.gen.ApiMethod;
+import org.esa.beam.extapi.gen.ApiParameter;
+import org.esa.beam.extapi.gen.GeneratorContext;
+import org.esa.beam.extapi.gen.JavadocHelpers;
+import org.esa.beam.extapi.gen.ModuleGenerator;
 
 import static org.esa.beam.extapi.gen.JavadocHelpers.firstCharToUpperCase;
 import static org.esa.beam.extapi.gen.ModuleGenerator.METHOD_VAR_NAME;
@@ -14,20 +17,6 @@ import static org.esa.beam.extapi.gen.TemplateEval.kv;
  * @author Norman Fomferra
  */
 public abstract class PyCFunctionGenerator extends AbstractFunctionGenerator {
-
-    final static HashMap<String, String> CARRAY_FORMATS = new HashMap<String, String>();
-
-    static {
-        // todo - make sure that the following type mappings match in number of bytes
-        CARRAY_FORMATS.put(Byte.TYPE.getName(), "b"); // 1 byte
-        CARRAY_FORMATS.put(Boolean.TYPE.getName(), "b");  // 1 byte
-        CARRAY_FORMATS.put(Character.TYPE.getName(), "h");  // 2 byte
-        CARRAY_FORMATS.put(Short.TYPE.getName(), "h"); // 2 byte
-        CARRAY_FORMATS.put(Integer.TYPE.getName(), "i"); // 4 byte
-        CARRAY_FORMATS.put(Long.TYPE.getName(), "l"); // 8 byte
-        CARRAY_FORMATS.put(Float.TYPE.getName(), "f"); // 4 byte
-        CARRAY_FORMATS.put(Double.TYPE.getName(), "d"); // 8 byte
-    }
 
     protected PyCFunctionGenerator(ApiMethod apiMethod, PyCParameterGenerator[] parameterGenerators) {
         super(apiMethod, parameterGenerators);
@@ -101,14 +90,17 @@ public abstract class PyCFunctionGenerator extends AbstractFunctionGenerator {
     public String generateEnterCode(GeneratorContext context) {
         final ApiMethod apiMethod = getApiMethod();
 
-        return eval(""
-                            + "if (!beampy_initJMethod(&${method}, ${classVar}, \"${class}\", \"${methodName}\", \"${methodSig}\", ${static})) {\n"
-                            + "    return NULL;\n"
-                            + "}\n",
+        return eval("" +
+                            "if (!beampy_initApi()) {\n" +
+                            "    return NULL;\n" +
+                            "}\n" +
+                            "if (!beampy_initJMethod(&${method}, ${classVar}, \"${className}\", \"${methodName}\", \"${methodSig}\", ${isstatic})) {\n" +
+                            "    return NULL;\n" +
+                            "}\n",
                     kv("method", ModuleGenerator.METHOD_VAR_NAME),
-                    kv("static", apiMethod.getMemberDoc().isStatic() ? "1" : "0"),
+                    kv("isstatic", apiMethod.getMemberDoc().isStatic() ? "1" : "0"),
                     kv("classVar", ModuleGenerator.getComponentCClassVarName(apiMethod.getEnclosingClass().getType())),
-                    kv("class", apiMethod.getEnclosingClass().getType().qualifiedTypeName()),
+                    kv("className", apiMethod.getEnclosingClass().getType().qualifiedTypeName()),
                     kv("methodName", apiMethod.getJavaName()),
                     kv("methodSig", apiMethod.getJavaSignature()));
     }
@@ -169,15 +161,6 @@ public abstract class PyCFunctionGenerator extends AbstractFunctionGenerator {
         return parseArgs.toString();
     }
 
-
-    static String getCArrayFormat(com.sun.javadoc.Type type) {
-        String typeName = type.simpleTypeName();
-        String format = PyCFunctionGenerator.CARRAY_FORMATS.get(typeName);
-        if (format == null) {
-            throw new IllegalArgumentException("Illegal type: " + type.qualifiedTypeName());
-        }
-        return format;
-    }
 
     final ApiParameter getReturnParameter(GeneratorContext context) {
         for (ApiParameter parameter : context.getParametersFor(getApiMethod())) {

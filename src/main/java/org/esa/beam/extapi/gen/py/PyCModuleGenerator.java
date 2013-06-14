@@ -33,6 +33,7 @@ import org.esa.beam.extapi.gen.c.CModuleGenerator;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.HashMap;
 import java.util.List;
 
 import static org.esa.beam.extapi.gen.TemplateEval.eval;
@@ -47,7 +48,29 @@ public class PyCModuleGenerator extends ModuleGenerator {
     public static final String BEAM_PYAPI_PY_SRCDIR = ".";
     public static final String BEAM_PYAPI_NAME = "beampy";
     public static final String BEAM_PYAPI_VARNAMEPREFIX = "BeamPy";
-    public static final String SELF_OBJ_NAME = "_jobj_ref";
+    public static final String SELF_OBJ_NAME = "_jobj";
+
+    final static HashMap<String, String> CARRAY_FORMATS = new HashMap<String, String>();
+
+    static {
+        // todo - make sure that the following type mappings match in number of bytes
+        CARRAY_FORMATS.put(Byte.TYPE.getName(), "b"); // 1 byte
+        CARRAY_FORMATS.put(Boolean.TYPE.getName(), "b");  // 1 byte
+        CARRAY_FORMATS.put(Character.TYPE.getName(), "h");  // 2 byte
+        CARRAY_FORMATS.put(Short.TYPE.getName(), "h"); // 2 byte
+        CARRAY_FORMATS.put(Integer.TYPE.getName(), "i"); // 4 byte
+        CARRAY_FORMATS.put(Long.TYPE.getName(), "l"); // 8 byte
+        CARRAY_FORMATS.put(Float.TYPE.getName(), "f"); // 4 byte
+        CARRAY_FORMATS.put(Double.TYPE.getName(), "d"); // 8 byte
+    }
+
+    public static String getCArrayFormat(String typeName) {
+        String format = CARRAY_FORMATS.get(typeName);
+        if (format == null) {
+            throw new IllegalArgumentException("Illegal type: " + typeName);
+        }
+        return format;
+    }
 
     private final CModuleGenerator cModuleGenerator;
 
@@ -128,9 +151,6 @@ public class PyCModuleGenerator extends ModuleGenerator {
                 writeInitApiFunction(writer);
                 writer.printf("\n");
 
-                writeTemplateResource(writer, "/org/esa/beam/extapi/gen/c/CModuleGenerator-stub-conv.c");
-                writer.printf("\n");
-
                 writeTemplateResource(writer, "PyCModuleGenerator-stub-init-method.c");
                 writer.printf("\n");
 
@@ -194,9 +214,11 @@ public class PyCModuleGenerator extends ModuleGenerator {
     }
 
     void writePrimitiveArrayConverter(PrintWriter writer, String type, String elemToItemCall, String itemToElemCall) throws IOException {
+        final String bufferFormat = getCArrayFormat(type);
         writeTemplateResource(writer, "PyCModuleGenerator-stub-conv-primarr.c",
                               kv("typeLC", type),
                               kv("typeUC", JavadocHelpers.firstCharToUpperCase(type)),
+                              kv("bufferFormat", bufferFormat),
                               kv("elemToItemCall", elemToItemCall),
                               kv("itemToElemCall", itemToElemCall));
     }
@@ -232,8 +254,11 @@ public class PyCModuleGenerator extends ModuleGenerator {
                                            + "            Object_delete(self.${obj})\n"
                                            + "\n",
                                    kv("obj", SELF_OBJ_NAME)));
+                writer.printf("\n\n");
                 for (ApiClass apiClass : getApiInfo().getAllClasses()) {
-                    writer.printf("class %s(JObject):\n", getClassName(apiClass.getType()));
+                    final String className = getClassName(apiClass.getType());
+
+                    writer.printf("class %s(JObject):\n", className);
 
                     final String commentText = JavadocHelpers.convertToPythonDoc(getApiInfo(), apiClass.getType().asClassDoc(), "", false);
                     if (!commentText.isEmpty()) {
@@ -265,12 +290,28 @@ public class PyCModuleGenerator extends ModuleGenerator {
                                               + "\n",
                                       kv("obj", SELF_OBJ_NAME)));
 
+                    if (className.equals("String")) {
+                        writer.write("" +
+                                             "    @staticmethod\n" +
+                                             "    def newString(str):\n" +
+                                             "        return String(String_newString(str))\n" +
+                                             "\n");
+
+                    } else if (className.equals("Map")) {
+                        // experimental
+                        writer.write("" +
+                                             "    @staticmethod\n" +
+                                             "    def newMap(dict):\n" +
+                                             "        return Map(Map_newHashMap(dict))\n" +
+                                             "\n");
+                    }
+
                     for (FunctionGenerator generator : getFunctionGenerators(apiClass)) {
                         String staticFName = getCModuleGenerator().getFunctionNameFor(generator.getApiMethod());
                         String javaFName = generator.getApiMethod().getJavaName();
                         String instanceFName;
                         if (javaFName.equals("<init>")) {
-                            instanceFName = "new" + getClassName(apiClass.getType());
+                            instanceFName = "new" + className;
                         } else {
                             instanceFName = staticFName.substring(staticFName.indexOf('_') + 1);
                         }
@@ -312,13 +353,13 @@ public class PyCModuleGenerator extends ModuleGenerator {
                             }
                         } else {
                             if (isObject(generator.getApiMethod().getReturnType())) {
-                                String className = getClassName(generator.getApiMethod().getReturnType());
+                                String retClassName = getClassName(generator.getApiMethod().getReturnType());
                                 if (JavadocHelpers.isInstance(generator.getApiMethod().getMemberDoc())) {
                                     writePythonInstanceFuncHeader(writer, instanceFName, params, functionCommentText);
-                                    writer.printf("        return %s(%s(self.%s%s))\n", className, staticFName, SELF_OBJ_NAME, args.length() > 0 ? ", " + args : "");
+                                    writer.printf("        return %s(%s(self.%s%s))\n", retClassName, staticFName, SELF_OBJ_NAME, args.length() > 0 ? ", " + args : "");
                                 } else {
                                     writePythonStaticFuncHeader(writer, instanceFName, params, functionCommentText);
-                                    writer.printf("        return %s(%s(%s))\n", className, staticFName, args);
+                                    writer.printf("        return %s(%s(%s))\n", retClassName, staticFName, args);
                                 }
                             } else {
                                 if (JavadocHelpers.isInstance(generator.getApiMethod().getMemberDoc())) {
@@ -335,29 +376,6 @@ public class PyCModuleGenerator extends ModuleGenerator {
                     writer.printf("\n");
                 }
 
-                writer.write("class String:\n" +
-                                     "    def __init__(self, obj):\n" +
-                                     "        if obj == None:\n" +
-                                     "            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')\n" +
-                                     "        self._obj = obj\n" +
-                                     "    \n" +
-                                     "    @staticmethod\n" +
-                                     "    def newString(str):\n" +
-                                     "        return String(String_newString(str))\n" +
-                                     "\n");
-                // experimental
-                /*
-                writer.write("class Map:\n" +
-                                     "    def __init__(self, obj):\n" +
-                                     "        if obj == None:\n" +
-                                     "            raise TypeError('A tuple (<type_name>, <pointer>) is required, but got None')\n" +
-                                     "        self._obj = obj\n" +
-                                     "    \n" +
-                                     "    @staticmethod\n" +
-                                     "    def newHashMap(dict):\n" +
-                                     "        return Map(Map_newHashMap(dict))\n" +
-                                     "\n");
-                */
             }
         }.create();
     }

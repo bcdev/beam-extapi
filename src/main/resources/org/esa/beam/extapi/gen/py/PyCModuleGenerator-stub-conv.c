@@ -5,15 +5,39 @@
 PyObject* beampy_newPyStringFromJString(jstring strJObj)
 {
     const char* utf8Chars;
-    jsize n;
     PyObject* strPyObj;
 
-    n = (*jenv)->GetStringUTFLength(jenv, strJObj);
     utf8Chars = (*jenv)->GetStringUTFChars(jenv, strJObj, 0);
-    strPyObj = PyUnicode_DecodeUTF8(utf8Chars, n, NULL);
+    strPyObj = PyUnicode_FromString(utf8Chars);
     (*jenv)->ReleaseStringUTFChars(jenv, strJObj, utf8Chars);
 
     return strPyObj;
+}
+
+/**
+ * Returns a global reference to a String array.
+ */
+jstring beampy_newJStringFromPyObject(PyObject* anyPyObj)
+{
+    char* utf8Chars;
+    PyObject* strPyObj;
+    jstring strJObj;
+
+    strPyObj = PyObject_Str(anyPyObj);
+    if (strPyObj == NULL) {
+        return NULL;
+    }
+
+    utf8Chars = PyUnicode_AsUTF8(strPyObj);
+    strJObj = (*jenv)->NewStringUTF(jenv, utf8Chars);
+    Py_DECREF(strPyObj);
+
+    if (strJObj == NULL) {
+        return NULL;
+    }
+
+    // todo - check if we must DeleteLocalRef(strJObj)
+    return (*jenv)->NewGlobalRef(jenv, strJObj);
 }
 
 PyObject* beampy_newPySeqFromJStringArray(jarray arrayJObj)
@@ -45,11 +69,40 @@ PyObject* beampy_newPySeqFromJStringArray(jarray arrayJObj)
     return listPyObj;
 }
 
+/**
+ * Returns a global reference to a String array.
+ */
 jarray beampy_newJStringArrayFromPySeq(PyObject* seqPyObj)
 {
-    // todo - implement me!
-    PyErr_SetString(PyExc_NotImplementedError, "not implemented: beampy_newJStringArrayFromPySeq()");
-    return NULL;
+    jarray arrayJObj;
+    Py_ssize_t size;
+    Py_ssize_t i;
+
+    size = PySequence_Size(seqPyObj);
+    if (size < 0 || size >= (1 << 31)) {
+        char msg[256];
+        sprintf(msg, "invalid sequence size: %d", size);
+        PyErr_SetString(PyExc_ValueError, msg);
+        return NULL;
+    }
+
+    arrayJObj = (*jenv)->NewObjectArray(jenv, (jsize) size, classString, NULL);
+
+    for (i = 0; i < size; i++) {
+        PyObject* itemPyObj = PySequence_GetItem(seqPyObj, i);
+        if (itemPyObj == NULL) {
+            (*jenv)->DeleteLocalRef(jenv, arrayJObj);
+            return NULL;
+        }
+        if (itemPyObj != Py_None) {
+            (*jenv)->SetObjectArrayElement(jenv, arrayJObj, (jint) i, beampy_newJStringFromPyObject(itemPyObj));
+        } else {
+            (*jenv)->SetObjectArrayElement(jenv, arrayJObj, (jint) i, NULL);
+        }
+    }
+
+    // todo - check if we must DeleteLocalRef(arrayJObj)
+    return (*jenv)->NewGlobalRef(jenv, arrayJObj);
 }
 
 
@@ -58,13 +111,36 @@ jarray beampy_newJStringArrayFromPySeq(PyObject* seqPyObj)
 // Java objects and object arrays
 ///////////////////////////////////////////////
 
-PyObject* beampy_newPyObjectFromJObject(jobject obj, const char* typeName)
+/**
+ * Stores a global reference to a Java object
+ */
+PyObject* beampy_newPyObjectFromJObject(jobject anyJObj, const char* typeName)
 {
-    if (obj != NULL) {
-        jobject ref = (*jenv)->NewGlobalRef(jenv, obj);
-        return Py_BuildValue("(sK)", typeName, (unsigned PY_LONG_LONG) ref);
+    if (anyJObj != NULL) {
+        jobject refJObj = (*jenv)->NewGlobalRef(jenv, anyJObj);
+        return Py_BuildValue("(sK)", typeName, (unsigned PY_LONG_LONG) refJObj);
     } else {
         return Py_BuildValue("");
+    }
+}
+
+jobject beampy_newJObjectFromPyObject(PyObject* anyPyObj, const char* typeName)
+{
+    if (PyTuple_Check(anyPyObj) && PyTuple_Size(anyPyObj) == 2) {
+        PyObject* typePyObj = PyTuple_GetItem(anyPyObj, 0);
+        PyObject* jobjPyObj = PyTuple_GetItem(anyPyObj, 1);
+        const char* typeNameActual = PyUnicode_AsUTF8(typePyObj);
+        // todo - using a more generic approach we would here use the Java type hierarchy to perform type-checking
+        if (strcmp(typeNameActual, "Object") == 0 || strcmp(typeNameActual, typeName) == 0) {
+            return (jobject) PyLong_AsVoidPtr(jobjPyObj);
+        } else {
+            PyErr_SetString(PyExc_ValueError, "illegal object type");
+            return NULL;
+        }
+    } else {
+        // todo - using a more generic approach we would here try to convert the python object to a Java one
+        PyErr_SetString(PyExc_ValueError, "tuple of length 2 expected");
+        return NULL;
     }
 }
 
@@ -99,9 +175,35 @@ PyObject* beampy_newPySeqFromJObjectArray(jarray arrJObj, const char* typeName)
 
 jarray beampy_newJObjectArrayFromPySeq(PyObject* seqPyObj, const char* typeName)
 {
-    // todo - implement me!
-    PyErr_SetString(PyExc_NotImplementedError, "not implemented: beampy_newPySeqFromJObjectArray()");
-    return NULL;
+    jarray arrayJObj;
+    Py_ssize_t size;
+    Py_ssize_t i;
+
+    size = PySequence_Size(seqPyObj);
+    if (size < 0 || size >= (1 << 31)) {
+        char msg[256];
+        sprintf(msg, "invalid sequence size: %d", size);
+        PyErr_SetString(PyExc_ValueError, msg);
+        return NULL;
+    }
+
+    arrayJObj = (*jenv)->NewObjectArray(jenv, (jsize) size, classObject, NULL);
+
+    for (i = 0; i < size; i++) {
+        PyObject* itemPyObj = PySequence_GetItem(seqPyObj, i);
+        if (itemPyObj == NULL) {
+            (*jenv)->DeleteLocalRef(jenv, arrayJObj);
+            return NULL;
+        }
+        if (itemPyObj != Py_None) {
+            (*jenv)->SetObjectArrayElement(jenv, arrayJObj, (jint) i, beampy_newJObjectFromPyObject(itemPyObj, typeName));
+        } else {
+            (*jenv)->SetObjectArrayElement(jenv, arrayJObj, (jint) i, NULL);
+        }
+    }
+
+    // todo - check if we must DeleteLocalRef(arrayJObj)
+    return (*jenv)->NewGlobalRef(jenv, arrayJObj);
 }
 
 
@@ -109,55 +211,6 @@ jarray beampy_newJObjectArrayFromPySeq(PyObject* seqPyObj, const char* typeName)
 
 
 /*
-
-PyObject* beampy_newPySeqFromCObjectArray______________(const char* type, const void** elems, int length)
-{
-    PyObject* list;
-    PyObject* item;
-    int i;
-    list = PyList_New(length);
-    if (list == NULL) {
-        return NULL;
-    }
-    for (i = 0; i < length; i++) {
-        item = Py_BuildValue("(sK)", type, (unsigned PY_LONG_LONG) elems[i]);
-        if (item == NULL) {
-            Py_DECREF(list);
-            return NULL;
-        }
-        if (PyList_SetItem(list, i, item) != 0) {
-            Py_DECREF(item);
-            Py_DECREF(list);
-            return NULL;
-        }
-    }
-    return list;
-}
-
-PyObject* beampy_newPySeqFromCStringArray______________(const char** elems, int length)
-{
-    PyObject* list;
-    PyObject* item;
-    int i;
-    list = PyList_New(length);
-    if (list == NULL) {
-        return NULL;
-    }
-    for (i = 0; i < length; i++) {
-        item = PyUnicode_FromString(elems[i]);
-        if (item == NULL) {
-            Py_DECREF(list);
-            return NULL;
-        }
-        if (PyList_SetItem(list, i, item) != 0) {
-            Py_DECREF(item);
-            Py_DECREF(list);
-            return NULL;
-        }
-    }
-    return list;
-}
-
 
 // The following code is experimental and unused yet.
 //

@@ -1,48 +1,75 @@
 
 /*
+ * This template generates functions for converting Java primitive array to Python buffers and back.
  * Template parameters:
  *   typeUC =         ${typeUC}
  *   typeLC =         ${typeLC}
+ *   bufferFormat =   ${bufferFormat}
  *   itemToElemCall = ${itemToElemCall}
+ *   elemToItemCall = ${elemToItemCall}
  */
 
-
 // Used in /org/esa/beam/extapi/gen/py/PyCParameterGenerator.java, PrimitiveArray
-jarray beampy_newJ${typeUC}ArrayFromBuffer(const j${typeLC}* buffer, jint length)
+jarray beampy_newJ${typeUC}ArrayFromBuffer(const j${typeLC}* buffer, jint bufferLength)
 {
-    jarray arrayJObj = (*jenv)->New${typeUC}Array(jenv, length);
+    jarray arrayJObj;
+
+    arrayJObj = (*jenv)->New${typeUC}Array(jenv, bufferLength);
     if (arrayJObj != NULL) {
-        beam_copyToJArray(arrayJObj, buffer, length, sizeof (j${typeLC}));
+        void* addr = (*jenv)->GetPrimitiveArrayCritical(jenv, arrayJObj, NULL);
+        if (addr != NULL) {
+            memcpy(addr, buffer, bufferLength * sizeof (j${typeLC}));
+            (*jenv)->ReleasePrimitiveArrayCritical(jenv, arrayJObj, addr, 0);
+        }
     }
+
     return arrayJObj;
 }
 
-
 // Used in /org/esa/beam/extapi/gen/py/PyCParameterGenerator.java, PrimitiveArray
-PyObject* beampy_copyJ${typeUC}ArrayToBuffer(jarray arrayJObj, j${typeLC}* buffer, jint length, PyObject* bufferPyObj)
+PyObject* beampy_copyJ${typeUC}ArrayToBuffer(jarray arrayJObj, j${typeLC}* buffer, jint bufferLength, PyObject* bufferPyObj)
 {
-    // todo - implement me!
-    PyErr_SetString(PyExc_NotImplementedError, "not implemented: beampy_copyJ${typeUC}ArrayToBuffer()");
-    // todo return bufferPyObj;
-    return NULL;
-}
+    void* addr;
+    jsize n;
 
+    n = (*jenv)->GetArrayLength(jenv, arrayJObj);
+    if (bufferLength < n) {
+         PyErr_SetString(PyExc_ValueError, "array buffer too small");
+         return NULL;
+    }
+
+    addr = (*jenv)->GetPrimitiveArrayCritical(jenv, arrayJObj, NULL);
+    if (addr != NULL) {
+        memcpy(buffer, addr, bufferLength * sizeof (j${typeLC}));
+        (*jenv)->ReleasePrimitiveArrayCritical(jenv, arrayJObj, addr, 0);
+    }
+
+    return bufferPyObj;
+}
 
 // Used in /org/esa/beam/extapi/gen/py/PyCParameterGenerator.java, PrimitiveArray
 PyObject* beampy_newPyObjectFromJ${typeUC}Array(jarray arrayJObj)
 {
-    // todo - implement me!
-    PyErr_SetString(PyExc_NotImplementedError, "not implemented: beampy_newPyObjectFromJ${typeUC}Array()");
-    return NULL;
+    PyObject* bufferPyObj;
+    void* addr;
+    jsize arrayLength;
+
+    arrayLength = (*jenv)->GetArrayLength(jenv, arrayJObj);
+
+    addr = (*jenv)->GetPrimitiveArrayCritical(jenv, arrayJObj, NULL);
+    if (addr != NULL) {
+        bufferPyObj = CArray_createFromItems("${bufferFormat}", addr, arrayLength, CArray_releaseElements);
+        (*jenv)->ReleasePrimitiveArrayCritical(jenv, arrayJObj, addr, 0);
+    } else {
+        bufferPyObj = NULL;
+    }
+
+    return bufferPyObj;
 }
 
-/*
- * Creates C-array of primitive type ${typeName} from a Python sequence.
- * Template parameters:
- *   typeUC =         ${typeUC}
- *   typeLC =         ${typeLC}
- *   itemToElemCall = ${itemToElemCall}
- */
+// The following code is commented out because its uses Python lists to represent Java primitive arrays.
+// We now use Python buffers to do so.
+// However the code might be useful at a later stage.
 
  /*
 jarray beampy_newJ${typeUC}ArrayFromPySeq(PyObject* seq, jint* length)
@@ -115,6 +142,6 @@ PyObject* beampy_newPyListFromJ${typeUC}Array(jarray arrayJObj)
             return NULL;
         }
     }
-    return list;
-}
-*/
+      return list;
+  }
+  */
