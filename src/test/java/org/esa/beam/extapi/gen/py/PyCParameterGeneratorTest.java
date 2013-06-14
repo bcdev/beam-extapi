@@ -103,6 +103,20 @@ public class PyCParameterGeneratorTest {
     }
 
     @Test
+    public void test_CodeGenParameter_MapScalar() {
+        testGenerators(new PyCParameterGenerator.MapScalar(createParam("params", Map.class, Modifier.IN)),
+                       null,
+                       "jobject paramsJObj = NULL;",
+                       "paramsJObj = beampy_newJMapFromPyObject(paramsPyObj);\n" +
+                               "if (paramsJObj == NULL) {\n" +
+                               "    return NULL;\n" +
+                               "}",
+                       "paramsJObj",
+                       null,
+                       "(*jenv)->DeleteLocalRef(jenv, paramsJObj);");
+    }
+
+    @Test
     public void test_CodeGenParameter_PrimitiveArray() {
         testPrimitiveArray("data", boolean[].class, Modifier.IN,
                            "jboolean* dataData = NULL;\n" +

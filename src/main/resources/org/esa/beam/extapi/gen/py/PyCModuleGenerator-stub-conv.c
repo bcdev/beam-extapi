@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////
-// Java strings and strings arrays
+// Java String and String array
 ///////////////////////////////////////////////
 
 PyObject* beampy_newPyStringFromJString(jstring strJObj)
@@ -15,7 +15,7 @@ PyObject* beampy_newPyStringFromJString(jstring strJObj)
 }
 
 /**
- * Returns a global reference to a String array.
+ * Returns a local reference to a String array.
  */
 jstring beampy_newJStringFromPyObject(PyObject* anyPyObj)
 {
@@ -36,8 +36,7 @@ jstring beampy_newJStringFromPyObject(PyObject* anyPyObj)
         return NULL;
     }
 
-    // todo - check if we must DeleteLocalRef(strJObj)
-    return (*jenv)->NewGlobalRef(jenv, strJObj);
+    return strJObj;
 }
 
 PyObject* beampy_newPySeqFromJStringArray(jarray arrayJObj)
@@ -70,7 +69,7 @@ PyObject* beampy_newPySeqFromJStringArray(jarray arrayJObj)
 }
 
 /**
- * Returns a global reference to a String array.
+ * Returns a local reference to a String array.
  */
 jarray beampy_newJStringArrayFromPySeq(PyObject* seqPyObj)
 {
@@ -101,14 +100,13 @@ jarray beampy_newJStringArrayFromPySeq(PyObject* seqPyObj)
         }
     }
 
-    // todo - check if we must DeleteLocalRef(arrayJObj)
-    return (*jenv)->NewGlobalRef(jenv, arrayJObj);
+    return arrayJObj;
 }
 
 
 
 ///////////////////////////////////////////////
-// Java objects and object arrays
+// Java Object and Object array
 ///////////////////////////////////////////////
 
 /**
@@ -131,7 +129,7 @@ jobject beampy_newJObjectFromPyObject(PyObject* anyPyObj, const char* typeName)
         PyObject* jobjPyObj = PyTuple_GetItem(anyPyObj, 1);
         const char* typeNameActual = PyUnicode_AsUTF8(typePyObj);
         // todo - using a more generic approach we would here use the Java type hierarchy to perform type-checking
-        if (strcmp(typeNameActual, "Object") == 0 || strcmp(typeNameActual, typeName) == 0) {
+        if (strcmp(typeName, "Object") == 0 || strcmp(typeName, typeNameActual) == 0) {
             return (jobject) PyLong_AsVoidPtr(jobjPyObj);
         } else {
             PyErr_SetString(PyExc_ValueError, "illegal object type");
@@ -202,140 +200,118 @@ jarray beampy_newJObjectArrayFromPySeq(PyObject* seqPyObj, const char* typeName)
         }
     }
 
-    // todo - check if we must DeleteLocalRef(arrayJObj)
-    return (*jenv)->NewGlobalRef(jenv, arrayJObj);
+    return arrayJObj;
 }
 
 
+
+
+
+
+///////////////////////////////////////////////
+// Java Map
+///////////////////////////////////////////////
 
 
 
 /*
+static jclass classBoolean = NULL;
+static jclass classInteger = NULL;
+static jclass classDouble = NULL;
+static jclass classHashMap = NULL;
+*/
 
-// The following code is experimental and unused yet.
-//
-// It allows us to create a Java (Hash)Map from a Python dictionary
-// so that we can pass the resulting map into GPF.create() methods.
+static jmethodID _booleanConstr = NULL;
+static jmethodID _integerConstr = NULL;
+static jmethodID _doubleConstr = NULL;
+static jmethodID _hashMapConstr = NULL;
+static jmethodID _hashMapPutMethod = NULL;
 
-#include <jni.h>
-
-static jmethodID hashMapConstr = NULL;
-static jmethodID hashMapPutMethod = NULL;
-static jmethodID booleanConstr = NULL;
-static jmethodID integerConstr = NULL;
-static jmethodID doubleConstr = NULL;
-
-
-jmethodID beampy_getMethodID(jclass cls, const char* name, const char* sig)
-{
-    JNIEnv* jenv = beam_getJNIEnv();
-    jmethodID m = (*jenv)->GetMethodID(jenv, cls, name, sig);
-    if (m == NULL){
-        fprintf(stderr, "${libName}: Java method not found: %p: %s%s\n", cls, name, sig);
-    }
-    return m;
-}
-
-void beam_initJavaCoreMethods() {
+boolean beampy_initJavaCoreVars() {
     static init = 0;
     if (init == 0) {
         init = 1;
-        booleanConstr = beampy_getMethodID(classBoolean, "<init>", "(Z)V");
-        integerConstr = beampy_getMethodID(classInteger, "<init>", "(I)V");
-        doubleConstr = beampy_getMethodID(classDouble, "<init>", "(D)V");
-        hashMapConstr = beampy_getMethodID(classHashMap, "<init>", "()V");
-        hashMapPutMethod = beampy_getMethodID(classHashMap, "put", "(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;");
+
+        if (!beampy_initJMethod(&_booleanConstr, classBoolean, "java.lang.Boolean", "<init>", "(Z)V", 0)) {
+            return 0;
+        }
+        if (!beampy_initJMethod(&_integerConstr, classInteger, "java.lang.Integer", "<init>", "(I)V", 0)) {
+            return 0;
+        }
+        if (!beampy_initJMethod(&_doubleConstr, classDouble, "java.lang.Double", "<init>", "(D)V", 0)) {
+            return 0;
+        }
+        if (!beampy_initJMethod(&_hashMapConstr, classHashMap, "java.util.HashMap", "<init>", "()V", 0)) {
+            return 0;
+        }
+        if (!beampy_initJMethod(&_hashMapPutMethod, classHashMap, "java.util.HashMap", "put", "(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;", 0)) {
+            return 0;
+        }
     }
+    return 1;
 }
 
-jobject beampy_newJObjectFromPyObject(PyObject* pyObj)
+jobject beampy_newJMapFromPyObject(PyObject* anyPyObj);
+
+jobject beampy_newGenericJObjectFromPyObject(PyObject* anyPyObj)
 {
-    JNIEnv* jenv = beam_getJNIEnv();
-    static int init = 0;
-    jobject result = NULL;
+    jobject anyJObj = NULL;
 
-    beam_initJavaCoreMethods();
+    if (!beampy_initJavaCoreVars()) {
+        return NULL;
+    }
 
-    if (PyBool_Check(pyObj)) {
-        int v = (pyObj == Py_True);
-        result = (*jenv)->NewObject(jenv, classBoolean, booleanConstr, v);
-    } else if (PyLong_Check(pyObj)) {
-        long v = PyLong_AsLong(pyObj);
-        result = (*jenv)->NewObject(jenv, classInteger, integerConstr, v);
-    } else if (PyFloat_Check(pyObj)) {
-        double v = PyFloat_AsDouble(pyObj);
-        result = (*jenv)->NewObject(jenv, classDouble, doubleConstr, v);
-    } else if (PyUnicode_Check(pyObj)) {
-        char* utf8 = PyUnicode_AsUTF8(pyObj);
-        result = (*jenv)->NewStringUTF(jenv, utf8);
+    if (PyBool_Check(anyPyObj)) {
+        boolean v = (anyPyObj == Py_True);
+        anyJObj = (*jenv)->NewObject(jenv, classBoolean, _booleanConstr, v);
+    } else if (PyLong_Check(anyPyObj)) {
+        long v = PyLong_AsLong(anyPyObj);
+        anyJObj = (*jenv)->NewObject(jenv, classInteger, _integerConstr, v);
+    } else if (PyFloat_Check(anyPyObj)) {
+        double v = PyFloat_AsDouble(anyPyObj);
+        anyJObj = (*jenv)->NewObject(jenv, classDouble, _doubleConstr, v);
+    } else if (PyUnicode_Check(anyPyObj)) {
+        char* v = PyUnicode_AsUTF8(anyPyObj);
+        anyJObj = (*jenv)->NewStringUTF(jenv, v);
+    } else if (PyDict_Check(anyPyObj)) {
+        anyJObj = beampy_newJMapFromPyObject(anyPyObj);
     } else {
-        PyErr_SetString(PyExc_ValueError, "Expected a boolean, number or string");
+        PyErr_SetString(PyExc_ValueError, "Expected a boolean, number, string or dictionary");
     }
 
-    return result != NULL ? (*jenv)->NewGlobalRef(jenv, result) : NULL;
+    return anyJObj;
 }
 
-void* Map_newHashMap(PyObject* dict)
+
+jobject beampy_newJMapFromPyObject(PyObject* anyPyObj)
 {
-    JNIEnv* jenv = beam_getJNIEnv();
-    PyObject* dictKey;
-    PyObject* dictValue;
+    PyObject* dictKeyPyObj;
+    PyObject* dictValuePyObj;
     Py_ssize_t dictPos = 0;
-    jobject map = NULL;
-    int apicode = 0;
+    jobject mapJObj = NULL;
 
-    if ((apicode = beam_initApi()) != 0) {
-        PyErr_SetString(BeamPy_Error, "beam_initApi() failed");
+    if (!beampy_initJavaCoreVars()) {
         return NULL;
     }
 
-    beam_initJavaCoreMethods();
-
-    map = (*jenv)->NewObject(jenv, classHashMap, hashMapConstr);
-    if (map == NULL) {
-        PyErr_SetString(BeamPy_Error, "Map_newHashMap: dictionary expected");
+    if (!PyDict_Check(anyPyObj)) {
+        PyErr_SetString(PyExc_TypeError, "dictionary expected");
         return NULL;
     }
 
-    while (PyDict_Next(dict, &dictPos, &dictKey, &dictValue)) {
-        jobject mapKey = beampy_newJObjectFromPyObject(dictKey);
-        jobject mapValue = beampy_newJObjectFromPyObject(dictValue);
-        if (mapKey != NULL && mapValue != NULL) {
-            (*jenv)->CallObjectMethod(jenv, map, hashMapPutMethod, mapKey, mapValue);
+    mapJObj = (*jenv)->NewObject(jenv, classHashMap, _hashMapConstr);
+    if (mapJObj == NULL) {
+        PyErr_SetString(PyExc_ValueError, "failed to create Java Map");
+        return NULL;
+    }
+
+    while (PyDict_Next(anyPyObj, &dictPos, &dictKeyPyObj, &dictValuePyObj)) {
+        jobject mapKeyJObj   = beampy_newGenericJObjectFromPyObject(dictKeyPyObj);
+        jobject mapValueJObj = beampy_newGenericJObjectFromPyObject(dictValuePyObj);
+        if (mapKeyJObj != NULL && mapValueJObj != NULL) {
+            (*jenv)->CallObjectMethod(jenv, mapJObj, _hashMapPutMethod, mapKeyJObj, mapValueJObj);
         }
     }
 
-    return map;
+    return mapJObj;
 }
-
-
-//
-// Factory method for Java HashMap instances.
-//
-// In Python, call <code>beampy.Map_newHashMap({'a': 0.04, 'b': True, 'C': 545})</code>
-// or <code>beampy.Map.newHashMap({'a': 0.04, 'b': True, 'C': 545})</code>.
-//
-PyObject* BeamPyMap_newHashMap(PyObject* self, PyObject* args)
-{
-    PyObject* dict;
-    void* result;
-
-    if (!PyArg_ParseTuple(args, "O:newHashMap", &dict)) {
-        return NULL;
-    }
-
-    if (!PyDict_Check(dict)) {
-        PyErr_SetString(PyExc_ValueError, "dictionary expected");
-        return NULL;
-    }
-
-    result = Map_newHashMap(dict);
-    if (result == NULL) {
-        return NULL;
-    }
-
-    return Py_BuildValue("(sK)", "Map", (unsigned PY_LONG_LONG) result);
-}
-
-
-*/

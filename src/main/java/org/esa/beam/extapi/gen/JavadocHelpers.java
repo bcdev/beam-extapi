@@ -42,16 +42,20 @@ public class JavadocHelpers {
         return type.qualifiedTypeName().equals("java.lang.String");
     }
 
+    public static boolean isMap(Type type) {
+        return type.qualifiedTypeName().equals("java.util.Map");
+    }
+
     public static boolean isPrimitiveArray(Type type) {
-        return type.dimension().equals("[]") && type.isPrimitive();
+        return isArray1D(type) && type.isPrimitive();
     }
 
     public static boolean isStringArray(Type type) {
-        return type.dimension().equals("[]") && isString(type);
+        return isArray1D(type) && isString(type);
     }
 
     public static boolean isObjectArray(Type type) {
-        return type.dimension().equals("[]") && !type.isPrimitive();
+        return isArray1D(type) && !type.isPrimitive();
     }
 
     public static String firstCharToUpperCase(String typeName) {
@@ -132,5 +136,9 @@ public class JavadocHelpers {
                 .replace("\"", "\\\"")
                 .replace("\n", "\\n")
                 .replace("\t", "    ");
+    }
+
+    private static boolean isArray1D(Type type) {
+        return type.dimension().equals("[]");
     }
 }
