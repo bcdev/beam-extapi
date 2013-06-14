@@ -1,37 +1,105 @@
+///////////////////////////////////////////////
+// Java strings and strings arrays
+///////////////////////////////////////////////
+
+PyObject* beampy_newPyStringFromJString(jstring strJObj)
+{
+    const char* utf8Chars;
+    jsize n;
+    PyObject* strPyObj;
+
+    n = (*jenv)->GetStringUTFLength(jenv, strJObj);
+    utf8Chars = (*jenv)->GetStringUTFChars(jenv, strJObj, 0);
+    strPyObj = PyUnicode_DecodeUTF8(utf8Chars, n, NULL);
+    (*jenv)->ReleaseStringUTFChars(jenv, strJObj, utf8Chars);
+
+    return strPyObj;
+}
+
+PyObject* beampy_newPySeqFromJStringArray(jarray arrayJObj)
+{
+    PyObject* listPyObj;
+    jsize i, n;
+
+    n = (*jenv)->GetArrayLength(jenv, arrayJObj);
+    listPyObj = PyList_New(n);
+    if (listPyObj == NULL) {
+        return NULL;
+    }
+
+    for (i = 0; i < n; i++) {
+        jstring itemJObj = (jstring) (*jenv)->GetObjectArrayElement(jenv, arrayJObj, i);
+        PyObject* itemPyObj = beampy_newPyStringFromJString(itemJObj);
+        (*jenv)->DeleteLocalRef(jenv, itemJObj);
+        if (itemPyObj == NULL) {
+            Py_DECREF(listPyObj);
+            return NULL;
+        }
+        if (PyList_SetItem(listPyObj, i, itemPyObj) != 0) {
+            Py_DECREF(itemPyObj);
+            Py_DECREF(listPyObj);
+            return NULL;
+        }
+    }
+
+    return listPyObj;
+}
+
 jarray beampy_newJStringArrayFromPySeq(PyObject* seqPyObj)
 {
-    /*
-       todo - implement me!
-     */
+    // todo - implement me!
     PyErr_SetString(PyExc_NotImplementedError, "not implemented: beampy_newJStringArrayFromPySeq()");
     return NULL;
 }
-PyObject* beampy_newPySeqFromJStringArray(jarray arrayJObj)
+
+
+
+///////////////////////////////////////////////
+// Java objects and object arrays
+///////////////////////////////////////////////
+
+PyObject* beampy_newPyObjectFromJObject(jobject obj, const char* typeName)
 {
-    /*
-       todo - implement me!
-     */
-    PyErr_SetString(PyExc_NotImplementedError, "not implemented: beampy_newPySeqFromJStringArray()");
-    return NULL;
+    if (obj != NULL) {
+        jobject ref = (*jenv)->NewGlobalRef(jenv, obj);
+        return Py_BuildValue("(sK)", typeName, (unsigned PY_LONG_LONG) ref);
+    } else {
+        return Py_BuildValue("");
+    }
 }
 
+PyObject* beampy_newPySeqFromJObjectArray(jarray arrJObj, const char* typeName)
+{
+    PyObject* listPyObj;
+    jsize i, n;
 
+    n = (*jenv)->GetArrayLength(jenv, arrJObj);
+    listPyObj = PyList_New(n);
+    if (listPyObj == NULL) {
+        return NULL;
+    }
 
+    for (i = 0; i < n; i++) {
+        jobject itemJObj = (*jenv)->GetObjectArrayElement(jenv, arrJObj, i);
+        PyObject* itemPyObj = beampy_newPyObjectFromJObject(itemJObj, typeName);
+        (*jenv)->DeleteLocalRef(jenv, itemJObj);
+        if (itemPyObj == NULL) {
+            Py_DECREF(listPyObj);
+            return NULL;
+        }
+        if (PyList_SetItem(listPyObj, i, itemPyObj) != 0) {
+            Py_DECREF(itemPyObj);
+            Py_DECREF(listPyObj);
+            return NULL;
+        }
+    }
 
+    return listPyObj;
+}
 
 jarray beampy_newJObjectArrayFromPySeq(PyObject* seqPyObj, const char* typeName)
 {
-    /*
-       todo - implement me!
-     */
-    PyErr_SetString(PyExc_NotImplementedError, "not implemented: beampy_newJObjectArrayFromPySeq()");
-    return NULL;
-}
-PyObject* beampy_newPySeqFromJObjectArray(jarray arrayJObj, const char* typeName)
-{
-    /*
-       todo - implement me!
-     */
+    // todo - implement me!
     PyErr_SetString(PyExc_NotImplementedError, "not implemented: beampy_newPySeqFromJObjectArray()");
     return NULL;
 }
@@ -40,30 +108,9 @@ PyObject* beampy_newPySeqFromJObjectArray(jarray arrayJObj, const char* typeName
 
 
 
-PyObject* beampy_newPyStringFromJString(jstring jstr)
-{
-    /*
-       todo - implement me!
-     */
-    PyErr_SetString(PyExc_NotImplementedError, "not implemented: beampy_newPyStringFromJString()");
-    return NULL;
-}
-
-PyObject* beampy_newPyObjectFromJObject(jobject valueJObj)
-{
-    /*
-       todo - implement me!
-       Use char* PyUnicode_AsUTF8AndSize(PyObject *unicode, Py_ssize_t *size)
-       PyArg_ParseTuple(item, "(sK)", &itemType, &itemObj);
-     */
-    PyErr_SetString(PyExc_NotImplementedError, "not implemented: beampy_newPyObjectFromJObject()");
-    return NULL;
-}
-
 /*
- * Creates a Python sequence (a list) from a C-array of Java objects (type void*).
- */
-PyObject* beampy_newPySeqFromCObjectArray(const char* type, const void** elems, int length)
+
+PyObject* beampy_newPySeqFromCObjectArray______________(const char* type, const void** elems, int length)
 {
     PyObject* list;
     PyObject* item;
@@ -87,25 +134,7 @@ PyObject* beampy_newPySeqFromCObjectArray(const char* type, const void** elems, 
     return list;
 }
 
-/*
- * Creates a C-array of Java objects (type void*) from a Python sequence.
- */
-void** beampy_newCObjectArrayFromPySeq(const char* type, PyObject* seq, int* length)
-{
-    /*
-       todo - implement me!
-       Use char* PyUnicode_AsUTF8AndSize(PyObject *unicode, Py_ssize_t *size)
-       PyArg_ParseTuple(item, "(sK)", &itemType, &itemObj);
-    */
-    PyErr_SetString(PyExc_NotImplementedError, "not implemented: beampy_newCObjectArrayFromPySeq()");
-    return NULL;
-}
-
-
-/*
- * Creates a Python sequence (a list) from a C-array of C-strings (type const char*).
- */
-PyObject* beampy_newPySeqFromCStringArray(const char** elems, int length)
+PyObject* beampy_newPySeqFromCStringArray______________(const char** elems, int length)
 {
     PyObject* list;
     PyObject* item;
@@ -129,20 +158,6 @@ PyObject* beampy_newPySeqFromCStringArray(const char** elems, int length)
     return list;
 }
 
-/*
- * Creates a C-array of C-strings from a Python sequence.
- */
-char** beampy_newCStringArrayFromPySeq(PyObject* seq, int* length)
-{
-    /*
-        todo - implement me!
-       Use char* PyUnicode_AsUTF8AndSize(PyObject *unicode, Py_ssize_t *size)
-    */
-    PyErr_SetString(PyExc_NotImplementedError, "not implemented: beampy_newCStringArrayFromPySeq()");
-    return NULL;
-}
-
-/*
 
 // The following code is experimental and unused yet.
 //

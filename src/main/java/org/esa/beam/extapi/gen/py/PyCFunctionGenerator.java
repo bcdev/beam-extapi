@@ -300,7 +300,9 @@ public abstract class PyCFunctionGenerator extends AbstractFunctionGenerator {
 
         @Override
         public String generateTargetResultFromTransformedJniResultAssignment(GeneratorContext context) {
-            return format("${res}PyObj = beampy_newPyObjectFromJObject(${res}JObj);");
+            String typeName = getReturnType().simpleTypeName();
+            return format("${res}PyObj = beampy_newPyObjectFromJObject(${res}JObj, \"${typeName}\");",
+                          kv("typeName", typeName));
         }
 
         @Override
@@ -356,8 +358,8 @@ public abstract class PyCFunctionGenerator extends AbstractFunctionGenerator {
         @Override
         public String generateTargetResultFromTransformedJniResultAssignment(GeneratorContext context) {
             String typeName = getReturnType().simpleTypeName();
-            return format("${res}PyObj = beampy_newPySeqFromJObjectArray((jarray) ${res}JObj, \"${type}\");",
-                          kv("type", typeName));
+            return format("${res}PyObj = beampy_newPySeqFromJObjectArray((jarray) ${res}JObj, \"${typeName}\");",
+                          kv("typeName", typeName));
         }
     }
 

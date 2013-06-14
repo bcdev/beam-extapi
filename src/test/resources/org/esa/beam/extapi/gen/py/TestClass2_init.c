@@ -7,7 +7,7 @@ PyObject* BeamPyTestClass2_newTestClass2(PyObject* self, PyObject* args)
         return NULL;
     }
     _resultJObj = (*jenv)->NewObject(jenv, classTestClass2, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "TestClass2");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }

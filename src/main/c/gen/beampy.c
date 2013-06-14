@@ -4319,40 +4319,108 @@ PyObject* beampy_newPyListFromJDoubleArray(jarray arrayJObj)
 // >>>>>>>> End include from PyCModuleGenerator-stub-conv-primarr.c
 
 // <<<<<<<< Begin include from PyCModuleGenerator-stub-conv.c
+///////////////////////////////////////////////
+// Java strings and strings arrays
+///////////////////////////////////////////////
+
+PyObject* beampy_newPyStringFromJString(jstring strJObj)
+{
+    const char* utf8Chars;
+    jsize n;
+    PyObject* strPyObj;
+
+    n = (*jenv)->GetStringUTFLength(jenv, strJObj);
+    utf8Chars = (*jenv)->GetStringUTFChars(jenv, strJObj, 0);
+    strPyObj = PyUnicode_DecodeUTF8(utf8Chars, n, NULL);
+    (*jenv)->ReleaseStringUTFChars(jenv, strJObj, utf8Chars);
+
+    return strPyObj;
+}
+
+PyObject* beampy_newPySeqFromJStringArray(jarray arrayJObj)
+{
+    PyObject* listPyObj;
+    jsize i, n;
+
+    n = (*jenv)->GetArrayLength(jenv, arrayJObj);
+    listPyObj = PyList_New(n);
+    if (listPyObj == NULL) {
+        return NULL;
+    }
+
+    for (i = 0; i < n; i++) {
+        jstring itemJObj = (jstring) (*jenv)->GetObjectArrayElement(jenv, arrayJObj, i);
+        PyObject* itemPyObj = beampy_newPyStringFromJString(itemJObj);
+        (*jenv)->DeleteLocalRef(jenv, itemJObj);
+        if (itemPyObj == NULL) {
+            Py_DECREF(listPyObj);
+            return NULL;
+        }
+        if (PyList_SetItem(listPyObj, i, itemPyObj) != 0) {
+            Py_DECREF(itemPyObj);
+            Py_DECREF(listPyObj);
+            return NULL;
+        }
+    }
+
+    return listPyObj;
+}
+
 jarray beampy_newJStringArrayFromPySeq(PyObject* seqPyObj)
 {
-    /*
-       todo - implement me!
-     */
+    // todo - implement me!
     PyErr_SetString(PyExc_NotImplementedError, "not implemented: beampy_newJStringArrayFromPySeq()");
     return NULL;
 }
-PyObject* beampy_newPySeqFromJStringArray(jarray arrayJObj)
+
+
+
+///////////////////////////////////////////////
+// Java objects and object arrays
+///////////////////////////////////////////////
+
+PyObject* beampy_newPyObjectFromJObject(jobject obj, const char* typeName)
 {
-    /*
-       todo - implement me!
-     */
-    PyErr_SetString(PyExc_NotImplementedError, "not implemented: beampy_newPySeqFromJStringArray()");
-    return NULL;
+    if (obj != NULL) {
+        jobject ref = (*jenv)->NewGlobalRef(jenv, obj);
+        return Py_BuildValue("(sK)", typeName, (unsigned PY_LONG_LONG) ref);
+    } else {
+        return Py_BuildValue("");
+    }
 }
 
+PyObject* beampy_newPySeqFromJObjectArray(jarray arrJObj, const char* typeName)
+{
+    PyObject* listPyObj;
+    jsize i, n;
 
+    n = (*jenv)->GetArrayLength(jenv, arrJObj);
+    listPyObj = PyList_New(n);
+    if (listPyObj == NULL) {
+        return NULL;
+    }
 
+    for (i = 0; i < n; i++) {
+        jobject itemJObj = (*jenv)->GetObjectArrayElement(jenv, arrJObj, i);
+        PyObject* itemPyObj = beampy_newPyObjectFromJObject(itemJObj, typeName);
+        (*jenv)->DeleteLocalRef(jenv, itemJObj);
+        if (itemPyObj == NULL) {
+            Py_DECREF(listPyObj);
+            return NULL;
+        }
+        if (PyList_SetItem(listPyObj, i, itemPyObj) != 0) {
+            Py_DECREF(itemPyObj);
+            Py_DECREF(listPyObj);
+            return NULL;
+        }
+    }
 
+    return listPyObj;
+}
 
 jarray beampy_newJObjectArrayFromPySeq(PyObject* seqPyObj, const char* typeName)
 {
-    /*
-       todo - implement me!
-     */
-    PyErr_SetString(PyExc_NotImplementedError, "not implemented: beampy_newJObjectArrayFromPySeq()");
-    return NULL;
-}
-PyObject* beampy_newPySeqFromJObjectArray(jarray arrayJObj, const char* typeName)
-{
-    /*
-       todo - implement me!
-     */
+    // todo - implement me!
     PyErr_SetString(PyExc_NotImplementedError, "not implemented: beampy_newPySeqFromJObjectArray()");
     return NULL;
 }
@@ -4361,30 +4429,9 @@ PyObject* beampy_newPySeqFromJObjectArray(jarray arrayJObj, const char* typeName
 
 
 
-PyObject* beampy_newPyStringFromJString(jstring jstr)
-{
-    /*
-       todo - implement me!
-     */
-    PyErr_SetString(PyExc_NotImplementedError, "not implemented: beampy_newPyStringFromJString()");
-    return NULL;
-}
-
-PyObject* beampy_newPyObjectFromJObject(jobject valueJObj)
-{
-    /*
-       todo - implement me!
-       Use char* PyUnicode_AsUTF8AndSize(PyObject *unicode, Py_ssize_t *size)
-       PyArg_ParseTuple(item, "(sK)", &itemType, &itemObj);
-     */
-    PyErr_SetString(PyExc_NotImplementedError, "not implemented: beampy_newPyObjectFromJObject()");
-    return NULL;
-}
-
 /*
- * Creates a Python sequence (a list) from a C-array of Java objects (type void*).
- */
-PyObject* beampy_newPySeqFromCObjectArray(const char* type, const void** elems, int length)
+
+PyObject* beampy_newPySeqFromCObjectArray______________(const char* type, const void** elems, int length)
 {
     PyObject* list;
     PyObject* item;
@@ -4408,25 +4455,7 @@ PyObject* beampy_newPySeqFromCObjectArray(const char* type, const void** elems, 
     return list;
 }
 
-/*
- * Creates a C-array of Java objects (type void*) from a Python sequence.
- */
-void** beampy_newCObjectArrayFromPySeq(const char* type, PyObject* seq, int* length)
-{
-    /*
-       todo - implement me!
-       Use char* PyUnicode_AsUTF8AndSize(PyObject *unicode, Py_ssize_t *size)
-       PyArg_ParseTuple(item, "(sK)", &itemType, &itemObj);
-    */
-    PyErr_SetString(PyExc_NotImplementedError, "not implemented: beampy_newCObjectArrayFromPySeq()");
-    return NULL;
-}
-
-
-/*
- * Creates a Python sequence (a list) from a C-array of C-strings (type const char*).
- */
-PyObject* beampy_newPySeqFromCStringArray(const char** elems, int length)
+PyObject* beampy_newPySeqFromCStringArray______________(const char** elems, int length)
 {
     PyObject* list;
     PyObject* item;
@@ -4450,20 +4479,6 @@ PyObject* beampy_newPySeqFromCStringArray(const char** elems, int length)
     return list;
 }
 
-/*
- * Creates a C-array of C-strings from a Python sequence.
- */
-char** beampy_newCStringArrayFromPySeq(PyObject* seq, int* length)
-{
-    /*
-        todo - implement me!
-       Use char* PyUnicode_AsUTF8AndSize(PyObject *unicode, Py_ssize_t *size)
-    */
-    PyErr_SetString(PyExc_NotImplementedError, "not implemented: beampy_newCStringArrayFromPySeq()");
-    return NULL;
-}
-
-/*
 
 // The following code is experimental and unused yet.
 //
@@ -4676,7 +4691,7 @@ PyObject* BeamPyGeoCoding_getPixelPos(PyObject* self, PyObject* args)
     geoPosJObj = (jobject) geoPos;
     pixelPosJObj = (jobject) pixelPos;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, geoPosJObj, pixelPosJObj);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "PixelPos");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -4706,7 +4721,7 @@ PyObject* BeamPyGeoCoding_getGeoPos(PyObject* self, PyObject* args)
     pixelPosJObj = (jobject) pixelPos;
     geoPosJObj = (jobject) geoPos;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, pixelPosJObj, geoPosJObj);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "GeoPos");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -4728,7 +4743,7 @@ PyObject* BeamPyGeoCoding_getDatum(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "Datum");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -4768,7 +4783,7 @@ PyObject* BeamPyGeoCoding_getImageCRS(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "CoordinateReferenceSystem");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -4790,7 +4805,7 @@ PyObject* BeamPyGeoCoding_getMapCRS(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "CoordinateReferenceSystem");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -4812,7 +4827,7 @@ PyObject* BeamPyGeoCoding_getGeoCRS(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "CoordinateReferenceSystem");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -4834,7 +4849,7 @@ PyObject* BeamPyGeoCoding_getImageToMapTransform(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "MathTransform");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -4856,7 +4871,7 @@ PyObject* BeamPyProductWriter_getWriterPlugIn(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "ProductWriterPlugIn");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -4878,7 +4893,7 @@ PyObject* BeamPyProductWriter_getOutput(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "Object");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -5099,7 +5114,7 @@ PyObject* BeamPyGPF_createProductWithoutSourceProducts(PyObject* self, PyObject*
     operatorNameJObj =(*jenv)->NewStringUTF(jenv, operatorName);
     parametersJObj = (jobject) parameters;
     _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, classGPF, _method, operatorNameJObj, parametersJObj);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "Product");
     (*jenv)->DeleteLocalRef(jenv, operatorNameJObj);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
@@ -5128,7 +5143,7 @@ PyObject* BeamPyGPF_createProductFromSourceProduct(PyObject* self, PyObject* arg
     parametersJObj = (jobject) parameters;
     sourceProductJObj = (jobject) sourceProduct;
     _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, classGPF, _method, operatorNameJObj, parametersJObj, sourceProductJObj);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "Product");
     (*jenv)->DeleteLocalRef(jenv, operatorNameJObj);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
@@ -5159,7 +5174,7 @@ PyObject* BeamPyGPF_createProductFromSourceProducts(PyObject* self, PyObject* ar
         return NULL;
     }
     _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, classGPF, _method, operatorNameJObj, parametersJObj, sourceProductsJObj);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "Product");
     (*jenv)->DeleteLocalRef(jenv, operatorNameJObj);
     (*jenv)->DeleteLocalRef(jenv, sourceProductsJObj);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
@@ -5189,7 +5204,7 @@ PyObject* BeamPyGPF_createProductFromNamedSourceProducts(PyObject* self, PyObjec
     parametersJObj = (jobject) parameters;
     sourceProductsJObj = (jobject) sourceProducts;
     _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, classGPF, _method, operatorNameJObj, parametersJObj, sourceProductsJObj);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "Product");
     (*jenv)->DeleteLocalRef(jenv, operatorNameJObj);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
@@ -5227,7 +5242,7 @@ PyObject* BeamPyGPF_createProductNS(PyObject* self, PyObject* args)
     sourceProductsJObj = (jobject) sourceProducts;
     renderingHintsJObj = (jobject) renderingHints;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, operatorNameJObj, parametersJObj, sourceProductsJObj, renderingHintsJObj);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "Product");
     (*jenv)->DeleteLocalRef(jenv, operatorNameJObj);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
@@ -5265,7 +5280,7 @@ PyObject* BeamPyGPF_createOperator(PyObject* self, PyObject* args)
     sourceProductsJObj = (jobject) sourceProducts;
     renderingHintsJObj = (jobject) renderingHints;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, operatorNameJObj, parametersJObj, sourceProductsJObj, renderingHintsJObj);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "Operator");
     (*jenv)->DeleteLocalRef(jenv, operatorNameJObj);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
@@ -5288,7 +5303,7 @@ PyObject* BeamPyGPF_getOperatorSpiRegistry(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "OperatorSpiRegistry");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -5324,7 +5339,7 @@ PyObject* BeamPyGPF_getDefaultInstance(PyObject* self, PyObject* args)
         return NULL;
     }
     _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, classGPF, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "GPF");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -5391,7 +5406,7 @@ PyObject* BeamPyIndexCoding_newIndexCoding(PyObject* self, PyObject* args)
     }
     nameJObj =(*jenv)->NewStringUTF(jenv, name);
     _resultJObj = (*jenv)->NewObject(jenv, classIndexCoding, _method, nameJObj);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "IndexCoding");
     (*jenv)->DeleteLocalRef(jenv, nameJObj);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
@@ -5417,7 +5432,7 @@ PyObject* BeamPyIndexCoding_getIndex(PyObject* self, PyObject* args)
     _thisJObj = (jobject) _this;
     nameJObj =(*jenv)->NewStringUTF(jenv, name);
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, nameJObj);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "MetadataAttribute");
     (*jenv)->DeleteLocalRef(jenv, nameJObj);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
@@ -5469,7 +5484,7 @@ PyObject* BeamPyIndexCoding_addIndex(PyObject* self, PyObject* args)
     nameJObj =(*jenv)->NewStringUTF(jenv, name);
     descriptionJObj =(*jenv)->NewStringUTF(jenv, description);
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, nameJObj, value, descriptionJObj);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "MetadataAttribute");
     (*jenv)->DeleteLocalRef(jenv, nameJObj);
     (*jenv)->DeleteLocalRef(jenv, descriptionJObj);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
@@ -5589,7 +5604,7 @@ PyObject* BeamPyIndexCoding_addSample(PyObject* self, PyObject* args)
     nameJObj =(*jenv)->NewStringUTF(jenv, name);
     descriptionJObj =(*jenv)->NewStringUTF(jenv, description);
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, nameJObj, value, descriptionJObj);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "MetadataAttribute");
     (*jenv)->DeleteLocalRef(jenv, nameJObj);
     (*jenv)->DeleteLocalRef(jenv, descriptionJObj);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
@@ -5675,7 +5690,7 @@ PyObject* BeamPyIndexCoding_getElementGroup(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "ProductNodeGroup");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -5697,7 +5712,7 @@ PyObject* BeamPyIndexCoding_getParentElement(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "MetadataElement");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -5785,7 +5800,7 @@ PyObject* BeamPyIndexCoding_getElementAt(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, index);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "MetadataElement");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -5854,7 +5869,7 @@ PyObject* BeamPyIndexCoding_getElement(PyObject* self, PyObject* args)
     _thisJObj = (jobject) _this;
     nameJObj =(*jenv)->NewStringUTF(jenv, name);
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, nameJObj);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "MetadataElement");
     (*jenv)->DeleteLocalRef(jenv, nameJObj);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
@@ -5966,7 +5981,7 @@ PyObject* BeamPyIndexCoding_getAttributeAt(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, index);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "MetadataAttribute");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -6035,7 +6050,7 @@ PyObject* BeamPyIndexCoding_getAttribute(PyObject* self, PyObject* args)
     _thisJObj = (jobject) _this;
     nameJObj =(*jenv)->NewStringUTF(jenv, name);
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, nameJObj);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "MetadataAttribute");
     (*jenv)->DeleteLocalRef(jenv, nameJObj);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
@@ -6135,7 +6150,7 @@ PyObject* BeamPyIndexCoding_getAttributeUTC(PyObject* self, PyObject* args)
     nameJObj =(*jenv)->NewStringUTF(jenv, name);
     defaultValueJObj = (jobject) defaultValue;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, nameJObj, defaultValueJObj);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "UTC");
     (*jenv)->DeleteLocalRef(jenv, nameJObj);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
@@ -6329,7 +6344,7 @@ PyObject* BeamPyIndexCoding_createDeepClone(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "MetadataElement");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -6369,7 +6384,7 @@ PyObject* BeamPyIndexCoding_getOwner(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "ProductNode");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -6538,7 +6553,7 @@ PyObject* BeamPyIndexCoding_getProduct(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "Product");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -6560,7 +6575,7 @@ PyObject* BeamPyIndexCoding_getProductReader(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "ProductReader");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -6582,7 +6597,7 @@ PyObject* BeamPyIndexCoding_getProductWriter(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "ProductWriter");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -6700,7 +6715,7 @@ PyObject* BeamPyIndexCoding_getExtension(PyObject* self, PyObject* args)
     _thisJObj = (jobject) _this;
     arg0JObj = (jobject) arg0;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, arg0JObj);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "Object");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -6714,7 +6729,7 @@ PyObject* BeamPyPixelPos_newPixelPos1(PyObject* self, PyObject* args)
         return NULL;
     }
     _resultJObj = (*jenv)->NewObject(jenv, classPixelPos, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "PixelPos");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -6733,7 +6748,7 @@ PyObject* BeamPyPixelPos_newPixelPos2(PyObject* self, PyObject* args)
         return NULL;
     }
     _resultJObj = (*jenv)->NewObject(jenv, classPixelPos, _method, x, y);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "PixelPos");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -7038,7 +7053,7 @@ PyObject* BeamPyPixelPos_clone(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "Object");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -7100,7 +7115,7 @@ PyObject* BeamPyProductIO_getProductReader(PyObject* self, PyObject* args)
     }
     formatNameJObj =(*jenv)->NewStringUTF(jenv, formatName);
     _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, classProductIO, _method, formatNameJObj);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "ProductReader");
     (*jenv)->DeleteLocalRef(jenv, formatNameJObj);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
@@ -7142,7 +7157,7 @@ PyObject* BeamPyProductIO_getProductWriter(PyObject* self, PyObject* args)
     }
     formatNameJObj =(*jenv)->NewStringUTF(jenv, formatName);
     _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, classProductIO, _method, formatNameJObj);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "ProductWriter");
     (*jenv)->DeleteLocalRef(jenv, formatNameJObj);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
@@ -7163,7 +7178,7 @@ PyObject* BeamPyProductIO_readProduct(PyObject* self, PyObject* args)
     }
     filePathJObj =(*jenv)->NewStringUTF(jenv, filePath);
     _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, classProductIO, _method, filePathJObj);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "Product");
     (*jenv)->DeleteLocalRef(jenv, filePathJObj);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
@@ -7185,7 +7200,7 @@ PyObject* BeamPyProductIO_getProductReaderForFile(PyObject* self, PyObject* args
     }
     fileJObj = (jobject) file;
     _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, classProductIO, _method, fileJObj);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "ProductReader");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -7206,7 +7221,7 @@ PyObject* BeamPyProductIO_getProductReaderForInput(PyObject* self, PyObject* arg
     }
     inputJObj = (jobject) input;
     _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, classProductIO, _method, inputJObj);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "ProductReader");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -7256,7 +7271,7 @@ PyObject* BeamPyPlacemark_newPlacemark(PyObject* self, PyObject* args)
     descriptorJObj = (jobject) descriptor;
     featureJObj = (jobject) feature;
     _resultJObj = (*jenv)->NewObject(jenv, classPlacemark, _method, descriptorJObj, featureJObj);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "Placemark");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -7298,7 +7313,7 @@ PyObject* BeamPyPlacemark_createPointPlacemark(PyObject* self, PyObject* args)
     geoPosJObj = (jobject) geoPos;
     geoCodingJObj = (jobject) geoCoding;
     _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, classPlacemark, _method, descriptorJObj, nameJObj, labelJObj, textJObj, pixelPosJObj, geoPosJObj, geoCodingJObj);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "Placemark");
     (*jenv)->DeleteLocalRef(jenv, nameJObj);
     (*jenv)->DeleteLocalRef(jenv, labelJObj);
     (*jenv)->DeleteLocalRef(jenv, textJObj);
@@ -7323,7 +7338,7 @@ PyObject* BeamPyPlacemark_getDescriptor(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "PlacemarkDescriptor");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -7345,7 +7360,7 @@ PyObject* BeamPyPlacemark_getFeature(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "SimpleFeature");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -7370,7 +7385,7 @@ PyObject* BeamPyPlacemark_getAttributeValue(PyObject* self, PyObject* args)
     _thisJObj = (jobject) _this;
     attributeNameJObj =(*jenv)->NewStringUTF(jenv, attributeName);
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, attributeNameJObj);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "Object");
     (*jenv)->DeleteLocalRef(jenv, attributeNameJObj);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
@@ -7573,7 +7588,7 @@ PyObject* BeamPyPlacemark_getPixelPos(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "PixelPos");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -7617,7 +7632,7 @@ PyObject* BeamPyPlacemark_getGeoPos(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "GeoPos");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -7671,7 +7686,7 @@ PyObject* BeamPyPlacemark_createPinFeatureType(PyObject* self, PyObject* args)
         return NULL;
     }
     _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, classPlacemark, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "SimpleFeatureType");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -7685,7 +7700,7 @@ PyObject* BeamPyPlacemark_createGcpFeatureType(PyObject* self, PyObject* args)
         return NULL;
     }
     _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, classPlacemark, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "SimpleFeatureType");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -7699,7 +7714,7 @@ PyObject* BeamPyPlacemark_createGeometryFeatureType(PyObject* self, PyObject* ar
         return NULL;
     }
     _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, classPlacemark, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "SimpleFeatureType");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -7719,7 +7734,7 @@ PyObject* BeamPyPlacemark_createPointFeatureType(PyObject* self, PyObject* args)
     }
     nameJObj =(*jenv)->NewStringUTF(jenv, name);
     _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, classPlacemark, _method, nameJObj);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "SimpleFeatureType");
     (*jenv)->DeleteLocalRef(jenv, nameJObj);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
@@ -7742,7 +7757,7 @@ PyObject* BeamPyPlacemark_getOwner(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "ProductNode");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -7948,7 +7963,7 @@ PyObject* BeamPyPlacemark_getProduct(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "Product");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -7970,7 +7985,7 @@ PyObject* BeamPyPlacemark_getProductReader(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "ProductReader");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -7992,7 +8007,7 @@ PyObject* BeamPyPlacemark_getProductWriter(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "ProductWriter");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -8110,7 +8125,7 @@ PyObject* BeamPyPlacemark_getExtension(PyObject* self, PyObject* args)
     _thisJObj = (jobject) _this;
     arg0JObj = (jobject) arg0;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, arg0JObj);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "Object");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -8130,7 +8145,7 @@ PyObject* BeamPyMetadataElement_newMetadataElement(PyObject* self, PyObject* arg
     }
     nameJObj =(*jenv)->NewStringUTF(jenv, name);
     _resultJObj = (*jenv)->NewObject(jenv, classMetadataElement, _method, nameJObj);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "MetadataElement");
     (*jenv)->DeleteLocalRef(jenv, nameJObj);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
@@ -8153,7 +8168,7 @@ PyObject* BeamPyMetadataElement_getElementGroup(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "ProductNodeGroup");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -8175,7 +8190,7 @@ PyObject* BeamPyMetadataElement_getParentElement(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "MetadataElement");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -8285,7 +8300,7 @@ PyObject* BeamPyMetadataElement_getElementAt(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, index);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "MetadataElement");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -8354,7 +8369,7 @@ PyObject* BeamPyMetadataElement_getElement(PyObject* self, PyObject* args)
     _thisJObj = (jobject) _this;
     nameJObj =(*jenv)->NewStringUTF(jenv, name);
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, nameJObj);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "MetadataElement");
     (*jenv)->DeleteLocalRef(jenv, nameJObj);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
@@ -8488,7 +8503,7 @@ PyObject* BeamPyMetadataElement_getAttributeAt(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, index);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "MetadataAttribute");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -8557,7 +8572,7 @@ PyObject* BeamPyMetadataElement_getAttribute(PyObject* self, PyObject* args)
     _thisJObj = (jobject) _this;
     nameJObj =(*jenv)->NewStringUTF(jenv, name);
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, nameJObj);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "MetadataAttribute");
     (*jenv)->DeleteLocalRef(jenv, nameJObj);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
@@ -8657,7 +8672,7 @@ PyObject* BeamPyMetadataElement_getAttributeUTC(PyObject* self, PyObject* args)
     nameJObj =(*jenv)->NewStringUTF(jenv, name);
     defaultValueJObj = (jobject) defaultValue;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, nameJObj, defaultValueJObj);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "UTC");
     (*jenv)->DeleteLocalRef(jenv, nameJObj);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
@@ -8873,7 +8888,7 @@ PyObject* BeamPyMetadataElement_createDeepClone(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "MetadataElement");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -8913,7 +8928,7 @@ PyObject* BeamPyMetadataElement_getOwner(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "ProductNode");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -9082,7 +9097,7 @@ PyObject* BeamPyMetadataElement_getProduct(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "Product");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -9104,7 +9119,7 @@ PyObject* BeamPyMetadataElement_getProductReader(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "ProductReader");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -9126,7 +9141,7 @@ PyObject* BeamPyMetadataElement_getProductWriter(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "ProductWriter");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -9244,7 +9259,7 @@ PyObject* BeamPyMetadataElement_getExtension(PyObject* self, PyObject* args)
     _thisJObj = (jobject) _this;
     arg0JObj = (jobject) arg0;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, arg0JObj);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "Object");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -9269,7 +9284,7 @@ PyObject* BeamPyProduct_newProduct(PyObject* self, PyObject* args)
     nameJObj =(*jenv)->NewStringUTF(jenv, name);
     typeJObj =(*jenv)->NewStringUTF(jenv, type);
     _resultJObj = (*jenv)->NewObject(jenv, classProduct, _method, nameJObj, typeJObj, sceneRasterWidth, sceneRasterHeight);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "Product");
     (*jenv)->DeleteLocalRef(jenv, nameJObj);
     (*jenv)->DeleteLocalRef(jenv, typeJObj);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
@@ -9293,7 +9308,7 @@ PyObject* BeamPyProduct_getFileLocation(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "File");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -9403,7 +9418,7 @@ PyObject* BeamPyProduct_getProductReader(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "ProductReader");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -9447,7 +9462,7 @@ PyObject* BeamPyProduct_getProductWriter(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "ProductWriter");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -9563,7 +9578,7 @@ PyObject* BeamPyProduct_getPointingFactory(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "PointingFactory");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -9629,7 +9644,7 @@ PyObject* BeamPyProduct_getGeoCoding(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "GeoCoding");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -9735,7 +9750,7 @@ PyObject* BeamPyProduct_getStartTime(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "UTC");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -9779,7 +9794,7 @@ PyObject* BeamPyProduct_getEndTime(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "UTC");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -9823,7 +9838,7 @@ PyObject* BeamPyProduct_getMetadataRoot(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "MetadataElement");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -9845,7 +9860,7 @@ PyObject* BeamPyProduct_getGroups(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "ProductNodeGroup");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -9870,7 +9885,7 @@ PyObject* BeamPyProduct_getGroup(PyObject* self, PyObject* args)
     _thisJObj = (jobject) _this;
     nameJObj =(*jenv)->NewStringUTF(jenv, name);
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, nameJObj);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "ProductNodeGroup");
     (*jenv)->DeleteLocalRef(jenv, nameJObj);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
@@ -9893,7 +9908,7 @@ PyObject* BeamPyProduct_getTiePointGridGroup(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "ProductNodeGroup");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -9980,7 +9995,7 @@ PyObject* BeamPyProduct_getTiePointGridAt(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, index);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "TiePointGrid");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -10049,7 +10064,7 @@ PyObject* BeamPyProduct_getTiePointGrid(PyObject* self, PyObject* args)
     _thisJObj = (jobject) _this;
     nameJObj =(*jenv)->NewStringUTF(jenv, name);
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, nameJObj);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "TiePointGrid");
     (*jenv)->DeleteLocalRef(jenv, nameJObj);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
@@ -10095,7 +10110,7 @@ PyObject* BeamPyProduct_getBandGroup(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "ProductNodeGroup");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -10143,7 +10158,7 @@ PyObject* BeamPyProduct_addNewBand(PyObject* self, PyObject* args)
     _thisJObj = (jobject) _this;
     bandNameJObj =(*jenv)->NewStringUTF(jenv, bandName);
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, bandNameJObj, dataType);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "Band");
     (*jenv)->DeleteLocalRef(jenv, bandNameJObj);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
@@ -10172,7 +10187,7 @@ PyObject* BeamPyProduct_addComputedBand(PyObject* self, PyObject* args)
     bandNameJObj =(*jenv)->NewStringUTF(jenv, bandName);
     expressionJObj =(*jenv)->NewStringUTF(jenv, expression);
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, bandNameJObj, expressionJObj);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "Band");
     (*jenv)->DeleteLocalRef(jenv, bandNameJObj);
     (*jenv)->DeleteLocalRef(jenv, expressionJObj);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
@@ -10239,7 +10254,7 @@ PyObject* BeamPyProduct_getBandAt(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, index);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "Band");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -10308,7 +10323,7 @@ PyObject* BeamPyProduct_getBand(PyObject* self, PyObject* args)
     _thisJObj = (jobject) _this;
     nameJObj =(*jenv)->NewStringUTF(jenv, name);
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, nameJObj);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "Band");
     (*jenv)->DeleteLocalRef(jenv, nameJObj);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
@@ -10403,7 +10418,7 @@ PyObject* BeamPyProduct_getRasterDataNode(PyObject* self, PyObject* args)
     _thisJObj = (jobject) _this;
     nameJObj =(*jenv)->NewStringUTF(jenv, name);
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, nameJObj);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "RasterDataNode");
     (*jenv)->DeleteLocalRef(jenv, nameJObj);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
@@ -10426,7 +10441,7 @@ PyObject* BeamPyProduct_getMaskGroup(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "ProductNodeGroup");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -10448,7 +10463,7 @@ PyObject* BeamPyProduct_getVectorDataGroup(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "ProductNodeGroup");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -10470,7 +10485,7 @@ PyObject* BeamPyProduct_getFlagCodingGroup(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "ProductNodeGroup");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -10492,7 +10507,7 @@ PyObject* BeamPyProduct_getIndexCodingGroup(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "ProductNodeGroup");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -10535,7 +10550,7 @@ PyObject* BeamPyProduct_getGcpGroup(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "PlacemarkGroup");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -10557,7 +10572,7 @@ PyObject* BeamPyProduct_getPinGroup(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "PlacemarkGroup");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -10644,7 +10659,7 @@ PyObject* BeamPyProduct_parseExpression(PyObject* self, PyObject* args)
     _thisJObj = (jobject) _this;
     expressionJObj =(*jenv)->NewStringUTF(jenv, expression);
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, expressionJObj);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "Term");
     (*jenv)->DeleteLocalRef(jenv, expressionJObj);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
@@ -10812,7 +10827,7 @@ PyObject* BeamPyProduct_getProductManager(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "ProductManager");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -10834,7 +10849,7 @@ PyObject* BeamPyProduct_createBandArithmeticParser(PyObject* self, PyObject* arg
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "Parser");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -10856,7 +10871,7 @@ PyObject* BeamPyProduct_createBandArithmeticDefaultNamespace(PyObject* self, PyO
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "WritableNamespace");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -10888,7 +10903,7 @@ PyObject* BeamPyProduct_createSubset(PyObject* self, PyObject* args)
     nameJObj =(*jenv)->NewStringUTF(jenv, name);
     descJObj =(*jenv)->NewStringUTF(jenv, desc);
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, subsetDefJObj, nameJObj, descJObj);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "Product");
     (*jenv)->DeleteLocalRef(jenv, nameJObj);
     (*jenv)->DeleteLocalRef(jenv, descJObj);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
@@ -10919,7 +10934,7 @@ PyObject* BeamPyProduct_createFlippedProduct(PyObject* self, PyObject* args)
     nameJObj =(*jenv)->NewStringUTF(jenv, name);
     descJObj =(*jenv)->NewStringUTF(jenv, desc);
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, flipType, nameJObj, descJObj);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "Product");
     (*jenv)->DeleteLocalRef(jenv, nameJObj);
     (*jenv)->DeleteLocalRef(jenv, descJObj);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
@@ -11071,7 +11086,7 @@ PyObject* BeamPyProduct_getPreferredTileSize(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "Dimension");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -11135,7 +11150,7 @@ PyObject* BeamPyProduct_getAutoGrouping(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "AutoGrouping");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -11193,7 +11208,7 @@ PyObject* BeamPyProduct_addComputedMask(PyObject* self, PyObject* args)
     descriptionJObj =(*jenv)->NewStringUTF(jenv, description);
     colorJObj = (jobject) color;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, maskNameJObj, expressionJObj, descriptionJObj, colorJObj, transparency);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "Mask");
     (*jenv)->DeleteLocalRef(jenv, maskNameJObj);
     (*jenv)->DeleteLocalRef(jenv, expressionJObj);
     (*jenv)->DeleteLocalRef(jenv, descriptionJObj);
@@ -11265,7 +11280,7 @@ PyObject* BeamPyProduct_getBitmaskDef(PyObject* self, PyObject* args)
     _thisJObj = (jobject) _this;
     nameJObj =(*jenv)->NewStringUTF(jenv, name);
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, nameJObj);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "BitmaskDef");
     (*jenv)->DeleteLocalRef(jenv, nameJObj);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
@@ -11291,7 +11306,7 @@ PyObject* BeamPyProduct_getValidMask(PyObject* self, PyObject* args)
     _thisJObj = (jobject) _this;
     idJObj =(*jenv)->NewStringUTF(jenv, id);
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, idJObj);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "BitRaster");
     (*jenv)->DeleteLocalRef(jenv, idJObj);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
@@ -11347,7 +11362,7 @@ PyObject* BeamPyProduct_createValidMask2(PyObject* self, PyObject* args)
     expressionJObj =(*jenv)->NewStringUTF(jenv, expression);
     pmJObj = (jobject) pm;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, expressionJObj, pmJObj);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "BitRaster");
     (*jenv)->DeleteLocalRef(jenv, expressionJObj);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
@@ -11378,7 +11393,7 @@ PyObject* BeamPyProduct_createValidMask1(PyObject* self, PyObject* args)
     termJObj = (jobject) term;
     pmJObj = (jobject) pm;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, termJObj, pmJObj);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "BitRaster");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -11496,7 +11511,7 @@ PyObject* BeamPyProduct_getOwner(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "ProductNode");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -11665,7 +11680,7 @@ PyObject* BeamPyProduct_getProduct(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "Product");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -11783,7 +11798,7 @@ PyObject* BeamPyProduct_getExtension(PyObject* self, PyObject* args)
     _thisJObj = (jobject) _this;
     arg0JObj = (jobject) arg0;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, arg0JObj);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "Object");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -11802,7 +11817,7 @@ PyObject* BeamPyColorPaletteDef_newColorPaletteDefFromRange(PyObject* self, PyOb
         return NULL;
     }
     _resultJObj = (*jenv)->NewObject(jenv, classColorPaletteDef, _method, minSample, maxSample);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "ColorPaletteDef");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -11826,7 +11841,7 @@ PyObject* BeamPyColorPaletteDef_newColorPaletteDefFromPoints(PyObject* self, PyO
         return NULL;
     }
     _resultJObj = (*jenv)->NewObject(jenv, classColorPaletteDef, _method, pointsJObj, numColors);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "ColorPaletteDef");
     (*jenv)->DeleteLocalRef(jenv, pointsJObj);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
@@ -12002,7 +12017,7 @@ PyObject* BeamPyColorPaletteDef_getPointAt(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, index);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "Point");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -12024,7 +12039,7 @@ PyObject* BeamPyColorPaletteDef_getFirstPoint(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "Point");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -12046,7 +12061,7 @@ PyObject* BeamPyColorPaletteDef_getLastPoint(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "Point");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -12156,7 +12171,7 @@ PyObject* BeamPyColorPaletteDef_getCenterColor(PyObject* self, PyObject* args)
     c1JObj = (jobject) c1;
     c2JObj = (jobject) c2;
     _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, classColorPaletteDef, _method, c1JObj, c2JObj);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "Color");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -12266,7 +12281,7 @@ PyObject* BeamPyColorPaletteDef_getIterator(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "Iterator");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -12288,7 +12303,7 @@ PyObject* BeamPyColorPaletteDef_clone(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "Object");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -12310,7 +12325,7 @@ PyObject* BeamPyColorPaletteDef_createDeepCopy(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "ColorPaletteDef");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -12331,7 +12346,7 @@ PyObject* BeamPyColorPaletteDef_loadColorPaletteDef(PyObject* self, PyObject* ar
     }
     fileJObj = (jobject) file;
     _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, classColorPaletteDef, _method, fileJObj);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "ColorPaletteDef");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -12445,7 +12460,7 @@ PyObject* BeamPyColorPaletteDef_computeColor(PyObject* self, PyObject* args)
     _thisJObj = (jobject) _this;
     scalingJObj = (jobject) scaling;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, scalingJObj, sample);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "Color");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -12466,7 +12481,7 @@ PyObject* BeamPyImageInfo_newImageInfoPalette(PyObject* self, PyObject* args)
     }
     colorPaletteDefJObj = (jobject) colorPaletteDef;
     _resultJObj = (*jenv)->NewObject(jenv, classImageInfo, _method, colorPaletteDefJObj);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "ImageInfo");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -12487,7 +12502,7 @@ PyObject* BeamPyImageInfo_newImageInfoRGB(PyObject* self, PyObject* args)
     }
     rgbChannelDefJObj = (jobject) rgbChannelDef;
     _resultJObj = (*jenv)->NewObject(jenv, classImageInfo, _method, rgbChannelDefJObj);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "ImageInfo");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -12509,7 +12524,7 @@ PyObject* BeamPyImageInfo_getColorPaletteDef(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "ColorPaletteDef");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -12531,7 +12546,7 @@ PyObject* BeamPyImageInfo_getRgbChannelDef(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "RGBChannelDef");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -12553,7 +12568,7 @@ PyObject* BeamPyImageInfo_getNoDataColor(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "Color");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -12702,7 +12717,7 @@ PyObject* BeamPyImageInfo_createIndexColorModel(PyObject* self, PyObject* args)
     _thisJObj = (jobject) _this;
     scalingJObj = (jobject) scaling;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, scalingJObj);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "IndexColorModel");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -12724,7 +12739,7 @@ PyObject* BeamPyImageInfo_createComponentColorModel(PyObject* self, PyObject* ar
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "ComponentColorModel");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -12746,7 +12761,7 @@ PyObject* BeamPyImageInfo_clone(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "Object");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -12768,7 +12783,7 @@ PyObject* BeamPyImageInfo_createDeepCopy(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "ImageInfo");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -12856,7 +12871,7 @@ PyObject* BeamPyImageInfo_getHistogramMatching(PyObject* self, PyObject* args)
     }
     modeJObj =(*jenv)->NewStringUTF(jenv, mode);
     _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, classImageInfo, _method, modeJObj);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "HistogramMatching");
     (*jenv)->DeleteLocalRef(jenv, modeJObj);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
@@ -12871,7 +12886,7 @@ PyObject* BeamPyProductManager_newProductManager(PyObject* self, PyObject* args)
         return NULL;
     }
     _resultJObj = (*jenv)->NewObject(jenv, classProductManager, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "ProductManager");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -12913,7 +12928,7 @@ PyObject* BeamPyProductManager_getProduct(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, index);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "Product");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -13004,7 +13019,7 @@ PyObject* BeamPyProductManager_getProductByDisplayName(PyObject* self, PyObject*
     _thisJObj = (jobject) _this;
     displayNameJObj =(*jenv)->NewStringUTF(jenv, displayName);
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, displayNameJObj);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "Product");
     (*jenv)->DeleteLocalRef(jenv, displayNameJObj);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
@@ -13028,7 +13043,7 @@ PyObject* BeamPyProductManager_getProductByRefNo(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, refNo);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "Product");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -13053,7 +13068,7 @@ PyObject* BeamPyProductManager_getProductByName(PyObject* self, PyObject* args)
     _thisJObj = (jobject) _this;
     nameJObj =(*jenv)->NewStringUTF(jenv, name);
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, nameJObj);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "Product");
     (*jenv)->DeleteLocalRef(jenv, nameJObj);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
@@ -13261,7 +13276,7 @@ PyObject* BeamPyImageGeometry_newImageGeometry(PyObject* self, PyObject* args)
     mapCrsJObj = (jobject) mapCrs;
     image2mapJObj = (jobject) image2map;
     _resultJObj = (*jenv)->NewObject(jenv, classImageGeometry, _method, boundsJObj, mapCrsJObj, image2mapJObj);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "ImageGeometry");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -13283,7 +13298,7 @@ PyObject* BeamPyImageGeometry_getImage2MapTransform(PyObject* self, PyObject* ar
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "AffineTransform");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -13305,7 +13320,7 @@ PyObject* BeamPyImageGeometry_getImageRect(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "Rectangle");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -13327,7 +13342,7 @@ PyObject* BeamPyImageGeometry_getMapCrs(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "CoordinateReferenceSystem");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -13374,7 +13389,7 @@ PyObject* BeamPyImageGeometry_calculateEastingNorthing(PyObject* self, PyObject*
     sourceProductJObj = (jobject) sourceProduct;
     targetCrsJObj = (jobject) targetCrs;
     _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, classImageGeometry, _method, sourceProductJObj, targetCrsJObj, referencePixelX, referencePixelY, pixelSizeX, pixelSizeY);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "Point2D");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -13401,7 +13416,7 @@ PyObject* BeamPyImageGeometry_calculateProductSize(PyObject* self, PyObject* arg
     sourceProductJObj = (jobject) sourceProduct;
     targetCrsJObj = (jobject) targetCrs;
     _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, classImageGeometry, _method, sourceProductJObj, targetCrsJObj, pixelSizeX, pixelSizeY);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "Rectangle");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -13462,7 +13477,7 @@ PyObject* BeamPyImageGeometry_createTargetGeometry(PyObject* self, PyObject* arg
     referencePixelXJObj = (jobject) referencePixelX;
     referencePixelYJObj = (jobject) referencePixelY;
     _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, classImageGeometry, _method, sourceProductJObj, targetCrsJObj, pixelSizeXJObj, pixelSizeYJObj, widthJObj, heightJObj, orientationJObj, eastingJObj, northingJObj, referencePixelXJObj, referencePixelYJObj);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "ImageGeometry");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -13487,7 +13502,7 @@ PyObject* BeamPyImageGeometry_createCollocationTargetGeometry(PyObject* self, Py
     targetProductJObj = (jobject) targetProduct;
     collocationProductJObj = (jobject) collocationProduct;
     _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, classImageGeometry, _method, targetProductJObj, collocationProductJObj);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "ImageGeometry");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -13508,7 +13523,7 @@ PyObject* BeamPyImageGeometry_createValidRect(PyObject* self, PyObject* args)
     }
     productJObj = (jobject) product;
     _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, classImageGeometry, _method, productJObj);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "Rectangle2D");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -13531,7 +13546,7 @@ PyObject* BeamPyBand_newBand(PyObject* self, PyObject* args)
     }
     nameJObj =(*jenv)->NewStringUTF(jenv, name);
     _resultJObj = (*jenv)->NewObject(jenv, classBand, _method, nameJObj, dataType, width, height);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "Band");
     (*jenv)->DeleteLocalRef(jenv, nameJObj);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
@@ -13554,7 +13569,7 @@ PyObject* BeamPyBand_getFlagCoding(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "FlagCoding");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -13595,7 +13610,7 @@ PyObject* BeamPyBand_getIndexCoding(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "IndexCoding");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -13636,7 +13651,7 @@ PyObject* BeamPyBand_getSampleCoding(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "SampleCoding");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -13984,7 +13999,7 @@ PyObject* BeamPyBand_getSceneRasterData(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "ProductData");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -14380,7 +14395,7 @@ PyObject* BeamPyBand_getGeoCoding(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "GeoCoding");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -14424,7 +14439,7 @@ PyObject* BeamPyBand_getPointing(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "Pointing");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -14953,7 +14968,7 @@ PyObject* BeamPyBand_getRasterData(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "ProductData");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -15556,7 +15571,7 @@ PyObject* BeamPyBand_createCompatibleRasterData(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "ProductData");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -15578,7 +15593,7 @@ PyObject* BeamPyBand_createCompatibleSceneRasterData(PyObject* self, PyObject* a
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "ProductData");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -15602,7 +15617,7 @@ PyObject* BeamPyBand_createCompatibleRasterDataForRect(PyObject* self, PyObject*
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, width, height);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "ProductData");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -15696,7 +15711,7 @@ PyObject* BeamPyBand_createTransectProfileData(PyObject* self, PyObject* args)
     _thisJObj = (jobject) _this;
     shapeJObj = (jobject) shape;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, shapeJObj);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "TransectProfileData");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -15718,7 +15733,7 @@ PyObject* BeamPyBand_getImageInfo(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "ImageInfo");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -15799,7 +15814,7 @@ PyObject* BeamPyBand_createDefaultImageInfo(PyObject* self, PyObject* args)
     }
     histogramJObj = (jobject) histogram;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, histoSkipAreasJObj, histogramJObj);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "ImageInfo");
     PyBuffer_Release(&histoSkipAreasBuf);
     (*jenv)->DeleteLocalRef(jenv, histoSkipAreasJObj);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
@@ -15823,7 +15838,7 @@ PyObject* BeamPyBand_getOverlayMaskGroup(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "ProductNodeGroup");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -15849,7 +15864,7 @@ PyObject* BeamPyBand_createColorIndexedImage(PyObject* self, PyObject* args)
     _thisJObj = (jobject) _this;
     pmJObj = (jobject) pm;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, pmJObj);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "BufferedImage");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -15875,7 +15890,7 @@ PyObject* BeamPyBand_createRgbImage(PyObject* self, PyObject* args)
     _thisJObj = (jobject) _this;
     pmJObj = (jobject) pm;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, pmJObj);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "BufferedImage");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -15902,7 +15917,7 @@ PyObject* BeamPyBand_createPixelValidator(PyObject* self, PyObject* args)
     _thisJObj = (jobject) _this;
     roiJObj = (jobject) roi;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, lineOffset, roiJObj);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "IndexValidator");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -16007,7 +16022,7 @@ PyObject* BeamPyBand_getSourceImage(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "MultiLevelImage");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -16048,7 +16063,7 @@ PyObject* BeamPyBand_getGeophysicalImage(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "MultiLevelImage");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -16089,7 +16104,7 @@ PyObject* BeamPyBand_getValidMaskImage(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "MultiLevelImage");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -16130,7 +16145,7 @@ PyObject* BeamPyBand_getStx(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "Stx");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -16174,7 +16189,7 @@ PyObject* BeamPyBand_getValidShape(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "Shape");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -16196,7 +16211,7 @@ PyObject* BeamPyBand_getRoiMaskGroup(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "ProductNodeGroup");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -16278,7 +16293,7 @@ PyObject* BeamPyBand_getData(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "ProductData");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -16322,7 +16337,7 @@ PyObject* BeamPyBand_getDataElems(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "Object");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -16502,7 +16517,7 @@ PyObject* BeamPyBand_createCompatibleProductData(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, numElems);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "ProductData");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -16524,7 +16539,7 @@ PyObject* BeamPyBand_getOwner(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "ProductNode");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -16671,7 +16686,7 @@ PyObject* BeamPyBand_getProduct(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "Product");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -16693,7 +16708,7 @@ PyObject* BeamPyBand_getProductReader(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "ProductReader");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -16715,7 +16730,7 @@ PyObject* BeamPyBand_getProductWriter(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "ProductWriter");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -16785,7 +16800,7 @@ PyObject* BeamPyBand_getExtension(PyObject* self, PyObject* args)
     _thisJObj = (jobject) _this;
     arg0JObj = (jobject) arg0;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, arg0JObj);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "Object");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -16807,7 +16822,7 @@ PyObject* BeamPyPlacemarkGroup_getVectorDataNode(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "VectorDataNode");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -16833,7 +16848,7 @@ PyObject* BeamPyPlacemarkGroup_getPlacemark(PyObject* self, PyObject* args)
     _thisJObj = (jobject) _this;
     featureJObj = (jobject) feature;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, featureJObj);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "Placemark");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -16981,7 +16996,7 @@ PyObject* BeamPyPlacemarkGroup_get1(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, index);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "ProductNode");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -17075,7 +17090,7 @@ PyObject* BeamPyPlacemarkGroup_toArray2(PyObject* self, PyObject* args)
         return NULL;
     }
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, arrayJObj);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "ProductNode");
     (*jenv)->DeleteLocalRef(jenv, arrayJObj);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
@@ -17147,7 +17162,7 @@ PyObject* BeamPyPlacemarkGroup_getByDisplayName(PyObject* self, PyObject* args)
     _thisJObj = (jobject) _this;
     displayNameJObj =(*jenv)->NewStringUTF(jenv, displayName);
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, displayNameJObj);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "ProductNode");
     (*jenv)->DeleteLocalRef(jenv, displayNameJObj);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
@@ -17173,7 +17188,7 @@ PyObject* BeamPyPlacemarkGroup_get2(PyObject* self, PyObject* args)
     _thisJObj = (jobject) _this;
     nameJObj =(*jenv)->NewStringUTF(jenv, name);
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, nameJObj);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "ProductNode");
     (*jenv)->DeleteLocalRef(jenv, nameJObj);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
@@ -17347,7 +17362,7 @@ PyObject* BeamPyPlacemarkGroup_getRemovedNodes(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "Collection");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -17459,7 +17474,7 @@ PyObject* BeamPyPlacemarkGroup_getOwner(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "ProductNode");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -17628,7 +17643,7 @@ PyObject* BeamPyPlacemarkGroup_getProduct(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "Product");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -17650,7 +17665,7 @@ PyObject* BeamPyPlacemarkGroup_getProductReader(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "ProductReader");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -17672,7 +17687,7 @@ PyObject* BeamPyPlacemarkGroup_getProductWriter(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "ProductWriter");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -17835,7 +17850,7 @@ PyObject* BeamPyPlacemarkGroup_getExtension(PyObject* self, PyObject* args)
     _thisJObj = (jobject) _this;
     arg0JObj = (jobject) arg0;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, arg0JObj);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "Object");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -17876,7 +17891,7 @@ PyObject* BeamPyTiePointGrid_newTiePointGrid1(PyObject* self, PyObject* args)
         return NULL;
     }
     _resultJObj = (*jenv)->NewObject(jenv, classTiePointGrid, _method, nameJObj, gridWidth, gridHeight, offsetX, offsetY, subSamplingX, subSamplingY, tiePointsJObj);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "TiePointGrid");
     (*jenv)->DeleteLocalRef(jenv, nameJObj);
     PyBuffer_Release(&tiePointsBuf);
     (*jenv)->DeleteLocalRef(jenv, tiePointsJObj);
@@ -17921,7 +17936,7 @@ PyObject* BeamPyTiePointGrid_newTiePointGrid2(PyObject* self, PyObject* args)
         return NULL;
     }
     _resultJObj = (*jenv)->NewObject(jenv, classTiePointGrid, _method, nameJObj, gridWidth, gridHeight, offsetX, offsetY, subSamplingX, subSamplingY, tiePointsJObj, discontinuity);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "TiePointGrid");
     (*jenv)->DeleteLocalRef(jenv, nameJObj);
     PyBuffer_Release(&tiePointsBuf);
     (*jenv)->DeleteLocalRef(jenv, tiePointsJObj);
@@ -17966,7 +17981,7 @@ PyObject* BeamPyTiePointGrid_newTiePointGrid3(PyObject* self, PyObject* args)
         return NULL;
     }
     _resultJObj = (*jenv)->NewObject(jenv, classTiePointGrid, _method, nameJObj, gridWidth, gridHeight, offsetX, offsetY, subSamplingX, subSamplingY, tiePointsJObj, containsAngles);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "TiePointGrid");
     (*jenv)->DeleteLocalRef(jenv, nameJObj);
     PyBuffer_Release(&tiePointsBuf);
     (*jenv)->DeleteLocalRef(jenv, tiePointsJObj);
@@ -18098,7 +18113,7 @@ PyObject* BeamPyTiePointGrid_getSceneRasterData(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "ProductData");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -19075,7 +19090,7 @@ PyObject* BeamPyTiePointGrid_cloneTiePointGrid(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "TiePointGrid");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -19096,7 +19111,7 @@ PyObject* BeamPyTiePointGrid_createZenithFromElevationAngleTiePointGrid(PyObject
     }
     elevationAngleGridJObj = (jobject) elevationAngleGrid;
     _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, classTiePointGrid, _method, elevationAngleGridJObj);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "TiePointGrid");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -19121,7 +19136,7 @@ PyObject* BeamPyTiePointGrid_createSubset(PyObject* self, PyObject* args)
     sourceTiePointGridJObj = (jobject) sourceTiePointGrid;
     subsetDefJObj = (jobject) subsetDef;
     _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, classTiePointGrid, _method, sourceTiePointGridJObj, subsetDefJObj);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "TiePointGrid");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -19200,7 +19215,7 @@ PyObject* BeamPyTiePointGrid_getGeoCoding(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "GeoCoding");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -19244,7 +19259,7 @@ PyObject* BeamPyTiePointGrid_getPointing(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "Pointing");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -19735,7 +19750,7 @@ PyObject* BeamPyTiePointGrid_getRasterData(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "ProductData");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -20451,7 +20466,7 @@ PyObject* BeamPyTiePointGrid_createCompatibleRasterData1(PyObject* self, PyObjec
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "ProductData");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -20473,7 +20488,7 @@ PyObject* BeamPyTiePointGrid_createCompatibleSceneRasterData(PyObject* self, PyO
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "ProductData");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -20497,7 +20512,7 @@ PyObject* BeamPyTiePointGrid_createCompatibleRasterData2(PyObject* self, PyObjec
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, width, height);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "ProductData");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -20591,7 +20606,7 @@ PyObject* BeamPyTiePointGrid_createTransectProfileData(PyObject* self, PyObject*
     _thisJObj = (jobject) _this;
     shapeJObj = (jobject) shape;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, shapeJObj);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "TransectProfileData");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -20613,7 +20628,7 @@ PyObject* BeamPyTiePointGrid_getImageInfo1(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "ImageInfo");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -20679,7 +20694,7 @@ PyObject* BeamPyTiePointGrid_getImageInfo2(PyObject* self, PyObject* args)
     _thisJObj = (jobject) _this;
     pmJObj = (jobject) pm;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, pmJObj);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "ImageInfo");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -20720,7 +20735,7 @@ PyObject* BeamPyTiePointGrid_getImageInfo3(PyObject* self, PyObject* args)
     }
     pmJObj = (jobject) pm;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, histoSkipAreasJObj, pmJObj);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "ImageInfo");
     PyBuffer_Release(&histoSkipAreasBuf);
     (*jenv)->DeleteLocalRef(jenv, histoSkipAreasJObj);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
@@ -20763,7 +20778,7 @@ PyObject* BeamPyTiePointGrid_createDefaultImageInfo1(PyObject* self, PyObject* a
     }
     pmJObj = (jobject) pm;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, histoSkipAreasJObj, pmJObj);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "ImageInfo");
     PyBuffer_Release(&histoSkipAreasBuf);
     (*jenv)->DeleteLocalRef(jenv, histoSkipAreasJObj);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
@@ -20806,7 +20821,7 @@ PyObject* BeamPyTiePointGrid_createDefaultImageInfo2(PyObject* self, PyObject* a
     }
     histogramJObj = (jobject) histogram;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, histoSkipAreasJObj, histogramJObj);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "ImageInfo");
     PyBuffer_Release(&histoSkipAreasBuf);
     (*jenv)->DeleteLocalRef(jenv, histoSkipAreasJObj);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
@@ -20830,7 +20845,7 @@ PyObject* BeamPyTiePointGrid_getOverlayMaskGroup(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "ProductNodeGroup");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -20856,7 +20871,7 @@ PyObject* BeamPyTiePointGrid_createColorIndexedImage(PyObject* self, PyObject* a
     _thisJObj = (jobject) _this;
     pmJObj = (jobject) pm;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, pmJObj);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "BufferedImage");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -20882,7 +20897,7 @@ PyObject* BeamPyTiePointGrid_createRgbImage(PyObject* self, PyObject* args)
     _thisJObj = (jobject) _this;
     pmJObj = (jobject) pm;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, pmJObj);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "BufferedImage");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -20982,7 +20997,7 @@ PyObject* BeamPyTiePointGrid_createPixelValidator(PyObject* self, PyObject* args
     _thisJObj = (jobject) _this;
     roiJObj = (jobject) roi;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, lineOffset, roiJObj);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "IndexValidator");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -21087,7 +21102,7 @@ PyObject* BeamPyTiePointGrid_getSourceImage(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "MultiLevelImage");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -21172,7 +21187,7 @@ PyObject* BeamPyTiePointGrid_getGeophysicalImage(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "MultiLevelImage");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -21213,7 +21228,7 @@ PyObject* BeamPyTiePointGrid_getValidMaskImage(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "MultiLevelImage");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -21254,7 +21269,7 @@ PyObject* BeamPyTiePointGrid_getStx1(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "Stx");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -21281,7 +21296,7 @@ PyObject* BeamPyTiePointGrid_getStx2(PyObject* self, PyObject* args)
     _thisJObj = (jobject) _this;
     pmJObj = (jobject) pm;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, accurate, pmJObj);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "Stx");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -21325,7 +21340,7 @@ PyObject* BeamPyTiePointGrid_getValidShape(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "Shape");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -21347,7 +21362,7 @@ PyObject* BeamPyTiePointGrid_getRoiMaskGroup(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "ProductNodeGroup");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -21429,7 +21444,7 @@ PyObject* BeamPyTiePointGrid_getData(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "ProductData");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -21473,7 +21488,7 @@ PyObject* BeamPyTiePointGrid_getDataElems(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "Object");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -21676,7 +21691,7 @@ PyObject* BeamPyTiePointGrid_createCompatibleProductData(PyObject* self, PyObjec
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, numElems);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "ProductData");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -21698,7 +21713,7 @@ PyObject* BeamPyTiePointGrid_getOwner(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "ProductNode");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -21867,7 +21882,7 @@ PyObject* BeamPyTiePointGrid_getProduct(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "Product");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -21889,7 +21904,7 @@ PyObject* BeamPyTiePointGrid_getProductReader(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "ProductReader");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -21911,7 +21926,7 @@ PyObject* BeamPyTiePointGrid_getProductWriter(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "ProductWriter");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -22074,7 +22089,7 @@ PyObject* BeamPyTiePointGrid_getExtension(PyObject* self, PyObject* args)
     _thisJObj = (jobject) _this;
     arg0JObj = (jobject) arg0;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, arg0JObj);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "Object");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -22093,7 +22108,7 @@ PyObject* BeamPyAngularDirection_newAngularDirection(PyObject* self, PyObject* a
         return NULL;
     }
     _resultJObj = (*jenv)->NewObject(jenv, classAngularDirection, _method, azimuth, zenith);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "AngularDirection");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -22158,7 +22173,7 @@ PyObject* BeamPyFlagCoding_newFlagCoding(PyObject* self, PyObject* args)
     }
     nameJObj =(*jenv)->NewStringUTF(jenv, name);
     _resultJObj = (*jenv)->NewObject(jenv, classFlagCoding, _method, nameJObj);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "FlagCoding");
     (*jenv)->DeleteLocalRef(jenv, nameJObj);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
@@ -22184,7 +22199,7 @@ PyObject* BeamPyFlagCoding_getFlag(PyObject* self, PyObject* args)
     _thisJObj = (jobject) _this;
     nameJObj =(*jenv)->NewStringUTF(jenv, name);
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, nameJObj);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "MetadataAttribute");
     (*jenv)->DeleteLocalRef(jenv, nameJObj);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
@@ -22236,7 +22251,7 @@ PyObject* BeamPyFlagCoding_addFlag(PyObject* self, PyObject* args)
     nameJObj =(*jenv)->NewStringUTF(jenv, name);
     descriptionJObj =(*jenv)->NewStringUTF(jenv, description);
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, nameJObj, flagMask, descriptionJObj);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "MetadataAttribute");
     (*jenv)->DeleteLocalRef(jenv, nameJObj);
     (*jenv)->DeleteLocalRef(jenv, descriptionJObj);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
@@ -22356,7 +22371,7 @@ PyObject* BeamPyFlagCoding_addSample(PyObject* self, PyObject* args)
     nameJObj =(*jenv)->NewStringUTF(jenv, name);
     descriptionJObj =(*jenv)->NewStringUTF(jenv, description);
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, nameJObj, value, descriptionJObj);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "MetadataAttribute");
     (*jenv)->DeleteLocalRef(jenv, nameJObj);
     (*jenv)->DeleteLocalRef(jenv, descriptionJObj);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
@@ -22442,7 +22457,7 @@ PyObject* BeamPyFlagCoding_getElementGroup(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "ProductNodeGroup");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -22464,7 +22479,7 @@ PyObject* BeamPyFlagCoding_getParentElement(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "MetadataElement");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -22552,7 +22567,7 @@ PyObject* BeamPyFlagCoding_getElementAt(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, index);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "MetadataElement");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -22621,7 +22636,7 @@ PyObject* BeamPyFlagCoding_getElement(PyObject* self, PyObject* args)
     _thisJObj = (jobject) _this;
     nameJObj =(*jenv)->NewStringUTF(jenv, name);
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, nameJObj);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "MetadataElement");
     (*jenv)->DeleteLocalRef(jenv, nameJObj);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
@@ -22733,7 +22748,7 @@ PyObject* BeamPyFlagCoding_getAttributeAt(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, index);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "MetadataAttribute");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -22802,7 +22817,7 @@ PyObject* BeamPyFlagCoding_getAttribute(PyObject* self, PyObject* args)
     _thisJObj = (jobject) _this;
     nameJObj =(*jenv)->NewStringUTF(jenv, name);
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, nameJObj);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "MetadataAttribute");
     (*jenv)->DeleteLocalRef(jenv, nameJObj);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
@@ -22902,7 +22917,7 @@ PyObject* BeamPyFlagCoding_getAttributeUTC(PyObject* self, PyObject* args)
     nameJObj =(*jenv)->NewStringUTF(jenv, name);
     defaultValueJObj = (jobject) defaultValue;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, nameJObj, defaultValueJObj);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "UTC");
     (*jenv)->DeleteLocalRef(jenv, nameJObj);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
@@ -23096,7 +23111,7 @@ PyObject* BeamPyFlagCoding_createDeepClone(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "MetadataElement");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -23136,7 +23151,7 @@ PyObject* BeamPyFlagCoding_getOwner(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "ProductNode");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -23305,7 +23320,7 @@ PyObject* BeamPyFlagCoding_getProduct(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "Product");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -23327,7 +23342,7 @@ PyObject* BeamPyFlagCoding_getProductReader(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "ProductReader");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -23349,7 +23364,7 @@ PyObject* BeamPyFlagCoding_getProductWriter(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "ProductWriter");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -23467,7 +23482,7 @@ PyObject* BeamPyFlagCoding_getExtension(PyObject* self, PyObject* args)
     _thisJObj = (jobject) _this;
     arg0JObj = (jobject) arg0;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, arg0JObj);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "Object");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -23489,7 +23504,7 @@ PyObject* BeamPyProductReader_getReaderPlugIn(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "ProductReaderPlugIn");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -23511,7 +23526,7 @@ PyObject* BeamPyProductReader_getInput(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "Object");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -23533,7 +23548,7 @@ PyObject* BeamPyProductReader_getSubsetDef(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "ProductSubsetDef");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -23563,7 +23578,7 @@ PyObject* BeamPyProductReader_readProductNodes(PyObject* self, PyObject* args)
     inputJObj = (jobject) input;
     subsetDefJObj = (jobject) subsetDef;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, inputJObj, subsetDefJObj);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "Product");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -23629,7 +23644,7 @@ PyObject* BeamPyRGBChannelDef_newRGBChannelDef(PyObject* self, PyObject* args)
         return NULL;
     }
     _resultJObj = (*jenv)->NewObject(jenv, classRGBChannelDef, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "RGBChannelDef");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -23903,7 +23918,7 @@ PyObject* BeamPyRGBChannelDef_clone(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "Object");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -23921,7 +23936,7 @@ PyObject* BeamPyProductData_createInstance1(PyObject* self, PyObject* args)
         return NULL;
     }
     _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, classProductData, _method, type);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "ProductData");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -23940,7 +23955,7 @@ PyObject* BeamPyProductData_createInstance2(PyObject* self, PyObject* args)
         return NULL;
     }
     _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, classProductData, _method, type, numElems);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "ProductData");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -23962,7 +23977,7 @@ PyObject* BeamPyProductData_createInstance3(PyObject* self, PyObject* args)
     }
     dataJObj = (jobject) data;
     _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, classProductData, _method, type, dataJObj);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "ProductData");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -23994,7 +24009,7 @@ PyObject* BeamPyProductData_createInstance5(PyObject* self, PyObject* args)
         return NULL;
     }
     _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, classProductData, _method, elemsJObj);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "ProductData");
     PyBuffer_Release(&elemsBuf);
     (*jenv)->DeleteLocalRef(jenv, elemsJObj);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
@@ -24028,7 +24043,7 @@ PyObject* BeamPyProductData_createUnsignedInstance1(PyObject* self, PyObject* ar
         return NULL;
     }
     _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, classProductData, _method, elemsJObj);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "ProductData");
     PyBuffer_Release(&elemsBuf);
     (*jenv)->DeleteLocalRef(jenv, elemsJObj);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
@@ -24062,7 +24077,7 @@ PyObject* BeamPyProductData_createInstance10(PyObject* self, PyObject* args)
         return NULL;
     }
     _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, classProductData, _method, elemsJObj);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "ProductData");
     PyBuffer_Release(&elemsBuf);
     (*jenv)->DeleteLocalRef(jenv, elemsJObj);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
@@ -24096,7 +24111,7 @@ PyObject* BeamPyProductData_createUnsignedInstance3(PyObject* self, PyObject* ar
         return NULL;
     }
     _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, classProductData, _method, elemsJObj);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "ProductData");
     PyBuffer_Release(&elemsBuf);
     (*jenv)->DeleteLocalRef(jenv, elemsJObj);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
@@ -24130,7 +24145,7 @@ PyObject* BeamPyProductData_createInstance8(PyObject* self, PyObject* args)
         return NULL;
     }
     _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, classProductData, _method, elemsJObj);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "ProductData");
     PyBuffer_Release(&elemsBuf);
     (*jenv)->DeleteLocalRef(jenv, elemsJObj);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
@@ -24164,7 +24179,7 @@ PyObject* BeamPyProductData_createUnsignedInstance2(PyObject* self, PyObject* ar
         return NULL;
     }
     _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, classProductData, _method, elemsJObj);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "ProductData");
     PyBuffer_Release(&elemsBuf);
     (*jenv)->DeleteLocalRef(jenv, elemsJObj);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
@@ -24198,7 +24213,7 @@ PyObject* BeamPyProductData_createInstance9(PyObject* self, PyObject* args)
         return NULL;
     }
     _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, classProductData, _method, elemsJObj);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "ProductData");
     PyBuffer_Release(&elemsBuf);
     (*jenv)->DeleteLocalRef(jenv, elemsJObj);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
@@ -24220,7 +24235,7 @@ PyObject* BeamPyProductData_createInstance4(PyObject* self, PyObject* args)
     }
     strDataJObj =(*jenv)->NewStringUTF(jenv, strData);
     _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, classProductData, _method, strDataJObj);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "ProductData");
     (*jenv)->DeleteLocalRef(jenv, strDataJObj);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
@@ -24253,7 +24268,7 @@ PyObject* BeamPyProductData_createInstance7(PyObject* self, PyObject* args)
         return NULL;
     }
     _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, classProductData, _method, elemsJObj);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "ProductData");
     PyBuffer_Release(&elemsBuf);
     (*jenv)->DeleteLocalRef(jenv, elemsJObj);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
@@ -24287,7 +24302,7 @@ PyObject* BeamPyProductData_createInstance6(PyObject* self, PyObject* args)
         return NULL;
     }
     _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, classProductData, _method, elemsJObj);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "ProductData");
     PyBuffer_Release(&elemsBuf);
     (*jenv)->DeleteLocalRef(jenv, elemsJObj);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
@@ -25042,7 +25057,7 @@ PyObject* BeamPyProductData_getElems(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "Object");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -25376,7 +25391,7 @@ PyObject* BeamPyGeoPos_newGeoPos(PyObject* self, PyObject* args)
         return NULL;
     }
     _resultJObj = (*jenv)->NewObject(jenv, classGeoPos, _method, lat, lon);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "GeoPos");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -25653,7 +25668,7 @@ PyObject* BeamPyProductNodeGroup_newProductNodeGroup(PyObject* self, PyObject* a
     }
     nameJObj =(*jenv)->NewStringUTF(jenv, name);
     _resultJObj = (*jenv)->NewObject(jenv, classProductNodeGroup, _method, nameJObj);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "ProductNodeGroup");
     (*jenv)->DeleteLocalRef(jenv, nameJObj);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
@@ -25715,7 +25730,7 @@ PyObject* BeamPyProductNodeGroup_getAt(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, index);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "ProductNode");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -25830,7 +25845,7 @@ PyObject* BeamPyProductNodeGroup_getByDisplayName(PyObject* self, PyObject* args
     _thisJObj = (jobject) _this;
     displayNameJObj =(*jenv)->NewStringUTF(jenv, displayName);
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, displayNameJObj);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "ProductNode");
     (*jenv)->DeleteLocalRef(jenv, displayNameJObj);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
@@ -25856,7 +25871,7 @@ PyObject* BeamPyProductNodeGroup_get(PyObject* self, PyObject* args)
     _thisJObj = (jobject) _this;
     nameJObj =(*jenv)->NewStringUTF(jenv, name);
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, nameJObj);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "ProductNode");
     (*jenv)->DeleteLocalRef(jenv, nameJObj);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
@@ -26030,7 +26045,7 @@ PyObject* BeamPyProductNodeGroup_getRemovedNodes(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "Collection");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -26137,7 +26152,7 @@ PyObject* BeamPyProductNodeGroup_getOwner(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "ProductNode");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -26306,7 +26321,7 @@ PyObject* BeamPyProductNodeGroup_getProduct(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "Product");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -26328,7 +26343,7 @@ PyObject* BeamPyProductNodeGroup_getProductReader(PyObject* self, PyObject* args
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "ProductReader");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -26350,7 +26365,7 @@ PyObject* BeamPyProductNodeGroup_getProductWriter(PyObject* self, PyObject* args
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "ProductWriter");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -26442,7 +26457,7 @@ PyObject* BeamPyProductNodeGroup_getExtension(PyObject* self, PyObject* args)
     _thisJObj = (jobject) _this;
     arg0JObj = (jobject) arg0;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, arg0JObj);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "Object");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -26456,7 +26471,7 @@ PyObject* BeamPyProductUtils_newProductUtils(PyObject* self, PyObject* args)
         return NULL;
     }
     _resultJObj = (*jenv)->NewObject(jenv, classProductUtils, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "ProductUtils");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -26484,7 +26499,7 @@ PyObject* BeamPyProductUtils_createImageInfo(PyObject* self, PyObject* args)
     }
     pmJObj = (jobject) pm;
     _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, classProductUtils, _method, rastersJObj, assignMissingImageInfos, pmJObj);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "ImageInfo");
     (*jenv)->DeleteLocalRef(jenv, rastersJObj);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
@@ -26516,7 +26531,7 @@ PyObject* BeamPyProductUtils_createRgbImage(PyObject* self, PyObject* args)
     imageInfoJObj = (jobject) imageInfo;
     pmJObj = (jobject) pm;
     _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, classProductUtils, _method, rastersJObj, imageInfoJObj, pmJObj);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "BufferedImage");
     (*jenv)->DeleteLocalRef(jenv, rastersJObj);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
@@ -26542,7 +26557,7 @@ PyObject* BeamPyProductUtils_createColorIndexedImage(PyObject* self, PyObject* a
     rasterDataNodeJObj = (jobject) rasterDataNode;
     pmJObj = (jobject) pm;
     _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, classProductUtils, _method, rasterDataNodeJObj, pmJObj);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "BufferedImage");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -26571,7 +26586,7 @@ PyObject* BeamPyProductUtils_createSuitableMapInfo1(PyObject* self, PyObject* ar
     rectJObj = (jobject) rect;
     mapProjectionJObj = (jobject) mapProjection;
     _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, classProductUtils, _method, productJObj, rectJObj, mapProjectionJObj);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "MapInfo");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -26598,7 +26613,7 @@ PyObject* BeamPyProductUtils_createSuitableMapInfo2(PyObject* self, PyObject* ar
     productJObj = (jobject) product;
     mapProjectionJObj = (jobject) mapProjection;
     _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, classProductUtils, _method, productJObj, mapProjectionJObj, orientation, noDataValue);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "MapInfo");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -26629,7 +26644,7 @@ PyObject* BeamPyProductUtils_getOutputRasterSize(PyObject* self, PyObject* args)
     rectJObj = (jobject) rect;
     mapTransformJObj = (jobject) mapTransform;
     _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, classProductUtils, _method, productJObj, rectJObj, mapTransformJObj, pixelSizeX, pixelSizeY);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "Dimension");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -26847,7 +26862,7 @@ PyObject* BeamPyProductUtils_getClosestGeoPos(PyObject* self, PyObject* args)
     origPosJObj = (jobject) origPos;
     regionJObj = (jobject) region;
     _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, classProductUtils, _method, gcJObj, origPosJObj, regionJObj, step);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "GeoPos");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -27117,7 +27132,7 @@ PyObject* BeamPyProductUtils_copyFlagCoding(PyObject* self, PyObject* args)
     sourceFlagCodingJObj = (jobject) sourceFlagCoding;
     targetJObj = (jobject) target;
     _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, classProductUtils, _method, sourceFlagCodingJObj, targetJObj);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "FlagCoding");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -27142,7 +27157,7 @@ PyObject* BeamPyProductUtils_copyIndexCoding(PyObject* self, PyObject* args)
     sourceIndexCodingJObj = (jobject) sourceIndexCoding;
     targetJObj = (jobject) target;
     _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, classProductUtils, _method, sourceIndexCodingJObj, targetJObj);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "IndexCoding");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -27276,7 +27291,7 @@ PyObject* BeamPyProductUtils_copyTiePointGrid(PyObject* self, PyObject* args)
     sourceProductJObj = (jobject) sourceProduct;
     targetProductJObj = (jobject) targetProduct;
     _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, classProductUtils, _method, gridNameJObj, sourceProductJObj, targetProductJObj);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "TiePointGrid");
     (*jenv)->DeleteLocalRef(jenv, gridNameJObj);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
@@ -27306,7 +27321,7 @@ PyObject* BeamPyProductUtils_copyBand4(PyObject* self, PyObject* args)
     sourceProductJObj = (jobject) sourceProduct;
     targetProductJObj = (jobject) targetProduct;
     _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, classProductUtils, _method, sourceBandNameJObj, sourceProductJObj, targetProductJObj, copySourceImage);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "Band");
     (*jenv)->DeleteLocalRef(jenv, sourceBandNameJObj);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
@@ -27339,7 +27354,7 @@ PyObject* BeamPyProductUtils_copyBand2(PyObject* self, PyObject* args)
     targetBandNameJObj =(*jenv)->NewStringUTF(jenv, targetBandName);
     targetProductJObj = (jobject) targetProduct;
     _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, classProductUtils, _method, sourceBandNameJObj, sourceProductJObj, targetBandNameJObj, targetProductJObj, copySourceImage);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "Band");
     (*jenv)->DeleteLocalRef(jenv, sourceBandNameJObj);
     (*jenv)->DeleteLocalRef(jenv, targetBandNameJObj);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
@@ -27390,7 +27405,7 @@ PyObject* BeamPyProductUtils_copyBand3(PyObject* self, PyObject* args)
     sourceProductJObj = (jobject) sourceProduct;
     targetProductJObj = (jobject) targetProduct;
     _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, classProductUtils, _method, sourceBandNameJObj, sourceProductJObj, targetProductJObj);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "Band");
     (*jenv)->DeleteLocalRef(jenv, sourceBandNameJObj);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
@@ -27422,7 +27437,7 @@ PyObject* BeamPyProductUtils_copyBand1(PyObject* self, PyObject* args)
     targetBandNameJObj =(*jenv)->NewStringUTF(jenv, targetBandName);
     targetProductJObj = (jobject) targetProduct;
     _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, classProductUtils, _method, sourceBandNameJObj, sourceProductJObj, targetBandNameJObj, targetProductJObj);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "Band");
     (*jenv)->DeleteLocalRef(jenv, sourceBandNameJObj);
     (*jenv)->DeleteLocalRef(jenv, targetBandNameJObj);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
@@ -27591,7 +27606,7 @@ PyObject* BeamPyProductUtils_createDensityPlotImage(PyObject* self, PyObject* ar
     imageJObj = (jobject) image;
     pmJObj = (jobject) pm;
     _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, classProductUtils, _method, raster1JObj, sampleMin1, sampleMax1, raster2JObj, sampleMin2, sampleMax2, roiMaskJObj, width, height, backgroundJObj, imageJObj, pmJObj);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "BufferedImage");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -27620,7 +27635,7 @@ PyObject* BeamPyProductUtils_overlayMasks(PyObject* self, PyObject* args)
     overlayBImJObj = (jobject) overlayBIm;
     pmJObj = (jobject) pm;
     _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, classProductUtils, _method, rasterJObj, overlayBImJObj, pmJObj);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "BufferedImage");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -27641,7 +27656,7 @@ PyObject* BeamPyProductUtils_getCenterGeoPos(PyObject* self, PyObject* args)
     }
     productJObj = (jobject) product;
     _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, classProductUtils, _method, productJObj);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "GeoPos");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -27804,7 +27819,7 @@ PyObject* BeamPyProductUtils_convertToPixelPath(PyObject* self, PyObject* args)
     geoPathJObj = (jobject) geoPath;
     geoCodingJObj = (jobject) geoCoding;
     _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, classProductUtils, _method, geoPathJObj, geoCodingJObj);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "GeneralPath");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -27829,7 +27844,7 @@ PyObject* BeamPyProductUtils_convertToGeoPath(PyObject* self, PyObject* args)
     shapeJObj = (jobject) shape;
     geoCodingJObj = (jobject) geoCoding;
     _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, classProductUtils, _method, shapeJObj, geoCodingJObj);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "GeneralPath");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -27913,7 +27928,7 @@ PyObject* BeamPyProductUtils_createGeoTIFFMetadata2(PyObject* self, PyObject* ar
     }
     productJObj = (jobject) product;
     _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, classProductUtils, _method, productJObj);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "GeoTIFFMetadata");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -27936,7 +27951,7 @@ PyObject* BeamPyProductUtils_createGeoTIFFMetadata1(PyObject* self, PyObject* ar
     }
     geoCodingJObj = (jobject) geoCoding;
     _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, classProductUtils, _method, geoCodingJObj, width, height);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "GeoTIFFMetadata");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -27958,7 +27973,7 @@ PyObject* BeamPyProductUtils_areaToPath(PyObject* self, PyObject* args)
     }
     negativeAreaJObj = (jobject) negativeArea;
     _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, classProductUtils, _method, negativeAreaJObj, deltaX);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "GeneralPath");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -28151,7 +28166,7 @@ PyObject* BeamPyProductUtils_getScanLineTime(PyObject* self, PyObject* args)
     }
     productJObj = (jobject) product;
     _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, classProductUtils, _method, productJObj, y);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "UTC");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -28218,7 +28233,7 @@ PyObject* BeamPyMetadataAttribute_newMetadataAttribute(PyObject* self, PyObject*
     nameJObj =(*jenv)->NewStringUTF(jenv, name);
     dataJObj = (jobject) data;
     _resultJObj = (*jenv)->NewObject(jenv, classMetadataAttribute, _method, nameJObj, dataJObj, readOnly);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "MetadataAttribute");
     (*jenv)->DeleteLocalRef(jenv, nameJObj);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
@@ -28241,7 +28256,7 @@ PyObject* BeamPyMetadataAttribute_getParentElement(PyObject* self, PyObject* arg
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "MetadataElement");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -28308,7 +28323,7 @@ PyObject* BeamPyMetadataAttribute_createDeepClone(PyObject* self, PyObject* args
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "MetadataAttribute");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -28409,7 +28424,7 @@ PyObject* BeamPyMetadataAttribute_getData(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "ProductData");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -28453,7 +28468,7 @@ PyObject* BeamPyMetadataAttribute_getDataElems(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "Object");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -28651,7 +28666,7 @@ PyObject* BeamPyMetadataAttribute_createCompatibleProductData(PyObject* self, Py
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, numElems);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "ProductData");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -28673,7 +28688,7 @@ PyObject* BeamPyMetadataAttribute_getOwner(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "ProductNode");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -28861,7 +28876,7 @@ PyObject* BeamPyMetadataAttribute_getProduct(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "Product");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -28883,7 +28898,7 @@ PyObject* BeamPyMetadataAttribute_getProductReader(PyObject* self, PyObject* arg
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "ProductReader");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -28905,7 +28920,7 @@ PyObject* BeamPyMetadataAttribute_getProductWriter(PyObject* self, PyObject* arg
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "ProductWriter");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -29023,7 +29038,7 @@ PyObject* BeamPyMetadataAttribute_getExtension(PyObject* self, PyObject* args)
     _thisJObj = (jobject) _this;
     arg0JObj = (jobject) arg0;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, arg0JObj);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "Object");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }

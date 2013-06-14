@@ -19,7 +19,7 @@ PyObject* BeamPyTestClass2_getPixelsForType(PyObject* self, PyObject* args)
     _thisJObj = (jobject) _this;
     p1JObj = (jobject) p1;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, p1JObj);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "Object");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }

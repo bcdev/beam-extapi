@@ -15,7 +15,7 @@ PyObject* BeamPyTestClass2_getTimestamp(PyObject* self, PyObject* args)
     }
     _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "Date");
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
