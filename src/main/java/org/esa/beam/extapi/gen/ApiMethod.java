@@ -33,8 +33,7 @@ public final class ApiMethod implements Comparable<ApiMethod> {
     private static Type getReturnType(ApiClass enclosingClass, ExecutableMemberDoc memberDoc) {
         if (memberDoc.isConstructor()) {
             return enclosingClass.getType();
-        }
-        else {
+        } else {
             final Type type = ((MethodDoc) memberDoc).returnType();
             return unfoldType(type);
         }

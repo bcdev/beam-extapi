@@ -2,6 +2,7 @@
         deprecatedMethods="true">
 
     <sourcePaths>
+        <path>${jdkSourceDir}/src.zip</path>
         <path>${beamSourceDir}/beam-core/src/main/java</path>
         <path>${beamSourceDir}/beam-gpf/src/main/java</path>
     </sourcePaths>
@@ -21,6 +22,25 @@
           o  rename a method (renameTo="newAngularDirection")
           o  to expose all methods which have overloaded names
     -->
+
+    <!--
+       ##########################################################################
+       #                 Java Collections used in the BEAM API                  #
+       ##########################################################################
+    -->
+
+    <class name="java.util.Map">
+
+    </class>
+
+    <class name="java.util.List">
+
+    </class>
+
+    <class name="java.util.Set">
+
+    </class>
+
 
     <!--
        ##########################################################################

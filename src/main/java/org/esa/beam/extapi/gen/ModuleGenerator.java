@@ -35,7 +35,7 @@ public abstract class ModuleGenerator implements GeneratorContext {
     public static final String CLASS_VAR_NAME_PATTERN = "class%s";
 
     public static final String[] JAVA_LANG_CLASSES = new String[]{"Boolean", "Byte", "Character", "Short", "Integer", "Long", "Float", "Double", "String"};
-    public static final String[] JAVA_UTIL_CLASSES = new String[]{"HashMap", "HashSet"};
+    public static final String[] JAVA_UTIL_CLASSES = new String[]{"HashMap", "HashSet", "ArrayList"};
 
     private final ApiInfo apiInfo;
     private final Map<ApiClass, List<FunctionGenerator>> functionGenerators;

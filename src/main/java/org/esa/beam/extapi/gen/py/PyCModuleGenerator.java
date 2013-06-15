@@ -133,6 +133,9 @@ public class PyCModuleGenerator extends ModuleGenerator {
                 writeFunctionDeclarations(writer);
                 writer.printf("\n");
 
+                writeTemplateResource(writer, "PyCModuleGenerator-stub-java-util.h");
+                writer.printf("\n");
+
                 writePyMethodDefs(writer);
                 writer.printf("\n");
 
@@ -158,6 +161,9 @@ public class PyCModuleGenerator extends ModuleGenerator {
                 writer.printf("\n");
 
                 writeTemplateResource(writer, "PyCModuleGenerator-stub-conv.c");
+                writer.printf("\n");
+
+                writeTemplateResource(writer, "PyCModuleGenerator-stub-java-util.c");
                 writer.printf("\n");
 
                 writeFunctionDefinitions(writer);
@@ -196,8 +202,7 @@ public class PyCModuleGenerator extends ModuleGenerator {
         }
         writer.printf("    {\"Object_delete\", BeamPyObject_delete, METH_VARARGS, \"Deletes global references to Java objects held by Python objects\"},\n");
         writer.printf("    {\"String_newString\", BeamPyString_newString, METH_VARARGS, \"Converts a Python unicode string into a Java java.lang.String object\"},\n");
-        // experimental
-        // writer.printf("    {\"Map_newHashMap\", BeamPyMap_newHashMap, METH_VARARGS, \"Converts a Python dictionary into a Java java.utils.Map object\"},\n");
+        writer.printf("    {\"Map_newHashMap\", BeamPyMap_newHashMap, METH_VARARGS, \"Converts a Python dictionary into a Java java.utils.Map object\"},\n");
         writer.printf("    {NULL, NULL, 0, NULL}  /* Sentinel */\n");
         writer.printf("};\n");
     }
@@ -298,11 +303,22 @@ public class PyCModuleGenerator extends ModuleGenerator {
                                              "\n");
 
                     } else if (className.equals("Map")) {
-                        // experimental
                         writer.write("" +
                                              "    @staticmethod\n" +
-                                             "    def newMap(dict):\n" +
-                                             "        return Map(Map_newHashMap(dict))\n" +
+                                             "    def newMap(dic=None):\n" +
+                                             "        return Map(Map_newHashMap(dic))\n" +
+                                             "\n" +
+                                             "    def __len__(self):\n" +
+                                             "        return self.size()\n" +
+                                             "\n" +
+                                             "    def __getitem__(self, key):\n" +
+                                             "        return self.get(key)\n" +
+                                             "\n" +
+                                             "    def __setitem__(self, key, value):\n" +
+                                             "        return self.put(key, value)\n" +
+                                             "\n" +
+                                             "    def __delitem__(self, key):\n" +
+                                             "        return self.remove(key)\n" +
                                              "\n");
                     }
 

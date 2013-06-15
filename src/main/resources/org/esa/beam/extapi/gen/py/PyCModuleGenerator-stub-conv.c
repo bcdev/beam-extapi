@@ -206,20 +206,10 @@ jarray beampy_newJObjectArrayFromPySeq(PyObject* seqPyObj, const char* typeName)
 
 
 
-
-
 ///////////////////////////////////////////////
 // Java Map
 ///////////////////////////////////////////////
 
-
-
-/*
-static jclass classBoolean = NULL;
-static jclass classInteger = NULL;
-static jclass classDouble = NULL;
-static jclass classHashMap = NULL;
-*/
 
 static jmethodID _booleanConstr = NULL;
 static jmethodID _integerConstr = NULL;
@@ -294,8 +284,8 @@ jobject beampy_newJMapFromPyObject(PyObject* anyPyObj)
         return NULL;
     }
 
-    if (!PyDict_Check(anyPyObj)) {
-        PyErr_SetString(PyExc_TypeError, "dictionary expected");
+    if (!(anyPyObj == Py_None || PyDict_Check(anyPyObj))) {
+        PyErr_SetString(PyExc_TypeError, "dictionary or None expected");
         return NULL;
     }
 
@@ -305,13 +295,16 @@ jobject beampy_newJMapFromPyObject(PyObject* anyPyObj)
         return NULL;
     }
 
-    while (PyDict_Next(anyPyObj, &dictPos, &dictKeyPyObj, &dictValuePyObj)) {
-        jobject mapKeyJObj   = beampy_newGenericJObjectFromPyObject(dictKeyPyObj);
-        jobject mapValueJObj = beampy_newGenericJObjectFromPyObject(dictValuePyObj);
-        if (mapKeyJObj != NULL && mapValueJObj != NULL) {
-            (*jenv)->CallObjectMethod(jenv, mapJObj, _hashMapPutMethod, mapKeyJObj, mapValueJObj);
+    if (anyPyObj != Py_None) {
+        while (PyDict_Next(anyPyObj, &dictPos, &dictKeyPyObj, &dictValuePyObj)) {
+            jobject mapKeyJObj   = beampy_newGenericJObjectFromPyObject(dictKeyPyObj);
+            jobject mapValueJObj = beampy_newGenericJObjectFromPyObject(dictValuePyObj);
+            if (mapKeyJObj != NULL && mapValueJObj != NULL) {
+                (*jenv)->CallObjectMethod(jenv, mapJObj, _hashMapPutMethod, mapKeyJObj, mapValueJObj);
+            }
         }
     }
 
     return mapJObj;
 }
+

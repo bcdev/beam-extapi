@@ -149,55 +149,104 @@ public final class ApiInfo {
     }
 
     private static Map<ApiClass, ApiMembers> getApiMembers(RootDoc rootDoc, ApiGeneratorConfig config) {
-
         Map<ApiClass, ApiMembers> apiClasses = new HashMap<ApiClass, ApiMembers>(1000);
-
         for (ClassDoc classDoc : rootDoc.classes()) {
-            String classRejectReason = getRejectReason(config, classDoc);
-            if (classRejectReason == null) {
-                ApiClass apiClass = new ApiClass(classDoc);
-                ArrayList<ApiConstant> apiConstants = new ArrayList<ApiConstant>();
-                ArrayList<ApiMethod> apiMethods = new ArrayList<ApiMethod>();
+            collectApiMembersFromClass(classDoc, config, false, apiClasses);
+        }
+        for (ApiMembers value : new ArrayList<ApiMembers>(apiClasses.values())) {
+            collectApiMembersFromApiMembers(value, config, apiClasses);
+        }
+        return apiClasses;
+    }
 
-                for (ConstructorDoc constructorDoc : classDoc.constructors()) {
-                    ApiMethod apiMethod = new ApiMethod(apiClass, constructorDoc);
-                    String rejectReason = getRejectReason(config, apiMethod);
-                    if (rejectReason == null) {
-                        apiMethods.add(apiMethod);
-                    } else {
-                        System.out.printf("Rejected: constructor %s#%s() - reason: %s\n", classDoc.qualifiedTypeName(), constructorDoc.name(), rejectReason);
-                    }
-                }
+    private static void collectApiMembersFromApiMembers(ApiMembers apiMembers, ApiGeneratorConfig config, Map<ApiClass, ApiMembers> apiClasses) {
+        for (ApiMethod apiMethod : apiMembers.apiMethods) {
+            ExecutableMemberDoc memberDoc = apiMethod.getMemberDoc();
+            if (memberDoc.isConstructor()) {
+                collectApiMembersFromConstructor((ConstructorDoc) memberDoc, config, apiClasses);
+            }   else {
+                collectApiMembersFromMethod((MethodDoc) memberDoc, config, apiClasses);
+            }
+        }
+    }
 
-                ClassDoc classDoc0 = classDoc;
-                do {
-                    for (FieldDoc fieldDoc : classDoc0.fields()) {
-                        if (fieldDoc.isPublic() && fieldDoc.isStatic() && fieldDoc.isFinal()) {
-                            apiConstants.add(new ApiConstant(apiClass, fieldDoc));
-                        }
-                    }
+    private static void collectApiMembersFromClass(ClassDoc classDoc, ApiGeneratorConfig config, boolean secondaryPass, Map<ApiClass, ApiMembers> apiClasses) {
 
-                    for (MethodDoc methodDoc : classDoc0.methods()) {
-                        ApiMethod apiMethod = new ApiMethod(apiClass, methodDoc);
-                        String rejectReason = getRejectReason(config, apiMethod);
-                        if (rejectReason == null) {
-                            if (classDoc0 == classDoc || !apiMethods.contains(apiMethod)) {
-                                apiMethods.add(apiMethod);
-                            }
-                        } else {
-                            System.out.printf("Rejected: method %s#%s() - reason: %s\n", classDoc.qualifiedTypeName(), methodDoc.name(), rejectReason);
-                        }
-                    }
-                    classDoc0 = classDoc0.superclass();
-                } while (classDoc0 != null && !isObjectClass(classDoc0));
-
-                apiClasses.put(apiClass, new ApiMembers(apiConstants, apiMethods));
-            } else {
-                System.out.printf("Rejected: class %s - reason: %s\n", classDoc.qualifiedTypeName(), classRejectReason);
+        if (secondaryPass) {
+            if (!config.isApiClass(classDoc.qualifiedName())) {
+                System.out.println("!isApiClass: classDoc = " + classDoc.qualifiedName());
+                return;
+            }
+            if (contains(apiClasses, classDoc)) {
+                System.out.println("contains: classDoc = " + classDoc.qualifiedName());
+                return;
             }
         }
 
-        return apiClasses;
+        String classRejectReason = getRejectReason(config, classDoc);
+        if (classRejectReason == null) {
+            ApiClass apiClass = new ApiClass(classDoc);
+            ArrayList<ApiConstant> apiConstants = new ArrayList<ApiConstant>();
+            ArrayList<ApiMethod> apiMethods = new ArrayList<ApiMethod>();
+
+            for (ConstructorDoc constructorDoc : classDoc.constructors()) {
+                ApiMethod apiMethod = new ApiMethod(apiClass, constructorDoc);
+                String rejectReason = getRejectReason(config, apiMethod);
+                if (rejectReason == null) {
+                    apiMethods.add(apiMethod);
+                } else {
+                    System.out.printf("Rejected: constructor %s#%s() - reason: %s\n", classDoc.qualifiedTypeName(), constructorDoc.name(), rejectReason);
+                }
+            }
+
+            ClassDoc classDoc0 = classDoc;
+            do {
+                for (FieldDoc fieldDoc : classDoc0.fields()) {
+                    if (fieldDoc.isPublic() && fieldDoc.isStatic() && fieldDoc.isFinal()) {
+                        apiConstants.add(new ApiConstant(apiClass, fieldDoc));
+                    }
+                }
+
+                for (MethodDoc methodDoc : classDoc0.methods()) {
+                    ApiMethod apiMethod = new ApiMethod(apiClass, methodDoc);
+                    String rejectReason = getRejectReason(config, apiMethod);
+                    if (rejectReason == null) {
+                        if (classDoc0 == classDoc || !apiMethods.contains(apiMethod)) {
+                            apiMethods.add(apiMethod);
+                        }
+                    } else {
+                        System.out.printf("Rejected: method %s#%s() - reason: %s\n", classDoc.qualifiedTypeName(), methodDoc.name(), rejectReason);
+                    }
+                }
+                classDoc0 = classDoc0.superclass();
+            } while (classDoc0 != null && !isObjectClass(classDoc0));
+
+            apiClasses.put(apiClass, new ApiMembers(apiConstants, apiMethods));
+        } else {
+            System.out.printf("Rejected: class %s - reason: %s\n", classDoc.qualifiedTypeName(), classRejectReason);
+        }
+    }
+
+    private static void collectApiMembersFromConstructor(ConstructorDoc constructorDoc, ApiGeneratorConfig config,  Map<ApiClass, ApiMembers> apiClasses) {
+        collectApiMembersFromParameters(constructorDoc, config, apiClasses);
+    }
+
+    private static void collectApiMembersFromMethod(MethodDoc methodDoc, ApiGeneratorConfig config,Map<ApiClass, ApiMembers> apiClasses) {
+        collectApiMembersFromParameters(methodDoc, config, apiClasses);
+        ClassDoc retClassDoc = methodDoc.returnType().asClassDoc();
+        if (retClassDoc != null && !JavadocHelpers.isVoid(retClassDoc)) {
+            collectApiMembersFromClass(retClassDoc, config, true, apiClasses);
+        }
+    }
+
+    private static void collectApiMembersFromParameters(ExecutableMemberDoc memberDoc, ApiGeneratorConfig config,  Map<ApiClass, ApiMembers> apiClasses) {
+        Parameter[] parameters = memberDoc.parameters();
+        for (Parameter parameter : parameters) {
+            ClassDoc paramClassDoc = parameter.type().asClassDoc();
+            if (paramClassDoc != null) {
+                collectApiMembersFromClass(paramClassDoc, config, true, apiClasses);
+            }
+        }
     }
 
     private static String getRejectReason(ApiGeneratorConfig config, ClassDoc classDoc) {
@@ -260,6 +309,10 @@ public final class ApiInfo {
             ApiMembers referencingMembers = getApiMembers(allClasses, type);
             referencingMembers.apiMethods.add(apiMethod);
         }
+    }
+
+    private static boolean contains(Map<ApiClass, ApiMembers> classes, Type type) {
+        return classes.containsKey(new ApiClass(type));
     }
 
     private static ApiMembers getApiMembers(Map<ApiClass, ApiMembers> allClasses, Type type) {

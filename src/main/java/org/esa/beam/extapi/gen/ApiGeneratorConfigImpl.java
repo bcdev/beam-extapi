@@ -17,17 +17,9 @@ public class ApiGeneratorConfigImpl implements ApiGeneratorConfig {
 
     private final String[] sourcePaths;
     private final String[] packages;
-    private final Map<String, Map<String, MConfig>> mConfigs;
-    private final  boolean includeDeprecatedClasses;
-    private final  boolean includeDeprecatedMethods;
-
-    public ApiGeneratorConfigImpl(String[] sourcePaths, String[] packages, CConfig[] cConfigs, boolean includeDeprecatedClasses, boolean includeDeprecatedMethods) {
-        this.sourcePaths = sourcePaths;
-        this.packages = packages;
-        this.mConfigs = createMConfigMap(cConfigs);
-        this.includeDeprecatedClasses = includeDeprecatedClasses;
-        this.includeDeprecatedMethods = includeDeprecatedMethods;
-    }
+    private final Map<String, Map<String, MethodConfig>> methodConfigsMap;
+    private final boolean includeDeprecatedClasses;
+    private final boolean includeDeprecatedMethods;
 
     @Override
     public boolean getIncludeDeprecatedClasses() {
@@ -39,32 +31,94 @@ public class ApiGeneratorConfigImpl implements ApiGeneratorConfig {
         return includeDeprecatedMethods;
     }
 
-    private static Map<String, Map<String, MConfig>> createMConfigMap(CConfig[] cConfigs) {
-        Map<String, Map<String, MConfig>> cMap = new HashMap<String, Map<String, MConfig>>();
-        for (CConfig cConfig : cConfigs) {
-            final HashMap<String, MConfig> mMap = new HashMap<String, MConfig>();
-            final MConfig[] methods = cConfig.methods;
-            for (MConfig method : methods) {
-                mMap.put(method.name + method.sig, method);
-            }
-            cMap.put(cConfig.name, mMap);
-        }
-        return cMap;
+
+    @Override
+    public String[] getSourcePaths() {
+        return sourcePaths;
     }
 
-    public static ApiGeneratorConfig load(TemplateEval.KV ... pairs) throws JDOMException, IOException {
+    @Override
+    public String[] getPackages() {
+        return packages;
+    }
+
+
+    @Override
+    public boolean isApiClass(String className) {
+        return methodConfigsMap.get(className) != null;
+    }
+
+    @Override
+    public boolean isApiMethod(String className, String methodName, String methodSignature) {
+        Map<String, MethodConfig> mm = methodConfigsMap.get(className);
+        if (mm == null) {
+            throw new IllegalArgumentException(className);
+        }
+        final MethodConfig methodConfig = mm.get(methodName + methodSignature);
+        return methodConfig == null || !methodConfig.ignore;
+    }
+
+    @Override
+    public String getFunctionName(String className, String methodName, String methodSignature) {
+        final MethodConfig methodConfig = methodConfigsMap.get(className).get(methodName + methodSignature);
+        if (methodConfig == null) {
+            return methodName;
+        }
+        return methodConfig.renameTo != null ? methodConfig.renameTo : methodConfig.name;
+    }
+
+    @Override
+    public ApiParameter.Modifier[] getParameterModifiers(String className, String methodName, String methodSignature) {
+        final MethodConfig methodConfig = methodConfigsMap.get(className).get(methodName + methodSignature);
+        if (methodConfig == null) {
+            return null;
+        }
+        return methodConfig.mods;
+    }
+
+    @Override
+    public String getLengthExpr(String className, String methodName, String methodSignature) {
+        final MethodConfig methodConfig = methodConfigsMap.get(className).get(methodName + methodSignature);
+        if (methodConfig == null) {
+            return null;
+        }
+        return methodConfig.lengthExpr;
+    }
+
+    public static ApiGeneratorConfig load(TemplateEval.KV... pairs) throws JDOMException, IOException {
         final TemplateEval templateEval = TemplateEval.create(pairs);
         final SAXBuilder saxBuilder = new SAXBuilder();
         final Document document = saxBuilder.build(ApiGeneratorConfigImpl.class.getResourceAsStream("ApiGeneratorDoclet-config.xml"));
         final Element rootElement = document.getRootElement();
         final String[] sourcePaths = getSourcePaths(rootElement, templateEval);
         final String[] packages = getPackages(rootElement, templateEval);
-        CConfig[] cConfigs = getCConfigs(rootElement);
+        ClassConfig[] classConfigs = parseClassConfigs(rootElement);
         String deprecatedClasses = rootElement.getAttributeValue("deprecatedClasses");
         String deprecatedMethods = rootElement.getAttributeValue("deprecatedMethods");
-        return new ApiGeneratorConfigImpl(sourcePaths, packages, cConfigs,
+        return new ApiGeneratorConfigImpl(sourcePaths, packages, classConfigs,
                                           deprecatedClasses != null && deprecatedClasses.equals("true"),
                                           deprecatedMethods != null && deprecatedMethods.equals("true"));
+    }
+
+    private static Map<String, Map<String, MethodConfig>> createMethodConfigsMap(ClassConfig[] classConfigs) {
+        Map<String, Map<String, MethodConfig>> classMap = new HashMap<String, Map<String, MethodConfig>>();
+        for (ClassConfig classConfig : classConfigs) {
+            final HashMap<String, MethodConfig> methodMap = new HashMap<String, MethodConfig>();
+            final MethodConfig[] methods = classConfig.methodConfigs;
+            for (MethodConfig method : methods) {
+                methodMap.put(method.name + method.sig, method);
+            }
+            classMap.put(classConfig.name, methodMap);
+        }
+        return classMap;
+    }
+
+    private ApiGeneratorConfigImpl(String[] sourcePaths, String[] packages, ClassConfig[] classConfigs, boolean includeDeprecatedClasses, boolean includeDeprecatedMethods) {
+        this.sourcePaths = sourcePaths;
+        this.packages = packages;
+        this.methodConfigsMap = createMethodConfigsMap(classConfigs);
+        this.includeDeprecatedClasses = includeDeprecatedClasses;
+        this.includeDeprecatedMethods = includeDeprecatedMethods;
     }
 
     private static String[] getSourcePaths(Element rootElement, TemplateEval templateEval) {
@@ -89,29 +143,29 @@ public class ApiGeneratorConfigImpl implements ApiGeneratorConfig {
         return stringArray;
     }
 
-    private static CConfig[] getCConfigs(Element rootElement) {
+    private static ClassConfig[] parseClassConfigs(Element rootElement) {
         final List classChildren = rootElement.getChildren("class");
         if (classChildren == null) {
             throw new IllegalArgumentException("missing 'config/class' elements");
         }
-        CConfig[] cConfigs = new CConfig[classChildren.size()];
+        ClassConfig[] classConfigs = new ClassConfig[classChildren.size()];
         for (int i = 0; i < classChildren.size(); i++) {
             Element classChild = (Element) classChildren.get(i);
             final String name = classChild.getAttributeValue("name");
             if (name == null) {
                 throw new IllegalArgumentException("missing attribute 'config/class/name'");
             }
-            cConfigs[i] = new CConfig(name, getMConfigs(classChild));
+            classConfigs[i] = new ClassConfig(name, parseMethodConfigs(classChild));
         }
-        return cConfigs;
+        return classConfigs;
     }
 
-    private static MConfig[] getMConfigs(Element classChild) {
+    private static MethodConfig[] parseMethodConfigs(Element classChild) {
         final List methodChildren = classChild.getChildren("method");
         if (methodChildren == null) {
-            return new MConfig[0];
+            return new MethodConfig[0];
         }
-        MConfig[] mConfigs = new MConfig[methodChildren.size()];
+        MethodConfig[] methodConfigs = new MethodConfig[methodChildren.size()];
         for (int i = 0; i < methodChildren.size(); i++) {
             Element methodChild = (Element) methodChildren.get(i);
             final String name = methodChild.getAttributeValue("name");
@@ -126,9 +180,9 @@ public class ApiGeneratorConfigImpl implements ApiGeneratorConfig {
             boolean ignore = ignoreValue != null && Boolean.parseBoolean(ignoreValue);
             final String renameTo = methodChild.getAttributeValue("renameTo");
             final String lengthExpr = methodChild.getAttributeValue("lengthExpr");
-            mConfigs[i] = new MConfig(name, sig, ignore, renameTo, parseModifiers(methodChild), lengthExpr);
+            methodConfigs[i] = new MethodConfig(name, sig, ignore, renameTo, parseModifiers(methodChild), lengthExpr);
         }
-        return mConfigs;
+        return methodConfigs;
     }
 
     private static ApiParameter.Modifier[] parseModifiers(Element methodChild) {
@@ -151,66 +205,14 @@ public class ApiGeneratorConfigImpl implements ApiGeneratorConfig {
         return mods;
     }
 
-    @Override
-    public boolean isApiClass(String className) {
-        return mConfigs.get(className) != null;
-    }
-
-    @Override
-    public boolean isApiMethod(String className, String methodName, String methodSignature) {
-        Map<String, MConfig> mm = mConfigs.get(className);
-        if (mm == null) {
-            throw new IllegalArgumentException(className);
-        }
-        final MConfig mConfig = mm.get(methodName + methodSignature);
-        return mConfig == null || !mConfig.ignore;
-    }
-
-    @Override
-    public String getFunctionName(String className, String methodName, String methodSignature) {
-        final MConfig mConfig = mConfigs.get(className).get(methodName + methodSignature);
-        if (mConfig == null) {
-            return methodName;
-        }
-        return mConfig.renameTo != null ? mConfig.renameTo : mConfig.name;
-    }
-
-    @Override
-    public ApiParameter.Modifier[] getParameterModifiers(String className, String methodName, String methodSignature) {
-        final MConfig mConfig = mConfigs.get(className).get(methodName + methodSignature);
-        if (mConfig == null) {
-            return null;
-        }
-        return mConfig.mods;
-    }
-
-    @Override
-    public String getLengthExpr(String className, String methodName, String methodSignature) {
-        final MConfig mConfig = mConfigs.get(className).get(methodName + methodSignature);
-        if (mConfig == null) {
-            return null;
-        }
-        return mConfig.lengthExpr;
-    }
-
-    @Override
-    public String[] getSourcePaths() {
-        return sourcePaths;
-    }
-
-    @Override
-    public String[] getPackages() {
-        return packages;
-    }
-
-    public static class CConfig {
+    private static class ClassConfig {
 
         private final String name;
-        private final MConfig[] methods;
+        private final MethodConfig[] methodConfigs;
 
-        public CConfig(String name, MConfig[] methods) {
+        public ClassConfig(String name, MethodConfig[] methodConfigs) {
             this.name = name;
-            this.methods = methods;
+            this.methodConfigs = methodConfigs;
         }
 
         @Override
@@ -219,7 +221,7 @@ public class ApiGeneratorConfigImpl implements ApiGeneratorConfig {
         }
     }
 
-    public static class MConfig {
+    private static class MethodConfig {
 
         private final String name;
         private final String sig;
@@ -228,11 +230,11 @@ public class ApiGeneratorConfigImpl implements ApiGeneratorConfig {
         private final ApiParameter.Modifier[] mods;
         /**
          * Expression that computes an expected length of an array parameter which serves as return value.
-         * :-)
+         * Understood?  :-)
          */
         private final String lengthExpr;
 
-        public MConfig(String name, String sig, boolean ignore, String renameTo, ApiParameter.Modifier[] mods, String lengthExpr) {
+        public MethodConfig(String name, String sig, boolean ignore, String renameTo, ApiParameter.Modifier[] mods, String lengthExpr) {
             this.name = name;
             this.sig = sig;
             this.ignore = ignore;

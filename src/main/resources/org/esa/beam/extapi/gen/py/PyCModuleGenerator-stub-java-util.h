@@ -1,0 +1,1 @@
+PyObject* BeamPyMap_newHashMap(PyObject* self, PyObject* args);

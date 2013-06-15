@@ -210,55 +210,6 @@ public abstract class PyCParameterGenerator implements ParameterGenerator {
         }
     }
 
-    public static class MapScalar extends PyCParameterGenerator {
-        public MapScalar(ApiParameter parameter) {
-            super(parameter);
-        }
-
-        @Override
-        public String generateTargetArgDeclaration(GeneratorContext context) {
-            return eval("PyObject* ${par}PyObj = NULL;", kv("par", getName()));
-        }
-
-        @Override
-        public String generateJniArgDeclaration(GeneratorContext context) {
-            return eval("jobject ${par}JObj = NULL;", kv("par", getName()));
-        }
-
-        @Override
-        public String getParseFormat(GeneratorContext context) {
-            return "O";
-        }
-
-        @Override
-        public String getParseArgs(GeneratorContext context) {
-            return eval("&${par}PyObj", kv("par", getName()));
-        }
-
-        @Override
-        public String generateJniArgFromTransformedTargetArgAssignment(GeneratorContext context) {
-            return eval("${par}JObj = beampy_newJMapFromPyObject(${par}PyObj);\n" +
-                                "if (${par}JObj == NULL) {\n" +
-                                "    return NULL;\n" +
-                                "}", kv("par", getName()));
-        }
-
-        @Override
-        public String generateJniCallArgs(GeneratorContext context) {
-            return eval("${par}JObj", kv("par", getName()));
-        }
-
-        @Override
-        public String generateJniArgDeref(GeneratorContext context) {
-            return eval("(*jenv)->DeleteLocalRef(jenv, ${par}JObj);", kv("par", getName()));
-        }
-
-        @Override
-        public String generateTargetArgFromTransformedJniArgAssignment(GeneratorContext context) {
-            return null;
-        }
-    }
-
     static class PrimitiveArray extends PyCParameterGenerator {
 
         PrimitiveArray(ApiParameter parameter) {
