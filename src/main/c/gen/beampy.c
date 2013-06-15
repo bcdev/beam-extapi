@@ -52,6 +52,7 @@ typedef void* PlacemarkGroup;
 typedef void* TiePointGrid;
 typedef void* AngularDirection;
 typedef void* FlagCoding;
+typedef void* Map;
 typedef void* ProductReader;
 typedef void* RGBChannelDef;
 typedef void* ProductData;
@@ -90,7 +91,7 @@ typedef void* Integer;
 typedef void* Object;
 typedef void* Collection;
 typedef void* Iterator;
-typedef void* Map;
+typedef void* Set;
 typedef void* ImageInputStream;
 typedef void* ImageOutputStream;
 typedef void* ROI;
@@ -958,6 +959,20 @@ PyObject* BeamPyFlagCoding_getProductRefString(PyObject* self, PyObject* args);
 PyObject* BeamPyFlagCoding_updateExpression(PyObject* self, PyObject* args);
 PyObject* BeamPyFlagCoding_removeFromFile(PyObject* self, PyObject* args);
 PyObject* BeamPyFlagCoding_getExtension(PyObject* self, PyObject* args);
+PyObject* BeamPyMap_size(PyObject* self, PyObject* args);
+PyObject* BeamPyMap_isEmpty(PyObject* self, PyObject* args);
+PyObject* BeamPyMap_containsKey(PyObject* self, PyObject* args);
+PyObject* BeamPyMap_containsValue(PyObject* self, PyObject* args);
+PyObject* BeamPyMap_get(PyObject* self, PyObject* args);
+PyObject* BeamPyMap_put(PyObject* self, PyObject* args);
+PyObject* BeamPyMap_remove(PyObject* self, PyObject* args);
+PyObject* BeamPyMap_putAll(PyObject* self, PyObject* args);
+PyObject* BeamPyMap_clear(PyObject* self, PyObject* args);
+PyObject* BeamPyMap_keySet(PyObject* self, PyObject* args);
+PyObject* BeamPyMap_values(PyObject* self, PyObject* args);
+PyObject* BeamPyMap_entrySet(PyObject* self, PyObject* args);
+PyObject* BeamPyMap_equals(PyObject* self, PyObject* args);
+PyObject* BeamPyMap_hashCode(PyObject* self, PyObject* args);
 PyObject* BeamPyProductReader_getReaderPlugIn(PyObject* self, PyObject* args);
 PyObject* BeamPyProductReader_getInput(PyObject* self, PyObject* args);
 PyObject* BeamPyProductReader_getSubsetDef(PyObject* self, PyObject* args);
@@ -1206,6 +1221,10 @@ PyObject* BeamPyMetadataAttribute_getProductRefString(PyObject* self, PyObject* 
 PyObject* BeamPyMetadataAttribute_updateExpression(PyObject* self, PyObject* args);
 PyObject* BeamPyMetadataAttribute_removeFromFile(PyObject* self, PyObject* args);
 PyObject* BeamPyMetadataAttribute_getExtension(PyObject* self, PyObject* args);
+
+// <<<<<<<< Begin include from PyCModuleGenerator-stub-java-util.h
+PyObject* BeamPyMap_newHashMap(PyObject* self, PyObject* args);
+// >>>>>>>> End include from PyCModuleGenerator-stub-java-util.h
 
 static PyMethodDef BeamPy_Methods[] = {
     {"GeoCoding_isCrossingMeridianAt180", BeamPyGeoCoding_isCrossingMeridianAt180, METH_VARARGS, " Checks whether or not the longitudes of this geo-coding cross the +/- 180 degree meridian.\n\n @return <code>true</code>, if so\n\n@param this The GeoCoding object."},
@@ -2021,6 +2040,20 @@ static PyMethodDef BeamPy_Methods[] = {
     {"FlagCoding_updateExpression", BeamPyFlagCoding_updateExpression, METH_VARARGS, " Asks a product node to replace all occurences of and references to the node name\n given by {@code oldExternalName} with {@code oldExternalName}. Such references most often occur\n in band arithmetic expressions.\n\n \n@param this The FlagCoding object.\n@param oldExternalName The old node name.\n @param newExternalName The new node name.\n"},
     {"FlagCoding_removeFromFile", BeamPyFlagCoding_removeFromFile, METH_VARARGS, " Physically remove this node from the file associated with the given product writer. The default implementation\n does nothing.\n\n \n@param this The FlagCoding object.\n@param productWriter the product writer to be used to remove this node from the underlying file.\n"},
     {"FlagCoding_getExtension", BeamPyFlagCoding_getExtension, METH_VARARGS, "\n@param this The FlagCoding object."},
+    {"Map_size", BeamPyMap_size, METH_VARARGS, "\n@param this The Map object."},
+    {"Map_isEmpty", BeamPyMap_isEmpty, METH_VARARGS, "\n@param this The Map object."},
+    {"Map_containsKey", BeamPyMap_containsKey, METH_VARARGS, "\n@param this The Map object."},
+    {"Map_containsValue", BeamPyMap_containsValue, METH_VARARGS, "\n@param this The Map object."},
+    {"Map_get", BeamPyMap_get, METH_VARARGS, "\n@param this The Map object."},
+    {"Map_put", BeamPyMap_put, METH_VARARGS, "\n@param this The Map object."},
+    {"Map_remove", BeamPyMap_remove, METH_VARARGS, "\n@param this The Map object."},
+    {"Map_putAll", BeamPyMap_putAll, METH_VARARGS, "\n@param this The Map object."},
+    {"Map_clear", BeamPyMap_clear, METH_VARARGS, "\n@param this The Map object."},
+    {"Map_keySet", BeamPyMap_keySet, METH_VARARGS, "\n@param this The Map object."},
+    {"Map_values", BeamPyMap_values, METH_VARARGS, "\n@param this The Map object."},
+    {"Map_entrySet", BeamPyMap_entrySet, METH_VARARGS, "\n@param this The Map object."},
+    {"Map_equals", BeamPyMap_equals, METH_VARARGS, "\n@param this The Map object."},
+    {"Map_hashCode", BeamPyMap_hashCode, METH_VARARGS, "\n@param this The Map object."},
     {"ProductReader_getReaderPlugIn", BeamPyProductReader_getReaderPlugIn, METH_VARARGS, " Returns the plug-in which created this product reader.\n\n @return the product reader plug-in, should never be <code>null</code>\n\n@param this The ProductReader object."},
     {"ProductReader_getInput", BeamPyProductReader_getInput, METH_VARARGS, " Retrives the current input destination object. Thie return value might be <code>null</code> if the\n <code>setInput</code> has not been called so far.\n\n@param this The ProductReader object."},
     {"ProductReader_getSubsetDef", BeamPyProductReader_getSubsetDef, METH_VARARGS, " Returns the subset information with which this a data product is read from its physical source.\n\n @return the subset information, can be <code>null</code>\n\n@param this The ProductReader object."},
@@ -2271,6 +2304,7 @@ static PyMethodDef BeamPy_Methods[] = {
     {"MetadataAttribute_getExtension", BeamPyMetadataAttribute_getExtension, METH_VARARGS, "\n@param this The MetadataAttribute object."},
     {"Object_delete", BeamPyObject_delete, METH_VARARGS, "Deletes global references to Java objects held by Python objects"},
     {"String_newString", BeamPyString_newString, METH_VARARGS, "Converts a Python unicode string into a Java java.lang.String object"},
+    {"Map_newHashMap", BeamPyMap_newHashMap, METH_VARARGS, "Converts a Python dictionary into a Java java.utils.Map object"},
     {NULL, NULL, 0, NULL}  /* Sentinel */
 };
 
@@ -2288,6 +2322,7 @@ jclass classString;
 /* java.util classes. */
 jclass classHashMap;
 jclass classHashSet;
+jclass classArrayList;
 
 /* API classes. */
 jclass classGeoCoding;
@@ -2308,6 +2343,7 @@ jclass classPlacemarkGroup;
 jclass classTiePointGrid;
 jclass classAngularDirection;
 jclass classFlagCoding;
+jclass classMap;
 jclass classProductReader;
 jclass classRGBChannelDef;
 jclass classProductData;
@@ -2342,7 +2378,7 @@ jclass classClass;
 jclass classObject;
 jclass classCollection;
 jclass classIterator;
-jclass classMap;
+jclass classSet;
 jclass classImageInputStream;
 jclass classImageOutputStream;
 jclass classROI;
@@ -2935,6 +2971,13 @@ int beam_initApi()
         return exitCode;
     }
 
+    classArrayList = beam_findJvmClass("java/util/ArrayList");
+    if (classArrayList == NULL) { 
+        fprintf(stderr, "beampy: Java class not found: java/util/ArrayList\n");
+        exitCode = 1011;
+        return exitCode;
+    }
+
     classGeoCoding = beam_findJvmClass("org/esa/beam/framework/datamodel/GeoCoding");
     if (classGeoCoding == NULL) { 
         fprintf(stderr, "beampy: Java class not found: org/esa/beam/framework/datamodel/GeoCoding\n");
@@ -3061,52 +3104,59 @@ int beam_initApi()
         return exitCode;
     }
 
+    classMap = beam_findJvmClass("java/util/Map");
+    if (classMap == NULL) { 
+        fprintf(stderr, "beampy: Java class not found: java/util/Map\n");
+        exitCode = 2018;
+        return exitCode;
+    }
+
     classProductReader = beam_findJvmClass("org/esa/beam/framework/dataio/ProductReader");
     if (classProductReader == NULL) { 
         fprintf(stderr, "beampy: Java class not found: org/esa/beam/framework/dataio/ProductReader\n");
-        exitCode = 2018;
+        exitCode = 2019;
         return exitCode;
     }
 
     classRGBChannelDef = beam_findJvmClass("org/esa/beam/framework/datamodel/RGBChannelDef");
     if (classRGBChannelDef == NULL) { 
         fprintf(stderr, "beampy: Java class not found: org/esa/beam/framework/datamodel/RGBChannelDef\n");
-        exitCode = 2019;
+        exitCode = 2020;
         return exitCode;
     }
 
     classProductData = beam_findJvmClass("org/esa/beam/framework/datamodel/ProductData");
     if (classProductData == NULL) { 
         fprintf(stderr, "beampy: Java class not found: org/esa/beam/framework/datamodel/ProductData\n");
-        exitCode = 2020;
+        exitCode = 2021;
         return exitCode;
     }
 
     classGeoPos = beam_findJvmClass("org/esa/beam/framework/datamodel/GeoPos");
     if (classGeoPos == NULL) { 
         fprintf(stderr, "beampy: Java class not found: org/esa/beam/framework/datamodel/GeoPos\n");
-        exitCode = 2021;
+        exitCode = 2022;
         return exitCode;
     }
 
     classProductNodeGroup = beam_findJvmClass("org/esa/beam/framework/datamodel/ProductNodeGroup");
     if (classProductNodeGroup == NULL) { 
         fprintf(stderr, "beampy: Java class not found: org/esa/beam/framework/datamodel/ProductNodeGroup\n");
-        exitCode = 2022;
+        exitCode = 2023;
         return exitCode;
     }
 
     classProductUtils = beam_findJvmClass("org/esa/beam/util/ProductUtils");
     if (classProductUtils == NULL) { 
         fprintf(stderr, "beampy: Java class not found: org/esa/beam/util/ProductUtils\n");
-        exitCode = 2023;
+        exitCode = 2024;
         return exitCode;
     }
 
     classMetadataAttribute = beam_findJvmClass("org/esa/beam/framework/datamodel/MetadataAttribute");
     if (classMetadataAttribute == NULL) { 
         fprintf(stderr, "beampy: Java class not found: org/esa/beam/framework/datamodel/MetadataAttribute\n");
-        exitCode = 2024;
+        exitCode = 2025;
         return exitCode;
     }
 
@@ -4553,20 +4603,10 @@ jarray beampy_newJObjectArrayFromPySeq(PyObject* seqPyObj, const char* typeName)
 
 
 
-
-
 ///////////////////////////////////////////////
 // Java Map
 ///////////////////////////////////////////////
 
-
-
-/*
-static jclass classBoolean = NULL;
-static jclass classInteger = NULL;
-static jclass classDouble = NULL;
-static jclass classHashMap = NULL;
-*/
 
 static jmethodID _booleanConstr = NULL;
 static jmethodID _integerConstr = NULL;
@@ -4641,8 +4681,8 @@ jobject beampy_newJMapFromPyObject(PyObject* anyPyObj)
         return NULL;
     }
 
-    if (!PyDict_Check(anyPyObj)) {
-        PyErr_SetString(PyExc_TypeError, "dictionary expected");
+    if (!(anyPyObj == Py_None || PyDict_Check(anyPyObj))) {
+        PyErr_SetString(PyExc_TypeError, "dictionary or None expected");
         return NULL;
     }
 
@@ -4652,17 +4692,43 @@ jobject beampy_newJMapFromPyObject(PyObject* anyPyObj)
         return NULL;
     }
 
-    while (PyDict_Next(anyPyObj, &dictPos, &dictKeyPyObj, &dictValuePyObj)) {
-        jobject mapKeyJObj   = beampy_newGenericJObjectFromPyObject(dictKeyPyObj);
-        jobject mapValueJObj = beampy_newGenericJObjectFromPyObject(dictValuePyObj);
-        if (mapKeyJObj != NULL && mapValueJObj != NULL) {
-            (*jenv)->CallObjectMethod(jenv, mapJObj, _hashMapPutMethod, mapKeyJObj, mapValueJObj);
+    if (anyPyObj != Py_None) {
+        while (PyDict_Next(anyPyObj, &dictPos, &dictKeyPyObj, &dictValuePyObj)) {
+            jobject mapKeyJObj   = beampy_newGenericJObjectFromPyObject(dictKeyPyObj);
+            jobject mapValueJObj = beampy_newGenericJObjectFromPyObject(dictValuePyObj);
+            if (mapKeyJObj != NULL && mapValueJObj != NULL) {
+                (*jenv)->CallObjectMethod(jenv, mapJObj, _hashMapPutMethod, mapKeyJObj, mapValueJObj);
+            }
         }
     }
 
     return mapJObj;
 }
+
 // >>>>>>>> End include from PyCModuleGenerator-stub-conv.c
+
+// <<<<<<<< Begin include from PyCModuleGenerator-stub-java-util.c
+
+
+PyObject* BeamPyMap_newHashMap(PyObject* self, PyObject* args)
+{
+    PyObject* anyPyObj = NULL;
+    PyObject* resPyObj = NULL;
+    jobject anyJObj = NULL;
+    if (!beampy_initApi()) {
+        return NULL;
+    }
+    if (!PyArg_ParseTuple(args, "O:BeamPyMap_newHashMap", &anyPyObj)) {
+        return NULL;
+    }
+    anyJObj = beampy_newJMapFromPyObject(anyPyObj);
+    if (anyJObj != NULL) {
+        resPyObj = beampy_newPyObjectFromJObject(anyJObj, "Map");
+        (*jenv)->DeleteLocalRef(jenv, anyJObj);
+    }
+    return resPyObj;
+}
+// >>>>>>>> End include from PyCModuleGenerator-stub-java-util.c
 
 PyObject* BeamPyGeoCoding_isCrossingMeridianAt180(PyObject* self, PyObject* args)
 {
@@ -5221,7 +5287,8 @@ PyObject* BeamPyGPF_createProductWithoutSourceProducts(PyObject* self, PyObject*
     static jmethodID _method = NULL;
     const char* operatorName = NULL;
     jstring operatorNameJObj = NULL;
-    PyObject* parametersPyObj = NULL;
+    const char* parametersType = NULL;
+    unsigned PY_LONG_LONG parameters = 0;
     jobject parametersJObj = NULL;
     PyObject* _resultPyObj = NULL;
     jobject _resultJObj = NULL;
@@ -5231,18 +5298,14 @@ PyObject* BeamPyGPF_createProductWithoutSourceProducts(PyObject* self, PyObject*
     if (!beampy_initJMethod(&_method, classGPF, "org.esa.beam.framework.gpf.GPF", "createProduct", "(Ljava/lang/String;Ljava/util/Map;)Lorg/esa/beam/framework/datamodel/Product;", 1)) {
         return NULL;
     }
-    if (!PyArg_ParseTuple(args, "sO:BeamPyGPF_createProductWithoutSourceProducts", &operatorName, &parametersPyObj)) {
+    if (!PyArg_ParseTuple(args, "s(sK):BeamPyGPF_createProductWithoutSourceProducts", &operatorName, &parametersType, &parameters)) {
         return NULL;
     }
     operatorNameJObj =(*jenv)->NewStringUTF(jenv, operatorName);
-    parametersJObj = beampy_newJMapFromPyObject(parametersPyObj);
-    if (parametersJObj == NULL) {
-        return NULL;
-    }
+    parametersJObj = (jobject) parameters;
     _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, classGPF, _method, operatorNameJObj, parametersJObj);
     _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "Product");
     (*jenv)->DeleteLocalRef(jenv, operatorNameJObj);
-    (*jenv)->DeleteLocalRef(jenv, parametersJObj);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -5252,7 +5315,8 @@ PyObject* BeamPyGPF_createProductFromSourceProduct(PyObject* self, PyObject* arg
     static jmethodID _method = NULL;
     const char* operatorName = NULL;
     jstring operatorNameJObj = NULL;
-    PyObject* parametersPyObj = NULL;
+    const char* parametersType = NULL;
+    unsigned PY_LONG_LONG parameters = 0;
     jobject parametersJObj = NULL;
     const char* sourceProductType = NULL;
     unsigned PY_LONG_LONG sourceProduct = 0;
@@ -5265,19 +5329,15 @@ PyObject* BeamPyGPF_createProductFromSourceProduct(PyObject* self, PyObject* arg
     if (!beampy_initJMethod(&_method, classGPF, "org.esa.beam.framework.gpf.GPF", "createProduct", "(Ljava/lang/String;Ljava/util/Map;Lorg/esa/beam/framework/datamodel/Product;)Lorg/esa/beam/framework/datamodel/Product;", 1)) {
         return NULL;
     }
-    if (!PyArg_ParseTuple(args, "sO(sK):BeamPyGPF_createProductFromSourceProduct", &operatorName, &parametersPyObj, &sourceProductType, &sourceProduct)) {
+    if (!PyArg_ParseTuple(args, "s(sK)(sK):BeamPyGPF_createProductFromSourceProduct", &operatorName, &parametersType, &parameters, &sourceProductType, &sourceProduct)) {
         return NULL;
     }
     operatorNameJObj =(*jenv)->NewStringUTF(jenv, operatorName);
-    parametersJObj = beampy_newJMapFromPyObject(parametersPyObj);
-    if (parametersJObj == NULL) {
-        return NULL;
-    }
+    parametersJObj = (jobject) parameters;
     sourceProductJObj = (jobject) sourceProduct;
     _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, classGPF, _method, operatorNameJObj, parametersJObj, sourceProductJObj);
     _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "Product");
     (*jenv)->DeleteLocalRef(jenv, operatorNameJObj);
-    (*jenv)->DeleteLocalRef(jenv, parametersJObj);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -5287,7 +5347,8 @@ PyObject* BeamPyGPF_createProductFromSourceProducts(PyObject* self, PyObject* ar
     static jmethodID _method = NULL;
     const char* operatorName = NULL;
     jstring operatorNameJObj = NULL;
-    PyObject* parametersPyObj = NULL;
+    const char* parametersType = NULL;
+    unsigned PY_LONG_LONG parameters = 0;
     jobject parametersJObj = NULL;
     PyObject* sourceProductsPyObj = NULL;
     jarray sourceProductsJObj = NULL;
@@ -5299,14 +5360,11 @@ PyObject* BeamPyGPF_createProductFromSourceProducts(PyObject* self, PyObject* ar
     if (!beampy_initJMethod(&_method, classGPF, "org.esa.beam.framework.gpf.GPF", "createProduct", "(Ljava/lang/String;Ljava/util/Map;[Lorg/esa/beam/framework/datamodel/Product;)Lorg/esa/beam/framework/datamodel/Product;", 1)) {
         return NULL;
     }
-    if (!PyArg_ParseTuple(args, "sOO:BeamPyGPF_createProductFromSourceProducts", &operatorName, &parametersPyObj, &sourceProductsPyObj)) {
+    if (!PyArg_ParseTuple(args, "s(sK)O:BeamPyGPF_createProductFromSourceProducts", &operatorName, &parametersType, &parameters, &sourceProductsPyObj)) {
         return NULL;
     }
     operatorNameJObj =(*jenv)->NewStringUTF(jenv, operatorName);
-    parametersJObj = beampy_newJMapFromPyObject(parametersPyObj);
-    if (parametersJObj == NULL) {
-        return NULL;
-    }
+    parametersJObj = (jobject) parameters;
     sourceProductsJObj = beampy_newJObjectArrayFromPySeq(sourceProductsPyObj, "Product");
     if (sourceProductsJObj == NULL) {
         return NULL;
@@ -5314,7 +5372,6 @@ PyObject* BeamPyGPF_createProductFromSourceProducts(PyObject* self, PyObject* ar
     _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, classGPF, _method, operatorNameJObj, parametersJObj, sourceProductsJObj);
     _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "Product");
     (*jenv)->DeleteLocalRef(jenv, operatorNameJObj);
-    (*jenv)->DeleteLocalRef(jenv, parametersJObj);
     (*jenv)->DeleteLocalRef(jenv, sourceProductsJObj);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
@@ -5325,9 +5382,11 @@ PyObject* BeamPyGPF_createProductFromNamedSourceProducts(PyObject* self, PyObjec
     static jmethodID _method = NULL;
     const char* operatorName = NULL;
     jstring operatorNameJObj = NULL;
-    PyObject* parametersPyObj = NULL;
+    const char* parametersType = NULL;
+    unsigned PY_LONG_LONG parameters = 0;
     jobject parametersJObj = NULL;
-    PyObject* sourceProductsPyObj = NULL;
+    const char* sourceProductsType = NULL;
+    unsigned PY_LONG_LONG sourceProducts = 0;
     jobject sourceProductsJObj = NULL;
     PyObject* _resultPyObj = NULL;
     jobject _resultJObj = NULL;
@@ -5337,23 +5396,15 @@ PyObject* BeamPyGPF_createProductFromNamedSourceProducts(PyObject* self, PyObjec
     if (!beampy_initJMethod(&_method, classGPF, "org.esa.beam.framework.gpf.GPF", "createProduct", "(Ljava/lang/String;Ljava/util/Map;Ljava/util/Map;)Lorg/esa/beam/framework/datamodel/Product;", 1)) {
         return NULL;
     }
-    if (!PyArg_ParseTuple(args, "sOO:BeamPyGPF_createProductFromNamedSourceProducts", &operatorName, &parametersPyObj, &sourceProductsPyObj)) {
+    if (!PyArg_ParseTuple(args, "s(sK)(sK):BeamPyGPF_createProductFromNamedSourceProducts", &operatorName, &parametersType, &parameters, &sourceProductsType, &sourceProducts)) {
         return NULL;
     }
     operatorNameJObj =(*jenv)->NewStringUTF(jenv, operatorName);
-    parametersJObj = beampy_newJMapFromPyObject(parametersPyObj);
-    if (parametersJObj == NULL) {
-        return NULL;
-    }
-    sourceProductsJObj = beampy_newJMapFromPyObject(sourceProductsPyObj);
-    if (sourceProductsJObj == NULL) {
-        return NULL;
-    }
+    parametersJObj = (jobject) parameters;
+    sourceProductsJObj = (jobject) sourceProducts;
     _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, classGPF, _method, operatorNameJObj, parametersJObj, sourceProductsJObj);
     _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "Product");
     (*jenv)->DeleteLocalRef(jenv, operatorNameJObj);
-    (*jenv)->DeleteLocalRef(jenv, parametersJObj);
-    (*jenv)->DeleteLocalRef(jenv, sourceProductsJObj);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -5367,9 +5418,11 @@ PyObject* BeamPyGPF_createProductNS(PyObject* self, PyObject* args)
     jobject _thisJObj = NULL;
     const char* operatorName = NULL;
     jstring operatorNameJObj = NULL;
-    PyObject* parametersPyObj = NULL;
+    const char* parametersType = NULL;
+    unsigned PY_LONG_LONG parameters = 0;
     jobject parametersJObj = NULL;
-    PyObject* sourceProductsPyObj = NULL;
+    const char* sourceProductsType = NULL;
+    unsigned PY_LONG_LONG sourceProducts = 0;
     jobject sourceProductsJObj = NULL;
     const char* renderingHintsType = NULL;
     unsigned PY_LONG_LONG renderingHints = 0;
@@ -5382,25 +5435,17 @@ PyObject* BeamPyGPF_createProductNS(PyObject* self, PyObject* args)
     if (!beampy_initJMethod(&_method, classGPF, "org.esa.beam.framework.gpf.GPF", "createProductNS", "(Ljava/lang/String;Ljava/util/Map;Ljava/util/Map;Ljava/awt/RenderingHints;)Lorg/esa/beam/framework/datamodel/Product;", 0)) {
         return NULL;
     }
-    if (!PyArg_ParseTuple(args, "(sK)sOO(sK):BeamPyGPF_createProductNS", &_thisType, &_this, &operatorName, &parametersPyObj, &sourceProductsPyObj, &renderingHintsType, &renderingHints)) {
+    if (!PyArg_ParseTuple(args, "(sK)s(sK)(sK)(sK):BeamPyGPF_createProductNS", &_thisType, &_this, &operatorName, &parametersType, &parameters, &sourceProductsType, &sourceProducts, &renderingHintsType, &renderingHints)) {
         return NULL;
     }
     _thisJObj = (jobject) _this;
     operatorNameJObj =(*jenv)->NewStringUTF(jenv, operatorName);
-    parametersJObj = beampy_newJMapFromPyObject(parametersPyObj);
-    if (parametersJObj == NULL) {
-        return NULL;
-    }
-    sourceProductsJObj = beampy_newJMapFromPyObject(sourceProductsPyObj);
-    if (sourceProductsJObj == NULL) {
-        return NULL;
-    }
+    parametersJObj = (jobject) parameters;
+    sourceProductsJObj = (jobject) sourceProducts;
     renderingHintsJObj = (jobject) renderingHints;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, operatorNameJObj, parametersJObj, sourceProductsJObj, renderingHintsJObj);
     _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "Product");
     (*jenv)->DeleteLocalRef(jenv, operatorNameJObj);
-    (*jenv)->DeleteLocalRef(jenv, parametersJObj);
-    (*jenv)->DeleteLocalRef(jenv, sourceProductsJObj);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -5414,9 +5459,11 @@ PyObject* BeamPyGPF_createOperator(PyObject* self, PyObject* args)
     jobject _thisJObj = NULL;
     const char* operatorName = NULL;
     jstring operatorNameJObj = NULL;
-    PyObject* parametersPyObj = NULL;
+    const char* parametersType = NULL;
+    unsigned PY_LONG_LONG parameters = 0;
     jobject parametersJObj = NULL;
-    PyObject* sourceProductsPyObj = NULL;
+    const char* sourceProductsType = NULL;
+    unsigned PY_LONG_LONG sourceProducts = 0;
     jobject sourceProductsJObj = NULL;
     const char* renderingHintsType = NULL;
     unsigned PY_LONG_LONG renderingHints = 0;
@@ -5429,25 +5476,17 @@ PyObject* BeamPyGPF_createOperator(PyObject* self, PyObject* args)
     if (!beampy_initJMethod(&_method, classGPF, "org.esa.beam.framework.gpf.GPF", "createOperator", "(Ljava/lang/String;Ljava/util/Map;Ljava/util/Map;Ljava/awt/RenderingHints;)Lorg/esa/beam/framework/gpf/Operator;", 0)) {
         return NULL;
     }
-    if (!PyArg_ParseTuple(args, "(sK)sOO(sK):BeamPyGPF_createOperator", &_thisType, &_this, &operatorName, &parametersPyObj, &sourceProductsPyObj, &renderingHintsType, &renderingHints)) {
+    if (!PyArg_ParseTuple(args, "(sK)s(sK)(sK)(sK):BeamPyGPF_createOperator", &_thisType, &_this, &operatorName, &parametersType, &parameters, &sourceProductsType, &sourceProducts, &renderingHintsType, &renderingHints)) {
         return NULL;
     }
     _thisJObj = (jobject) _this;
     operatorNameJObj =(*jenv)->NewStringUTF(jenv, operatorName);
-    parametersJObj = beampy_newJMapFromPyObject(parametersPyObj);
-    if (parametersJObj == NULL) {
-        return NULL;
-    }
-    sourceProductsJObj = beampy_newJMapFromPyObject(sourceProductsPyObj);
-    if (sourceProductsJObj == NULL) {
-        return NULL;
-    }
+    parametersJObj = (jobject) parameters;
+    sourceProductsJObj = (jobject) sourceProducts;
     renderingHintsJObj = (jobject) renderingHints;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, operatorNameJObj, parametersJObj, sourceProductsJObj, renderingHintsJObj);
     _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "Operator");
     (*jenv)->DeleteLocalRef(jenv, operatorNameJObj);
-    (*jenv)->DeleteLocalRef(jenv, parametersJObj);
-    (*jenv)->DeleteLocalRef(jenv, sourceProductsJObj);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -26008,6 +26047,362 @@ PyObject* BeamPyFlagCoding_getExtension(PyObject* self, PyObject* args)
     return _resultPyObj;
 }
 
+PyObject* BeamPyMap_size(PyObject* self, PyObject* args)
+{
+    static jmethodID _method = NULL;
+    
+    const char* _thisType = NULL;
+    unsigned PY_LONG_LONG _this = 0;
+    jobject _thisJObj = NULL;
+    jint _result = (jint) 0;
+    if (!beampy_initApi()) {
+        return NULL;
+    }
+    if (!beampy_initJMethod(&_method, classMap, "java.util.Map", "size", "()I", 0)) {
+        return NULL;
+    }
+    if (!PyArg_ParseTuple(args, "(sK):BeamPyMap_size", &_thisType, &_this)) {
+        return NULL;
+    }
+    _thisJObj = (jobject) _this;
+    _result = (*jenv)->CallIntMethod(jenv, _thisJObj, _method);
+    return PyLong_FromLong(_result);
+}
+
+PyObject* BeamPyMap_isEmpty(PyObject* self, PyObject* args)
+{
+    static jmethodID _method = NULL;
+    
+    const char* _thisType = NULL;
+    unsigned PY_LONG_LONG _this = 0;
+    jobject _thisJObj = NULL;
+    jboolean _result = (jboolean) 0;
+    if (!beampy_initApi()) {
+        return NULL;
+    }
+    if (!beampy_initJMethod(&_method, classMap, "java.util.Map", "isEmpty", "()Z", 0)) {
+        return NULL;
+    }
+    if (!PyArg_ParseTuple(args, "(sK):BeamPyMap_isEmpty", &_thisType, &_this)) {
+        return NULL;
+    }
+    _thisJObj = (jobject) _this;
+    _result = (*jenv)->CallBooleanMethod(jenv, _thisJObj, _method);
+    return PyBool_FromLong(_result);
+}
+
+PyObject* BeamPyMap_containsKey(PyObject* self, PyObject* args)
+{
+    static jmethodID _method = NULL;
+    
+    const char* _thisType = NULL;
+    unsigned PY_LONG_LONG _this = 0;
+    jobject _thisJObj = NULL;
+    const char* arg0Type = NULL;
+    unsigned PY_LONG_LONG arg0 = 0;
+    jobject arg0JObj = NULL;
+    jboolean _result = (jboolean) 0;
+    if (!beampy_initApi()) {
+        return NULL;
+    }
+    if (!beampy_initJMethod(&_method, classMap, "java.util.Map", "containsKey", "(Ljava/lang/Object;)Z", 0)) {
+        return NULL;
+    }
+    if (!PyArg_ParseTuple(args, "(sK)(sK):BeamPyMap_containsKey", &_thisType, &_this, &arg0Type, &arg0)) {
+        return NULL;
+    }
+    _thisJObj = (jobject) _this;
+    arg0JObj = (jobject) arg0;
+    _result = (*jenv)->CallBooleanMethod(jenv, _thisJObj, _method, arg0JObj);
+    return PyBool_FromLong(_result);
+}
+
+PyObject* BeamPyMap_containsValue(PyObject* self, PyObject* args)
+{
+    static jmethodID _method = NULL;
+    
+    const char* _thisType = NULL;
+    unsigned PY_LONG_LONG _this = 0;
+    jobject _thisJObj = NULL;
+    const char* arg0Type = NULL;
+    unsigned PY_LONG_LONG arg0 = 0;
+    jobject arg0JObj = NULL;
+    jboolean _result = (jboolean) 0;
+    if (!beampy_initApi()) {
+        return NULL;
+    }
+    if (!beampy_initJMethod(&_method, classMap, "java.util.Map", "containsValue", "(Ljava/lang/Object;)Z", 0)) {
+        return NULL;
+    }
+    if (!PyArg_ParseTuple(args, "(sK)(sK):BeamPyMap_containsValue", &_thisType, &_this, &arg0Type, &arg0)) {
+        return NULL;
+    }
+    _thisJObj = (jobject) _this;
+    arg0JObj = (jobject) arg0;
+    _result = (*jenv)->CallBooleanMethod(jenv, _thisJObj, _method, arg0JObj);
+    return PyBool_FromLong(_result);
+}
+
+PyObject* BeamPyMap_get(PyObject* self, PyObject* args)
+{
+    static jmethodID _method = NULL;
+    
+    const char* _thisType = NULL;
+    unsigned PY_LONG_LONG _this = 0;
+    jobject _thisJObj = NULL;
+    const char* arg0Type = NULL;
+    unsigned PY_LONG_LONG arg0 = 0;
+    jobject arg0JObj = NULL;
+    PyObject* _resultPyObj = NULL;
+    jobject _resultJObj = NULL;
+    if (!beampy_initApi()) {
+        return NULL;
+    }
+    if (!beampy_initJMethod(&_method, classMap, "java.util.Map", "get", "(Ljava/lang/Object;)Ljava/lang/Object;", 0)) {
+        return NULL;
+    }
+    if (!PyArg_ParseTuple(args, "(sK)(sK):BeamPyMap_get", &_thisType, &_this, &arg0Type, &arg0)) {
+        return NULL;
+    }
+    _thisJObj = (jobject) _this;
+    arg0JObj = (jobject) arg0;
+    _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, arg0JObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "Object");
+    (*jenv)->DeleteLocalRef(jenv, _resultJObj);
+    return _resultPyObj;
+}
+
+PyObject* BeamPyMap_put(PyObject* self, PyObject* args)
+{
+    static jmethodID _method = NULL;
+    
+    const char* _thisType = NULL;
+    unsigned PY_LONG_LONG _this = 0;
+    jobject _thisJObj = NULL;
+    const char* arg0Type = NULL;
+    unsigned PY_LONG_LONG arg0 = 0;
+    jobject arg0JObj = NULL;
+    const char* arg1Type = NULL;
+    unsigned PY_LONG_LONG arg1 = 0;
+    jobject arg1JObj = NULL;
+    PyObject* _resultPyObj = NULL;
+    jobject _resultJObj = NULL;
+    if (!beampy_initApi()) {
+        return NULL;
+    }
+    if (!beampy_initJMethod(&_method, classMap, "java.util.Map", "put", "(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;", 0)) {
+        return NULL;
+    }
+    if (!PyArg_ParseTuple(args, "(sK)(sK)(sK):BeamPyMap_put", &_thisType, &_this, &arg0Type, &arg0, &arg1Type, &arg1)) {
+        return NULL;
+    }
+    _thisJObj = (jobject) _this;
+    arg0JObj = (jobject) arg0;
+    arg1JObj = (jobject) arg1;
+    _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, arg0JObj, arg1JObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "Object");
+    (*jenv)->DeleteLocalRef(jenv, _resultJObj);
+    return _resultPyObj;
+}
+
+PyObject* BeamPyMap_remove(PyObject* self, PyObject* args)
+{
+    static jmethodID _method = NULL;
+    
+    const char* _thisType = NULL;
+    unsigned PY_LONG_LONG _this = 0;
+    jobject _thisJObj = NULL;
+    const char* arg0Type = NULL;
+    unsigned PY_LONG_LONG arg0 = 0;
+    jobject arg0JObj = NULL;
+    PyObject* _resultPyObj = NULL;
+    jobject _resultJObj = NULL;
+    if (!beampy_initApi()) {
+        return NULL;
+    }
+    if (!beampy_initJMethod(&_method, classMap, "java.util.Map", "remove", "(Ljava/lang/Object;)Ljava/lang/Object;", 0)) {
+        return NULL;
+    }
+    if (!PyArg_ParseTuple(args, "(sK)(sK):BeamPyMap_remove", &_thisType, &_this, &arg0Type, &arg0)) {
+        return NULL;
+    }
+    _thisJObj = (jobject) _this;
+    arg0JObj = (jobject) arg0;
+    _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, arg0JObj);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "Object");
+    (*jenv)->DeleteLocalRef(jenv, _resultJObj);
+    return _resultPyObj;
+}
+
+PyObject* BeamPyMap_putAll(PyObject* self, PyObject* args)
+{
+    static jmethodID _method = NULL;
+    
+    const char* _thisType = NULL;
+    unsigned PY_LONG_LONG _this = 0;
+    jobject _thisJObj = NULL;
+    const char* arg0Type = NULL;
+    unsigned PY_LONG_LONG arg0 = 0;
+    jobject arg0JObj = NULL;
+    if (!beampy_initApi()) {
+        return NULL;
+    }
+    if (!beampy_initJMethod(&_method, classMap, "java.util.Map", "putAll", "(Ljava/util/Map;)V", 0)) {
+        return NULL;
+    }
+    if (!PyArg_ParseTuple(args, "(sK)(sK):BeamPyMap_putAll", &_thisType, &_this, &arg0Type, &arg0)) {
+        return NULL;
+    }
+    _thisJObj = (jobject) _this;
+    arg0JObj = (jobject) arg0;
+    (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, arg0JObj);
+    return Py_BuildValue("");
+}
+
+PyObject* BeamPyMap_clear(PyObject* self, PyObject* args)
+{
+    static jmethodID _method = NULL;
+    
+    const char* _thisType = NULL;
+    unsigned PY_LONG_LONG _this = 0;
+    jobject _thisJObj = NULL;
+    if (!beampy_initApi()) {
+        return NULL;
+    }
+    if (!beampy_initJMethod(&_method, classMap, "java.util.Map", "clear", "()V", 0)) {
+        return NULL;
+    }
+    if (!PyArg_ParseTuple(args, "(sK):BeamPyMap_clear", &_thisType, &_this)) {
+        return NULL;
+    }
+    _thisJObj = (jobject) _this;
+    (*jenv)->CallVoidMethod(jenv, _thisJObj, _method);
+    return Py_BuildValue("");
+}
+
+PyObject* BeamPyMap_keySet(PyObject* self, PyObject* args)
+{
+    static jmethodID _method = NULL;
+    
+    const char* _thisType = NULL;
+    unsigned PY_LONG_LONG _this = 0;
+    jobject _thisJObj = NULL;
+    PyObject* _resultPyObj = NULL;
+    jobject _resultJObj = NULL;
+    if (!beampy_initApi()) {
+        return NULL;
+    }
+    if (!beampy_initJMethod(&_method, classMap, "java.util.Map", "keySet", "()Ljava/util/Set;", 0)) {
+        return NULL;
+    }
+    if (!PyArg_ParseTuple(args, "(sK):BeamPyMap_keySet", &_thisType, &_this)) {
+        return NULL;
+    }
+    _thisJObj = (jobject) _this;
+    _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "Set");
+    (*jenv)->DeleteLocalRef(jenv, _resultJObj);
+    return _resultPyObj;
+}
+
+PyObject* BeamPyMap_values(PyObject* self, PyObject* args)
+{
+    static jmethodID _method = NULL;
+    
+    const char* _thisType = NULL;
+    unsigned PY_LONG_LONG _this = 0;
+    jobject _thisJObj = NULL;
+    PyObject* _resultPyObj = NULL;
+    jobject _resultJObj = NULL;
+    if (!beampy_initApi()) {
+        return NULL;
+    }
+    if (!beampy_initJMethod(&_method, classMap, "java.util.Map", "values", "()Ljava/util/Collection;", 0)) {
+        return NULL;
+    }
+    if (!PyArg_ParseTuple(args, "(sK):BeamPyMap_values", &_thisType, &_this)) {
+        return NULL;
+    }
+    _thisJObj = (jobject) _this;
+    _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "Collection");
+    (*jenv)->DeleteLocalRef(jenv, _resultJObj);
+    return _resultPyObj;
+}
+
+PyObject* BeamPyMap_entrySet(PyObject* self, PyObject* args)
+{
+    static jmethodID _method = NULL;
+    
+    const char* _thisType = NULL;
+    unsigned PY_LONG_LONG _this = 0;
+    jobject _thisJObj = NULL;
+    PyObject* _resultPyObj = NULL;
+    jobject _resultJObj = NULL;
+    if (!beampy_initApi()) {
+        return NULL;
+    }
+    if (!beampy_initJMethod(&_method, classMap, "java.util.Map", "entrySet", "()Ljava/util/Set;", 0)) {
+        return NULL;
+    }
+    if (!PyArg_ParseTuple(args, "(sK):BeamPyMap_entrySet", &_thisType, &_this)) {
+        return NULL;
+    }
+    _thisJObj = (jobject) _this;
+    _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
+    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "Set");
+    (*jenv)->DeleteLocalRef(jenv, _resultJObj);
+    return _resultPyObj;
+}
+
+PyObject* BeamPyMap_equals(PyObject* self, PyObject* args)
+{
+    static jmethodID _method = NULL;
+    
+    const char* _thisType = NULL;
+    unsigned PY_LONG_LONG _this = 0;
+    jobject _thisJObj = NULL;
+    const char* arg0Type = NULL;
+    unsigned PY_LONG_LONG arg0 = 0;
+    jobject arg0JObj = NULL;
+    jboolean _result = (jboolean) 0;
+    if (!beampy_initApi()) {
+        return NULL;
+    }
+    if (!beampy_initJMethod(&_method, classMap, "java.util.Map", "equals", "(Ljava/lang/Object;)Z", 0)) {
+        return NULL;
+    }
+    if (!PyArg_ParseTuple(args, "(sK)(sK):BeamPyMap_equals", &_thisType, &_this, &arg0Type, &arg0)) {
+        return NULL;
+    }
+    _thisJObj = (jobject) _this;
+    arg0JObj = (jobject) arg0;
+    _result = (*jenv)->CallBooleanMethod(jenv, _thisJObj, _method, arg0JObj);
+    return PyBool_FromLong(_result);
+}
+
+PyObject* BeamPyMap_hashCode(PyObject* self, PyObject* args)
+{
+    static jmethodID _method = NULL;
+    
+    const char* _thisType = NULL;
+    unsigned PY_LONG_LONG _this = 0;
+    jobject _thisJObj = NULL;
+    jint _result = (jint) 0;
+    if (!beampy_initApi()) {
+        return NULL;
+    }
+    if (!beampy_initJMethod(&_method, classMap, "java.util.Map", "hashCode", "()I", 0)) {
+        return NULL;
+    }
+    if (!PyArg_ParseTuple(args, "(sK):BeamPyMap_hashCode", &_thisType, &_this)) {
+        return NULL;
+    }
+    _thisJObj = (jobject) _this;
+    _result = (*jenv)->CallIntMethod(jenv, _thisJObj, _method);
+    return PyLong_FromLong(_result);
+}
+
 PyObject* BeamPyProductReader_getReaderPlugIn(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
@@ -31239,7 +31634,8 @@ PyObject* BeamPyProductUtils_copyBandsForGeomTransform1(PyObject* self, PyObject
     unsigned PY_LONG_LONG targetProduct = 0;
     jobject targetProductJObj = NULL;
     jdouble defaultNoDataValue = (jdouble) 0;
-    PyObject* addedRasterDataNodesPyObj = NULL;
+    const char* addedRasterDataNodesType = NULL;
+    unsigned PY_LONG_LONG addedRasterDataNodes = 0;
     jobject addedRasterDataNodesJObj = NULL;
     if (!beampy_initApi()) {
         return NULL;
@@ -31247,17 +31643,13 @@ PyObject* BeamPyProductUtils_copyBandsForGeomTransform1(PyObject* self, PyObject
     if (!beampy_initJMethod(&_method, classProductUtils, "org.esa.beam.util.ProductUtils", "copyBandsForGeomTransform", "(Lorg/esa/beam/framework/datamodel/Product;Lorg/esa/beam/framework/datamodel/Product;DLjava/util/Map;)V", 1)) {
         return NULL;
     }
-    if (!PyArg_ParseTuple(args, "(sK)(sK)dO:BeamPyProductUtils_copyBandsForGeomTransform1", &sourceProductType, &sourceProduct, &targetProductType, &targetProduct, &defaultNoDataValue, &addedRasterDataNodesPyObj)) {
+    if (!PyArg_ParseTuple(args, "(sK)(sK)d(sK):BeamPyProductUtils_copyBandsForGeomTransform1", &sourceProductType, &sourceProduct, &targetProductType, &targetProduct, &defaultNoDataValue, &addedRasterDataNodesType, &addedRasterDataNodes)) {
         return NULL;
     }
     sourceProductJObj = (jobject) sourceProduct;
     targetProductJObj = (jobject) targetProduct;
-    addedRasterDataNodesJObj = beampy_newJMapFromPyObject(addedRasterDataNodesPyObj);
-    if (addedRasterDataNodesJObj == NULL) {
-        return NULL;
-    }
+    addedRasterDataNodesJObj = (jobject) addedRasterDataNodes;
     (*jenv)->CallStaticVoidMethod(jenv, classProductUtils, _method, sourceProductJObj, targetProductJObj, defaultNoDataValue, addedRasterDataNodesJObj);
-    (*jenv)->DeleteLocalRef(jenv, addedRasterDataNodesJObj);
     return Py_BuildValue("");
 }
 
@@ -31272,7 +31664,8 @@ PyObject* BeamPyProductUtils_copyBandsForGeomTransform2(PyObject* self, PyObject
     jobject targetProductJObj = NULL;
     jboolean includeTiePointGrids = (jboolean) 0;
     jdouble defaultNoDataValue = (jdouble) 0;
-    PyObject* targetToSourceMapPyObj = NULL;
+    const char* targetToSourceMapType = NULL;
+    unsigned PY_LONG_LONG targetToSourceMap = 0;
     jobject targetToSourceMapJObj = NULL;
     if (!beampy_initApi()) {
         return NULL;
@@ -31280,17 +31673,13 @@ PyObject* BeamPyProductUtils_copyBandsForGeomTransform2(PyObject* self, PyObject
     if (!beampy_initJMethod(&_method, classProductUtils, "org.esa.beam.util.ProductUtils", "copyBandsForGeomTransform", "(Lorg/esa/beam/framework/datamodel/Product;Lorg/esa/beam/framework/datamodel/Product;ZDLjava/util/Map;)V", 1)) {
         return NULL;
     }
-    if (!PyArg_ParseTuple(args, "(sK)(sK)bdO:BeamPyProductUtils_copyBandsForGeomTransform2", &sourceProductType, &sourceProduct, &targetProductType, &targetProduct, &includeTiePointGrids, &defaultNoDataValue, &targetToSourceMapPyObj)) {
+    if (!PyArg_ParseTuple(args, "(sK)(sK)bd(sK):BeamPyProductUtils_copyBandsForGeomTransform2", &sourceProductType, &sourceProduct, &targetProductType, &targetProduct, &includeTiePointGrids, &defaultNoDataValue, &targetToSourceMapType, &targetToSourceMap)) {
         return NULL;
     }
     sourceProductJObj = (jobject) sourceProduct;
     targetProductJObj = (jobject) targetProduct;
-    targetToSourceMapJObj = beampy_newJMapFromPyObject(targetToSourceMapPyObj);
-    if (targetToSourceMapJObj == NULL) {
-        return NULL;
-    }
+    targetToSourceMapJObj = (jobject) targetToSourceMap;
     (*jenv)->CallStaticVoidMethod(jenv, classProductUtils, _method, sourceProductJObj, targetProductJObj, includeTiePointGrids, defaultNoDataValue, targetToSourceMapJObj);
-    (*jenv)->DeleteLocalRef(jenv, targetToSourceMapJObj);
     return Py_BuildValue("");
 }
 

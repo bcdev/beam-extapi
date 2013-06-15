@@ -33,6 +33,7 @@ typedef void* PlacemarkGroup;
 typedef void* TiePointGrid;
 typedef void* AngularDirection;
 typedef void* FlagCoding;
+typedef void* Map;
 typedef void* ProductReader;
 typedef void* RGBChannelDef;
 typedef void* ProductData;
@@ -71,7 +72,7 @@ typedef void* Integer;
 typedef void* Object;
 typedef void* Collection;
 typedef void* Iterator;
-typedef void* Map;
+typedef void* Set;
 typedef void* ImageInputStream;
 typedef void* ImageOutputStream;
 typedef void* ROI;
@@ -1112,6 +1113,23 @@ char* FlagCoding_getProductRefString(FlagCoding _this);
 void FlagCoding_updateExpression(FlagCoding _this, const char* oldExternalName, const char* newExternalName);
 void FlagCoding_removeFromFile(FlagCoding _this, ProductWriter productWriter);
 Object FlagCoding_getExtension(FlagCoding _this, Class arg0);
+
+/* Functions for class Map */
+
+int Map_size(Map _this);
+boolean Map_isEmpty(Map _this);
+boolean Map_containsKey(Map _this, Object arg0);
+boolean Map_containsValue(Map _this, Object arg0);
+Object Map_get(Map _this, Object arg0);
+Object Map_put(Map _this, Object arg0, Object arg1);
+Object Map_remove(Map _this, Object arg0);
+void Map_putAll(Map _this, Map arg0);
+void Map_clear(Map _this);
+Set Map_keySet(Map _this);
+Collection Map_values(Map _this);
+Set Map_entrySet(Map _this);
+boolean Map_equals(Map _this, Object arg0);
+int Map_hashCode(Map _this);
 
 /* Functions for class ProductReader */
 

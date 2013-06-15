@@ -5755,6 +5755,74 @@ class ProductUtils(JObject):
         return ProductUtils_getGeophysicalSampleLong(band._jobj, pixelX, pixelY, level)
 
 
+class Map(JObject):
+    def __init__(self, obj):
+        JObject.__init__(self, obj)
+
+    def __del__(self):
+        JObject.__del__(self)
+
+    @staticmethod
+    def newMap(dic=None):
+        return Map(Map_newHashMap(dic))
+
+    def __len__(self):
+        return self.size()
+
+    def __getitem__(self, key):
+        return self.get(key)
+
+    def __setitem__(self, key, value):
+        return self.put(key, value)
+
+    def __delitem__(self, key):
+        return self.remove(key)
+
+    def size(self):
+        return Map_size(self._jobj)
+
+    def isEmpty(self):
+        return Map_isEmpty(self._jobj)
+
+    def containsKey(self, arg0):
+        return Map_containsKey(self._jobj, arg0._jobj)
+
+    def containsValue(self, arg0):
+        return Map_containsValue(self._jobj, arg0._jobj)
+
+    def get(self, arg0):
+        return Object(Map_get(self._jobj, arg0._jobj))
+
+    def put(self, arg0, arg1):
+        return Object(Map_put(self._jobj, arg0._jobj, arg1._jobj))
+
+    def remove(self, arg0):
+        return Object(Map_remove(self._jobj, arg0._jobj))
+
+    def putAll(self, arg0):
+        Map_putAll(self._jobj, arg0._jobj)
+        return
+
+    def clear(self):
+        Map_clear(self._jobj)
+        return
+
+    def keySet(self):
+        return Set(Map_keySet(self._jobj))
+
+    def values(self):
+        return Collection(Map_values(self._jobj))
+
+    def entrySet(self):
+        return Set(Map_entrySet(self._jobj))
+
+    def equals(self, arg0):
+        return Map_equals(self._jobj, arg0._jobj)
+
+    def hashCode(self):
+        return Map_hashCode(self._jobj)
+
+
 class MetadataElement(JObject):
     """ A <code>MetadataElement</code> is a data node used to store metadata. Metadata elements can have any number of
 metadata attributes of the type {@link MetadataAttribute} and any number of inner <code>MetadataElement</code>s.
@@ -6194,18 +6262,6 @@ the coordinate systems used to map the earth.
 
     def __del__(self):
         JObject.__del__(self)
-
-
-class Map(JObject):
-    def __init__(self, obj):
-        JObject.__init__(self, obj)
-
-    def __del__(self):
-        JObject.__del__(self)
-
-    @staticmethod
-    def newMap(dict):
-        return Map(Map_newHashMap(dict))
 
 
 class Pointing(JObject):
@@ -7638,6 +7694,14 @@ class Scaling(JObject):
 
 
 class WritableNamespace(JObject):
+    def __init__(self, obj):
+        JObject.__init__(self, obj)
+
+    def __del__(self):
+        JObject.__del__(self)
+
+
+class Set(JObject):
     def __init__(self, obj):
         JObject.__init__(self, obj)
 

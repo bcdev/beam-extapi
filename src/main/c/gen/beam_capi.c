@@ -49,6 +49,7 @@ jclass classString;
 /* java.util classes. */
 jclass classHashMap;
 jclass classHashSet;
+jclass classArrayList;
 
 /* API classes. */
 jclass classGeoCoding;
@@ -69,6 +70,7 @@ jclass classPlacemarkGroup;
 jclass classTiePointGrid;
 jclass classAngularDirection;
 jclass classFlagCoding;
+jclass classMap;
 jclass classProductReader;
 jclass classRGBChannelDef;
 jclass classProductData;
@@ -103,7 +105,7 @@ jclass classClass;
 jclass classObject;
 jclass classCollection;
 jclass classIterator;
-jclass classMap;
+jclass classSet;
 jclass classImageInputStream;
 jclass classImageOutputStream;
 jclass classROI;
@@ -444,6 +446,13 @@ int beam_initApi()
         return exitCode;
     }
 
+    classArrayList = beam_findJvmClass("java/util/ArrayList");
+    if (classArrayList == NULL) { 
+        fprintf(stderr, "beam_capi: Java class not found: java/util/ArrayList\n");
+        exitCode = 1011;
+        return exitCode;
+    }
+
     classGeoCoding = beam_findJvmClass("org/esa/beam/framework/datamodel/GeoCoding");
     if (classGeoCoding == NULL) { 
         fprintf(stderr, "beam_capi: Java class not found: org/esa/beam/framework/datamodel/GeoCoding\n");
@@ -570,52 +579,59 @@ int beam_initApi()
         return exitCode;
     }
 
+    classMap = beam_findJvmClass("java/util/Map");
+    if (classMap == NULL) { 
+        fprintf(stderr, "beam_capi: Java class not found: java/util/Map\n");
+        exitCode = 2018;
+        return exitCode;
+    }
+
     classProductReader = beam_findJvmClass("org/esa/beam/framework/dataio/ProductReader");
     if (classProductReader == NULL) { 
         fprintf(stderr, "beam_capi: Java class not found: org/esa/beam/framework/dataio/ProductReader\n");
-        exitCode = 2018;
+        exitCode = 2019;
         return exitCode;
     }
 
     classRGBChannelDef = beam_findJvmClass("org/esa/beam/framework/datamodel/RGBChannelDef");
     if (classRGBChannelDef == NULL) { 
         fprintf(stderr, "beam_capi: Java class not found: org/esa/beam/framework/datamodel/RGBChannelDef\n");
-        exitCode = 2019;
+        exitCode = 2020;
         return exitCode;
     }
 
     classProductData = beam_findJvmClass("org/esa/beam/framework/datamodel/ProductData");
     if (classProductData == NULL) { 
         fprintf(stderr, "beam_capi: Java class not found: org/esa/beam/framework/datamodel/ProductData\n");
-        exitCode = 2020;
+        exitCode = 2021;
         return exitCode;
     }
 
     classGeoPos = beam_findJvmClass("org/esa/beam/framework/datamodel/GeoPos");
     if (classGeoPos == NULL) { 
         fprintf(stderr, "beam_capi: Java class not found: org/esa/beam/framework/datamodel/GeoPos\n");
-        exitCode = 2021;
+        exitCode = 2022;
         return exitCode;
     }
 
     classProductNodeGroup = beam_findJvmClass("org/esa/beam/framework/datamodel/ProductNodeGroup");
     if (classProductNodeGroup == NULL) { 
         fprintf(stderr, "beam_capi: Java class not found: org/esa/beam/framework/datamodel/ProductNodeGroup\n");
-        exitCode = 2022;
+        exitCode = 2023;
         return exitCode;
     }
 
     classProductUtils = beam_findJvmClass("org/esa/beam/util/ProductUtils");
     if (classProductUtils == NULL) { 
         fprintf(stderr, "beam_capi: Java class not found: org/esa/beam/util/ProductUtils\n");
-        exitCode = 2023;
+        exitCode = 2024;
         return exitCode;
     }
 
     classMetadataAttribute = beam_findJvmClass("org/esa/beam/framework/datamodel/MetadataAttribute");
     if (classMetadataAttribute == NULL) { 
         fprintf(stderr, "beam_capi: Java class not found: org/esa/beam/framework/datamodel/MetadataAttribute\n");
-        exitCode = 2024;
+        exitCode = 2025;
         return exitCode;
     }
 
@@ -17015,6 +17031,268 @@ Object FlagCoding_getExtension(FlagCoding _this, Class arg0)
     }
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, arg0);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
+}
+
+int Map_size(Map _this)
+{
+    static jmethodID _method = NULL;
+    int _result = (int) 0;
+    if (_method == NULL) {
+        if (beam_initApi() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classMap, "size", "()I");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
+    }
+    _result = (*jenv)->CallIntMethod(jenv, _this, _method);
+    return _result;
+}
+
+boolean Map_isEmpty(Map _this)
+{
+    static jmethodID _method = NULL;
+    boolean _result = (boolean) 0;
+    if (_method == NULL) {
+        if (beam_initApi() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classMap, "isEmpty", "()Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
+    }
+    _result = (*jenv)->CallBooleanMethod(jenv, _this, _method);
+    return _result;
+}
+
+boolean Map_containsKey(Map _this, Object arg0)
+{
+    static jmethodID _method = NULL;
+    boolean _result = (boolean) 0;
+    if (_method == NULL) {
+        if (beam_initApi() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classMap, "containsKey", "(Ljava/lang/Object;)Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
+    }
+    _result = (*jenv)->CallBooleanMethod(jenv, _this, _method, arg0);
+    return _result;
+}
+
+boolean Map_containsValue(Map _this, Object arg0)
+{
+    static jmethodID _method = NULL;
+    boolean _result = (boolean) 0;
+    if (_method == NULL) {
+        if (beam_initApi() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classMap, "containsValue", "(Ljava/lang/Object;)Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
+    }
+    _result = (*jenv)->CallBooleanMethod(jenv, _this, _method, arg0);
+    return _result;
+}
+
+Object Map_get(Map _this, Object arg0)
+{
+    static jmethodID _method = NULL;
+    Object _result = (Object) 0;
+    if (_method == NULL) {
+        if (beam_initApi() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classMap, "get", "(Ljava/lang/Object;)Ljava/lang/Object;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
+    }
+    _result = (*jenv)->CallObjectMethod(jenv, _this, _method, arg0);
+    return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
+}
+
+Object Map_put(Map _this, Object arg0, Object arg1)
+{
+    static jmethodID _method = NULL;
+    Object _result = (Object) 0;
+    if (_method == NULL) {
+        if (beam_initApi() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classMap, "put", "(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
+    }
+    _result = (*jenv)->CallObjectMethod(jenv, _this, _method, arg0, arg1);
+    return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
+}
+
+Object Map_remove(Map _this, Object arg0)
+{
+    static jmethodID _method = NULL;
+    Object _result = (Object) 0;
+    if (_method == NULL) {
+        if (beam_initApi() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classMap, "remove", "(Ljava/lang/Object;)Ljava/lang/Object;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
+    }
+    _result = (*jenv)->CallObjectMethod(jenv, _this, _method, arg0);
+    return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
+}
+
+void Map_putAll(Map _this, Map arg0)
+{
+    static jmethodID _method = NULL;
+    if (_method == NULL) {
+        if (beam_initApi() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classMap, "putAll", "(Ljava/util/Map;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
+    }
+    (*jenv)->CallVoidMethod(jenv, _this, _method, arg0);
+}
+
+void Map_clear(Map _this)
+{
+    static jmethodID _method = NULL;
+    if (_method == NULL) {
+        if (beam_initApi() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classMap, "clear", "()V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
+    }
+    (*jenv)->CallVoidMethod(jenv, _this, _method);
+}
+
+Set Map_keySet(Map _this)
+{
+    static jmethodID _method = NULL;
+    Set _result = (Set) 0;
+    if (_method == NULL) {
+        if (beam_initApi() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classMap, "keySet", "()Ljava/util/Set;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
+    }
+    _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
+    return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
+}
+
+Collection Map_values(Map _this)
+{
+    static jmethodID _method = NULL;
+    Collection _result = (Collection) 0;
+    if (_method == NULL) {
+        if (beam_initApi() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classMap, "values", "()Ljava/util/Collection;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
+    }
+    _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
+    return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
+}
+
+Set Map_entrySet(Map _this)
+{
+    static jmethodID _method = NULL;
+    Set _result = (Set) 0;
+    if (_method == NULL) {
+        if (beam_initApi() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classMap, "entrySet", "()Ljava/util/Set;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
+    }
+    _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
+    return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
+}
+
+boolean Map_equals(Map _this, Object arg0)
+{
+    static jmethodID _method = NULL;
+    boolean _result = (boolean) 0;
+    if (_method == NULL) {
+        if (beam_initApi() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classMap, "equals", "(Ljava/lang/Object;)Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
+    }
+    _result = (*jenv)->CallBooleanMethod(jenv, _this, _method, arg0);
+    return _result;
+}
+
+int Map_hashCode(Map _this)
+{
+    static jmethodID _method = NULL;
+    int _result = (int) 0;
+    if (_method == NULL) {
+        if (beam_initApi() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classMap, "hashCode", "()I");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
+    }
+    _result = (*jenv)->CallIntMethod(jenv, _this, _method);
+    return _result;
 }
 
 ProductReaderPlugIn ProductReader_getReaderPlugIn(ProductReader _this)

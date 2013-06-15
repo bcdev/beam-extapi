@@ -828,6 +828,20 @@ EXPORTS
 	FlagCoding_updateExpression
 	FlagCoding_removeFromFile
 	FlagCoding_getExtension
+	Map_size
+	Map_isEmpty
+	Map_containsKey
+	Map_containsValue
+	Map_get
+	Map_put
+	Map_remove
+	Map_putAll
+	Map_clear
+	Map_keySet
+	Map_values
+	Map_entrySet
+	Map_equals
+	Map_hashCode
 	ProductReader_getReaderPlugIn
 	ProductReader_getInput
 	ProductReader_getSubsetDef
