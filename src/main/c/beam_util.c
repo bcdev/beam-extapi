@@ -100,6 +100,7 @@ void Util_listDir(const char* parent_dir, Util_handleDirEntry handler, void* use
 #endif
 }
 
+// experimental code
 #ifdef COLLECTIONS
 
 Value NULL_VALUE = {0, {0}};
