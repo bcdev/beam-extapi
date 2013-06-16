@@ -48,6 +48,44 @@ PyTypeObject JObject_Type = {
     NULL,                         /* tp_new */
 };
 
+int JObject_Check(PyObject* anyPyObj)
+{
+    PyTypeObject* type = anyPyObj->ob_type;
+    while (type != NULL) {
+        if (type == &JObject_Type) {
+            return 1;
+        }
+        type = type->tp_base;
+    }
+    return 0;
+}
+
+JObject* JObject_AsJObject(PyObject* anyPyObj)
+{
+    if (anyPyObj == NULL || !JObject_Check(anyPyObj)) {
+        return NULL;
+    }
+    return (JObject*) anyPyObj;
+}
+
+jobject JObject_GetJObjectRef(PyObject* anyPyObj)
+{
+    JObject* jobjPyObj = JObject_AsJObject(anyPyObj);
+    if (jobjPyObj == NULL) {
+        return NULL;
+    }
+    return jobjPyObj->jobjectRef;
+}
+
+jboolean JObject_IsInstanceOf(PyObject* anyPyObj, jclass jclassRef)
+{
+    jobject jobjectRef = JObject_GetJObjectRef(anyPyObj);
+    if (jobjectRef == NULL) {
+        return 0;
+    }
+    return (*jenv)->IsInstanceOf(jenv, jobjectRef, jclassRef);
+}
+
 
 /**
  * Implements the __init__() method of the JObject_Type class.
@@ -65,10 +103,10 @@ int JObject_init(JObject* self, PyObject* args, PyObject* kwds)
 
     jobj = (jobject) PyLong_AsVoidPtr(jobjId);
     if (jobj != NULL) {
-        self->jobj = (*jenv)->NewGlobalRef(jenv, jobj);
+        self->jobjectRef = (*jenv)->NewGlobalRef(jenv, jobj);
         return 0;
     } else {
-        self->jobj = NULL;
+        self->jobjectRef = NULL;
         return 1;
     }
 }
@@ -80,8 +118,8 @@ void JObject_dealloc(JObject* self)
 {
     printf("JObject_dealloc\n");
 
-    if (self->jobj != NULL) {
-        (*jenv)->DeleteGlobalRef(jenv, self->jobj);
-        self->jobj = NULL;
+    if (self->jobjectRef != NULL) {
+        (*jenv)->DeleteGlobalRef(jenv, self->jobjectRef);
+        self->jobjectRef = NULL;
     }
 }

@@ -17,15 +17,31 @@ extern "C" {
  */
 typedef struct {
     PyObject_HEAD
-    /** The pointer to the Java object obtained from JNI. */
-    jobject objId;
+    /** A global reference to a Java object obtained from JNI. */
+    jobject jobjectRef;
 } JObject;
+
+/**
+ * Returns 1 (TRUE) if the given Python object is a JObject or a derived type. 0 (FALSE) otherwise.
+ */
+int JObject_Check(PyObject* anyPyObj);
+/**
+ * Returns a JObject pointer if the given Python object is a JObject or derived type. NULL otherwise.
+ */
+JObject* JObject_AsJObject(PyObject* anyPyObj);
+/**
+ * Returns a global reference to a Java object if the given Python object is a JObject or derived type. NULL otherwise.
+ */
+jobject JObject_GetJObjectRef(PyObject* anyPyObj);
 
 int JObject_init(JObject* self, PyObject* args, PyObject* kwds);
 void JObject_dealloc(JObject* self);
 
 PyAPI_DATA(PyTypeObject) JObject_Type;
 
+// todo - better use functions for retrieving these pointers
+PyAPI_DATA(JavaVM*) jvm;
+PyAPI_DATA(JNIEnv*) jenv;
 
 #ifdef __cplusplus
 }  /* extern "C" */
