@@ -18,6 +18,35 @@ public abstract class TargetFile {
         templateEval = new TemplateEval();
     }
 
+    public String getBaseName() {
+        return baseName;
+    }
+
+    public File getFile() {
+        return file;
+    }
+
+    public TemplateEval getTemplateEval() {
+        return templateEval;
+    }
+
+    public PrintWriter getWriter() {
+        return writer;
+    }
+
+    public void writeResource(String resourceName, TemplateEval.KV... pairs) throws IOException {
+        final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(resourceName)));
+        try {
+            templateEval.add(pairs).eval(bufferedReader, writer);
+        } finally {
+            bufferedReader.close();
+        }
+    }
+
+    public void writeText(String text, TemplateEval.KV... pairs) {
+        writer.print(templateEval.add(pairs).eval(text));
+    }
+
     public void create() throws IOException {
         try {
             writeHeader();
@@ -34,16 +63,4 @@ public abstract class TargetFile {
 
     protected void writeFooter() throws IOException {}
 
-    protected void writeResource(String resourceName, TemplateEval.KV... pairs) throws IOException {
-        final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(resourceName)));
-        try {
-            templateEval.add(pairs).eval(bufferedReader, writer);
-        } finally {
-            bufferedReader.close();
-        }
-    }
-
-    protected void writeText(String text, TemplateEval.KV... pairs) throws IOException {
-        writer.print(templateEval.add(pairs).eval(text));
-    }
 }

@@ -23,7 +23,6 @@ import com.sun.javadoc.RootDoc;
 import org.apache.commons.lang.StringUtils;
 import org.esa.beam.extapi.gen.c.CModuleGenerator;
 import org.esa.beam.extapi.gen.py.PyCModuleGenerator;
-import org.esa.beam.extapi.gen.py2.PyCModuleGenerator2;
 import org.jdom.JDOMException;
 
 import java.io.File;
@@ -145,10 +144,6 @@ public class ApiGeneratorDoclet extends Doclet {
                 final PyCModuleGenerator pyCModuleGenerator = new PyCModuleGenerator(cModuleGenerator);
                 cModuleGenerator.run();
                 pyCModuleGenerator.run();
-
-                final PyCModuleGenerator2 pyCModuleGenerator2 = new PyCModuleGenerator2(apiInfo);
-                pyCModuleGenerator2.run();
-
                 return true;
             } catch (IOException e) {
                 e.printStackTrace();

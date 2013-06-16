@@ -48,6 +48,14 @@ PyTypeObject JObject_Type = {
     NULL,                         /* tp_new */
 };
 
+PyObject* JObject_FromJObjectRef(jobject jobjectRef)
+{
+    PyObject* longPyObj = PyLong_FromVoidPtr(jobjectRef);
+    PyObject* jobjPyObj = PyObject_CallObject(&JObject_Type, longPyObj);
+    Py_DECREF(longPyObj);
+    return jobjPyObj;
+}
+
 int JObject_Check(PyObject* anyPyObj)
 {
     PyTypeObject* type = anyPyObj->ob_type;
@@ -93,22 +101,27 @@ jboolean JObject_IsInstanceOf(PyObject* anyPyObj, jclass jclassRef)
 int JObject_init(JObject* self, PyObject* args, PyObject* kwds)
 {
     PyObject* jobjId;
-    jobject jobj;
-
-    printf("JObject_init\n");
+    jobject jobjectRef;
 
     if (!PyArg_ParseTupleAndKeywords(args, kwds, "O", NULL, &jobjId)) {
         return -1;
     }
 
-    jobj = (jobject) PyLong_AsVoidPtr(jobjId);
-    if (jobj != NULL) {
-        self->jobjectRef = (*jenv)->NewGlobalRef(jenv, jobj);
-        return 0;
-    } else {
-        self->jobjectRef = NULL;
-        return 1;
+    jobjectRef = (jobject) PyLong_AsVoidPtr(jobjId);
+    if (jobjectRef == NULL) {
+        PyErr_SetString(PyExc_ValueError, "failed to convert argument to Java object reference");
+        return -2;
     }
+
+    jobjectRef = (*jenv)->NewGlobalRef(jenv, jobjectRef);
+    if (jobjectRef == NULL) {
+        PyErr_SetString(PyExc_MemoryError, "failed to create global Java object reference");
+        return -3;
+    }
+
+    printf("JObject_init %p\n", jobjectRef);
+    self->jobjectRef = jobjectRef;
+    return 0;
 }
 
 /**
@@ -116,7 +129,7 @@ int JObject_init(JObject* self, PyObject* args, PyObject* kwds)
  */
 void JObject_dealloc(JObject* self)
 {
-    printf("JObject_dealloc\n");
+    printf("JObject_dealloc %p\n", self->jobjectRef);
 
     if (self->jobjectRef != NULL) {
         (*jenv)->DeleteGlobalRef(jenv, self->jobjectRef);

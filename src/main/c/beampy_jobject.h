@@ -21,6 +21,14 @@ typedef struct {
     jobject jobjectRef;
 } JObject;
 
+//PyAPI_DATA(PyTypeObject) JObject_Type;
+extern PyTypeObject JObject_Type;
+
+/**
+ * Creates a new JObject instance from a given global reference to a Java object.
+ */
+PyObject* JObject_FromJObjectRef(jobject jobjectRef);
+
 /**
  * Returns 1 (TRUE) if the given Python object is a JObject or a derived type. 0 (FALSE) otherwise.
  */
@@ -37,11 +45,12 @@ jobject JObject_GetJObjectRef(PyObject* anyPyObj);
 int JObject_init(JObject* self, PyObject* args, PyObject* kwds);
 void JObject_dealloc(JObject* self);
 
-PyAPI_DATA(PyTypeObject) JObject_Type;
 
 // todo - better use functions for retrieving these pointers
-PyAPI_DATA(JavaVM*) jvm;
-PyAPI_DATA(JNIEnv*) jenv;
+//PyAPI_DATA(JavaVM*) jvm;
+extern JavaVM* jvm;
+//PyAPI_DATA(JNIEnv*) jenv;
+extern JNIEnv* jenv;
 
 #ifdef __cplusplus
 }  /* extern "C" */

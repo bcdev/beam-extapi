@@ -17,18 +17,7 @@
 package org.esa.beam.extapi.gen.py;
 
 import com.sun.javadoc.Type;
-import org.esa.beam.extapi.gen.ApiClass;
-import org.esa.beam.extapi.gen.ApiConstant;
-import org.esa.beam.extapi.gen.ApiGeneratorDoclet;
-import org.esa.beam.extapi.gen.ApiMethod;
-import org.esa.beam.extapi.gen.FunctionGenerator;
-import org.esa.beam.extapi.gen.FunctionWriter;
-import org.esa.beam.extapi.gen.JavadocHelpers;
-import org.esa.beam.extapi.gen.ModuleGenerator;
-import org.esa.beam.extapi.gen.ParameterGenerator;
-import org.esa.beam.extapi.gen.TargetCFile;
-import org.esa.beam.extapi.gen.TargetCHeaderFile;
-import org.esa.beam.extapi.gen.TargetFile;
+import org.esa.beam.extapi.gen.*;
 import org.esa.beam.extapi.gen.c.CModuleGenerator;
 
 import java.io.IOException;
@@ -36,6 +25,7 @@ import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.List;
 
+import static org.esa.beam.extapi.gen.JavadocHelpers.convertToPythonDoc;
 import static org.esa.beam.extapi.gen.TemplateEval.eval;
 import static org.esa.beam.extapi.gen.TemplateEval.kv;
 
@@ -112,7 +102,11 @@ public class PyCModuleGenerator extends ModuleGenerator {
             @Override
             protected void writeContent() throws IOException {
                 writer.println("#include \"../beampy_carray.h\"");
+                writer.println("#include \"../beampy_jobject.h\"");
                 writeTemplateResource(writer, "/org/esa/beam/extapi/gen/c/CModuleGenerator-stub-types.h");
+
+                writeJObjectSubtypesDeclarations(writer);
+
             }
         }.create();
     }
@@ -142,10 +136,13 @@ public class PyCModuleGenerator extends ModuleGenerator {
                 writeClassDefinitions(writer);
                 writer.printf("\n");
 
+                writeJObjectSubtypesRegistration(writer);
+                writer.printf("\n");
+
                 writeTemplateResource(writer, "PyCModuleGenerator-stub-buffer.c");
                 writer.printf("\n");
 
-                writeTemplateResource(writer, "PyCModuleGenerator-stub-jobject.c");
+                writeTemplateResource(writer, "PyCModuleGenerator-stub-pymodule.c");
                 writer.printf("\n");
 
                 writeTemplateResource(writer, "/org/esa/beam/extapi/gen/c/CModuleGenerator-stub-jvm.c");
@@ -168,8 +165,84 @@ public class PyCModuleGenerator extends ModuleGenerator {
 
                 writeFunctionDefinitions(writer);
                 writer.printf("\n");
+
+                writeJObjectSubtypesDefinitions(this);
+                writer.printf("\n");
+
             }
         }.create();
+    }
+
+    private void writeJObjectSubtypesDeclarations(PrintWriter writer) {
+        for (ApiClass apiClass : getApiInfo().getAllClasses()) {
+            writer.printf(eval("// PyAPI_DATA(PyTypeObject) ${className}_Type;\n" +
+                                       "extern PyTypeObject ${className}_Type;\n",
+                               kv("className", getClassName(apiClass.getType()))));
+        }
+    }
+
+    private void writeJObjectSubtypesDefinitions(TargetFile file) {
+        TemplateEval templateEval = file.getTemplateEval();
+        for (ApiClass apiClass : getApiInfo().getAllClasses()) {
+
+            String className = getClassName(apiClass.getType());
+
+            templateEval.add(kv("className", className),
+                             kv("classDoc", convertToPythonDoc(getApiInfo(), apiClass.getType().asClassDoc(), "", true)));
+
+            file.writeText("static PyMemberDef ${className}_Members[] = {\n");
+            // todo - write members (constants)
+            file.writeText("    {NULL, 0, 0, 0, NULL}\n");
+            file.writeText("};\n");
+            file.writeText("\n");
+
+            file.writeText("static PyMethodDef ${className}_Methods[] = \n" +
+                                   "{\n");
+            List<ApiMethod> methods = getApiInfo().getMethodsOf(apiClass);
+            for (ApiMethod method : methods) {
+
+                String functionName = cModuleGenerator.getFunctionNameFor(method);
+                functionName = functionName.substring(className.length() + 1);
+
+                templateEval.add(kv("methodName", functionName),
+                                 kv("methodDoc", convertToPythonDoc(getApiInfo(), method.getMemberDoc(), "", true)),
+                                 kv("methodFlags", method.getMemberDoc().isStatic() || method.getMemberDoc().isConstructor() ? "METH_VARARGS | METH_STATIC" : "METH_VARARGS"));
+
+                file.writeText("    {\"${methodName}\", (PyCFunction) BeamPy${className}_${methodName}, ${methodFlags}, \"${methodDoc}\"},\n");
+            }
+            file.writeText("    {NULL, NULL, 0, NULL}\n");
+            file.writeText("};\n");
+            file.writeText("\n");
+
+            try {
+                file.writeResource("PyCModuleGenerator-stub-pytype.c");
+            } catch (IOException e) {
+                throw new IllegalStateException(e);
+            }
+
+            file.writeText("\n");
+        }
+    }
+
+    private void writeJObjectSubtypesRegistration(PrintWriter writer) {
+        writer.printf("" +
+                              "int beampy_registerJObjectSubtypes(PyObject* module)\n" +
+                              "{\n");
+        for (ApiClass apiClass : getApiInfo().getAllClasses()) {
+            writer.printf(eval("" +
+                                       "    // Register ${className}:\n" +
+                                       "    ${className}_Type.tp_base = &JObject_Type;\n" +
+                                       "    if (PyType_Ready(&${className}_Type) < 0) {\n" +
+                                       "        return 0;\n" +
+                                       "    }\n" +
+                                       "    Py_INCREF(&${className}_Type);\n" +
+                                       "    PyModule_AddObject(module, \"${className}\", (PyObject*) &${className}_Type);\n" +
+                                       "\n",
+                               kv("className", getClassName(apiClass.getType()))));
+        }
+        writer.printf("" +
+                              "    return 1;\n" +
+                              "}\n");
     }
 
     private void writeFunctionDeclarations(PrintWriter writer) {
@@ -200,8 +273,8 @@ public class PyCModuleGenerator extends ModuleGenerator {
                               generator.generateDocText(this));
             }
         }
-        writer.printf("    {\"Object_delete\", BeamPyObject_delete, METH_VARARGS, \"Deletes global references to Java objects held by Python objects\"},\n");
         writer.printf("    {\"String_newString\", BeamPyString_newString, METH_VARARGS, \"Converts a Python unicode string into a Java java.lang.String object\"},\n");
+        writer.printf("    {\"Object_delete\", BeamPyObject_delete, METH_VARARGS, \"Deletes global references to Java objects held by Python objects\"},\n");
         writer.printf("    {\"Map_newHashMap\", BeamPyMap_newHashMap, METH_VARARGS, \"Converts a Python dictionary into a Java java.utils.Map object\"},\n");
         writer.printf("    {NULL, NULL, 0, NULL}  /* Sentinel */\n");
         writer.printf("};\n");

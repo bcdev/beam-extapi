@@ -149,8 +149,8 @@ jclass classMathTransform;
 
 // <<<<<<<< Begin include from CModuleGenerator-stub-jvm.c
 
-static JavaVM* jvm = NULL;
-static JNIEnv* jenv = NULL;
+JavaVM* jvm = NULL;
+JNIEnv* jenv = NULL;
 
 /* Shared library callbacks (called if this module's code is linked into a shared library and loaded by a Java VM) */
 
@@ -330,6 +330,7 @@ boolean beam_createJvmWithDefaults()
 }
 
 
+
 jclass beam_findJvmClass(const char* classResourceName)
 {
     jclass c = (*jenv)->FindClass(jenv, classResourceName);
@@ -340,7 +341,7 @@ jclass beam_findJvmClass(const char* classResourceName)
 }
 
 
-
+// todo - the following functions actually belong in another module because they expect String and Object typedefs to be present
 
 String String_newString(const char* chars)
 {

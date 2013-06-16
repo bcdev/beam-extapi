@@ -62,7 +62,8 @@ typedef struct {
 } CArrayObj;
 
 
-PyAPI_DATA(PyTypeObject) CArray_Type;
+// PyAPI_DATA(PyTypeObject) CArray_Type;
+extern PyTypeObject CArray_Type;
 
 
 #ifdef __cplusplus
