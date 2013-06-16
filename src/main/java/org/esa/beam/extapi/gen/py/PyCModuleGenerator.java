@@ -136,6 +136,9 @@ public class PyCModuleGenerator extends ModuleGenerator {
                 writeClassDefinitions(writer);
                 writer.printf("\n");
 
+                writeJObjectSubtypesDefinitions(this);
+                writer.printf("\n");
+
                 writeJObjectSubtypesRegistration(writer);
                 writer.printf("\n");
 
@@ -164,9 +167,6 @@ public class PyCModuleGenerator extends ModuleGenerator {
                 writer.printf("\n");
 
                 writeFunctionDefinitions(writer);
-                writer.printf("\n");
-
-                writeJObjectSubtypesDefinitions(this);
                 writer.printf("\n");
 
             }
@@ -236,7 +236,8 @@ public class PyCModuleGenerator extends ModuleGenerator {
                                        "        return 0;\n" +
                                        "    }\n" +
                                        "    Py_INCREF(&${className}_Type);\n" +
-                                       "    PyModule_AddObject(module, \"${className}\", (PyObject*) &${className}_Type);\n" +
+                                       "    // PyModule_AddObject(module, \"${className}\", (PyObject*) &${className}_Type);\n" +
+                                       "    PyModule_AddObject(module, \"J${className}\", (PyObject*) &${className}_Type);\n" +
                                        "\n",
                                kv("className", getClassName(apiClass.getType()))));
         }
