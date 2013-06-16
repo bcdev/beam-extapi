@@ -33396,7 +33396,8 @@ static PyMethodDef Shape_Methods[] =
  */
 PyTypeObject Shape_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    "Shape",               /* tp_name */
+    //"Shape",               /* tp_name */
+    "JShape",               /* tp_name */
     sizeof (JObject),             /* tp_basicsize */
     0,                            /* tp_itemsize */
     (destructor)JObject_dealloc,  /* tp_dealloc */
@@ -33454,7 +33455,8 @@ static PyMethodDef MapTransform_Methods[] =
  */
 PyTypeObject MapTransform_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    "MapTransform",               /* tp_name */
+    //"MapTransform",               /* tp_name */
+    "JMapTransform",               /* tp_name */
     sizeof (JObject),             /* tp_basicsize */
     0,                            /* tp_itemsize */
     (destructor)JObject_dealloc,  /* tp_dealloc */
@@ -33522,7 +33524,8 @@ static PyMethodDef ImageGeometry_Methods[] =
  */
 PyTypeObject ImageGeometry_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    "ImageGeometry",               /* tp_name */
+    //"ImageGeometry",               /* tp_name */
+    "JImageGeometry",               /* tp_name */
     sizeof (JObject),             /* tp_basicsize */
     0,                            /* tp_itemsize */
     (destructor)JObject_dealloc,  /* tp_dealloc */
@@ -33580,7 +33583,8 @@ static PyMethodDef Parser_Methods[] =
  */
 PyTypeObject Parser_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    "Parser",               /* tp_name */
+    //"Parser",               /* tp_name */
+    "JParser",               /* tp_name */
     sizeof (JObject),             /* tp_basicsize */
     0,                            /* tp_itemsize */
     (destructor)JObject_dealloc,  /* tp_dealloc */
@@ -33649,7 +33653,8 @@ static PyMethodDef GeoCoding_Methods[] =
  */
 PyTypeObject GeoCoding_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    "GeoCoding",               /* tp_name */
+    //"GeoCoding",               /* tp_name */
+    "JGeoCoding",               /* tp_name */
     sizeof (JObject),             /* tp_basicsize */
     0,                            /* tp_itemsize */
     (destructor)JObject_dealloc,  /* tp_dealloc */
@@ -33773,7 +33778,8 @@ static PyMethodDef ProductData_Methods[] =
  */
 PyTypeObject ProductData_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    "ProductData",               /* tp_name */
+    //"ProductData",               /* tp_name */
+    "JProductData",               /* tp_name */
     sizeof (JObject),             /* tp_basicsize */
     0,                            /* tp_itemsize */
     (destructor)JObject_dealloc,  /* tp_dealloc */
@@ -33831,7 +33837,8 @@ static PyMethodDef AffineTransform_Methods[] =
  */
 PyTypeObject AffineTransform_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    "AffineTransform",               /* tp_name */
+    //"AffineTransform",               /* tp_name */
+    "JAffineTransform",               /* tp_name */
     sizeof (JObject),             /* tp_basicsize */
     0,                            /* tp_itemsize */
     (destructor)JObject_dealloc,  /* tp_dealloc */
@@ -33889,7 +33896,8 @@ static PyMethodDef Mask_Methods[] =
  */
 PyTypeObject Mask_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    "Mask",               /* tp_name */
+    //"Mask",               /* tp_name */
+    "JMask",               /* tp_name */
     sizeof (JObject),             /* tp_basicsize */
     0,                            /* tp_itemsize */
     (destructor)JObject_dealloc,  /* tp_dealloc */
@@ -33947,7 +33955,8 @@ static PyMethodDef Double_Methods[] =
  */
 PyTypeObject Double_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    "Double",               /* tp_name */
+    //"Double",               /* tp_name */
+    "JDouble",               /* tp_name */
     sizeof (JObject),             /* tp_basicsize */
     0,                            /* tp_itemsize */
     (destructor)JObject_dealloc,  /* tp_dealloc */
@@ -34016,7 +34025,8 @@ static PyMethodDef GPF_Methods[] =
  */
 PyTypeObject GPF_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    "GPF",               /* tp_name */
+    //"GPF",               /* tp_name */
+    "JGPF",               /* tp_name */
     sizeof (JObject),             /* tp_basicsize */
     0,                            /* tp_itemsize */
     (destructor)JObject_dealloc,  /* tp_dealloc */
@@ -34132,7 +34142,8 @@ static PyMethodDef IndexCoding_Methods[] =
  */
 PyTypeObject IndexCoding_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    "IndexCoding",               /* tp_name */
+    //"IndexCoding",               /* tp_name */
+    "JIndexCoding",               /* tp_name */
     sizeof (JObject),             /* tp_basicsize */
     0,                            /* tp_itemsize */
     (destructor)JObject_dealloc,  /* tp_dealloc */
@@ -34190,7 +34201,8 @@ static PyMethodDef Term_Methods[] =
  */
 PyTypeObject Term_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    "Term",               /* tp_name */
+    //"Term",               /* tp_name */
+    "JTerm",               /* tp_name */
     sizeof (JObject),             /* tp_basicsize */
     0,                            /* tp_itemsize */
     (destructor)JObject_dealloc,  /* tp_dealloc */
@@ -34248,7 +34260,8 @@ static PyMethodDef RasterDataNode_Methods[] =
  */
 PyTypeObject RasterDataNode_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    "RasterDataNode",               /* tp_name */
+    //"RasterDataNode",               /* tp_name */
+    "JRasterDataNode",               /* tp_name */
     sizeof (JObject),             /* tp_basicsize */
     0,                            /* tp_itemsize */
     (destructor)JObject_dealloc,  /* tp_dealloc */
@@ -34306,7 +34319,8 @@ static PyMethodDef Class_Methods[] =
  */
 PyTypeObject Class_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    "Class",               /* tp_name */
+    //"Class",               /* tp_name */
+    "JClass",               /* tp_name */
     sizeof (JObject),             /* tp_basicsize */
     0,                            /* tp_itemsize */
     (destructor)JObject_dealloc,  /* tp_dealloc */
@@ -34364,7 +34378,8 @@ static PyMethodDef Product_AutoGrouping_Methods[] =
  */
 PyTypeObject Product_AutoGrouping_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    "Product_AutoGrouping",               /* tp_name */
+    //"Product_AutoGrouping",               /* tp_name */
+    "JProduct_AutoGrouping",               /* tp_name */
     sizeof (JObject),             /* tp_basicsize */
     0,                            /* tp_itemsize */
     (destructor)JObject_dealloc,  /* tp_dealloc */
@@ -34441,7 +34456,8 @@ static PyMethodDef PixelPos_Methods[] =
  */
 PyTypeObject PixelPos_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    "PixelPos",               /* tp_name */
+    //"PixelPos",               /* tp_name */
+    "JPixelPos",               /* tp_name */
     sizeof (JObject),             /* tp_basicsize */
     0,                            /* tp_itemsize */
     (destructor)JObject_dealloc,  /* tp_dealloc */
@@ -34499,7 +34515,8 @@ static PyMethodDef BitRaster_Methods[] =
  */
 PyTypeObject BitRaster_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    "BitRaster",               /* tp_name */
+    //"BitRaster",               /* tp_name */
+    "JBitRaster",               /* tp_name */
     sizeof (JObject),             /* tp_basicsize */
     0,                            /* tp_itemsize */
     (destructor)JObject_dealloc,  /* tp_dealloc */
@@ -34557,7 +34574,8 @@ static PyMethodDef ImageOutputStream_Methods[] =
  */
 PyTypeObject ImageOutputStream_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    "ImageOutputStream",               /* tp_name */
+    //"ImageOutputStream",               /* tp_name */
+    "JImageOutputStream",               /* tp_name */
     sizeof (JObject),             /* tp_basicsize */
     0,                            /* tp_itemsize */
     (destructor)JObject_dealloc,  /* tp_dealloc */
@@ -34615,7 +34633,8 @@ static PyMethodDef Stx_Methods[] =
  */
 PyTypeObject Stx_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    "Stx",               /* tp_name */
+    //"Stx",               /* tp_name */
+    "JStx",               /* tp_name */
     sizeof (JObject),             /* tp_basicsize */
     0,                            /* tp_itemsize */
     (destructor)JObject_dealloc,  /* tp_dealloc */
@@ -34673,7 +34692,8 @@ static PyMethodDef Rectangle_Methods[] =
  */
 PyTypeObject Rectangle_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    "Rectangle",               /* tp_name */
+    //"Rectangle",               /* tp_name */
+    "JRectangle",               /* tp_name */
     sizeof (JObject),             /* tp_basicsize */
     0,                            /* tp_itemsize */
     (destructor)JObject_dealloc,  /* tp_dealloc */
@@ -34731,7 +34751,8 @@ static PyMethodDef Dimension_Methods[] =
  */
 PyTypeObject Dimension_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    "Dimension",               /* tp_name */
+    //"Dimension",               /* tp_name */
+    "JDimension",               /* tp_name */
     sizeof (JObject),             /* tp_basicsize */
     0,                            /* tp_itemsize */
     (destructor)JObject_dealloc,  /* tp_dealloc */
@@ -34796,7 +34817,8 @@ static PyMethodDef ProductIO_Methods[] =
  */
 PyTypeObject ProductIO_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    "ProductIO",               /* tp_name */
+    //"ProductIO",               /* tp_name */
+    "JProductIO",               /* tp_name */
     sizeof (JObject),             /* tp_basicsize */
     0,                            /* tp_itemsize */
     (destructor)JObject_dealloc,  /* tp_dealloc */
@@ -34854,7 +34876,8 @@ static PyMethodDef ProductNode_Methods[] =
  */
 PyTypeObject ProductNode_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    "ProductNode",               /* tp_name */
+    //"ProductNode",               /* tp_name */
+    "JProductNode",               /* tp_name */
     sizeof (JObject),             /* tp_basicsize */
     0,                            /* tp_itemsize */
     (destructor)JObject_dealloc,  /* tp_dealloc */
@@ -34915,7 +34938,8 @@ static PyMethodDef AngularDirection_Methods[] =
  */
 PyTypeObject AngularDirection_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    "AngularDirection",               /* tp_name */
+    //"AngularDirection",               /* tp_name */
+    "JAngularDirection",               /* tp_name */
     sizeof (JObject),             /* tp_basicsize */
     0,                            /* tp_itemsize */
     (destructor)JObject_dealloc,  /* tp_dealloc */
@@ -34973,7 +34997,8 @@ static PyMethodDef SimpleFeatureType_Methods[] =
  */
 PyTypeObject SimpleFeatureType_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    "SimpleFeatureType",               /* tp_name */
+    //"SimpleFeatureType",               /* tp_name */
+    "JSimpleFeatureType",               /* tp_name */
     sizeof (JObject),             /* tp_basicsize */
     0,                            /* tp_itemsize */
     (destructor)JObject_dealloc,  /* tp_dealloc */
@@ -35031,7 +35056,8 @@ static PyMethodDef SampleCoding_Methods[] =
  */
 PyTypeObject SampleCoding_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    "SampleCoding",               /* tp_name */
+    //"SampleCoding",               /* tp_name */
+    "JSampleCoding",               /* tp_name */
     sizeof (JObject),             /* tp_basicsize */
     0,                            /* tp_itemsize */
     (destructor)JObject_dealloc,  /* tp_dealloc */
@@ -35089,7 +35115,8 @@ static PyMethodDef Object_Methods[] =
  */
 PyTypeObject Object_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    "Object",               /* tp_name */
+    //"Object",               /* tp_name */
+    "JObject",               /* tp_name */
     sizeof (JObject),             /* tp_basicsize */
     0,                            /* tp_itemsize */
     (destructor)JObject_dealloc,  /* tp_dealloc */
@@ -35153,7 +35180,8 @@ static PyMethodDef ProductReader_Methods[] =
  */
 PyTypeObject ProductReader_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    "ProductReader",               /* tp_name */
+    //"ProductReader",               /* tp_name */
+    "JProductReader",               /* tp_name */
     sizeof (JObject),             /* tp_basicsize */
     0,                            /* tp_itemsize */
     (destructor)JObject_dealloc,  /* tp_dealloc */
@@ -35211,7 +35239,8 @@ static PyMethodDef ProductReaderPlugIn_Methods[] =
  */
 PyTypeObject ProductReaderPlugIn_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    "ProductReaderPlugIn",               /* tp_name */
+    //"ProductReaderPlugIn",               /* tp_name */
+    "JProductReaderPlugIn",               /* tp_name */
     sizeof (JObject),             /* tp_basicsize */
     0,                            /* tp_itemsize */
     (destructor)JObject_dealloc,  /* tp_dealloc */
@@ -35269,7 +35298,8 @@ static PyMethodDef Integer_Methods[] =
  */
 PyTypeObject Integer_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    "Integer",               /* tp_name */
+    //"Integer",               /* tp_name */
+    "JInteger",               /* tp_name */
     sizeof (JObject),             /* tp_basicsize */
     0,                            /* tp_itemsize */
     (destructor)JObject_dealloc,  /* tp_dealloc */
@@ -35327,7 +35357,8 @@ static PyMethodDef ProductData_UTC_Methods[] =
  */
 PyTypeObject ProductData_UTC_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    "ProductData_UTC",               /* tp_name */
+    //"ProductData_UTC",               /* tp_name */
+    "JProductData_UTC",               /* tp_name */
     sizeof (JObject),             /* tp_basicsize */
     0,                            /* tp_itemsize */
     (destructor)JObject_dealloc,  /* tp_dealloc */
@@ -35527,7 +35558,8 @@ static PyMethodDef Band_Methods[] =
  */
 PyTypeObject Band_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    "Band",               /* tp_name */
+    //"Band",               /* tp_name */
+    "JBand",               /* tp_name */
     sizeof (JObject),             /* tp_basicsize */
     0,                            /* tp_itemsize */
     (destructor)JObject_dealloc,  /* tp_dealloc */
@@ -35585,7 +35617,8 @@ static PyMethodDef ColorPaletteDef_Point_Methods[] =
  */
 PyTypeObject ColorPaletteDef_Point_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    "ColorPaletteDef_Point",               /* tp_name */
+    //"ColorPaletteDef_Point",               /* tp_name */
+    "JColorPaletteDef_Point",               /* tp_name */
     sizeof (JObject),             /* tp_basicsize */
     0,                            /* tp_itemsize */
     (destructor)JObject_dealloc,  /* tp_dealloc */
@@ -35643,7 +35676,8 @@ static PyMethodDef RenderedImage_Methods[] =
  */
 PyTypeObject RenderedImage_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    "RenderedImage",               /* tp_name */
+    //"RenderedImage",               /* tp_name */
+    "JRenderedImage",               /* tp_name */
     sizeof (JObject),             /* tp_basicsize */
     0,                            /* tp_itemsize */
     (destructor)JObject_dealloc,  /* tp_dealloc */
@@ -35741,7 +35775,8 @@ static PyMethodDef Placemark_Methods[] =
  */
 PyTypeObject Placemark_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    "Placemark",               /* tp_name */
+    //"Placemark",               /* tp_name */
+    "JPlacemark",               /* tp_name */
     sizeof (JObject),             /* tp_basicsize */
     0,                            /* tp_itemsize */
     (destructor)JObject_dealloc,  /* tp_dealloc */
@@ -35799,7 +35834,8 @@ static PyMethodDef IndexValidator_Methods[] =
  */
 PyTypeObject IndexValidator_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    "IndexValidator",               /* tp_name */
+    //"IndexValidator",               /* tp_name */
+    "JIndexValidator",               /* tp_name */
     sizeof (JObject),             /* tp_basicsize */
     0,                            /* tp_itemsize */
     (destructor)JObject_dealloc,  /* tp_dealloc */
@@ -35857,7 +35893,8 @@ static PyMethodDef Area_Methods[] =
  */
 PyTypeObject Area_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    "Area",               /* tp_name */
+    //"Area",               /* tp_name */
+    "JArea",               /* tp_name */
     sizeof (JObject),             /* tp_basicsize */
     0,                            /* tp_itemsize */
     (destructor)JObject_dealloc,  /* tp_dealloc */
@@ -35915,7 +35952,8 @@ static PyMethodDef ComponentColorModel_Methods[] =
  */
 PyTypeObject ComponentColorModel_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    "ComponentColorModel",               /* tp_name */
+    //"ComponentColorModel",               /* tp_name */
+    "JComponentColorModel",               /* tp_name */
     sizeof (JObject),             /* tp_basicsize */
     0,                            /* tp_itemsize */
     (destructor)JObject_dealloc,  /* tp_dealloc */
@@ -35973,7 +36011,8 @@ static PyMethodDef Iterator_Methods[] =
  */
 PyTypeObject Iterator_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    "Iterator",               /* tp_name */
+    //"Iterator",               /* tp_name */
+    "JIterator",               /* tp_name */
     sizeof (JObject),             /* tp_basicsize */
     0,                            /* tp_itemsize */
     (destructor)JObject_dealloc,  /* tp_dealloc */
@@ -36031,7 +36070,8 @@ static PyMethodDef MathTransform_Methods[] =
  */
 PyTypeObject MathTransform_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    "MathTransform",               /* tp_name */
+    //"MathTransform",               /* tp_name */
+    "JMathTransform",               /* tp_name */
     sizeof (JObject),             /* tp_basicsize */
     0,                            /* tp_itemsize */
     (destructor)JObject_dealloc,  /* tp_dealloc */
@@ -36089,7 +36129,8 @@ static PyMethodDef CoordinateReferenceSystem_Methods[] =
  */
 PyTypeObject CoordinateReferenceSystem_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    "CoordinateReferenceSystem",               /* tp_name */
+    //"CoordinateReferenceSystem",               /* tp_name */
+    "JCoordinateReferenceSystem",               /* tp_name */
     sizeof (JObject),             /* tp_basicsize */
     0,                            /* tp_itemsize */
     (destructor)JObject_dealloc,  /* tp_dealloc */
@@ -36147,7 +36188,8 @@ static PyMethodDef ProductWriterPlugIn_Methods[] =
  */
 PyTypeObject ProductWriterPlugIn_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    "ProductWriterPlugIn",               /* tp_name */
+    //"ProductWriterPlugIn",               /* tp_name */
+    "JProductWriterPlugIn",               /* tp_name */
     sizeof (JObject),             /* tp_basicsize */
     0,                            /* tp_itemsize */
     (destructor)JObject_dealloc,  /* tp_dealloc */
@@ -36205,7 +36247,8 @@ static PyMethodDef Rectangle2D_Methods[] =
  */
 PyTypeObject Rectangle2D_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    "Rectangle2D",               /* tp_name */
+    //"Rectangle2D",               /* tp_name */
+    "JRectangle2D",               /* tp_name */
     sizeof (JObject),             /* tp_basicsize */
     0,                            /* tp_itemsize */
     (destructor)JObject_dealloc,  /* tp_dealloc */
@@ -36263,7 +36306,8 @@ static PyMethodDef File_Methods[] =
  */
 PyTypeObject File_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    "File",               /* tp_name */
+    //"File",               /* tp_name */
+    "JFile",               /* tp_name */
     sizeof (JObject),             /* tp_basicsize */
     0,                            /* tp_itemsize */
     (destructor)JObject_dealloc,  /* tp_dealloc */
@@ -36335,7 +36379,8 @@ static PyMethodDef GeoPos_Methods[] =
  */
 PyTypeObject GeoPos_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    "GeoPos",               /* tp_name */
+    //"GeoPos",               /* tp_name */
+    "JGeoPos",               /* tp_name */
     sizeof (JObject),             /* tp_basicsize */
     0,                            /* tp_itemsize */
     (destructor)JObject_dealloc,  /* tp_dealloc */
@@ -36430,7 +36475,8 @@ static PyMethodDef ProductNodeGroup_Methods[] =
  */
 PyTypeObject ProductNodeGroup_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    "ProductNodeGroup",               /* tp_name */
+    //"ProductNodeGroup",               /* tp_name */
+    "JProductNodeGroup",               /* tp_name */
     sizeof (JObject),             /* tp_basicsize */
     0,                            /* tp_itemsize */
     (destructor)JObject_dealloc,  /* tp_dealloc */
@@ -36488,7 +36534,8 @@ static PyMethodDef MapProjection_Methods[] =
  */
 PyTypeObject MapProjection_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    "MapProjection",               /* tp_name */
+    //"MapProjection",               /* tp_name */
+    "JMapProjection",               /* tp_name */
     sizeof (JObject),             /* tp_basicsize */
     0,                            /* tp_itemsize */
     (destructor)JObject_dealloc,  /* tp_dealloc */
@@ -36563,7 +36610,8 @@ static PyMethodDef ProductManager_Methods[] =
  */
 PyTypeObject ProductManager_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    "ProductManager",               /* tp_name */
+    //"ProductManager",               /* tp_name */
+    "JProductManager",               /* tp_name */
     sizeof (JObject),             /* tp_basicsize */
     0,                            /* tp_itemsize */
     (destructor)JObject_dealloc,  /* tp_dealloc */
@@ -36679,7 +36727,8 @@ static PyMethodDef FlagCoding_Methods[] =
  */
 PyTypeObject FlagCoding_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    "FlagCoding",               /* tp_name */
+    //"FlagCoding",               /* tp_name */
+    "JFlagCoding",               /* tp_name */
     sizeof (JObject),             /* tp_basicsize */
     0,                            /* tp_itemsize */
     (destructor)JObject_dealloc,  /* tp_dealloc */
@@ -36737,7 +36786,8 @@ static PyMethodDef IndexColorModel_Methods[] =
  */
 PyTypeObject IndexColorModel_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    "IndexColorModel",               /* tp_name */
+    //"IndexColorModel",               /* tp_name */
+    "JIndexColorModel",               /* tp_name */
     sizeof (JObject),             /* tp_basicsize */
     0,                            /* tp_itemsize */
     (destructor)JObject_dealloc,  /* tp_dealloc */
@@ -36795,7 +36845,8 @@ static PyMethodDef Operator_Methods[] =
  */
 PyTypeObject Operator_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    "Operator",               /* tp_name */
+    //"Operator",               /* tp_name */
+    "JOperator",               /* tp_name */
     sizeof (JObject),             /* tp_basicsize */
     0,                            /* tp_itemsize */
     (destructor)JObject_dealloc,  /* tp_dealloc */
@@ -36853,7 +36904,8 @@ static PyMethodDef OperatorSpiRegistry_Methods[] =
  */
 PyTypeObject OperatorSpiRegistry_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    "OperatorSpiRegistry",               /* tp_name */
+    //"OperatorSpiRegistry",               /* tp_name */
+    "JOperatorSpiRegistry",               /* tp_name */
     sizeof (JObject),             /* tp_basicsize */
     0,                            /* tp_itemsize */
     (destructor)JObject_dealloc,  /* tp_dealloc */
@@ -36911,7 +36963,8 @@ static PyMethodDef ImageInfo_HistogramMatching_Methods[] =
  */
 PyTypeObject ImageInfo_HistogramMatching_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    "ImageInfo_HistogramMatching",               /* tp_name */
+    //"ImageInfo_HistogramMatching",               /* tp_name */
+    "JImageInfo_HistogramMatching",               /* tp_name */
     sizeof (JObject),             /* tp_basicsize */
     0,                            /* tp_itemsize */
     (destructor)JObject_dealloc,  /* tp_dealloc */
@@ -36969,7 +37022,8 @@ static PyMethodDef BitmaskDef_Methods[] =
  */
 PyTypeObject BitmaskDef_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    "BitmaskDef",               /* tp_name */
+    //"BitmaskDef",               /* tp_name */
+    "JBitmaskDef",               /* tp_name */
     sizeof (JObject),             /* tp_basicsize */
     0,                            /* tp_itemsize */
     (destructor)JObject_dealloc,  /* tp_dealloc */
@@ -37027,7 +37081,8 @@ static PyMethodDef ProductNodeListener_Methods[] =
  */
 PyTypeObject ProductNodeListener_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    "ProductNodeListener",               /* tp_name */
+    //"ProductNodeListener",               /* tp_name */
+    "JProductNodeListener",               /* tp_name */
     sizeof (JObject),             /* tp_basicsize */
     0,                            /* tp_itemsize */
     (destructor)JObject_dealloc,  /* tp_dealloc */
@@ -37157,7 +37212,8 @@ static PyMethodDef ProductUtils_Methods[] =
  */
 PyTypeObject ProductUtils_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    "ProductUtils",               /* tp_name */
+    //"ProductUtils",               /* tp_name */
+    "JProductUtils",               /* tp_name */
     sizeof (JObject),             /* tp_basicsize */
     0,                            /* tp_itemsize */
     (destructor)JObject_dealloc,  /* tp_dealloc */
@@ -37229,7 +37285,8 @@ static PyMethodDef Map_Methods[] =
  */
 PyTypeObject Map_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    "Map",               /* tp_name */
+    //"Map",               /* tp_name */
+    "JMap",               /* tp_name */
     sizeof (JObject),             /* tp_basicsize */
     0,                            /* tp_itemsize */
     (destructor)JObject_dealloc,  /* tp_dealloc */
@@ -37337,7 +37394,8 @@ static PyMethodDef MetadataElement_Methods[] =
  */
 PyTypeObject MetadataElement_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    "MetadataElement",               /* tp_name */
+    //"MetadataElement",               /* tp_name */
+    "JMetadataElement",               /* tp_name */
     sizeof (JObject),             /* tp_basicsize */
     0,                            /* tp_itemsize */
     (destructor)JObject_dealloc,  /* tp_dealloc */
@@ -37395,7 +37453,8 @@ static PyMethodDef Datum_Methods[] =
  */
 PyTypeObject Datum_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    "Datum",               /* tp_name */
+    //"Datum",               /* tp_name */
+    "JDatum",               /* tp_name */
     sizeof (JObject),             /* tp_basicsize */
     0,                            /* tp_itemsize */
     (destructor)JObject_dealloc,  /* tp_dealloc */
@@ -37453,7 +37512,8 @@ static PyMethodDef Pointing_Methods[] =
  */
 PyTypeObject Pointing_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    "Pointing",               /* tp_name */
+    //"Pointing",               /* tp_name */
+    "JPointing",               /* tp_name */
     sizeof (JObject),             /* tp_basicsize */
     0,                            /* tp_itemsize */
     (destructor)JObject_dealloc,  /* tp_dealloc */
@@ -37511,7 +37571,8 @@ static PyMethodDef Color_Methods[] =
  */
 PyTypeObject Color_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    "Color",               /* tp_name */
+    //"Color",               /* tp_name */
+    "JColor",               /* tp_name */
     sizeof (JObject),             /* tp_basicsize */
     0,                            /* tp_itemsize */
     (destructor)JObject_dealloc,  /* tp_dealloc */
@@ -37569,7 +37630,8 @@ static PyMethodDef PlacemarkDescriptor_Methods[] =
  */
 PyTypeObject PlacemarkDescriptor_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    "PlacemarkDescriptor",               /* tp_name */
+    //"PlacemarkDescriptor",               /* tp_name */
+    "JPlacemarkDescriptor",               /* tp_name */
     sizeof (JObject),             /* tp_basicsize */
     0,                            /* tp_itemsize */
     (destructor)JObject_dealloc,  /* tp_dealloc */
@@ -37627,7 +37689,8 @@ static PyMethodDef PointingFactory_Methods[] =
  */
 PyTypeObject PointingFactory_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    "PointingFactory",               /* tp_name */
+    //"PointingFactory",               /* tp_name */
+    "JPointingFactory",               /* tp_name */
     sizeof (JObject),             /* tp_basicsize */
     0,                            /* tp_itemsize */
     (destructor)JObject_dealloc,  /* tp_dealloc */
@@ -37685,7 +37748,8 @@ static PyMethodDef TransectProfileData_Methods[] =
  */
 PyTypeObject TransectProfileData_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    "TransectProfileData",               /* tp_name */
+    //"TransectProfileData",               /* tp_name */
+    "JTransectProfileData",               /* tp_name */
     sizeof (JObject),             /* tp_basicsize */
     0,                            /* tp_itemsize */
     (destructor)JObject_dealloc,  /* tp_dealloc */
@@ -37790,7 +37854,8 @@ static PyMethodDef PlacemarkGroup_Methods[] =
  */
 PyTypeObject PlacemarkGroup_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    "PlacemarkGroup",               /* tp_name */
+    //"PlacemarkGroup",               /* tp_name */
+    "JPlacemarkGroup",               /* tp_name */
     sizeof (JObject),             /* tp_basicsize */
     0,                            /* tp_itemsize */
     (destructor)JObject_dealloc,  /* tp_dealloc */
@@ -37958,7 +38023,8 @@ static PyMethodDef Product_Methods[] =
  */
 PyTypeObject Product_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    "Product",               /* tp_name */
+    //"Product",               /* tp_name */
+    "JProduct",               /* tp_name */
     sizeof (JObject),             /* tp_basicsize */
     0,                            /* tp_itemsize */
     (destructor)JObject_dealloc,  /* tp_dealloc */
@@ -38016,7 +38082,8 @@ static PyMethodDef Point2D_Methods[] =
  */
 PyTypeObject Point2D_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    "Point2D",               /* tp_name */
+    //"Point2D",               /* tp_name */
+    "JPoint2D",               /* tp_name */
     sizeof (JObject),             /* tp_basicsize */
     0,                            /* tp_itemsize */
     (destructor)JObject_dealloc,  /* tp_dealloc */
@@ -38074,7 +38141,8 @@ static PyMethodDef ProductVisitor_Methods[] =
  */
 PyTypeObject ProductVisitor_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    "ProductVisitor",               /* tp_name */
+    //"ProductVisitor",               /* tp_name */
+    "JProductVisitor",               /* tp_name */
     sizeof (JObject),             /* tp_basicsize */
     0,                            /* tp_itemsize */
     (destructor)JObject_dealloc,  /* tp_dealloc */
@@ -38132,7 +38200,8 @@ static PyMethodDef Scaling_Methods[] =
  */
 PyTypeObject Scaling_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    "Scaling",               /* tp_name */
+    //"Scaling",               /* tp_name */
+    "JScaling",               /* tp_name */
     sizeof (JObject),             /* tp_basicsize */
     0,                            /* tp_itemsize */
     (destructor)JObject_dealloc,  /* tp_dealloc */
@@ -38190,7 +38259,8 @@ static PyMethodDef WritableNamespace_Methods[] =
  */
 PyTypeObject WritableNamespace_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    "WritableNamespace",               /* tp_name */
+    //"WritableNamespace",               /* tp_name */
+    "JWritableNamespace",               /* tp_name */
     sizeof (JObject),             /* tp_basicsize */
     0,                            /* tp_itemsize */
     (destructor)JObject_dealloc,  /* tp_dealloc */
@@ -38248,7 +38318,8 @@ static PyMethodDef Set_Methods[] =
  */
 PyTypeObject Set_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    "Set",               /* tp_name */
+    //"Set",               /* tp_name */
+    "JSet",               /* tp_name */
     sizeof (JObject),             /* tp_basicsize */
     0,                            /* tp_itemsize */
     (destructor)JObject_dealloc,  /* tp_dealloc */
@@ -38306,7 +38377,8 @@ static PyMethodDef MultiLevelImage_Methods[] =
  */
 PyTypeObject MultiLevelImage_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    "MultiLevelImage",               /* tp_name */
+    //"MultiLevelImage",               /* tp_name */
+    "JMultiLevelImage",               /* tp_name */
     sizeof (JObject),             /* tp_basicsize */
     0,                            /* tp_itemsize */
     (destructor)JObject_dealloc,  /* tp_dealloc */
@@ -38364,7 +38436,8 @@ static PyMethodDef ROI_Methods[] =
  */
 PyTypeObject ROI_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    "ROI",               /* tp_name */
+    //"ROI",               /* tp_name */
+    "JROI",               /* tp_name */
     sizeof (JObject),             /* tp_basicsize */
     0,                            /* tp_itemsize */
     (destructor)JObject_dealloc,  /* tp_dealloc */
@@ -38422,7 +38495,8 @@ static PyMethodDef RenderingHints_Key_Methods[] =
  */
 PyTypeObject RenderingHints_Key_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    "RenderingHints_Key",               /* tp_name */
+    //"RenderingHints_Key",               /* tp_name */
+    "JRenderingHints_Key",               /* tp_name */
     sizeof (JObject),             /* tp_basicsize */
     0,                            /* tp_itemsize */
     (destructor)JObject_dealloc,  /* tp_dealloc */
@@ -38480,7 +38554,8 @@ static PyMethodDef Collection_Methods[] =
  */
 PyTypeObject Collection_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    "Collection",               /* tp_name */
+    //"Collection",               /* tp_name */
+    "JCollection",               /* tp_name */
     sizeof (JObject),             /* tp_basicsize */
     0,                            /* tp_itemsize */
     (destructor)JObject_dealloc,  /* tp_dealloc */
@@ -38538,7 +38613,8 @@ static PyMethodDef ProductManager_Listener_Methods[] =
  */
 PyTypeObject ProductManager_Listener_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    "ProductManager_Listener",               /* tp_name */
+    //"ProductManager_Listener",               /* tp_name */
+    "JProductManager_Listener",               /* tp_name */
     sizeof (JObject),             /* tp_basicsize */
     0,                            /* tp_itemsize */
     (destructor)JObject_dealloc,  /* tp_dealloc */
@@ -38596,7 +38672,8 @@ static PyMethodDef GeoTIFFMetadata_Methods[] =
  */
 PyTypeObject GeoTIFFMetadata_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    "GeoTIFFMetadata",               /* tp_name */
+    //"GeoTIFFMetadata",               /* tp_name */
+    "JGeoTIFFMetadata",               /* tp_name */
     sizeof (JObject),             /* tp_basicsize */
     0,                            /* tp_itemsize */
     (destructor)JObject_dealloc,  /* tp_dealloc */
@@ -38685,7 +38762,8 @@ static PyMethodDef ColorPaletteDef_Methods[] =
  */
 PyTypeObject ColorPaletteDef_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    "ColorPaletteDef",               /* tp_name */
+    //"ColorPaletteDef",               /* tp_name */
+    "JColorPaletteDef",               /* tp_name */
     sizeof (JObject),             /* tp_basicsize */
     0,                            /* tp_itemsize */
     (destructor)JObject_dealloc,  /* tp_dealloc */
@@ -38743,7 +38821,8 @@ static PyMethodDef MapInfo_Methods[] =
  */
 PyTypeObject MapInfo_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    "MapInfo",               /* tp_name */
+    //"MapInfo",               /* tp_name */
+    "JMapInfo",               /* tp_name */
     sizeof (JObject),             /* tp_basicsize */
     0,                            /* tp_itemsize */
     (destructor)JObject_dealloc,  /* tp_dealloc */
@@ -38820,7 +38899,8 @@ static PyMethodDef ImageInfo_Methods[] =
  */
 PyTypeObject ImageInfo_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    "ImageInfo",               /* tp_name */
+    //"ImageInfo",               /* tp_name */
+    "JImageInfo",               /* tp_name */
     sizeof (JObject),             /* tp_basicsize */
     0,                            /* tp_itemsize */
     (destructor)JObject_dealloc,  /* tp_dealloc */
@@ -38878,7 +38958,8 @@ static PyMethodDef Histogram_Methods[] =
  */
 PyTypeObject Histogram_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    "Histogram",               /* tp_name */
+    //"Histogram",               /* tp_name */
+    "JHistogram",               /* tp_name */
     sizeof (JObject),             /* tp_basicsize */
     0,                            /* tp_itemsize */
     (destructor)JObject_dealloc,  /* tp_dealloc */
@@ -38936,7 +39017,8 @@ static PyMethodDef String_Methods[] =
  */
 PyTypeObject String_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    "String",               /* tp_name */
+    //"String",               /* tp_name */
+    "JString",               /* tp_name */
     sizeof (JObject),             /* tp_basicsize */
     0,                            /* tp_itemsize */
     (destructor)JObject_dealloc,  /* tp_dealloc */
@@ -38994,7 +39076,8 @@ static PyMethodDef BufferedImage_Methods[] =
  */
 PyTypeObject BufferedImage_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    "BufferedImage",               /* tp_name */
+    //"BufferedImage",               /* tp_name */
+    "JBufferedImage",               /* tp_name */
     sizeof (JObject),             /* tp_basicsize */
     0,                            /* tp_itemsize */
     (destructor)JObject_dealloc,  /* tp_dealloc */
@@ -39066,7 +39149,8 @@ static PyMethodDef RGBChannelDef_Methods[] =
  */
 PyTypeObject RGBChannelDef_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    "RGBChannelDef",               /* tp_name */
+    //"RGBChannelDef",               /* tp_name */
+    "JRGBChannelDef",               /* tp_name */
     sizeof (JObject),             /* tp_basicsize */
     0,                            /* tp_itemsize */
     (destructor)JObject_dealloc,  /* tp_dealloc */
@@ -39293,7 +39377,8 @@ static PyMethodDef TiePointGrid_Methods[] =
  */
 PyTypeObject TiePointGrid_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    "TiePointGrid",               /* tp_name */
+    //"TiePointGrid",               /* tp_name */
+    "JTiePointGrid",               /* tp_name */
     sizeof (JObject),             /* tp_basicsize */
     0,                            /* tp_itemsize */
     (destructor)JObject_dealloc,  /* tp_dealloc */
@@ -39351,7 +39436,8 @@ static PyMethodDef SimpleFeature_Methods[] =
  */
 PyTypeObject SimpleFeature_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    "SimpleFeature",               /* tp_name */
+    //"SimpleFeature",               /* tp_name */
+    "JSimpleFeature",               /* tp_name */
     sizeof (JObject),             /* tp_basicsize */
     0,                            /* tp_itemsize */
     (destructor)JObject_dealloc,  /* tp_dealloc */
@@ -39409,7 +39495,8 @@ static PyMethodDef ProductSubsetDef_Methods[] =
  */
 PyTypeObject ProductSubsetDef_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    "ProductSubsetDef",               /* tp_name */
+    //"ProductSubsetDef",               /* tp_name */
+    "JProductSubsetDef",               /* tp_name */
     sizeof (JObject),             /* tp_basicsize */
     0,                            /* tp_itemsize */
     (destructor)JObject_dealloc,  /* tp_dealloc */
@@ -39478,7 +39565,8 @@ static PyMethodDef ProductWriter_Methods[] =
  */
 PyTypeObject ProductWriter_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    "ProductWriter",               /* tp_name */
+    //"ProductWriter",               /* tp_name */
+    "JProductWriter",               /* tp_name */
     sizeof (JObject),             /* tp_basicsize */
     0,                            /* tp_itemsize */
     (destructor)JObject_dealloc,  /* tp_dealloc */
@@ -39575,7 +39663,8 @@ static PyMethodDef MetadataAttribute_Methods[] =
  */
 PyTypeObject MetadataAttribute_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    "MetadataAttribute",               /* tp_name */
+    //"MetadataAttribute",               /* tp_name */
+    "JMetadataAttribute",               /* tp_name */
     sizeof (JObject),             /* tp_basicsize */
     0,                            /* tp_itemsize */
     (destructor)JObject_dealloc,  /* tp_dealloc */
@@ -39633,7 +39722,8 @@ static PyMethodDef ProgressMonitor_Methods[] =
  */
 PyTypeObject ProgressMonitor_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    "ProgressMonitor",               /* tp_name */
+    //"ProgressMonitor",               /* tp_name */
+    "JProgressMonitor",               /* tp_name */
     sizeof (JObject),             /* tp_basicsize */
     0,                            /* tp_itemsize */
     (destructor)JObject_dealloc,  /* tp_dealloc */
@@ -39691,7 +39781,8 @@ static PyMethodDef VectorDataNode_Methods[] =
  */
 PyTypeObject VectorDataNode_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    "VectorDataNode",               /* tp_name */
+    //"VectorDataNode",               /* tp_name */
+    "JVectorDataNode",               /* tp_name */
     sizeof (JObject),             /* tp_basicsize */
     0,                            /* tp_itemsize */
     (destructor)JObject_dealloc,  /* tp_dealloc */
@@ -39749,7 +39840,8 @@ static PyMethodDef GeneralPath_Methods[] =
  */
 PyTypeObject GeneralPath_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    "GeneralPath",               /* tp_name */
+    //"GeneralPath",               /* tp_name */
+    "JGeneralPath",               /* tp_name */
     sizeof (JObject),             /* tp_basicsize */
     0,                            /* tp_itemsize */
     (destructor)JObject_dealloc,  /* tp_dealloc */
@@ -39807,7 +39899,8 @@ static PyMethodDef ImageInputStream_Methods[] =
  */
 PyTypeObject ImageInputStream_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    "ImageInputStream",               /* tp_name */
+    //"ImageInputStream",               /* tp_name */
+    "JImageInputStream",               /* tp_name */
     sizeof (JObject),             /* tp_basicsize */
     0,                            /* tp_itemsize */
     (destructor)JObject_dealloc,  /* tp_dealloc */
@@ -39865,7 +39958,8 @@ static PyMethodDef RenderingHints_Methods[] =
  */
 PyTypeObject RenderingHints_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    "RenderingHints",               /* tp_name */
+    //"RenderingHints",               /* tp_name */
+    "JRenderingHints",               /* tp_name */
     sizeof (JObject),             /* tp_basicsize */
     0,                            /* tp_itemsize */
     (destructor)JObject_dealloc,  /* tp_dealloc */

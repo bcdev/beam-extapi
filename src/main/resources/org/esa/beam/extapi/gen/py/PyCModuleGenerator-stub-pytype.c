@@ -8,7 +8,8 @@
  */
 PyTypeObject ${className}_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    "${className}",               /* tp_name */
+    //"${className}",               /* tp_name */
+    "J${className}",               /* tp_name */
     sizeof (JObject),             /* tp_basicsize */
     0,                            /* tp_itemsize */
     (destructor)JObject_dealloc,  /* tp_dealloc */
