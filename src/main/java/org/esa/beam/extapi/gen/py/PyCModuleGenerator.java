@@ -168,8 +168,7 @@ public class PyCModuleGenerator extends ModuleGenerator {
 
     private void writeJObjectSubtypesDeclarations(PrintWriter writer) {
         for (ApiClass apiClass : getApiInfo().getAllClasses()) {
-            writer.printf(eval("// PyAPI_DATA(PyTypeObject) ${className}_Type;\n" +
-                                       "extern PyTypeObject ${className}_Type;\n",
+            writer.printf(eval("extern PyTypeObject ${className}_Type;\n",
                                kv("className", getComponentCClassName(apiClass.getType()))));
         }
     }

@@ -18,5 +18,3 @@ jarray beampy_newJLongArray(const jlong* data, jint length);
 jarray beampy_newJFloatArray(const jfloat* data, jint length);
 jarray beampy_newJDoubleArray(const jdouble* data, jint length);
 
-// experimental
-// PyObject* BeamPyMap_newHashMap(PyObject* self, PyObject* args);
