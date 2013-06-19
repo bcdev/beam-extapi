@@ -24,8 +24,6 @@ jarray beampy_newJLongArray(const jlong* data, jint length);
 jarray beampy_newJFloatArray(const jfloat* data, jint length);
 jarray beampy_newJDoubleArray(const jdouble* data, jint length);
 
-// experimental
-// PyObject* BeamPyMap_newHashMap(PyObject* self, PyObject* args);
 // >>>>>>>> End include from PyCModuleGenerator-stub-init.c
 
 /* Wrapped API classes */
@@ -1212,8 +1210,11 @@ PyObject* BeamPyMetadataAttribute_updateExpression(PyObject* self, PyObject* arg
 PyObject* BeamPyMetadataAttribute_removeFromFile(PyObject* self, PyObject* args);
 PyObject* BeamPyMetadataAttribute_getExtension(PyObject* self, PyObject* args);
 
-static PyMethodDef BeamPy_Methods[] = {
-    {NULL, NULL, 0, NULL}  /* Sentinel */
+//
+// Global functions of module ${libName}
+//
+static PyMethodDef BeamPy_Functions[] = {
+    {NULL, NULL, 0, NULL}
 };
 
 /* java.lang classes. */
@@ -8601,7 +8602,7 @@ static struct PyModuleDef BeamPy_Module =
    "beampy",           /* Name of the Python module */
    "BEAM Python API",  /* Module documentation */
    -1,                 /* Size of per-interpreter state of the module, or -1 if the module keeps state in global variables. */
-   BeamPy_Methods      /* Structure containing all BEAM/Python API functions */
+   BeamPy_Functions    /* Structure containing global beampy-functions */
 };
 
 int beampy_registerJObjectSubtypes(PyObject* module);
@@ -10399,7 +10400,10 @@ PyObject* beampy_newPyListFromJDoubleArray(jarray arrayJObj)
 // Java String and String array
 ///////////////////////////////////////////////
 
-// todo remove me
+// Used by
+//   PyCFunctionGenerator.java (PyCFunctionGenerator.StringMethod)
+//   This file (beampy_newPySeqFromJStringArray)
+//
 PyObject* beampy_newPyStringFromJString(jstring strJObj)
 {
     const char* utf8Chars;
@@ -10412,10 +10416,12 @@ PyObject* beampy_newPyStringFromJString(jstring strJObj)
     return strPyObj;
 }
 
+// Used by
+//    beampy_newJStringArrayFromPySeq (this file)
+//
 /**
  * Returns a local reference to a String array.
  */
-// todo remove me
 jstring beampy_newJStringFromPyObject(PyObject* anyPyObj)
 {
     char* utf8Chars;
@@ -10438,7 +10444,9 @@ jstring beampy_newJStringFromPyObject(PyObject* anyPyObj)
     return strJObj;
 }
 
-// todo remove me
+// Used by
+//   PyCFunctionGenerator.java (PyCFunctionGenerator.StringArrayMethod)
+//
 PyObject* beampy_newPySeqFromJStringArray(jarray arrayJObj)
 {
     PyObject* listPyObj;
@@ -10468,10 +10476,12 @@ PyObject* beampy_newPySeqFromJStringArray(jarray arrayJObj)
     return listPyObj;
 }
 
+// Used by
+//   PyCParameterGenerator.java (PyCParameterGenerator.StringArray)
+//
 /**
  * Returns a local reference to a String array.
  */
-// todo remove me
 jarray beampy_newJStringArrayFromPySeq(PyObject* seqPyObj)
 {
     jarray arrayJObj;
@@ -10510,7 +10520,9 @@ jarray beampy_newJStringArrayFromPySeq(PyObject* seqPyObj)
 // Java Object and Object array
 ///////////////////////////////////////////////
 
-// todo remove me
+// Used by
+//   beampy_newJObjectArrayFromPySeq (this file)
+//
 jobject beampy_newJObjectFromPyObject(PyObject* anyPyObj, PyTypeObject* type)
 {
 /*
@@ -10534,7 +10546,9 @@ jobject beampy_newJObjectFromPyObject(PyObject* anyPyObj, PyTypeObject* type)
     return NULL;
 }
 
-// todo remove me
+// Used by
+//      PyCFunctionGenerator.ObjectArrayMethod
+//
 PyObject* beampy_newPySeqFromJObjectArray(jarray arrJObj, PyTypeObject* type)
 {
     PyObject* listPyObj;
@@ -10564,7 +10578,9 @@ PyObject* beampy_newPySeqFromJObjectArray(jarray arrJObj, PyTypeObject* type)
     return listPyObj;
 }
 
-// todo remove me
+// Used by
+//     PyCParameterGenerator.ObjectArray
+//
 jarray beampy_newJObjectArrayFromPySeq(PyObject* seqPyObj, PyTypeObject* type)
 {
     jarray arrayJObj;
@@ -10637,6 +10653,9 @@ boolean beampy_initJavaCoreVars() {
 
 jobject beampy_newJMapFromPyObject(PyObject* anyPyObj);
 
+// Used by
+//     beampy_newJMapFromPyObject (this file)
+//
 jobject beampy_newGenericJObjectFromPyObject(PyObject* anyPyObj)
 {
     jobject anyJObj = NULL;
@@ -10667,6 +10686,9 @@ jobject beampy_newGenericJObjectFromPyObject(PyObject* anyPyObj)
 }
 
 
+// Used by
+//     beampy_newGenericJObjectFromPyObject (this file)
+//
 jobject beampy_newJMapFromPyObject(PyObject* anyPyObj)
 {
     PyObject* dictKeyPyObj;
