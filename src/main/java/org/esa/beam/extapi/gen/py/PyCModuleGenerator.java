@@ -257,7 +257,11 @@ public class PyCModuleGenerator extends ModuleGenerator {
     }
 
     private void writePyMethodDefs(PrintWriter writer) {
-        writer.printf("static PyMethodDef BeamPy_Methods[] = {\n");
+        writer.printf("" +
+                              "//\n" +
+                              "// Global functions of module ${libName}\n" +
+                              "//\n" +
+                              "static PyMethodDef BeamPy_Functions[] = {\n");
 /*
         for (ApiClass apiClass : getApiClasses()) {
             for (FunctionGenerator generator : getFunctionGenerators(apiClass)) {
@@ -268,7 +272,7 @@ public class PyCModuleGenerator extends ModuleGenerator {
             }
         }
 */
-        writer.printf("    {NULL, NULL, 0, NULL}  /* Sentinel */\n");
+        writer.printf("    {NULL, NULL, 0, NULL}\n");
         writer.printf("};\n");
     }
 

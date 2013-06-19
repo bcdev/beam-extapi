@@ -74,7 +74,6 @@ typedef void* AffineTransform;
 typedef void* Area;
 typedef void* GeneralPath;
 typedef void* Point2D;
-typedef void* Rectangle2D;
 typedef void* BufferedImage;
 typedef void* ComponentColorModel;
 typedef void* IndexColorModel;
@@ -377,8 +376,7 @@ PyObject* BeamPyProduct_setStartTime(PyObject* self, PyObject* args);
 PyObject* BeamPyProduct_getEndTime(PyObject* self, PyObject* args);
 PyObject* BeamPyProduct_setEndTime(PyObject* self, PyObject* args);
 PyObject* BeamPyProduct_getMetadataRoot(PyObject* self, PyObject* args);
-PyObject* BeamPyProduct_getGroups(PyObject* self, PyObject* args);
-PyObject* BeamPyProduct_getGroup(PyObject* self, PyObject* args);
+PyObject* BeamPyProduct_getBandGroup(PyObject* self, PyObject* args);
 PyObject* BeamPyProduct_getTiePointGridGroup(PyObject* self, PyObject* args);
 PyObject* BeamPyProduct_addTiePointGrid(PyObject* self, PyObject* args);
 PyObject* BeamPyProduct_removeTiePointGrid(PyObject* self, PyObject* args);
@@ -388,7 +386,6 @@ PyObject* BeamPyProduct_getTiePointGridNames(PyObject* self, PyObject* args);
 PyObject* BeamPyProduct_getTiePointGrids(PyObject* self, PyObject* args);
 PyObject* BeamPyProduct_getTiePointGrid(PyObject* self, PyObject* args);
 PyObject* BeamPyProduct_containsTiePointGrid(PyObject* self, PyObject* args);
-PyObject* BeamPyProduct_getBandGroup(PyObject* self, PyObject* args);
 PyObject* BeamPyProduct_addBand(PyObject* self, PyObject* args);
 PyObject* BeamPyProduct_addNewBand(PyObject* self, PyObject* args);
 PyObject* BeamPyProduct_addComputedBand(PyObject* self, PyObject* args);
@@ -409,8 +406,6 @@ PyObject* BeamPyProduct_getIndexCodingGroup(PyObject* self, PyObject* args);
 PyObject* BeamPyProduct_containsPixel(PyObject* self, PyObject* args);
 PyObject* BeamPyProduct_getGcpGroup(PyObject* self, PyObject* args);
 PyObject* BeamPyProduct_getPinGroup(PyObject* self, PyObject* args);
-PyObject* BeamPyProduct_getNumResolutionsMax(PyObject* self, PyObject* args);
-PyObject* BeamPyProduct_setNumResolutionsMax(PyObject* self, PyObject* args);
 PyObject* BeamPyProduct_isCompatibleProduct(PyObject* self, PyObject* args);
 PyObject* BeamPyProduct_parseExpression(PyObject* self, PyObject* args);
 PyObject* BeamPyProduct_acceptVisitor(PyObject* self, PyObject* args);
@@ -536,7 +531,6 @@ PyObject* BeamPyImageGeometry_calculateEastingNorthing(PyObject* self, PyObject*
 PyObject* BeamPyImageGeometry_calculateProductSize(PyObject* self, PyObject* args);
 PyObject* BeamPyImageGeometry_createTargetGeometry(PyObject* self, PyObject* args);
 PyObject* BeamPyImageGeometry_createCollocationTargetGeometry(PyObject* self, PyObject* args);
-PyObject* BeamPyImageGeometry_createValidRect(PyObject* self, PyObject* args);
 PyObject* BeamPyBand_newBand(PyObject* self, PyObject* args);
 PyObject* BeamPyBand_getFlagCoding(PyObject* self, PyObject* args);
 PyObject* BeamPyBand_isFlagBand(PyObject* self, PyObject* args);
@@ -1121,7 +1115,6 @@ PyObject* BeamPyProductUtils_createMapBoundary(PyObject* self, PyObject* args);
 PyObject* BeamPyProductUtils_createGeoBoundary1(PyObject* self, PyObject* args);
 PyObject* BeamPyProductUtils_createGeoBoundary2(PyObject* self, PyObject* args);
 PyObject* BeamPyProductUtils_createGeoBoundary3(PyObject* self, PyObject* args);
-PyObject* BeamPyProductUtils_getClosestGeoPos(PyObject* self, PyObject* args);
 PyObject* BeamPyProductUtils_createGeoBoundary4(PyObject* self, PyObject* args);
 PyObject* BeamPyProductUtils_createGeoBoundaryPaths1(PyObject* self, PyObject* args);
 PyObject* BeamPyProductUtils_createGeoBoundaryPaths2(PyObject* self, PyObject* args);
@@ -1283,7 +1276,6 @@ jclass classAffineTransform;
 jclass classArea;
 jclass classGeneralPath;
 jclass classPoint2D;
-jclass classRectangle2D;
 jclass classBufferedImage;
 jclass classComponentColorModel;
 jclass classIndexColorModel;
@@ -1466,7 +1458,6 @@ static PyMethodDef ImageGeometry_Methods[] =
     {"calculateProductSize", (PyCFunction) BeamPyImageGeometry_calculateProductSize, METH_VARARGS | METH_STATIC, ""},
     {"createTargetGeometry", (PyCFunction) BeamPyImageGeometry_createTargetGeometry, METH_VARARGS | METH_STATIC, ""},
     {"createCollocationTargetGeometry", (PyCFunction) BeamPyImageGeometry_createCollocationTargetGeometry, METH_VARARGS | METH_STATIC, ""},
-    {"createValidRect", (PyCFunction) BeamPyImageGeometry_createValidRect, METH_VARARGS | METH_STATIC, ""},
     {NULL, NULL, 0, NULL}
 };
 
@@ -3448,7 +3439,7 @@ static PyMethodDef Band_Methods[] =
     {"getNumDataElems", (PyCFunction) BeamPyBand_getNumDataElems, METH_VARARGS, "Gets the number of data elements in this data node."},
     {"setData", (PyCFunction) BeamPyBand_setData, METH_VARARGS, "Sets the data of this data node."},
     {"getData", (PyCFunction) BeamPyBand_getData, METH_VARARGS, "Gets the data of this data node."},
-    {"setDataElems", (PyCFunction) BeamPyBand_setDataElems, METH_VARARGS, "Sets the data elements of this data node.\n@deprecated since 5.0\n@see ProductData#setElems(Object)"},
+    {"setDataElems", (PyCFunction) BeamPyBand_setDataElems, METH_VARARGS, "Sets the data elements of this data node.\n@see ProductData#setElems(Object)"},
     {"getDataElems", (PyCFunction) BeamPyBand_getDataElems, METH_VARARGS, "Gets the data elements of this data node.\n@see ProductData#getElems()"},
     {"getDataElemSize", (PyCFunction) BeamPyBand_getDataElemSize, METH_VARARGS, "Gets the data element size in bytes.\n@see ProductData#getElemSize(int)"},
     {"setReadOnly", (PyCFunction) BeamPyBand_setReadOnly, METH_VARARGS, ""},
@@ -4133,64 +4124,6 @@ PyTypeObject ProductWriterPlugIn_Type = {
     NULL,                         /* tp_iternext */
     ProductWriterPlugIn_Methods,         /* tp_methods */
     ProductWriterPlugIn_Members,         /* tp_members */
-    NULL,                         /* tp_getset */
-    NULL,                         /* tp_base */
-    NULL,                         /* tp_dict */
-    NULL,                         /* tp_descr_get */
-    NULL,                         /* tp_descr_set */
-    0,                            /* tp_dictoffset */
-    (initproc) JObject_init,      /* tp_init */
-    NULL,                         /* tp_alloc */
-    NULL,                         /* tp_new */
-};
-
-static PyMemberDef Rectangle2D_Members[] = {
-    {NULL, 0, 0, 0, NULL}
-};
-
-static PyMethodDef Rectangle2D_Methods[] = 
-{
-    {NULL, NULL, 0, NULL}
-};
-
-// Note: this is unused, experimental code
-
-/**
- * Implements the BeamPy_JObjectType class singleton.
- *
- * THIS TYPE IS NOT YET IN USE: we currently use
- * (<type_string>, <pointer>) tuples to represent Java JNI objects.
- */
-PyTypeObject Rectangle2D_Type = {
-    PyVarObject_HEAD_INIT(NULL, 0)
-    "Rectangle2D",               /* tp_name */
-    sizeof (JObject),             /* tp_basicsize */
-    0,                            /* tp_itemsize */
-    (destructor)JObject_dealloc,  /* tp_dealloc */
-    NULL,                         /* tp_print */
-    NULL,                         /* tp_getattr */
-    NULL,                         /* tp_setattr */
-    NULL,                         /* tp_reserved */
-    NULL,                         /* tp_repr */
-    NULL,                         /* tp_as_number */
-    NULL,                         /* tp_as_sequence */
-    NULL,                         /* tp_as_mapping */
-    NULL,                         /* tp_hash  */
-    NULL,                         /* tp_call */
-    NULL,                         /* tp_str */
-    NULL,                         /* tp_getattro */
-    NULL,                         /* tp_setattro */
-    NULL,                         /* tp_as_buffer */
-    Py_TPFLAGS_DEFAULT,           /* tp_flags */
-    "",                /* tp_doc */
-    NULL,                         /* tp_traverse */
-    NULL,                         /* tp_clear */
-    NULL,                         /* tp_richcompare */
-    0,                            /* tp_weaklistoffset */
-    NULL,                         /* tp_iter */
-    NULL,                         /* tp_iternext */
-    Rectangle2D_Methods,         /* tp_methods */
-    Rectangle2D_Members,         /* tp_members */
     NULL,                         /* tp_getset */
     NULL,                         /* tp_base */
     NULL,                         /* tp_dict */
@@ -5044,7 +4977,6 @@ static PyMethodDef ProductUtils_Methods[] =
     {"createGeoBoundary1", (PyCFunction) BeamPyProductUtils_createGeoBoundary1, METH_VARARGS | METH_STATIC, "Creates the geographical boundary of the given product and returns it as a list of geographical coordinates.\n@param product the input product, must not be null\n@param step    the step given in pixels\n@return an array of geographical coordinates\n@throws IllegalArgumentException if product is null or if the product's {@link GeoCoding} is null"},
     {"createGeoBoundary2", (PyCFunction) BeamPyProductUtils_createGeoBoundary2, METH_VARARGS | METH_STATIC, "Creates the geographical boundary of the given region within the given product and returns it as a list of\ngeographical coordinates.\n This method delegates to {@link #createGeoBoundary(Product, java.awt.Rectangle, int, boolean) createGeoBoundary(Product, Rectangle, int, boolean)}\nand the additional boolean parameter <code>usePixelCenter</code> is <code>true</code>.\n@param product the input product, must not be null\n@param region  the region rectangle in product pixel coordinates, can be null for entire product\n@param step    the step given in pixels\n@return an array of geographical coordinates\n@throws IllegalArgumentException if product is null or if the product's {@link GeoCoding} is null\n@see #createPixelBoundary(RasterDataNode, java.awt.Rectangle, int)"},
     {"createGeoBoundary3", (PyCFunction) BeamPyProductUtils_createGeoBoundary3, METH_VARARGS | METH_STATIC, "Creates the geographical boundary of the given region within the given product and returns it as a list of\ngeographical coordinates.\n@param product        the input product, must not be null\n@param region         the region rectangle in product pixel coordinates, can be null for entire product\n@param step           the step given in pixels\n@param usePixelCenter <code>true</code> if the pixel center should be used to create the boundary\n@return an array of geographical coordinates\n@throws IllegalArgumentException if product is null or if the product's {@link GeoCoding} is null\n@see #createPixelBoundary(Product, java.awt.Rectangle, int, boolean)"},
-    {"getClosestGeoPos", (PyCFunction) BeamPyProductUtils_getClosestGeoPos, METH_VARARGS | METH_STATIC, "Searches for a valid GeoPos by considering the vicinity of a {@link PixelPos}. It does not check\nthe original pixel position, but uses it for determining which pixel positions to examine.\n@param gc      the GeoCoding, must not be null\n@param origPos the original pixel position, must not be null\n@param region  the rectangle which determines the valid pixel positions, must not be null\n@param step    determines the step size between pixels which is used in the search process. Small step\nsizes will increase the accuracy, but need more computational time\n@return a {@link GeoPos}. This will be valid if the search was successful. If not, a {@link GeoPos} with\nNaN-values for latitude and longitude will be returned."},
     {"createGeoBoundary4", (PyCFunction) BeamPyProductUtils_createGeoBoundary4, METH_VARARGS | METH_STATIC, "Creates the geographical boundary of the given region within the given raster and returns it as a list of\ngeographical coordinates.\n@param raster the input raster, must not be null\n@param region the region rectangle in raster pixel coordinates, can be null for entire raster\n@param step   the step given in pixels\n@return an array of geographical coordinates\n@throws IllegalArgumentException if raster is null or if the raster has no {@link GeoCoding} is null\n@see #createPixelBoundary(RasterDataNode, java.awt.Rectangle, int)"},
     {"createGeoBoundaryPaths1", (PyCFunction) BeamPyProductUtils_createGeoBoundaryPaths1, METH_VARARGS | METH_STATIC, "Converts the geographic boundary entire product into one, two or three shape objects. If the product does not\nintersect the 180 degree meridian, a single general path is returned. Otherwise two or three shapes are created\nand returned in the order from west to east.\n\nThe geographic boundary of the given product are returned as shapes comprising (longitude,latitude) pairs.\n@param product the input product\n@return an array of shape objects\n@throws IllegalArgumentException if product is null or if the product's {@link GeoCoding} is null\n@see #createGeoBoundary(Product, int)"},
     {"createGeoBoundaryPaths2", (PyCFunction) BeamPyProductUtils_createGeoBoundaryPaths2, METH_VARARGS | METH_STATIC, "Converts the geographic boundary of the region within the given product into one, two or three shape objects. If\nthe product does not intersect the 180 degree meridian, a single general path is returned. Otherwise two or three\nshapes are created and returned in the order from west to east.\n\nThis method delegates to {@link #createGeoBoundaryPaths(Product, java.awt.Rectangle, int, boolean) createGeoBoundaryPaths(Product, Rectangle, int, boolean)}\nand the additional parameter <code>usePixelCenter</code> is <code>true</code>.\n\nThe geographic boundary of the given product are returned as shapes comprising (longitude,latitude) pairs.\n@param product the input product\n@param region  the region rectangle in product pixel coordinates, can be null for entire product\n@param step    the step given in pixels\n@return an array of shape objects\n@throws IllegalArgumentException if product is null or if the product's {@link GeoCoding} is null\n@see #createGeoBoundary(Product, java.awt.Rectangle, int)"},
@@ -5820,8 +5752,7 @@ static PyMethodDef Product_Methods[] =
     {"getEndTime", (PyCFunction) BeamPyProduct_getEndTime, METH_VARARGS, "Gets the (sensing) stop time associated with the last raster data line.\n\nFor Level-1/2 products this is\nthe data-take time associated with the last raster data line.\nFor Level-3 products, this could be the end time of last input product\ncontributing data.\n@return the stop time , can be null e.g. for non-swath products"},
     {"setEndTime", (PyCFunction) BeamPyProduct_setEndTime, METH_VARARGS, "Sets the (sensing) stop time associated with the first raster data line.\n\nFor Level-1/2 products this is\nthe data-take time associated with the last raster data line.\nFor Level-3 products, this could be the end time of last input product\ncontributing data.\n@param endTime the sensing stop time, can be null"},
     {"getMetadataRoot", (PyCFunction) BeamPyProduct_getMetadataRoot, METH_VARARGS, "Gets the root element of the associated metadata.\n@return the metadata root element"},
-    {"getGroups", (PyCFunction) BeamPyProduct_getGroups, METH_VARARGS, "@return The group which contains all other product node groups."},
-    {"getGroup", (PyCFunction) BeamPyProduct_getGroup, METH_VARARGS, "@param name The group name.\n@return The group with the given name, or {@code null} if no such group exists."},
+    {"getBandGroup", (PyCFunction) BeamPyProduct_getBandGroup, METH_VARARGS, "Gets the band group of this product.\n@return The group of all bands."},
     {"getTiePointGridGroup", (PyCFunction) BeamPyProduct_getTiePointGridGroup, METH_VARARGS, "Gets the tie-point grid group of this product.\n@return The group of all tie-point grids."},
     {"addTiePointGrid", (PyCFunction) BeamPyProduct_addTiePointGrid, METH_VARARGS, "Adds the given tie-point grid to this product.\n@param tiePointGrid the tie-point grid to added, ignored if <code>null</code>"},
     {"removeTiePointGrid", (PyCFunction) BeamPyProduct_removeTiePointGrid, METH_VARARGS, "Removes the tie-point grid from this product.\n@param tiePointGrid the tie-point grid to be removed, ignored if <code>null</code>\n@return <code>true</code> if node could be removed"},
@@ -5831,7 +5762,6 @@ static PyMethodDef Product_Methods[] =
     {"getTiePointGrids", (PyCFunction) BeamPyProduct_getTiePointGrids, METH_VARARGS, "Returns an array of tie-point grids contained in this product\n@return an array of tie-point grids contained in this product. If this product has no  tie-point grids a\nzero-length-array is returned."},
     {"getTiePointGrid", (PyCFunction) BeamPyProduct_getTiePointGrid, METH_VARARGS, "Returns the tie-point grid with the given name.\n@param name the tie-point grid name\n@return the tie-point grid with the given name or <code>null</code> if a tie-point grid with the given name is\nnot contained in this product."},
     {"containsTiePointGrid", (PyCFunction) BeamPyProduct_containsTiePointGrid, METH_VARARGS, "Tests if a tie-point grid with the given name is contained in this product.\n@param name the name, must not be <code>null</code>\n@return <code>true</code> if a tie-point grid with the given name is contained in this product,\n<code>false</code> otherwise"},
-    {"getBandGroup", (PyCFunction) BeamPyProduct_getBandGroup, METH_VARARGS, "Gets the band group of this product.\n@return The group of all bands."},
     {"addBand", (PyCFunction) BeamPyProduct_addBand, METH_VARARGS, "Adds the given band to this product.\n@param band the band to added, must not be <code>null</code>"},
     {"addNewBand", (PyCFunction) BeamPyProduct_addNewBand, METH_VARARGS, "Creates a new band with the given name and data type and adds it to this product and returns it.\n@param bandName the new band's name\n@param dataType the raster data type, must be one of the multiple <code>ProductData.TYPE_<i>X</i></code>\nconstants\n@return the new band which has just been added"},
     {"addComputedBand", (PyCFunction) BeamPyProduct_addComputedBand, METH_VARARGS, "Creates a new band with the given name and adds it to this product and returns it.\nThe new band's data type is {@code float} and it's samples are computed from the given band maths expression.\n@param bandName   the new band's name\n@param expression the band maths expression\n@return the new band which has just been added"},
@@ -5852,8 +5782,6 @@ static PyMethodDef Product_Methods[] =
     {"containsPixel", (PyCFunction) BeamPyProduct_containsPixel, METH_VARARGS, "Tests if the given pixel position is within the product pixel bounds.\n@param x the x coordinate of the pixel position\n@param y the y coordinate of the pixel position\n@return true, if so\n@see #containsPixel(PixelPos)"},
     {"getGcpGroup", (PyCFunction) BeamPyProduct_getGcpGroup, METH_VARARGS, "Gets the group of ground-control points (GCPs).\nNote that this method will create the group, if none exists already.\n@return the GCP group."},
     {"getPinGroup", (PyCFunction) BeamPyProduct_getPinGroup, METH_VARARGS, "Gets the group of pins.\nNote that this method will create the group, if none exists already.\n@return the pin group."},
-    {"getNumResolutionsMax", (PyCFunction) BeamPyProduct_getNumResolutionsMax, METH_VARARGS, "@return The maximum number of resolution levels common to all band images.\nIf less than or equal to zero, the  number of resolution levels is considered to be unknown."},
-    {"setNumResolutionsMax", (PyCFunction) BeamPyProduct_setNumResolutionsMax, METH_VARARGS, "@param numResolutionsMax The maximum number of resolution levels common to all band images.\nIf less than or equal to zero, the  number of resolution levels is considered to be unknown."},
     {"isCompatibleProduct", (PyCFunction) BeamPyProduct_isCompatibleProduct, METH_VARARGS, "Checks whether or not the given product is compatible with this product.\n@param product the product to compare with\n@param eps     the maximum lat/lon error in degree\n@return <code>false</code> if the scene dimensions or geocoding are different, <code>true</code> otherwise."},
     {"parseExpression", (PyCFunction) BeamPyProduct_parseExpression, METH_VARARGS, "Parses a mathematical expression given as a text string.\n@param expression a expression given as a text string, e.g. \"radiance_4 / (1.0 + radiance_11)\".\n@return a term parsed from the given expression string\n@throws ParseException if the expression could not successfully be parsed"},
     {"acceptVisitor", (PyCFunction) BeamPyProduct_acceptVisitor, METH_VARARGS, "Accepts the given visitor. This method implements the well known 'Visitor' design pattern of the gang-of-four.\nThe visitor pattern allows to define new operations on the product data model without the need to add more code\nto it. The new operation is implemented by the visitor.\n\nThe method subsequentially visits (calls <code>acceptVisitor</code> for) all bands, tie-point grids and flag\ncodings. Finally it visits product metadata root element and calls <code>visitor.visit(this)</code>.\n@param visitor the visitor, must not be <code>null</code>"},
@@ -7208,7 +7136,7 @@ static PyMethodDef TiePointGrid_Methods[] =
     {"getNumDataElems", (PyCFunction) BeamPyTiePointGrid_getNumDataElems, METH_VARARGS, "Gets the number of data elements in this data node."},
     {"setData", (PyCFunction) BeamPyTiePointGrid_setData, METH_VARARGS, "Sets the data of this data node."},
     {"getData", (PyCFunction) BeamPyTiePointGrid_getData, METH_VARARGS, "Gets the data of this data node."},
-    {"setDataElems", (PyCFunction) BeamPyTiePointGrid_setDataElems, METH_VARARGS, "Sets the data elements of this data node.\n@deprecated since 5.0\n@see ProductData#setElems(Object)"},
+    {"setDataElems", (PyCFunction) BeamPyTiePointGrid_setDataElems, METH_VARARGS, "Sets the data elements of this data node.\n@see ProductData#setElems(Object)"},
     {"getDataElems", (PyCFunction) BeamPyTiePointGrid_getDataElems, METH_VARARGS, "Gets the data elements of this data node.\n@see ProductData#getElems()"},
     {"getDataElemSize", (PyCFunction) BeamPyTiePointGrid_getDataElemSize, METH_VARARGS, "Gets the data element size in bytes.\n@see ProductData#getElemSize(int)"},
     {"setReadOnly", (PyCFunction) BeamPyTiePointGrid_setReadOnly, METH_VARARGS, ""},
@@ -7491,7 +7419,7 @@ static PyMethodDef MetadataAttribute_Methods[] =
     {"getNumDataElems", (PyCFunction) BeamPyMetadataAttribute_getNumDataElems, METH_VARARGS, "Gets the number of data elements in this data node."},
     {"setData", (PyCFunction) BeamPyMetadataAttribute_setData, METH_VARARGS, "Sets the data of this data node."},
     {"getData", (PyCFunction) BeamPyMetadataAttribute_getData, METH_VARARGS, "Gets the data of this data node."},
-    {"setDataElems", (PyCFunction) BeamPyMetadataAttribute_setDataElems, METH_VARARGS, "Sets the data elements of this data node.\n@deprecated since 5.0\n@see ProductData#setElems(Object)"},
+    {"setDataElems", (PyCFunction) BeamPyMetadataAttribute_setDataElems, METH_VARARGS, "Sets the data elements of this data node.\n@see ProductData#setElems(Object)"},
     {"getDataElems", (PyCFunction) BeamPyMetadataAttribute_getDataElems, METH_VARARGS, "Gets the data elements of this data node.\n@see ProductData#getElems()"},
     {"getDataElemSize", (PyCFunction) BeamPyMetadataAttribute_getDataElemSize, METH_VARARGS, "Gets the data element size in bytes.\n@see ProductData#getElemSize(int)"},
     {"setReadOnly", (PyCFunction) BeamPyMetadataAttribute_setReadOnly, METH_VARARGS, ""},
@@ -8200,14 +8128,6 @@ int beampy_registerJObjectSubtypes(PyObject* module)
     }
     Py_INCREF(&ProductWriterPlugIn_Type);
     PyModule_AddObject(module, "ProductWriterPlugIn", (PyObject*) &ProductWriterPlugIn_Type);
-
-    // Register Rectangle2D:
-    Rectangle2D_Type.tp_base = &JObject_Type;
-    if (PyType_Ready(&Rectangle2D_Type) < 0) {
-        return 0;
-    }
-    Py_INCREF(&Rectangle2D_Type);
-    PyModule_AddObject(module, "Rectangle2D", (PyObject*) &Rectangle2D_Type);
 
     // Register File:
     File_Type.tp_base = &JObject_Type;
@@ -17290,7 +17210,7 @@ PyObject* BeamPyProduct_getMetadataRoot(PyObject* self, PyObject* args)
     return _resultPyObj;
 }
 
-PyObject* BeamPyProduct_getGroups(PyObject* self, PyObject* args)
+PyObject* BeamPyProduct_getBandGroup(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
     
@@ -17301,10 +17221,10 @@ PyObject* BeamPyProduct_getGroups(PyObject* self, PyObject* args)
     if (!beampy_initApi()) {
         return NULL;
     }
-    if (!beampy_initJMethod(&_method, classProduct, "org.esa.beam.framework.datamodel.Product", "getGroups", "()Lorg/esa/beam/framework/datamodel/ProductNodeGroup;", 0)) {
+    if (!beampy_initJMethod(&_method, classProduct, "org.esa.beam.framework.datamodel.Product", "getBandGroup", "()Lorg/esa/beam/framework/datamodel/ProductNodeGroup;", 0)) {
         return NULL;
     }
-    if (!PyArg_ParseTuple(args, "O:BeamPyProduct_getGroups", &_thisPyObj)) {
+    if (!PyArg_ParseTuple(args, "O:BeamPyProduct_getBandGroup", &_thisPyObj)) {
         return NULL;
     }
     _thisJObj = JObject_GetJObjectRef(_thisPyObj);
@@ -17313,37 +17233,6 @@ PyObject* BeamPyProduct_getGroups(PyObject* self, PyObject* args)
     }
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
     _resultPyObj = JObject_FromJObjectRefWithType(_resultJObj, &ProductNodeGroup_Type);
-    (*jenv)->DeleteLocalRef(jenv, _resultJObj);
-    return _resultPyObj;
-}
-
-PyObject* BeamPyProduct_getGroup(PyObject* self, PyObject* args)
-{
-    static jmethodID _method = NULL;
-    
-    PyObject* _thisPyObj = NULL;
-    jobject _thisJObj = NULL;
-    const char* name = NULL;
-    jstring nameJObj = NULL;
-    PyObject* _resultPyObj = NULL;
-    jobject _resultJObj = NULL;
-    if (!beampy_initApi()) {
-        return NULL;
-    }
-    if (!beampy_initJMethod(&_method, classProduct, "org.esa.beam.framework.datamodel.Product", "getGroup", "(Ljava/lang/String;)Lorg/esa/beam/framework/datamodel/ProductNodeGroup;", 0)) {
-        return NULL;
-    }
-    if (!PyArg_ParseTuple(args, "Os:BeamPyProduct_getGroup", &_thisPyObj, &name)) {
-        return NULL;
-    }
-    _thisJObj = JObject_GetJObjectRef(_thisPyObj);
-    if (_thisJObj == NULL) {
-        return NULL;
-    }
-    nameJObj =(*jenv)->NewStringUTF(jenv, name);
-    _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, nameJObj);
-    _resultPyObj = JObject_FromJObjectRefWithType(_resultJObj, &ProductNodeGroup_Type);
-    (*jenv)->DeleteLocalRef(jenv, nameJObj);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -17597,33 +17486,6 @@ PyObject* BeamPyProduct_containsTiePointGrid(PyObject* self, PyObject* args)
     _result = (*jenv)->CallBooleanMethod(jenv, _thisJObj, _method, nameJObj);
     (*jenv)->DeleteLocalRef(jenv, nameJObj);
     return PyBool_FromLong(_result);
-}
-
-PyObject* BeamPyProduct_getBandGroup(PyObject* self, PyObject* args)
-{
-    static jmethodID _method = NULL;
-    
-    PyObject* _thisPyObj = NULL;
-    jobject _thisJObj = NULL;
-    PyObject* _resultPyObj = NULL;
-    jobject _resultJObj = NULL;
-    if (!beampy_initApi()) {
-        return NULL;
-    }
-    if (!beampy_initJMethod(&_method, classProduct, "org.esa.beam.framework.datamodel.Product", "getBandGroup", "()Lorg/esa/beam/framework/datamodel/ProductNodeGroup;", 0)) {
-        return NULL;
-    }
-    if (!PyArg_ParseTuple(args, "O:BeamPyProduct_getBandGroup", &_thisPyObj)) {
-        return NULL;
-    }
-    _thisJObj = JObject_GetJObjectRef(_thisPyObj);
-    if (_thisJObj == NULL) {
-        return NULL;
-    }
-    _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = JObject_FromJObjectRefWithType(_resultJObj, &ProductNodeGroup_Type);
-    (*jenv)->DeleteLocalRef(jenv, _resultJObj);
-    return _resultPyObj;
 }
 
 PyObject* BeamPyProduct_addBand(PyObject* self, PyObject* args)
@@ -18190,54 +18052,6 @@ PyObject* BeamPyProduct_getPinGroup(PyObject* self, PyObject* args)
     _resultPyObj = JObject_FromJObjectRefWithType(_resultJObj, &PlacemarkGroup_Type);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
-}
-
-PyObject* BeamPyProduct_getNumResolutionsMax(PyObject* self, PyObject* args)
-{
-    static jmethodID _method = NULL;
-    
-    PyObject* _thisPyObj = NULL;
-    jobject _thisJObj = NULL;
-    jint _result = (jint) 0;
-    if (!beampy_initApi()) {
-        return NULL;
-    }
-    if (!beampy_initJMethod(&_method, classProduct, "org.esa.beam.framework.datamodel.Product", "getNumResolutionsMax", "()I", 0)) {
-        return NULL;
-    }
-    if (!PyArg_ParseTuple(args, "O:BeamPyProduct_getNumResolutionsMax", &_thisPyObj)) {
-        return NULL;
-    }
-    _thisJObj = JObject_GetJObjectRef(_thisPyObj);
-    if (_thisJObj == NULL) {
-        return NULL;
-    }
-    _result = (*jenv)->CallIntMethod(jenv, _thisJObj, _method);
-    return PyLong_FromLong(_result);
-}
-
-PyObject* BeamPyProduct_setNumResolutionsMax(PyObject* self, PyObject* args)
-{
-    static jmethodID _method = NULL;
-    
-    PyObject* _thisPyObj = NULL;
-    jobject _thisJObj = NULL;
-    jint numResolutionsMax = (jint) 0;
-    if (!beampy_initApi()) {
-        return NULL;
-    }
-    if (!beampy_initJMethod(&_method, classProduct, "org.esa.beam.framework.datamodel.Product", "setNumResolutionsMax", "(I)V", 0)) {
-        return NULL;
-    }
-    if (!PyArg_ParseTuple(args, "Oi:BeamPyProduct_setNumResolutionsMax", &_thisPyObj, &numResolutionsMax)) {
-        return NULL;
-    }
-    _thisJObj = JObject_GetJObjectRef(_thisPyObj);
-    if (_thisJObj == NULL) {
-        return NULL;
-    }
-    (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, numResolutionsMax);
-    return Py_BuildValue("");
 }
 
 PyObject* BeamPyProduct_isCompatibleProduct(PyObject* self, PyObject* args)
@@ -21841,32 +21655,6 @@ PyObject* BeamPyImageGeometry_createCollocationTargetGeometry(PyObject* self, Py
     }
     _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, classImageGeometry, _method, targetProductJObj, collocationProductJObj);
     _resultPyObj = JObject_FromJObjectRefWithType(_resultJObj, &ImageGeometry_Type);
-    (*jenv)->DeleteLocalRef(jenv, _resultJObj);
-    return _resultPyObj;
-}
-
-PyObject* BeamPyImageGeometry_createValidRect(PyObject* self, PyObject* args)
-{
-    static jmethodID _method = NULL;
-    PyObject* productPyObj = NULL;
-    jobject productJObj = NULL;
-    PyObject* _resultPyObj = NULL;
-    jobject _resultJObj = NULL;
-    if (!beampy_initApi()) {
-        return NULL;
-    }
-    if (!beampy_initJMethod(&_method, classImageGeometry, "org.esa.beam.framework.datamodel.ImageGeometry", "createValidRect", "(Lorg/esa/beam/framework/datamodel/Product;)Ljava/awt/geom/Rectangle2D;", 1)) {
-        return NULL;
-    }
-    if (!PyArg_ParseTuple(args, "O:BeamPyImageGeometry_createValidRect", &productPyObj)) {
-        return NULL;
-    }
-    productJObj = JObject_GetJObjectRefWithType(productPyObj, &Product_Type);
-    if (productJObj == NULL) {
-        return NULL;
-    }
-    _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, classImageGeometry, _method, productJObj);
-    _resultPyObj = JObject_FromJObjectRefWithType(_resultJObj, &Rectangle2D_Type);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -38616,45 +38404,6 @@ PyObject* BeamPyProductUtils_createGeoBoundary3(PyObject* self, PyObject* args)
     }
     _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, classProductUtils, _method, productJObj, regionJObj, step, usePixelCenter);
     _resultPyObj = beampy_newPySeqFromJObjectArray((jarray) _resultJObj, &GeoPos_Type);
-    (*jenv)->DeleteLocalRef(jenv, _resultJObj);
-    return _resultPyObj;
-}
-
-PyObject* BeamPyProductUtils_getClosestGeoPos(PyObject* self, PyObject* args)
-{
-    static jmethodID _method = NULL;
-    PyObject* gcPyObj = NULL;
-    jobject gcJObj = NULL;
-    PyObject* origPosPyObj = NULL;
-    jobject origPosJObj = NULL;
-    PyObject* regionPyObj = NULL;
-    jobject regionJObj = NULL;
-    jint step = (jint) 0;
-    PyObject* _resultPyObj = NULL;
-    jobject _resultJObj = NULL;
-    if (!beampy_initApi()) {
-        return NULL;
-    }
-    if (!beampy_initJMethod(&_method, classProductUtils, "org.esa.beam.util.ProductUtils", "getClosestGeoPos", "(Lorg/esa/beam/framework/datamodel/GeoCoding;Lorg/esa/beam/framework/datamodel/PixelPos;Ljava/awt/Rectangle;I)Lorg/esa/beam/framework/datamodel/GeoPos;", 1)) {
-        return NULL;
-    }
-    if (!PyArg_ParseTuple(args, "OOOi:BeamPyProductUtils_getClosestGeoPos", &gcPyObj, &origPosPyObj, &regionPyObj, &step)) {
-        return NULL;
-    }
-    gcJObj = JObject_GetJObjectRefWithType(gcPyObj, &GeoCoding_Type);
-    if (gcJObj == NULL) {
-        return NULL;
-    }
-    origPosJObj = JObject_GetJObjectRefWithType(origPosPyObj, &PixelPos_Type);
-    if (origPosJObj == NULL) {
-        return NULL;
-    }
-    regionJObj = JObject_GetJObjectRefWithType(regionPyObj, &Rectangle_Type);
-    if (regionJObj == NULL) {
-        return NULL;
-    }
-    _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, classProductUtils, _method, gcJObj, origPosJObj, regionJObj, step);
-    _resultPyObj = JObject_FromJObjectRefWithType(_resultJObj, &GeoPos_Type);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }

@@ -99,8 +99,6 @@ extern PyTypeObject MathTransform_Type;
 extern PyTypeObject CoordinateReferenceSystem_Type;
 // PyAPI_DATA(PyTypeObject) ProductWriterPlugIn_Type;
 extern PyTypeObject ProductWriterPlugIn_Type;
-// PyAPI_DATA(PyTypeObject) Rectangle2D_Type;
-extern PyTypeObject Rectangle2D_Type;
 // PyAPI_DATA(PyTypeObject) File_Type;
 extern PyTypeObject File_Type;
 // PyAPI_DATA(PyTypeObject) GeoPos_Type;

@@ -9,7 +9,7 @@ static struct PyModuleDef BeamPy_Module =
    "${libName}",           /* Name of the Python module */
    "BEAM Python API",  /* Module documentation */
    -1,                 /* Size of per-interpreter state of the module, or -1 if the module keeps state in global variables. */
-   BeamPy_Methods      /* Structure containing all BEAM/Python API functions */
+   BeamPy_Functions    /* Structure containing global ${libName}-functions */
 };
 
 int beampy_registerJObjectSubtypes(PyObject* module);
