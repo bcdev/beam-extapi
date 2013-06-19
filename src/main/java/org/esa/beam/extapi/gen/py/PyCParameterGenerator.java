@@ -7,6 +7,7 @@ import org.esa.beam.extapi.gen.GeneratorContext;
 import org.esa.beam.extapi.gen.ParameterGenerator;
 
 import static org.esa.beam.extapi.gen.JavadocHelpers.firstCharToUpperCase;
+import static org.esa.beam.extapi.gen.ModuleGenerator.getComponentCClassName;
 import static org.esa.beam.extapi.gen.TemplateEval.eval;
 import static org.esa.beam.extapi.gen.TemplateEval.kv;
 
@@ -124,7 +125,8 @@ public abstract class PyCParameterGenerator implements ParameterGenerator {
 
         @Override
         public String generateTargetArgDeclaration(GeneratorContext context) {
-            return PyCFunctionGenerator.generateJObjectTargetArgDecl(getName());
+            return eval("PyObject* ${par}PyObj = NULL;",
+                                kv("par", getName()));
         }
 
         @Override
@@ -134,17 +136,24 @@ public abstract class PyCParameterGenerator implements ParameterGenerator {
 
         @Override
         public String getParseFormat(GeneratorContext context) {
-            return "(sK)";
+            return "O";
         }
 
         @Override
         public String getParseArgs(GeneratorContext context) {
-            return eval("&${par}Type, &${par}", kv("par", getName()));
+            return eval("&${par}PyObj", kv("par", getName()));
         }
 
         @Override
         public String generateJniArgFromTransformedTargetArgAssignment(GeneratorContext context) {
-            return eval("${par}JObj = (jobject) ${par};", kv("par", getName()));
+            String typeName = getComponentCClassName(getType());
+            return eval("" +
+                                "${par}JObj = JObject_GetJObjectRefWithType(${par}PyObj, &${typeName}_Type);\n" +
+                                "if (${par}JObj == NULL) {\n" +
+                                "    return NULL;\n" +
+                                "}",
+                        kv("par", getName()),
+                        kv("typeName", typeName));
         }
 
         @Override
@@ -346,13 +355,14 @@ public abstract class PyCParameterGenerator implements ParameterGenerator {
 
         @Override
         public String generateJniArgFromTransformedTargetArgAssignment(GeneratorContext context) {
+            String typeName = getComponentCClassName(getType());
             return eval(""
-                                + "${par}JObj = beampy_newJObjectArrayFromPySeq(${par}PyObj, \"${type}\");\n"
+                                + "${par}JObj = beampy_newJObjectArrayFromPySeq(${par}PyObj, &${typeName}_Type);\n"
                                 + "if (${par}JObj == NULL) {\n"
                                 + "    return NULL;\n" // todo - goto error label and deref all JNI vars
                                 + "}",
                         kv("par", getName()),
-                        kv("type", getType().simpleTypeName()));
+                        kv("typeName", typeName));
         }
 
         @Override

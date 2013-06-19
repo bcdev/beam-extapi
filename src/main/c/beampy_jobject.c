@@ -50,8 +50,13 @@ PyTypeObject JObject_Type = {
 
 PyObject* JObject_FromJObjectRef(jobject jobjectRef)
 {
+    return JObject_FromJObjectRefWithType(jobjectRef, &JObject_Type);
+}
+
+PyObject* JObject_FromJObjectRefWithType(jobject jobjectRef, PyTypeObject* type)
+{
     PyObject* longPyObj = PyLong_FromVoidPtr(jobjectRef);
-    PyObject* jobjPyObj = PyObject_CallObject(&JObject_Type, longPyObj);
+    PyObject* jobjPyObj = PyObject_CallObject(type, longPyObj);
     Py_DECREF(longPyObj);
     return jobjPyObj;
 }
@@ -77,6 +82,15 @@ JObject* JObject_AsJObject(PyObject* anyPyObj)
 }
 
 jobject JObject_GetJObjectRef(PyObject* anyPyObj)
+{
+    JObject* jobjPyObj = JObject_AsJObject(anyPyObj);
+    if (jobjPyObj == NULL) {
+        return NULL;
+    }
+    return jobjPyObj->jobjectRef;
+}
+
+jobject JObject_GetJObjectRefWithType(PyObject* anyPyObj, PyTypeObject* type)
 {
     JObject* jobjPyObj = JObject_AsJObject(anyPyObj);
     if (jobjPyObj == NULL) {

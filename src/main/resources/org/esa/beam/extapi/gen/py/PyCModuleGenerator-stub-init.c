@@ -9,11 +9,6 @@
 
 static PyObject* BeamPy_Error;
 
-/* Extra global functions for beampy. These will also go into the module definition. */
-PyObject* BeamPyObject_delete(PyObject* self, PyObject* args);
-PyObject* BeamPyString_newString(PyObject* self, PyObject* args);
-
-
 jarray beampy_newJBooleanArray(const jboolean* data, jint length);
 jarray beampy_newJByteArray(const jbyte* data, jint length);
 jarray beampy_newJCharArray(const jchar* data, jint length);

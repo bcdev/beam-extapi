@@ -141,4 +141,8 @@ public class JavadocHelpers {
     private static boolean isArray1D(Type type) {
         return type.dimension().equals("[]");
     }
+
+    public static boolean isObject(Type type) {
+        return !type.isPrimitive() && !isString(type);
+    }
 }

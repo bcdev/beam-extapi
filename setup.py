@@ -46,19 +46,19 @@ extra_compile_args = []
 if WIN32:
     define_macros += [('WIN32', '1')]
     include_dirs += [JDK_HOME + '/include', JDK_HOME + '/include/win32']
-    libraries=['jvm']
+    libraries = ['jvm']
     library_dirs = [JDK_HOME + '/jre/lib/i386/server',
                     JDK_HOME + '/lib']
 
 if LINUX:
     include_dirs += [JDK_HOME + '/include', JDK_HOME + '/include/linux']
-    libraries=['jvm']
+    libraries = ['jvm']
     library_dirs = [JDK_HOME + '/jre/lib/i386/server',
                     JDK_HOME + '/lib']
 
 if DARWIN:
     include_dirs += [JDK_HOME + '/Headers']
-    libraries=['server']
+    libraries = ['server']
     library_dirs = [JDK_HOME + '/Libraries']
     extra_link_args += ['-framework JavaVM']
     extra_compile_args += ['-framework JavaVM']
@@ -68,28 +68,26 @@ if DARWIN:
     # see http://docs.python.org/3.2/distutils/setupscript.html
     # see http://docs.python.org/3.2/distutils/apiref.html?highlight=setup#distutils.core.setup
     # sudo ln -s /System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Libraries/libclient64.dylib /usr/lib/libclient.dylib
-    
 
 setup(name='beampy',
-    description='BEAM Python API',
-    long_description='A framework for developing applications for Earth Observation data based on the BEAM (Java) API',
-    version='4.11.0',
-    platforms='Python 3, Java 1.6, BEAM 4.11',
-    author='Brockmann Consult GmbH',
-    author_email='beam@brockmann-consult.de',
-    maintainer='Brockmann Consult GmbH',
-    maintainer_email='beam@brockmann-consult.de',
-    license='GPL 3',
-    url='http://www.brockmann-consult.de/beam/',
-    download_url='http://www.brockmann-consult.de/beam/',
-    py_modules=['beampy'],
-    ext_modules=[Extension('_beampy',
-        sources,
-        include_dirs=include_dirs,
-        library_dirs=library_dirs,
-        libraries=libraries,
-        extra_link_args=extra_link_args,
-        extra_compile_args=extra_compile_args,
-        define_macros=define_macros
-    )]
+      description='BEAM Python API',
+      long_description='A framework for developing applications for Earth Observation data based on the BEAM (Java) API',
+      version='4.11.0',
+      platforms='Python 3, Java 1.6, BEAM 4.11',
+      author='Brockmann Consult GmbH',
+      author_email='beam@brockmann-consult.de',
+      maintainer='Brockmann Consult GmbH',
+      maintainer_email='beam@brockmann-consult.de',
+      license='GPL 3',
+      url='http://www.brockmann-consult.de/beam/',
+      download_url='http://www.brockmann-consult.de/beam/',
+      ext_modules=[Extension('beampy',
+                             sources,
+                             include_dirs=include_dirs,
+                             library_dirs=library_dirs,
+                             libraries=libraries,
+                             extra_link_args=extra_link_args,
+                             extra_compile_args=extra_compile_args,
+                             define_macros=define_macros
+      )]
 )

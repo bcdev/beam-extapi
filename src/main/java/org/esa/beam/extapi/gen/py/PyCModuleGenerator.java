@@ -16,7 +16,6 @@
 
 package org.esa.beam.extapi.gen.py;
 
-import com.sun.javadoc.Type;
 import org.esa.beam.extapi.gen.*;
 import org.esa.beam.extapi.gen.c.CModuleGenerator;
 
@@ -25,7 +24,7 @@ import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.List;
 
-import static org.esa.beam.extapi.gen.JavadocHelpers.convertToPythonDoc;
+import static org.esa.beam.extapi.gen.JavadocHelpers.*;
 import static org.esa.beam.extapi.gen.TemplateEval.eval;
 import static org.esa.beam.extapi.gen.TemplateEval.kv;
 
@@ -85,7 +84,7 @@ public class PyCModuleGenerator extends ModuleGenerator {
         writeWinDef();
         writeCHeader();
         writeCSource();
-        writePythonSource();
+        //writePythonSource();
     }
 
     private void writeWinDef() throws IOException {
@@ -127,9 +126,6 @@ public class PyCModuleGenerator extends ModuleGenerator {
                 writeFunctionDeclarations(writer);
                 writer.printf("\n");
 
-                writeTemplateResource(writer, "PyCModuleGenerator-stub-java-util.h");
-                writer.printf("\n");
-
                 writePyMethodDefs(writer);
                 writer.printf("\n");
 
@@ -163,9 +159,6 @@ public class PyCModuleGenerator extends ModuleGenerator {
                 writeTemplateResource(writer, "PyCModuleGenerator-stub-conv.c");
                 writer.printf("\n");
 
-                writeTemplateResource(writer, "PyCModuleGenerator-stub-java-util.c");
-                writer.printf("\n");
-
                 writeFunctionDefinitions(writer);
                 writer.printf("\n");
 
@@ -177,7 +170,7 @@ public class PyCModuleGenerator extends ModuleGenerator {
         for (ApiClass apiClass : getApiInfo().getAllClasses()) {
             writer.printf(eval("// PyAPI_DATA(PyTypeObject) ${className}_Type;\n" +
                                        "extern PyTypeObject ${className}_Type;\n",
-                               kv("className", getClassName(apiClass.getType()))));
+                               kv("className", getComponentCClassName(apiClass.getType()))));
         }
     }
 
@@ -185,7 +178,7 @@ public class PyCModuleGenerator extends ModuleGenerator {
         TemplateEval templateEval = file.getTemplateEval();
         for (ApiClass apiClass : getApiInfo().getAllClasses()) {
 
-            String className = getClassName(apiClass.getType());
+            String className = getComponentCClassName(apiClass.getType());
 
             templateEval.add(kv("className", className),
                              kv("classDoc", convertToPythonDoc(getApiInfo(), apiClass.getType().asClassDoc(), "", true)));
@@ -236,10 +229,9 @@ public class PyCModuleGenerator extends ModuleGenerator {
                                        "        return 0;\n" +
                                        "    }\n" +
                                        "    Py_INCREF(&${className}_Type);\n" +
-                                       "    // PyModule_AddObject(module, \"${className}\", (PyObject*) &${className}_Type);\n" +
-                                       "    PyModule_AddObject(module, \"J${className}\", (PyObject*) &${className}_Type);\n" +
+                                       "    PyModule_AddObject(module, \"${className}\", (PyObject*) &${className}_Type);\n" +
                                        "\n",
-                               kv("className", getClassName(apiClass.getType()))));
+                               kv("className", getComponentCClassName(apiClass.getType()))));
         }
         writer.printf("" +
                               "    return 1;\n" +
@@ -266,6 +258,7 @@ public class PyCModuleGenerator extends ModuleGenerator {
 
     private void writePyMethodDefs(PrintWriter writer) {
         writer.printf("static PyMethodDef BeamPy_Methods[] = {\n");
+/*
         for (ApiClass apiClass : getApiClasses()) {
             for (FunctionGenerator generator : getFunctionGenerators(apiClass)) {
                 writer.printf("    {\"%s\", %s, METH_VARARGS, \"%s\"},\n",
@@ -274,9 +267,7 @@ public class PyCModuleGenerator extends ModuleGenerator {
                               generator.generateDocText(this));
             }
         }
-        writer.printf("    {\"String_newString\", BeamPyString_newString, METH_VARARGS, \"Converts a Python unicode string into a Java java.lang.String object\"},\n");
-        writer.printf("    {\"Object_delete\", BeamPyObject_delete, METH_VARARGS, \"Deletes global references to Java objects held by Python objects\"},\n");
-        writer.printf("    {\"Map_newHashMap\", BeamPyMap_newHashMap, METH_VARARGS, \"Converts a Python dictionary into a Java java.utils.Map object\"},\n");
+*/
         writer.printf("    {NULL, NULL, 0, NULL}  /* Sentinel */\n");
         writer.printf("};\n");
     }
@@ -296,7 +287,7 @@ public class PyCModuleGenerator extends ModuleGenerator {
         final String bufferFormat = getCArrayFormat(type);
         writeTemplateResource(writer, "PyCModuleGenerator-stub-conv-primarr.c",
                               kv("typeLC", type),
-                              kv("typeUC", JavadocHelpers.firstCharToUpperCase(type)),
+                              kv("typeUC", firstCharToUpperCase(type)),
                               kv("bufferFormat", bufferFormat),
                               kv("elemToItemCall", elemToItemCall),
                               kv("itemToElemCall", itemToElemCall));
@@ -335,7 +326,7 @@ public class PyCModuleGenerator extends ModuleGenerator {
                                    kv("obj", SELF_OBJ_NAME)));
                 writer.printf("\n\n");
                 for (ApiClass apiClass : getApiInfo().getAllClasses()) {
-                    final String className = getClassName(apiClass.getType());
+                    final String className = getComponentCClassName(apiClass.getType());
 
                     writer.printf("class %s(JObject):\n", className);
 
@@ -432,7 +423,7 @@ public class PyCModuleGenerator extends ModuleGenerator {
                                                                                              false);
 
                         if (JavadocHelpers.isVoid(generator.getApiMethod().getReturnType())) {
-                            if (JavadocHelpers.isInstance(generator.getApiMethod().getMemberDoc())) {
+                            if (isInstance(generator.getApiMethod().getMemberDoc())) {
                                 writePythonInstanceFuncHeader(writer, instanceFName, params, functionCommentText);
                                 writer.printf("        %s(self.%s%s)\n", staticFName, SELF_OBJ_NAME, args.length() > 0 ? ", " + args : "");
                                 writer.printf("        return\n");
@@ -443,8 +434,8 @@ public class PyCModuleGenerator extends ModuleGenerator {
                             }
                         } else {
                             if (isObject(generator.getApiMethod().getReturnType())) {
-                                String retClassName = getClassName(generator.getApiMethod().getReturnType());
-                                if (JavadocHelpers.isInstance(generator.getApiMethod().getMemberDoc())) {
+                                String retClassName = getComponentCClassName(generator.getApiMethod().getReturnType());
+                                if (isInstance(generator.getApiMethod().getMemberDoc())) {
                                     writePythonInstanceFuncHeader(writer, instanceFName, params, functionCommentText);
                                     writer.printf("        return %s(%s(self.%s%s))\n", retClassName, staticFName, SELF_OBJ_NAME, args.length() > 0 ? ", " + args : "");
                                 } else {
@@ -452,7 +443,7 @@ public class PyCModuleGenerator extends ModuleGenerator {
                                     writer.printf("        return %s(%s(%s))\n", retClassName, staticFName, args);
                                 }
                             } else {
-                                if (JavadocHelpers.isInstance(generator.getApiMethod().getMemberDoc())) {
+                                if (isInstance(generator.getApiMethod().getMemberDoc())) {
                                     writePythonInstanceFuncHeader(writer, instanceFName, params, functionCommentText);
                                     writer.printf("        return %s(self.%s%s)\n", staticFName, SELF_OBJ_NAME, args.length() > 0 ? ", " + args : "");
                                 } else {
@@ -487,14 +478,6 @@ public class PyCModuleGenerator extends ModuleGenerator {
             writer.printf("%s\n", commentText);
             writer.printf("        \"\"\"\n");
         }
-    }
-
-    private static String getClassName(Type type) {
-        return type.typeName().replace('.', '_');
-    }
-
-    private static boolean isObject(Type type) {
-        return !type.isPrimitive() && !JavadocHelpers.isString(type);
     }
 
 }

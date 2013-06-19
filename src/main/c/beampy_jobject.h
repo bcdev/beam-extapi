@@ -28,6 +28,7 @@ extern PyTypeObject JObject_Type;
  * Creates a new JObject instance from a given global reference to a Java object.
  */
 PyObject* JObject_FromJObjectRef(jobject jobjectRef);
+PyObject* JObject_FromJObjectRefWithType(jobject jobjectRef, PyTypeObject* type);
 
 /**
  * Returns 1 (TRUE) if the given Python object is a JObject or a derived type. 0 (FALSE) otherwise.
@@ -41,9 +42,11 @@ JObject* JObject_AsJObject(PyObject* anyPyObj);
  * Returns a global reference to a Java object if the given Python object is a JObject or derived type. NULL otherwise.
  */
 jobject JObject_GetJObjectRef(PyObject* anyPyObj);
+jobject JObject_GetJObjectRefWithType(PyObject* anyPyObj, PyTypeObject* type);
 
 int JObject_init(JObject* self, PyObject* args, PyObject* kwds);
 void JObject_dealloc(JObject* self);
+
 
 
 // todo - better use functions for retrieving these pointers

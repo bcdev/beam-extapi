@@ -2,6 +2,7 @@
 // Java String and String array
 ///////////////////////////////////////////////
 
+// todo remove me
 PyObject* beampy_newPyStringFromJString(jstring strJObj)
 {
     const char* utf8Chars;
@@ -17,6 +18,7 @@ PyObject* beampy_newPyStringFromJString(jstring strJObj)
 /**
  * Returns a local reference to a String array.
  */
+// todo remove me
 jstring beampy_newJStringFromPyObject(PyObject* anyPyObj)
 {
     char* utf8Chars;
@@ -39,6 +41,7 @@ jstring beampy_newJStringFromPyObject(PyObject* anyPyObj)
     return strJObj;
 }
 
+// todo remove me
 PyObject* beampy_newPySeqFromJStringArray(jarray arrayJObj)
 {
     PyObject* listPyObj;
@@ -71,6 +74,7 @@ PyObject* beampy_newPySeqFromJStringArray(jarray arrayJObj)
 /**
  * Returns a local reference to a String array.
  */
+// todo remove me
 jarray beampy_newJStringArrayFromPySeq(PyObject* seqPyObj)
 {
     jarray arrayJObj;
@@ -109,21 +113,10 @@ jarray beampy_newJStringArrayFromPySeq(PyObject* seqPyObj)
 // Java Object and Object array
 ///////////////////////////////////////////////
 
-/**
- * Stores a global reference to a Java object
- */
-PyObject* beampy_newPyObjectFromJObject(jobject anyJObj, const char* typeName)
+// todo remove me
+jobject beampy_newJObjectFromPyObject(PyObject* anyPyObj, PyTypeObject* type)
 {
-    if (anyJObj != NULL) {
-        jobject refJObj = (*jenv)->NewGlobalRef(jenv, anyJObj);
-        return Py_BuildValue("(sK)", typeName, (unsigned PY_LONG_LONG) refJObj);
-    } else {
-        return Py_BuildValue("");
-    }
-}
-
-jobject beampy_newJObjectFromPyObject(PyObject* anyPyObj, const char* typeName)
-{
+/*
     if (PyTuple_Check(anyPyObj) && PyTuple_Size(anyPyObj) == 2) {
         PyObject* typePyObj = PyTuple_GetItem(anyPyObj, 0);
         PyObject* jobjPyObj = PyTuple_GetItem(anyPyObj, 1);
@@ -140,9 +133,12 @@ jobject beampy_newJObjectFromPyObject(PyObject* anyPyObj, const char* typeName)
         PyErr_SetString(PyExc_ValueError, "tuple of length 2 expected");
         return NULL;
     }
+*/
+    return NULL;
 }
 
-PyObject* beampy_newPySeqFromJObjectArray(jarray arrJObj, const char* typeName)
+// todo remove me
+PyObject* beampy_newPySeqFromJObjectArray(jarray arrJObj, PyTypeObject* type)
 {
     PyObject* listPyObj;
     jsize i, n;
@@ -155,7 +151,7 @@ PyObject* beampy_newPySeqFromJObjectArray(jarray arrJObj, const char* typeName)
 
     for (i = 0; i < n; i++) {
         jobject itemJObj = (*jenv)->GetObjectArrayElement(jenv, arrJObj, i);
-        PyObject* itemPyObj = beampy_newPyObjectFromJObject(itemJObj, typeName);
+        PyObject* itemPyObj = JObject_FromJObjectRefWithType(itemJObj, type);
         (*jenv)->DeleteLocalRef(jenv, itemJObj);
         if (itemPyObj == NULL) {
             Py_DECREF(listPyObj);
@@ -171,7 +167,8 @@ PyObject* beampy_newPySeqFromJObjectArray(jarray arrJObj, const char* typeName)
     return listPyObj;
 }
 
-jarray beampy_newJObjectArrayFromPySeq(PyObject* seqPyObj, const char* typeName)
+// todo remove me
+jarray beampy_newJObjectArrayFromPySeq(PyObject* seqPyObj, PyTypeObject* type)
 {
     jarray arrayJObj;
     Py_ssize_t size;
@@ -194,7 +191,7 @@ jarray beampy_newJObjectArrayFromPySeq(PyObject* seqPyObj, const char* typeName)
             return NULL;
         }
         if (itemPyObj != Py_None) {
-            (*jenv)->SetObjectArrayElement(jenv, arrayJObj, (jint) i, beampy_newJObjectFromPyObject(itemPyObj, typeName));
+            (*jenv)->SetObjectArrayElement(jenv, arrayJObj, (jint) i, beampy_newJObjectFromPyObject(itemPyObj, type));
         } else {
             (*jenv)->SetObjectArrayElement(jenv, arrayJObj, (jint) i, NULL);
         }

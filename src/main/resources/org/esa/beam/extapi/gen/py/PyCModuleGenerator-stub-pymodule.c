@@ -6,7 +6,7 @@
 static struct PyModuleDef BeamPy_Module =
 {
    PyModuleDef_HEAD_INIT,
-   "_${libName}",           /* Name of the Python module */
+   "${libName}",           /* Name of the Python module */
    "BEAM Python API",  /* Module documentation */
    -1,                 /* Size of per-interpreter state of the module, or -1 if the module keeps state in global variables. */
    BeamPy_Methods      /* Structure containing all BEAM/Python API functions */
@@ -18,11 +18,11 @@ int beampy_registerJObjectSubtypes(PyObject* module);
 /**
  * Called by the Python interpreter once immediately after the shared lib _${libName}.pyk has been loaded.
  */
-PyMODINIT_FUNC PyInit__${libName}()
+PyMODINIT_FUNC PyInit_${libName}()
 {
     PyObject* module;
 
-    fprintf(stdout, "${libName}: enter PyInit__${libName}()\n");
+    fprintf(stdout, "${libName}: enter PyInit_${libName}()\n");
 
     /////////////////////////////////////////////////////////////////////////
     // Create BeamPy_Module
@@ -72,7 +72,7 @@ PyMODINIT_FUNC PyInit__${libName}()
         return NULL;
     }
 
-    fprintf(stdout, "${libName}: exit PyInit__${libName}()\n");
+    fprintf(stdout, "${libName}: exit PyInit_${libName}()\n");
 
     return module;
 }

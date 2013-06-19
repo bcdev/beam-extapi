@@ -1,5 +1,6 @@
 // todo - the following functions will not be used anymore once we use JObject subtypes
 
+// todo - remove it
 PyObject* BeamPyString_newString(PyObject* self, PyObject* args)
 {
     const char* str;
@@ -18,6 +19,7 @@ PyObject* BeamPyString_newString(PyObject* self, PyObject* args)
     }
 }
 
+// todo - remove it
 PyObject* BeamPyObject_delete(PyObject* self, PyObject* args)
 {
     const char* thisObjType;
@@ -42,7 +44,7 @@ PyObject* BeamPyMap_newHashMap(PyObject* self, PyObject* args)
     }
     anyJObj = beampy_newJMapFromPyObject(anyPyObj);
     if (anyJObj != NULL) {
-        resPyObj = beampy_newPyObjectFromJObject(anyJObj, "Map");
+        resPyObj = JObject_FromJObjectWithType(anyJObj, &Map_Type);
         (*jenv)->DeleteLocalRef(jenv, anyJObj);
     }
     return resPyObj;

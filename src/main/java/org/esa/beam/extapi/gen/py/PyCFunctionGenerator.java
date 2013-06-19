@@ -1,16 +1,12 @@
 package org.esa.beam.extapi.gen.py;
 
-import org.esa.beam.extapi.gen.AbstractFunctionGenerator;
-import org.esa.beam.extapi.gen.ApiMethod;
-import org.esa.beam.extapi.gen.ApiParameter;
-import org.esa.beam.extapi.gen.GeneratorContext;
-import org.esa.beam.extapi.gen.JavadocHelpers;
-import org.esa.beam.extapi.gen.ModuleGenerator;
+import org.esa.beam.extapi.gen.*;
 
 import static org.esa.beam.extapi.gen.JavadocHelpers.firstCharToUpperCase;
+import static org.esa.beam.extapi.gen.JavadocHelpers.getComponentCTypeName;
 import static org.esa.beam.extapi.gen.ModuleGenerator.METHOD_VAR_NAME;
 import static org.esa.beam.extapi.gen.ModuleGenerator.THIS_VAR_NAME;
-import static org.esa.beam.extapi.gen.TemplateEval.eval;
+import static org.esa.beam.extapi.gen.ModuleGenerator.getComponentCClassName;
 import static org.esa.beam.extapi.gen.TemplateEval.kv;
 
 /**
@@ -68,41 +64,33 @@ public abstract class PyCFunctionGenerator extends AbstractFunctionGenerator {
     public final String generateLocalVarDeclarations(GeneratorContext context) {
         final String methodVarDecl = super.generateLocalVarDeclarations(context);
         if (isInstanceMethod()) {
-            return format("" +
-                                  "${methodVarDecl}\n" +
-                                  "${thisVarDecl}\n" +
-                                  "jobject ${this}JObj = NULL;",
-                          kv("methodVarDecl", methodVarDecl),
-                          kv("thisVarDecl", generateJObjectTargetArgDecl(ModuleGenerator.THIS_VAR_NAME)));
+            return methodVarDecl +
+                    format("\n" +
+                                   "PyObject* ${this}PyObj = NULL;\n" +
+                                   "jobject ${this}JObj = NULL;",
+                           kv("this", ModuleGenerator.THIS_VAR_NAME));
         } else {
             return methodVarDecl;
         }
-    }
-
-    static String generateJObjectTargetArgDecl(String varName) {
-        return eval("" +
-                            "const char* ${var}Type = NULL;\n" +
-                            "unsigned PY_LONG_LONG ${var} = 0;",
-                    kv("var", varName));
     }
 
     @Override
     public String generateEnterCode(GeneratorContext context) {
         final ApiMethod apiMethod = getApiMethod();
 
-        return eval("" +
-                            "if (!beampy_initApi()) {\n" +
-                            "    return NULL;\n" +
-                            "}\n" +
-                            "if (!beampy_initJMethod(&${method}, ${classVar}, \"${className}\", \"${methodName}\", \"${methodSig}\", ${isstatic})) {\n" +
-                            "    return NULL;\n" +
-                            "}\n",
-                    kv("method", ModuleGenerator.METHOD_VAR_NAME),
-                    kv("isstatic", apiMethod.getMemberDoc().isStatic() ? "1" : "0"),
-                    kv("classVar", ModuleGenerator.getComponentCClassVarName(apiMethod.getEnclosingClass().getType())),
-                    kv("className", apiMethod.getEnclosingClass().getType().qualifiedTypeName()),
-                    kv("methodName", apiMethod.getJavaName()),
-                    kv("methodSig", apiMethod.getJavaSignature()));
+        return format("" +
+                              "if (!beampy_initApi()) {\n" +
+                              "    return NULL;\n" +
+                              "}\n" +
+                              "if (!beampy_initJMethod(&${method}, ${classVar}, \"${className}\", \"${methodName}\", \"${methodSig}\", ${isstatic})) {\n" +
+                              "    return NULL;\n" +
+                              "}\n",
+                      kv("method", ModuleGenerator.METHOD_VAR_NAME),
+                      kv("isstatic", apiMethod.getMemberDoc().isStatic() ? "1" : "0"),
+                      kv("classVar", ModuleGenerator.getComponentCClassVarName(apiMethod.getEnclosingClass().getType())),
+                      kv("className", apiMethod.getEnclosingClass().getType().qualifiedTypeName()),
+                      kv("methodName", apiMethod.getJavaName()),
+                      kv("methodSig", apiMethod.getJavaSignature()));
     }
 
 
@@ -123,7 +111,11 @@ public abstract class PyCFunctionGenerator extends AbstractFunctionGenerator {
                           kv("function", context.getFunctionNameFor(apiMethod)),
                           kv("parseArgs", parseArgs));
         if (isInstanceMethod()) {
-            return s + format("${this}JObj = (jobject) ${this};");
+            return s + format("" +
+                                      "${this}JObj = JObject_GetJObjectRef(${this}PyObj);\n" +
+                                      "if (${this}JObj == NULL) {\n" +
+                                      "    return NULL;\n" +
+                                      "}");
         } else {
             return s;
         }
@@ -132,7 +124,7 @@ public abstract class PyCFunctionGenerator extends AbstractFunctionGenerator {
     private String getParseFormats(GeneratorContext context) {
         StringBuilder parseFormats = new StringBuilder();
         if (isInstanceMethod()) {
-            parseFormats.append("(sK)");
+            parseFormats.append("O");
         }
         for (PyCParameterGenerator generator : getParameterGenerators()) {
             String format = generator.getParseFormat(context);
@@ -147,7 +139,7 @@ public abstract class PyCFunctionGenerator extends AbstractFunctionGenerator {
     private String getParseArgs(GeneratorContext context) {
         StringBuilder parseArgs = new StringBuilder();
         if (isInstanceMethod()) {
-            parseArgs.append(format("&${this}Type, &${this}"));
+            parseArgs.append(format("&${this}PyObj"));
         }
         for (PyCParameterGenerator generator : getParameterGenerators()) {
             String args = generator.getParseArgs(context);
@@ -283,8 +275,8 @@ public abstract class PyCFunctionGenerator extends AbstractFunctionGenerator {
 
         @Override
         public String generateTargetResultFromTransformedJniResultAssignment(GeneratorContext context) {
-            String typeName = getReturnType().simpleTypeName();
-            return format("${res}PyObj = beampy_newPyObjectFromJObject(${res}JObj, \"${typeName}\");",
+            String typeName = getComponentCClassName(getReturnType());
+            return format("${res}PyObj = JObject_FromJObjectRefWithType(${res}JObj, &${typeName}_Type);",
                           kv("typeName", typeName));
         }
 
@@ -340,8 +332,8 @@ public abstract class PyCFunctionGenerator extends AbstractFunctionGenerator {
 
         @Override
         public String generateTargetResultFromTransformedJniResultAssignment(GeneratorContext context) {
-            String typeName = getReturnType().simpleTypeName();
-            return format("${res}PyObj = beampy_newPySeqFromJObjectArray((jarray) ${res}JObj, \"${typeName}\");",
+            String typeName = getComponentCClassName(getReturnType());
+            return format("${res}PyObj = beampy_newPySeqFromJObjectArray((jarray) ${res}JObj, &${typeName}_Type);",
                           kv("typeName", typeName));
         }
     }
