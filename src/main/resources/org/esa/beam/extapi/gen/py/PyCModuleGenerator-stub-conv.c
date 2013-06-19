@@ -2,7 +2,10 @@
 // Java String and String array
 ///////////////////////////////////////////////
 
-// todo remove me
+// Used by
+//   PyCFunctionGenerator.java (PyCFunctionGenerator.StringMethod)
+//   This file (beampy_newPySeqFromJStringArray)
+//
 PyObject* beampy_newPyStringFromJString(jstring strJObj)
 {
     const char* utf8Chars;
@@ -15,10 +18,12 @@ PyObject* beampy_newPyStringFromJString(jstring strJObj)
     return strPyObj;
 }
 
+// Used by
+//    beampy_newJStringArrayFromPySeq (this file)
+//
 /**
  * Returns a local reference to a String array.
  */
-// todo remove me
 jstring beampy_newJStringFromPyObject(PyObject* anyPyObj)
 {
     char* utf8Chars;
@@ -41,7 +46,9 @@ jstring beampy_newJStringFromPyObject(PyObject* anyPyObj)
     return strJObj;
 }
 
-// todo remove me
+// Used by
+//   PyCFunctionGenerator.java (PyCFunctionGenerator.StringArrayMethod)
+//
 PyObject* beampy_newPySeqFromJStringArray(jarray arrayJObj)
 {
     PyObject* listPyObj;
@@ -71,10 +78,12 @@ PyObject* beampy_newPySeqFromJStringArray(jarray arrayJObj)
     return listPyObj;
 }
 
+// Used by
+//   PyCParameterGenerator.java (PyCParameterGenerator.StringArray)
+//
 /**
  * Returns a local reference to a String array.
  */
-// todo remove me
 jarray beampy_newJStringArrayFromPySeq(PyObject* seqPyObj)
 {
     jarray arrayJObj;
@@ -113,7 +122,9 @@ jarray beampy_newJStringArrayFromPySeq(PyObject* seqPyObj)
 // Java Object and Object array
 ///////////////////////////////////////////////
 
-// todo remove me
+// Used by
+//   beampy_newJObjectArrayFromPySeq (this file)
+//
 jobject beampy_newJObjectFromPyObject(PyObject* anyPyObj, PyTypeObject* type)
 {
 /*
@@ -137,7 +148,9 @@ jobject beampy_newJObjectFromPyObject(PyObject* anyPyObj, PyTypeObject* type)
     return NULL;
 }
 
-// todo remove me
+// Used by
+//      PyCFunctionGenerator.ObjectArrayMethod
+//
 PyObject* beampy_newPySeqFromJObjectArray(jarray arrJObj, PyTypeObject* type)
 {
     PyObject* listPyObj;
@@ -167,7 +180,9 @@ PyObject* beampy_newPySeqFromJObjectArray(jarray arrJObj, PyTypeObject* type)
     return listPyObj;
 }
 
-// todo remove me
+// Used by
+//     PyCParameterGenerator.ObjectArray
+//
 jarray beampy_newJObjectArrayFromPySeq(PyObject* seqPyObj, PyTypeObject* type)
 {
     jarray arrayJObj;
@@ -240,6 +255,9 @@ boolean beampy_initJavaCoreVars() {
 
 jobject beampy_newJMapFromPyObject(PyObject* anyPyObj);
 
+// Used by
+//     beampy_newJMapFromPyObject (this file)
+//
 jobject beampy_newGenericJObjectFromPyObject(PyObject* anyPyObj)
 {
     jobject anyJObj = NULL;
@@ -270,6 +288,9 @@ jobject beampy_newGenericJObjectFromPyObject(PyObject* anyPyObj)
 }
 
 
+// Used by
+//     beampy_newGenericJObjectFromPyObject (this file)
+//
 jobject beampy_newJMapFromPyObject(PyObject* anyPyObj)
 {
     PyObject* dictKeyPyObj;
