@@ -55,31 +55,9 @@ static jmethodID BPy_ArrayListSize = NULL;
 
 jboolean BPy_InitConv();
 
-jarray BPy_NewJBooleanArrayFromBuffer(PyObject* arg, jboolean* ok);
-jarray BPy_NewJCharArrayFromBuffer(PyObject* arg, jboolean* ok);
-jarray BPy_NewJByteArrayFromBuffer(PyObject* arg, jboolean* ok);
-jarray BPy_NewJShortArrayFromBuffer(PyObject* arg, jboolean* ok);
-jarray BPy_NewJIntArrayFromBuffer(PyObject* arg, jboolean* ok);
-jarray BPy_NewJLongArrayFromBuffer(PyObject* arg, jboolean* ok);
-jarray BPy_NewJFloatArrayFromBuffer(PyObject* arg, jboolean* ok);
-jarray BPy_NewJDoubleArrayFromBuffer(PyObject* arg, jboolean* ok);
+typedef jarray (JNICALL *BPy_NewJArrayFn)(JNIEnv*, jsize);
 
-jarray BPy_NewJBooleanArrayFromSeq(PyObject* arg, jboolean* ok);
-jarray BPy_NewJCharArrayFromSeq(PyObject* arg, jboolean* ok);
-jarray BPy_NewJByteArrayFromSeq(PyObject* arg, jboolean* ok);
-jarray BPy_NewJShortArrayFromSeq(PyObject* arg, jboolean* ok);
-jarray BPy_NewJIntArrayFromSeq(PyObject* arg, jboolean* ok);
-jarray BPy_NewJLongArrayFromSeq(PyObject* arg, jboolean* ok);
-jarray BPy_NewJFloatArrayFromSeq(PyObject* arg, jboolean* ok);
-jarray BPy_NewJDoubleArrayFromSeq(PyObject* arg, jboolean* ok);
-
-jobject BPy_NewJNumberFromInt(PyObject* arg, jboolean* ok);
-jobject BPy_NewJNumberFromFloat(PyObject* arg, jboolean* ok);
-jstring BPy_NewJStringFromStr(PyObject* arg, jboolean* ok);
-jobject BPy_NewJMapFromDict(PyObject* arg, jboolean* ok);
-jobject BPy_NewJListFromSeq(PyObject* arg, jboolean* ok);
-jobjectArray BPy_NewJObjectArrayFromSeq(PyObject* arg, jboolean* ok);
-jobjectArray BPy_NewJStringArrayFromSeq(PyObject* arg, jboolean* ok);
+jarray BPy_NewGenericJPrimitiveArrayFromBuffer(const void* buffer, jint bufferLength, size_t elemSize, BPy_NewJArrayFn NewJArray);
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Python To Java Conversion Functions
@@ -99,102 +77,62 @@ jobject BPy_ConvFailure(const char* msg, jboolean* ok)
     return NULL;
 }
 
-jarray BPy_NewJBooleanArrayFromBuffer(PyObject* arg, jboolean* ok)
+jarray BPy_NewGenericJPrimitiveArrayFromBuffer(const void* buffer, jint bufferLength, size_t elemSize, BPy_NewJArrayFn NewJArray)
 {
-    PyErr_SetString(PyExc_NotImplementedError, "TODO - implement me!");
-    return NULL;
+    jarray arrayJObj;
+
+    arrayJObj = NewJArray(jenv, bufferLength);
+    if (arrayJObj != NULL) {
+        void* addr = (*jenv)->GetPrimitiveArrayCritical(jenv, arrayJObj, NULL);
+        if (addr != NULL) {
+            memcpy(addr, buffer, bufferLength * elemSize);
+            (*jenv)->ReleasePrimitiveArrayCritical(jenv, arrayJObj, addr, 0);
+        }
+    }
+
+    return arrayJObj;
 }
 
-jarray BPy_NewJCharArrayFromBuffer(PyObject* arg, jboolean* ok)
+jarray BPy_NewJBooleanArrayFromBuffer(const jboolean* buffer, jint bufferLength)
 {
-    PyErr_SetString(PyExc_NotImplementedError, "TODO - implement me!");
-    return NULL;
+    return BPy_NewGenericJPrimitiveArrayFromBuffer(buffer, bufferLength, sizeof (jboolean), (*jenv)->NewBooleanArray);
 }
 
-jarray BPy_NewJByteArrayFromBuffer(PyObject* arg, jboolean* ok)
+jarray BPy_NewJCharArrayFromBuffer(const jchar* buffer, jint bufferLength)
 {
-    PyErr_SetString(PyExc_NotImplementedError, "TODO - implement me!");
-    return NULL;
+    return BPy_NewGenericJPrimitiveArrayFromBuffer(buffer, bufferLength, sizeof (jchar), (*jenv)->NewCharArray);
 }
 
-jarray BPy_NewJShortArrayFromBuffer(PyObject* arg, jboolean* ok)
+jarray BPy_NewJByteArrayFromBuffer(const jbyte* buffer, jint bufferLength)
 {
-    PyErr_SetString(PyExc_NotImplementedError, "TODO - implement me!");
-    return NULL;
+    return BPy_NewGenericJPrimitiveArrayFromBuffer(buffer, bufferLength, sizeof (jbyte), (*jenv)->NewByteArray);
 }
 
-jarray BPy_NewJIntArrayFromBuffer(PyObject* arg, jboolean* ok)
+jarray BPy_NewJShortArrayFromBuffer(const jshort* buffer, jint bufferLength)
 {
-    PyErr_SetString(PyExc_NotImplementedError, "TODO - implement me!");
-    return NULL;
+    return BPy_NewGenericJPrimitiveArrayFromBuffer(buffer, bufferLength, sizeof (jshort), (*jenv)->NewShortArray);
 }
 
-jarray BPy_NewJLongArrayFromBuffer(PyObject* arg, jboolean* ok)
+jarray BPy_NewJIntArrayFromBuffer(const jint* buffer, jint bufferLength)
 {
-    PyErr_SetString(PyExc_NotImplementedError, "TODO - implement me!");
-    return NULL;
+    return BPy_NewGenericJPrimitiveArrayFromBuffer(buffer, bufferLength, sizeof (jint), (*jenv)->NewIntArray);
 }
 
-jarray BPy_NewJFloatArrayFromBuffer(PyObject* arg, jboolean* ok)
+jarray BPy_NewJLongArrayFromBuffer(const jlong* buffer, jint bufferLength)
 {
-    PyErr_SetString(PyExc_NotImplementedError, "TODO - implement me!");
-    return NULL;
+    return BPy_NewGenericJPrimitiveArrayFromBuffer(buffer, bufferLength, sizeof (jlong), (*jenv)->NewLongArray);
 }
 
-jarray BPy_NewJDoubleArrayFromBuffer(PyObject* arg, jboolean* ok)
+jarray BPy_NewJFloatArrayFromBuffer(const jfloat* buffer, jint bufferLength)
 {
-    PyErr_SetString(PyExc_NotImplementedError, "TODO - implement me!");
-    return NULL;
+    return BPy_NewGenericJPrimitiveArrayFromBuffer(buffer, bufferLength, sizeof (jfloat), (*jenv)->NewFloatArray);
 }
 
-
-jarray BPy_NewJBooleanArrayFromSeq(PyObject* arg, jboolean* ok)
+jarray BPy_NewJDoubleArrayFromBuffer(const jdouble* buffer, jint bufferLength)
 {
-    PyErr_SetString(PyExc_NotImplementedError, "TODO - implement me!");
-    return NULL;
+    return BPy_NewGenericJPrimitiveArrayFromBuffer(buffer, bufferLength, sizeof (jdouble), (*jenv)->NewDoubleArray);
 }
 
-jarray BPy_NewJCharArrayFromSeq(PyObject* arg, jboolean* ok)
-{
-    PyErr_SetString(PyExc_NotImplementedError, "TODO - implement me!");
-    return NULL;
-}
-
-jarray BPy_NewJByteArrayFromSeq(PyObject* arg, jboolean* ok)
-{
-    PyErr_SetString(PyExc_NotImplementedError, "TODO - implement me!");
-    return NULL;
-}
-
-jarray BPy_NewJShortArrayFromSeq(PyObject* arg, jboolean* ok)
-{
-    PyErr_SetString(PyExc_NotImplementedError, "TODO - implement me!");
-    return NULL;
-}
-
-jarray BPy_NewJIntArrayFromSeq(PyObject* arg, jboolean* ok)
-{
-    PyErr_SetString(PyExc_NotImplementedError, "TODO - implement me!");
-    return NULL;
-}
-
-jarray BPy_NewJLongArrayFromSeq(PyObject* arg, jboolean* ok)
-{
-    PyErr_SetString(PyExc_NotImplementedError, "TODO - implement me!");
-    return NULL;
-}
-
-jarray BPy_NewJFloatArrayFromSeq(PyObject* arg, jboolean* ok)
-{
-    PyErr_SetString(PyExc_NotImplementedError, "TODO - implement me!");
-    return NULL;
-}
-
-jarray BPy_NewJDoubleArrayFromSeq(PyObject* arg, jboolean* ok)
-{
-    PyErr_SetString(PyExc_NotImplementedError, "TODO - implement me!");
-    return NULL;
-}
 
 jobject BPy_NewJBooleanFromBool(PyObject* arg, jboolean* ok)
 {
@@ -309,9 +247,9 @@ jobject BPy_NewJListFromSeq(PyObject* arg, jboolean* ok)
     return NULL;
 }
 
-typedef (*BPy_ToJObjectConverter)(PyObject*, jboolean*);
+typedef jobject (*BPy_ToJObjectFn)(PyObject*, jboolean*);
 
-jobjectArray BPy_NewGenericJObjectArrayFromSeq(PyObject* arg, jclass componentType, BPy_ToJObjectConverter conv, jboolean* ok)
+jobjectArray BPy_NewGenericJObjectArrayFromSeq(PyObject* arg, jclass componentType, BPy_ToJObjectFn toJObject, jboolean* ok)
 {
     jarray arrayJObj;
     Py_ssize_t size;
@@ -335,7 +273,7 @@ jobjectArray BPy_NewGenericJObjectArrayFromSeq(PyObject* arg, jclass componentTy
             (*jenv)->DeleteLocalRef(jenv, arrayJObj);
             return BPy_ConvFailure("failed to get sequence item", ok);
         }
-        (*jenv)->SetObjectArrayElement(jenv, arrayJObj, (jint) i, conv(itemPyObj, ok));
+        (*jenv)->SetObjectArrayElement(jenv, arrayJObj, (jint) i, toJObject(itemPyObj, ok));
     }
 
     return BPy_ConvSuccess(arrayJObj, ok);
@@ -530,6 +468,87 @@ jarray BPy_ToJDoubleArray(PyObject* arg, jboolean* ok)
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Java To Python Conversion Functions
+
+PyObject* BPy_CopyGenericJPrimitiveArrayToBuffer(jarray arrayJObj, void* buffer, jint bufferLength, size_t elemSize, PyObject* bufferPyObj)
+{
+    void* addr;
+    jsize n;
+
+    n = (*jenv)->GetArrayLength(jenv, arrayJObj);
+    if (bufferLength < n) {
+         PyErr_SetString(PyExc_ValueError, "array buffer too small");
+         return NULL;
+    }
+
+    addr = (*jenv)->GetPrimitiveArrayCritical(jenv, arrayJObj, NULL);
+    if (addr != NULL) {
+        memcpy(buffer, addr, bufferLength * elemSize);
+        (*jenv)->ReleasePrimitiveArrayCritical(jenv, arrayJObj, addr, 0);
+    }
+
+    return bufferPyObj;
+}
+
+PyObject* BPy_CopyJBooleanArrayToBuffer(jarray arrayJObj, jboolean* buffer, jint bufferLength, PyObject* bufferPyObj)
+{
+    return BPy_CopyGenericJPrimitiveArrayToBuffer(arrayJObj, buffer, bufferLength, sizeof (jboolean), bufferPyObj);
+}
+
+PyObject* BPy_CopyJCharArrayToBuffer(jarray arrayJObj, jchar* buffer, jint bufferLength, PyObject* bufferPyObj)
+{
+    return BPy_CopyGenericJPrimitiveArrayToBuffer(arrayJObj, buffer, bufferLength, sizeof (jchar), bufferPyObj);
+}
+
+PyObject* BPy_CopyJByteArrayToBuffer(jarray arrayJObj, jbyte* buffer, jint bufferLength, PyObject* bufferPyObj)
+{
+    return BPy_CopyGenericJPrimitiveArrayToBuffer(arrayJObj, buffer, bufferLength, sizeof (jbyte), bufferPyObj);
+}
+
+PyObject* BPy_CopyJShortArrayToBuffer(jarray arrayJObj, jshort* buffer, jint bufferLength, PyObject* bufferPyObj)
+{
+    return BPy_CopyGenericJPrimitiveArrayToBuffer(arrayJObj, buffer, bufferLength, sizeof (jshort), bufferPyObj);
+}
+
+PyObject* BPy_CopyJIntArrayToBuffer(jarray arrayJObj, jint* buffer, jint bufferLength, PyObject* bufferPyObj)
+{
+    return BPy_CopyGenericJPrimitiveArrayToBuffer(arrayJObj, buffer, bufferLength, sizeof (jint), bufferPyObj);
+}
+
+PyObject* BPy_CopyJLongArrayToBuffer(jarray arrayJObj, jlong* buffer, jint bufferLength, PyObject* bufferPyObj)
+{
+    return BPy_CopyGenericJPrimitiveArrayToBuffer(arrayJObj, buffer, bufferLength, sizeof (jlong), bufferPyObj);
+}
+
+PyObject* BPy_CopyJFloatArrayToBuffer(jarray arrayJObj, jfloat* buffer, jint bufferLength, PyObject* bufferPyObj)
+{
+    return BPy_CopyGenericJPrimitiveArrayToBuffer(arrayJObj, buffer, bufferLength, sizeof (jfloat), bufferPyObj);
+}
+
+PyObject* BPy_CopyJDoubleArrayToBuffer(jarray arrayJObj, jdouble* buffer, jint bufferLength, PyObject* bufferPyObj)
+{
+    return BPy_CopyGenericJPrimitiveArrayToBuffer(arrayJObj, buffer, bufferLength, sizeof (jdouble), bufferPyObj);
+}
+
+PyObject* BPy_NewCArrayFromJPrimitiveArray(jarray arrayJObj, const char* format)
+{
+    PyObject* bufferPyObj;
+    void* addr;
+    jsize arrayLength;
+
+    arrayLength = (*jenv)->GetArrayLength(jenv, arrayJObj);
+
+    addr = (*jenv)->GetPrimitiveArrayCritical(jenv, arrayJObj, NULL);
+    if (addr != NULL) {
+        bufferPyObj = CArray_FromMemory(format, addr, arrayLength, CArray_FreeMemory);
+        (*jenv)->ReleasePrimitiveArrayCritical(jenv, arrayJObj, addr, 0);
+    } else {
+        bufferPyObj = NULL;
+    }
+
+    return bufferPyObj;
+}
+
+
 
 PyObject* BPy_FromJObject(PyTypeObject* type, jobject arg)
 {

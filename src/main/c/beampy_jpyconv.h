@@ -10,6 +10,31 @@ extern "C" {
 #include "beampy_jobject.h"
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Primitive Array Conversion Functions
+
+jarray BPy_NewJBooleanArrayFromBuffer(const jboolean* buffer, jint bufferLength);
+jarray BPy_NewJCharArrayFromBuffer(const jchar* buffer, jint bufferLength);
+jarray BPy_NewJByteArrayFromBuffer(const jbyte* buffer, jint bufferLength);
+jarray BPy_NewJShortArrayFromBuffer(const jshort* buffer, jint bufferLength);
+jarray BPy_NewJIntArrayFromBuffer(const jint* buffer, jint bufferLength);
+jarray BPy_NewJLongArrayFromBuffer(const jlong* buffer, jint bufferLength);
+jarray BPy_NewJFloatArrayFromBuffer(const jfloat* buffer, jint bufferLength);
+jarray BPy_NewJDoubleArrayFromBuffer(const jdouble* buffer, jint bufferLength);
+jarray BPy_NewJBooleanArrayFromBuffer(const jboolean* buffer, jint bufferLength);
+
+PyObject* BPy_NewCArrayFromJPrimitiveArray(jarray arrayJObj, const char* format);
+
+PyObject* BPy_CopyJBooleanArrayToBuffer(jarray arrayJObj, jboolean* buffer, jint bufferLength, PyObject* bufferPyObj);
+PyObject* BPy_CopyJCharArrayToBuffer(jarray arrayJObj, jchar* buffer, jint bufferLength, PyObject* bufferPyObj);
+PyObject* BPy_CopyJByteArrayToBuffer(jarray arrayJObj, jbyte* buffer, jint bufferLength, PyObject* bufferPyObj);
+PyObject* BPy_CopyJShortArrayToBuffer(jarray arrayJObj, jshort* buffer, jint bufferLength, PyObject* bufferPyObj);
+PyObject* BPy_CopyJIntArrayToBuffer(jarray arrayJObj, jint* buffer, jint bufferLength, PyObject* bufferPyObj);
+PyObject* BPy_CopyJLongArrayToBuffer(jarray arrayJObj, jlong* buffer, jint bufferLength, PyObject* bufferPyObj);
+PyObject* BPy_CopyJFloatArrayToBuffer(jarray arrayJObj, jfloat* buffer, jint bufferLength, PyObject* bufferPyObj);
+PyObject* BPy_CopyJDoubleArrayToBuffer(jarray arrayJObj, jdouble* buffer, jint bufferLength, PyObject* bufferPyObj);
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Python To Java Conversion Functions
 
 jobject BPy_ToJObject(PyObject* arg, jboolean* ok);
