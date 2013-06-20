@@ -9,6 +9,9 @@ extern "C" {
 #include "Python.h"
 #include "jni.h"
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// JObject
+
 /**
  * Structure used to represent Java JNI objects.
  *
@@ -25,35 +28,66 @@ typedef struct {
 extern PyTypeObject JObject_Type;
 
 /**
+ * Creates a new JObject instance from a given global reference to a Java object and the given type.
+ * The type must be &JObject_Type or type.tp_base == &JObject_Type.
+ */
+PyObject* JObject_FromJObjectRefWithType(jobject jobjectRef, PyTypeObject* type);
+
+/**
  * Creates a new JObject instance from a given global reference to a Java object.
  */
 PyObject* JObject_FromJObjectRef(jobject jobjectRef);
-PyObject* JObject_FromJObjectRefWithType(jobject jobjectRef, PyTypeObject* type);
 
 /**
  * Returns 1 (TRUE) if the given Python object is a JObject or a derived type. 0 (FALSE) otherwise.
  */
 int JObject_Check(PyObject* anyPyObj);
+
 /**
  * Returns a JObject pointer if the given Python object is a JObject or derived type. NULL otherwise.
  */
 JObject* JObject_AsJObject(PyObject* anyPyObj);
+
 /**
  * Returns a global reference to a Java object if the given Python object is a JObject or derived type. NULL otherwise.
  */
 jobject JObject_GetJObjectRef(PyObject* anyPyObj);
-jobject JObject_GetJObjectRefWithType(PyObject* anyPyObj, PyTypeObject* type);
 
+/**
+ * Returns a global reference to a Java object if the given Python object is a JObject or derived type and if the Java
+ * object is an instance of the given Java class. NULL otherwise.
+ */
+jobject JObject_GetJObjectRefInstanceOf(PyObject* anyPyObj, jclass requestedType);
+
+
+// todo - check if we need them here (should be local in C-file)
+//        used in derived type decls, but maybe PyType_Ready does the job?
 int JObject_init(JObject* self, PyObject* args, PyObject* kwds);
 void JObject_dealloc(JObject* self);
 
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// JObjectArray
+
+///PyAPI_DATA(PyTypeObject) JObject_Type;
+extern PyTypeObject JObjectArray_Type;
+
+/**
+ * Creates a new JObjectArray instance from a given global reference to a Java object.
+ */
+PyObject* JObjectArray_FromJObjectArrayRef(jobjectArray jobjectArrayRef);
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// JVM access
 
 // todo - better use functions for retrieving these pointers
 //PyAPI_DATA(JavaVM*) jvm;
 extern JavaVM* jvm;
 //PyAPI_DATA(JNIEnv*) jenv;
 extern JNIEnv* jenv;
+
+//
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 #ifdef __cplusplus
 }  /* extern "C" */

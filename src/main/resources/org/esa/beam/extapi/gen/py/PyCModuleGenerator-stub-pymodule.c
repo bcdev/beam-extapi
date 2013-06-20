@@ -58,6 +58,16 @@ PyMODINIT_FUNC PyInit_${libName}()
     PyModule_AddObject(module, "JObject", (PyObject*) &JObject_Type);
 
     /////////////////////////////////////////////////////////////////////////
+    // Register JObjectArray_Type ('JObjectArray')
+    //
+    JObjectArray_Type.tp_base = &JObject_Type;
+    if (PyType_Ready(&JObject_Type) < 0) {
+        return NULL;
+    }
+    Py_INCREF(&JObjectArray_Type);
+    PyModule_AddObject(module, "JObjectArray", (PyObject*) &JObjectArray_Type);
+
+    /////////////////////////////////////////////////////////////////////////
     // Register BEAM JObject Sub-types
     //
     if (!beampy_registerJObjectSubtypes(module)) {

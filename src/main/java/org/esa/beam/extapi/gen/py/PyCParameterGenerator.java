@@ -148,7 +148,7 @@ public abstract class PyCParameterGenerator implements ParameterGenerator {
         public String generateJniArgFromTransformedTargetArgAssignment(GeneratorContext context) {
             String typeName = getComponentCClassName(getType());
             return eval("" +
-                                "${par}JObj = JObject_GetJObjectRefWithType(${par}PyObj, &${typeName}_Type);\n" +
+                                "${par}JObj = JObject_GetJObjectRefInstanceOf(${par}PyObj, class${typeName});\n" +
                                 "if (${par}JObj == NULL) {\n" +
                                 "    return NULL;\n" +
                                 "}",
