@@ -56,7 +56,7 @@ PyObject* JObject_FromJObjectRef(jobject jobjectRef)
 PyObject* JObject_FromJObjectRefWithType(jobject jobjectRef, PyTypeObject* type)
 {
     PyObject* longPyObj = PyLong_FromVoidPtr(jobjectRef);
-    PyObject* jobjPyObj = PyObject_CallObject(type, longPyObj);
+    PyObject* jobjPyObj = PyObject_CallObject((PyObject*) type, longPyObj);
     Py_DECREF(longPyObj);
     return jobjPyObj;
 }
@@ -105,14 +105,10 @@ jobject JObject_GetJObjectRefInstanceOf(PyObject* anyPyObj, jclass jclassRef)
 jobjectArray JObject_GetJObjectArrayRef(PyObject* anyPyObj)
 {
     static jclass classObjectArray = NULL;
-    JObject* jobjPyObj = JObject_AsJObject(anyPyObj);
-    if (jobjPyObj == NULL) {
-        return NULL;
-    }
     if (classObjectArray == NULL) {
         classObjectArray = (*jenv)->FindClass(jenv, "[Ljava/lang/Object;");
     }
-    return (jobjectArray) JObject_GetJObjectRefInstanceOf(jobjPyObj, classObjectArray);
+    return (jobjectArray) JObject_GetJObjectRefInstanceOf(anyPyObj, classObjectArray);
 }
 
 /**
@@ -160,6 +156,58 @@ void JObject_dealloc(JObject* self)
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // JObjectArray
 
+/*
+ * Implements the length method of the <sequence> interface for CArray_Type
+ */
+Py_ssize_t JObjectArray_sq_length(JObjectArray* self)
+{
+    return (Py_ssize_t) (*jenv)->GetArrayLength(jenv, self->jobjectRef);
+}
+
+/*
+ * Implements the item getter method of the <sequence> interface for CArray_Type
+ */
+PyObject* JObjectArray_sq_item(JObjectArray* self, Py_ssize_t index)
+{
+    jobject elemJObj = (*jenv)->GetObjectArrayElement(jenv, self->jobjectRef, (jsize) index);
+    return JObject_FromJObjectRef(elemJObj);
+}
+
+/*
+ * Implements the item assignment method of the <sequence> interface for CArray_Type
+ */
+int JObjectArray_sq_ass_item(JObjectArray* self, Py_ssize_t index, PyObject* other)
+{
+    jobject elemJObj = NULL;
+    if (other != Py_None) {
+        // todo - use a more generic conversion function here...
+        elemJObj = JObject_GetJObjectRef(other);
+        if (elemJObj == NULL) {
+            PyErr_SetString(PyExc_ValueError, "illegal item type, must be a JObject");
+            return -1;
+        }
+    }
+    (*jenv)->SetObjectArrayElement(jenv, self->jobjectRef, (jsize) index, elemJObj);
+    // todo - check for any Java exceptions thrown
+    return 0;
+}
+
+/*
+ * Implements the <sequence> interface for CArray_Type
+ */
+static PySequenceMethods JObjectArray_as_sequence = {
+    (lenfunc) JObjectArray_sq_length,            /* sq_length */
+    NULL,   /* sq_concat */
+    NULL,   /* sq_repeat */
+    (ssizeargfunc) JObjectArray_sq_item,         /* sq_item */
+    NULL,   /* was_sq_slice */
+    (ssizeobjargproc) JObjectArray_sq_ass_item,  /* sq_ass_item */
+    NULL,   /* was_sq_ass_slice */
+    NULL,   /* sq_contains */
+    NULL,   /* sq_inplace_concat */
+    NULL,   /* sq_inplace_repeat */
+};
+
 /**
  * Implements the BeamPy_JObjectType class singleton.
  */
@@ -175,7 +223,7 @@ PyTypeObject JObjectArray_Type = {
     NULL,                         /* tp_reserved */
     NULL,                         /* tp_repr */
     NULL,                         /* tp_as_number */
-    NULL,                         /* tp_as_sequence */
+    &JObjectArray_as_sequence,    /* tp_as_sequence */
     NULL,                         /* tp_as_mapping */
     NULL,                         /* tp_hash  */
     NULL,                         /* tp_call */

@@ -69,6 +69,8 @@ void JObject_dealloc(JObject* self);
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // JObjectArray
 
+typedef JObject JObjectArray;
+
 ///PyAPI_DATA(PyTypeObject) JObject_Type;
 extern PyTypeObject JObjectArray_Type;
 
