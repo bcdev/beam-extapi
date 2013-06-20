@@ -43,9 +43,9 @@ public class PyCModuleGenerator extends ModuleGenerator {
 
     static {
         // todo - make sure that the following type mappings match in number of bytes
-        CARRAY_FORMATS.put(Byte.TYPE.getName(), "b"); // 1 byte
         CARRAY_FORMATS.put(Boolean.TYPE.getName(), "b");  // 1 byte
         CARRAY_FORMATS.put(Character.TYPE.getName(), "h");  // 2 byte
+        CARRAY_FORMATS.put(Byte.TYPE.getName(), "b"); // 1 byte
         CARRAY_FORMATS.put(Short.TYPE.getName(), "h"); // 2 byte
         CARRAY_FORMATS.put(Integer.TYPE.getName(), "i"); // 4 byte
         CARRAY_FORMATS.put(Long.TYPE.getName(), "l"); // 8 byte
