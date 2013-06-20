@@ -24,7 +24,7 @@ typedef void (*CArrayFree)(void* array_elems, int array_length);
  * calling Py_INCREF(obj) in the returned obj yourself
  * @param format The item type format. Must be one of "b", "B", "h", "H", "i", "I", "l", "L", "f", "d" (see Python struct module).
  */
-PyObject* CArray_createFromItems(const char* format, void* items, int length, CArrayFree free_fn);
+PyObject* CArray_FromMemory(const char* format, void* items, int length, CArrayFree free_fn);
 
 /**
  * Factory function for a CArray used if only the number of items is known given.
@@ -33,18 +33,18 @@ PyObject* CArray_createFromItems(const char* format, void* items, int length, CA
  * calling Py_INCREF(obj) in the returned obj yourself
  * @param format The item type format. Must be one of "b", "B", "h", "H", "i", "I", "l", "L", "f", "d" (see Python struct module).
  */
-PyObject* CArray_createFromLength(const char* format, int length);
+PyObject* CArray_FromLength(const char* format, int length);
 
 /**
  * Gets the size in bytes of an item in a CArray.
  * @param format The item type format. Must be one of "b", "B", "h", "H", "i", "I", "l", "L", "f", "d" (see Python struct module).
  */
-size_t CArray_getItemSize(const char* format);
+size_t CArray_ItemSize(const char* format);
 
 /**
  * Default implementation for the CArrayFree function.
  */
-void CArray_releaseElements(void* elems, int length);
+void CArray_FreeMemory(void* elems, int length);
 
 
 /**
@@ -59,7 +59,7 @@ typedef struct {
     void* items;
     CArrayFree free_fn;
     size_t num_exports;
-} CArrayObj;
+} CArray;
 
 
 // PyAPI_DATA(PyTypeObject) CArray_Type;

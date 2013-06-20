@@ -5,7 +5,7 @@
 /*
  * Default implementation for the 'free_fn' field.
  */
-void CArray_releaseElements(void* items, int length)
+void CArray_FreeMemory(void* items, int length)
 {
     if (items != NULL) {
         free(items);
@@ -15,7 +15,7 @@ void CArray_releaseElements(void* items, int length)
 /*
  * Helper for the __init__() method for CArray_Type
  */
-static void CArray_initInstance(CArrayObj* self, const char* format, void* items, size_t item_size, int length, CArrayFree free_fn)
+static void CArray_InitInstance(CArray* self, const char* format, void* items, size_t item_size, int length, CArrayFree free_fn)
 {
     self->format[0] = format[0];
     self->format[1] = 0;
@@ -31,11 +31,11 @@ static void CArray_initInstance(CArrayObj* self, const char* format, void* items
  */
 static PyObject* CArray_new(PyTypeObject* type, PyObject* args, PyObject* kwds)
 {
-    CArrayObj* self;
+    CArray* self;
     printf("CArray_new\n");
-    self = (CArrayObj*) type->tp_alloc(type, 0);
+    self = (CArray*) type->tp_alloc(type, 0);
     if (self != NULL) {
-        CArray_initInstance(self, "\0", 0, 0, 0, 0);
+        CArray_InitInstance(self, "\0", 0, 0, 0, 0);
     }
     return (PyObject*) self;
 }
@@ -43,7 +43,7 @@ static PyObject* CArray_new(PyTypeObject* type, PyObject* args, PyObject* kwds)
 /*
  * Helper for the __init__() method for CArray_Type
  */
-size_t CArray_getItemSize(const char* format)
+size_t CArray_ItemSize(const char* format)
 {
     if (strcmp(format, "b") == 0 || strcmp(format, "B") == 0) {
         return sizeof (char);
@@ -66,7 +66,7 @@ size_t CArray_getItemSize(const char* format)
 /*
  * Implements the __init__() method for CArray_Type
  */
-static int CArray_init(CArrayObj* self, PyObject* args, PyObject* kwds)
+static int CArray_init(CArray* self, PyObject* args, PyObject* kwds)
 {
     const char* format = NULL;
     void* items = NULL;
@@ -79,7 +79,7 @@ static int CArray_init(CArrayObj* self, PyObject* args, PyObject* kwds)
         return 1;
     }
 
-    item_size = CArray_getItemSize(format);
+    item_size = CArray_ItemSize(format);
     if (item_size <= 0) {
         return 2;
     }
@@ -95,14 +95,14 @@ static int CArray_init(CArrayObj* self, PyObject* args, PyObject* kwds)
         return 4;
     }
 
-    CArray_initInstance(self, format, items, item_size, length, CArray_releaseElements);
+    CArray_InitInstance(self, format, items, item_size, length, CArray_FreeMemory);
     return 0;
 }
 
 /*
  * Implements the dealloc() method for CArray_Type
  */
-static void CArray_dealloc(CArrayObj* self)
+static void CArray_dealloc(CArray* self)
 {
     printf("CArray_dealloc\n");
     if (self->items != NULL && self->free_fn != NULL) {
@@ -116,57 +116,16 @@ static void CArray_dealloc(CArrayObj* self)
 /*
  * Implements the repr() method for CArray_Type
  */
-static PyObject* CArray_repr(CArrayObj* self)
+static PyObject* CArray_repr(CArray* self)
 {
     return PyUnicode_FromFormat("CArray('%s', %d)", self->format, self->length);
 }
 
 /*
- * A test instance method of CArray_Type
- */
-static PyObject* CArray_noargs(CArrayObj* self)
-{
-    printf("CArray_noargs self=%p\n", self);
-    return Py_BuildValue("");
-}
-
-/*
- * A test instance method of CArray_Type
- */
-static PyObject* CArray_varargs(CArrayObj* self, PyObject* args)
-{
-    printf("CArray_varargs self=%p, args=%p\n", self, args);
-    return Py_BuildValue("");
-}
-
-/*
- * A test static method of CArray_Type
- */
-static PyObject* CArray_varargsstatic(CArrayObj* self, PyObject* args)
-{
-    printf("CArray_varargsstatic self=%p, args=%p\n", self, args);
-    return Py_BuildValue("");
-}
-
-/*
- * A test class method of CArray_Type
- */
-static PyObject* CArray_varargsclass(PyTypeObject* cls, PyObject* args)
-{
-    printf("CArray_varargsclass cls=%p, args=%p\n", cls, args);
-    return Py_BuildValue("");
-}
-
-
-/*
- * Implements all specific methods of the CArray_Type (currently all methods are tests)
+ * Implements all specific methods of the CArray_Type (none so far)
  */
 static PyMethodDef CArray_methods[] = {
-    {"noargs", (PyCFunction) CArray_noargs, METH_NOARGS, "METH_NOARGS test"},
-    {"varargs", (PyCFunction) CArray_varargs, METH_VARARGS, "METH_VARARGS test"},
-    {"varargsstatic", (PyCFunction) CArray_varargsstatic, METH_VARARGS | METH_STATIC, "METH_VARARGS | METH_STATIC test"},
-    {"varargsclass", (PyCFunction) CArray_varargsclass, METH_VARARGS | METH_CLASS, "METH_VARARGS | METH_CLASS test"},
-    {NULL}  /* Sentinel */
+    {NULL} 
 };
 
 #define PRINT_FLAG(F) printf("CArray_getbufferproc: %s = %d\n", #F, (flags & F) != 0);
@@ -175,7 +134,7 @@ static PyMethodDef CArray_methods[] = {
 /*
  * Implements the getbuffer() method of the <buffer> interface for CArray_Type
  */
-int CArray_getbufferproc(CArrayObj* self, Py_buffer* view, int flags)
+int CArray_getbufferproc(CArray* self, Py_buffer* view, int flags)
 {
     int ret = 0;
 
@@ -259,7 +218,7 @@ int CArray_getbufferproc(CArrayObj* self, Py_buffer* view, int flags)
 /*
  * Implements the releasebuffer() method of the <buffer> interface for CArray_Type
  */
-void CArray_releasebufferproc(CArrayObj* self, Py_buffer* view)
+void CArray_releasebufferproc(CArray* self, Py_buffer* view)
 {
     printf("CArray_releasebufferproc\n");
     // Step 1
@@ -290,7 +249,7 @@ static PyBufferProcs CArray_as_buffer = {
 /*
  * Implements the length method of the <sequence> interface for CArray_Type
  */
-Py_ssize_t CArray_sq_length(CArrayObj* self)
+Py_ssize_t CArray_sq_length(CArray* self)
 {
     return self->length;
 }
@@ -298,7 +257,7 @@ Py_ssize_t CArray_sq_length(CArrayObj* self)
 /*
  * Implements the item getter method of the <sequence> interface for CArray_Type
  */
-PyObject* CArray_sq_item(CArrayObj* self, Py_ssize_t index)
+PyObject* CArray_sq_item(CArray* self, Py_ssize_t index)
 {
     if (index < 0) {
         index += self->length;
@@ -330,7 +289,7 @@ PyObject* CArray_sq_item(CArrayObj* self, Py_ssize_t index)
 /*
  * Implements the item assignment method of the <sequence> interface for CArray_Type
  */
-int CArray_sq_ass_item(CArrayObj* self, Py_ssize_t index, PyObject* other)
+int CArray_sq_ass_item(CArray* self, Py_ssize_t index, PyObject* other)
 {
     if (index < 0) {
         index += self->length;
@@ -388,7 +347,7 @@ static PySequenceMethods CArray_as_sequence = {
 PyTypeObject CArray_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
     "${libName}.CArray",       /* tp_name */
-    sizeof(CArrayObj),         /* tp_basicsize */
+    sizeof(CArray),         /* tp_basicsize */
     0,                         /* tp_itemsize */
     (destructor)CArray_dealloc,/* tp_dealloc */
     0,                         /* tp_print */
@@ -432,12 +391,12 @@ PyTypeObject CArray_Type = {
  * Note that this method does not increment the reference counter. You are responsible for 
  * calling Py_INCREF(obj) in the returned obj yourself
  */
-PyObject* CArray_createFromItems(const char* format, void* items, int length, CArrayFree free_fn) {
+PyObject* CArray_FromMemory(const char* format, void* items, int length, CArrayFree free_fn) {
     PyTypeObject* type = &CArray_Type;
-    CArrayObj* self;
+    CArray* self;
     size_t item_size;
 
-    item_size = CArray_getItemSize(format);
+    item_size = CArray_ItemSize(format);
     if (item_size <= 0) {
         return NULL;
     }
@@ -452,8 +411,8 @@ PyObject* CArray_createFromItems(const char* format, void* items, int length, CA
         return NULL;
     }
 
-    self = (CArrayObj*) type->tp_alloc(type, 0);
-    CArray_initInstance(self, format, items, item_size, length, free_fn);
+    self = (CArray*) type->tp_alloc(type, 0);
+    CArray_InitInstance(self, format, items, item_size, length, free_fn);
     return (PyObject*) self;
 }
 
@@ -463,13 +422,13 @@ PyObject* CArray_createFromItems(const char* format, void* items, int length, CA
  * Note that this method does not increment the reference counter. You are responsible for
  * calling Py_INCREF(obj) in the returned obj yourself
  */
-PyObject* CArray_createFromLength(const char* format, int length) {
+PyObject* CArray_FromLength(const char* format, int length) {
     PyTypeObject* type = &CArray_Type;
-    CArrayObj* self;
+    CArray* self;
     void* items;
     size_t item_size;
 
-    item_size = CArray_getItemSize(format);
+    item_size = CArray_ItemSize(format);
     if (item_size <= 0) {
         return NULL;
     }
@@ -485,47 +444,9 @@ PyObject* CArray_createFromLength(const char* format, int length) {
         return NULL;
     }
 
-    self = (CArrayObj*) type->tp_alloc(type, 0);
-    CArray_initInstance(self, format, items, item_size, length, CArray_releaseElements);
+    self = (CArray*) type->tp_alloc(type, 0);
+    CArray_InitInstance(self, format, items, item_size, length, CArray_FreeMemory);
     return (PyObject*) self;
 }
 
-/*
- * Implements the 'carray' module.
- * May be used for testing this CArray_Type in a separate module.
- * However, the _beampy.pyd library already registers it.
- */
-/*
-static PyModuleDef CArray_Module = {
-    PyModuleDef_HEAD_INIT,
-    "carray",
-    "Provides a light-weight wrapper around one-dimensional C-arrays.",
-    -1,
-    NULL, NULL, NULL, NULL, NULL
-};
-*/
-
-/*
- * May be used for testing this CArray_Type in a separate module.
- * However, the _beampy.pyd library already registers it.
- */
-/*
-PyMODINIT_FUNC PyInit_carray()
-{
-    PyObject* m;
-
-    if (PyType_Ready(&CArray_Type) < 0) {
-        return NULL;
-    }
-
-    m = PyModule_Create(&CArray_Module);
-    if (m == NULL) {
-        return NULL;
-    }
-
-    Py_INCREF(&CArray_Type);
-    PyModule_AddObject(m, "CArray", (PyObject*) &CArray_Type);
-    return m;
-}
-*/
 

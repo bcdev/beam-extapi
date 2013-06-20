@@ -58,7 +58,7 @@ PyObject* beampy_newPyObjectFromJ${typeUC}Array(jarray arrayJObj)
 
     addr = (*jenv)->GetPrimitiveArrayCritical(jenv, arrayJObj, NULL);
     if (addr != NULL) {
-        bufferPyObj = CArray_createFromItems("${bufferFormat}", addr, arrayLength, CArray_releaseElements);
+        bufferPyObj = CArray_FromMemory("${bufferFormat}", addr, arrayLength, CArray_FreeMemory);
         (*jenv)->ReleasePrimitiveArrayCritical(jenv, arrayJObj, addr, 0);
     } else {
         bufferPyObj = NULL;
