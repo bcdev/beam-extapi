@@ -33,7 +33,7 @@ PyObject* CArray_FromMemory(const char* format, void* items, int length, CArrayF
  * calling Py_INCREF(obj) in the returned obj yourself
  * @param format The item type format. Must be one of "b", "B", "h", "H", "i", "I", "l", "L", "f", "d" (see Python struct module).
  */
-PyObject* CArray_FromLength(const char* format, int length);
+PyObject* CArray_New(const char* format, int length);
 
 /**
  * Gets the size in bytes of an item in a CArray.

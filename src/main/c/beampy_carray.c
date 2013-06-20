@@ -422,7 +422,7 @@ PyObject* CArray_FromMemory(const char* format, void* items, int length, CArrayF
  * Note that this method does not increment the reference counter. You are responsible for
  * calling Py_INCREF(obj) in the returned obj yourself
  */
-PyObject* CArray_FromLength(const char* format, int length) {
+PyObject* CArray_New(const char* format, int length) {
     PyTypeObject* type = &CArray_Type;
     CArray* self;
     void* items;
