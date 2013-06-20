@@ -48,12 +48,12 @@ PyTypeObject JObject_Type = {
     NULL,                         /* tp_new */
 };
 
-PyObject* JObject_FromJObjectRef(jobject jobjectRef)
+PyObject* JObject_New(jobject jobjectRef)
 {
-    return JObject_FromJObjectRefWithType(jobjectRef, &JObject_Type);
+    return JObject_FromType(&JObject_Type, jobjectRef);
 }
 
-PyObject* JObject_FromJObjectRefWithType(jobject jobjectRef, PyTypeObject* type)
+PyObject* JObject_FromType(PyTypeObject* type, jobject jobjectRef)
 {
     PyObject* longPyObj = PyLong_FromVoidPtr(jobjectRef);
     PyObject* jobjPyObj = PyObject_CallObject((PyObject*) type, longPyObj);
@@ -170,7 +170,7 @@ Py_ssize_t JObjectArray_sq_length(JObjectArray* self)
 PyObject* JObjectArray_sq_item(JObjectArray* self, Py_ssize_t index)
 {
     jobject elemJObj = (*jenv)->GetObjectArrayElement(jenv, self->jobjectRef, (jsize) index);
-    return JObject_FromJObjectRef(elemJObj);
+    return JObject_New(elemJObj);
 }
 
 /*
@@ -252,9 +252,9 @@ PyTypeObject JObjectArray_Type = {
     NULL,                         /* tp_new */
 };
 
-PyObject* JObjectArray_FromJObjectArrayRef(jobjectArray jobjectArrayRef)
+PyObject* JObjectArray_New(jobjectArray jobjectArrayRef)
 {
-    return JObject_FromJObjectRefWithType(jobjectArrayRef, &JObjectArray_Type);
+    return JObject_FromType(&JObjectArray_Type, jobjectArrayRef);
 }
 
 

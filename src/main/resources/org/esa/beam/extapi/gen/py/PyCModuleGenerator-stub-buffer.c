@@ -6,7 +6,7 @@ PyObject* beampy_getPrimitiveArrayBuffer(PyObject* obj, Py_buffer* view, int fla
             PyErr_SetString(PyExc_ValueError, "no buffer length specified");
             return NULL;
         }
-        obj = CArray_FromLength(format, len);
+        obj = CArray_New(format, len);
         if (obj == NULL) {
             PyErr_SetString(PyExc_MemoryError, "out of memory");
             return NULL;

@@ -276,7 +276,7 @@ public abstract class PyCFunctionGenerator extends AbstractFunctionGenerator {
         @Override
         public String generateTargetResultFromTransformedJniResultAssignment(GeneratorContext context) {
             String typeName = getComponentCClassName(getReturnType());
-            return format("${res}PyObj = JObject_FromJObjectRefWithType(${res}JObj, &${typeName}_Type);",
+            return format("${res}PyObj = JObject_FromType(&${typeName}_Type, ${res}JObj);",
                           kv("typeName", typeName));
         }
 

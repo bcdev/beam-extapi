@@ -31,12 +31,12 @@ extern PyTypeObject JObject_Type;
  * Creates a new JObject instance from a given global reference to a Java object and the given type.
  * The type must be &JObject_Type or type.tp_base == &JObject_Type.
  */
-PyObject* JObject_FromJObjectRefWithType(jobject jobjectRef, PyTypeObject* type);
+PyObject* JObject_FromType(PyTypeObject* type, jobject jobjectRef);
 
 /**
  * Creates a new JObject instance from a given global reference to a Java object.
  */
-PyObject* JObject_FromJObjectRef(jobject jobjectRef);
+PyObject* JObject_New(jobject jobjectRef);
 
 /**
  * Returns 1 (TRUE) if the given Python object is a JObject or a derived type. 0 (FALSE) otherwise.
@@ -77,7 +77,7 @@ extern PyTypeObject JObjectArray_Type;
 /**
  * Creates a new JObjectArray instance from a given global reference to a Java object.
  */
-PyObject* JObjectArray_FromJObjectArrayRef(jobjectArray jobjectArrayRef);
+PyObject* JObjectArray_New(jobjectArray jobjectArrayRef);
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // JVM access

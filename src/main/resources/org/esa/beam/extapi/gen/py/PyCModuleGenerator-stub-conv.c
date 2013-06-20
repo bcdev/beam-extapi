@@ -164,7 +164,7 @@ PyObject* beampy_newPySeqFromJObjectArray(jarray arrJObj, PyTypeObject* type)
 
     for (i = 0; i < n; i++) {
         jobject itemJObj = (*jenv)->GetObjectArrayElement(jenv, arrJObj, i);
-        PyObject* itemPyObj = JObject_FromJObjectRefWithType(itemJObj, type);
+        PyObject* itemPyObj = JObject_FromType(type, itemJObj);
         (*jenv)->DeleteLocalRef(jenv, itemJObj);
         if (itemPyObj == NULL) {
             Py_DECREF(listPyObj);
