@@ -32,12 +32,11 @@ import static org.esa.beam.extapi.gen.TemplateEval.kv;
  * @author Norman Fomferra
  */
 public class PyCModuleGenerator extends ModuleGenerator {
+    public final static boolean DEBUG = true;
 
     public static final String BEAM_PYAPI_C_SRCDIR = "src/main/c/gen";
-    public static final String BEAM_PYAPI_PY_SRCDIR = ".";
     public static final String BEAM_PYAPI_NAME = "beampy";
     public static final String BEAM_PYAPI_VARNAMEPREFIX = "BeamPy";
-    public static final String SELF_OBJ_NAME = "_jobj";
 
     final static HashMap<String, String> CARRAY_FORMATS = new HashMap<String, String>();
 
@@ -84,7 +83,6 @@ public class PyCModuleGenerator extends ModuleGenerator {
         writeWinDef();
         writeCHeader();
         writeCSource();
-        //writePythonSource();
     }
 
     private void writeWinDef() throws IOException {
@@ -226,19 +224,25 @@ public class PyCModuleGenerator extends ModuleGenerator {
         }
     }
 
+
     private void writeJObjectSubtypesRegistration(PrintWriter writer) {
         writer.printf("" +
-                              "int beampy_registerJObjectSubtypes(PyObject* module)\n" +
+                              "int BPy_RegisterJObjectSubtypes(PyObject* module)\n" +
                               "{\n");
         for (ApiClass apiClass : getApiInfo().getAllClasses()) {
             writer.printf(eval("" +
                                        "    // Register ${className}:\n" +
                                        "    ${className}_Type.tp_base = &JObject_Type;\n" +
+                                       (DEBUG ? "    printf(\"DEBUG: ${className} M0\\n\");\n" : "") +
                                        "    if (PyType_Ready(&${className}_Type) < 0) {\n" +
+                                       (DEBUG ? "        printf(\"DEBUG: PyType_Ready failed!\\n\");\n" : "") +
                                        "        return 0;\n" +
                                        "    }\n" +
+                                       (DEBUG ? "    printf(\"DEBUG: ${className} M1\\n\");\n" : "") +
                                        "    Py_INCREF(&${className}_Type);\n" +
+                                       (DEBUG ? "    printf(\"DEBUG: ${className} M2\\n\");\n" : "") +
                                        "    PyModule_AddObject(module, \"${className}\", (PyObject*) &${className}_Type);\n" +
+                                       (DEBUG ? "    printf(\"DEBUG: ${className} added\\n\");\n" : "") +
                                        "\n",
                                kv("className", getComponentCClassName(apiClass.getType()))));
         }
@@ -281,6 +285,7 @@ public class PyCModuleGenerator extends ModuleGenerator {
             }
         }
 */
+        writer.printf("    {\"py2j\", BPy_Py2J, METH_VARARGS, \"Test function which takes an argument, converts it into a Java object and wraps it by a JObject\"},\n");
         writer.printf("    {NULL, NULL, 0, NULL} /*Sentinel*/\n");
         writer.printf("};\n");
     }

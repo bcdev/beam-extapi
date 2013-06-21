@@ -22,3 +22,30 @@ jboolean BPy_InitApi()
     }
     return 1;
 }
+
+/**
+ * Test Python --> Java conversion
+ */
+PyObject* BPy_Py2J(PyObject* self, PyObject* args)
+{
+    jboolean ok = 1;
+    PyObject* arg = NULL;
+    PyObject* resultPyObj = NULL;
+    jobject resultJObj = NULL;
+    if (!BPy_InitApi()) {
+        return NULL;
+    }
+printf("M1\n");
+    if (!PyArg_ParseTuple(args, "O:BPy_Py2J", &arg)) {
+        return NULL;
+    }
+printf("M2\n");
+    resultJObj = BPy_ToJObject(arg, &ok);
+    if (!ok) {
+        return NULL;
+    }
+printf("M3\n");
+    resultPyObj = BPy_FromJObject(&JObject_Type, resultJObj);
+    return resultPyObj;
+}
+

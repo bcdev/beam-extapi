@@ -70,7 +70,6 @@ public abstract class PyCFunctionGenerator extends AbstractFunctionGenerator {
         if (isInstanceMethod()) {
             return methodVarDecl +
                     format("\n" +
-                                   "PyObject* ${this}PyObj = NULL;\n" +
                                    "jobject ${this}JObj = NULL;",
                            kv("this", ModuleGenerator.THIS_VAR_NAME));
         } else {
@@ -82,19 +81,31 @@ public abstract class PyCFunctionGenerator extends AbstractFunctionGenerator {
     public String generateEnterCode(GeneratorContext context) {
         final ApiMethod apiMethod = getApiMethod();
 
-        return format("" +
-                              "if (!BPy_InitApi()) {\n" +
-                              "    return NULL;\n" +
-                              "}\n" +
-                              "if (!BPy_InitJMethod(&${method}, ${classVar}, \"${className}\", \"${methodName}\", \"${methodSig}\", ${isstatic})) {\n" +
-                              "    return NULL;\n" +
-                              "}\n",
-                      kv("method", ModuleGenerator.METHOD_VAR_NAME),
-                      kv("isstatic", apiMethod.getMemberDoc().isStatic() ? "1" : "0"),
-                      kv("classVar", ModuleGenerator.getComponentCClassVarName(apiMethod.getEnclosingClass().getType())),
-                      kv("className", apiMethod.getEnclosingClass().getType().qualifiedTypeName()),
-                      kv("methodName", apiMethod.getJavaName()),
-                      kv("methodSig", apiMethod.getJavaSignature()));
+        String s = format("" +
+                                  "if (!BPy_InitApi()) {\n" +
+                                  "    return NULL;\n" +
+                                  "}\n" +
+                                  "if (!BPy_InitJMethod(&${method}, ${classVar}, \"${className}\", \"${methodName}\", \"${methodSig}\", ${isstatic})) {\n" +
+                                  "    return NULL;\n" +
+                                  "}\n",
+                          kv("method", ModuleGenerator.METHOD_VAR_NAME),
+                          kv("isstatic", apiMethod.getMemberDoc().isStatic() ? "1" : "0"),
+                          kv("classVar", ModuleGenerator.getComponentCClassVarName(apiMethod.getEnclosingClass().getType())),
+                          kv("className", apiMethod.getEnclosingClass().getType().qualifiedTypeName()),
+                          kv("methodName", apiMethod.getJavaName()),
+                          kv("methodSig", apiMethod.getJavaSignature()));
+        if (isInstanceMethod()) {
+            final String typeName = getComponentCClassName(getEnclosingClass().getType());
+            return s + format("" +
+                                      "${this}JObj = JObject_AsJObjectRefT(self, class${typeName});\n" +
+                                      "if (${this}JObj == NULL) {\n" +
+                                      "    PyErr_SetString(PyExc_ValueError, \"argument 'self' must be of type '${typeName}' (Java object reference)\");\n" +
+                                      "    return NULL;\n" +
+                                      "}",
+                              kv("typeName", typeName));
+        } else {
+            return s;
+        }
     }
 
 
@@ -107,32 +118,17 @@ public abstract class PyCFunctionGenerator extends AbstractFunctionGenerator {
         }
 
         String parseArgs = getParseArgs(context);
-        String s = format("" +
-                                  "if (!PyArg_ParseTuple(args, \"${parseFormats}:${function}\", ${parseArgs})) {\n" +
-                                  "    return NULL;\n" +
-                                  "}\n",
-                          kv("parseFormats", parseFormats),
-                          kv("function", context.getFunctionNameFor(apiMethod)),
-                          kv("parseArgs", parseArgs));
-        if (isInstanceMethod()) {
-            final String typeName = getComponentCClassName(getEnclosingClass().getType());
-            return s + format("" +
-                                      "${this}JObj = JObject_AsJObjectRefT(${this}PyObj, class${typeName});\n" +
-                                      "if (${this}JObj == NULL) {\n" +
-                                      "    PyErr_SetString(PyExc_ValueError, \"argument 'self' must be of type '${typeName}' (Java object reference)\");\n" +
-                                      "    return NULL;\n" +
-                                      "}",
-                              kv("typeName", typeName));
-        } else {
-            return s;
-        }
+        return format("" +
+                              "if (!PyArg_ParseTuple(args, \"${parseFormats}:${function}\", ${parseArgs})) {\n" +
+                              "    return NULL;\n" +
+                              "}\n",
+                      kv("parseFormats", parseFormats),
+                      kv("function", apiMethod.getJavaName()),
+                      kv("parseArgs", parseArgs));
     }
 
     private String getParseFormats(GeneratorContext context) {
         StringBuilder parseFormats = new StringBuilder();
-        if (isInstanceMethod()) {
-            parseFormats.append("O");
-        }
         for (PyCParameterGenerator generator : getParameterGenerators()) {
             String format = generator.getParseFormat(context);
             if (format != null) {
@@ -145,9 +141,6 @@ public abstract class PyCFunctionGenerator extends AbstractFunctionGenerator {
 
     private String getParseArgs(GeneratorContext context) {
         StringBuilder parseArgs = new StringBuilder();
-        if (isInstanceMethod()) {
-            parseArgs.append(format("&${this}PyObj"));
-        }
         for (PyCParameterGenerator generator : getParameterGenerators()) {
             String args = generator.getParseArgs(context);
             if (args != null) {

@@ -9,10 +9,14 @@ static struct PyModuleDef BeamPy_Module =
    "${libName}",           /* Name of the Python module */
    "BEAM Python API",  /* Module documentation */
    -1,                 /* Size of per-interpreter state of the module, or -1 if the module keeps state in global variables. */
-   BeamPy_Functions    /* Structure containing global ${libName}-functions */
+   BeamPy_Functions,    /* Structure containing global ${libName}-functions */
+   NULL,   // m_reload
+   NULL,   // m_traverse
+   NULL,   // m_clear
+   NULL    // m_free
 };
 
-int beampy_registerJObjectSubtypes(PyObject* module);
+int BPy_RegisterJObjectSubtypes(PyObject* module);
 
 
 /**
@@ -61,7 +65,7 @@ PyMODINIT_FUNC PyInit_${libName}()
     // Register JObjectArray_Type ('JObjectArray')
     //
     JObjectArray_Type.tp_base = &JObject_Type;
-    if (PyType_Ready(&JObject_Type) < 0) {
+    if (PyType_Ready(&JObjectArray_Type) < 0) {
         return NULL;
     }
     Py_INCREF(&JObjectArray_Type);
@@ -70,7 +74,7 @@ PyMODINIT_FUNC PyInit_${libName}()
     /////////////////////////////////////////////////////////////////////////
     // Register BEAM JObject Sub-types
     //
-    if (!beampy_registerJObjectSubtypes(module)) {
+    if (!BPy_RegisterJObjectSubtypes(module)) {
         return NULL;
     }
 
