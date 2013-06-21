@@ -4,6 +4,9 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Java Core Variables
 
+static jboolean BPy_ModuleInit = 0;
+
+
 static jclass BPy_ObjectClass = NULL;
 static jclass BPy_ObjectArrayClass = NULL;
 static jclass BPy_StringArrayClass = NULL;
@@ -50,10 +53,14 @@ static jmethodID BPy_ArrayListSet = NULL;
 static jmethodID BPy_ArrayListGet = NULL;
 static jmethodID BPy_ArrayListSize = NULL;
 
+
+#define BPY_CHECK_JPYUTIL() if (!BPy_CheckJPyUtil()) { return BPy_ConvFailure(NULL, ok); } else {}
+
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Local function declarations
 
-jboolean BPy_InitConv();
+
 
 typedef jarray (JNICALL *BPy_NewJArrayFn)(JNIEnv*, jsize);
 
@@ -80,7 +87,6 @@ jobject BPy_ConvFailure(const char* msg, jboolean* ok)
 jarray BPy_NewGenericJPrimitiveArrayFromBuffer(const void* buffer, jint bufferLength, size_t elemSize, BPy_NewJArrayFn NewJArray)
 {
     jarray arrayJObj;
-
     arrayJObj = NewJArray(jenv, bufferLength);
     if (arrayJObj != NULL) {
         void* addr = (*jenv)->GetPrimitiveArrayCritical(jenv, arrayJObj, NULL);
@@ -136,10 +142,10 @@ jarray BPy_NewJDoubleArrayFromBuffer(const jdouble* buffer, jint bufferLength)
 
 jobject BPy_NewJBooleanFromBool(PyObject* arg, jboolean* ok)
 {
-    jobject argJObj;
-    if (!BPy_InitConv()) {
-        return BPy_ConvFailure(NULL, ok);
-    }
+    jobject argJObj = NULL;
+
+    BPY_CHECK_JPYUTIL()
+
     argJObj = (*jenv)->NewObject(jenv, BPy_BooleanClass, BPy_BooleanConstr, (jboolean) PyObject_IsTrue(arg));;
     if (argJObj == NULL) {
         return BPy_ConvFailure("failed to instantiate Java object", ok);
@@ -150,10 +156,11 @@ jobject BPy_NewJBooleanFromBool(PyObject* arg, jboolean* ok)
 jobject BPy_NewJNumberFromInt(PyObject* arg, jboolean* ok)
 {
     jobject argJObj = NULL;
-    PY_LONG_LONG v = PyLong_AsLongLong(arg);
-    if (!BPy_InitConv()) {
-        return BPy_ConvFailure(NULL, ok);
-    }
+    PY_LONG_LONG v;
+
+    BPY_CHECK_JPYUTIL()
+
+    v = PyLong_AsLongLong(arg);
     if (v == (jbyte) v) {
         argJObj = (*jenv)->NewObject(jenv, BPy_ByteClass, BPy_ByteConstr, (jbyte) v);
     } else if (v == (jshort) v) {
@@ -173,22 +180,23 @@ jobject BPy_NewJNumberFromInt(PyObject* arg, jboolean* ok)
 
 jobject BPy_NewJNumberFromFloat(PyObject* arg, jboolean* ok)
 {
-     jobject argJObj = NULL;
-     double v = PyLong_AsDouble(arg);
-     if (!BPy_InitConv()) {
-         return BPy_ConvFailure(NULL, ok);
-     }
-     if (v == (jfloat) v) {
-         argJObj = (*jenv)->NewObject(jenv, BPy_FloatClass, BPy_FloatConstr, (jfloat) v);
-     } else if (v == (jdouble) v) {
-         argJObj = (*jenv)->NewObject(jenv, BPy_DoubleClass, BPy_DoubleConstr, (jdouble) v);
-     } else {
-         return BPy_ConvFailure("missing appropriate Java representation of argument", ok);
-     }
-     if (argJObj == NULL) {
-         return BPy_ConvFailure("failed to instantiate Java object", ok);
-     }
-     return BPy_ConvSuccess(argJObj, ok);
+    jobject argJObj = NULL;
+    double v;
+
+    BPY_CHECK_JPYUTIL()
+
+    v = PyLong_AsDouble(arg);
+    if (v == (jfloat) v) {
+        argJObj = (*jenv)->NewObject(jenv, BPy_FloatClass, BPy_FloatConstr, (jfloat) v);
+    } else if (v == (jdouble) v) {
+        argJObj = (*jenv)->NewObject(jenv, BPy_DoubleClass, BPy_DoubleConstr, (jdouble) v);
+    } else {
+        return BPy_ConvFailure("missing appropriate Java representation of argument", ok);
+    }
+    if (argJObj == NULL) {
+        return BPy_ConvFailure("failed to instantiate Java object", ok);
+    }
+    return BPy_ConvSuccess(argJObj, ok);
 }
 
 jstring BPy_NewJStringFromStr(PyObject* arg, jboolean* ok)
@@ -197,9 +205,11 @@ jstring BPy_NewJStringFromStr(PyObject* arg, jboolean* ok)
     PyObject* strPyObj;
     jstring strJObj;
 
+    BPY_CHECK_JPYUTIL()
+
     strPyObj = PyObject_Str(arg);
     if (strPyObj == NULL) {
-        return BPy_ConvFailure(NULL, ok);
+        return BPy_ConvFailure("argument of type 'str' expected", ok);
     }
 
     utf8Chars = PyUnicode_AsUTF8(strPyObj);
@@ -221,9 +231,7 @@ jobject BPy_NewJMapFromDict(PyObject* arg, jboolean* ok)
     Py_ssize_t dictPos = 0;
     jobject mapJObj = NULL;
 
-    if (!BPy_InitConv()) {
-        return BPy_ConvFailure(NULL, ok);
-    }
+    BPY_CHECK_JPYUTIL()
 
     mapJObj = (*jenv)->NewObject(jenv, BPy_HashMapClass, BPy_HashMapConstr);
     if (mapJObj == NULL) {
@@ -252,6 +260,8 @@ jobjectArray BPy_NewJObjectArrayFromSeqT(PyObject* arg, jclass compType, jboolea
     jarray arrayJObj;
     Py_ssize_t size;
     Py_ssize_t i;
+
+    BPY_CHECK_JPYUTIL()
 
     size = PySequence_Size(arg);
     if (size < 0 || size >= (1 << 31)) {
@@ -287,9 +297,14 @@ jobjectArray BPy_NewJObjectArrayFromSeq(PyObject* arg, jboolean* ok)
     return BPy_NewJObjectArrayFromSeqT(arg, BPy_ObjectClass, ok);
 }
 
+/**
+ * Checks for Py_None or for JObject and returns NULL or the Java reference.
+ * Note, no error message will be set, caller must check ok flag and proceed on failure.
+ */
 jobject BPy_ToJObjectDefault(PyObject* arg, jclass type, jboolean* ok)
 {
     jobject argJObj;
+
     if (arg == Py_None) {
         return BPy_ConvSuccess(NULL, ok);
     }
@@ -298,12 +313,18 @@ jobject BPy_ToJObjectDefault(PyObject* arg, jclass type, jboolean* ok)
     if (argJObj != NULL) {
         return BPy_ConvSuccess((*jenv)->NewLocalRef(jenv, argJObj), ok);
     }
+
     return BPy_ConvFailure(NULL, ok);
 }
 
+/**
+ * Checks for Py_None or for JObjectArray and returns NULL or the Java Array reference.
+ * Note, no error message will be set, caller must check ok flag and proceed on failure.
+ */
 jobjectArray BPy_ToJObjectArrayDefault(PyObject* arg, jclass compType, jboolean* ok)
 {
     jobjectArray argJObj;
+
     if (arg == Py_None) {
         return BPy_ConvSuccess(NULL, ok);
     }
@@ -312,6 +333,7 @@ jobjectArray BPy_ToJObjectArrayDefault(PyObject* arg, jclass compType, jboolean*
     if (argJObj != NULL) {
         return BPy_ConvSuccess((*jenv)->NewLocalRef(jenv, argJObj), ok);
     }
+
     return BPy_ConvFailure(NULL, ok);
 }
 
@@ -726,10 +748,18 @@ jboolean BPy_InitJMethod(jmethodID* methodPtr, jclass cls, const char* className
     return 1;
 }
 
-jboolean BPy_InitConv() {
-    static jboolean init = 0;
-    if (!init) {
-        init = 1;
+jboolean BPy_CheckJPyUtil()
+{
+    if (!BPy_ModuleInit) {
+        PyErr_SetString(PyExc_RuntimeError, "you must call BPy_InitJPyUtil() before you can use this function");
+    }
+    return BPy_ModuleInit;
+}
+
+
+jboolean BPy_InitJPyUtil()
+{
+    if (!BPy_ModuleInit) {
 
         if (!BPy_InitJClass(&BPy_ObjectClass, "Ljava/lang/Object;")) {
             return 0;
@@ -784,13 +814,13 @@ jboolean BPy_InitConv() {
         if (!BPy_InitJMethod(&BPy_ByteConstr, BPy_ByteClass, "java.lang.Byte", "<init>", "(B)V", 0)) {
             return 0;
         }
-        if (!BPy_InitJMethod(&BPy_ShortConstr, BPy_BooleanClass, "java.lang.Short", "<init>", "(S)V", 0)) {
+        if (!BPy_InitJMethod(&BPy_ShortConstr, BPy_ShortClass, "java.lang.Short", "<init>", "(S)V", 0)) {
             return 0;
         }
         if (!BPy_InitJMethod(&BPy_IntegerConstr, BPy_IntegerClass, "java.lang.Integer", "<init>", "(I)V", 0)) {
             return 0;
         }
-        if (!BPy_InitJMethod(&BPy_LongConstr, BPy_FloatClass, "java.lang.Long", "<init>", "(L)V", 0)) {
+        if (!BPy_InitJMethod(&BPy_LongConstr, BPy_LongClass, "java.lang.Long", "<init>", "(J)V", 0)) {
             return 0;
         }
         if (!BPy_InitJMethod(&BPy_FloatConstr, BPy_FloatClass, "java.lang.Float", "<init>", "(F)V", 0)) {
@@ -805,8 +835,10 @@ jboolean BPy_InitConv() {
         if (!BPy_InitJMethod(&BPy_HashMapPut, BPy_HashMapClass, "java.util.HashMap", "put", "(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;", 0)) {
             return 0;
         }
+
+        BPy_ModuleInit = 1;
     }
-    return 1;
+    return BPy_ModuleInit;
 }
 
 

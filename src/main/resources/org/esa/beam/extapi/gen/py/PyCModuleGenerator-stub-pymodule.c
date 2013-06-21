@@ -86,6 +86,13 @@ PyMODINIT_FUNC PyInit_${libName}()
         return NULL;
     }
 
+    /////////////////////////////////////////////////////////////////////////
+    // Initialise JPyUtil
+
+    if (!BPy_InitJPyUtil()) {
+        return NULL;
+    }
+
     fprintf(stdout, "${libName}: exit PyInit_${libName}()\n");
 
     return module;
