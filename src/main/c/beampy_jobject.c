@@ -58,12 +58,32 @@ PyObject* JObject_repr(JObject* self)
                                 self->jobjectRef);
 }
 
+jclass JObject_GetJObjectClass()
+{
+    static jclass objectClass = NULL;
+    if (objectClass == NULL) {
+        objectClass = (*jenv)->FindClass(jenv, "Ljava/lang/Object;");
+    }
+    return objectClass;
+}
+
 PyObject* JObject_str(JObject* self)
 {
-    return PyUnicode_FromFormat("%s@%p(jobjectRef=%p)",
-                                ((PyObject*)self)->ob_type->tp_name,
-                                self,
-                                self->jobjectRef);
+    static jmethodID toStringMethod = NULL;
+    jstring strJObj;
+    PyObject* strPyObj;
+    jboolean isCopy;
+    const char * utfChars;
+
+    if (toStringMethod == NULL) {
+        toStringMethod = (*jenv)->GetMethodID(jenv, JObject_GetJObjectClass(), "toString", "()Ljava/lang/String;");
+    }
+
+    strJObj = (*jenv)->CallObjectMethod(jenv, self->jobjectRef, toStringMethod);
+    utfChars = (*jenv)->GetStringUTFChars(jenv, strJObj, &isCopy);
+    strPyObj = PyUnicode_FromFormat("%s", utfChars);
+    (*jenv)->ReleaseStringUTFChars(jenv, strJObj, utfChars);
+    return strPyObj;
 }
 
 
