@@ -118,7 +118,7 @@ static void CArray_dealloc(CArray* self)
  */
 static PyObject* CArray_repr(CArray* self)
 {
-    return PyUnicode_FromFormat("CArray('%s', %d)", self->format, self->length);
+    return PyUnicode_FromFormat("beampy.CArray('%s', %d)", self->format, self->length);
 }
 
 /*
@@ -346,7 +346,7 @@ static PySequenceMethods CArray_as_sequence = {
  */
 PyTypeObject CArray_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    "${libName}.CArray",       /* tp_name */
+    "beampy.CArray",       /* tp_name */
     sizeof(CArray),         /* tp_basicsize */
     0,                         /* tp_itemsize */
     (destructor)CArray_dealloc,/* tp_dealloc */
