@@ -220,9 +220,10 @@ int CArray_getbufferproc(CArray* self, Py_buffer* view, int flags)
  */
 void CArray_releasebufferproc(CArray* self, Py_buffer* view)
 {
-    printf("CArray_releasebufferproc\n");
     // Step 1
     self->num_exports--;
+    // printf("CArray_releasebufferproc: self->num_exports=%d\n", self->num_exports);
+
     // Step 2
     if (self->num_exports == 0) {
         view->buf = NULL;
@@ -234,7 +235,6 @@ void CArray_releasebufferproc(CArray* self, Py_buffer* view)
             free(view->strides);
             view->shape = NULL;
         }
-        // todo: release resources...
     }
 }
 
