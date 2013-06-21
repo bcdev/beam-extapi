@@ -1,5 +1,5 @@
-#ifndef BEAM_CARRAY_H
-#define BEAM_CARRAY_H
+#ifndef BEAMPY_CARRAY_H
+#define BEAMPY_CARRAY_H
 
 #ifdef __cplusplus
 extern "C" {
