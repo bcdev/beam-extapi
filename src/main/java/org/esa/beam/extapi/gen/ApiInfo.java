@@ -174,11 +174,11 @@ public final class ApiInfo {
 
         if (secondaryPass) {
             if (!config.isApiClass(classDoc.qualifiedName())) {
-                System.out.println("!isApiClass: classDoc = " + classDoc.qualifiedName());
+                // System.out.println("!isApiClass: classDoc = " + classDoc.qualifiedName());
                 return;
             }
             if (contains(apiClasses, classDoc)) {
-                System.out.println("contains: classDoc = " + classDoc.qualifiedName());
+                // System.out.println("contains: classDoc = " + classDoc.qualifiedName());
                 return;
             }
         }
