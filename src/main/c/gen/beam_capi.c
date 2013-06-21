@@ -972,6 +972,7 @@ const char* MetadataAttribute_PROPERTY_NAME_DESCRIPTION = "description";
 boolean GeoCoding_isCrossingMeridianAt180(GeoCoding _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -991,6 +992,7 @@ boolean GeoCoding_isCrossingMeridianAt180(GeoCoding _this)
 boolean GeoCoding_canGetPixelPos(GeoCoding _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -1010,6 +1012,7 @@ boolean GeoCoding_canGetPixelPos(GeoCoding _this)
 boolean GeoCoding_canGetGeoPos(GeoCoding _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -1029,6 +1032,7 @@ boolean GeoCoding_canGetGeoPos(GeoCoding _this)
 PixelPos GeoCoding_getPixelPos(GeoCoding _this, GeoPos geoPos, PixelPos pixelPos)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     PixelPos _result = (PixelPos) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -1048,6 +1052,7 @@ PixelPos GeoCoding_getPixelPos(GeoCoding _this, GeoPos geoPos, PixelPos pixelPos
 GeoPos GeoCoding_getGeoPos(GeoCoding _this, PixelPos pixelPos, GeoPos geoPos)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     GeoPos _result = (GeoPos) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -1067,6 +1072,7 @@ GeoPos GeoCoding_getGeoPos(GeoCoding _this, PixelPos pixelPos, GeoPos geoPos)
 Datum GeoCoding_getDatum(GeoCoding _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     Datum _result = (Datum) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -1086,6 +1092,7 @@ Datum GeoCoding_getDatum(GeoCoding _this)
 void GeoCoding_dispose(GeoCoding _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classGeoCoding, "dispose", "()V");
@@ -1103,6 +1110,7 @@ void GeoCoding_dispose(GeoCoding _this)
 CoordinateReferenceSystem GeoCoding_getImageCRS(GeoCoding _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     CoordinateReferenceSystem _result = (CoordinateReferenceSystem) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -1122,6 +1130,7 @@ CoordinateReferenceSystem GeoCoding_getImageCRS(GeoCoding _this)
 CoordinateReferenceSystem GeoCoding_getMapCRS(GeoCoding _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     CoordinateReferenceSystem _result = (CoordinateReferenceSystem) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -1141,6 +1150,7 @@ CoordinateReferenceSystem GeoCoding_getMapCRS(GeoCoding _this)
 CoordinateReferenceSystem GeoCoding_getGeoCRS(GeoCoding _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     CoordinateReferenceSystem _result = (CoordinateReferenceSystem) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -1160,6 +1170,7 @@ CoordinateReferenceSystem GeoCoding_getGeoCRS(GeoCoding _this)
 MathTransform GeoCoding_getImageToMapTransform(GeoCoding _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     MathTransform _result = (MathTransform) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -1179,6 +1190,7 @@ MathTransform GeoCoding_getImageToMapTransform(GeoCoding _this)
 ProductWriterPlugIn ProductWriter_getWriterPlugIn(ProductWriter _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     ProductWriterPlugIn _result = (ProductWriterPlugIn) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -1198,6 +1210,7 @@ ProductWriterPlugIn ProductWriter_getWriterPlugIn(ProductWriter _this)
 Object ProductWriter_getOutput(ProductWriter _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     Object _result = (Object) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -1217,6 +1230,7 @@ Object ProductWriter_getOutput(ProductWriter _this)
 void ProductWriter_writeProductNodes(ProductWriter _this, Product product, Object output)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classProductWriter, "writeProductNodes", "(Lorg/esa/beam/framework/datamodel/Product;Ljava/lang/Object;)V");
@@ -1234,6 +1248,7 @@ void ProductWriter_writeProductNodes(ProductWriter _this, Product product, Objec
 void ProductWriter_writeBandRasterData(ProductWriter _this, Band sourceBand, int sourceOffsetX, int sourceOffsetY, int sourceWidth, int sourceHeight, ProductData sourceBuffer, ProgressMonitor pm)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classProductWriter, "writeBandRasterData", "(Lorg/esa/beam/framework/datamodel/Band;IIIILorg/esa/beam/framework/datamodel/ProductData;Lcom/bc/ceres/core/ProgressMonitor;)V");
@@ -1251,6 +1266,7 @@ void ProductWriter_writeBandRasterData(ProductWriter _this, Band sourceBand, int
 void ProductWriter_flush(ProductWriter _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classProductWriter, "flush", "()V");
@@ -1268,6 +1284,7 @@ void ProductWriter_flush(ProductWriter _this)
 void ProductWriter_close(ProductWriter _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classProductWriter, "close", "()V");
@@ -1285,6 +1302,7 @@ void ProductWriter_close(ProductWriter _this)
 boolean ProductWriter_shouldWrite(ProductWriter _this, ProductNode node)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -1304,6 +1322,7 @@ boolean ProductWriter_shouldWrite(ProductWriter _this, ProductNode node)
 boolean ProductWriter_isIncrementalMode(ProductWriter _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -1323,6 +1342,7 @@ boolean ProductWriter_isIncrementalMode(ProductWriter _this)
 void ProductWriter_setIncrementalMode(ProductWriter _this, boolean enabled)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classProductWriter, "setIncrementalMode", "(Z)V");
@@ -1340,6 +1360,7 @@ void ProductWriter_setIncrementalMode(ProductWriter _this, boolean enabled)
 void ProductWriter_deleteOutput(ProductWriter _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classProductWriter, "deleteOutput", "()V");
@@ -1357,6 +1378,7 @@ void ProductWriter_deleteOutput(ProductWriter _this)
 void ProductWriter_removeBand(ProductWriter _this, Band band)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classProductWriter, "removeBand", "(Lorg/esa/beam/framework/datamodel/Band;)V");
@@ -1374,6 +1396,7 @@ void ProductWriter_removeBand(ProductWriter _this, Band band)
 Product GPF_createProductWithoutSourceProducts(const char* operatorName, Map parameters)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring operatorNameString = NULL;
     Product _result = (Product) 0;
     if (_method == NULL) {
@@ -1396,6 +1419,7 @@ Product GPF_createProductWithoutSourceProducts(const char* operatorName, Map par
 Product GPF_createProductFromSourceProduct(const char* operatorName, Map parameters, Product sourceProduct)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring operatorNameString = NULL;
     Product _result = (Product) 0;
     if (_method == NULL) {
@@ -1418,6 +1442,7 @@ Product GPF_createProductFromSourceProduct(const char* operatorName, Map paramet
 Product GPF_createProductFromSourceProducts(const char* operatorName, Map parameters, const Product sourceProductsElems, int sourceProductsLength)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring operatorNameString = NULL;
     jarray sourceProductsArray = NULL;
     Product _result = (Product) 0;
@@ -1443,6 +1468,7 @@ Product GPF_createProductFromSourceProducts(const char* operatorName, Map parame
 Product GPF_createProductFromNamedSourceProducts(const char* operatorName, Map parameters, Map sourceProducts)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring operatorNameString = NULL;
     Product _result = (Product) 0;
     if (_method == NULL) {
@@ -1465,6 +1491,7 @@ Product GPF_createProductFromNamedSourceProducts(const char* operatorName, Map p
 Product GPF_createProductNS(GPF _this, const char* operatorName, Map parameters, Map sourceProducts, RenderingHints renderingHints)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring operatorNameString = NULL;
     Product _result = (Product) 0;
     if (_method == NULL) {
@@ -1487,6 +1514,7 @@ Product GPF_createProductNS(GPF _this, const char* operatorName, Map parameters,
 Operator GPF_createOperator(GPF _this, const char* operatorName, Map parameters, Map sourceProducts, RenderingHints renderingHints)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring operatorNameString = NULL;
     Operator _result = (Operator) 0;
     if (_method == NULL) {
@@ -1509,6 +1537,7 @@ Operator GPF_createOperator(GPF _this, const char* operatorName, Map parameters,
 OperatorSpiRegistry GPF_getOperatorSpiRegistry(GPF _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     OperatorSpiRegistry _result = (OperatorSpiRegistry) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -1528,6 +1557,7 @@ OperatorSpiRegistry GPF_getOperatorSpiRegistry(GPF _this)
 void GPF_setOperatorSpiRegistry(GPF _this, OperatorSpiRegistry spiRegistry)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classGPF, "setOperatorSpiRegistry", "(Lorg/esa/beam/framework/gpf/OperatorSpiRegistry;)V");
@@ -1545,6 +1575,7 @@ void GPF_setOperatorSpiRegistry(GPF _this, OperatorSpiRegistry spiRegistry)
 GPF GPF_getDefaultInstance()
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     GPF _result = (GPF) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -1564,6 +1595,7 @@ GPF GPF_getDefaultInstance()
 void GPF_setDefaultInstance(GPF defaultInstance)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetStaticMethodID(jenv, classGPF, "setDefaultInstance", "(Lorg/esa/beam/framework/gpf/GPF;)V");
@@ -1581,6 +1613,7 @@ void GPF_setDefaultInstance(GPF defaultInstance)
 void GPF_writeProduct(Product product, File file, const char* formatName, boolean incremental, ProgressMonitor pm)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring formatNameString = NULL;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -1601,6 +1634,7 @@ void GPF_writeProduct(Product product, File file, const char* formatName, boolea
 IndexCoding IndexCoding_newIndexCoding(const char* name)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring nameString = NULL;
     IndexCoding _result = (IndexCoding) 0;
     if (_method == NULL) {
@@ -1623,6 +1657,7 @@ IndexCoding IndexCoding_newIndexCoding(const char* name)
 MetadataAttribute IndexCoding_getIndex(IndexCoding _this, const char* name)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring nameString = NULL;
     MetadataAttribute _result = (MetadataAttribute) 0;
     if (_method == NULL) {
@@ -1645,6 +1680,7 @@ MetadataAttribute IndexCoding_getIndex(IndexCoding _this, const char* name)
 char** IndexCoding_getIndexNames(IndexCoding _this, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     char** _result = (char**) 0;
     jarray _resultArray = NULL;
     if (_method == NULL) {
@@ -1667,6 +1703,7 @@ char** IndexCoding_getIndexNames(IndexCoding _this, int* _resultArrayLength)
 MetadataAttribute IndexCoding_addIndex(IndexCoding _this, const char* name, int value, const char* description)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring nameString = NULL;
     jstring descriptionString = NULL;
     MetadataAttribute _result = (MetadataAttribute) 0;
@@ -1692,6 +1729,7 @@ MetadataAttribute IndexCoding_addIndex(IndexCoding _this, const char* name, int 
 int IndexCoding_getIndexValue(IndexCoding _this, const char* name)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring nameString = NULL;
     int _result = (int) 0;
     if (_method == NULL) {
@@ -1714,6 +1752,7 @@ int IndexCoding_getIndexValue(IndexCoding _this, const char* name)
 void IndexCoding_acceptVisitor(IndexCoding _this, ProductVisitor visitor)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classIndexCoding, "acceptVisitor", "(Lorg/esa/beam/framework/datamodel/ProductVisitor;)V");
@@ -1731,6 +1770,7 @@ void IndexCoding_acceptVisitor(IndexCoding _this, ProductVisitor visitor)
 void IndexCoding_addElement(IndexCoding _this, MetadataElement element)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classIndexCoding, "addElement", "(Lorg/esa/beam/framework/datamodel/MetadataElement;)V");
@@ -1748,6 +1788,7 @@ void IndexCoding_addElement(IndexCoding _this, MetadataElement element)
 void IndexCoding_addAttribute(IndexCoding _this, MetadataAttribute attribute)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classIndexCoding, "addAttribute", "(Lorg/esa/beam/framework/datamodel/MetadataAttribute;)V");
@@ -1765,6 +1806,7 @@ void IndexCoding_addAttribute(IndexCoding _this, MetadataAttribute attribute)
 MetadataAttribute IndexCoding_addSample(IndexCoding _this, const char* name, int value, const char* description)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring nameString = NULL;
     jstring descriptionString = NULL;
     MetadataAttribute _result = (MetadataAttribute) 0;
@@ -1790,6 +1832,7 @@ MetadataAttribute IndexCoding_addSample(IndexCoding _this, const char* name, int
 int IndexCoding_getSampleCount(IndexCoding _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     int _result = (int) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -1809,6 +1852,7 @@ int IndexCoding_getSampleCount(IndexCoding _this)
 char* IndexCoding_getSampleName(IndexCoding _this, int index)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
     if (_method == NULL) {
@@ -1831,6 +1875,7 @@ char* IndexCoding_getSampleName(IndexCoding _this, int index)
 int IndexCoding_getSampleValue(IndexCoding _this, int index)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     int _result = (int) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -1850,6 +1895,7 @@ int IndexCoding_getSampleValue(IndexCoding _this, int index)
 ProductNodeGroup IndexCoding_getElementGroup(IndexCoding _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     ProductNodeGroup _result = (ProductNodeGroup) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -1869,6 +1915,7 @@ ProductNodeGroup IndexCoding_getElementGroup(IndexCoding _this)
 MetadataElement IndexCoding_getParentElement(IndexCoding _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     MetadataElement _result = (MetadataElement) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -1888,6 +1935,7 @@ MetadataElement IndexCoding_getParentElement(IndexCoding _this)
 void IndexCoding_addElementAt(IndexCoding _this, MetadataElement element, int index)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classIndexCoding, "addElementAt", "(Lorg/esa/beam/framework/datamodel/MetadataElement;I)V");
@@ -1905,6 +1953,7 @@ void IndexCoding_addElementAt(IndexCoding _this, MetadataElement element, int in
 boolean IndexCoding_removeElement(IndexCoding _this, MetadataElement element)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -1924,6 +1973,7 @@ boolean IndexCoding_removeElement(IndexCoding _this, MetadataElement element)
 int IndexCoding_getNumElements(IndexCoding _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     int _result = (int) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -1943,6 +1993,7 @@ int IndexCoding_getNumElements(IndexCoding _this)
 MetadataElement IndexCoding_getElementAt(IndexCoding _this, int index)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     MetadataElement _result = (MetadataElement) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -1962,6 +2013,7 @@ MetadataElement IndexCoding_getElementAt(IndexCoding _this, int index)
 char** IndexCoding_getElementNames(IndexCoding _this, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     char** _result = (char**) 0;
     jarray _resultArray = NULL;
     if (_method == NULL) {
@@ -1984,6 +2036,7 @@ char** IndexCoding_getElementNames(IndexCoding _this, int* _resultArrayLength)
 MetadataElement* IndexCoding_getElements(IndexCoding _this, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     MetadataElement* _result = (MetadataElement*) 0;
     jarray _resultArray = NULL;
     if (_method == NULL) {
@@ -2006,6 +2059,7 @@ MetadataElement* IndexCoding_getElements(IndexCoding _this, int* _resultArrayLen
 MetadataElement IndexCoding_getElement(IndexCoding _this, const char* name)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring nameString = NULL;
     MetadataElement _result = (MetadataElement) 0;
     if (_method == NULL) {
@@ -2028,6 +2082,7 @@ MetadataElement IndexCoding_getElement(IndexCoding _this, const char* name)
 boolean IndexCoding_containsElement(IndexCoding _this, const char* name)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring nameString = NULL;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
@@ -2050,6 +2105,7 @@ boolean IndexCoding_containsElement(IndexCoding _this, const char* name)
 int IndexCoding_getElementIndex(IndexCoding _this, MetadataElement element)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     int _result = (int) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -2069,6 +2125,7 @@ int IndexCoding_getElementIndex(IndexCoding _this, MetadataElement element)
 boolean IndexCoding_removeAttribute(IndexCoding _this, MetadataAttribute attribute)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -2088,6 +2145,7 @@ boolean IndexCoding_removeAttribute(IndexCoding _this, MetadataAttribute attribu
 int IndexCoding_getNumAttributes(IndexCoding _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     int _result = (int) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -2107,6 +2165,7 @@ int IndexCoding_getNumAttributes(IndexCoding _this)
 MetadataAttribute IndexCoding_getAttributeAt(IndexCoding _this, int index)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     MetadataAttribute _result = (MetadataAttribute) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -2126,6 +2185,7 @@ MetadataAttribute IndexCoding_getAttributeAt(IndexCoding _this, int index)
 char** IndexCoding_getAttributeNames(IndexCoding _this, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     char** _result = (char**) 0;
     jarray _resultArray = NULL;
     if (_method == NULL) {
@@ -2148,6 +2208,7 @@ char** IndexCoding_getAttributeNames(IndexCoding _this, int* _resultArrayLength)
 MetadataAttribute* IndexCoding_getAttributes(IndexCoding _this, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     MetadataAttribute* _result = (MetadataAttribute*) 0;
     jarray _resultArray = NULL;
     if (_method == NULL) {
@@ -2170,6 +2231,7 @@ MetadataAttribute* IndexCoding_getAttributes(IndexCoding _this, int* _resultArra
 MetadataAttribute IndexCoding_getAttribute(IndexCoding _this, const char* name)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring nameString = NULL;
     MetadataAttribute _result = (MetadataAttribute) 0;
     if (_method == NULL) {
@@ -2192,6 +2254,7 @@ MetadataAttribute IndexCoding_getAttribute(IndexCoding _this, const char* name)
 boolean IndexCoding_containsAttribute(IndexCoding _this, const char* name)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring nameString = NULL;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
@@ -2214,6 +2277,7 @@ boolean IndexCoding_containsAttribute(IndexCoding _this, const char* name)
 int IndexCoding_getAttributeIndex(IndexCoding _this, MetadataAttribute attribute)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     int _result = (int) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -2233,6 +2297,7 @@ int IndexCoding_getAttributeIndex(IndexCoding _this, MetadataAttribute attribute
 double IndexCoding_getAttributeDouble(IndexCoding _this, const char* name, double defaultValue)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring nameString = NULL;
     double _result = (double) 0;
     if (_method == NULL) {
@@ -2255,6 +2320,7 @@ double IndexCoding_getAttributeDouble(IndexCoding _this, const char* name, doubl
 ProductData_UTC IndexCoding_getAttributeUTC(IndexCoding _this, const char* name, ProductData_UTC defaultValue)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring nameString = NULL;
     ProductData_UTC _result = (ProductData_UTC) 0;
     if (_method == NULL) {
@@ -2277,6 +2343,7 @@ ProductData_UTC IndexCoding_getAttributeUTC(IndexCoding _this, const char* name,
 int IndexCoding_getAttributeInt(IndexCoding _this, const char* name, int defaultValue)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring nameString = NULL;
     int _result = (int) 0;
     if (_method == NULL) {
@@ -2299,6 +2366,7 @@ int IndexCoding_getAttributeInt(IndexCoding _this, const char* name, int default
 void IndexCoding_setAttributeInt(IndexCoding _this, const char* name, int value)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring nameString = NULL;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -2319,6 +2387,7 @@ void IndexCoding_setAttributeInt(IndexCoding _this, const char* name, int value)
 void IndexCoding_setAttributeDouble(IndexCoding _this, const char* name, double value)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring nameString = NULL;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -2339,6 +2408,7 @@ void IndexCoding_setAttributeDouble(IndexCoding _this, const char* name, double 
 void IndexCoding_setAttributeUTC(IndexCoding _this, const char* name, ProductData_UTC value)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring nameString = NULL;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -2359,6 +2429,7 @@ void IndexCoding_setAttributeUTC(IndexCoding _this, const char* name, ProductDat
 char* IndexCoding_getAttributeString(IndexCoding _this, const char* name, const char* defaultValue)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring nameString = NULL;
     jstring defaultValueString = NULL;
     char* _result = (char*) 0;
@@ -2387,6 +2458,7 @@ char* IndexCoding_getAttributeString(IndexCoding _this, const char* name, const 
 void IndexCoding_setAttributeString(IndexCoding _this, const char* name, const char* value)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring nameString = NULL;
     jstring valueString = NULL;
     if (_method == NULL) {
@@ -2410,6 +2482,7 @@ void IndexCoding_setAttributeString(IndexCoding _this, const char* name, const c
 void IndexCoding_setModified(IndexCoding _this, boolean modified)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classIndexCoding, "setModified", "(Z)V");
@@ -2427,6 +2500,7 @@ void IndexCoding_setModified(IndexCoding _this, boolean modified)
 MetadataElement IndexCoding_createDeepClone(IndexCoding _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     MetadataElement _result = (MetadataElement) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -2446,6 +2520,7 @@ MetadataElement IndexCoding_createDeepClone(IndexCoding _this)
 void IndexCoding_dispose(IndexCoding _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classIndexCoding, "dispose", "()V");
@@ -2463,6 +2538,7 @@ void IndexCoding_dispose(IndexCoding _this)
 ProductNode IndexCoding_getOwner(IndexCoding _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     ProductNode _result = (ProductNode) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -2482,6 +2558,7 @@ ProductNode IndexCoding_getOwner(IndexCoding _this)
 char* IndexCoding_getName(IndexCoding _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
     if (_method == NULL) {
@@ -2504,6 +2581,7 @@ char* IndexCoding_getName(IndexCoding _this)
 void IndexCoding_setName(IndexCoding _this, const char* name)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring nameString = NULL;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -2524,6 +2602,7 @@ void IndexCoding_setName(IndexCoding _this, const char* name)
 char* IndexCoding_getDescription(IndexCoding _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
     if (_method == NULL) {
@@ -2546,6 +2625,7 @@ char* IndexCoding_getDescription(IndexCoding _this)
 void IndexCoding_setDescription(IndexCoding _this, const char* description)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring descriptionString = NULL;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -2566,6 +2646,7 @@ void IndexCoding_setDescription(IndexCoding _this, const char* description)
 boolean IndexCoding_isModified(IndexCoding _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -2585,6 +2666,7 @@ boolean IndexCoding_isModified(IndexCoding _this)
 char* IndexCoding_toString(IndexCoding _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
     if (_method == NULL) {
@@ -2607,6 +2689,7 @@ char* IndexCoding_toString(IndexCoding _this)
 boolean IndexCoding_isValidNodeName(const char* name)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring nameString = NULL;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
@@ -2629,6 +2712,7 @@ boolean IndexCoding_isValidNodeName(const char* name)
 Product IndexCoding_getProduct(IndexCoding _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     Product _result = (Product) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -2648,6 +2732,7 @@ Product IndexCoding_getProduct(IndexCoding _this)
 ProductReader IndexCoding_getProductReader(IndexCoding _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     ProductReader _result = (ProductReader) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -2667,6 +2752,7 @@ ProductReader IndexCoding_getProductReader(IndexCoding _this)
 ProductWriter IndexCoding_getProductWriter(IndexCoding _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     ProductWriter _result = (ProductWriter) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -2686,6 +2772,7 @@ ProductWriter IndexCoding_getProductWriter(IndexCoding _this)
 char* IndexCoding_getDisplayName(IndexCoding _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
     if (_method == NULL) {
@@ -2708,6 +2795,7 @@ char* IndexCoding_getDisplayName(IndexCoding _this)
 char* IndexCoding_getProductRefString(IndexCoding _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
     if (_method == NULL) {
@@ -2730,6 +2818,7 @@ char* IndexCoding_getProductRefString(IndexCoding _this)
 void IndexCoding_updateExpression(IndexCoding _this, const char* oldExternalName, const char* newExternalName)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring oldExternalNameString = NULL;
     jstring newExternalNameString = NULL;
     if (_method == NULL) {
@@ -2753,6 +2842,7 @@ void IndexCoding_updateExpression(IndexCoding _this, const char* oldExternalName
 void IndexCoding_removeFromFile(IndexCoding _this, ProductWriter productWriter)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classIndexCoding, "removeFromFile", "(Lorg/esa/beam/framework/dataio/ProductWriter;)V");
@@ -2770,6 +2860,7 @@ void IndexCoding_removeFromFile(IndexCoding _this, ProductWriter productWriter)
 Object IndexCoding_getExtension(IndexCoding _this, Class arg0)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     Object _result = (Object) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -2789,6 +2880,7 @@ Object IndexCoding_getExtension(IndexCoding _this, Class arg0)
 PixelPos PixelPos_newPixelPos1()
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     PixelPos _result = (PixelPos) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -2808,6 +2900,7 @@ PixelPos PixelPos_newPixelPos1()
 PixelPos PixelPos_newPixelPos2(float x, float y)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     PixelPos _result = (PixelPos) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -2827,6 +2920,7 @@ PixelPos PixelPos_newPixelPos2(float x, float y)
 boolean PixelPos_isValid(PixelPos _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -2846,6 +2940,7 @@ boolean PixelPos_isValid(PixelPos _this)
 void PixelPos_setInvalid(PixelPos _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classPixelPos, "setInvalid", "()V");
@@ -2863,6 +2958,7 @@ void PixelPos_setInvalid(PixelPos _this)
 double PixelPos_getX(PixelPos _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     double _result = (double) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -2882,6 +2978,7 @@ double PixelPos_getX(PixelPos _this)
 double PixelPos_getY(PixelPos _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     double _result = (double) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -2901,6 +2998,7 @@ double PixelPos_getY(PixelPos _this)
 void PixelPos_setLocation1(PixelPos _this, double arg0, double arg1)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classPixelPos, "setLocation", "(DD)V");
@@ -2918,6 +3016,7 @@ void PixelPos_setLocation1(PixelPos _this, double arg0, double arg1)
 void PixelPos_setLocation2(PixelPos _this, float arg0, float arg1)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classPixelPos, "setLocation", "(FF)V");
@@ -2935,6 +3034,7 @@ void PixelPos_setLocation2(PixelPos _this, float arg0, float arg1)
 char* PixelPos_toString(PixelPos _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
     if (_method == NULL) {
@@ -2957,6 +3057,7 @@ char* PixelPos_toString(PixelPos _this)
 void PixelPos_setLocation3(PixelPos _this, Point2D arg0)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classPixelPos, "setLocation", "(Ljava/awt/geom/Point2D;)V");
@@ -2974,6 +3075,7 @@ void PixelPos_setLocation3(PixelPos _this, Point2D arg0)
 double PixelPos_distanceSq2(double arg0, double arg1, double arg2, double arg3)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     double _result = (double) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -2993,6 +3095,7 @@ double PixelPos_distanceSq2(double arg0, double arg1, double arg2, double arg3)
 double PixelPos_distance2(double arg0, double arg1, double arg2, double arg3)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     double _result = (double) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -3012,6 +3115,7 @@ double PixelPos_distance2(double arg0, double arg1, double arg2, double arg3)
 double PixelPos_distanceSq1(PixelPos _this, double arg0, double arg1)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     double _result = (double) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -3031,6 +3135,7 @@ double PixelPos_distanceSq1(PixelPos _this, double arg0, double arg1)
 double PixelPos_distanceSq3(PixelPos _this, Point2D arg0)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     double _result = (double) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -3050,6 +3155,7 @@ double PixelPos_distanceSq3(PixelPos _this, Point2D arg0)
 double PixelPos_distance1(PixelPos _this, double arg0, double arg1)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     double _result = (double) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -3069,6 +3175,7 @@ double PixelPos_distance1(PixelPos _this, double arg0, double arg1)
 double PixelPos_distance3(PixelPos _this, Point2D arg0)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     double _result = (double) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -3088,6 +3195,7 @@ double PixelPos_distance3(PixelPos _this, Point2D arg0)
 Object PixelPos_clone(PixelPos _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     Object _result = (Object) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -3107,6 +3215,7 @@ Object PixelPos_clone(PixelPos _this)
 int PixelPos_hashCode(PixelPos _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     int _result = (int) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -3126,6 +3235,7 @@ int PixelPos_hashCode(PixelPos _this)
 boolean PixelPos_equals(PixelPos _this, Object arg0)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -3145,6 +3255,7 @@ boolean PixelPos_equals(PixelPos _this, Object arg0)
 ProductReader ProductIO_getProductReader(const char* formatName)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring formatNameString = NULL;
     ProductReader _result = (ProductReader) 0;
     if (_method == NULL) {
@@ -3167,6 +3278,7 @@ ProductReader ProductIO_getProductReader(const char* formatName)
 char** ProductIO_getProductWriterExtensions(const char* formatName, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring formatNameString = NULL;
     char** _result = (char**) 0;
     jarray _resultArray = NULL;
@@ -3192,6 +3304,7 @@ char** ProductIO_getProductWriterExtensions(const char* formatName, int* _result
 ProductWriter ProductIO_getProductWriter(const char* formatName)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring formatNameString = NULL;
     ProductWriter _result = (ProductWriter) 0;
     if (_method == NULL) {
@@ -3214,6 +3327,7 @@ ProductWriter ProductIO_getProductWriter(const char* formatName)
 Product ProductIO_readProduct(const char* filePath)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring filePathString = NULL;
     Product _result = (Product) 0;
     if (_method == NULL) {
@@ -3236,6 +3350,7 @@ Product ProductIO_readProduct(const char* filePath)
 ProductReader ProductIO_getProductReaderForFile(File file)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     ProductReader _result = (ProductReader) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -3255,6 +3370,7 @@ ProductReader ProductIO_getProductReaderForFile(File file)
 ProductReader ProductIO_getProductReaderForInput(Object input)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     ProductReader _result = (ProductReader) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -3274,6 +3390,7 @@ ProductReader ProductIO_getProductReaderForInput(Object input)
 void ProductIO_writeProduct(Product product, const char* filePath, const char* formatName)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring filePathString = NULL;
     jstring formatNameString = NULL;
     if (_method == NULL) {
@@ -3297,6 +3414,7 @@ void ProductIO_writeProduct(Product product, const char* filePath, const char* f
 Placemark Placemark_newPlacemark(PlacemarkDescriptor descriptor, SimpleFeature feature)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     Placemark _result = (Placemark) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -3316,6 +3434,7 @@ Placemark Placemark_newPlacemark(PlacemarkDescriptor descriptor, SimpleFeature f
 Placemark Placemark_createPointPlacemark(PlacemarkDescriptor descriptor, const char* name, const char* label, const char* text, PixelPos pixelPos, GeoPos geoPos, GeoCoding geoCoding)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring nameString = NULL;
     jstring labelString = NULL;
     jstring textString = NULL;
@@ -3344,6 +3463,7 @@ Placemark Placemark_createPointPlacemark(PlacemarkDescriptor descriptor, const c
 PlacemarkDescriptor Placemark_getDescriptor(Placemark _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     PlacemarkDescriptor _result = (PlacemarkDescriptor) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -3363,6 +3483,7 @@ PlacemarkDescriptor Placemark_getDescriptor(Placemark _this)
 SimpleFeature Placemark_getFeature(Placemark _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     SimpleFeature _result = (SimpleFeature) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -3382,6 +3503,7 @@ SimpleFeature Placemark_getFeature(Placemark _this)
 Object Placemark_getAttributeValue(Placemark _this, const char* attributeName)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring attributeNameString = NULL;
     Object _result = (Object) 0;
     if (_method == NULL) {
@@ -3404,6 +3526,7 @@ Object Placemark_getAttributeValue(Placemark _this, const char* attributeName)
 void Placemark_setAttributeValue(Placemark _this, const char* attributeName, Object attributeValue)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring attributeNameString = NULL;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -3424,6 +3547,7 @@ void Placemark_setAttributeValue(Placemark _this, const char* attributeName, Obj
 void Placemark_setLabel(Placemark _this, const char* label)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring labelString = NULL;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -3444,6 +3568,7 @@ void Placemark_setLabel(Placemark _this, const char* label)
 char* Placemark_getLabel(Placemark _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
     if (_method == NULL) {
@@ -3466,6 +3591,7 @@ char* Placemark_getLabel(Placemark _this)
 void Placemark_setText(Placemark _this, const char* text)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring textString = NULL;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -3486,6 +3612,7 @@ void Placemark_setText(Placemark _this, const char* text)
 char* Placemark_getText(Placemark _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
     if (_method == NULL) {
@@ -3508,6 +3635,7 @@ char* Placemark_getText(Placemark _this)
 void Placemark_setStyleCss(Placemark _this, const char* styleCss)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring styleCssString = NULL;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -3528,6 +3656,7 @@ void Placemark_setStyleCss(Placemark _this, const char* styleCss)
 char* Placemark_getStyleCss(Placemark _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
     if (_method == NULL) {
@@ -3550,6 +3679,7 @@ char* Placemark_getStyleCss(Placemark _this)
 void Placemark_acceptVisitor(Placemark _this, ProductVisitor visitor)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classPlacemark, "acceptVisitor", "(Lorg/esa/beam/framework/datamodel/ProductVisitor;)V");
@@ -3567,6 +3697,7 @@ void Placemark_acceptVisitor(Placemark _this, ProductVisitor visitor)
 PixelPos Placemark_getPixelPos(Placemark _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     PixelPos _result = (PixelPos) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -3586,6 +3717,7 @@ PixelPos Placemark_getPixelPos(Placemark _this)
 void Placemark_setPixelPos(Placemark _this, PixelPos pixelPos)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classPlacemark, "setPixelPos", "(Lorg/esa/beam/framework/datamodel/PixelPos;)V");
@@ -3603,6 +3735,7 @@ void Placemark_setPixelPos(Placemark _this, PixelPos pixelPos)
 GeoPos Placemark_getGeoPos(Placemark _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     GeoPos _result = (GeoPos) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -3622,6 +3755,7 @@ GeoPos Placemark_getGeoPos(Placemark _this)
 void Placemark_setGeoPos(Placemark _this, GeoPos geoPos)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classPlacemark, "setGeoPos", "(Lorg/esa/beam/framework/datamodel/GeoPos;)V");
@@ -3639,6 +3773,7 @@ void Placemark_setGeoPos(Placemark _this, GeoPos geoPos)
 void Placemark_updatePositions(Placemark _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classPlacemark, "updatePositions", "()V");
@@ -3656,6 +3791,7 @@ void Placemark_updatePositions(Placemark _this)
 SimpleFeatureType Placemark_createPinFeatureType()
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     SimpleFeatureType _result = (SimpleFeatureType) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -3675,6 +3811,7 @@ SimpleFeatureType Placemark_createPinFeatureType()
 SimpleFeatureType Placemark_createGcpFeatureType()
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     SimpleFeatureType _result = (SimpleFeatureType) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -3694,6 +3831,7 @@ SimpleFeatureType Placemark_createGcpFeatureType()
 SimpleFeatureType Placemark_createGeometryFeatureType()
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     SimpleFeatureType _result = (SimpleFeatureType) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -3713,6 +3851,7 @@ SimpleFeatureType Placemark_createGeometryFeatureType()
 SimpleFeatureType Placemark_createPointFeatureType(const char* name)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring nameString = NULL;
     SimpleFeatureType _result = (SimpleFeatureType) 0;
     if (_method == NULL) {
@@ -3735,6 +3874,7 @@ SimpleFeatureType Placemark_createPointFeatureType(const char* name)
 ProductNode Placemark_getOwner(Placemark _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     ProductNode _result = (ProductNode) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -3754,6 +3894,7 @@ ProductNode Placemark_getOwner(Placemark _this)
 char* Placemark_getName(Placemark _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
     if (_method == NULL) {
@@ -3776,6 +3917,7 @@ char* Placemark_getName(Placemark _this)
 void Placemark_setName(Placemark _this, const char* name)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring nameString = NULL;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -3796,6 +3938,7 @@ void Placemark_setName(Placemark _this, const char* name)
 char* Placemark_getDescription(Placemark _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
     if (_method == NULL) {
@@ -3818,6 +3961,7 @@ char* Placemark_getDescription(Placemark _this)
 void Placemark_setDescription(Placemark _this, const char* description)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring descriptionString = NULL;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -3838,6 +3982,7 @@ void Placemark_setDescription(Placemark _this, const char* description)
 boolean Placemark_isModified(Placemark _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -3857,6 +4002,7 @@ boolean Placemark_isModified(Placemark _this)
 void Placemark_setModified(Placemark _this, boolean modified)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classPlacemark, "setModified", "(Z)V");
@@ -3874,6 +4020,7 @@ void Placemark_setModified(Placemark _this, boolean modified)
 char* Placemark_toString(Placemark _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
     if (_method == NULL) {
@@ -3896,6 +4043,7 @@ char* Placemark_toString(Placemark _this)
 void Placemark_dispose(Placemark _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classPlacemark, "dispose", "()V");
@@ -3913,6 +4061,7 @@ void Placemark_dispose(Placemark _this)
 boolean Placemark_isValidNodeName(const char* name)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring nameString = NULL;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
@@ -3935,6 +4084,7 @@ boolean Placemark_isValidNodeName(const char* name)
 Product Placemark_getProduct(Placemark _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     Product _result = (Product) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -3954,6 +4104,7 @@ Product Placemark_getProduct(Placemark _this)
 ProductReader Placemark_getProductReader(Placemark _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     ProductReader _result = (ProductReader) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -3973,6 +4124,7 @@ ProductReader Placemark_getProductReader(Placemark _this)
 ProductWriter Placemark_getProductWriter(Placemark _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     ProductWriter _result = (ProductWriter) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -3992,6 +4144,7 @@ ProductWriter Placemark_getProductWriter(Placemark _this)
 char* Placemark_getDisplayName(Placemark _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
     if (_method == NULL) {
@@ -4014,6 +4167,7 @@ char* Placemark_getDisplayName(Placemark _this)
 char* Placemark_getProductRefString(Placemark _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
     if (_method == NULL) {
@@ -4036,6 +4190,7 @@ char* Placemark_getProductRefString(Placemark _this)
 void Placemark_updateExpression(Placemark _this, const char* oldExternalName, const char* newExternalName)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring oldExternalNameString = NULL;
     jstring newExternalNameString = NULL;
     if (_method == NULL) {
@@ -4059,6 +4214,7 @@ void Placemark_updateExpression(Placemark _this, const char* oldExternalName, co
 void Placemark_removeFromFile(Placemark _this, ProductWriter productWriter)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classPlacemark, "removeFromFile", "(Lorg/esa/beam/framework/dataio/ProductWriter;)V");
@@ -4076,6 +4232,7 @@ void Placemark_removeFromFile(Placemark _this, ProductWriter productWriter)
 Object Placemark_getExtension(Placemark _this, Class arg0)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     Object _result = (Object) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -4095,6 +4252,7 @@ Object Placemark_getExtension(Placemark _this, Class arg0)
 MetadataElement MetadataElement_newMetadataElement(const char* name)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring nameString = NULL;
     MetadataElement _result = (MetadataElement) 0;
     if (_method == NULL) {
@@ -4117,6 +4275,7 @@ MetadataElement MetadataElement_newMetadataElement(const char* name)
 ProductNodeGroup MetadataElement_getElementGroup(MetadataElement _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     ProductNodeGroup _result = (ProductNodeGroup) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -4136,6 +4295,7 @@ ProductNodeGroup MetadataElement_getElementGroup(MetadataElement _this)
 MetadataElement MetadataElement_getParentElement(MetadataElement _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     MetadataElement _result = (MetadataElement) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -4155,6 +4315,7 @@ MetadataElement MetadataElement_getParentElement(MetadataElement _this)
 void MetadataElement_addElement(MetadataElement _this, MetadataElement element)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classMetadataElement, "addElement", "(Lorg/esa/beam/framework/datamodel/MetadataElement;)V");
@@ -4172,6 +4333,7 @@ void MetadataElement_addElement(MetadataElement _this, MetadataElement element)
 void MetadataElement_addElementAt(MetadataElement _this, MetadataElement element, int index)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classMetadataElement, "addElementAt", "(Lorg/esa/beam/framework/datamodel/MetadataElement;I)V");
@@ -4189,6 +4351,7 @@ void MetadataElement_addElementAt(MetadataElement _this, MetadataElement element
 boolean MetadataElement_removeElement(MetadataElement _this, MetadataElement element)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -4208,6 +4371,7 @@ boolean MetadataElement_removeElement(MetadataElement _this, MetadataElement ele
 int MetadataElement_getNumElements(MetadataElement _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     int _result = (int) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -4227,6 +4391,7 @@ int MetadataElement_getNumElements(MetadataElement _this)
 MetadataElement MetadataElement_getElementAt(MetadataElement _this, int index)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     MetadataElement _result = (MetadataElement) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -4246,6 +4411,7 @@ MetadataElement MetadataElement_getElementAt(MetadataElement _this, int index)
 char** MetadataElement_getElementNames(MetadataElement _this, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     char** _result = (char**) 0;
     jarray _resultArray = NULL;
     if (_method == NULL) {
@@ -4268,6 +4434,7 @@ char** MetadataElement_getElementNames(MetadataElement _this, int* _resultArrayL
 MetadataElement* MetadataElement_getElements(MetadataElement _this, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     MetadataElement* _result = (MetadataElement*) 0;
     jarray _resultArray = NULL;
     if (_method == NULL) {
@@ -4290,6 +4457,7 @@ MetadataElement* MetadataElement_getElements(MetadataElement _this, int* _result
 MetadataElement MetadataElement_getElement(MetadataElement _this, const char* name)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring nameString = NULL;
     MetadataElement _result = (MetadataElement) 0;
     if (_method == NULL) {
@@ -4312,6 +4480,7 @@ MetadataElement MetadataElement_getElement(MetadataElement _this, const char* na
 boolean MetadataElement_containsElement(MetadataElement _this, const char* name)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring nameString = NULL;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
@@ -4334,6 +4503,7 @@ boolean MetadataElement_containsElement(MetadataElement _this, const char* name)
 int MetadataElement_getElementIndex(MetadataElement _this, MetadataElement element)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     int _result = (int) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -4353,6 +4523,7 @@ int MetadataElement_getElementIndex(MetadataElement _this, MetadataElement eleme
 void MetadataElement_addAttribute(MetadataElement _this, MetadataAttribute attribute)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classMetadataElement, "addAttribute", "(Lorg/esa/beam/framework/datamodel/MetadataAttribute;)V");
@@ -4370,6 +4541,7 @@ void MetadataElement_addAttribute(MetadataElement _this, MetadataAttribute attri
 boolean MetadataElement_removeAttribute(MetadataElement _this, MetadataAttribute attribute)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -4389,6 +4561,7 @@ boolean MetadataElement_removeAttribute(MetadataElement _this, MetadataAttribute
 int MetadataElement_getNumAttributes(MetadataElement _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     int _result = (int) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -4408,6 +4581,7 @@ int MetadataElement_getNumAttributes(MetadataElement _this)
 MetadataAttribute MetadataElement_getAttributeAt(MetadataElement _this, int index)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     MetadataAttribute _result = (MetadataAttribute) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -4427,6 +4601,7 @@ MetadataAttribute MetadataElement_getAttributeAt(MetadataElement _this, int inde
 char** MetadataElement_getAttributeNames(MetadataElement _this, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     char** _result = (char**) 0;
     jarray _resultArray = NULL;
     if (_method == NULL) {
@@ -4449,6 +4624,7 @@ char** MetadataElement_getAttributeNames(MetadataElement _this, int* _resultArra
 MetadataAttribute* MetadataElement_getAttributes(MetadataElement _this, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     MetadataAttribute* _result = (MetadataAttribute*) 0;
     jarray _resultArray = NULL;
     if (_method == NULL) {
@@ -4471,6 +4647,7 @@ MetadataAttribute* MetadataElement_getAttributes(MetadataElement _this, int* _re
 MetadataAttribute MetadataElement_getAttribute(MetadataElement _this, const char* name)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring nameString = NULL;
     MetadataAttribute _result = (MetadataAttribute) 0;
     if (_method == NULL) {
@@ -4493,6 +4670,7 @@ MetadataAttribute MetadataElement_getAttribute(MetadataElement _this, const char
 boolean MetadataElement_containsAttribute(MetadataElement _this, const char* name)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring nameString = NULL;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
@@ -4515,6 +4693,7 @@ boolean MetadataElement_containsAttribute(MetadataElement _this, const char* nam
 int MetadataElement_getAttributeIndex(MetadataElement _this, MetadataAttribute attribute)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     int _result = (int) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -4534,6 +4713,7 @@ int MetadataElement_getAttributeIndex(MetadataElement _this, MetadataAttribute a
 double MetadataElement_getAttributeDouble(MetadataElement _this, const char* name, double defaultValue)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring nameString = NULL;
     double _result = (double) 0;
     if (_method == NULL) {
@@ -4556,6 +4736,7 @@ double MetadataElement_getAttributeDouble(MetadataElement _this, const char* nam
 ProductData_UTC MetadataElement_getAttributeUTC(MetadataElement _this, const char* name, ProductData_UTC defaultValue)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring nameString = NULL;
     ProductData_UTC _result = (ProductData_UTC) 0;
     if (_method == NULL) {
@@ -4578,6 +4759,7 @@ ProductData_UTC MetadataElement_getAttributeUTC(MetadataElement _this, const cha
 int MetadataElement_getAttributeInt(MetadataElement _this, const char* name, int defaultValue)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring nameString = NULL;
     int _result = (int) 0;
     if (_method == NULL) {
@@ -4600,6 +4782,7 @@ int MetadataElement_getAttributeInt(MetadataElement _this, const char* name, int
 void MetadataElement_setAttributeInt(MetadataElement _this, const char* name, int value)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring nameString = NULL;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -4620,6 +4803,7 @@ void MetadataElement_setAttributeInt(MetadataElement _this, const char* name, in
 void MetadataElement_setAttributeDouble(MetadataElement _this, const char* name, double value)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring nameString = NULL;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -4640,6 +4824,7 @@ void MetadataElement_setAttributeDouble(MetadataElement _this, const char* name,
 void MetadataElement_setAttributeUTC(MetadataElement _this, const char* name, ProductData_UTC value)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring nameString = NULL;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -4660,6 +4845,7 @@ void MetadataElement_setAttributeUTC(MetadataElement _this, const char* name, Pr
 char* MetadataElement_getAttributeString(MetadataElement _this, const char* name, const char* defaultValue)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring nameString = NULL;
     jstring defaultValueString = NULL;
     char* _result = (char*) 0;
@@ -4688,6 +4874,7 @@ char* MetadataElement_getAttributeString(MetadataElement _this, const char* name
 void MetadataElement_setAttributeString(MetadataElement _this, const char* name, const char* value)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring nameString = NULL;
     jstring valueString = NULL;
     if (_method == NULL) {
@@ -4711,6 +4898,7 @@ void MetadataElement_setAttributeString(MetadataElement _this, const char* name,
 void MetadataElement_setModified(MetadataElement _this, boolean modified)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classMetadataElement, "setModified", "(Z)V");
@@ -4728,6 +4916,7 @@ void MetadataElement_setModified(MetadataElement _this, boolean modified)
 void MetadataElement_acceptVisitor(MetadataElement _this, ProductVisitor visitor)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classMetadataElement, "acceptVisitor", "(Lorg/esa/beam/framework/datamodel/ProductVisitor;)V");
@@ -4745,6 +4934,7 @@ void MetadataElement_acceptVisitor(MetadataElement _this, ProductVisitor visitor
 MetadataElement MetadataElement_createDeepClone(MetadataElement _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     MetadataElement _result = (MetadataElement) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -4764,6 +4954,7 @@ MetadataElement MetadataElement_createDeepClone(MetadataElement _this)
 void MetadataElement_dispose(MetadataElement _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classMetadataElement, "dispose", "()V");
@@ -4781,6 +4972,7 @@ void MetadataElement_dispose(MetadataElement _this)
 ProductNode MetadataElement_getOwner(MetadataElement _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     ProductNode _result = (ProductNode) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -4800,6 +4992,7 @@ ProductNode MetadataElement_getOwner(MetadataElement _this)
 char* MetadataElement_getName(MetadataElement _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
     if (_method == NULL) {
@@ -4822,6 +5015,7 @@ char* MetadataElement_getName(MetadataElement _this)
 void MetadataElement_setName(MetadataElement _this, const char* name)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring nameString = NULL;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -4842,6 +5036,7 @@ void MetadataElement_setName(MetadataElement _this, const char* name)
 char* MetadataElement_getDescription(MetadataElement _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
     if (_method == NULL) {
@@ -4864,6 +5059,7 @@ char* MetadataElement_getDescription(MetadataElement _this)
 void MetadataElement_setDescription(MetadataElement _this, const char* description)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring descriptionString = NULL;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -4884,6 +5080,7 @@ void MetadataElement_setDescription(MetadataElement _this, const char* descripti
 boolean MetadataElement_isModified(MetadataElement _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -4903,6 +5100,7 @@ boolean MetadataElement_isModified(MetadataElement _this)
 char* MetadataElement_toString(MetadataElement _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
     if (_method == NULL) {
@@ -4925,6 +5123,7 @@ char* MetadataElement_toString(MetadataElement _this)
 boolean MetadataElement_isValidNodeName(const char* name)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring nameString = NULL;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
@@ -4947,6 +5146,7 @@ boolean MetadataElement_isValidNodeName(const char* name)
 Product MetadataElement_getProduct(MetadataElement _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     Product _result = (Product) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -4966,6 +5166,7 @@ Product MetadataElement_getProduct(MetadataElement _this)
 ProductReader MetadataElement_getProductReader(MetadataElement _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     ProductReader _result = (ProductReader) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -4985,6 +5186,7 @@ ProductReader MetadataElement_getProductReader(MetadataElement _this)
 ProductWriter MetadataElement_getProductWriter(MetadataElement _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     ProductWriter _result = (ProductWriter) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -5004,6 +5206,7 @@ ProductWriter MetadataElement_getProductWriter(MetadataElement _this)
 char* MetadataElement_getDisplayName(MetadataElement _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
     if (_method == NULL) {
@@ -5026,6 +5229,7 @@ char* MetadataElement_getDisplayName(MetadataElement _this)
 char* MetadataElement_getProductRefString(MetadataElement _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
     if (_method == NULL) {
@@ -5048,6 +5252,7 @@ char* MetadataElement_getProductRefString(MetadataElement _this)
 void MetadataElement_updateExpression(MetadataElement _this, const char* oldExternalName, const char* newExternalName)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring oldExternalNameString = NULL;
     jstring newExternalNameString = NULL;
     if (_method == NULL) {
@@ -5071,6 +5276,7 @@ void MetadataElement_updateExpression(MetadataElement _this, const char* oldExte
 void MetadataElement_removeFromFile(MetadataElement _this, ProductWriter productWriter)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classMetadataElement, "removeFromFile", "(Lorg/esa/beam/framework/dataio/ProductWriter;)V");
@@ -5088,6 +5294,7 @@ void MetadataElement_removeFromFile(MetadataElement _this, ProductWriter product
 Object MetadataElement_getExtension(MetadataElement _this, Class arg0)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     Object _result = (Object) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -5107,6 +5314,7 @@ Object MetadataElement_getExtension(MetadataElement _this, Class arg0)
 Product Product_newProduct(const char* name, const char* type, int sceneRasterWidth, int sceneRasterHeight)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring nameString = NULL;
     jstring typeString = NULL;
     Product _result = (Product) 0;
@@ -5132,6 +5340,7 @@ Product Product_newProduct(const char* name, const char* type, int sceneRasterWi
 File Product_getFileLocation(Product _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     File _result = (File) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -5151,6 +5360,7 @@ File Product_getFileLocation(Product _this)
 void Product_setFileLocation(Product _this, File fileLocation)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classProduct, "setFileLocation", "(Ljava/io/File;)V");
@@ -5168,6 +5378,7 @@ void Product_setFileLocation(Product _this, File fileLocation)
 char* Product_getProductType(Product _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
     if (_method == NULL) {
@@ -5190,6 +5401,7 @@ char* Product_getProductType(Product _this)
 void Product_setProductType(Product _this, const char* productType)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring productTypeString = NULL;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -5210,6 +5422,7 @@ void Product_setProductType(Product _this, const char* productType)
 void Product_setProductReader(Product _this, ProductReader reader)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classProduct, "setProductReader", "(Lorg/esa/beam/framework/dataio/ProductReader;)V");
@@ -5227,6 +5440,7 @@ void Product_setProductReader(Product _this, ProductReader reader)
 ProductReader Product_getProductReader(Product _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     ProductReader _result = (ProductReader) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -5246,6 +5460,7 @@ ProductReader Product_getProductReader(Product _this)
 void Product_setProductWriter(Product _this, ProductWriter writer)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classProduct, "setProductWriter", "(Lorg/esa/beam/framework/dataio/ProductWriter;)V");
@@ -5263,6 +5478,7 @@ void Product_setProductWriter(Product _this, ProductWriter writer)
 ProductWriter Product_getProductWriter(Product _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     ProductWriter _result = (ProductWriter) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -5282,6 +5498,7 @@ ProductWriter Product_getProductWriter(Product _this)
 void Product_writeHeader(Product _this, Object output)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classProduct, "writeHeader", "(Ljava/lang/Object;)V");
@@ -5299,6 +5516,7 @@ void Product_writeHeader(Product _this, Object output)
 void Product_closeProductReader(Product _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classProduct, "closeProductReader", "()V");
@@ -5316,6 +5534,7 @@ void Product_closeProductReader(Product _this)
 void Product_closeProductWriter(Product _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classProduct, "closeProductWriter", "()V");
@@ -5333,6 +5552,7 @@ void Product_closeProductWriter(Product _this)
 void Product_closeIO(Product _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classProduct, "closeIO", "()V");
@@ -5350,6 +5570,7 @@ void Product_closeIO(Product _this)
 void Product_dispose(Product _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classProduct, "dispose", "()V");
@@ -5367,6 +5588,7 @@ void Product_dispose(Product _this)
 PointingFactory Product_getPointingFactory(Product _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     PointingFactory _result = (PointingFactory) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -5386,6 +5608,7 @@ PointingFactory Product_getPointingFactory(Product _this)
 void Product_setPointingFactory(Product _this, PointingFactory pointingFactory)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classProduct, "setPointingFactory", "(Lorg/esa/beam/framework/datamodel/PointingFactory;)V");
@@ -5403,6 +5626,7 @@ void Product_setPointingFactory(Product _this, PointingFactory pointingFactory)
 void Product_setGeoCoding(Product _this, GeoCoding geoCoding)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classProduct, "setGeoCoding", "(Lorg/esa/beam/framework/datamodel/GeoCoding;)V");
@@ -5420,6 +5644,7 @@ void Product_setGeoCoding(Product _this, GeoCoding geoCoding)
 GeoCoding Product_getGeoCoding(Product _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     GeoCoding _result = (GeoCoding) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -5439,6 +5664,7 @@ GeoCoding Product_getGeoCoding(Product _this)
 boolean Product_isUsingSingleGeoCoding(Product _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -5458,6 +5684,7 @@ boolean Product_isUsingSingleGeoCoding(Product _this)
 boolean Product_transferGeoCodingTo(Product _this, Product destProduct, ProductSubsetDef subsetDef)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -5477,6 +5704,7 @@ boolean Product_transferGeoCodingTo(Product _this, Product destProduct, ProductS
 int Product_getSceneRasterWidth(Product _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     int _result = (int) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -5496,6 +5724,7 @@ int Product_getSceneRasterWidth(Product _this)
 int Product_getSceneRasterHeight(Product _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     int _result = (int) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -5515,6 +5744,7 @@ int Product_getSceneRasterHeight(Product _this)
 ProductData_UTC Product_getStartTime(Product _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     ProductData_UTC _result = (ProductData_UTC) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -5534,6 +5764,7 @@ ProductData_UTC Product_getStartTime(Product _this)
 void Product_setStartTime(Product _this, ProductData_UTC startTime)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classProduct, "setStartTime", "(Lorg/esa/beam/framework/datamodel/ProductData/UTC;)V");
@@ -5551,6 +5782,7 @@ void Product_setStartTime(Product _this, ProductData_UTC startTime)
 ProductData_UTC Product_getEndTime(Product _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     ProductData_UTC _result = (ProductData_UTC) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -5570,6 +5802,7 @@ ProductData_UTC Product_getEndTime(Product _this)
 void Product_setEndTime(Product _this, ProductData_UTC endTime)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classProduct, "setEndTime", "(Lorg/esa/beam/framework/datamodel/ProductData/UTC;)V");
@@ -5587,6 +5820,7 @@ void Product_setEndTime(Product _this, ProductData_UTC endTime)
 MetadataElement Product_getMetadataRoot(Product _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     MetadataElement _result = (MetadataElement) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -5606,6 +5840,7 @@ MetadataElement Product_getMetadataRoot(Product _this)
 ProductNodeGroup Product_getBandGroup(Product _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     ProductNodeGroup _result = (ProductNodeGroup) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -5625,6 +5860,7 @@ ProductNodeGroup Product_getBandGroup(Product _this)
 ProductNodeGroup Product_getTiePointGridGroup(Product _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     ProductNodeGroup _result = (ProductNodeGroup) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -5644,6 +5880,7 @@ ProductNodeGroup Product_getTiePointGridGroup(Product _this)
 void Product_addTiePointGrid(Product _this, TiePointGrid tiePointGrid)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classProduct, "addTiePointGrid", "(Lorg/esa/beam/framework/datamodel/TiePointGrid;)V");
@@ -5661,6 +5898,7 @@ void Product_addTiePointGrid(Product _this, TiePointGrid tiePointGrid)
 boolean Product_removeTiePointGrid(Product _this, TiePointGrid tiePointGrid)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -5680,6 +5918,7 @@ boolean Product_removeTiePointGrid(Product _this, TiePointGrid tiePointGrid)
 int Product_getNumTiePointGrids(Product _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     int _result = (int) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -5699,6 +5938,7 @@ int Product_getNumTiePointGrids(Product _this)
 TiePointGrid Product_getTiePointGridAt(Product _this, int index)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     TiePointGrid _result = (TiePointGrid) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -5718,6 +5958,7 @@ TiePointGrid Product_getTiePointGridAt(Product _this, int index)
 char** Product_getTiePointGridNames(Product _this, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     char** _result = (char**) 0;
     jarray _resultArray = NULL;
     if (_method == NULL) {
@@ -5740,6 +5981,7 @@ char** Product_getTiePointGridNames(Product _this, int* _resultArrayLength)
 TiePointGrid* Product_getTiePointGrids(Product _this, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     TiePointGrid* _result = (TiePointGrid*) 0;
     jarray _resultArray = NULL;
     if (_method == NULL) {
@@ -5762,6 +6004,7 @@ TiePointGrid* Product_getTiePointGrids(Product _this, int* _resultArrayLength)
 TiePointGrid Product_getTiePointGrid(Product _this, const char* name)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring nameString = NULL;
     TiePointGrid _result = (TiePointGrid) 0;
     if (_method == NULL) {
@@ -5784,6 +6027,7 @@ TiePointGrid Product_getTiePointGrid(Product _this, const char* name)
 boolean Product_containsTiePointGrid(Product _this, const char* name)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring nameString = NULL;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
@@ -5806,6 +6050,7 @@ boolean Product_containsTiePointGrid(Product _this, const char* name)
 void Product_addBand(Product _this, Band band)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classProduct, "addBand", "(Lorg/esa/beam/framework/datamodel/Band;)V");
@@ -5823,6 +6068,7 @@ void Product_addBand(Product _this, Band band)
 Band Product_addNewBand(Product _this, const char* bandName, int dataType)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring bandNameString = NULL;
     Band _result = (Band) 0;
     if (_method == NULL) {
@@ -5845,6 +6091,7 @@ Band Product_addNewBand(Product _this, const char* bandName, int dataType)
 Band Product_addComputedBand(Product _this, const char* bandName, const char* expression)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring bandNameString = NULL;
     jstring expressionString = NULL;
     Band _result = (Band) 0;
@@ -5870,6 +6117,7 @@ Band Product_addComputedBand(Product _this, const char* bandName, const char* ex
 boolean Product_removeBand(Product _this, Band band)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -5889,6 +6137,7 @@ boolean Product_removeBand(Product _this, Band band)
 int Product_getNumBands(Product _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     int _result = (int) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -5908,6 +6157,7 @@ int Product_getNumBands(Product _this)
 Band Product_getBandAt(Product _this, int index)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     Band _result = (Band) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -5927,6 +6177,7 @@ Band Product_getBandAt(Product _this, int index)
 char** Product_getBandNames(Product _this, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     char** _result = (char**) 0;
     jarray _resultArray = NULL;
     if (_method == NULL) {
@@ -5949,6 +6200,7 @@ char** Product_getBandNames(Product _this, int* _resultArrayLength)
 Band* Product_getBands(Product _this, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     Band* _result = (Band*) 0;
     jarray _resultArray = NULL;
     if (_method == NULL) {
@@ -5971,6 +6223,7 @@ Band* Product_getBands(Product _this, int* _resultArrayLength)
 Band Product_getBand(Product _this, const char* name)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring nameString = NULL;
     Band _result = (Band) 0;
     if (_method == NULL) {
@@ -5993,6 +6246,7 @@ Band Product_getBand(Product _this, const char* name)
 int Product_getBandIndex(Product _this, const char* name)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring nameString = NULL;
     int _result = (int) 0;
     if (_method == NULL) {
@@ -6015,6 +6269,7 @@ int Product_getBandIndex(Product _this, const char* name)
 boolean Product_containsBand(Product _this, const char* name)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring nameString = NULL;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
@@ -6037,6 +6292,7 @@ boolean Product_containsBand(Product _this, const char* name)
 boolean Product_containsRasterDataNode(Product _this, const char* name)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring nameString = NULL;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
@@ -6059,6 +6315,7 @@ boolean Product_containsRasterDataNode(Product _this, const char* name)
 RasterDataNode Product_getRasterDataNode(Product _this, const char* name)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring nameString = NULL;
     RasterDataNode _result = (RasterDataNode) 0;
     if (_method == NULL) {
@@ -6081,6 +6338,7 @@ RasterDataNode Product_getRasterDataNode(Product _this, const char* name)
 ProductNodeGroup Product_getMaskGroup(Product _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     ProductNodeGroup _result = (ProductNodeGroup) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -6100,6 +6358,7 @@ ProductNodeGroup Product_getMaskGroup(Product _this)
 ProductNodeGroup Product_getVectorDataGroup(Product _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     ProductNodeGroup _result = (ProductNodeGroup) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -6119,6 +6378,7 @@ ProductNodeGroup Product_getVectorDataGroup(Product _this)
 ProductNodeGroup Product_getFlagCodingGroup(Product _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     ProductNodeGroup _result = (ProductNodeGroup) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -6138,6 +6398,7 @@ ProductNodeGroup Product_getFlagCodingGroup(Product _this)
 ProductNodeGroup Product_getIndexCodingGroup(Product _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     ProductNodeGroup _result = (ProductNodeGroup) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -6157,6 +6418,7 @@ ProductNodeGroup Product_getIndexCodingGroup(Product _this)
 boolean Product_containsPixel(Product _this, float x, float y)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -6176,6 +6438,7 @@ boolean Product_containsPixel(Product _this, float x, float y)
 PlacemarkGroup Product_getGcpGroup(Product _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     PlacemarkGroup _result = (PlacemarkGroup) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -6195,6 +6458,7 @@ PlacemarkGroup Product_getGcpGroup(Product _this)
 PlacemarkGroup Product_getPinGroup(Product _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     PlacemarkGroup _result = (PlacemarkGroup) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -6214,6 +6478,7 @@ PlacemarkGroup Product_getPinGroup(Product _this)
 boolean Product_isCompatibleProduct(Product _this, Product product, float eps)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -6233,6 +6498,7 @@ boolean Product_isCompatibleProduct(Product _this, Product product, float eps)
 Term Product_parseExpression(Product _this, const char* expression)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring expressionString = NULL;
     Term _result = (Term) 0;
     if (_method == NULL) {
@@ -6255,6 +6521,7 @@ Term Product_parseExpression(Product _this, const char* expression)
 void Product_acceptVisitor(Product _this, ProductVisitor visitor)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classProduct, "acceptVisitor", "(Lorg/esa/beam/framework/datamodel/ProductVisitor;)V");
@@ -6272,6 +6539,7 @@ void Product_acceptVisitor(Product _this, ProductVisitor visitor)
 boolean Product_addProductNodeListener(Product _this, ProductNodeListener listener)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -6291,6 +6559,7 @@ boolean Product_addProductNodeListener(Product _this, ProductNodeListener listen
 void Product_removeProductNodeListener(Product _this, ProductNodeListener listener)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classProduct, "removeProductNodeListener", "(Lorg/esa/beam/framework/datamodel/ProductNodeListener;)V");
@@ -6308,6 +6577,7 @@ void Product_removeProductNodeListener(Product _this, ProductNodeListener listen
 ProductNodeListener* Product_getProductNodeListeners(Product _this, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     ProductNodeListener* _result = (ProductNodeListener*) 0;
     jarray _resultArray = NULL;
     if (_method == NULL) {
@@ -6330,6 +6600,7 @@ ProductNodeListener* Product_getProductNodeListeners(Product _this, int* _result
 int Product_getRefNo(Product _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     int _result = (int) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -6349,6 +6620,7 @@ int Product_getRefNo(Product _this)
 void Product_setRefNo(Product _this, int refNo)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classProduct, "setRefNo", "(I)V");
@@ -6366,6 +6638,7 @@ void Product_setRefNo(Product _this, int refNo)
 void Product_resetRefNo(Product _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classProduct, "resetRefNo", "()V");
@@ -6383,6 +6656,7 @@ void Product_resetRefNo(Product _this)
 ProductManager Product_getProductManager(Product _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     ProductManager _result = (ProductManager) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -6402,6 +6676,7 @@ ProductManager Product_getProductManager(Product _this)
 Parser Product_createBandArithmeticParser(Product _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     Parser _result = (Parser) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -6421,6 +6696,7 @@ Parser Product_createBandArithmeticParser(Product _this)
 WritableNamespace Product_createBandArithmeticDefaultNamespace(Product _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     WritableNamespace _result = (WritableNamespace) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -6440,6 +6716,7 @@ WritableNamespace Product_createBandArithmeticDefaultNamespace(Product _this)
 Product Product_createSubset(Product _this, ProductSubsetDef subsetDef, const char* name, const char* desc)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring nameString = NULL;
     jstring descString = NULL;
     Product _result = (Product) 0;
@@ -6465,6 +6742,7 @@ Product Product_createSubset(Product _this, ProductSubsetDef subsetDef, const ch
 Product Product_createFlippedProduct(Product _this, int flipType, const char* name, const char* desc)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring nameString = NULL;
     jstring descString = NULL;
     Product _result = (Product) 0;
@@ -6490,6 +6768,7 @@ Product Product_createFlippedProduct(Product _this, int flipType, const char* na
 void Product_setModified(Product _this, boolean modified)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classProduct, "setModified", "(Z)V");
@@ -6507,6 +6786,7 @@ void Product_setModified(Product _this, boolean modified)
 char* Product_getQuicklookBandName(Product _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
     if (_method == NULL) {
@@ -6529,6 +6809,7 @@ char* Product_getQuicklookBandName(Product _this)
 void Product_setQuicklookBandName(Product _this, const char* quicklookBandName)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring quicklookBandNameString = NULL;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -6549,6 +6830,7 @@ void Product_setQuicklookBandName(Product _this, const char* quicklookBandName)
 char* Product_createPixelInfoString(Product _this, int pixelX, int pixelY)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
     if (_method == NULL) {
@@ -6571,6 +6853,7 @@ char* Product_createPixelInfoString(Product _this, int pixelX, int pixelY)
 ProductNode* Product_getRemovedChildNodes(Product _this, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     ProductNode* _result = (ProductNode*) 0;
     jarray _resultArray = NULL;
     if (_method == NULL) {
@@ -6593,6 +6876,7 @@ ProductNode* Product_getRemovedChildNodes(Product _this, int* _resultArrayLength
 boolean Product_canBeOrthorectified(Product _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -6612,6 +6896,7 @@ boolean Product_canBeOrthorectified(Product _this)
 Dimension Product_getPreferredTileSize(Product _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     Dimension _result = (Dimension) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -6631,6 +6916,7 @@ Dimension Product_getPreferredTileSize(Product _this)
 void Product_setPreferredTileSize(Product _this, int tileWidth, int tileHeight)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classProduct, "setPreferredTileSize", "(II)V");
@@ -6648,6 +6934,7 @@ void Product_setPreferredTileSize(Product _this, int tileWidth, int tileHeight)
 char** Product_getAllFlagNames(Product _this, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     char** _result = (char**) 0;
     jarray _resultArray = NULL;
     if (_method == NULL) {
@@ -6670,6 +6957,7 @@ char** Product_getAllFlagNames(Product _this, int* _resultArrayLength)
 Product_AutoGrouping Product_getAutoGrouping(Product _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     Product_AutoGrouping _result = (Product_AutoGrouping) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -6689,6 +6977,7 @@ Product_AutoGrouping Product_getAutoGrouping(Product _this)
 void Product_setAutoGrouping(Product _this, const char* pattern)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring patternString = NULL;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -6709,6 +6998,7 @@ void Product_setAutoGrouping(Product _this, const char* pattern)
 Mask Product_addComputedMask(Product _this, const char* maskName, const char* expression, const char* description, Color color, double transparency)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring maskNameString = NULL;
     jstring expressionString = NULL;
     jstring descriptionString = NULL;
@@ -6737,6 +7027,7 @@ Mask Product_addComputedMask(Product _this, const char* maskName, const char* ex
 void Product_addBitmaskDef(Product _this, BitmaskDef bitmaskDef)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classProduct, "addBitmaskDef", "(Lorg/esa/beam/framework/datamodel/BitmaskDef;)V");
@@ -6754,6 +7045,7 @@ void Product_addBitmaskDef(Product _this, BitmaskDef bitmaskDef)
 char** Product_getBitmaskDefNames(Product _this, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     char** _result = (char**) 0;
     jarray _resultArray = NULL;
     if (_method == NULL) {
@@ -6776,6 +7068,7 @@ char** Product_getBitmaskDefNames(Product _this, int* _resultArrayLength)
 BitmaskDef Product_getBitmaskDef(Product _this, const char* name)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring nameString = NULL;
     BitmaskDef _result = (BitmaskDef) 0;
     if (_method == NULL) {
@@ -6798,6 +7091,7 @@ BitmaskDef Product_getBitmaskDef(Product _this, const char* name)
 BitRaster Product_getValidMask(Product _this, const char* id)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring idString = NULL;
     BitRaster _result = (BitRaster) 0;
     if (_method == NULL) {
@@ -6820,6 +7114,7 @@ BitRaster Product_getValidMask(Product _this, const char* id)
 void Product_setValidMask(Product _this, const char* id, BitRaster validMask)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring idString = NULL;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -6840,6 +7135,7 @@ void Product_setValidMask(Product _this, const char* id, BitRaster validMask)
 BitRaster Product_createValidMask2(Product _this, const char* expression, ProgressMonitor pm)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring expressionString = NULL;
     BitRaster _result = (BitRaster) 0;
     if (_method == NULL) {
@@ -6862,6 +7158,7 @@ BitRaster Product_createValidMask2(Product _this, const char* expression, Progre
 BitRaster Product_createValidMask1(Product _this, Term term, ProgressMonitor pm)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     BitRaster _result = (BitRaster) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -6881,6 +7178,7 @@ BitRaster Product_createValidMask1(Product _this, Term term, ProgressMonitor pm)
 void Product_readBitmask2(Product _this, int offsetX, int offsetY, int width, int height, Term bitmaskTerm, const boolean* bitmaskElems, int bitmaskLength, ProgressMonitor pm)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jarray bitmaskArray = NULL;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -6902,6 +7200,7 @@ void Product_readBitmask2(Product _this, int offsetX, int offsetY, int width, in
 void Product_readBitmask1(Product _this, int offsetX, int offsetY, int width, int height, Term bitmaskTerm, const byte* bitmaskElems, int bitmaskLength, byte trueValue, byte falseValue, ProgressMonitor pm)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jarray bitmaskArray = NULL;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -6923,6 +7222,7 @@ void Product_readBitmask1(Product _this, int offsetX, int offsetY, int width, in
 ProductNode Product_getOwner(Product _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     ProductNode _result = (ProductNode) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -6942,6 +7242,7 @@ ProductNode Product_getOwner(Product _this)
 char* Product_getName(Product _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
     if (_method == NULL) {
@@ -6964,6 +7265,7 @@ char* Product_getName(Product _this)
 void Product_setName(Product _this, const char* name)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring nameString = NULL;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -6984,6 +7286,7 @@ void Product_setName(Product _this, const char* name)
 char* Product_getDescription(Product _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
     if (_method == NULL) {
@@ -7006,6 +7309,7 @@ char* Product_getDescription(Product _this)
 void Product_setDescription(Product _this, const char* description)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring descriptionString = NULL;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -7026,6 +7330,7 @@ void Product_setDescription(Product _this, const char* description)
 boolean Product_isModified(Product _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -7045,6 +7350,7 @@ boolean Product_isModified(Product _this)
 char* Product_toString(Product _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
     if (_method == NULL) {
@@ -7067,6 +7373,7 @@ char* Product_toString(Product _this)
 boolean Product_isValidNodeName(const char* name)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring nameString = NULL;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
@@ -7089,6 +7396,7 @@ boolean Product_isValidNodeName(const char* name)
 Product Product_getProduct(Product _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     Product _result = (Product) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -7108,6 +7416,7 @@ Product Product_getProduct(Product _this)
 char* Product_getDisplayName(Product _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
     if (_method == NULL) {
@@ -7130,6 +7439,7 @@ char* Product_getDisplayName(Product _this)
 char* Product_getProductRefString(Product _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
     if (_method == NULL) {
@@ -7152,6 +7462,7 @@ char* Product_getProductRefString(Product _this)
 void Product_updateExpression(Product _this, const char* oldExternalName, const char* newExternalName)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring oldExternalNameString = NULL;
     jstring newExternalNameString = NULL;
     if (_method == NULL) {
@@ -7175,6 +7486,7 @@ void Product_updateExpression(Product _this, const char* oldExternalName, const 
 void Product_removeFromFile(Product _this, ProductWriter productWriter)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classProduct, "removeFromFile", "(Lorg/esa/beam/framework/dataio/ProductWriter;)V");
@@ -7192,6 +7504,7 @@ void Product_removeFromFile(Product _this, ProductWriter productWriter)
 Object Product_getExtension(Product _this, Class arg0)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     Object _result = (Object) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -7211,6 +7524,7 @@ Object Product_getExtension(Product _this, Class arg0)
 ColorPaletteDef ColorPaletteDef_newColorPaletteDefFromRange(double minSample, double maxSample)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     ColorPaletteDef _result = (ColorPaletteDef) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -7230,6 +7544,7 @@ ColorPaletteDef ColorPaletteDef_newColorPaletteDefFromRange(double minSample, do
 ColorPaletteDef ColorPaletteDef_newColorPaletteDefFromPoints(const ColorPaletteDef_Point pointsElems, int pointsLength, int numColors)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jarray pointsArray = NULL;
     ColorPaletteDef _result = (ColorPaletteDef) 0;
     if (_method == NULL) {
@@ -7252,6 +7567,7 @@ ColorPaletteDef ColorPaletteDef_newColorPaletteDefFromPoints(const ColorPaletteD
 boolean ColorPaletteDef_isDiscrete(ColorPaletteDef _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -7271,6 +7587,7 @@ boolean ColorPaletteDef_isDiscrete(ColorPaletteDef _this)
 void ColorPaletteDef_setDiscrete(ColorPaletteDef _this, boolean discrete)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classColorPaletteDef, "setDiscrete", "(Z)V");
@@ -7288,6 +7605,7 @@ void ColorPaletteDef_setDiscrete(ColorPaletteDef _this, boolean discrete)
 int ColorPaletteDef_getNumColors(ColorPaletteDef _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     int _result = (int) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -7307,6 +7625,7 @@ int ColorPaletteDef_getNumColors(ColorPaletteDef _this)
 void ColorPaletteDef_setNumColors(ColorPaletteDef _this, int numColors)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classColorPaletteDef, "setNumColors", "(I)V");
@@ -7324,6 +7643,7 @@ void ColorPaletteDef_setNumColors(ColorPaletteDef _this, int numColors)
 int ColorPaletteDef_getNumPoints(ColorPaletteDef _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     int _result = (int) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -7343,6 +7663,7 @@ int ColorPaletteDef_getNumPoints(ColorPaletteDef _this)
 void ColorPaletteDef_setNumPoints(ColorPaletteDef _this, int numPoints)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classColorPaletteDef, "setNumPoints", "(I)V");
@@ -7360,6 +7681,7 @@ void ColorPaletteDef_setNumPoints(ColorPaletteDef _this, int numPoints)
 boolean ColorPaletteDef_isAutoDistribute(ColorPaletteDef _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -7379,6 +7701,7 @@ boolean ColorPaletteDef_isAutoDistribute(ColorPaletteDef _this)
 void ColorPaletteDef_setAutoDistribute(ColorPaletteDef _this, boolean autoDistribute)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classColorPaletteDef, "setAutoDistribute", "(Z)V");
@@ -7396,6 +7719,7 @@ void ColorPaletteDef_setAutoDistribute(ColorPaletteDef _this, boolean autoDistri
 ColorPaletteDef_Point ColorPaletteDef_getPointAt(ColorPaletteDef _this, int index)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     ColorPaletteDef_Point _result = (ColorPaletteDef_Point) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -7415,6 +7739,7 @@ ColorPaletteDef_Point ColorPaletteDef_getPointAt(ColorPaletteDef _this, int inde
 ColorPaletteDef_Point ColorPaletteDef_getFirstPoint(ColorPaletteDef _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     ColorPaletteDef_Point _result = (ColorPaletteDef_Point) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -7434,6 +7759,7 @@ ColorPaletteDef_Point ColorPaletteDef_getFirstPoint(ColorPaletteDef _this)
 ColorPaletteDef_Point ColorPaletteDef_getLastPoint(ColorPaletteDef _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     ColorPaletteDef_Point _result = (ColorPaletteDef_Point) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -7453,6 +7779,7 @@ ColorPaletteDef_Point ColorPaletteDef_getLastPoint(ColorPaletteDef _this)
 double ColorPaletteDef_getMinDisplaySample(ColorPaletteDef _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     double _result = (double) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -7472,6 +7799,7 @@ double ColorPaletteDef_getMinDisplaySample(ColorPaletteDef _this)
 double ColorPaletteDef_getMaxDisplaySample(ColorPaletteDef _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     double _result = (double) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -7491,6 +7819,7 @@ double ColorPaletteDef_getMaxDisplaySample(ColorPaletteDef _this)
 void ColorPaletteDef_insertPointAfter(ColorPaletteDef _this, int index, ColorPaletteDef_Point point)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classColorPaletteDef, "insertPointAfter", "(ILorg/esa/beam/framework/datamodel/ColorPaletteDef/Point;)V");
@@ -7508,6 +7837,7 @@ void ColorPaletteDef_insertPointAfter(ColorPaletteDef _this, int index, ColorPal
 boolean ColorPaletteDef_createPointAfter(ColorPaletteDef _this, int index, Scaling scaling)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -7527,6 +7857,7 @@ boolean ColorPaletteDef_createPointAfter(ColorPaletteDef _this, int index, Scali
 Color ColorPaletteDef_getCenterColor(Color c1, Color c2)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     Color _result = (Color) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -7546,6 +7877,7 @@ Color ColorPaletteDef_getCenterColor(Color c1, Color c2)
 void ColorPaletteDef_removePointAt(ColorPaletteDef _this, int index)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classColorPaletteDef, "removePointAt", "(I)V");
@@ -7563,6 +7895,7 @@ void ColorPaletteDef_removePointAt(ColorPaletteDef _this, int index)
 void ColorPaletteDef_addPoint(ColorPaletteDef _this, ColorPaletteDef_Point point)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classColorPaletteDef, "addPoint", "(Lorg/esa/beam/framework/datamodel/ColorPaletteDef/Point;)V");
@@ -7580,6 +7913,7 @@ void ColorPaletteDef_addPoint(ColorPaletteDef _this, ColorPaletteDef_Point point
 ColorPaletteDef_Point* ColorPaletteDef_getPoints(ColorPaletteDef _this, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     ColorPaletteDef_Point* _result = (ColorPaletteDef_Point*) 0;
     jarray _resultArray = NULL;
     if (_method == NULL) {
@@ -7602,6 +7936,7 @@ ColorPaletteDef_Point* ColorPaletteDef_getPoints(ColorPaletteDef _this, int* _re
 void ColorPaletteDef_setPoints(ColorPaletteDef _this, const ColorPaletteDef_Point pointsElems, int pointsLength)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jarray pointsArray = NULL;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -7622,6 +7957,7 @@ void ColorPaletteDef_setPoints(ColorPaletteDef _this, const ColorPaletteDef_Poin
 Iterator ColorPaletteDef_getIterator(ColorPaletteDef _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     Iterator _result = (Iterator) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -7641,6 +7977,7 @@ Iterator ColorPaletteDef_getIterator(ColorPaletteDef _this)
 Object ColorPaletteDef_clone(ColorPaletteDef _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     Object _result = (Object) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -7660,6 +7997,7 @@ Object ColorPaletteDef_clone(ColorPaletteDef _this)
 ColorPaletteDef ColorPaletteDef_createDeepCopy(ColorPaletteDef _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     ColorPaletteDef _result = (ColorPaletteDef) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -7679,6 +8017,7 @@ ColorPaletteDef ColorPaletteDef_createDeepCopy(ColorPaletteDef _this)
 ColorPaletteDef ColorPaletteDef_loadColorPaletteDef(File file)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     ColorPaletteDef _result = (ColorPaletteDef) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -7698,6 +8037,7 @@ ColorPaletteDef ColorPaletteDef_loadColorPaletteDef(File file)
 void ColorPaletteDef_storeColorPaletteDef(ColorPaletteDef colorPaletteDef, File file)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetStaticMethodID(jenv, classColorPaletteDef, "storeColorPaletteDef", "(Lorg/esa/beam/framework/datamodel/ColorPaletteDef;Ljava/io/File;)V");
@@ -7715,6 +8055,7 @@ void ColorPaletteDef_storeColorPaletteDef(ColorPaletteDef colorPaletteDef, File 
 void ColorPaletteDef_dispose(ColorPaletteDef _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classColorPaletteDef, "dispose", "()V");
@@ -7732,6 +8073,7 @@ void ColorPaletteDef_dispose(ColorPaletteDef _this)
 Color* ColorPaletteDef_getColors(ColorPaletteDef _this, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     Color* _result = (Color*) 0;
     jarray _resultArray = NULL;
     if (_method == NULL) {
@@ -7754,6 +8096,7 @@ Color* ColorPaletteDef_getColors(ColorPaletteDef _this, int* _resultArrayLength)
 Color* ColorPaletteDef_createColorPalette(ColorPaletteDef _this, Scaling scaling, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     Color* _result = (Color*) 0;
     jarray _resultArray = NULL;
     if (_method == NULL) {
@@ -7776,6 +8119,7 @@ Color* ColorPaletteDef_createColorPalette(ColorPaletteDef _this, Scaling scaling
 Color ColorPaletteDef_computeColor(ColorPaletteDef _this, Scaling scaling, double sample)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     Color _result = (Color) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -7795,6 +8139,7 @@ Color ColorPaletteDef_computeColor(ColorPaletteDef _this, Scaling scaling, doubl
 ImageInfo ImageInfo_newImageInfoPalette(ColorPaletteDef colorPaletteDef)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     ImageInfo _result = (ImageInfo) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -7814,6 +8159,7 @@ ImageInfo ImageInfo_newImageInfoPalette(ColorPaletteDef colorPaletteDef)
 ImageInfo ImageInfo_newImageInfoRGB(RGBChannelDef rgbChannelDef)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     ImageInfo _result = (ImageInfo) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -7833,6 +8179,7 @@ ImageInfo ImageInfo_newImageInfoRGB(RGBChannelDef rgbChannelDef)
 ColorPaletteDef ImageInfo_getColorPaletteDef(ImageInfo _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     ColorPaletteDef _result = (ColorPaletteDef) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -7852,6 +8199,7 @@ ColorPaletteDef ImageInfo_getColorPaletteDef(ImageInfo _this)
 RGBChannelDef ImageInfo_getRgbChannelDef(ImageInfo _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     RGBChannelDef _result = (RGBChannelDef) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -7871,6 +8219,7 @@ RGBChannelDef ImageInfo_getRgbChannelDef(ImageInfo _this)
 Color ImageInfo_getNoDataColor(ImageInfo _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     Color _result = (Color) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -7890,6 +8239,7 @@ Color ImageInfo_getNoDataColor(ImageInfo _this)
 void ImageInfo_setNoDataColor(ImageInfo _this, Color noDataColor)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classImageInfo, "setNoDataColor", "(Ljava/awt/Color;)V");
@@ -7907,6 +8257,7 @@ void ImageInfo_setNoDataColor(ImageInfo _this, Color noDataColor)
 void ImageInfo_setHistogramMatching(ImageInfo _this, ImageInfo_HistogramMatching histogramMatching)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classImageInfo, "setHistogramMatching", "(Lorg/esa/beam/framework/datamodel/ImageInfo/HistogramMatching;)V");
@@ -7924,6 +8275,7 @@ void ImageInfo_setHistogramMatching(ImageInfo _this, ImageInfo_HistogramMatching
 boolean ImageInfo_isLogScaled(ImageInfo _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -7943,6 +8295,7 @@ boolean ImageInfo_isLogScaled(ImageInfo _this)
 void ImageInfo_setLogScaled(ImageInfo _this, boolean logScaled)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classImageInfo, "setLogScaled", "(Z)V");
@@ -7960,6 +8313,7 @@ void ImageInfo_setLogScaled(ImageInfo _this, boolean logScaled)
 Color* ImageInfo_getColors(ImageInfo _this, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     Color* _result = (Color*) 0;
     jarray _resultArray = NULL;
     if (_method == NULL) {
@@ -7982,6 +8336,7 @@ Color* ImageInfo_getColors(ImageInfo _this, int* _resultArrayLength)
 int ImageInfo_getColorComponentCount(ImageInfo _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     int _result = (int) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -8001,6 +8356,7 @@ int ImageInfo_getColorComponentCount(ImageInfo _this)
 IndexColorModel ImageInfo_createIndexColorModel(ImageInfo _this, Scaling scaling)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     IndexColorModel _result = (IndexColorModel) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -8020,6 +8376,7 @@ IndexColorModel ImageInfo_createIndexColorModel(ImageInfo _this, Scaling scaling
 ComponentColorModel ImageInfo_createComponentColorModel(ImageInfo _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     ComponentColorModel _result = (ComponentColorModel) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -8039,6 +8396,7 @@ ComponentColorModel ImageInfo_createComponentColorModel(ImageInfo _this)
 Object ImageInfo_clone(ImageInfo _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     Object _result = (Object) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -8058,6 +8416,7 @@ Object ImageInfo_clone(ImageInfo _this)
 ImageInfo ImageInfo_createDeepCopy(ImageInfo _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     ImageInfo _result = (ImageInfo) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -8077,6 +8436,7 @@ ImageInfo ImageInfo_createDeepCopy(ImageInfo _this)
 void ImageInfo_dispose(ImageInfo _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classImageInfo, "dispose", "()V");
@@ -8094,6 +8454,7 @@ void ImageInfo_dispose(ImageInfo _this)
 void ImageInfo_setColors(ImageInfo _this, const Color colorsElems, int colorsLength)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jarray colorsArray = NULL;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -8114,6 +8475,7 @@ void ImageInfo_setColors(ImageInfo _this, const Color colorsElems, int colorsLen
 void ImageInfo_setColorPaletteDef(ImageInfo _this, ColorPaletteDef colorPaletteDef, double minSample, double maxSample, boolean autoDistribute)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classImageInfo, "setColorPaletteDef", "(Lorg/esa/beam/framework/datamodel/ColorPaletteDef;DDZ)V");
@@ -8131,6 +8493,7 @@ void ImageInfo_setColorPaletteDef(ImageInfo _this, ColorPaletteDef colorPaletteD
 ImageInfo_HistogramMatching ImageInfo_getHistogramMatching(const char* mode)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring modeString = NULL;
     ImageInfo_HistogramMatching _result = (ImageInfo_HistogramMatching) 0;
     if (_method == NULL) {
@@ -8153,6 +8516,7 @@ ImageInfo_HistogramMatching ImageInfo_getHistogramMatching(const char* mode)
 ProductManager ProductManager_newProductManager()
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     ProductManager _result = (ProductManager) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -8172,6 +8536,7 @@ ProductManager ProductManager_newProductManager()
 int ProductManager_getProductCount(ProductManager _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     int _result = (int) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -8191,6 +8556,7 @@ int ProductManager_getProductCount(ProductManager _this)
 Product ProductManager_getProduct(ProductManager _this, int index)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     Product _result = (Product) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -8210,6 +8576,7 @@ Product ProductManager_getProduct(ProductManager _this, int index)
 char** ProductManager_getProductDisplayNames(ProductManager _this, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     char** _result = (char**) 0;
     jarray _resultArray = NULL;
     if (_method == NULL) {
@@ -8232,6 +8599,7 @@ char** ProductManager_getProductDisplayNames(ProductManager _this, int* _resultA
 char** ProductManager_getProductNames(ProductManager _this, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     char** _result = (char**) 0;
     jarray _resultArray = NULL;
     if (_method == NULL) {
@@ -8254,6 +8622,7 @@ char** ProductManager_getProductNames(ProductManager _this, int* _resultArrayLen
 Product* ProductManager_getProducts(ProductManager _this, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     Product* _result = (Product*) 0;
     jarray _resultArray = NULL;
     if (_method == NULL) {
@@ -8276,6 +8645,7 @@ Product* ProductManager_getProducts(ProductManager _this, int* _resultArrayLengt
 Product ProductManager_getProductByDisplayName(ProductManager _this, const char* displayName)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring displayNameString = NULL;
     Product _result = (Product) 0;
     if (_method == NULL) {
@@ -8298,6 +8668,7 @@ Product ProductManager_getProductByDisplayName(ProductManager _this, const char*
 Product ProductManager_getProductByRefNo(ProductManager _this, int refNo)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     Product _result = (Product) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -8317,6 +8688,7 @@ Product ProductManager_getProductByRefNo(ProductManager _this, int refNo)
 Product ProductManager_getProductByName(ProductManager _this, const char* name)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring nameString = NULL;
     Product _result = (Product) 0;
     if (_method == NULL) {
@@ -8339,6 +8711,7 @@ Product ProductManager_getProductByName(ProductManager _this, const char* name)
 int ProductManager_getProductIndex(ProductManager _this, Product product)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     int _result = (int) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -8358,6 +8731,7 @@ int ProductManager_getProductIndex(ProductManager _this, Product product)
 boolean ProductManager_containsProduct(ProductManager _this, const char* name)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring nameString = NULL;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
@@ -8380,6 +8754,7 @@ boolean ProductManager_containsProduct(ProductManager _this, const char* name)
 boolean ProductManager_contains(ProductManager _this, Product product)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -8399,6 +8774,7 @@ boolean ProductManager_contains(ProductManager _this, Product product)
 void ProductManager_addProduct(ProductManager _this, Product product)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classProductManager, "addProduct", "(Lorg/esa/beam/framework/datamodel/Product;)V");
@@ -8416,6 +8792,7 @@ void ProductManager_addProduct(ProductManager _this, Product product)
 boolean ProductManager_removeProduct(ProductManager _this, Product product)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -8435,6 +8812,7 @@ boolean ProductManager_removeProduct(ProductManager _this, Product product)
 void ProductManager_removeAllProducts(ProductManager _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classProductManager, "removeAllProducts", "()V");
@@ -8452,6 +8830,7 @@ void ProductManager_removeAllProducts(ProductManager _this)
 boolean ProductManager_addListener(ProductManager _this, ProductManager_Listener listener)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -8471,6 +8850,7 @@ boolean ProductManager_addListener(ProductManager _this, ProductManager_Listener
 boolean ProductManager_removeListener(ProductManager _this, ProductManager_Listener listener)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -8490,6 +8870,7 @@ boolean ProductManager_removeListener(ProductManager _this, ProductManager_Liste
 ImageGeometry ImageGeometry_newImageGeometry(Rectangle bounds, CoordinateReferenceSystem mapCrs, AffineTransform image2map)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     ImageGeometry _result = (ImageGeometry) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -8509,6 +8890,7 @@ ImageGeometry ImageGeometry_newImageGeometry(Rectangle bounds, CoordinateReferen
 AffineTransform ImageGeometry_getImage2MapTransform(ImageGeometry _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     AffineTransform _result = (AffineTransform) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -8528,6 +8910,7 @@ AffineTransform ImageGeometry_getImage2MapTransform(ImageGeometry _this)
 Rectangle ImageGeometry_getImageRect(ImageGeometry _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     Rectangle _result = (Rectangle) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -8547,6 +8930,7 @@ Rectangle ImageGeometry_getImageRect(ImageGeometry _this)
 CoordinateReferenceSystem ImageGeometry_getMapCrs(ImageGeometry _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     CoordinateReferenceSystem _result = (CoordinateReferenceSystem) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -8566,6 +8950,7 @@ CoordinateReferenceSystem ImageGeometry_getMapCrs(ImageGeometry _this)
 void ImageGeometry_changeYAxisDirection(ImageGeometry _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classImageGeometry, "changeYAxisDirection", "()V");
@@ -8583,6 +8968,7 @@ void ImageGeometry_changeYAxisDirection(ImageGeometry _this)
 Point2D ImageGeometry_calculateEastingNorthing(Product sourceProduct, CoordinateReferenceSystem targetCrs, double referencePixelX, double referencePixelY, double pixelSizeX, double pixelSizeY)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     Point2D _result = (Point2D) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -8602,6 +8988,7 @@ Point2D ImageGeometry_calculateEastingNorthing(Product sourceProduct, Coordinate
 Rectangle ImageGeometry_calculateProductSize(Product sourceProduct, CoordinateReferenceSystem targetCrs, double pixelSizeX, double pixelSizeY)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     Rectangle _result = (Rectangle) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -8621,6 +9008,7 @@ Rectangle ImageGeometry_calculateProductSize(Product sourceProduct, CoordinateRe
 ImageGeometry ImageGeometry_createTargetGeometry(Product sourceProduct, CoordinateReferenceSystem targetCrs, Double pixelSizeX, Double pixelSizeY, Integer width, Integer height, Double orientation, Double easting, Double northing, Double referencePixelX, Double referencePixelY)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     ImageGeometry _result = (ImageGeometry) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -8640,6 +9028,7 @@ ImageGeometry ImageGeometry_createTargetGeometry(Product sourceProduct, Coordina
 ImageGeometry ImageGeometry_createCollocationTargetGeometry(Product targetProduct, Product collocationProduct)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     ImageGeometry _result = (ImageGeometry) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -8659,6 +9048,7 @@ ImageGeometry ImageGeometry_createCollocationTargetGeometry(Product targetProduc
 Band Band_newBand(const char* name, int dataType, int width, int height)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring nameString = NULL;
     Band _result = (Band) 0;
     if (_method == NULL) {
@@ -8681,6 +9071,7 @@ Band Band_newBand(const char* name, int dataType, int width, int height)
 FlagCoding Band_getFlagCoding(Band _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     FlagCoding _result = (FlagCoding) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -8700,6 +9091,7 @@ FlagCoding Band_getFlagCoding(Band _this)
 boolean Band_isFlagBand(Band _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -8719,6 +9111,7 @@ boolean Band_isFlagBand(Band _this)
 IndexCoding Band_getIndexCoding(Band _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     IndexCoding _result = (IndexCoding) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -8738,6 +9131,7 @@ IndexCoding Band_getIndexCoding(Band _this)
 boolean Band_isIndexBand(Band _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -8757,6 +9151,7 @@ boolean Band_isIndexBand(Band _this)
 SampleCoding Band_getSampleCoding(Band _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     SampleCoding _result = (SampleCoding) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -8776,6 +9171,7 @@ SampleCoding Band_getSampleCoding(Band _this)
 void Band_setSampleCoding(Band _this, SampleCoding sampleCoding)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classBand, "setSampleCoding", "(Lorg/esa/beam/framework/datamodel/SampleCoding;)V");
@@ -8793,6 +9189,7 @@ void Band_setSampleCoding(Band _this, SampleCoding sampleCoding)
 int Band_getSpectralBandIndex(Band _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     int _result = (int) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -8812,6 +9209,7 @@ int Band_getSpectralBandIndex(Band _this)
 void Band_setSpectralBandIndex(Band _this, int spectralBandIndex)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classBand, "setSpectralBandIndex", "(I)V");
@@ -8829,6 +9227,7 @@ void Band_setSpectralBandIndex(Band _this, int spectralBandIndex)
 float Band_getSpectralWavelength(Band _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     float _result = (float) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -8848,6 +9247,7 @@ float Band_getSpectralWavelength(Band _this)
 void Band_setSpectralWavelength(Band _this, float spectralWavelength)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classBand, "setSpectralWavelength", "(F)V");
@@ -8865,6 +9265,7 @@ void Band_setSpectralWavelength(Band _this, float spectralWavelength)
 float Band_getSpectralBandwidth(Band _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     float _result = (float) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -8884,6 +9285,7 @@ float Band_getSpectralBandwidth(Band _this)
 void Band_setSpectralBandwidth(Band _this, float spectralBandwidth)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classBand, "setSpectralBandwidth", "(F)V");
@@ -8901,6 +9303,7 @@ void Band_setSpectralBandwidth(Band _this, float spectralBandwidth)
 float Band_getSolarFlux(Band _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     float _result = (float) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -8920,6 +9323,7 @@ float Band_getSolarFlux(Band _this)
 void Band_setSolarFlux(Band _this, float solarFlux)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classBand, "setSolarFlux", "(F)V");
@@ -8937,6 +9341,7 @@ void Band_setSolarFlux(Band _this, float solarFlux)
 void Band_acceptVisitor(Band _this, ProductVisitor visitor)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classBand, "acceptVisitor", "(Lorg/esa/beam/framework/datamodel/ProductVisitor;)V");
@@ -8954,6 +9359,7 @@ void Band_acceptVisitor(Band _this, ProductVisitor visitor)
 char* Band_toString(Band _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
     if (_method == NULL) {
@@ -8976,6 +9382,7 @@ char* Band_toString(Band _this)
 void Band_removeFromFile(Band _this, ProductWriter productWriter)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classBand, "removeFromFile", "(Lorg/esa/beam/framework/dataio/ProductWriter;)V");
@@ -8993,6 +9400,7 @@ void Band_removeFromFile(Band _this, ProductWriter productWriter)
 void Band_dispose(Band _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classBand, "dispose", "()V");
@@ -9010,6 +9418,7 @@ void Band_dispose(Band _this)
 char* Band_getViewModeId(Band _this, const char* bandName)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring bandNameString = NULL;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
@@ -9035,6 +9444,7 @@ char* Band_getViewModeId(Band _this, const char* bandName)
 int Band_computeBand(Band _this, const char* expression, const char* validMaskExpression, const Product sourceProductsElems, int sourceProductsLength, int defaultProductIndex, boolean checkInvalids, boolean useInvalidValue, double noDataValue, ProgressMonitor pm)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring expressionString = NULL;
     jstring validMaskExpressionString = NULL;
     jarray sourceProductsArray = NULL;
@@ -9063,6 +9473,7 @@ int Band_computeBand(Band _this, const char* expression, const char* validMaskEx
 ProductData Band_getSceneRasterData(Band _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     ProductData _result = (ProductData) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -9082,6 +9493,7 @@ ProductData Band_getSceneRasterData(Band _this)
 int Band_getPixelInt(Band _this, int x, int y)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     int _result = (int) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -9101,6 +9513,7 @@ int Band_getPixelInt(Band _this, int x, int y)
 float Band_getPixelFloat(Band _this, int x, int y)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     float _result = (float) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -9120,6 +9533,7 @@ float Band_getPixelFloat(Band _this, int x, int y)
 double Band_getPixelDouble(Band _this, int x, int y)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     double _result = (double) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -9139,6 +9553,7 @@ double Band_getPixelDouble(Band _this, int x, int y)
 void Band_setPixelInt(Band _this, int x, int y, int pixelValue)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classBand, "setPixelInt", "(III)V");
@@ -9156,6 +9571,7 @@ void Band_setPixelInt(Band _this, int x, int y, int pixelValue)
 void Band_setPixelFloat(Band _this, int x, int y, float pixelValue)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classBand, "setPixelFloat", "(IIF)V");
@@ -9173,6 +9589,7 @@ void Band_setPixelFloat(Band _this, int x, int y, float pixelValue)
 void Band_setPixelDouble(Band _this, int x, int y, double pixelValue)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classBand, "setPixelDouble", "(IID)V");
@@ -9190,6 +9607,7 @@ void Band_setPixelDouble(Band _this, int x, int y, double pixelValue)
 void Band_setPixelsInt(Band _this, int x, int y, int w, int h, const int* pixelsElems, int pixelsLength)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jarray pixelsArray = NULL;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -9211,6 +9629,7 @@ void Band_setPixelsInt(Band _this, int x, int y, int w, int h, const int* pixels
 void Band_setPixelsFloat(Band _this, int x, int y, int w, int h, const float* pixelsElems, int pixelsLength)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jarray pixelsArray = NULL;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -9232,6 +9651,7 @@ void Band_setPixelsFloat(Band _this, int x, int y, int w, int h, const float* pi
 void Band_setPixelsDouble(Band _this, int x, int y, int w, int h, const double* pixelsElems, int pixelsLength)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jarray pixelsArray = NULL;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -9253,6 +9673,7 @@ void Band_setPixelsDouble(Band _this, int x, int y, int w, int h, const double* 
 void Band_ensureRasterData(Band _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classBand, "ensureRasterData", "()V");
@@ -9270,6 +9691,7 @@ void Band_ensureRasterData(Band _this)
 void Band_unloadRasterData(Band _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classBand, "unloadRasterData", "()V");
@@ -9287,6 +9709,7 @@ void Band_unloadRasterData(Band _this)
 int Band_getSceneRasterWidth(Band _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     int _result = (int) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -9306,6 +9729,7 @@ int Band_getSceneRasterWidth(Band _this)
 int Band_getSceneRasterHeight(Band _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     int _result = (int) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -9325,6 +9749,7 @@ int Band_getSceneRasterHeight(Band _this)
 int Band_getRasterWidth(Band _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     int _result = (int) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -9344,6 +9769,7 @@ int Band_getRasterWidth(Band _this)
 int Band_getRasterHeight(Band _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     int _result = (int) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -9363,6 +9789,7 @@ int Band_getRasterHeight(Band _this)
 void Band_setModified(Band _this, boolean modified)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classBand, "setModified", "(Z)V");
@@ -9380,6 +9807,7 @@ void Band_setModified(Band _this, boolean modified)
 GeoCoding Band_getGeoCoding(Band _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     GeoCoding _result = (GeoCoding) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -9399,6 +9827,7 @@ GeoCoding Band_getGeoCoding(Band _this)
 void Band_setGeoCoding(Band _this, GeoCoding geoCoding)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classBand, "setGeoCoding", "(Lorg/esa/beam/framework/datamodel/GeoCoding;)V");
@@ -9416,6 +9845,7 @@ void Band_setGeoCoding(Band _this, GeoCoding geoCoding)
 Pointing Band_getPointing(Band _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     Pointing _result = (Pointing) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -9435,6 +9865,7 @@ Pointing Band_getPointing(Band _this)
 boolean Band_canBeOrthorectified(Band _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -9454,6 +9885,7 @@ boolean Band_canBeOrthorectified(Band _this)
 boolean Band_isFloatingPointType(Band _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -9473,6 +9905,7 @@ boolean Band_isFloatingPointType(Band _this)
 int Band_getGeophysicalDataType(Band _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     int _result = (int) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -9492,6 +9925,7 @@ int Band_getGeophysicalDataType(Band _this)
 double Band_getScalingFactor(Band _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     double _result = (double) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -9511,6 +9945,7 @@ double Band_getScalingFactor(Band _this)
 void Band_setScalingFactor(Band _this, double scalingFactor)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classBand, "setScalingFactor", "(D)V");
@@ -9528,6 +9963,7 @@ void Band_setScalingFactor(Band _this, double scalingFactor)
 double Band_getScalingOffset(Band _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     double _result = (double) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -9547,6 +9983,7 @@ double Band_getScalingOffset(Band _this)
 void Band_setScalingOffset(Band _this, double scalingOffset)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classBand, "setScalingOffset", "(D)V");
@@ -9564,6 +10001,7 @@ void Band_setScalingOffset(Band _this, double scalingOffset)
 boolean Band_isLog10Scaled(Band _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -9583,6 +10021,7 @@ boolean Band_isLog10Scaled(Band _this)
 void Band_setLog10Scaled(Band _this, boolean log10Scaled)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classBand, "setLog10Scaled", "(Z)V");
@@ -9600,6 +10039,7 @@ void Band_setLog10Scaled(Band _this, boolean log10Scaled)
 boolean Band_isScalingApplied(Band _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -9619,6 +10059,7 @@ boolean Band_isScalingApplied(Band _this)
 boolean Band_isValidMaskProperty(const char* propertyName)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring propertyNameString = NULL;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
@@ -9641,6 +10082,7 @@ boolean Band_isValidMaskProperty(const char* propertyName)
 boolean Band_isNoDataValueSet(Band _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -9660,6 +10102,7 @@ boolean Band_isNoDataValueSet(Band _this)
 void Band_clearNoDataValue(Band _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classBand, "clearNoDataValue", "()V");
@@ -9677,6 +10120,7 @@ void Band_clearNoDataValue(Band _this)
 boolean Band_isNoDataValueUsed(Band _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -9696,6 +10140,7 @@ boolean Band_isNoDataValueUsed(Band _this)
 void Band_setNoDataValueUsed(Band _this, boolean noDataValueUsed)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classBand, "setNoDataValueUsed", "(Z)V");
@@ -9713,6 +10158,7 @@ void Band_setNoDataValueUsed(Band _this, boolean noDataValueUsed)
 double Band_getNoDataValue(Band _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     double _result = (double) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -9732,6 +10178,7 @@ double Band_getNoDataValue(Band _this)
 void Band_setNoDataValue(Band _this, double noDataValue)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classBand, "setNoDataValue", "(D)V");
@@ -9749,6 +10196,7 @@ void Band_setNoDataValue(Band _this, double noDataValue)
 double Band_getGeophysicalNoDataValue(Band _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     double _result = (double) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -9768,6 +10216,7 @@ double Band_getGeophysicalNoDataValue(Band _this)
 void Band_setGeophysicalNoDataValue(Band _this, double noDataValue)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classBand, "setGeophysicalNoDataValue", "(D)V");
@@ -9785,6 +10234,7 @@ void Band_setGeophysicalNoDataValue(Band _this, double noDataValue)
 char* Band_getValidPixelExpression(Band _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
     if (_method == NULL) {
@@ -9807,6 +10257,7 @@ char* Band_getValidPixelExpression(Band _this)
 void Band_setValidPixelExpression(Band _this, const char* validPixelExpression)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring validPixelExpressionString = NULL;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -9827,6 +10278,7 @@ void Band_setValidPixelExpression(Band _this, const char* validPixelExpression)
 boolean Band_isValidMaskUsed(Band _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -9846,6 +10298,7 @@ boolean Band_isValidMaskUsed(Band _this)
 void Band_resetValidMask(Band _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classBand, "resetValidMask", "()V");
@@ -9863,6 +10316,7 @@ void Band_resetValidMask(Band _this)
 char* Band_getValidMaskExpression(Band _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
     if (_method == NULL) {
@@ -9885,6 +10339,7 @@ char* Band_getValidMaskExpression(Band _this)
 void Band_updateExpression(Band _this, const char* oldExternalName, const char* newExternalName)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring oldExternalNameString = NULL;
     jstring newExternalNameString = NULL;
     if (_method == NULL) {
@@ -9908,6 +10363,7 @@ void Band_updateExpression(Band _this, const char* oldExternalName, const char* 
 boolean Band_hasRasterData(Band _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -9927,6 +10383,7 @@ boolean Band_hasRasterData(Band _this)
 ProductData Band_getRasterData(Band _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     ProductData _result = (ProductData) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -9946,6 +10403,7 @@ ProductData Band_getRasterData(Band _this)
 void Band_setRasterData(Band _this, ProductData rasterData)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classBand, "setRasterData", "(Lorg/esa/beam/framework/datamodel/ProductData;)V");
@@ -9963,6 +10421,7 @@ void Band_setRasterData(Band _this, ProductData rasterData)
 void Band_loadRasterData(Band _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classBand, "loadRasterData", "()V");
@@ -9980,6 +10439,7 @@ void Band_loadRasterData(Band _this)
 boolean Band_isPixelValid(Band _this, int x, int y)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -9999,6 +10459,7 @@ boolean Band_isPixelValid(Band _this, int x, int y)
 int Band_getSampleInt(Band _this, int x, int y)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     int _result = (int) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -10018,6 +10479,7 @@ int Band_getSampleInt(Band _this, int x, int y)
 float Band_getSampleFloat(Band _this, int x, int y)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     float _result = (float) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -10037,6 +10499,7 @@ float Band_getSampleFloat(Band _this, int x, int y)
 int* Band_getPixelsInt(Band _this, int x, int y, int w, int h, const int* pixelsElems, int pixelsLength, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jarray pixelsArray = NULL;
     int* _result = (int*) 0;
     jarray _resultArray = NULL;
@@ -10063,6 +10526,7 @@ int* Band_getPixelsInt(Band _this, int x, int y, int w, int h, const int* pixels
 float* Band_getPixelsFloat(Band _this, int x, int y, int w, int h, const float* pixelsElems, int pixelsLength, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jarray pixelsArray = NULL;
     float* _result = (float*) 0;
     jarray _resultArray = NULL;
@@ -10089,6 +10553,7 @@ float* Band_getPixelsFloat(Band _this, int x, int y, int w, int h, const float* 
 double* Band_getPixelsDouble(Band _this, int x, int y, int w, int h, const double* pixelsElems, int pixelsLength, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jarray pixelsArray = NULL;
     double* _result = (double*) 0;
     jarray _resultArray = NULL;
@@ -10115,6 +10580,7 @@ double* Band_getPixelsDouble(Band _this, int x, int y, int w, int h, const doubl
 int* Band_readPixelsInt(Band _this, int x, int y, int w, int h, int* pixelsElems, int pixelsLength, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jarray pixelsArray = NULL;
     int* _result = (int*) 0;
     jarray _resultArray = NULL;
@@ -10148,6 +10614,7 @@ int* Band_readPixelsInt(Band _this, int x, int y, int w, int h, int* pixelsElems
 float* Band_readPixelsFloat(Band _this, int x, int y, int w, int h, float* pixelsElems, int pixelsLength, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jarray pixelsArray = NULL;
     float* _result = (float*) 0;
     jarray _resultArray = NULL;
@@ -10181,6 +10648,7 @@ float* Band_readPixelsFloat(Band _this, int x, int y, int w, int h, float* pixel
 double* Band_readPixelsDouble(Band _this, int x, int y, int w, int h, double* pixelsElems, int pixelsLength, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jarray pixelsArray = NULL;
     double* _result = (double*) 0;
     jarray _resultArray = NULL;
@@ -10214,6 +10682,7 @@ double* Band_readPixelsDouble(Band _this, int x, int y, int w, int h, double* pi
 void Band_writePixelsInt(Band _this, int x, int y, int w, int h, const int* pixelsElems, int pixelsLength)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jarray pixelsArray = NULL;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -10235,6 +10704,7 @@ void Band_writePixelsInt(Band _this, int x, int y, int w, int h, const int* pixe
 void Band_writePixelsFloat(Band _this, int x, int y, int w, int h, const float* pixelsElems, int pixelsLength)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jarray pixelsArray = NULL;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -10256,6 +10726,7 @@ void Band_writePixelsFloat(Band _this, int x, int y, int w, int h, const float* 
 void Band_writePixelsDouble(Band _this, int x, int y, int w, int h, const double* pixelsElems, int pixelsLength)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jarray pixelsArray = NULL;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -10277,6 +10748,7 @@ void Band_writePixelsDouble(Band _this, int x, int y, int w, int h, const double
 boolean* Band_readValidMask(Band _this, int x, int y, int w, int h, boolean* validMaskElems, int validMaskLength, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jarray validMaskArray = NULL;
     boolean* _result = (boolean*) 0;
     jarray _resultArray = NULL;
@@ -10310,6 +10782,7 @@ boolean* Band_readValidMask(Band _this, int x, int y, int w, int h, boolean* val
 void Band_writeRasterDataFully(Band _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classBand, "writeRasterDataFully", "()V");
@@ -10327,6 +10800,7 @@ void Band_writeRasterDataFully(Band _this)
 void Band_writeRasterData(Band _this, int offsetX, int offsetY, int width, int height, ProductData rasterData)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classBand, "writeRasterData", "(IIIILorg/esa/beam/framework/datamodel/ProductData;)V");
@@ -10344,6 +10818,7 @@ void Band_writeRasterData(Band _this, int offsetX, int offsetY, int width, int h
 ProductData Band_createCompatibleRasterData(Band _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     ProductData _result = (ProductData) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -10363,6 +10838,7 @@ ProductData Band_createCompatibleRasterData(Band _this)
 ProductData Band_createCompatibleSceneRasterData(Band _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     ProductData _result = (ProductData) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -10382,6 +10858,7 @@ ProductData Band_createCompatibleSceneRasterData(Band _this)
 ProductData Band_createCompatibleRasterDataForRect(Band _this, int width, int height)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     ProductData _result = (ProductData) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -10401,6 +10878,7 @@ ProductData Band_createCompatibleRasterDataForRect(Band _this, int width, int he
 boolean Band_isCompatibleRasterData(Band _this, ProductData rasterData, int w, int h)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -10420,6 +10898,7 @@ boolean Band_isCompatibleRasterData(Band _this, ProductData rasterData, int w, i
 void Band_checkCompatibleRasterData(Band _this, ProductData rasterData, int w, int h)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classBand, "checkCompatibleRasterData", "(Lorg/esa/beam/framework/datamodel/ProductData;II)V");
@@ -10437,6 +10916,7 @@ void Band_checkCompatibleRasterData(Band _this, ProductData rasterData, int w, i
 boolean Band_hasIntPixels(Band _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -10456,6 +10936,7 @@ boolean Band_hasIntPixels(Band _this)
 TransectProfileData Band_createTransectProfileData(Band _this, Shape shape)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     TransectProfileData _result = (TransectProfileData) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -10475,6 +10956,7 @@ TransectProfileData Band_createTransectProfileData(Band _this, Shape shape)
 ImageInfo Band_getImageInfo(Band _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     ImageInfo _result = (ImageInfo) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -10494,6 +10976,7 @@ ImageInfo Band_getImageInfo(Band _this)
 void Band_setImageInfo(Band _this, ImageInfo imageInfo)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classBand, "setImageInfo", "(Lorg/esa/beam/framework/datamodel/ImageInfo;)V");
@@ -10511,6 +10994,7 @@ void Band_setImageInfo(Band _this, ImageInfo imageInfo)
 void Band_fireImageInfoChanged(Band _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classBand, "fireImageInfoChanged", "()V");
@@ -10528,6 +11012,7 @@ void Band_fireImageInfoChanged(Band _this)
 ImageInfo Band_createDefaultImageInfo(Band _this, const double* histoSkipAreasElems, int histoSkipAreasLength, Histogram histogram)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jarray histoSkipAreasArray = NULL;
     ImageInfo _result = (ImageInfo) 0;
     if (_method == NULL) {
@@ -10551,6 +11036,7 @@ ImageInfo Band_createDefaultImageInfo(Band _this, const double* histoSkipAreasEl
 ProductNodeGroup Band_getOverlayMaskGroup(Band _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     ProductNodeGroup _result = (ProductNodeGroup) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -10570,6 +11056,7 @@ ProductNodeGroup Band_getOverlayMaskGroup(Band _this)
 BufferedImage Band_createColorIndexedImage(Band _this, ProgressMonitor pm)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     BufferedImage _result = (BufferedImage) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -10589,6 +11076,7 @@ BufferedImage Band_createColorIndexedImage(Band _this, ProgressMonitor pm)
 BufferedImage Band_createRgbImage(Band _this, ProgressMonitor pm)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     BufferedImage _result = (BufferedImage) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -10608,6 +11096,7 @@ BufferedImage Band_createRgbImage(Band _this, ProgressMonitor pm)
 IndexValidator Band_createPixelValidator(Band _this, int lineOffset, ROI roi)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     IndexValidator _result = (IndexValidator) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -10627,6 +11116,7 @@ IndexValidator Band_createPixelValidator(Band _this, int lineOffset, ROI roi)
 double Band_scale(Band _this, double v)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     double _result = (double) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -10646,6 +11136,7 @@ double Band_scale(Band _this, double v)
 double Band_scaleInverse(Band _this, double v)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     double _result = (double) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -10665,6 +11156,7 @@ double Band_scaleInverse(Band _this, double v)
 char* Band_getPixelString(Band _this, int x, int y)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
     if (_method == NULL) {
@@ -10687,6 +11179,7 @@ char* Band_getPixelString(Band _this, int x, int y)
 boolean Band_isSourceImageSet(Band _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -10706,6 +11199,7 @@ boolean Band_isSourceImageSet(Band _this)
 MultiLevelImage Band_getSourceImage(Band _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     MultiLevelImage _result = (MultiLevelImage) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -10725,6 +11219,7 @@ MultiLevelImage Band_getSourceImage(Band _this)
 boolean Band_isGeophysicalImageSet(Band _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -10744,6 +11239,7 @@ boolean Band_isGeophysicalImageSet(Band _this)
 MultiLevelImage Band_getGeophysicalImage(Band _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     MultiLevelImage _result = (MultiLevelImage) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -10763,6 +11259,7 @@ MultiLevelImage Band_getGeophysicalImage(Band _this)
 boolean Band_isValidMaskImageSet(Band _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -10782,6 +11279,7 @@ boolean Band_isValidMaskImageSet(Band _this)
 MultiLevelImage Band_getValidMaskImage(Band _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     MultiLevelImage _result = (MultiLevelImage) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -10801,6 +11299,7 @@ MultiLevelImage Band_getValidMaskImage(Band _this)
 boolean Band_isStxSet(Band _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -10820,6 +11319,7 @@ boolean Band_isStxSet(Band _this)
 Stx Band_getStx(Band _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     Stx _result = (Stx) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -10839,6 +11339,7 @@ Stx Band_getStx(Band _this)
 void Band_setStx(Band _this, Stx stx)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classBand, "setStx", "(Lorg/esa/beam/framework/datamodel/Stx;)V");
@@ -10856,6 +11357,7 @@ void Band_setStx(Band _this, Stx stx)
 Shape Band_getValidShape(Band _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     Shape _result = (Shape) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -10875,6 +11377,7 @@ Shape Band_getValidShape(Band _this)
 ProductNodeGroup Band_getRoiMaskGroup(Band _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     ProductNodeGroup _result = (ProductNodeGroup) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -10894,6 +11397,7 @@ ProductNodeGroup Band_getRoiMaskGroup(Band _this)
 int Band_getDataType(Band _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     int _result = (int) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -10913,6 +11417,7 @@ int Band_getDataType(Band _this)
 dlong Band_getNumDataElems(Band _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     dlong _result = (dlong) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -10932,6 +11437,7 @@ dlong Band_getNumDataElems(Band _this)
 void Band_setData(Band _this, ProductData data)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classBand, "setData", "(Lorg/esa/beam/framework/datamodel/ProductData;)V");
@@ -10949,6 +11455,7 @@ void Band_setData(Band _this, ProductData data)
 ProductData Band_getData(Band _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     ProductData _result = (ProductData) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -10968,6 +11475,7 @@ ProductData Band_getData(Band _this)
 void Band_setDataElems(Band _this, Object elems)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classBand, "setDataElems", "(Ljava/lang/Object;)V");
@@ -10985,6 +11493,7 @@ void Band_setDataElems(Band _this, Object elems)
 Object Band_getDataElems(Band _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     Object _result = (Object) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -11004,6 +11513,7 @@ Object Band_getDataElems(Band _this)
 int Band_getDataElemSize(Band _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     int _result = (int) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -11023,6 +11533,7 @@ int Band_getDataElemSize(Band _this)
 void Band_setReadOnly(Band _this, boolean readOnly)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classBand, "setReadOnly", "(Z)V");
@@ -11040,6 +11551,7 @@ void Band_setReadOnly(Band _this, boolean readOnly)
 boolean Band_isReadOnly(Band _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -11059,6 +11571,7 @@ boolean Band_isReadOnly(Band _this)
 void Band_setUnit(Band _this, const char* unit)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring unitString = NULL;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -11079,6 +11592,7 @@ void Band_setUnit(Band _this, const char* unit)
 char* Band_getUnit(Band _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
     if (_method == NULL) {
@@ -11101,6 +11615,7 @@ char* Band_getUnit(Band _this)
 boolean Band_isSynthetic(Band _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -11120,6 +11635,7 @@ boolean Band_isSynthetic(Band _this)
 void Band_setSynthetic(Band _this, boolean synthetic)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classBand, "setSynthetic", "(Z)V");
@@ -11137,6 +11653,7 @@ void Band_setSynthetic(Band _this, boolean synthetic)
 void Band_fireProductNodeDataChanged(Band _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classBand, "fireProductNodeDataChanged", "()V");
@@ -11154,6 +11671,7 @@ void Band_fireProductNodeDataChanged(Band _this)
 ProductData Band_createCompatibleProductData(Band _this, int numElems)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     ProductData _result = (ProductData) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -11173,6 +11691,7 @@ ProductData Band_createCompatibleProductData(Band _this, int numElems)
 ProductNode Band_getOwner(Band _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     ProductNode _result = (ProductNode) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -11192,6 +11711,7 @@ ProductNode Band_getOwner(Band _this)
 char* Band_getName(Band _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
     if (_method == NULL) {
@@ -11214,6 +11734,7 @@ char* Band_getName(Band _this)
 void Band_setName(Band _this, const char* name)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring nameString = NULL;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -11234,6 +11755,7 @@ void Band_setName(Band _this, const char* name)
 char* Band_getDescription(Band _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
     if (_method == NULL) {
@@ -11256,6 +11778,7 @@ char* Band_getDescription(Band _this)
 void Band_setDescription(Band _this, const char* description)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring descriptionString = NULL;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -11276,6 +11799,7 @@ void Band_setDescription(Band _this, const char* description)
 boolean Band_isModified(Band _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -11295,6 +11819,7 @@ boolean Band_isModified(Band _this)
 boolean Band_isValidNodeName(const char* name)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring nameString = NULL;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
@@ -11317,6 +11842,7 @@ boolean Band_isValidNodeName(const char* name)
 Product Band_getProduct(Band _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     Product _result = (Product) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -11336,6 +11862,7 @@ Product Band_getProduct(Band _this)
 ProductReader Band_getProductReader(Band _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     ProductReader _result = (ProductReader) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -11355,6 +11882,7 @@ ProductReader Band_getProductReader(Band _this)
 ProductWriter Band_getProductWriter(Band _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     ProductWriter _result = (ProductWriter) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -11374,6 +11902,7 @@ ProductWriter Band_getProductWriter(Band _this)
 char* Band_getDisplayName(Band _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
     if (_method == NULL) {
@@ -11396,6 +11925,7 @@ char* Band_getDisplayName(Band _this)
 char* Band_getProductRefString(Band _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
     if (_method == NULL) {
@@ -11418,6 +11948,7 @@ char* Band_getProductRefString(Band _this)
 Object Band_getExtension(Band _this, Class arg0)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     Object _result = (Object) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -11437,6 +11968,7 @@ Object Band_getExtension(Band _this, Class arg0)
 VectorDataNode PlacemarkGroup_getVectorDataNode(PlacemarkGroup _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     VectorDataNode _result = (VectorDataNode) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -11456,6 +11988,7 @@ VectorDataNode PlacemarkGroup_getVectorDataNode(PlacemarkGroup _this)
 Placemark PlacemarkGroup_getPlacemark(PlacemarkGroup _this, SimpleFeature feature)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     Placemark _result = (Placemark) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -11475,6 +12008,7 @@ Placemark PlacemarkGroup_getPlacemark(PlacemarkGroup _this, SimpleFeature featur
 boolean PlacemarkGroup_add3(PlacemarkGroup _this, Placemark placemark)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -11494,6 +12028,7 @@ boolean PlacemarkGroup_add3(PlacemarkGroup _this, Placemark placemark)
 void PlacemarkGroup_add1(PlacemarkGroup _this, int index, Placemark placemark)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classPlacemarkGroup, "add", "(ILorg/esa/beam/framework/datamodel/Placemark;)V");
@@ -11511,6 +12046,7 @@ void PlacemarkGroup_add1(PlacemarkGroup _this, int index, Placemark placemark)
 boolean PlacemarkGroup_remove1(PlacemarkGroup _this, Placemark placemark)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -11530,6 +12066,7 @@ boolean PlacemarkGroup_remove1(PlacemarkGroup _this, Placemark placemark)
 void PlacemarkGroup_dispose(PlacemarkGroup _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classPlacemarkGroup, "dispose", "()V");
@@ -11547,6 +12084,7 @@ void PlacemarkGroup_dispose(PlacemarkGroup _this)
 boolean PlacemarkGroup_isTakingOverNodeOwnership(PlacemarkGroup _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -11566,6 +12104,7 @@ boolean PlacemarkGroup_isTakingOverNodeOwnership(PlacemarkGroup _this)
 int PlacemarkGroup_getNodeCount(PlacemarkGroup _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     int _result = (int) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -11585,6 +12124,7 @@ int PlacemarkGroup_getNodeCount(PlacemarkGroup _this)
 ProductNode PlacemarkGroup_get1(PlacemarkGroup _this, int index)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     ProductNode _result = (ProductNode) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -11604,6 +12144,7 @@ ProductNode PlacemarkGroup_get1(PlacemarkGroup _this, int index)
 char** PlacemarkGroup_getNodeDisplayNames(PlacemarkGroup _this, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     char** _result = (char**) 0;
     jarray _resultArray = NULL;
     if (_method == NULL) {
@@ -11626,6 +12167,7 @@ char** PlacemarkGroup_getNodeDisplayNames(PlacemarkGroup _this, int* _resultArra
 char** PlacemarkGroup_getNodeNames(PlacemarkGroup _this, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     char** _result = (char**) 0;
     jarray _resultArray = NULL;
     if (_method == NULL) {
@@ -11648,6 +12190,7 @@ char** PlacemarkGroup_getNodeNames(PlacemarkGroup _this, int* _resultArrayLength
 ProductNode* PlacemarkGroup_toArray1(PlacemarkGroup _this, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     ProductNode* _result = (ProductNode*) 0;
     jarray _resultArray = NULL;
     if (_method == NULL) {
@@ -11670,6 +12213,7 @@ ProductNode* PlacemarkGroup_toArray1(PlacemarkGroup _this, int* _resultArrayLeng
 ProductNode PlacemarkGroup_toArray2(PlacemarkGroup _this, const ProductNode arrayElems, int arrayLength)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jarray arrayArray = NULL;
     ProductNode _result = (ProductNode) 0;
     if (_method == NULL) {
@@ -11692,6 +12236,7 @@ ProductNode PlacemarkGroup_toArray2(PlacemarkGroup _this, const ProductNode arra
 int PlacemarkGroup_indexOf1(PlacemarkGroup _this, const char* name)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring nameString = NULL;
     int _result = (int) 0;
     if (_method == NULL) {
@@ -11714,6 +12259,7 @@ int PlacemarkGroup_indexOf1(PlacemarkGroup _this, const char* name)
 int PlacemarkGroup_indexOf2(PlacemarkGroup _this, ProductNode element)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     int _result = (int) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -11733,6 +12279,7 @@ int PlacemarkGroup_indexOf2(PlacemarkGroup _this, ProductNode element)
 ProductNode PlacemarkGroup_getByDisplayName(PlacemarkGroup _this, const char* displayName)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring displayNameString = NULL;
     ProductNode _result = (ProductNode) 0;
     if (_method == NULL) {
@@ -11755,6 +12302,7 @@ ProductNode PlacemarkGroup_getByDisplayName(PlacemarkGroup _this, const char* di
 ProductNode PlacemarkGroup_get2(PlacemarkGroup _this, const char* name)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring nameString = NULL;
     ProductNode _result = (ProductNode) 0;
     if (_method == NULL) {
@@ -11777,6 +12325,7 @@ ProductNode PlacemarkGroup_get2(PlacemarkGroup _this, const char* name)
 boolean PlacemarkGroup_contains1(PlacemarkGroup _this, const char* name)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring nameString = NULL;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
@@ -11799,6 +12348,7 @@ boolean PlacemarkGroup_contains1(PlacemarkGroup _this, const char* name)
 boolean PlacemarkGroup_contains2(PlacemarkGroup _this, ProductNode node)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -11818,6 +12368,7 @@ boolean PlacemarkGroup_contains2(PlacemarkGroup _this, ProductNode node)
 boolean PlacemarkGroup_add4(PlacemarkGroup _this, ProductNode node)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -11837,6 +12388,7 @@ boolean PlacemarkGroup_add4(PlacemarkGroup _this, ProductNode node)
 void PlacemarkGroup_add2(PlacemarkGroup _this, int index, ProductNode node)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classPlacemarkGroup, "add", "(ILorg/esa/beam/framework/datamodel/ProductNode;)V");
@@ -11854,6 +12406,7 @@ void PlacemarkGroup_add2(PlacemarkGroup _this, int index, ProductNode node)
 boolean PlacemarkGroup_remove2(PlacemarkGroup _this, ProductNode node)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -11873,6 +12426,7 @@ boolean PlacemarkGroup_remove2(PlacemarkGroup _this, ProductNode node)
 void PlacemarkGroup_removeAll(PlacemarkGroup _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classPlacemarkGroup, "removeAll", "()V");
@@ -11890,6 +12444,7 @@ void PlacemarkGroup_removeAll(PlacemarkGroup _this)
 void PlacemarkGroup_clearRemovedList(PlacemarkGroup _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classPlacemarkGroup, "clearRemovedList", "()V");
@@ -11907,6 +12462,7 @@ void PlacemarkGroup_clearRemovedList(PlacemarkGroup _this)
 Collection PlacemarkGroup_getRemovedNodes(PlacemarkGroup _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     Collection _result = (Collection) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -11926,6 +12482,7 @@ Collection PlacemarkGroup_getRemovedNodes(PlacemarkGroup _this)
 dlong PlacemarkGroup_getRawStorageSize2(PlacemarkGroup _this, ProductSubsetDef subsetDef)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     dlong _result = (dlong) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -11945,6 +12502,7 @@ dlong PlacemarkGroup_getRawStorageSize2(PlacemarkGroup _this, ProductSubsetDef s
 void PlacemarkGroup_setModified(PlacemarkGroup _this, boolean modified)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classPlacemarkGroup, "setModified", "(Z)V");
@@ -11962,6 +12520,7 @@ void PlacemarkGroup_setModified(PlacemarkGroup _this, boolean modified)
 void PlacemarkGroup_acceptVisitor(PlacemarkGroup _this, ProductVisitor visitor)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classPlacemarkGroup, "acceptVisitor", "(Lorg/esa/beam/framework/datamodel/ProductVisitor;)V");
@@ -11979,6 +12538,7 @@ void PlacemarkGroup_acceptVisitor(PlacemarkGroup _this, ProductVisitor visitor)
 void PlacemarkGroup_updateExpression(PlacemarkGroup _this, const char* oldExternalName, const char* newExternalName)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring oldExternalNameString = NULL;
     jstring newExternalNameString = NULL;
     if (_method == NULL) {
@@ -12002,6 +12562,7 @@ void PlacemarkGroup_updateExpression(PlacemarkGroup _this, const char* oldExtern
 ProductNode PlacemarkGroup_getOwner(PlacemarkGroup _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     ProductNode _result = (ProductNode) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -12021,6 +12582,7 @@ ProductNode PlacemarkGroup_getOwner(PlacemarkGroup _this)
 char* PlacemarkGroup_getName(PlacemarkGroup _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
     if (_method == NULL) {
@@ -12043,6 +12605,7 @@ char* PlacemarkGroup_getName(PlacemarkGroup _this)
 void PlacemarkGroup_setName(PlacemarkGroup _this, const char* name)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring nameString = NULL;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -12063,6 +12626,7 @@ void PlacemarkGroup_setName(PlacemarkGroup _this, const char* name)
 char* PlacemarkGroup_getDescription(PlacemarkGroup _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
     if (_method == NULL) {
@@ -12085,6 +12649,7 @@ char* PlacemarkGroup_getDescription(PlacemarkGroup _this)
 void PlacemarkGroup_setDescription(PlacemarkGroup _this, const char* description)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring descriptionString = NULL;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -12105,6 +12670,7 @@ void PlacemarkGroup_setDescription(PlacemarkGroup _this, const char* description
 boolean PlacemarkGroup_isModified(PlacemarkGroup _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -12124,6 +12690,7 @@ boolean PlacemarkGroup_isModified(PlacemarkGroup _this)
 char* PlacemarkGroup_toString(PlacemarkGroup _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
     if (_method == NULL) {
@@ -12146,6 +12713,7 @@ char* PlacemarkGroup_toString(PlacemarkGroup _this)
 boolean PlacemarkGroup_isValidNodeName(const char* name)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring nameString = NULL;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
@@ -12168,6 +12736,7 @@ boolean PlacemarkGroup_isValidNodeName(const char* name)
 Product PlacemarkGroup_getProduct(PlacemarkGroup _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     Product _result = (Product) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -12187,6 +12756,7 @@ Product PlacemarkGroup_getProduct(PlacemarkGroup _this)
 ProductReader PlacemarkGroup_getProductReader(PlacemarkGroup _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     ProductReader _result = (ProductReader) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -12206,6 +12776,7 @@ ProductReader PlacemarkGroup_getProductReader(PlacemarkGroup _this)
 ProductWriter PlacemarkGroup_getProductWriter(PlacemarkGroup _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     ProductWriter _result = (ProductWriter) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -12225,6 +12796,7 @@ ProductWriter PlacemarkGroup_getProductWriter(PlacemarkGroup _this)
 char* PlacemarkGroup_getDisplayName(PlacemarkGroup _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
     if (_method == NULL) {
@@ -12247,6 +12819,7 @@ char* PlacemarkGroup_getDisplayName(PlacemarkGroup _this)
 char* PlacemarkGroup_getProductRefString(PlacemarkGroup _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
     if (_method == NULL) {
@@ -12269,6 +12842,7 @@ char* PlacemarkGroup_getProductRefString(PlacemarkGroup _this)
 dlong PlacemarkGroup_getRawStorageSize1(PlacemarkGroup _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     dlong _result = (dlong) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -12288,6 +12862,7 @@ dlong PlacemarkGroup_getRawStorageSize1(PlacemarkGroup _this)
 void PlacemarkGroup_fireProductNodeChanged1(PlacemarkGroup _this, const char* propertyName)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring propertyNameString = NULL;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -12308,6 +12883,7 @@ void PlacemarkGroup_fireProductNodeChanged1(PlacemarkGroup _this, const char* pr
 void PlacemarkGroup_fireProductNodeChanged2(PlacemarkGroup _this, const char* propertyName, Object oldValue, Object newValue)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring propertyNameString = NULL;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -12328,6 +12904,7 @@ void PlacemarkGroup_fireProductNodeChanged2(PlacemarkGroup _this, const char* pr
 void PlacemarkGroup_removeFromFile(PlacemarkGroup _this, ProductWriter productWriter)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classPlacemarkGroup, "removeFromFile", "(Lorg/esa/beam/framework/dataio/ProductWriter;)V");
@@ -12345,6 +12922,7 @@ void PlacemarkGroup_removeFromFile(PlacemarkGroup _this, ProductWriter productWr
 Object PlacemarkGroup_getExtension(PlacemarkGroup _this, Class arg0)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     Object _result = (Object) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -12364,6 +12942,7 @@ Object PlacemarkGroup_getExtension(PlacemarkGroup _this, Class arg0)
 TiePointGrid TiePointGrid_newTiePointGrid1(const char* name, int gridWidth, int gridHeight, float offsetX, float offsetY, float subSamplingX, float subSamplingY, const float* tiePointsElems, int tiePointsLength)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring nameString = NULL;
     jarray tiePointsArray = NULL;
     TiePointGrid _result = (TiePointGrid) 0;
@@ -12390,6 +12969,7 @@ TiePointGrid TiePointGrid_newTiePointGrid1(const char* name, int gridWidth, int 
 TiePointGrid TiePointGrid_newTiePointGrid2(const char* name, int gridWidth, int gridHeight, float offsetX, float offsetY, float subSamplingX, float subSamplingY, const float* tiePointsElems, int tiePointsLength, int discontinuity)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring nameString = NULL;
     jarray tiePointsArray = NULL;
     TiePointGrid _result = (TiePointGrid) 0;
@@ -12416,6 +12996,7 @@ TiePointGrid TiePointGrid_newTiePointGrid2(const char* name, int gridWidth, int 
 TiePointGrid TiePointGrid_newTiePointGrid3(const char* name, int gridWidth, int gridHeight, float offsetX, float offsetY, float subSamplingX, float subSamplingY, const float* tiePointsElems, int tiePointsLength, boolean containsAngles)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring nameString = NULL;
     jarray tiePointsArray = NULL;
     TiePointGrid _result = (TiePointGrid) 0;
@@ -12442,6 +13023,7 @@ TiePointGrid TiePointGrid_newTiePointGrid3(const char* name, int gridWidth, int 
 int TiePointGrid_getDiscontinuity2(const float* tiePointsElems, int tiePointsLength)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jarray tiePointsArray = NULL;
     int _result = (int) 0;
     if (_method == NULL) {
@@ -12465,6 +13047,7 @@ int TiePointGrid_getDiscontinuity2(const float* tiePointsElems, int tiePointsLen
 int TiePointGrid_getDiscontinuity1(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     int _result = (int) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -12484,6 +13067,7 @@ int TiePointGrid_getDiscontinuity1(TiePointGrid _this)
 void TiePointGrid_setDiscontinuity(TiePointGrid _this, int discontinuity)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "setDiscontinuity", "(I)V");
@@ -12501,6 +13085,7 @@ void TiePointGrid_setDiscontinuity(TiePointGrid _this, int discontinuity)
 boolean TiePointGrid_isFloatingPointType(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -12520,6 +13105,7 @@ boolean TiePointGrid_isFloatingPointType(TiePointGrid _this)
 int TiePointGrid_getGeophysicalDataType(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     int _result = (int) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -12539,6 +13125,7 @@ int TiePointGrid_getGeophysicalDataType(TiePointGrid _this)
 ProductData TiePointGrid_getSceneRasterData(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     ProductData _result = (ProductData) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -12558,6 +13145,7 @@ ProductData TiePointGrid_getSceneRasterData(TiePointGrid _this)
 int TiePointGrid_getSceneRasterWidth(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     int _result = (int) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -12577,6 +13165,7 @@ int TiePointGrid_getSceneRasterWidth(TiePointGrid _this)
 int TiePointGrid_getSceneRasterHeight(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     int _result = (int) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -12596,6 +13185,7 @@ int TiePointGrid_getSceneRasterHeight(TiePointGrid _this)
 float TiePointGrid_getOffsetX(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     float _result = (float) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -12615,6 +13205,7 @@ float TiePointGrid_getOffsetX(TiePointGrid _this)
 float TiePointGrid_getOffsetY(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     float _result = (float) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -12634,6 +13225,7 @@ float TiePointGrid_getOffsetY(TiePointGrid _this)
 float TiePointGrid_getSubSamplingX(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     float _result = (float) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -12653,6 +13245,7 @@ float TiePointGrid_getSubSamplingX(TiePointGrid _this)
 float TiePointGrid_getSubSamplingY(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     float _result = (float) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -12672,6 +13265,7 @@ float TiePointGrid_getSubSamplingY(TiePointGrid _this)
 float* TiePointGrid_getTiePoints(TiePointGrid _this, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     float* _result = (float*) 0;
     jarray _resultArray = NULL;
     if (_method == NULL) {
@@ -12694,6 +13288,7 @@ float* TiePointGrid_getTiePoints(TiePointGrid _this, int* _resultArrayLength)
 int TiePointGrid_getPixelInt(TiePointGrid _this, int x, int y)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     int _result = (int) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -12713,6 +13308,7 @@ int TiePointGrid_getPixelInt(TiePointGrid _this, int x, int y)
 void TiePointGrid_dispose(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "dispose", "()V");
@@ -12730,6 +13326,7 @@ void TiePointGrid_dispose(TiePointGrid _this)
 float TiePointGrid_getPixelFloat2(TiePointGrid _this, int x, int y)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     float _result = (float) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -12749,6 +13346,7 @@ float TiePointGrid_getPixelFloat2(TiePointGrid _this, int x, int y)
 float TiePointGrid_getPixelFloat1(TiePointGrid _this, float x, float y)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     float _result = (float) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -12768,6 +13366,7 @@ float TiePointGrid_getPixelFloat1(TiePointGrid _this, float x, float y)
 double TiePointGrid_getPixelDouble(TiePointGrid _this, int x, int y)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     double _result = (double) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -12787,6 +13386,7 @@ double TiePointGrid_getPixelDouble(TiePointGrid _this, int x, int y)
 void TiePointGrid_setPixelInt(TiePointGrid _this, int x, int y, int pixelValue)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "setPixelInt", "(III)V");
@@ -12804,6 +13404,7 @@ void TiePointGrid_setPixelInt(TiePointGrid _this, int x, int y, int pixelValue)
 void TiePointGrid_setPixelFloat(TiePointGrid _this, int x, int y, float pixelValue)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "setPixelFloat", "(IIF)V");
@@ -12821,6 +13422,7 @@ void TiePointGrid_setPixelFloat(TiePointGrid _this, int x, int y, float pixelVal
 void TiePointGrid_setPixelDouble(TiePointGrid _this, int x, int y, double pixelValue)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "setPixelDouble", "(IID)V");
@@ -12838,6 +13440,7 @@ void TiePointGrid_setPixelDouble(TiePointGrid _this, int x, int y, double pixelV
 int* TiePointGrid_getPixels6(TiePointGrid _this, int x, int y, int w, int h, const int* pixelsElems, int pixelsLength, ProgressMonitor pm, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jarray pixelsArray = NULL;
     int* _result = (int*) 0;
     jarray _resultArray = NULL;
@@ -12864,6 +13467,7 @@ int* TiePointGrid_getPixels6(TiePointGrid _this, int x, int y, int w, int h, con
 float* TiePointGrid_getPixels4(TiePointGrid _this, int x, int y, int w, int h, const float* pixelsElems, int pixelsLength, ProgressMonitor pm, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jarray pixelsArray = NULL;
     float* _result = (float*) 0;
     jarray _resultArray = NULL;
@@ -12890,6 +13494,7 @@ float* TiePointGrid_getPixels4(TiePointGrid _this, int x, int y, int w, int h, c
 double* TiePointGrid_getPixels2(TiePointGrid _this, int x, int y, int w, int h, const double* pixelsElems, int pixelsLength, ProgressMonitor pm, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jarray pixelsArray = NULL;
     double* _result = (double*) 0;
     jarray _resultArray = NULL;
@@ -12916,6 +13521,7 @@ double* TiePointGrid_getPixels2(TiePointGrid _this, int x, int y, int w, int h, 
 void TiePointGrid_setPixels3(TiePointGrid _this, int x, int y, int w, int h, const int* pixelsElems, int pixelsLength)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jarray pixelsArray = NULL;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -12937,6 +13543,7 @@ void TiePointGrid_setPixels3(TiePointGrid _this, int x, int y, int w, int h, con
 void TiePointGrid_setPixels2(TiePointGrid _this, int x, int y, int w, int h, const float* pixelsElems, int pixelsLength)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jarray pixelsArray = NULL;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -12958,6 +13565,7 @@ void TiePointGrid_setPixels2(TiePointGrid _this, int x, int y, int w, int h, con
 void TiePointGrid_setPixels1(TiePointGrid _this, int x, int y, int w, int h, const double* pixelsElems, int pixelsLength)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jarray pixelsArray = NULL;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -12979,6 +13587,7 @@ void TiePointGrid_setPixels1(TiePointGrid _this, int x, int y, int w, int h, con
 int* TiePointGrid_readPixels6(TiePointGrid _this, int x, int y, int w, int h, const int* pixelsElems, int pixelsLength, ProgressMonitor pm, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jarray pixelsArray = NULL;
     int* _result = (int*) 0;
     jarray _resultArray = NULL;
@@ -13005,6 +13614,7 @@ int* TiePointGrid_readPixels6(TiePointGrid _this, int x, int y, int w, int h, co
 float* TiePointGrid_readPixels4(TiePointGrid _this, int x, int y, int w, int h, const float* pixelsElems, int pixelsLength, ProgressMonitor pm, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jarray pixelsArray = NULL;
     float* _result = (float*) 0;
     jarray _resultArray = NULL;
@@ -13031,6 +13641,7 @@ float* TiePointGrid_readPixels4(TiePointGrid _this, int x, int y, int w, int h, 
 double* TiePointGrid_readPixels2(TiePointGrid _this, int x, int y, int w, int h, const double* pixelsElems, int pixelsLength, ProgressMonitor pm, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jarray pixelsArray = NULL;
     double* _result = (double*) 0;
     jarray _resultArray = NULL;
@@ -13057,6 +13668,7 @@ double* TiePointGrid_readPixels2(TiePointGrid _this, int x, int y, int w, int h,
 void TiePointGrid_writePixels6(TiePointGrid _this, int x, int y, int w, int h, const int* pixelsElems, int pixelsLength, ProgressMonitor pm)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jarray pixelsArray = NULL;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -13078,6 +13690,7 @@ void TiePointGrid_writePixels6(TiePointGrid _this, int x, int y, int w, int h, c
 void TiePointGrid_writePixels4(TiePointGrid _this, int x, int y, int w, int h, const float* pixelsElems, int pixelsLength, ProgressMonitor pm)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jarray pixelsArray = NULL;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -13099,6 +13712,7 @@ void TiePointGrid_writePixels4(TiePointGrid _this, int x, int y, int w, int h, c
 void TiePointGrid_writePixels2(TiePointGrid _this, int x, int y, int w, int h, const double* pixelsElems, int pixelsLength, ProgressMonitor pm)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jarray pixelsArray = NULL;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -13120,6 +13734,7 @@ void TiePointGrid_writePixels2(TiePointGrid _this, int x, int y, int w, int h, c
 void TiePointGrid_readRasterData2(TiePointGrid _this, int offsetX, int offsetY, int width, int height, ProductData rasterData, ProgressMonitor pm)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "readRasterData", "(IIIILorg/esa/beam/framework/datamodel/ProductData;Lcom/bc/ceres/core/ProgressMonitor;)V");
@@ -13137,6 +13752,7 @@ void TiePointGrid_readRasterData2(TiePointGrid _this, int offsetX, int offsetY, 
 void TiePointGrid_readRasterDataFully2(TiePointGrid _this, ProgressMonitor pm)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "readRasterDataFully", "(Lcom/bc/ceres/core/ProgressMonitor;)V");
@@ -13154,6 +13770,7 @@ void TiePointGrid_readRasterDataFully2(TiePointGrid _this, ProgressMonitor pm)
 void TiePointGrid_writeRasterData2(TiePointGrid _this, int offsetX, int offsetY, int width, int height, ProductData rasterData, ProgressMonitor pm)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "writeRasterData", "(IIIILorg/esa/beam/framework/datamodel/ProductData;Lcom/bc/ceres/core/ProgressMonitor;)V");
@@ -13171,6 +13788,7 @@ void TiePointGrid_writeRasterData2(TiePointGrid _this, int offsetX, int offsetY,
 void TiePointGrid_writeRasterDataFully2(TiePointGrid _this, ProgressMonitor pm)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "writeRasterDataFully", "(Lcom/bc/ceres/core/ProgressMonitor;)V");
@@ -13188,6 +13806,7 @@ void TiePointGrid_writeRasterDataFully2(TiePointGrid _this, ProgressMonitor pm)
 void TiePointGrid_acceptVisitor(TiePointGrid _this, ProductVisitor visitor)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "acceptVisitor", "(Lorg/esa/beam/framework/datamodel/ProductVisitor;)V");
@@ -13205,6 +13824,7 @@ void TiePointGrid_acceptVisitor(TiePointGrid _this, ProductVisitor visitor)
 TiePointGrid TiePointGrid_cloneTiePointGrid(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     TiePointGrid _result = (TiePointGrid) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -13224,6 +13844,7 @@ TiePointGrid TiePointGrid_cloneTiePointGrid(TiePointGrid _this)
 TiePointGrid TiePointGrid_createZenithFromElevationAngleTiePointGrid(TiePointGrid elevationAngleGrid)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     TiePointGrid _result = (TiePointGrid) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -13243,6 +13864,7 @@ TiePointGrid TiePointGrid_createZenithFromElevationAngleTiePointGrid(TiePointGri
 TiePointGrid TiePointGrid_createSubset(TiePointGrid sourceTiePointGrid, ProductSubsetDef subsetDef)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     TiePointGrid _result = (TiePointGrid) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -13262,6 +13884,7 @@ TiePointGrid TiePointGrid_createSubset(TiePointGrid sourceTiePointGrid, ProductS
 int TiePointGrid_getRasterWidth(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     int _result = (int) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -13281,6 +13904,7 @@ int TiePointGrid_getRasterWidth(TiePointGrid _this)
 int TiePointGrid_getRasterHeight(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     int _result = (int) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -13300,6 +13924,7 @@ int TiePointGrid_getRasterHeight(TiePointGrid _this)
 void TiePointGrid_setModified(TiePointGrid _this, boolean modified)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "setModified", "(Z)V");
@@ -13317,6 +13942,7 @@ void TiePointGrid_setModified(TiePointGrid _this, boolean modified)
 GeoCoding TiePointGrid_getGeoCoding(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     GeoCoding _result = (GeoCoding) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -13336,6 +13962,7 @@ GeoCoding TiePointGrid_getGeoCoding(TiePointGrid _this)
 void TiePointGrid_setGeoCoding(TiePointGrid _this, GeoCoding geoCoding)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "setGeoCoding", "(Lorg/esa/beam/framework/datamodel/GeoCoding;)V");
@@ -13353,6 +13980,7 @@ void TiePointGrid_setGeoCoding(TiePointGrid _this, GeoCoding geoCoding)
 Pointing TiePointGrid_getPointing(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     Pointing _result = (Pointing) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -13372,6 +14000,7 @@ Pointing TiePointGrid_getPointing(TiePointGrid _this)
 boolean TiePointGrid_canBeOrthorectified(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -13391,6 +14020,7 @@ boolean TiePointGrid_canBeOrthorectified(TiePointGrid _this)
 double TiePointGrid_getScalingFactor(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     double _result = (double) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -13410,6 +14040,7 @@ double TiePointGrid_getScalingFactor(TiePointGrid _this)
 void TiePointGrid_setScalingFactor(TiePointGrid _this, double scalingFactor)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "setScalingFactor", "(D)V");
@@ -13427,6 +14058,7 @@ void TiePointGrid_setScalingFactor(TiePointGrid _this, double scalingFactor)
 double TiePointGrid_getScalingOffset(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     double _result = (double) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -13446,6 +14078,7 @@ double TiePointGrid_getScalingOffset(TiePointGrid _this)
 void TiePointGrid_setScalingOffset(TiePointGrid _this, double scalingOffset)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "setScalingOffset", "(D)V");
@@ -13463,6 +14096,7 @@ void TiePointGrid_setScalingOffset(TiePointGrid _this, double scalingOffset)
 boolean TiePointGrid_isLog10Scaled(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -13482,6 +14116,7 @@ boolean TiePointGrid_isLog10Scaled(TiePointGrid _this)
 void TiePointGrid_setLog10Scaled(TiePointGrid _this, boolean log10Scaled)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "setLog10Scaled", "(Z)V");
@@ -13499,6 +14134,7 @@ void TiePointGrid_setLog10Scaled(TiePointGrid _this, boolean log10Scaled)
 boolean TiePointGrid_isScalingApplied(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -13518,6 +14154,7 @@ boolean TiePointGrid_isScalingApplied(TiePointGrid _this)
 boolean TiePointGrid_isValidMaskProperty(const char* propertyName)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring propertyNameString = NULL;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
@@ -13540,6 +14177,7 @@ boolean TiePointGrid_isValidMaskProperty(const char* propertyName)
 boolean TiePointGrid_isNoDataValueSet(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -13559,6 +14197,7 @@ boolean TiePointGrid_isNoDataValueSet(TiePointGrid _this)
 void TiePointGrid_clearNoDataValue(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "clearNoDataValue", "()V");
@@ -13576,6 +14215,7 @@ void TiePointGrid_clearNoDataValue(TiePointGrid _this)
 boolean TiePointGrid_isNoDataValueUsed(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -13595,6 +14235,7 @@ boolean TiePointGrid_isNoDataValueUsed(TiePointGrid _this)
 void TiePointGrid_setNoDataValueUsed(TiePointGrid _this, boolean noDataValueUsed)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "setNoDataValueUsed", "(Z)V");
@@ -13612,6 +14253,7 @@ void TiePointGrid_setNoDataValueUsed(TiePointGrid _this, boolean noDataValueUsed
 double TiePointGrid_getNoDataValue(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     double _result = (double) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -13631,6 +14273,7 @@ double TiePointGrid_getNoDataValue(TiePointGrid _this)
 void TiePointGrid_setNoDataValue(TiePointGrid _this, double noDataValue)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "setNoDataValue", "(D)V");
@@ -13648,6 +14291,7 @@ void TiePointGrid_setNoDataValue(TiePointGrid _this, double noDataValue)
 double TiePointGrid_getGeophysicalNoDataValue(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     double _result = (double) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -13667,6 +14311,7 @@ double TiePointGrid_getGeophysicalNoDataValue(TiePointGrid _this)
 void TiePointGrid_setGeophysicalNoDataValue(TiePointGrid _this, double noDataValue)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "setGeophysicalNoDataValue", "(D)V");
@@ -13684,6 +14329,7 @@ void TiePointGrid_setGeophysicalNoDataValue(TiePointGrid _this, double noDataVal
 char* TiePointGrid_getValidPixelExpression(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
     if (_method == NULL) {
@@ -13706,6 +14352,7 @@ char* TiePointGrid_getValidPixelExpression(TiePointGrid _this)
 void TiePointGrid_setValidPixelExpression(TiePointGrid _this, const char* validPixelExpression)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring validPixelExpressionString = NULL;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -13726,6 +14373,7 @@ void TiePointGrid_setValidPixelExpression(TiePointGrid _this, const char* validP
 boolean TiePointGrid_isValidMaskUsed(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -13745,6 +14393,7 @@ boolean TiePointGrid_isValidMaskUsed(TiePointGrid _this)
 void TiePointGrid_resetValidMask(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "resetValidMask", "()V");
@@ -13762,6 +14411,7 @@ void TiePointGrid_resetValidMask(TiePointGrid _this)
 char* TiePointGrid_getValidMaskExpression(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
     if (_method == NULL) {
@@ -13784,6 +14434,7 @@ char* TiePointGrid_getValidMaskExpression(TiePointGrid _this)
 void TiePointGrid_updateExpression(TiePointGrid _this, const char* oldExternalName, const char* newExternalName)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring oldExternalNameString = NULL;
     jstring newExternalNameString = NULL;
     if (_method == NULL) {
@@ -13807,6 +14458,7 @@ void TiePointGrid_updateExpression(TiePointGrid _this, const char* oldExternalNa
 boolean TiePointGrid_hasRasterData(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -13826,6 +14478,7 @@ boolean TiePointGrid_hasRasterData(TiePointGrid _this)
 ProductData TiePointGrid_getRasterData(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     ProductData _result = (ProductData) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -13845,6 +14498,7 @@ ProductData TiePointGrid_getRasterData(TiePointGrid _this)
 void TiePointGrid_setRasterData(TiePointGrid _this, ProductData rasterData)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "setRasterData", "(Lorg/esa/beam/framework/datamodel/ProductData;)V");
@@ -13862,6 +14516,7 @@ void TiePointGrid_setRasterData(TiePointGrid _this, ProductData rasterData)
 void TiePointGrid_loadRasterData1(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "loadRasterData", "()V");
@@ -13879,6 +14534,7 @@ void TiePointGrid_loadRasterData1(TiePointGrid _this)
 void TiePointGrid_loadRasterData2(TiePointGrid _this, ProgressMonitor pm)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "loadRasterData", "(Lcom/bc/ceres/core/ProgressMonitor;)V");
@@ -13896,6 +14552,7 @@ void TiePointGrid_loadRasterData2(TiePointGrid _this, ProgressMonitor pm)
 void TiePointGrid_unloadRasterData(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "unloadRasterData", "()V");
@@ -13913,6 +14570,7 @@ void TiePointGrid_unloadRasterData(TiePointGrid _this)
 boolean TiePointGrid_isPixelValid2(TiePointGrid _this, int x, int y)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -13932,6 +14590,7 @@ boolean TiePointGrid_isPixelValid2(TiePointGrid _this, int x, int y)
 int TiePointGrid_getSampleInt(TiePointGrid _this, int x, int y)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     int _result = (int) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -13951,6 +14610,7 @@ int TiePointGrid_getSampleInt(TiePointGrid _this, int x, int y)
 float TiePointGrid_getSampleFloat(TiePointGrid _this, int x, int y)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     float _result = (float) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -13970,6 +14630,7 @@ float TiePointGrid_getSampleFloat(TiePointGrid _this, int x, int y)
 boolean TiePointGrid_isPixelValid1(TiePointGrid _this, int pixelIndex)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -13989,6 +14650,7 @@ boolean TiePointGrid_isPixelValid1(TiePointGrid _this, int pixelIndex)
 boolean TiePointGrid_isPixelValid3(TiePointGrid _this, int x, int y, ROI roi)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -14008,6 +14670,7 @@ boolean TiePointGrid_isPixelValid3(TiePointGrid _this, int x, int y, ROI roi)
 int* TiePointGrid_getPixels5(TiePointGrid _this, int x, int y, int w, int h, const int* pixelsElems, int pixelsLength, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jarray pixelsArray = NULL;
     int* _result = (int*) 0;
     jarray _resultArray = NULL;
@@ -14034,6 +14697,7 @@ int* TiePointGrid_getPixels5(TiePointGrid _this, int x, int y, int w, int h, con
 float* TiePointGrid_getPixels3(TiePointGrid _this, int x, int y, int w, int h, const float* pixelsElems, int pixelsLength, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jarray pixelsArray = NULL;
     float* _result = (float*) 0;
     jarray _resultArray = NULL;
@@ -14060,6 +14724,7 @@ float* TiePointGrid_getPixels3(TiePointGrid _this, int x, int y, int w, int h, c
 double* TiePointGrid_getPixels1(TiePointGrid _this, int x, int y, int w, int h, const double* pixelsElems, int pixelsLength, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jarray pixelsArray = NULL;
     double* _result = (double*) 0;
     jarray _resultArray = NULL;
@@ -14086,6 +14751,7 @@ double* TiePointGrid_getPixels1(TiePointGrid _this, int x, int y, int w, int h, 
 int* TiePointGrid_readPixels5(TiePointGrid _this, int x, int y, int w, int h, const int* pixelsElems, int pixelsLength, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jarray pixelsArray = NULL;
     int* _result = (int*) 0;
     jarray _resultArray = NULL;
@@ -14112,6 +14778,7 @@ int* TiePointGrid_readPixels5(TiePointGrid _this, int x, int y, int w, int h, co
 float* TiePointGrid_readPixels3(TiePointGrid _this, int x, int y, int w, int h, const float* pixelsElems, int pixelsLength, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jarray pixelsArray = NULL;
     float* _result = (float*) 0;
     jarray _resultArray = NULL;
@@ -14138,6 +14805,7 @@ float* TiePointGrid_readPixels3(TiePointGrid _this, int x, int y, int w, int h, 
 double* TiePointGrid_readPixels1(TiePointGrid _this, int x, int y, int w, int h, const double* pixelsElems, int pixelsLength, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jarray pixelsArray = NULL;
     double* _result = (double*) 0;
     jarray _resultArray = NULL;
@@ -14164,6 +14832,7 @@ double* TiePointGrid_readPixels1(TiePointGrid _this, int x, int y, int w, int h,
 void TiePointGrid_writePixels5(TiePointGrid _this, int x, int y, int w, int h, const int* pixelsElems, int pixelsLength)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jarray pixelsArray = NULL;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -14185,6 +14854,7 @@ void TiePointGrid_writePixels5(TiePointGrid _this, int x, int y, int w, int h, c
 void TiePointGrid_writePixels3(TiePointGrid _this, int x, int y, int w, int h, const float* pixelsElems, int pixelsLength)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jarray pixelsArray = NULL;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -14206,6 +14876,7 @@ void TiePointGrid_writePixels3(TiePointGrid _this, int x, int y, int w, int h, c
 void TiePointGrid_writePixels1(TiePointGrid _this, int x, int y, int w, int h, const double* pixelsElems, int pixelsLength)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jarray pixelsArray = NULL;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -14227,6 +14898,7 @@ void TiePointGrid_writePixels1(TiePointGrid _this, int x, int y, int w, int h, c
 boolean* TiePointGrid_readValidMask(TiePointGrid _this, int x, int y, int w, int h, const boolean* validMaskElems, int validMaskLength, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jarray validMaskArray = NULL;
     boolean* _result = (boolean*) 0;
     jarray _resultArray = NULL;
@@ -14253,6 +14925,7 @@ boolean* TiePointGrid_readValidMask(TiePointGrid _this, int x, int y, int w, int
 void TiePointGrid_readRasterDataFully1(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "readRasterDataFully", "()V");
@@ -14270,6 +14943,7 @@ void TiePointGrid_readRasterDataFully1(TiePointGrid _this)
 void TiePointGrid_readRasterData1(TiePointGrid _this, int offsetX, int offsetY, int width, int height, ProductData rasterData)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "readRasterData", "(IIIILorg/esa/beam/framework/datamodel/ProductData;)V");
@@ -14287,6 +14961,7 @@ void TiePointGrid_readRasterData1(TiePointGrid _this, int offsetX, int offsetY, 
 void TiePointGrid_writeRasterDataFully1(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "writeRasterDataFully", "()V");
@@ -14304,6 +14979,7 @@ void TiePointGrid_writeRasterDataFully1(TiePointGrid _this)
 void TiePointGrid_writeRasterData1(TiePointGrid _this, int offsetX, int offsetY, int width, int height, ProductData rasterData)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "writeRasterData", "(IIIILorg/esa/beam/framework/datamodel/ProductData;)V");
@@ -14321,6 +14997,7 @@ void TiePointGrid_writeRasterData1(TiePointGrid _this, int offsetX, int offsetY,
 ProductData TiePointGrid_createCompatibleRasterData1(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     ProductData _result = (ProductData) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -14340,6 +15017,7 @@ ProductData TiePointGrid_createCompatibleRasterData1(TiePointGrid _this)
 ProductData TiePointGrid_createCompatibleSceneRasterData(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     ProductData _result = (ProductData) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -14359,6 +15037,7 @@ ProductData TiePointGrid_createCompatibleSceneRasterData(TiePointGrid _this)
 ProductData TiePointGrid_createCompatibleRasterData2(TiePointGrid _this, int width, int height)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     ProductData _result = (ProductData) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -14378,6 +15057,7 @@ ProductData TiePointGrid_createCompatibleRasterData2(TiePointGrid _this, int wid
 boolean TiePointGrid_isCompatibleRasterData(TiePointGrid _this, ProductData rasterData, int w, int h)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -14397,6 +15077,7 @@ boolean TiePointGrid_isCompatibleRasterData(TiePointGrid _this, ProductData rast
 void TiePointGrid_checkCompatibleRasterData(TiePointGrid _this, ProductData rasterData, int w, int h)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "checkCompatibleRasterData", "(Lorg/esa/beam/framework/datamodel/ProductData;II)V");
@@ -14414,6 +15095,7 @@ void TiePointGrid_checkCompatibleRasterData(TiePointGrid _this, ProductData rast
 boolean TiePointGrid_hasIntPixels(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -14433,6 +15115,7 @@ boolean TiePointGrid_hasIntPixels(TiePointGrid _this)
 TransectProfileData TiePointGrid_createTransectProfileData(TiePointGrid _this, Shape shape)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     TransectProfileData _result = (TransectProfileData) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -14452,6 +15135,7 @@ TransectProfileData TiePointGrid_createTransectProfileData(TiePointGrid _this, S
 ImageInfo TiePointGrid_getImageInfo1(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     ImageInfo _result = (ImageInfo) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -14471,6 +15155,7 @@ ImageInfo TiePointGrid_getImageInfo1(TiePointGrid _this)
 void TiePointGrid_setImageInfo(TiePointGrid _this, ImageInfo imageInfo)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "setImageInfo", "(Lorg/esa/beam/framework/datamodel/ImageInfo;)V");
@@ -14488,6 +15173,7 @@ void TiePointGrid_setImageInfo(TiePointGrid _this, ImageInfo imageInfo)
 void TiePointGrid_fireImageInfoChanged(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "fireImageInfoChanged", "()V");
@@ -14505,6 +15191,7 @@ void TiePointGrid_fireImageInfoChanged(TiePointGrid _this)
 ImageInfo TiePointGrid_getImageInfo2(TiePointGrid _this, ProgressMonitor pm)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     ImageInfo _result = (ImageInfo) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -14524,6 +15211,7 @@ ImageInfo TiePointGrid_getImageInfo2(TiePointGrid _this, ProgressMonitor pm)
 ImageInfo TiePointGrid_getImageInfo3(TiePointGrid _this, const double* histoSkipAreasElems, int histoSkipAreasLength, ProgressMonitor pm)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jarray histoSkipAreasArray = NULL;
     ImageInfo _result = (ImageInfo) 0;
     if (_method == NULL) {
@@ -14547,6 +15235,7 @@ ImageInfo TiePointGrid_getImageInfo3(TiePointGrid _this, const double* histoSkip
 ImageInfo TiePointGrid_createDefaultImageInfo1(TiePointGrid _this, const double* histoSkipAreasElems, int histoSkipAreasLength, ProgressMonitor pm)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jarray histoSkipAreasArray = NULL;
     ImageInfo _result = (ImageInfo) 0;
     if (_method == NULL) {
@@ -14570,6 +15259,7 @@ ImageInfo TiePointGrid_createDefaultImageInfo1(TiePointGrid _this, const double*
 ImageInfo TiePointGrid_createDefaultImageInfo2(TiePointGrid _this, const double* histoSkipAreasElems, int histoSkipAreasLength, Histogram histogram)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jarray histoSkipAreasArray = NULL;
     ImageInfo _result = (ImageInfo) 0;
     if (_method == NULL) {
@@ -14593,6 +15283,7 @@ ImageInfo TiePointGrid_createDefaultImageInfo2(TiePointGrid _this, const double*
 ProductNodeGroup TiePointGrid_getOverlayMaskGroup(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     ProductNodeGroup _result = (ProductNodeGroup) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -14612,6 +15303,7 @@ ProductNodeGroup TiePointGrid_getOverlayMaskGroup(TiePointGrid _this)
 BufferedImage TiePointGrid_createColorIndexedImage(TiePointGrid _this, ProgressMonitor pm)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     BufferedImage _result = (BufferedImage) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -14631,6 +15323,7 @@ BufferedImage TiePointGrid_createColorIndexedImage(TiePointGrid _this, ProgressM
 BufferedImage TiePointGrid_createRgbImage(TiePointGrid _this, ProgressMonitor pm)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     BufferedImage _result = (BufferedImage) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -14650,6 +15343,7 @@ BufferedImage TiePointGrid_createRgbImage(TiePointGrid _this, ProgressMonitor pm
 byte* TiePointGrid_quantizeRasterData1(TiePointGrid _this, double newMin, double newMax, double gamma, ProgressMonitor pm, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     byte* _result = (byte*) 0;
     jarray _resultArray = NULL;
     if (_method == NULL) {
@@ -14672,6 +15366,7 @@ byte* TiePointGrid_quantizeRasterData1(TiePointGrid _this, double newMin, double
 void TiePointGrid_quantizeRasterData2(TiePointGrid _this, double newMin, double newMax, double gamma, const byte* samplesElems, int samplesLength, int offset, int stride, ProgressMonitor pm)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jarray samplesArray = NULL;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -14693,6 +15388,7 @@ void TiePointGrid_quantizeRasterData2(TiePointGrid _this, double newMin, double 
 IndexValidator TiePointGrid_createPixelValidator(TiePointGrid _this, int lineOffset, ROI roi)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     IndexValidator _result = (IndexValidator) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -14712,6 +15408,7 @@ IndexValidator TiePointGrid_createPixelValidator(TiePointGrid _this, int lineOff
 double TiePointGrid_scale(TiePointGrid _this, double v)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     double _result = (double) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -14731,6 +15428,7 @@ double TiePointGrid_scale(TiePointGrid _this, double v)
 double TiePointGrid_scaleInverse(TiePointGrid _this, double v)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     double _result = (double) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -14750,6 +15448,7 @@ double TiePointGrid_scaleInverse(TiePointGrid _this, double v)
 char* TiePointGrid_getPixelString(TiePointGrid _this, int x, int y)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
     if (_method == NULL) {
@@ -14772,6 +15471,7 @@ char* TiePointGrid_getPixelString(TiePointGrid _this, int x, int y)
 boolean TiePointGrid_isSourceImageSet(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -14791,6 +15491,7 @@ boolean TiePointGrid_isSourceImageSet(TiePointGrid _this)
 MultiLevelImage TiePointGrid_getSourceImage(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     MultiLevelImage _result = (MultiLevelImage) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -14810,6 +15511,7 @@ MultiLevelImage TiePointGrid_getSourceImage(TiePointGrid _this)
 void TiePointGrid_setSourceImage2(TiePointGrid _this, RenderedImage sourceImage)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "setSourceImage", "(Ljava/awt/image/RenderedImage;)V");
@@ -14827,6 +15529,7 @@ void TiePointGrid_setSourceImage2(TiePointGrid _this, RenderedImage sourceImage)
 void TiePointGrid_setSourceImage1(TiePointGrid _this, MultiLevelImage sourceImage)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "setSourceImage", "(Lcom/bc/ceres/glevel/MultiLevelImage;)V");
@@ -14844,6 +15547,7 @@ void TiePointGrid_setSourceImage1(TiePointGrid _this, MultiLevelImage sourceImag
 boolean TiePointGrid_isGeophysicalImageSet(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -14863,6 +15567,7 @@ boolean TiePointGrid_isGeophysicalImageSet(TiePointGrid _this)
 MultiLevelImage TiePointGrid_getGeophysicalImage(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     MultiLevelImage _result = (MultiLevelImage) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -14882,6 +15587,7 @@ MultiLevelImage TiePointGrid_getGeophysicalImage(TiePointGrid _this)
 boolean TiePointGrid_isValidMaskImageSet(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -14901,6 +15607,7 @@ boolean TiePointGrid_isValidMaskImageSet(TiePointGrid _this)
 MultiLevelImage TiePointGrid_getValidMaskImage(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     MultiLevelImage _result = (MultiLevelImage) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -14920,6 +15627,7 @@ MultiLevelImage TiePointGrid_getValidMaskImage(TiePointGrid _this)
 boolean TiePointGrid_isStxSet(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -14939,6 +15647,7 @@ boolean TiePointGrid_isStxSet(TiePointGrid _this)
 Stx TiePointGrid_getStx1(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     Stx _result = (Stx) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -14958,6 +15667,7 @@ Stx TiePointGrid_getStx1(TiePointGrid _this)
 Stx TiePointGrid_getStx2(TiePointGrid _this, boolean accurate, ProgressMonitor pm)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     Stx _result = (Stx) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -14977,6 +15687,7 @@ Stx TiePointGrid_getStx2(TiePointGrid _this, boolean accurate, ProgressMonitor p
 void TiePointGrid_setStx(TiePointGrid _this, Stx stx)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "setStx", "(Lorg/esa/beam/framework/datamodel/Stx;)V");
@@ -14994,6 +15705,7 @@ void TiePointGrid_setStx(TiePointGrid _this, Stx stx)
 Shape TiePointGrid_getValidShape(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     Shape _result = (Shape) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -15013,6 +15725,7 @@ Shape TiePointGrid_getValidShape(TiePointGrid _this)
 ProductNodeGroup TiePointGrid_getRoiMaskGroup(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     ProductNodeGroup _result = (ProductNodeGroup) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -15032,6 +15745,7 @@ ProductNodeGroup TiePointGrid_getRoiMaskGroup(TiePointGrid _this)
 int TiePointGrid_getDataType(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     int _result = (int) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -15051,6 +15765,7 @@ int TiePointGrid_getDataType(TiePointGrid _this)
 dlong TiePointGrid_getNumDataElems(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     dlong _result = (dlong) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -15070,6 +15785,7 @@ dlong TiePointGrid_getNumDataElems(TiePointGrid _this)
 void TiePointGrid_setData(TiePointGrid _this, ProductData data)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "setData", "(Lorg/esa/beam/framework/datamodel/ProductData;)V");
@@ -15087,6 +15803,7 @@ void TiePointGrid_setData(TiePointGrid _this, ProductData data)
 ProductData TiePointGrid_getData(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     ProductData _result = (ProductData) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -15106,6 +15823,7 @@ ProductData TiePointGrid_getData(TiePointGrid _this)
 void TiePointGrid_setDataElems(TiePointGrid _this, Object elems)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "setDataElems", "(Ljava/lang/Object;)V");
@@ -15123,6 +15841,7 @@ void TiePointGrid_setDataElems(TiePointGrid _this, Object elems)
 Object TiePointGrid_getDataElems(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     Object _result = (Object) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -15142,6 +15861,7 @@ Object TiePointGrid_getDataElems(TiePointGrid _this)
 int TiePointGrid_getDataElemSize(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     int _result = (int) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -15161,6 +15881,7 @@ int TiePointGrid_getDataElemSize(TiePointGrid _this)
 void TiePointGrid_setReadOnly(TiePointGrid _this, boolean readOnly)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "setReadOnly", "(Z)V");
@@ -15178,6 +15899,7 @@ void TiePointGrid_setReadOnly(TiePointGrid _this, boolean readOnly)
 boolean TiePointGrid_isReadOnly(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -15197,6 +15919,7 @@ boolean TiePointGrid_isReadOnly(TiePointGrid _this)
 void TiePointGrid_setUnit(TiePointGrid _this, const char* unit)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring unitString = NULL;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -15217,6 +15940,7 @@ void TiePointGrid_setUnit(TiePointGrid _this, const char* unit)
 char* TiePointGrid_getUnit(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
     if (_method == NULL) {
@@ -15239,6 +15963,7 @@ char* TiePointGrid_getUnit(TiePointGrid _this)
 boolean TiePointGrid_isSynthetic(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -15258,6 +15983,7 @@ boolean TiePointGrid_isSynthetic(TiePointGrid _this)
 void TiePointGrid_setSynthetic(TiePointGrid _this, boolean synthetic)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "setSynthetic", "(Z)V");
@@ -15275,6 +16001,7 @@ void TiePointGrid_setSynthetic(TiePointGrid _this, boolean synthetic)
 void TiePointGrid_fireProductNodeDataChanged(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "fireProductNodeDataChanged", "()V");
@@ -15292,6 +16019,7 @@ void TiePointGrid_fireProductNodeDataChanged(TiePointGrid _this)
 dlong TiePointGrid_getRawStorageSize2(TiePointGrid _this, ProductSubsetDef subsetDef)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     dlong _result = (dlong) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -15311,6 +16039,7 @@ dlong TiePointGrid_getRawStorageSize2(TiePointGrid _this, ProductSubsetDef subse
 ProductData TiePointGrid_createCompatibleProductData(TiePointGrid _this, int numElems)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     ProductData _result = (ProductData) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -15330,6 +16059,7 @@ ProductData TiePointGrid_createCompatibleProductData(TiePointGrid _this, int num
 ProductNode TiePointGrid_getOwner(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     ProductNode _result = (ProductNode) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -15349,6 +16079,7 @@ ProductNode TiePointGrid_getOwner(TiePointGrid _this)
 char* TiePointGrid_getName(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
     if (_method == NULL) {
@@ -15371,6 +16102,7 @@ char* TiePointGrid_getName(TiePointGrid _this)
 void TiePointGrid_setName(TiePointGrid _this, const char* name)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring nameString = NULL;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -15391,6 +16123,7 @@ void TiePointGrid_setName(TiePointGrid _this, const char* name)
 char* TiePointGrid_getDescription(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
     if (_method == NULL) {
@@ -15413,6 +16146,7 @@ char* TiePointGrid_getDescription(TiePointGrid _this)
 void TiePointGrid_setDescription(TiePointGrid _this, const char* description)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring descriptionString = NULL;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -15433,6 +16167,7 @@ void TiePointGrid_setDescription(TiePointGrid _this, const char* description)
 boolean TiePointGrid_isModified(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -15452,6 +16187,7 @@ boolean TiePointGrid_isModified(TiePointGrid _this)
 char* TiePointGrid_toString(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
     if (_method == NULL) {
@@ -15474,6 +16210,7 @@ char* TiePointGrid_toString(TiePointGrid _this)
 boolean TiePointGrid_isValidNodeName(const char* name)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring nameString = NULL;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
@@ -15496,6 +16233,7 @@ boolean TiePointGrid_isValidNodeName(const char* name)
 Product TiePointGrid_getProduct(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     Product _result = (Product) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -15515,6 +16253,7 @@ Product TiePointGrid_getProduct(TiePointGrid _this)
 ProductReader TiePointGrid_getProductReader(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     ProductReader _result = (ProductReader) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -15534,6 +16273,7 @@ ProductReader TiePointGrid_getProductReader(TiePointGrid _this)
 ProductWriter TiePointGrid_getProductWriter(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     ProductWriter _result = (ProductWriter) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -15553,6 +16293,7 @@ ProductWriter TiePointGrid_getProductWriter(TiePointGrid _this)
 char* TiePointGrid_getDisplayName(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
     if (_method == NULL) {
@@ -15575,6 +16316,7 @@ char* TiePointGrid_getDisplayName(TiePointGrid _this)
 char* TiePointGrid_getProductRefString(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
     if (_method == NULL) {
@@ -15597,6 +16339,7 @@ char* TiePointGrid_getProductRefString(TiePointGrid _this)
 dlong TiePointGrid_getRawStorageSize1(TiePointGrid _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     dlong _result = (dlong) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -15616,6 +16359,7 @@ dlong TiePointGrid_getRawStorageSize1(TiePointGrid _this)
 void TiePointGrid_fireProductNodeChanged1(TiePointGrid _this, const char* propertyName)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring propertyNameString = NULL;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -15636,6 +16380,7 @@ void TiePointGrid_fireProductNodeChanged1(TiePointGrid _this, const char* proper
 void TiePointGrid_fireProductNodeChanged2(TiePointGrid _this, const char* propertyName, Object oldValue, Object newValue)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring propertyNameString = NULL;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -15656,6 +16401,7 @@ void TiePointGrid_fireProductNodeChanged2(TiePointGrid _this, const char* proper
 void TiePointGrid_removeFromFile(TiePointGrid _this, ProductWriter productWriter)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classTiePointGrid, "removeFromFile", "(Lorg/esa/beam/framework/dataio/ProductWriter;)V");
@@ -15673,6 +16419,7 @@ void TiePointGrid_removeFromFile(TiePointGrid _this, ProductWriter productWriter
 Object TiePointGrid_getExtension(TiePointGrid _this, Class arg0)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     Object _result = (Object) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -15692,6 +16439,7 @@ Object TiePointGrid_getExtension(TiePointGrid _this, Class arg0)
 AngularDirection AngularDirection_newAngularDirection(double azimuth, double zenith)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     AngularDirection _result = (AngularDirection) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -15711,6 +16459,7 @@ AngularDirection AngularDirection_newAngularDirection(double azimuth, double zen
 boolean AngularDirection_equals(AngularDirection _this, Object obj)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -15730,6 +16479,7 @@ boolean AngularDirection_equals(AngularDirection _this, Object obj)
 char* AngularDirection_toString(AngularDirection _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
     if (_method == NULL) {
@@ -15752,6 +16502,7 @@ char* AngularDirection_toString(AngularDirection _this)
 FlagCoding FlagCoding_newFlagCoding(const char* name)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring nameString = NULL;
     FlagCoding _result = (FlagCoding) 0;
     if (_method == NULL) {
@@ -15774,6 +16525,7 @@ FlagCoding FlagCoding_newFlagCoding(const char* name)
 MetadataAttribute FlagCoding_getFlag(FlagCoding _this, const char* name)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring nameString = NULL;
     MetadataAttribute _result = (MetadataAttribute) 0;
     if (_method == NULL) {
@@ -15796,6 +16548,7 @@ MetadataAttribute FlagCoding_getFlag(FlagCoding _this, const char* name)
 char** FlagCoding_getFlagNames(FlagCoding _this, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     char** _result = (char**) 0;
     jarray _resultArray = NULL;
     if (_method == NULL) {
@@ -15818,6 +16571,7 @@ char** FlagCoding_getFlagNames(FlagCoding _this, int* _resultArrayLength)
 MetadataAttribute FlagCoding_addFlag(FlagCoding _this, const char* name, int flagMask, const char* description)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring nameString = NULL;
     jstring descriptionString = NULL;
     MetadataAttribute _result = (MetadataAttribute) 0;
@@ -15843,6 +16597,7 @@ MetadataAttribute FlagCoding_addFlag(FlagCoding _this, const char* name, int fla
 int FlagCoding_getFlagMask(FlagCoding _this, const char* name)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring nameString = NULL;
     int _result = (int) 0;
     if (_method == NULL) {
@@ -15865,6 +16620,7 @@ int FlagCoding_getFlagMask(FlagCoding _this, const char* name)
 void FlagCoding_acceptVisitor(FlagCoding _this, ProductVisitor visitor)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classFlagCoding, "acceptVisitor", "(Lorg/esa/beam/framework/datamodel/ProductVisitor;)V");
@@ -15882,6 +16638,7 @@ void FlagCoding_acceptVisitor(FlagCoding _this, ProductVisitor visitor)
 void FlagCoding_addElement(FlagCoding _this, MetadataElement element)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classFlagCoding, "addElement", "(Lorg/esa/beam/framework/datamodel/MetadataElement;)V");
@@ -15899,6 +16656,7 @@ void FlagCoding_addElement(FlagCoding _this, MetadataElement element)
 void FlagCoding_addAttribute(FlagCoding _this, MetadataAttribute attribute)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classFlagCoding, "addAttribute", "(Lorg/esa/beam/framework/datamodel/MetadataAttribute;)V");
@@ -15916,6 +16674,7 @@ void FlagCoding_addAttribute(FlagCoding _this, MetadataAttribute attribute)
 MetadataAttribute FlagCoding_addSample(FlagCoding _this, const char* name, int value, const char* description)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring nameString = NULL;
     jstring descriptionString = NULL;
     MetadataAttribute _result = (MetadataAttribute) 0;
@@ -15941,6 +16700,7 @@ MetadataAttribute FlagCoding_addSample(FlagCoding _this, const char* name, int v
 int FlagCoding_getSampleCount(FlagCoding _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     int _result = (int) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -15960,6 +16720,7 @@ int FlagCoding_getSampleCount(FlagCoding _this)
 char* FlagCoding_getSampleName(FlagCoding _this, int index)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
     if (_method == NULL) {
@@ -15982,6 +16743,7 @@ char* FlagCoding_getSampleName(FlagCoding _this, int index)
 int FlagCoding_getSampleValue(FlagCoding _this, int index)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     int _result = (int) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -16001,6 +16763,7 @@ int FlagCoding_getSampleValue(FlagCoding _this, int index)
 ProductNodeGroup FlagCoding_getElementGroup(FlagCoding _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     ProductNodeGroup _result = (ProductNodeGroup) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -16020,6 +16783,7 @@ ProductNodeGroup FlagCoding_getElementGroup(FlagCoding _this)
 MetadataElement FlagCoding_getParentElement(FlagCoding _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     MetadataElement _result = (MetadataElement) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -16039,6 +16803,7 @@ MetadataElement FlagCoding_getParentElement(FlagCoding _this)
 void FlagCoding_addElementAt(FlagCoding _this, MetadataElement element, int index)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classFlagCoding, "addElementAt", "(Lorg/esa/beam/framework/datamodel/MetadataElement;I)V");
@@ -16056,6 +16821,7 @@ void FlagCoding_addElementAt(FlagCoding _this, MetadataElement element, int inde
 boolean FlagCoding_removeElement(FlagCoding _this, MetadataElement element)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -16075,6 +16841,7 @@ boolean FlagCoding_removeElement(FlagCoding _this, MetadataElement element)
 int FlagCoding_getNumElements(FlagCoding _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     int _result = (int) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -16094,6 +16861,7 @@ int FlagCoding_getNumElements(FlagCoding _this)
 MetadataElement FlagCoding_getElementAt(FlagCoding _this, int index)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     MetadataElement _result = (MetadataElement) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -16113,6 +16881,7 @@ MetadataElement FlagCoding_getElementAt(FlagCoding _this, int index)
 char** FlagCoding_getElementNames(FlagCoding _this, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     char** _result = (char**) 0;
     jarray _resultArray = NULL;
     if (_method == NULL) {
@@ -16135,6 +16904,7 @@ char** FlagCoding_getElementNames(FlagCoding _this, int* _resultArrayLength)
 MetadataElement* FlagCoding_getElements(FlagCoding _this, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     MetadataElement* _result = (MetadataElement*) 0;
     jarray _resultArray = NULL;
     if (_method == NULL) {
@@ -16157,6 +16927,7 @@ MetadataElement* FlagCoding_getElements(FlagCoding _this, int* _resultArrayLengt
 MetadataElement FlagCoding_getElement(FlagCoding _this, const char* name)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring nameString = NULL;
     MetadataElement _result = (MetadataElement) 0;
     if (_method == NULL) {
@@ -16179,6 +16950,7 @@ MetadataElement FlagCoding_getElement(FlagCoding _this, const char* name)
 boolean FlagCoding_containsElement(FlagCoding _this, const char* name)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring nameString = NULL;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
@@ -16201,6 +16973,7 @@ boolean FlagCoding_containsElement(FlagCoding _this, const char* name)
 int FlagCoding_getElementIndex(FlagCoding _this, MetadataElement element)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     int _result = (int) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -16220,6 +16993,7 @@ int FlagCoding_getElementIndex(FlagCoding _this, MetadataElement element)
 boolean FlagCoding_removeAttribute(FlagCoding _this, MetadataAttribute attribute)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -16239,6 +17013,7 @@ boolean FlagCoding_removeAttribute(FlagCoding _this, MetadataAttribute attribute
 int FlagCoding_getNumAttributes(FlagCoding _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     int _result = (int) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -16258,6 +17033,7 @@ int FlagCoding_getNumAttributes(FlagCoding _this)
 MetadataAttribute FlagCoding_getAttributeAt(FlagCoding _this, int index)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     MetadataAttribute _result = (MetadataAttribute) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -16277,6 +17053,7 @@ MetadataAttribute FlagCoding_getAttributeAt(FlagCoding _this, int index)
 char** FlagCoding_getAttributeNames(FlagCoding _this, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     char** _result = (char**) 0;
     jarray _resultArray = NULL;
     if (_method == NULL) {
@@ -16299,6 +17076,7 @@ char** FlagCoding_getAttributeNames(FlagCoding _this, int* _resultArrayLength)
 MetadataAttribute* FlagCoding_getAttributes(FlagCoding _this, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     MetadataAttribute* _result = (MetadataAttribute*) 0;
     jarray _resultArray = NULL;
     if (_method == NULL) {
@@ -16321,6 +17099,7 @@ MetadataAttribute* FlagCoding_getAttributes(FlagCoding _this, int* _resultArrayL
 MetadataAttribute FlagCoding_getAttribute(FlagCoding _this, const char* name)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring nameString = NULL;
     MetadataAttribute _result = (MetadataAttribute) 0;
     if (_method == NULL) {
@@ -16343,6 +17122,7 @@ MetadataAttribute FlagCoding_getAttribute(FlagCoding _this, const char* name)
 boolean FlagCoding_containsAttribute(FlagCoding _this, const char* name)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring nameString = NULL;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
@@ -16365,6 +17145,7 @@ boolean FlagCoding_containsAttribute(FlagCoding _this, const char* name)
 int FlagCoding_getAttributeIndex(FlagCoding _this, MetadataAttribute attribute)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     int _result = (int) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -16384,6 +17165,7 @@ int FlagCoding_getAttributeIndex(FlagCoding _this, MetadataAttribute attribute)
 double FlagCoding_getAttributeDouble(FlagCoding _this, const char* name, double defaultValue)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring nameString = NULL;
     double _result = (double) 0;
     if (_method == NULL) {
@@ -16406,6 +17188,7 @@ double FlagCoding_getAttributeDouble(FlagCoding _this, const char* name, double 
 ProductData_UTC FlagCoding_getAttributeUTC(FlagCoding _this, const char* name, ProductData_UTC defaultValue)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring nameString = NULL;
     ProductData_UTC _result = (ProductData_UTC) 0;
     if (_method == NULL) {
@@ -16428,6 +17211,7 @@ ProductData_UTC FlagCoding_getAttributeUTC(FlagCoding _this, const char* name, P
 int FlagCoding_getAttributeInt(FlagCoding _this, const char* name, int defaultValue)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring nameString = NULL;
     int _result = (int) 0;
     if (_method == NULL) {
@@ -16450,6 +17234,7 @@ int FlagCoding_getAttributeInt(FlagCoding _this, const char* name, int defaultVa
 void FlagCoding_setAttributeInt(FlagCoding _this, const char* name, int value)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring nameString = NULL;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -16470,6 +17255,7 @@ void FlagCoding_setAttributeInt(FlagCoding _this, const char* name, int value)
 void FlagCoding_setAttributeDouble(FlagCoding _this, const char* name, double value)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring nameString = NULL;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -16490,6 +17276,7 @@ void FlagCoding_setAttributeDouble(FlagCoding _this, const char* name, double va
 void FlagCoding_setAttributeUTC(FlagCoding _this, const char* name, ProductData_UTC value)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring nameString = NULL;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -16510,6 +17297,7 @@ void FlagCoding_setAttributeUTC(FlagCoding _this, const char* name, ProductData_
 char* FlagCoding_getAttributeString(FlagCoding _this, const char* name, const char* defaultValue)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring nameString = NULL;
     jstring defaultValueString = NULL;
     char* _result = (char*) 0;
@@ -16538,6 +17326,7 @@ char* FlagCoding_getAttributeString(FlagCoding _this, const char* name, const ch
 void FlagCoding_setAttributeString(FlagCoding _this, const char* name, const char* value)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring nameString = NULL;
     jstring valueString = NULL;
     if (_method == NULL) {
@@ -16561,6 +17350,7 @@ void FlagCoding_setAttributeString(FlagCoding _this, const char* name, const cha
 void FlagCoding_setModified(FlagCoding _this, boolean modified)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classFlagCoding, "setModified", "(Z)V");
@@ -16578,6 +17368,7 @@ void FlagCoding_setModified(FlagCoding _this, boolean modified)
 MetadataElement FlagCoding_createDeepClone(FlagCoding _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     MetadataElement _result = (MetadataElement) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -16597,6 +17388,7 @@ MetadataElement FlagCoding_createDeepClone(FlagCoding _this)
 void FlagCoding_dispose(FlagCoding _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classFlagCoding, "dispose", "()V");
@@ -16614,6 +17406,7 @@ void FlagCoding_dispose(FlagCoding _this)
 ProductNode FlagCoding_getOwner(FlagCoding _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     ProductNode _result = (ProductNode) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -16633,6 +17426,7 @@ ProductNode FlagCoding_getOwner(FlagCoding _this)
 char* FlagCoding_getName(FlagCoding _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
     if (_method == NULL) {
@@ -16655,6 +17449,7 @@ char* FlagCoding_getName(FlagCoding _this)
 void FlagCoding_setName(FlagCoding _this, const char* name)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring nameString = NULL;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -16675,6 +17470,7 @@ void FlagCoding_setName(FlagCoding _this, const char* name)
 char* FlagCoding_getDescription(FlagCoding _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
     if (_method == NULL) {
@@ -16697,6 +17493,7 @@ char* FlagCoding_getDescription(FlagCoding _this)
 void FlagCoding_setDescription(FlagCoding _this, const char* description)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring descriptionString = NULL;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -16717,6 +17514,7 @@ void FlagCoding_setDescription(FlagCoding _this, const char* description)
 boolean FlagCoding_isModified(FlagCoding _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -16736,6 +17534,7 @@ boolean FlagCoding_isModified(FlagCoding _this)
 char* FlagCoding_toString(FlagCoding _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
     if (_method == NULL) {
@@ -16758,6 +17557,7 @@ char* FlagCoding_toString(FlagCoding _this)
 boolean FlagCoding_isValidNodeName(const char* name)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring nameString = NULL;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
@@ -16780,6 +17580,7 @@ boolean FlagCoding_isValidNodeName(const char* name)
 Product FlagCoding_getProduct(FlagCoding _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     Product _result = (Product) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -16799,6 +17600,7 @@ Product FlagCoding_getProduct(FlagCoding _this)
 ProductReader FlagCoding_getProductReader(FlagCoding _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     ProductReader _result = (ProductReader) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -16818,6 +17620,7 @@ ProductReader FlagCoding_getProductReader(FlagCoding _this)
 ProductWriter FlagCoding_getProductWriter(FlagCoding _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     ProductWriter _result = (ProductWriter) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -16837,6 +17640,7 @@ ProductWriter FlagCoding_getProductWriter(FlagCoding _this)
 char* FlagCoding_getDisplayName(FlagCoding _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
     if (_method == NULL) {
@@ -16859,6 +17663,7 @@ char* FlagCoding_getDisplayName(FlagCoding _this)
 char* FlagCoding_getProductRefString(FlagCoding _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
     if (_method == NULL) {
@@ -16881,6 +17686,7 @@ char* FlagCoding_getProductRefString(FlagCoding _this)
 void FlagCoding_updateExpression(FlagCoding _this, const char* oldExternalName, const char* newExternalName)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring oldExternalNameString = NULL;
     jstring newExternalNameString = NULL;
     if (_method == NULL) {
@@ -16904,6 +17710,7 @@ void FlagCoding_updateExpression(FlagCoding _this, const char* oldExternalName, 
 void FlagCoding_removeFromFile(FlagCoding _this, ProductWriter productWriter)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classFlagCoding, "removeFromFile", "(Lorg/esa/beam/framework/dataio/ProductWriter;)V");
@@ -16921,6 +17728,7 @@ void FlagCoding_removeFromFile(FlagCoding _this, ProductWriter productWriter)
 Object FlagCoding_getExtension(FlagCoding _this, Class arg0)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     Object _result = (Object) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -16940,6 +17748,7 @@ Object FlagCoding_getExtension(FlagCoding _this, Class arg0)
 int Map_size(Map _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     int _result = (int) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -16959,6 +17768,7 @@ int Map_size(Map _this)
 boolean Map_isEmpty(Map _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -16978,6 +17788,7 @@ boolean Map_isEmpty(Map _this)
 boolean Map_containsKey(Map _this, Object arg0)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -16997,6 +17808,7 @@ boolean Map_containsKey(Map _this, Object arg0)
 boolean Map_containsValue(Map _this, Object arg0)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -17016,6 +17828,7 @@ boolean Map_containsValue(Map _this, Object arg0)
 Object Map_get(Map _this, Object arg0)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     Object _result = (Object) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -17035,6 +17848,7 @@ Object Map_get(Map _this, Object arg0)
 Object Map_put(Map _this, Object arg0, Object arg1)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     Object _result = (Object) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -17054,6 +17868,7 @@ Object Map_put(Map _this, Object arg0, Object arg1)
 Object Map_remove(Map _this, Object arg0)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     Object _result = (Object) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -17073,6 +17888,7 @@ Object Map_remove(Map _this, Object arg0)
 void Map_putAll(Map _this, Map arg0)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classMap, "putAll", "(Ljava/util/Map;)V");
@@ -17090,6 +17906,7 @@ void Map_putAll(Map _this, Map arg0)
 void Map_clear(Map _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classMap, "clear", "()V");
@@ -17107,6 +17924,7 @@ void Map_clear(Map _this)
 Set Map_keySet(Map _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     Set _result = (Set) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -17126,6 +17944,7 @@ Set Map_keySet(Map _this)
 Collection Map_values(Map _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     Collection _result = (Collection) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -17145,6 +17964,7 @@ Collection Map_values(Map _this)
 Set Map_entrySet(Map _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     Set _result = (Set) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -17164,6 +17984,7 @@ Set Map_entrySet(Map _this)
 boolean Map_equals(Map _this, Object arg0)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -17183,6 +18004,7 @@ boolean Map_equals(Map _this, Object arg0)
 int Map_hashCode(Map _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     int _result = (int) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -17202,6 +18024,7 @@ int Map_hashCode(Map _this)
 ProductReaderPlugIn ProductReader_getReaderPlugIn(ProductReader _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     ProductReaderPlugIn _result = (ProductReaderPlugIn) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -17221,6 +18044,7 @@ ProductReaderPlugIn ProductReader_getReaderPlugIn(ProductReader _this)
 Object ProductReader_getInput(ProductReader _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     Object _result = (Object) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -17240,6 +18064,7 @@ Object ProductReader_getInput(ProductReader _this)
 ProductSubsetDef ProductReader_getSubsetDef(ProductReader _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     ProductSubsetDef _result = (ProductSubsetDef) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -17259,6 +18084,7 @@ ProductSubsetDef ProductReader_getSubsetDef(ProductReader _this)
 Product ProductReader_readProductNodes(ProductReader _this, Object input, ProductSubsetDef subsetDef)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     Product _result = (Product) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -17278,6 +18104,7 @@ Product ProductReader_readProductNodes(ProductReader _this, Object input, Produc
 void ProductReader_readBandRasterData(ProductReader _this, Band destBand, int destOffsetX, int destOffsetY, int destWidth, int destHeight, ProductData destBuffer, ProgressMonitor pm)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classProductReader, "readBandRasterData", "(Lorg/esa/beam/framework/datamodel/Band;IIIILorg/esa/beam/framework/datamodel/ProductData;Lcom/bc/ceres/core/ProgressMonitor;)V");
@@ -17295,6 +18122,7 @@ void ProductReader_readBandRasterData(ProductReader _this, Band destBand, int de
 void ProductReader_close(ProductReader _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classProductReader, "close", "()V");
@@ -17312,6 +18140,7 @@ void ProductReader_close(ProductReader _this)
 RGBChannelDef RGBChannelDef_newRGBChannelDef()
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     RGBChannelDef _result = (RGBChannelDef) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -17331,6 +18160,7 @@ RGBChannelDef RGBChannelDef_newRGBChannelDef()
 char* RGBChannelDef_getSourceName(RGBChannelDef _this, int index)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
     if (_method == NULL) {
@@ -17353,6 +18183,7 @@ char* RGBChannelDef_getSourceName(RGBChannelDef _this, int index)
 void RGBChannelDef_setSourceName(RGBChannelDef _this, int index, const char* sourceName)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring sourceNameString = NULL;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -17373,6 +18204,7 @@ void RGBChannelDef_setSourceName(RGBChannelDef _this, int index, const char* sou
 char** RGBChannelDef_getSourceNames(RGBChannelDef _this, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     char** _result = (char**) 0;
     jarray _resultArray = NULL;
     if (_method == NULL) {
@@ -17395,6 +18227,7 @@ char** RGBChannelDef_getSourceNames(RGBChannelDef _this, int* _resultArrayLength
 void RGBChannelDef_setSourceNames(RGBChannelDef _this, const char** bandNamesElems, int bandNamesLength)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jobjectArray bandNamesArray = NULL;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -17415,6 +18248,7 @@ void RGBChannelDef_setSourceNames(RGBChannelDef _this, const char** bandNamesEle
 boolean RGBChannelDef_isAlphaUsed(RGBChannelDef _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -17434,6 +18268,7 @@ boolean RGBChannelDef_isAlphaUsed(RGBChannelDef _this)
 boolean RGBChannelDef_isGammaUsed(RGBChannelDef _this, int index)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -17453,6 +18288,7 @@ boolean RGBChannelDef_isGammaUsed(RGBChannelDef _this, int index)
 double RGBChannelDef_getGamma(RGBChannelDef _this, int index)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     double _result = (double) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -17472,6 +18308,7 @@ double RGBChannelDef_getGamma(RGBChannelDef _this, int index)
 void RGBChannelDef_setGamma(RGBChannelDef _this, int index, double gamma)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classRGBChannelDef, "setGamma", "(ID)V");
@@ -17489,6 +18326,7 @@ void RGBChannelDef_setGamma(RGBChannelDef _this, int index, double gamma)
 double RGBChannelDef_getMinDisplaySample(RGBChannelDef _this, int index)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     double _result = (double) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -17508,6 +18346,7 @@ double RGBChannelDef_getMinDisplaySample(RGBChannelDef _this, int index)
 void RGBChannelDef_setMinDisplaySample(RGBChannelDef _this, int index, double min)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classRGBChannelDef, "setMinDisplaySample", "(ID)V");
@@ -17525,6 +18364,7 @@ void RGBChannelDef_setMinDisplaySample(RGBChannelDef _this, int index, double mi
 double RGBChannelDef_getMaxDisplaySample(RGBChannelDef _this, int index)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     double _result = (double) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -17544,6 +18384,7 @@ double RGBChannelDef_getMaxDisplaySample(RGBChannelDef _this, int index)
 void RGBChannelDef_setMaxDisplaySample(RGBChannelDef _this, int index, double max)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classRGBChannelDef, "setMaxDisplaySample", "(ID)V");
@@ -17561,6 +18402,7 @@ void RGBChannelDef_setMaxDisplaySample(RGBChannelDef _this, int index, double ma
 Object RGBChannelDef_clone(RGBChannelDef _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     Object _result = (Object) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -17580,6 +18422,7 @@ Object RGBChannelDef_clone(RGBChannelDef _this)
 ProductData ProductData_createInstance1(int type)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     ProductData _result = (ProductData) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -17599,6 +18442,7 @@ ProductData ProductData_createInstance1(int type)
 ProductData ProductData_createInstance2(int type, int numElems)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     ProductData _result = (ProductData) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -17618,6 +18462,7 @@ ProductData ProductData_createInstance2(int type, int numElems)
 ProductData ProductData_createInstance3(int type, Object data)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     ProductData _result = (ProductData) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -17637,6 +18482,7 @@ ProductData ProductData_createInstance3(int type, Object data)
 ProductData ProductData_createInstance5(const byte* elemsElems, int elemsLength)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jarray elemsArray = NULL;
     ProductData _result = (ProductData) 0;
     if (_method == NULL) {
@@ -17660,6 +18506,7 @@ ProductData ProductData_createInstance5(const byte* elemsElems, int elemsLength)
 ProductData ProductData_createUnsignedInstance1(const byte* elemsElems, int elemsLength)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jarray elemsArray = NULL;
     ProductData _result = (ProductData) 0;
     if (_method == NULL) {
@@ -17683,6 +18530,7 @@ ProductData ProductData_createUnsignedInstance1(const byte* elemsElems, int elem
 ProductData ProductData_createInstance10(const short* elemsElems, int elemsLength)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jarray elemsArray = NULL;
     ProductData _result = (ProductData) 0;
     if (_method == NULL) {
@@ -17706,6 +18554,7 @@ ProductData ProductData_createInstance10(const short* elemsElems, int elemsLengt
 ProductData ProductData_createUnsignedInstance3(const short* elemsElems, int elemsLength)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jarray elemsArray = NULL;
     ProductData _result = (ProductData) 0;
     if (_method == NULL) {
@@ -17729,6 +18578,7 @@ ProductData ProductData_createUnsignedInstance3(const short* elemsElems, int ele
 ProductData ProductData_createInstance8(const int* elemsElems, int elemsLength)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jarray elemsArray = NULL;
     ProductData _result = (ProductData) 0;
     if (_method == NULL) {
@@ -17752,6 +18602,7 @@ ProductData ProductData_createInstance8(const int* elemsElems, int elemsLength)
 ProductData ProductData_createUnsignedInstance2(const int* elemsElems, int elemsLength)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jarray elemsArray = NULL;
     ProductData _result = (ProductData) 0;
     if (_method == NULL) {
@@ -17775,6 +18626,7 @@ ProductData ProductData_createUnsignedInstance2(const int* elemsElems, int elems
 ProductData ProductData_createInstance9(const dlong* elemsElems, int elemsLength)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jarray elemsArray = NULL;
     ProductData _result = (ProductData) 0;
     if (_method == NULL) {
@@ -17798,6 +18650,7 @@ ProductData ProductData_createInstance9(const dlong* elemsElems, int elemsLength
 ProductData ProductData_createInstance4(const char* strData)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring strDataString = NULL;
     ProductData _result = (ProductData) 0;
     if (_method == NULL) {
@@ -17820,6 +18673,7 @@ ProductData ProductData_createInstance4(const char* strData)
 ProductData ProductData_createInstance7(const float* elemsElems, int elemsLength)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jarray elemsArray = NULL;
     ProductData _result = (ProductData) 0;
     if (_method == NULL) {
@@ -17843,6 +18697,7 @@ ProductData ProductData_createInstance7(const float* elemsElems, int elemsLength
 ProductData ProductData_createInstance6(const double* elemsElems, int elemsLength)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jarray elemsArray = NULL;
     ProductData _result = (ProductData) 0;
     if (_method == NULL) {
@@ -17866,6 +18721,7 @@ ProductData ProductData_createInstance6(const double* elemsElems, int elemsLengt
 int ProductData_getType1(ProductData _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     int _result = (int) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -17885,6 +18741,7 @@ int ProductData_getType1(ProductData _this)
 int ProductData_getElemSize2(int type)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     int _result = (int) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -17904,6 +18761,7 @@ int ProductData_getElemSize2(int type)
 int ProductData_getElemSize1(ProductData _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     int _result = (int) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -17923,6 +18781,7 @@ int ProductData_getElemSize1(ProductData _this)
 char* ProductData_getTypeString2(int type)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
     if (_method == NULL) {
@@ -17945,6 +18804,7 @@ char* ProductData_getTypeString2(int type)
 int ProductData_getType2(const char* type)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring typeString = NULL;
     int _result = (int) 0;
     if (_method == NULL) {
@@ -17967,6 +18827,7 @@ int ProductData_getType2(const char* type)
 char* ProductData_getTypeString1(ProductData _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
     if (_method == NULL) {
@@ -17989,6 +18850,7 @@ char* ProductData_getTypeString1(ProductData _this)
 boolean ProductData_isInt(ProductData _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -18008,6 +18870,7 @@ boolean ProductData_isInt(ProductData _this)
 boolean ProductData_isIntType(int type)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -18027,6 +18890,7 @@ boolean ProductData_isIntType(int type)
 boolean ProductData_isSigned(ProductData _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -18046,6 +18910,7 @@ boolean ProductData_isSigned(ProductData _this)
 boolean ProductData_isUnsigned(ProductData _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -18065,6 +18930,7 @@ boolean ProductData_isUnsigned(ProductData _this)
 boolean ProductData_isUIntType(int type)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -18084,6 +18950,7 @@ boolean ProductData_isUIntType(int type)
 boolean ProductData_isFloatingPointType(int type)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -18103,6 +18970,7 @@ boolean ProductData_isFloatingPointType(int type)
 boolean ProductData_isScalar(ProductData _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -18122,6 +18990,7 @@ boolean ProductData_isScalar(ProductData _this)
 int ProductData_getNumElems(ProductData _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     int _result = (int) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -18141,6 +19010,7 @@ int ProductData_getNumElems(ProductData _this)
 int ProductData_getElemInt(ProductData _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     int _result = (int) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -18160,6 +19030,7 @@ int ProductData_getElemInt(ProductData _this)
 dlong ProductData_getElemUInt(ProductData _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     dlong _result = (dlong) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -18179,6 +19050,7 @@ dlong ProductData_getElemUInt(ProductData _this)
 float ProductData_getElemFloat(ProductData _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     float _result = (float) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -18198,6 +19070,7 @@ float ProductData_getElemFloat(ProductData _this)
 double ProductData_getElemDouble(ProductData _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     double _result = (double) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -18217,6 +19090,7 @@ double ProductData_getElemDouble(ProductData _this)
 char* ProductData_getElemString(ProductData _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
     if (_method == NULL) {
@@ -18239,6 +19113,7 @@ char* ProductData_getElemString(ProductData _this)
 boolean ProductData_getElemBoolean(ProductData _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -18258,6 +19133,7 @@ boolean ProductData_getElemBoolean(ProductData _this)
 int ProductData_getElemIntAt(ProductData _this, int index)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     int _result = (int) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -18277,6 +19153,7 @@ int ProductData_getElemIntAt(ProductData _this, int index)
 dlong ProductData_getElemUIntAt(ProductData _this, int index)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     dlong _result = (dlong) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -18296,6 +19173,7 @@ dlong ProductData_getElemUIntAt(ProductData _this, int index)
 float ProductData_getElemFloatAt(ProductData _this, int index)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     float _result = (float) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -18315,6 +19193,7 @@ float ProductData_getElemFloatAt(ProductData _this, int index)
 double ProductData_getElemDoubleAt(ProductData _this, int index)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     double _result = (double) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -18334,6 +19213,7 @@ double ProductData_getElemDoubleAt(ProductData _this, int index)
 char* ProductData_getElemStringAt(ProductData _this, int index)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
     if (_method == NULL) {
@@ -18356,6 +19236,7 @@ char* ProductData_getElemStringAt(ProductData _this, int index)
 boolean ProductData_getElemBooleanAt(ProductData _this, int index)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -18375,6 +19256,7 @@ boolean ProductData_getElemBooleanAt(ProductData _this, int index)
 void ProductData_setElemInt(ProductData _this, int value)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classProductData, "setElemInt", "(I)V");
@@ -18392,6 +19274,7 @@ void ProductData_setElemInt(ProductData _this, int value)
 void ProductData_setElemUInt(ProductData _this, dlong value)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classProductData, "setElemUInt", "(J)V");
@@ -18409,6 +19292,7 @@ void ProductData_setElemUInt(ProductData _this, dlong value)
 void ProductData_setElemFloat(ProductData _this, float value)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classProductData, "setElemFloat", "(F)V");
@@ -18426,6 +19310,7 @@ void ProductData_setElemFloat(ProductData _this, float value)
 void ProductData_setElemDouble(ProductData _this, double value)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classProductData, "setElemDouble", "(D)V");
@@ -18443,6 +19328,7 @@ void ProductData_setElemDouble(ProductData _this, double value)
 void ProductData_setElemString(ProductData _this, const char* value)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring valueString = NULL;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -18463,6 +19349,7 @@ void ProductData_setElemString(ProductData _this, const char* value)
 void ProductData_setElemBoolean(ProductData _this, boolean value)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classProductData, "setElemBoolean", "(Z)V");
@@ -18480,6 +19367,7 @@ void ProductData_setElemBoolean(ProductData _this, boolean value)
 void ProductData_setElemIntAt(ProductData _this, int index, int value)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classProductData, "setElemIntAt", "(II)V");
@@ -18497,6 +19385,7 @@ void ProductData_setElemIntAt(ProductData _this, int index, int value)
 void ProductData_setElemUIntAt(ProductData _this, int index, dlong value)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classProductData, "setElemUIntAt", "(IJ)V");
@@ -18514,6 +19403,7 @@ void ProductData_setElemUIntAt(ProductData _this, int index, dlong value)
 void ProductData_setElemFloatAt(ProductData _this, int index, float value)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classProductData, "setElemFloatAt", "(IF)V");
@@ -18531,6 +19421,7 @@ void ProductData_setElemFloatAt(ProductData _this, int index, float value)
 void ProductData_setElemDoubleAt(ProductData _this, int index, double value)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classProductData, "setElemDoubleAt", "(ID)V");
@@ -18548,6 +19439,7 @@ void ProductData_setElemDoubleAt(ProductData _this, int index, double value)
 void ProductData_setElemStringAt(ProductData _this, int index, const char* value)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring valueString = NULL;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -18568,6 +19460,7 @@ void ProductData_setElemStringAt(ProductData _this, int index, const char* value
 void ProductData_setElemBooleanAt(ProductData _this, int index, boolean value)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classProductData, "setElemBooleanAt", "(IZ)V");
@@ -18585,6 +19478,7 @@ void ProductData_setElemBooleanAt(ProductData _this, int index, boolean value)
 Object ProductData_getElems(ProductData _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     Object _result = (Object) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -18604,6 +19498,7 @@ Object ProductData_getElems(ProductData _this)
 void ProductData_setElems(ProductData _this, Object data)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classProductData, "setElems", "(Ljava/lang/Object;)V");
@@ -18621,6 +19516,7 @@ void ProductData_setElems(ProductData _this, Object data)
 void ProductData_readFrom4(ProductData _this, ImageInputStream input)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classProductData, "readFrom", "(Ljavax/imageio/stream/ImageInputStream;)V");
@@ -18638,6 +19534,7 @@ void ProductData_readFrom4(ProductData _this, ImageInputStream input)
 void ProductData_readFrom3(ProductData _this, int pos, ImageInputStream input)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classProductData, "readFrom", "(ILjavax/imageio/stream/ImageInputStream;)V");
@@ -18655,6 +19552,7 @@ void ProductData_readFrom3(ProductData _this, int pos, ImageInputStream input)
 void ProductData_readFrom1(ProductData _this, int startPos, int numElems, ImageInputStream input)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classProductData, "readFrom", "(IILjavax/imageio/stream/ImageInputStream;)V");
@@ -18672,6 +19570,7 @@ void ProductData_readFrom1(ProductData _this, int startPos, int numElems, ImageI
 void ProductData_readFrom2(ProductData _this, int startPos, int numElems, ImageInputStream input, dlong inputPos)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classProductData, "readFrom", "(IILjavax/imageio/stream/ImageInputStream;J)V");
@@ -18689,6 +19588,7 @@ void ProductData_readFrom2(ProductData _this, int startPos, int numElems, ImageI
 void ProductData_writeTo4(ProductData _this, ImageOutputStream output)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classProductData, "writeTo", "(Ljavax/imageio/stream/ImageOutputStream;)V");
@@ -18706,6 +19606,7 @@ void ProductData_writeTo4(ProductData _this, ImageOutputStream output)
 void ProductData_writeTo3(ProductData _this, int pos, ImageOutputStream output)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classProductData, "writeTo", "(ILjavax/imageio/stream/ImageOutputStream;)V");
@@ -18723,6 +19624,7 @@ void ProductData_writeTo3(ProductData _this, int pos, ImageOutputStream output)
 void ProductData_writeTo1(ProductData _this, int startPos, int numElems, ImageOutputStream output)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classProductData, "writeTo", "(IILjavax/imageio/stream/ImageOutputStream;)V");
@@ -18740,6 +19642,7 @@ void ProductData_writeTo1(ProductData _this, int startPos, int numElems, ImageOu
 void ProductData_writeTo2(ProductData _this, int startPos, int numElems, ImageOutputStream output, dlong outputPos)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classProductData, "writeTo", "(IILjavax/imageio/stream/ImageOutputStream;J)V");
@@ -18757,6 +19660,7 @@ void ProductData_writeTo2(ProductData _this, int startPos, int numElems, ImageOu
 char* ProductData_toString(ProductData _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
     if (_method == NULL) {
@@ -18779,6 +19683,7 @@ char* ProductData_toString(ProductData _this)
 int ProductData_hashCode(ProductData _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     int _result = (int) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -18798,6 +19703,7 @@ int ProductData_hashCode(ProductData _this)
 boolean ProductData_equals(ProductData _this, Object other)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -18817,6 +19723,7 @@ boolean ProductData_equals(ProductData _this, Object other)
 boolean ProductData_equalElems(ProductData _this, ProductData other)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -18836,6 +19743,7 @@ boolean ProductData_equalElems(ProductData _this, ProductData other)
 void ProductData_dispose(ProductData _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classProductData, "dispose", "()V");
@@ -18853,6 +19761,7 @@ void ProductData_dispose(ProductData _this)
 GeoPos GeoPos_newGeoPos(float lat, float lon)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     GeoPos _result = (GeoPos) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -18872,6 +19781,7 @@ GeoPos GeoPos_newGeoPos(float lat, float lon)
 float GeoPos_getLat(GeoPos _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     float _result = (float) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -18891,6 +19801,7 @@ float GeoPos_getLat(GeoPos _this)
 float GeoPos_getLon(GeoPos _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     float _result = (float) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -18910,6 +19821,7 @@ float GeoPos_getLon(GeoPos _this)
 void GeoPos_setLocation(GeoPos _this, float lat, float lon)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classGeoPos, "setLocation", "(FF)V");
@@ -18927,6 +19839,7 @@ void GeoPos_setLocation(GeoPos _this, float lat, float lon)
 boolean GeoPos_isValid(GeoPos _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -18946,6 +19859,7 @@ boolean GeoPos_isValid(GeoPos _this)
 boolean GeoPos_areValid(const GeoPos aElems, int aLength)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jarray aArray = NULL;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
@@ -18968,6 +19882,7 @@ boolean GeoPos_areValid(const GeoPos aElems, int aLength)
 void GeoPos_setInvalid(GeoPos _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classGeoPos, "setInvalid", "()V");
@@ -18985,6 +19900,7 @@ void GeoPos_setInvalid(GeoPos _this)
 boolean GeoPos_equals(GeoPos _this, Object obj)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -19004,6 +19920,7 @@ boolean GeoPos_equals(GeoPos _this, Object obj)
 int GeoPos_hashCode(GeoPos _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     int _result = (int) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -19023,6 +19940,7 @@ int GeoPos_hashCode(GeoPos _this)
 char* GeoPos_toString(GeoPos _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
     if (_method == NULL) {
@@ -19045,6 +19963,7 @@ char* GeoPos_toString(GeoPos _this)
 void GeoPos_normalize(GeoPos _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classGeoPos, "normalize", "()V");
@@ -19062,6 +19981,7 @@ void GeoPos_normalize(GeoPos _this)
 float GeoPos_normalizeLon(float lon)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     float _result = (float) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -19081,6 +20001,7 @@ float GeoPos_normalizeLon(float lon)
 char* GeoPos_getLatString(GeoPos _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
     if (_method == NULL) {
@@ -19103,6 +20024,7 @@ char* GeoPos_getLatString(GeoPos _this)
 char* GeoPos_getLonString(GeoPos _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
     if (_method == NULL) {
@@ -19125,6 +20047,7 @@ char* GeoPos_getLonString(GeoPos _this)
 ProductNodeGroup ProductNodeGroup_newProductNodeGroup(const char* name)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring nameString = NULL;
     ProductNodeGroup _result = (ProductNodeGroup) 0;
     if (_method == NULL) {
@@ -19147,6 +20070,7 @@ ProductNodeGroup ProductNodeGroup_newProductNodeGroup(const char* name)
 boolean ProductNodeGroup_isTakingOverNodeOwnership(ProductNodeGroup _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -19166,6 +20090,7 @@ boolean ProductNodeGroup_isTakingOverNodeOwnership(ProductNodeGroup _this)
 int ProductNodeGroup_getNodeCount(ProductNodeGroup _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     int _result = (int) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -19185,6 +20110,7 @@ int ProductNodeGroup_getNodeCount(ProductNodeGroup _this)
 ProductNode ProductNodeGroup_getAt(ProductNodeGroup _this, int index)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     ProductNode _result = (ProductNode) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -19204,6 +20130,7 @@ ProductNode ProductNodeGroup_getAt(ProductNodeGroup _this, int index)
 char** ProductNodeGroup_getNodeDisplayNames(ProductNodeGroup _this, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     char** _result = (char**) 0;
     jarray _resultArray = NULL;
     if (_method == NULL) {
@@ -19226,6 +20153,7 @@ char** ProductNodeGroup_getNodeDisplayNames(ProductNodeGroup _this, int* _result
 char** ProductNodeGroup_getNodeNames(ProductNodeGroup _this, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     char** _result = (char**) 0;
     jarray _resultArray = NULL;
     if (_method == NULL) {
@@ -19248,6 +20176,7 @@ char** ProductNodeGroup_getNodeNames(ProductNodeGroup _this, int* _resultArrayLe
 int ProductNodeGroup_indexOfName(ProductNodeGroup _this, const char* name)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring nameString = NULL;
     int _result = (int) 0;
     if (_method == NULL) {
@@ -19270,6 +20199,7 @@ int ProductNodeGroup_indexOfName(ProductNodeGroup _this, const char* name)
 int ProductNodeGroup_indexOf(ProductNodeGroup _this, ProductNode element)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     int _result = (int) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -19289,6 +20219,7 @@ int ProductNodeGroup_indexOf(ProductNodeGroup _this, ProductNode element)
 ProductNode ProductNodeGroup_getByDisplayName(ProductNodeGroup _this, const char* displayName)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring displayNameString = NULL;
     ProductNode _result = (ProductNode) 0;
     if (_method == NULL) {
@@ -19311,6 +20242,7 @@ ProductNode ProductNodeGroup_getByDisplayName(ProductNodeGroup _this, const char
 ProductNode ProductNodeGroup_get(ProductNodeGroup _this, const char* name)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring nameString = NULL;
     ProductNode _result = (ProductNode) 0;
     if (_method == NULL) {
@@ -19333,6 +20265,7 @@ ProductNode ProductNodeGroup_get(ProductNodeGroup _this, const char* name)
 boolean ProductNodeGroup_containsName(ProductNodeGroup _this, const char* name)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring nameString = NULL;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
@@ -19355,6 +20288,7 @@ boolean ProductNodeGroup_containsName(ProductNodeGroup _this, const char* name)
 boolean ProductNodeGroup_contains(ProductNodeGroup _this, ProductNode node)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -19374,6 +20308,7 @@ boolean ProductNodeGroup_contains(ProductNodeGroup _this, ProductNode node)
 boolean ProductNodeGroup_add(ProductNodeGroup _this, ProductNode node)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -19393,6 +20328,7 @@ boolean ProductNodeGroup_add(ProductNodeGroup _this, ProductNode node)
 void ProductNodeGroup_addAt(ProductNodeGroup _this, int index, ProductNode node)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classProductNodeGroup, "add", "(ILorg/esa/beam/framework/datamodel/ProductNode;)V");
@@ -19410,6 +20346,7 @@ void ProductNodeGroup_addAt(ProductNodeGroup _this, int index, ProductNode node)
 boolean ProductNodeGroup_remove(ProductNodeGroup _this, ProductNode node)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -19429,6 +20366,7 @@ boolean ProductNodeGroup_remove(ProductNodeGroup _this, ProductNode node)
 void ProductNodeGroup_removeAll(ProductNodeGroup _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classProductNodeGroup, "removeAll", "()V");
@@ -19446,6 +20384,7 @@ void ProductNodeGroup_removeAll(ProductNodeGroup _this)
 void ProductNodeGroup_clearRemovedList(ProductNodeGroup _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classProductNodeGroup, "clearRemovedList", "()V");
@@ -19463,6 +20402,7 @@ void ProductNodeGroup_clearRemovedList(ProductNodeGroup _this)
 Collection ProductNodeGroup_getRemovedNodes(ProductNodeGroup _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     Collection _result = (Collection) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -19482,6 +20422,7 @@ Collection ProductNodeGroup_getRemovedNodes(ProductNodeGroup _this)
 void ProductNodeGroup_setModified(ProductNodeGroup _this, boolean modified)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classProductNodeGroup, "setModified", "(Z)V");
@@ -19499,6 +20440,7 @@ void ProductNodeGroup_setModified(ProductNodeGroup _this, boolean modified)
 void ProductNodeGroup_acceptVisitor(ProductNodeGroup _this, ProductVisitor visitor)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classProductNodeGroup, "acceptVisitor", "(Lorg/esa/beam/framework/datamodel/ProductVisitor;)V");
@@ -19516,6 +20458,7 @@ void ProductNodeGroup_acceptVisitor(ProductNodeGroup _this, ProductVisitor visit
 void ProductNodeGroup_dispose(ProductNodeGroup _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classProductNodeGroup, "dispose", "()V");
@@ -19533,6 +20476,7 @@ void ProductNodeGroup_dispose(ProductNodeGroup _this)
 void ProductNodeGroup_updateExpression(ProductNodeGroup _this, const char* oldExternalName, const char* newExternalName)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring oldExternalNameString = NULL;
     jstring newExternalNameString = NULL;
     if (_method == NULL) {
@@ -19556,6 +20500,7 @@ void ProductNodeGroup_updateExpression(ProductNodeGroup _this, const char* oldEx
 ProductNode ProductNodeGroup_getOwner(ProductNodeGroup _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     ProductNode _result = (ProductNode) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -19575,6 +20520,7 @@ ProductNode ProductNodeGroup_getOwner(ProductNodeGroup _this)
 char* ProductNodeGroup_getName(ProductNodeGroup _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
     if (_method == NULL) {
@@ -19597,6 +20543,7 @@ char* ProductNodeGroup_getName(ProductNodeGroup _this)
 void ProductNodeGroup_setName(ProductNodeGroup _this, const char* name)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring nameString = NULL;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -19617,6 +20564,7 @@ void ProductNodeGroup_setName(ProductNodeGroup _this, const char* name)
 char* ProductNodeGroup_getDescription(ProductNodeGroup _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
     if (_method == NULL) {
@@ -19639,6 +20587,7 @@ char* ProductNodeGroup_getDescription(ProductNodeGroup _this)
 void ProductNodeGroup_setDescription(ProductNodeGroup _this, const char* description)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring descriptionString = NULL;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -19659,6 +20608,7 @@ void ProductNodeGroup_setDescription(ProductNodeGroup _this, const char* descrip
 boolean ProductNodeGroup_isModified(ProductNodeGroup _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -19678,6 +20628,7 @@ boolean ProductNodeGroup_isModified(ProductNodeGroup _this)
 char* ProductNodeGroup_toString(ProductNodeGroup _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
     if (_method == NULL) {
@@ -19700,6 +20651,7 @@ char* ProductNodeGroup_toString(ProductNodeGroup _this)
 boolean ProductNodeGroup_isValidNodeName(const char* name)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring nameString = NULL;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
@@ -19722,6 +20674,7 @@ boolean ProductNodeGroup_isValidNodeName(const char* name)
 Product ProductNodeGroup_getProduct(ProductNodeGroup _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     Product _result = (Product) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -19741,6 +20694,7 @@ Product ProductNodeGroup_getProduct(ProductNodeGroup _this)
 ProductReader ProductNodeGroup_getProductReader(ProductNodeGroup _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     ProductReader _result = (ProductReader) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -19760,6 +20714,7 @@ ProductReader ProductNodeGroup_getProductReader(ProductNodeGroup _this)
 ProductWriter ProductNodeGroup_getProductWriter(ProductNodeGroup _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     ProductWriter _result = (ProductWriter) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -19779,6 +20734,7 @@ ProductWriter ProductNodeGroup_getProductWriter(ProductNodeGroup _this)
 char* ProductNodeGroup_getDisplayName(ProductNodeGroup _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
     if (_method == NULL) {
@@ -19801,6 +20757,7 @@ char* ProductNodeGroup_getDisplayName(ProductNodeGroup _this)
 char* ProductNodeGroup_getProductRefString(ProductNodeGroup _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
     if (_method == NULL) {
@@ -19823,6 +20780,7 @@ char* ProductNodeGroup_getProductRefString(ProductNodeGroup _this)
 void ProductNodeGroup_removeFromFile(ProductNodeGroup _this, ProductWriter productWriter)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classProductNodeGroup, "removeFromFile", "(Lorg/esa/beam/framework/dataio/ProductWriter;)V");
@@ -19840,6 +20798,7 @@ void ProductNodeGroup_removeFromFile(ProductNodeGroup _this, ProductWriter produ
 Object ProductNodeGroup_getExtension(ProductNodeGroup _this, Class arg0)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     Object _result = (Object) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -19859,6 +20818,7 @@ Object ProductNodeGroup_getExtension(ProductNodeGroup _this, Class arg0)
 ProductUtils ProductUtils_newProductUtils()
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     ProductUtils _result = (ProductUtils) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -19878,6 +20838,7 @@ ProductUtils ProductUtils_newProductUtils()
 ImageInfo ProductUtils_createImageInfo(const RasterDataNode rastersElems, int rastersLength, boolean assignMissingImageInfos, ProgressMonitor pm)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jarray rastersArray = NULL;
     ImageInfo _result = (ImageInfo) 0;
     if (_method == NULL) {
@@ -19900,6 +20861,7 @@ ImageInfo ProductUtils_createImageInfo(const RasterDataNode rastersElems, int ra
 BufferedImage ProductUtils_createRgbImage(const RasterDataNode rastersElems, int rastersLength, ImageInfo imageInfo, ProgressMonitor pm)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jarray rastersArray = NULL;
     BufferedImage _result = (BufferedImage) 0;
     if (_method == NULL) {
@@ -19922,6 +20884,7 @@ BufferedImage ProductUtils_createRgbImage(const RasterDataNode rastersElems, int
 BufferedImage ProductUtils_createColorIndexedImage(RasterDataNode rasterDataNode, ProgressMonitor pm)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     BufferedImage _result = (BufferedImage) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -19941,6 +20904,7 @@ BufferedImage ProductUtils_createColorIndexedImage(RasterDataNode rasterDataNode
 MapInfo ProductUtils_createSuitableMapInfo1(Product product, Rectangle rect, MapProjection mapProjection)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     MapInfo _result = (MapInfo) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -19960,6 +20924,7 @@ MapInfo ProductUtils_createSuitableMapInfo1(Product product, Rectangle rect, Map
 MapInfo ProductUtils_createSuitableMapInfo2(Product product, MapProjection mapProjection, double orientation, double noDataValue)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     MapInfo _result = (MapInfo) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -19979,6 +20944,7 @@ MapInfo ProductUtils_createSuitableMapInfo2(Product product, MapProjection mapPr
 Dimension ProductUtils_getOutputRasterSize(Product product, Rectangle rect, MapTransform mapTransform, double pixelSizeX, double pixelSizeY)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     Dimension _result = (Dimension) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -19998,6 +20964,7 @@ Dimension ProductUtils_getOutputRasterSize(Product product, Rectangle rect, MapT
 Point2D* ProductUtils_createMapEnvelope2(Product product, Rectangle rect, MapTransform mapTransform, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     Point2D* _result = (Point2D*) 0;
     jarray _resultArray = NULL;
     if (_method == NULL) {
@@ -20020,6 +20987,7 @@ Point2D* ProductUtils_createMapEnvelope2(Product product, Rectangle rect, MapTra
 Point2D* ProductUtils_createMapEnvelope1(Product product, Rectangle rect, int step, MapTransform mapTransform, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     Point2D* _result = (Point2D*) 0;
     jarray _resultArray = NULL;
     if (_method == NULL) {
@@ -20042,6 +21010,7 @@ Point2D* ProductUtils_createMapEnvelope1(Product product, Rectangle rect, int st
 Point2D* ProductUtils_getMinMax(const Point2D boundaryElems, int boundaryLength, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jarray boundaryArray = NULL;
     Point2D* _result = (Point2D*) 0;
     jarray _resultArray = NULL;
@@ -20067,6 +21036,7 @@ Point2D* ProductUtils_getMinMax(const Point2D boundaryElems, int boundaryLength,
 Point2D* ProductUtils_createMapBoundary(Product product, Rectangle rect, int step, MapTransform mapTransform, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     Point2D* _result = (Point2D*) 0;
     jarray _resultArray = NULL;
     if (_method == NULL) {
@@ -20089,6 +21059,7 @@ Point2D* ProductUtils_createMapBoundary(Product product, Rectangle rect, int ste
 GeoPos* ProductUtils_createGeoBoundary1(Product product, int step, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     GeoPos* _result = (GeoPos*) 0;
     jarray _resultArray = NULL;
     if (_method == NULL) {
@@ -20111,6 +21082,7 @@ GeoPos* ProductUtils_createGeoBoundary1(Product product, int step, int* _resultA
 GeoPos* ProductUtils_createGeoBoundary2(Product product, Rectangle region, int step, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     GeoPos* _result = (GeoPos*) 0;
     jarray _resultArray = NULL;
     if (_method == NULL) {
@@ -20133,6 +21105,7 @@ GeoPos* ProductUtils_createGeoBoundary2(Product product, Rectangle region, int s
 GeoPos* ProductUtils_createGeoBoundary3(Product product, Rectangle region, int step, boolean usePixelCenter, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     GeoPos* _result = (GeoPos*) 0;
     jarray _resultArray = NULL;
     if (_method == NULL) {
@@ -20155,6 +21128,7 @@ GeoPos* ProductUtils_createGeoBoundary3(Product product, Rectangle region, int s
 GeoPos* ProductUtils_createGeoBoundary4(RasterDataNode raster, Rectangle region, int step, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     GeoPos* _result = (GeoPos*) 0;
     jarray _resultArray = NULL;
     if (_method == NULL) {
@@ -20177,6 +21151,7 @@ GeoPos* ProductUtils_createGeoBoundary4(RasterDataNode raster, Rectangle region,
 GeneralPath* ProductUtils_createGeoBoundaryPaths1(Product product, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     GeneralPath* _result = (GeneralPath*) 0;
     jarray _resultArray = NULL;
     if (_method == NULL) {
@@ -20199,6 +21174,7 @@ GeneralPath* ProductUtils_createGeoBoundaryPaths1(Product product, int* _resultA
 GeneralPath* ProductUtils_createGeoBoundaryPaths2(Product product, Rectangle region, int step, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     GeneralPath* _result = (GeneralPath*) 0;
     jarray _resultArray = NULL;
     if (_method == NULL) {
@@ -20221,6 +21197,7 @@ GeneralPath* ProductUtils_createGeoBoundaryPaths2(Product product, Rectangle reg
 GeneralPath* ProductUtils_createGeoBoundaryPaths3(Product product, Rectangle region, int step, boolean usePixelCenter, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     GeneralPath* _result = (GeneralPath*) 0;
     jarray _resultArray = NULL;
     if (_method == NULL) {
@@ -20243,6 +21220,7 @@ GeneralPath* ProductUtils_createGeoBoundaryPaths3(Product product, Rectangle reg
 PixelPos* ProductUtils_createPixelBoundary1(Product product, Rectangle rect, int step, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     PixelPos* _result = (PixelPos*) 0;
     jarray _resultArray = NULL;
     if (_method == NULL) {
@@ -20265,6 +21243,7 @@ PixelPos* ProductUtils_createPixelBoundary1(Product product, Rectangle rect, int
 PixelPos* ProductUtils_createPixelBoundary2(Product product, Rectangle rect, int step, boolean usePixelCenter, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     PixelPos* _result = (PixelPos*) 0;
     jarray _resultArray = NULL;
     if (_method == NULL) {
@@ -20287,6 +21266,7 @@ PixelPos* ProductUtils_createPixelBoundary2(Product product, Rectangle rect, int
 PixelPos* ProductUtils_createPixelBoundary3(RasterDataNode raster, Rectangle rect, int step, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     PixelPos* _result = (PixelPos*) 0;
     jarray _resultArray = NULL;
     if (_method == NULL) {
@@ -20309,6 +21289,7 @@ PixelPos* ProductUtils_createPixelBoundary3(RasterDataNode raster, Rectangle rec
 PixelPos* ProductUtils_createRectBoundary1(Rectangle rect, int step, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     PixelPos* _result = (PixelPos*) 0;
     jarray _resultArray = NULL;
     if (_method == NULL) {
@@ -20331,6 +21312,7 @@ PixelPos* ProductUtils_createRectBoundary1(Rectangle rect, int step, int* _resul
 PixelPos* ProductUtils_createRectBoundary2(Rectangle rect, int step, boolean usePixelCenter, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     PixelPos* _result = (PixelPos*) 0;
     jarray _resultArray = NULL;
     if (_method == NULL) {
@@ -20353,6 +21335,7 @@ PixelPos* ProductUtils_createRectBoundary2(Rectangle rect, int step, boolean use
 void ProductUtils_copyFlagCodings(Product source, Product target)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "copyFlagCodings", "(Lorg/esa/beam/framework/datamodel/Product;Lorg/esa/beam/framework/datamodel/Product;)V");
@@ -20370,6 +21353,7 @@ void ProductUtils_copyFlagCodings(Product source, Product target)
 FlagCoding ProductUtils_copyFlagCoding(FlagCoding sourceFlagCoding, Product target)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     FlagCoding _result = (FlagCoding) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -20389,6 +21373,7 @@ FlagCoding ProductUtils_copyFlagCoding(FlagCoding sourceFlagCoding, Product targ
 IndexCoding ProductUtils_copyIndexCoding(IndexCoding sourceIndexCoding, Product target)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     IndexCoding _result = (IndexCoding) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -20408,6 +21393,7 @@ IndexCoding ProductUtils_copyIndexCoding(IndexCoding sourceIndexCoding, Product 
 void ProductUtils_copyMasks(Product sourceProduct, Product targetProduct)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "copyMasks", "(Lorg/esa/beam/framework/datamodel/Product;Lorg/esa/beam/framework/datamodel/Product;)V");
@@ -20425,6 +21411,7 @@ void ProductUtils_copyMasks(Product sourceProduct, Product targetProduct)
 void ProductUtils_copyOverlayMasks(Product sourceProduct, Product targetProduct)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "copyOverlayMasks", "(Lorg/esa/beam/framework/datamodel/Product;Lorg/esa/beam/framework/datamodel/Product;)V");
@@ -20442,6 +21429,7 @@ void ProductUtils_copyOverlayMasks(Product sourceProduct, Product targetProduct)
 void ProductUtils_copyRoiMasks(Product sourceProduct, Product targetProduct)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "copyRoiMasks", "(Lorg/esa/beam/framework/datamodel/Product;Lorg/esa/beam/framework/datamodel/Product;)V");
@@ -20459,6 +21447,7 @@ void ProductUtils_copyRoiMasks(Product sourceProduct, Product targetProduct)
 void ProductUtils_copyFlagBands2(Product sourceProduct, Product targetProduct, boolean copySourceImage)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "copyFlagBands", "(Lorg/esa/beam/framework/datamodel/Product;Lorg/esa/beam/framework/datamodel/Product;Z)V");
@@ -20476,6 +21465,7 @@ void ProductUtils_copyFlagBands2(Product sourceProduct, Product targetProduct, b
 void ProductUtils_copyFlagBands1(Product sourceProduct, Product targetProduct)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "copyFlagBands", "(Lorg/esa/beam/framework/datamodel/Product;Lorg/esa/beam/framework/datamodel/Product;)V");
@@ -20493,6 +21483,7 @@ void ProductUtils_copyFlagBands1(Product sourceProduct, Product targetProduct)
 TiePointGrid ProductUtils_copyTiePointGrid(const char* gridName, Product sourceProduct, Product targetProduct)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring gridNameString = NULL;
     TiePointGrid _result = (TiePointGrid) 0;
     if (_method == NULL) {
@@ -20515,6 +21506,7 @@ TiePointGrid ProductUtils_copyTiePointGrid(const char* gridName, Product sourceP
 Band ProductUtils_copyBand4(const char* sourceBandName, Product sourceProduct, Product targetProduct, boolean copySourceImage)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring sourceBandNameString = NULL;
     Band _result = (Band) 0;
     if (_method == NULL) {
@@ -20537,6 +21529,7 @@ Band ProductUtils_copyBand4(const char* sourceBandName, Product sourceProduct, P
 Band ProductUtils_copyBand2(const char* sourceBandName, Product sourceProduct, const char* targetBandName, Product targetProduct, boolean copySourceImage)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring sourceBandNameString = NULL;
     jstring targetBandNameString = NULL;
     Band _result = (Band) 0;
@@ -20562,6 +21555,7 @@ Band ProductUtils_copyBand2(const char* sourceBandName, Product sourceProduct, c
 void ProductUtils_copyRasterDataNodeProperties(RasterDataNode sourceRaster, RasterDataNode targetRaster)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "copyRasterDataNodeProperties", "(Lorg/esa/beam/framework/datamodel/RasterDataNode;Lorg/esa/beam/framework/datamodel/RasterDataNode;)V");
@@ -20579,6 +21573,7 @@ void ProductUtils_copyRasterDataNodeProperties(RasterDataNode sourceRaster, Rast
 Band ProductUtils_copyBand3(const char* sourceBandName, Product sourceProduct, Product targetProduct)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring sourceBandNameString = NULL;
     Band _result = (Band) 0;
     if (_method == NULL) {
@@ -20601,6 +21596,7 @@ Band ProductUtils_copyBand3(const char* sourceBandName, Product sourceProduct, P
 Band ProductUtils_copyBand1(const char* sourceBandName, Product sourceProduct, const char* targetBandName, Product targetProduct)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring sourceBandNameString = NULL;
     jstring targetBandNameString = NULL;
     Band _result = (Band) 0;
@@ -20626,6 +21622,7 @@ Band ProductUtils_copyBand1(const char* sourceBandName, Product sourceProduct, c
 void ProductUtils_copySpectralBandProperties(Band sourceBand, Band targetBand)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "copySpectralBandProperties", "(Lorg/esa/beam/framework/datamodel/Band;Lorg/esa/beam/framework/datamodel/Band;)V");
@@ -20643,6 +21640,7 @@ void ProductUtils_copySpectralBandProperties(Band sourceBand, Band targetBand)
 void ProductUtils_copyGeoCoding(Product sourceProduct, Product targetProduct)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "copyGeoCoding", "(Lorg/esa/beam/framework/datamodel/Product;Lorg/esa/beam/framework/datamodel/Product;)V");
@@ -20660,6 +21658,7 @@ void ProductUtils_copyGeoCoding(Product sourceProduct, Product targetProduct)
 void ProductUtils_copyTiePointGrids(Product sourceProduct, Product targetProduct)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "copyTiePointGrids", "(Lorg/esa/beam/framework/datamodel/Product;Lorg/esa/beam/framework/datamodel/Product;)V");
@@ -20677,6 +21676,7 @@ void ProductUtils_copyTiePointGrids(Product sourceProduct, Product targetProduct
 void ProductUtils_copyVectorData(Product sourceProduct, Product targetProduct)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "copyVectorData", "(Lorg/esa/beam/framework/datamodel/Product;Lorg/esa/beam/framework/datamodel/Product;)V");
@@ -20694,6 +21694,7 @@ void ProductUtils_copyVectorData(Product sourceProduct, Product targetProduct)
 boolean ProductUtils_canGetPixelPos1(Product product)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -20713,6 +21714,7 @@ boolean ProductUtils_canGetPixelPos1(Product product)
 boolean ProductUtils_canGetPixelPos2(RasterDataNode raster)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -20732,6 +21734,7 @@ boolean ProductUtils_canGetPixelPos2(RasterDataNode raster)
 BufferedImage ProductUtils_createDensityPlotImage(RasterDataNode raster1, float sampleMin1, float sampleMax1, RasterDataNode raster2, float sampleMin2, float sampleMax2, Mask roiMask, int width, int height, Color background, BufferedImage image, ProgressMonitor pm)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     BufferedImage _result = (BufferedImage) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -20751,6 +21754,7 @@ BufferedImage ProductUtils_createDensityPlotImage(RasterDataNode raster1, float 
 BufferedImage ProductUtils_overlayMasks(RasterDataNode raster, BufferedImage overlayBIm, ProgressMonitor pm)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     BufferedImage _result = (BufferedImage) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -20770,6 +21774,7 @@ BufferedImage ProductUtils_overlayMasks(RasterDataNode raster, BufferedImage ove
 GeoPos ProductUtils_getCenterGeoPos(Product product)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     GeoPos _result = (GeoPos) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -20789,6 +21794,7 @@ GeoPos ProductUtils_getCenterGeoPos(Product product)
 int ProductUtils_normalizeGeoPolygon(const GeoPos polygonElems, int polygonLength)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jarray polygonArray = NULL;
     int _result = (int) 0;
     if (_method == NULL) {
@@ -20811,6 +21817,7 @@ int ProductUtils_normalizeGeoPolygon(const GeoPos polygonElems, int polygonLengt
 int ProductUtils_normalizeGeoPolygon_old(const GeoPos polygonElems, int polygonLength)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jarray polygonArray = NULL;
     int _result = (int) 0;
     if (_method == NULL) {
@@ -20833,6 +21840,7 @@ int ProductUtils_normalizeGeoPolygon_old(const GeoPos polygonElems, int polygonL
 void ProductUtils_denormalizeGeoPolygon(const GeoPos polygonElems, int polygonLength)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jarray polygonArray = NULL;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -20853,6 +21861,7 @@ void ProductUtils_denormalizeGeoPolygon(const GeoPos polygonElems, int polygonLe
 void ProductUtils_denormalizeGeoPos(GeoPos geoPos)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "denormalizeGeoPos", "(Lorg/esa/beam/framework/datamodel/GeoPos;)V");
@@ -20870,6 +21879,7 @@ void ProductUtils_denormalizeGeoPos(GeoPos geoPos)
 void ProductUtils_denormalizeGeoPos_old(GeoPos geoPos)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "denormalizeGeoPos_old", "(Lorg/esa/beam/framework/datamodel/GeoPos;)V");
@@ -20887,6 +21897,7 @@ void ProductUtils_denormalizeGeoPos_old(GeoPos geoPos)
 int ProductUtils_getRotationDirection(const GeoPos polygonElems, int polygonLength)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jarray polygonArray = NULL;
     int _result = (int) 0;
     if (_method == NULL) {
@@ -20909,6 +21920,7 @@ int ProductUtils_getRotationDirection(const GeoPos polygonElems, int polygonLeng
 double ProductUtils_getAngleSum(const GeoPos polygonElems, int polygonLength)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jarray polygonArray = NULL;
     double _result = (double) 0;
     if (_method == NULL) {
@@ -20931,6 +21943,7 @@ double ProductUtils_getAngleSum(const GeoPos polygonElems, int polygonLength)
 GeneralPath ProductUtils_convertToPixelPath(GeneralPath geoPath, GeoCoding geoCoding)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     GeneralPath _result = (GeneralPath) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -20950,6 +21963,7 @@ GeneralPath ProductUtils_convertToPixelPath(GeneralPath geoPath, GeoCoding geoCo
 GeneralPath ProductUtils_convertToGeoPath(Shape shape, GeoCoding geoCoding)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     GeneralPath _result = (GeneralPath) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -20969,6 +21983,7 @@ GeneralPath ProductUtils_convertToGeoPath(Shape shape, GeoCoding geoCoding)
 void ProductUtils_copyMetadata2(Product source, Product target)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "copyMetadata", "(Lorg/esa/beam/framework/datamodel/Product;Lorg/esa/beam/framework/datamodel/Product;)V");
@@ -20986,6 +22001,7 @@ void ProductUtils_copyMetadata2(Product source, Product target)
 void ProductUtils_copyMetadata1(MetadataElement source, MetadataElement target)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "copyMetadata", "(Lorg/esa/beam/framework/datamodel/MetadataElement;Lorg/esa/beam/framework/datamodel/MetadataElement;)V");
@@ -21003,6 +22019,7 @@ void ProductUtils_copyMetadata1(MetadataElement source, MetadataElement target)
 void ProductUtils_copyPreferredTileSize(Product sourceProduct, Product targetProduct)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "copyPreferredTileSize", "(Lorg/esa/beam/framework/datamodel/Product;Lorg/esa/beam/framework/datamodel/Product;)V");
@@ -21020,6 +22037,7 @@ void ProductUtils_copyPreferredTileSize(Product sourceProduct, Product targetPro
 GeoTIFFMetadata ProductUtils_createGeoTIFFMetadata2(Product product)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     GeoTIFFMetadata _result = (GeoTIFFMetadata) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -21039,6 +22057,7 @@ GeoTIFFMetadata ProductUtils_createGeoTIFFMetadata2(Product product)
 GeoTIFFMetadata ProductUtils_createGeoTIFFMetadata1(GeoCoding geoCoding, int width, int height)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     GeoTIFFMetadata _result = (GeoTIFFMetadata) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -21058,6 +22077,7 @@ GeoTIFFMetadata ProductUtils_createGeoTIFFMetadata1(GeoCoding geoCoding, int wid
 GeneralPath ProductUtils_areaToPath(Area negativeArea, double deltaX)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     GeneralPath _result = (GeneralPath) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -21077,6 +22097,7 @@ GeneralPath ProductUtils_areaToPath(Area negativeArea, double deltaX)
 void ProductUtils_addElementToHistory(Product product, MetadataElement elem)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "addElementToHistory", "(Lorg/esa/beam/framework/datamodel/Product;Lorg/esa/beam/framework/datamodel/MetadataElement;)V");
@@ -21094,6 +22115,7 @@ void ProductUtils_addElementToHistory(Product product, MetadataElement elem)
 char** ProductUtils_removeInvalidExpressions(Product product, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     char** _result = (char**) 0;
     jarray _resultArray = NULL;
     if (_method == NULL) {
@@ -21116,6 +22138,7 @@ char** ProductUtils_removeInvalidExpressions(Product product, int* _resultArrayL
 char* ProductUtils_findSuitableQuicklookBandName(Product product)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
     if (_method == NULL) {
@@ -21138,6 +22161,7 @@ char* ProductUtils_findSuitableQuicklookBandName(Product product)
 PixelPos* ProductUtils_computeSourcePixelCoordinates(GeoCoding sourceGeoCoding, int sourceWidth, int sourceHeight, GeoCoding destGeoCoding, Rectangle destArea, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     PixelPos* _result = (PixelPos*) 0;
     jarray _resultArray = NULL;
     if (_method == NULL) {
@@ -21160,6 +22184,7 @@ PixelPos* ProductUtils_computeSourcePixelCoordinates(GeoCoding sourceGeoCoding, 
 float* ProductUtils_computeMinMaxY(const PixelPos pixelPositionsElems, int pixelPositionsLength, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jarray pixelPositionsArray = NULL;
     float* _result = (float*) 0;
     jarray _resultArray = NULL;
@@ -21185,6 +22210,7 @@ float* ProductUtils_computeMinMaxY(const PixelPos pixelPositionsElems, int pixel
 void ProductUtils_copyBandsForGeomTransform1(Product sourceProduct, Product targetProduct, double defaultNoDataValue, Map addedRasterDataNodes)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "copyBandsForGeomTransform", "(Lorg/esa/beam/framework/datamodel/Product;Lorg/esa/beam/framework/datamodel/Product;DLjava/util/Map;)V");
@@ -21202,6 +22228,7 @@ void ProductUtils_copyBandsForGeomTransform1(Product sourceProduct, Product targ
 void ProductUtils_copyBandsForGeomTransform2(Product sourceProduct, Product targetProduct, boolean includeTiePointGrids, double defaultNoDataValue, Map targetToSourceMap)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "copyBandsForGeomTransform", "(Lorg/esa/beam/framework/datamodel/Product;Lorg/esa/beam/framework/datamodel/Product;ZDLjava/util/Map;)V");
@@ -21219,6 +22246,7 @@ void ProductUtils_copyBandsForGeomTransform2(Product sourceProduct, Product targ
 ProductData_UTC ProductUtils_getScanLineTime(Product product, double y)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     ProductData_UTC _result = (ProductData_UTC) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -21238,6 +22266,7 @@ ProductData_UTC ProductUtils_getScanLineTime(Product product, double y)
 double ProductUtils_getGeophysicalSampleDouble(Band band, int pixelX, int pixelY, int level)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     double _result = (double) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -21257,6 +22286,7 @@ double ProductUtils_getGeophysicalSampleDouble(Band band, int pixelX, int pixelY
 dlong ProductUtils_getGeophysicalSampleLong(Band band, int pixelX, int pixelY, int level)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     dlong _result = (dlong) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -21276,6 +22306,7 @@ dlong ProductUtils_getGeophysicalSampleLong(Band band, int pixelX, int pixelY, i
 MetadataAttribute MetadataAttribute_newMetadataAttribute(const char* name, ProductData data, boolean readOnly)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring nameString = NULL;
     MetadataAttribute _result = (MetadataAttribute) 0;
     if (_method == NULL) {
@@ -21298,6 +22329,7 @@ MetadataAttribute MetadataAttribute_newMetadataAttribute(const char* name, Produ
 MetadataElement MetadataAttribute_getParentElement(MetadataAttribute _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     MetadataElement _result = (MetadataElement) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -21317,6 +22349,7 @@ MetadataElement MetadataAttribute_getParentElement(MetadataAttribute _this)
 boolean MetadataAttribute_equals(MetadataAttribute _this, Object object)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -21336,6 +22369,7 @@ boolean MetadataAttribute_equals(MetadataAttribute _this, Object object)
 void MetadataAttribute_acceptVisitor(MetadataAttribute _this, ProductVisitor visitor)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classMetadataAttribute, "acceptVisitor", "(Lorg/esa/beam/framework/datamodel/ProductVisitor;)V");
@@ -21353,6 +22387,7 @@ void MetadataAttribute_acceptVisitor(MetadataAttribute _this, ProductVisitor vis
 MetadataAttribute MetadataAttribute_createDeepClone(MetadataAttribute _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     MetadataAttribute _result = (MetadataAttribute) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -21372,6 +22407,7 @@ MetadataAttribute MetadataAttribute_createDeepClone(MetadataAttribute _this)
 int MetadataAttribute_getDataType(MetadataAttribute _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     int _result = (int) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -21391,6 +22427,7 @@ int MetadataAttribute_getDataType(MetadataAttribute _this)
 boolean MetadataAttribute_isFloatingPointType(MetadataAttribute _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -21410,6 +22447,7 @@ boolean MetadataAttribute_isFloatingPointType(MetadataAttribute _this)
 dlong MetadataAttribute_getNumDataElems(MetadataAttribute _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     dlong _result = (dlong) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -21429,6 +22467,7 @@ dlong MetadataAttribute_getNumDataElems(MetadataAttribute _this)
 void MetadataAttribute_setData(MetadataAttribute _this, ProductData data)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classMetadataAttribute, "setData", "(Lorg/esa/beam/framework/datamodel/ProductData;)V");
@@ -21446,6 +22485,7 @@ void MetadataAttribute_setData(MetadataAttribute _this, ProductData data)
 ProductData MetadataAttribute_getData(MetadataAttribute _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     ProductData _result = (ProductData) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -21465,6 +22505,7 @@ ProductData MetadataAttribute_getData(MetadataAttribute _this)
 void MetadataAttribute_setDataElems(MetadataAttribute _this, Object elems)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classMetadataAttribute, "setDataElems", "(Ljava/lang/Object;)V");
@@ -21482,6 +22523,7 @@ void MetadataAttribute_setDataElems(MetadataAttribute _this, Object elems)
 Object MetadataAttribute_getDataElems(MetadataAttribute _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     Object _result = (Object) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -21501,6 +22543,7 @@ Object MetadataAttribute_getDataElems(MetadataAttribute _this)
 int MetadataAttribute_getDataElemSize(MetadataAttribute _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     int _result = (int) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -21520,6 +22563,7 @@ int MetadataAttribute_getDataElemSize(MetadataAttribute _this)
 void MetadataAttribute_setReadOnly(MetadataAttribute _this, boolean readOnly)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classMetadataAttribute, "setReadOnly", "(Z)V");
@@ -21537,6 +22581,7 @@ void MetadataAttribute_setReadOnly(MetadataAttribute _this, boolean readOnly)
 boolean MetadataAttribute_isReadOnly(MetadataAttribute _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -21556,6 +22601,7 @@ boolean MetadataAttribute_isReadOnly(MetadataAttribute _this)
 void MetadataAttribute_setUnit(MetadataAttribute _this, const char* unit)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring unitString = NULL;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -21576,6 +22622,7 @@ void MetadataAttribute_setUnit(MetadataAttribute _this, const char* unit)
 char* MetadataAttribute_getUnit(MetadataAttribute _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
     if (_method == NULL) {
@@ -21598,6 +22645,7 @@ char* MetadataAttribute_getUnit(MetadataAttribute _this)
 boolean MetadataAttribute_isSynthetic(MetadataAttribute _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -21617,6 +22665,7 @@ boolean MetadataAttribute_isSynthetic(MetadataAttribute _this)
 void MetadataAttribute_setSynthetic(MetadataAttribute _this, boolean synthetic)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classMetadataAttribute, "setSynthetic", "(Z)V");
@@ -21634,6 +22683,7 @@ void MetadataAttribute_setSynthetic(MetadataAttribute _this, boolean synthetic)
 void MetadataAttribute_fireProductNodeDataChanged(MetadataAttribute _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classMetadataAttribute, "fireProductNodeDataChanged", "()V");
@@ -21651,6 +22701,7 @@ void MetadataAttribute_fireProductNodeDataChanged(MetadataAttribute _this)
 void MetadataAttribute_dispose(MetadataAttribute _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classMetadataAttribute, "dispose", "()V");
@@ -21668,6 +22719,7 @@ void MetadataAttribute_dispose(MetadataAttribute _this)
 ProductData MetadataAttribute_createCompatibleProductData(MetadataAttribute _this, int numElems)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     ProductData _result = (ProductData) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -21687,6 +22739,7 @@ ProductData MetadataAttribute_createCompatibleProductData(MetadataAttribute _thi
 ProductNode MetadataAttribute_getOwner(MetadataAttribute _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     ProductNode _result = (ProductNode) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -21706,6 +22759,7 @@ ProductNode MetadataAttribute_getOwner(MetadataAttribute _this)
 char* MetadataAttribute_getName(MetadataAttribute _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
     if (_method == NULL) {
@@ -21728,6 +22782,7 @@ char* MetadataAttribute_getName(MetadataAttribute _this)
 void MetadataAttribute_setName(MetadataAttribute _this, const char* name)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring nameString = NULL;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -21748,6 +22803,7 @@ void MetadataAttribute_setName(MetadataAttribute _this, const char* name)
 char* MetadataAttribute_getDescription(MetadataAttribute _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
     if (_method == NULL) {
@@ -21770,6 +22826,7 @@ char* MetadataAttribute_getDescription(MetadataAttribute _this)
 void MetadataAttribute_setDescription(MetadataAttribute _this, const char* description)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring descriptionString = NULL;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -21790,6 +22847,7 @@ void MetadataAttribute_setDescription(MetadataAttribute _this, const char* descr
 boolean MetadataAttribute_isModified(MetadataAttribute _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -21809,6 +22867,7 @@ boolean MetadataAttribute_isModified(MetadataAttribute _this)
 void MetadataAttribute_setModified(MetadataAttribute _this, boolean modified)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classMetadataAttribute, "setModified", "(Z)V");
@@ -21826,6 +22885,7 @@ void MetadataAttribute_setModified(MetadataAttribute _this, boolean modified)
 char* MetadataAttribute_toString(MetadataAttribute _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
     if (_method == NULL) {
@@ -21848,6 +22908,7 @@ char* MetadataAttribute_toString(MetadataAttribute _this)
 boolean MetadataAttribute_isValidNodeName(const char* name)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring nameString = NULL;
     boolean _result = (boolean) 0;
     if (_method == NULL) {
@@ -21870,6 +22931,7 @@ boolean MetadataAttribute_isValidNodeName(const char* name)
 Product MetadataAttribute_getProduct(MetadataAttribute _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     Product _result = (Product) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -21889,6 +22951,7 @@ Product MetadataAttribute_getProduct(MetadataAttribute _this)
 ProductReader MetadataAttribute_getProductReader(MetadataAttribute _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     ProductReader _result = (ProductReader) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -21908,6 +22971,7 @@ ProductReader MetadataAttribute_getProductReader(MetadataAttribute _this)
 ProductWriter MetadataAttribute_getProductWriter(MetadataAttribute _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     ProductWriter _result = (ProductWriter) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
@@ -21927,6 +22991,7 @@ ProductWriter MetadataAttribute_getProductWriter(MetadataAttribute _this)
 char* MetadataAttribute_getDisplayName(MetadataAttribute _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
     if (_method == NULL) {
@@ -21949,6 +23014,7 @@ char* MetadataAttribute_getDisplayName(MetadataAttribute _this)
 char* MetadataAttribute_getProductRefString(MetadataAttribute _this)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     char* _result = (char*) 0;
     jstring _resultString = NULL;
     if (_method == NULL) {
@@ -21971,6 +23037,7 @@ char* MetadataAttribute_getProductRefString(MetadataAttribute _this)
 void MetadataAttribute_updateExpression(MetadataAttribute _this, const char* oldExternalName, const char* newExternalName)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     jstring oldExternalNameString = NULL;
     jstring newExternalNameString = NULL;
     if (_method == NULL) {
@@ -21994,6 +23061,7 @@ void MetadataAttribute_updateExpression(MetadataAttribute _this, const char* old
 void MetadataAttribute_removeFromFile(MetadataAttribute _this, ProductWriter productWriter)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
             _method = (*jenv)->GetMethodID(jenv, classMetadataAttribute, "removeFromFile", "(Lorg/esa/beam/framework/dataio/ProductWriter;)V");
@@ -22011,6 +23079,7 @@ void MetadataAttribute_removeFromFile(MetadataAttribute _this, ProductWriter pro
 Object MetadataAttribute_getExtension(MetadataAttribute _this, Class arg0)
 {
     static jmethodID _method = NULL;
+    jboolean ok = 1;
     Object _result = (Object) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {

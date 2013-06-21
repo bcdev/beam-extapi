@@ -34,7 +34,7 @@ sources = ['src/main/c/beam_util.c',
            'src/main/c/beampy_carray.c',
            'src/main/c/beampy_buffer.c',
            'src/main/c/beampy_jobject.c',
-           'src/main/c/beampy_jpyconv.c',
+           'src/main/c/beampy_jpyutil.c',
            #'src/main/c/gen/beam_capi.c',
            'src/main/c/gen/beampy.c']
 include_dirs = ['src/main/c',

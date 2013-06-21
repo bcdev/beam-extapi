@@ -81,7 +81,7 @@ JObject* JObject_AsJObject(PyObject* anyPyObj)
     return (JObject*) anyPyObj;
 }
 
-jobject JObject_GetJObjectRef(PyObject* anyPyObj)
+jobject JObject_AsJObjectRef(PyObject* anyPyObj)
 {
     JObject* jobjPyObj = JObject_AsJObject(anyPyObj);
     if (jobjPyObj == NULL) {
@@ -90,7 +90,7 @@ jobject JObject_GetJObjectRef(PyObject* anyPyObj)
     return jobjPyObj->jobjectRef;
 }
 
-jobject JObject_GetJObjectRefInstanceOf(PyObject* anyPyObj, jclass requestedType)
+jobject JObject_AsJObjectRefT(PyObject* anyPyObj, jclass requestedType)
 {
     JObject* jobjPyObj = JObject_AsJObject(anyPyObj);
     if (jobjPyObj == NULL) {
@@ -102,13 +102,71 @@ jobject JObject_GetJObjectRefInstanceOf(PyObject* anyPyObj, jclass requestedType
     return jobjPyObj->jobjectRef;
 }
 
-jobjectArray JObject_GetJObjectArrayRef(PyObject* anyPyObj)
+jobjectArray JObject_AsJObjectArrayRef(PyObject* anyPyObj)
 {
-    static jclass classObjectArray = NULL;
-    if (classObjectArray == NULL) {
-        classObjectArray = (*jenv)->FindClass(jenv, "[Ljava/lang/Object;");
+    static jclass objectClass = NULL;
+    if (objectClass == NULL) {
+        objectClass = (*jenv)->FindClass(jenv, "Ljava/lang/Object;");
     }
-    return (jobjectArray) JObject_GetJObjectRefInstanceOf(anyPyObj, classObjectArray);
+    return JObject_AsJObjectArrayRefT(anyPyObj, objectClass);
+}
+
+jclass JObject_GetComponentType(jobject arrayJObj)
+{
+    static jclass objectClass = NULL;
+    static jclass classClass = NULL;
+    static jmethodID getClassMethod = NULL;
+    static jmethodID getComponentTypeMethod = NULL;
+
+    jclass arrayCompType;
+    jobject arrayClassJObj;
+    jobject arrayCompTypeJObj;
+
+    if (objectClass == NULL) {
+        objectClass = (*jenv)->FindClass(jenv, "Ljava/lang/Object;");
+    }
+    if (classClass == NULL) {
+        classClass = (*jenv)->FindClass(jenv, "Ljava/lang/Class;");
+    }
+    if (getClassMethod == NULL) {
+        getClassMethod = (*jenv)->GetMethodID(jenv, objectClass, "getClass", "()Ljava/lang/Class;");
+    }
+    if (getComponentTypeMethod == NULL) {
+        getComponentTypeMethod = (*jenv)->GetMethodID(jenv, classClass, "getComponentType", "()Ljava/lang/Class;");
+    }
+
+    arrayClassJObj = (*jenv)->CallObjectMethod(jenv, arrayJObj, getClassMethod);
+    arrayCompTypeJObj = (*jenv)->CallObjectMethod(jenv, arrayClassJObj, getComponentTypeMethod);
+    if (arrayCompTypeJObj != NULL) {
+        arrayCompType = (*jenv)->GetObjectClass(jenv, arrayCompTypeJObj);
+    } else {
+        arrayCompType = NULL;
+    }
+
+    return arrayCompType;
+}
+
+
+jobjectArray JObject_AsJObjectArrayRefT(PyObject* anyPyObj, jclass requestedCompType)
+{
+    jobject arrayJObj;
+    jclass arrayCompType;
+
+    arrayJObj = JObject_AsJObjectRef(anyPyObj);
+    if (arrayJObj == NULL) {
+        return NULL;
+    }
+
+    arrayCompType = JObject_GetComponentType(arrayJObj);
+    if (arrayCompType == NULL) {
+        return NULL;
+    }
+
+    if (!(*jenv)->IsAssignableFrom(jenv, arrayCompType, requestedCompType)) {
+        return NULL;
+    }
+
+    return (jobjectArray) arrayJObj;
 }
 
 /**
@@ -181,7 +239,7 @@ int JObjectArray_sq_ass_item(JObjectArray* self, Py_ssize_t index, PyObject* oth
     jobject elemJObj = NULL;
     if (other != Py_None) {
         // todo - use a more generic conversion function here...
-        elemJObj = JObject_GetJObjectRef(other);
+        elemJObj = JObject_AsJObjectRef(other);
         if (elemJObj == NULL) {
             PyErr_SetString(PyExc_ValueError, "illegal item type, must be a JObject");
             return -1;

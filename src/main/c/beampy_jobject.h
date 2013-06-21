@@ -50,14 +50,17 @@ JObject* JObject_AsJObject(PyObject* anyPyObj);
 /**
  * Returns a global reference to a Java object if the given Python object is a JObject or derived type. NULL otherwise.
  */
-jobject JObject_GetJObjectRef(PyObject* anyPyObj);
+jobject JObject_AsJObjectRef(PyObject* anyPyObj);
 
 /**
  * Returns a global reference to a Java object if the given Python object is a JObject or derived type and if the Java
  * object is an instance of the given Java class. NULL otherwise.
  */
-jobject JObject_GetJObjectRefInstanceOf(PyObject* anyPyObj, jclass requestedType);
+jobject JObject_AsJObjectRefT(PyObject* anyPyObj, jclass requestedType);
 
+jobjectArray JObject_AsJObjectArrayRef(PyObject* anyPyObj);
+
+jobjectArray JObject_AsJObjectArrayRefT(PyObject* anyPyObj, jclass requestedCompType);
 
 // todo - check if we need them here (should be local in C-file)
 //        used in derived type decls, but maybe PyType_Ready does the job?

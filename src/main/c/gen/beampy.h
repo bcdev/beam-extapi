@@ -7,6 +7,8 @@ extern "C" {
 
 #include "../beampy_carray.h"
 #include "../beampy_jobject.h"
+#include "../beampy_jpyutil.h"
+#include "../beampy_buffer.h"
 // <<<<<<<< Begin include from /org/esa/beam/extapi/gen/c/CModuleGenerator-stub-types.h
 typedef char byte;
 typedef unsigned char boolean;

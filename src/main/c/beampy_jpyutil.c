@@ -1,4 +1,4 @@
-#include "beampy_jpyconv.h"
+#include "beampy_jpyutil.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -247,9 +247,7 @@ jobject BPy_NewJListFromSeq(PyObject* arg, jboolean* ok)
     return NULL;
 }
 
-typedef jobject (*BPy_ToJObjectFn)(PyObject*, jboolean*);
-
-jobjectArray BPy_NewGenericJObjectArrayFromSeq(PyObject* arg, jclass componentType, BPy_ToJObjectFn toJObject, jboolean* ok)
+jobjectArray BPy_NewJObjectArrayFromSeqT(PyObject* arg, jclass compType, jboolean* ok)
 {
     jarray arrayJObj;
     Py_ssize_t size;
@@ -262,7 +260,7 @@ jobjectArray BPy_NewGenericJObjectArrayFromSeq(PyObject* arg, jclass componentTy
         return BPy_ConvFailure(msg, ok);
     }
 
-    arrayJObj = (*jenv)->NewObjectArray(jenv, (jsize) size, componentType, NULL);
+    arrayJObj = (*jenv)->NewObjectArray(jenv, (jsize) size, compType, NULL);
     if (arrayJObj == NULL) {
         return BPy_ConvFailure("failed to instantiate Java Object[]", ok);
     }
@@ -273,7 +271,7 @@ jobjectArray BPy_NewGenericJObjectArrayFromSeq(PyObject* arg, jclass componentTy
             (*jenv)->DeleteLocalRef(jenv, arrayJObj);
             return BPy_ConvFailure("failed to get sequence item", ok);
         }
-        (*jenv)->SetObjectArrayElement(jenv, arrayJObj, (jint) i, toJObject(itemPyObj, ok));
+        (*jenv)->SetObjectArrayElement(jenv, arrayJObj, (jint) i, BPy_ToJObjectT(itemPyObj, compType, ok));
     }
 
     return BPy_ConvSuccess(arrayJObj, ok);
@@ -281,26 +279,47 @@ jobjectArray BPy_NewGenericJObjectArrayFromSeq(PyObject* arg, jclass componentTy
 
 jobjectArray BPy_NewJStringArrayFromSeq(PyObject* arg, jboolean* ok)
 {
-    return BPy_NewGenericJObjectArrayFromSeq(arg, BPy_ObjectClass, BPy_ToJObject, ok);
+    return BPy_NewJObjectArrayFromSeqT(arg, BPy_StringClass, ok);
 }
 
 jobjectArray BPy_NewJObjectArrayFromSeq(PyObject* arg, jboolean* ok)
 {
-    return BPy_NewGenericJObjectArrayFromSeq(arg, BPy_StringClass, BPy_ToJString, ok);
+    return BPy_NewJObjectArrayFromSeqT(arg, BPy_ObjectClass, ok);
 }
 
-
-
-jobject BPy_ToJObject(PyObject* arg, jboolean* ok)
+jobject BPy_ToJObjectDefault(PyObject* arg, jclass type, jboolean* ok)
 {
     jobject argJObj;
     if (arg == Py_None) {
         return BPy_ConvSuccess(NULL, ok);
     }
 
-    argJObj = JObject_GetJObjectRef(arg);
+    argJObj = JObject_AsJObjectRefT(arg, type);
     if (argJObj != NULL) {
         return BPy_ConvSuccess((*jenv)->NewLocalRef(jenv, argJObj), ok);
+    }
+    return BPy_ConvFailure(NULL, ok);
+}
+
+jobjectArray BPy_ToJObjectArrayDefault(PyObject* arg, jclass compType, jboolean* ok)
+{
+    jobjectArray argJObj;
+    if (arg == Py_None) {
+        return BPy_ConvSuccess(NULL, ok);
+    }
+
+    argJObj = JObject_AsJObjectArrayRefT(arg, compType);
+    if (argJObj != NULL) {
+        return BPy_ConvSuccess((*jenv)->NewLocalRef(jenv, argJObj), ok);
+    }
+    return BPy_ConvFailure(NULL, ok);
+}
+
+jobject BPy_ToJObjectGeneric(PyObject* arg, jboolean* ok)
+{
+    jobject argJObj = BPy_ToJObjectDefault(arg, BPy_ObjectClass, ok);
+    if (ok) {
+        return argJObj;
     }
 
     if (PyBool_Check(arg)) {
@@ -322,29 +341,29 @@ jobject BPy_ToJObject(PyObject* arg, jboolean* ok)
 
 jobject BPy_ToJObjectT(PyObject* arg, jclass type, jboolean* ok)
 {
-    jobject argJObj;
-    if (arg == Py_None) {
-        return BPy_ConvSuccess(NULL, ok);
+    jobject argJObj = BPy_ToJObjectDefault(arg, type, ok);
+    if (ok) {
+        return argJObj;
     }
 
-    argJObj = JObject_GetJObjectRefInstanceOf(arg, type);
-    if (argJObj != NULL) {
-        return BPy_ConvSuccess((*jenv)->NewLocalRef(jenv, argJObj), ok);
+    if (type == BPy_StringClass) {
+        return BPy_ToJString(arg, ok);
     }
 
-    return BPy_ConvFailure("missing appropriate Java representation of argument", ok);
+    // todo - this is only correct for type == java.lang.Object. Check type and perform appropriate conversions
+    return BPy_ToJObjectGeneric(arg, ok);
+}
+
+jobject BPy_ToJObject(PyObject* arg, jboolean* ok)
+{
+    return BPy_ToJObjectT(arg, BPy_ObjectClass, ok);
 }
 
 jstring BPy_ToJString(PyObject* arg, jboolean* ok)
 {
-    jobject strJObj;
-    if (arg == Py_None) {
-        return BPy_ConvSuccess(NULL, ok);
-    }
-
-    strJObj = JObject_GetJObjectRefInstanceOf(arg, BPy_StringClass);
-    if (strJObj != NULL) {
-        return BPy_ConvSuccess((*jenv)->NewLocalRef(jenv, strJObj), ok);
+    jobject argJObj = BPy_ToJObjectDefault(arg, BPy_StringClass, ok);
+    if (ok) {
+        return argJObj;
     }
 
     if (PyUnicode_Check(arg)) {
@@ -356,14 +375,9 @@ jstring BPy_ToJString(PyObject* arg, jboolean* ok)
 
 jobject BPy_ToJMap(PyObject* arg, jboolean* ok)
 {
-    jobject mapJObj;
-    if (arg == Py_None) {
-        return BPy_ConvSuccess(NULL, ok);
-    }
-
-    mapJObj = JObject_GetJObjectRefInstanceOf(arg, BPy_MapClass);
-    if (mapJObj != NULL) {
-        return BPy_ConvSuccess((*jenv)->NewLocalRef(jenv, mapJObj), ok);
+    jobject argJObj = BPy_ToJObjectDefault(arg, BPy_MapClass, ok);
+    if (ok) {
+        return argJObj;
     }
 
     if (PyDict_Check(arg)) {
@@ -375,96 +389,78 @@ jobject BPy_ToJMap(PyObject* arg, jboolean* ok)
 
 jobject BPy_ToJList(PyObject* arg, jboolean* ok)
 {
-    PyErr_SetString(PyExc_NotImplementedError, "TODO - implement BPy_ToJList");
-    return NULL;
+    jobject argJObj = BPy_ToJObjectDefault(arg, BPy_ListClass, ok);
+    if (ok) {
+        return argJObj;
+    }
+    return BPy_ConvFailure("TODO - implement conversion from Python sequence to java.util.List", ok);
 }
 
 jobjectArray BPy_ToJObjectArray(PyObject* arg, jboolean* ok)
 {
-    jobject arrayJObj;
-    if (arg == Py_None) {
-        return BPy_ConvSuccess(NULL, ok);
-    }
-
-    arrayJObj = JObject_GetJObjectRefInstanceOf(arg, BPy_ObjectArrayClass);
-    if (arrayJObj != NULL) {
-        return BPy_ConvSuccess((*jenv)->NewLocalRef(jenv, arrayJObj), ok);
-    }
-
-    if (PySequence_Check(arg)) {
-        return BPy_NewJObjectArrayFromSeq(arg, ok);
-    }
-
-    return BPy_ConvFailure("argument must be a sequence", ok);
+    return BPy_ToJObjectArrayT(arg, BPy_ObjectClass, ok);
 }
 
 jobjectArray BPy_ToJStringArray(PyObject* arg, jboolean* ok)
 {
-    jobject arrayJObj;
-    if (arg == Py_None) {
-        return BPy_ConvSuccess(NULL, ok);
-    }
+    return BPy_ToJObjectArrayT(arg, BPy_StringClass, ok);
+}
 
-    arrayJObj = JObject_GetJObjectRefInstanceOf(arg, BPy_StringArrayClass);
-    if (arrayJObj != NULL) {
-        return BPy_ConvSuccess((*jenv)->NewLocalRef(jenv, arrayJObj), ok);
+
+jobjectArray BPy_ToJObjectArrayT(PyObject* arg, jclass compType, jboolean* ok)
+{
+    jobjectArray argJObj = BPy_ToJObjectArrayDefault(arg, compType, ok);
+    if (ok) {
+        return argJObj;
     }
 
     if (PySequence_Check(arg)) {
-        return BPy_NewJStringArrayFromSeq(arg, ok);
+        return BPy_NewJObjectArrayFromSeqT(arg, compType, ok);
     }
 
     return BPy_ConvFailure("argument must be a sequence", ok);
 }
 
+
 jarray BPy_ToJBooleanArray(PyObject* arg, jboolean* ok)
 {
-    PyErr_SetString(PyExc_NotImplementedError, "TODO - implement BPy_ToJBooleanArray");
-    return NULL;
+    return BPy_ConvFailure("TODO - implement conversion to Java boolean[]", ok);
 }
 
 jarray BPy_ToJCharArray(PyObject* arg, jboolean* ok)
 {
-    PyErr_SetString(PyExc_NotImplementedError, "TODO - implement BPy_ToJCharArray");
-    return NULL;
+    return BPy_ConvFailure("TODO - implement conversion to Java char[]", ok);
 }
 
 jarray BPy_ToJByteArray(PyObject* arg, jboolean* ok)
 {
-    PyErr_SetString(PyExc_NotImplementedError, "TODO - implement BPy_ToJByteArray");
-    return NULL;
+    return BPy_ConvFailure("TODO - implement conversion to Java byte[]", ok);
 }
 
 jarray BPy_ToJShortArray(PyObject* arg, jboolean* ok)
 {
-    PyErr_SetString(PyExc_NotImplementedError, "TODO - implement BPy_ToJShortArray");
-    return NULL;
+    return BPy_ConvFailure("TODO - implement conversion to Java short[]", ok);
 }
 
 jarray BPy_ToJIntArray(PyObject* arg, jboolean* ok)
 {
-    PyErr_SetString(PyExc_NotImplementedError, "TODO - implement BPy_ToJIntArray");
-    return NULL;
+    return BPy_ConvFailure("TODO - implement conversion to Java int[]", ok);
 }
 
 jarray BPy_ToJLongArray(PyObject* arg, jboolean* ok)
 {
-    PyErr_SetString(PyExc_NotImplementedError, "TODO - implement BPy_ToJLongArray");
-    return NULL;
+    return BPy_ConvFailure("TODO - implement conversion to Java long[]", ok);
 }
 
 jarray BPy_ToJFloatArray(PyObject* arg, jboolean* ok)
 {
-    PyErr_SetString(PyExc_NotImplementedError, "TODO - implement BPy_ToJFloatArray");
-    return NULL;
+    return BPy_ConvFailure("TODO - implement conversion to Java float[]", ok);
 }
 
 jarray BPy_ToJDoubleArray(PyObject* arg, jboolean* ok)
 {
-    PyErr_SetString(PyExc_NotImplementedError, "TODO - implement BPy_ToJDoubleArray");
-    return NULL;
+    return BPy_ConvFailure("TODO - implement conversion to Java double[]", ok);
 }
-
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Java To Python Conversion Functions
@@ -529,7 +525,7 @@ PyObject* BPy_CopyJDoubleArrayToBuffer(jarray arrayJObj, jdouble* buffer, jint b
     return BPy_CopyGenericJPrimitiveArrayToBuffer(arrayJObj, buffer, bufferLength, sizeof (jdouble), bufferPyObj);
 }
 
-PyObject* BPy_NewCArrayFromJPrimitiveArray(jarray arrayJObj, const char* format)
+PyObject* BPy_NewBufferFromJPrimitiveArray(jarray arrayJObj, const char* format)
 {
     PyObject* bufferPyObj;
     void* addr;

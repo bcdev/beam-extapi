@@ -1,4 +1,4 @@
-// #include "beam_capi.h"
+
 #include "${libName}.h"
 
 #include <Python.h>
@@ -9,12 +9,16 @@
 
 static PyObject* BeamPy_Error;
 
-jarray beampy_newJBooleanArray(const jboolean* data, jint length);
-jarray beampy_newJByteArray(const jbyte* data, jint length);
-jarray beampy_newJCharArray(const jchar* data, jint length);
-jarray beampy_newJShortArray(const jshort* data, jint length);
-jarray beampy_newJIntArray(const jint* data, jint length);
-jarray beampy_newJLongArray(const jlong* data, jint length);
-jarray beampy_newJFloatArray(const jfloat* data, jint length);
-jarray beampy_newJDoubleArray(const jdouble* data, jint length);
+int beam_initApi();
 
+jboolean BPy_InitApi()
+{
+    int errCode = beam_initApi();
+    if (errCode != 0) {
+        char msg[64];
+        sprintf(msg, "beam_initApi() failed with error code %d", errCode);
+        PyErr_SetString(BeamPy_Error, msg);
+        return 0;
+    }
+    return 1;
+}
