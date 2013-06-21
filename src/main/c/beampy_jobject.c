@@ -90,13 +90,13 @@ jobject JObject_GetJObjectRef(PyObject* anyPyObj)
     return jobjPyObj->jobjectRef;
 }
 
-jobject JObject_GetJObjectRefInstanceOf(PyObject* anyPyObj, jclass jclassRef)
+jobject JObject_GetJObjectRefInstanceOf(PyObject* anyPyObj, jclass requestedType)
 {
     JObject* jobjPyObj = JObject_AsJObject(anyPyObj);
     if (jobjPyObj == NULL) {
         return NULL;
     }
-    if (!(*jenv)->IsInstanceOf(jenv, jobjPyObj->jobjectRef, jclassRef)) {
+    if (!(*jenv)->IsInstanceOf(jenv, jobjPyObj->jobjectRef, requestedType)) {
         return NULL;
     }
     return jobjPyObj->jobjectRef;
