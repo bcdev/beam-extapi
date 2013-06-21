@@ -10,6 +10,24 @@ extern "C" {
 #include "beampy_jobject.h"
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/*
+ * Java-To-Python Conversion Functions.
+ * These are used for converting return values of JNI method calls to Python objects.
+ */
+PyObject* BPy_FromJObject(PyTypeObject* type, jobject arg);
+PyObject* BPy_FromJString(jstring arg);
+PyObject* BPy_FromJBooleanArray(jarray arg);
+PyObject* BPy_FromJCharArray(jarray arg);
+PyObject* BPy_FromJByteArray(jarray arg);
+PyObject* BPy_FromJShortArray(jarray arg);
+PyObject* BPy_FromJIntArray(jarray arg);
+PyObject* BPy_FromJLongArray(jarray arg);
+PyObject* BPy_FromJFloatArray(jarray arg);
+PyObject* BPy_FromJDoubleArray(jarray arg);
+PyObject* BPy_FromJObjectArray(jobjectArray arg);
+PyObject* BPy_FromJStringArray(jobjectArray arg);
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Primitive Array Conversion Functions
 
 jarray BPy_NewJBooleanArrayFromBuffer(const jboolean* buffer, jint bufferLength);
@@ -56,22 +74,6 @@ jarray BPy_ToJIntArray(PyObject* arg, jboolean* ok);
 jarray BPy_ToJLongArray(PyObject* arg, jboolean* ok);
 jarray BPy_ToJFloatArray(PyObject* arg, jboolean* ok);
 jarray BPy_ToJDoubleArray(PyObject* arg, jboolean* ok);
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// Java To Python Conversion Functions
-
-PyObject* BPy_FromJObject(PyTypeObject* type, jobject arg);
-PyObject* BPy_FromJString(jstring arg);
-PyObject* BPy_FromJBooleanArray(jarray arg);
-PyObject* BPy_FromJCharArray(jarray arg);
-PyObject* BPy_FromJByteArray(jarray arg);
-PyObject* BPy_FromJShortArray(jarray arg);
-PyObject* BPy_FromJIntArray(jarray arg);
-PyObject* BPy_FromJLongArray(jarray arg);
-PyObject* BPy_FromJFloatArray(jarray arg);
-PyObject* BPy_FromJDoubleArray(jarray arg);
-PyObject* BPy_FromJObjectArray(jobjectArray arg);
-PyObject* BPy_FromJStringArray(jobjectArray arg);
 
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
