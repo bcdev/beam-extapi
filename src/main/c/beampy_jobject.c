@@ -1,5 +1,8 @@
 #include "beampy_jobject.h"
 
+PyObject* JObject_new(PyTypeObject *type, PyObject *args, PyObject *kwds);
+PyObject* JObject_repr(JObject* self);
+PyObject* JObject_str(JObject* self);
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // JObject
@@ -9,7 +12,7 @@
  */
 PyTypeObject JObject_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    "JObject",                    /* tp_name */
+    "beampy.JObject",             /* tp_name */
     sizeof (JObject),             /* tp_basicsize */
     0,                            /* tp_itemsize */
     (destructor)JObject_dealloc,  /* tp_dealloc */
@@ -17,17 +20,17 @@ PyTypeObject JObject_Type = {
     NULL,                         /* tp_getattr */
     NULL,                         /* tp_setattr */
     NULL,                         /* tp_reserved */
-    NULL,                         /* tp_repr */            // todo --> Object.toString()
+    (reprfunc)JObject_repr,       /* tp_repr */
     NULL,                         /* tp_as_number */
     NULL,                         /* tp_as_sequence */
     NULL,                         /* tp_as_mapping */
     NULL,                         /* tp_hash  */           // todo --> Object.hashCode()
     NULL,                         /* tp_call */
-    NULL,                         /* tp_str */
+    (reprfunc)JObject_str,        /* tp_str */
     NULL,                         /* tp_getattro */
     NULL,                         /* tp_setattro */
     NULL,                         /* tp_as_buffer */
-    Py_TPFLAGS_DEFAULT,           /* tp_flags */
+    Py_TPFLAGS_DEFAULT|Py_TPFLAGS_BASETYPE,  /* tp_flags */
     "Java Object Wrapper",        /* tp_doc */
     NULL,                         /* tp_traverse */
     NULL,                         /* tp_clear */
@@ -43,10 +46,26 @@ PyTypeObject JObject_Type = {
     NULL,                         /* tp_descr_get */
     NULL,                         /* tp_descr_set */
     0,                            /* tp_dictoffset */
-    (initproc) JObject_init,      /* tp_init */
+    (initproc)JObject_init,       /* tp_init */
     NULL,                         /* tp_alloc */
-    NULL,                         /* tp_new */
+    JObject_new,                  /* tp_new */
 };
+
+PyObject* JObject_repr(JObject* self)
+{
+    return PyUnicode_FromFormat("%s(%p)",
+                                ((PyObject*)self)->ob_type->tp_name,
+                                self->jobjectRef);
+}
+
+PyObject* JObject_str(JObject* self)
+{
+    return PyUnicode_FromFormat("%s@%p(jobjectRef=%p)",
+                                ((PyObject*)self)->ob_type->tp_name,
+                                self,
+                                self->jobjectRef);
+}
+
 
 PyObject* JObject_New(jobject jobjectRef)
 {
@@ -55,10 +74,21 @@ PyObject* JObject_New(jobject jobjectRef)
 
 PyObject* JObject_FromType(PyTypeObject* type, jobject jobjectRef)
 {
-    PyObject* longPyObj = PyLong_FromVoidPtr(jobjectRef);
-    PyObject* jobjPyObj = PyObject_CallObject((PyObject*) type, longPyObj);
-    Py_DECREF(longPyObj);
-    return jobjPyObj;
+    PyObject* arg;
+    PyObject* result;
+
+    arg = PyLong_FromVoidPtr(jobjectRef);
+    result = PyObject_CallFunctionObjArgs((PyObject*) type, arg, NULL);
+    Py_DECREF(arg);
+
+    // printf("JObject_FromType: type=%p, jobjectRef=%p, result=%p\n",type,jobjectRef,result);
+
+    if (result == NULL) {
+        char msg[256];
+        sprintf(msg, "JObject_FromType: failed to create instance of %s", type->tp_name);
+        PyErr_SetString(PyExc_ValueError, msg);
+    }
+    return result;
 }
 
 int JObject_Check(PyObject* anyPyObj)
@@ -174,28 +204,46 @@ jobjectArray JObject_AsJObjectArrayRefT(PyObject* anyPyObj, jclass requestedComp
  */
 int JObject_init(JObject* self, PyObject* args, PyObject* kwds)
 {
-    PyObject* jobjId;
+    // printf("JObject_init: type->tp_name=%s, self->jobjectRef=%p\n", ((PyObject*) self)->ob_type->tp_name, self->jobjectRef);
+    return 0;
+}
+
+/**
+ * Implements the __new__() method of the JObject_Type class.
+ */
+PyObject* JObject_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
+{
+    static char *kwlist[] = {"jobjectRef", NULL};
+    JObject* self;
+    PyObject* jobjId = NULL;
     jobject jobjectRef;
 
-    if (!PyArg_ParseTupleAndKeywords(args, kwds, "O", NULL, &jobjId)) {
-        return -1;
+    // printf("JObject_new: type->tp_name=%s\n", type->tp_name);
+
+    self = (JObject*) type->tp_alloc(type, 0);
+
+    if (!PyArg_ParseTupleAndKeywords(args, kwds, "O", kwlist, &jobjId)) {
+        return NULL;
     }
 
     jobjectRef = (jobject) PyLong_AsVoidPtr(jobjId);
     if (jobjectRef == NULL) {
-        PyErr_SetString(PyExc_ValueError, "failed to convert argument to Java object reference");
-        return -2;
+        PyErr_SetString(PyExc_ValueError, "JObject_new: failed to convert argument to Java object reference");
+        return NULL;
     }
 
     jobjectRef = (*jenv)->NewGlobalRef(jenv, jobjectRef);
     if (jobjectRef == NULL) {
-        PyErr_SetString(PyExc_MemoryError, "failed to create global Java object reference");
-        return -3;
+        PyErr_SetString(PyExc_MemoryError, "JObject_new: failed to create global Java object reference");
+        return NULL;
     }
 
-    printf("JObject_init %p\n", jobjectRef);
+    // printf("JObject_new: jobjectRef=%p\n", jobjectRef);
+
     self->jobjectRef = jobjectRef;
-    return 0;
+    Py_INCREF(self);
+
+    return (PyObject*) self;
 }
 
 /**
@@ -203,12 +251,14 @@ int JObject_init(JObject* self, PyObject* args, PyObject* kwds)
  */
 void JObject_dealloc(JObject* self)
 {
-    printf("JObject_dealloc %p\n", self->jobjectRef);
+printf("JObject_dealloc: self->jobjectRef=%p\n", self->jobjectRef);
 
     if (self->jobjectRef != NULL) {
         (*jenv)->DeleteGlobalRef(jenv, self->jobjectRef);
         self->jobjectRef = NULL;
     }
+
+    Py_TYPE(self)->tp_free((PyObject*) self);
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -271,7 +321,7 @@ static PySequenceMethods JObjectArray_as_sequence = {
  */
 PyTypeObject JObjectArray_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    "JObjectArray",               /* tp_name */
+    "beampy.JObjectArray",        /* tp_name */
     sizeof (JObject),             /* tp_basicsize */
     0,                            /* tp_itemsize */
     (destructor)JObject_dealloc,  /* tp_dealloc */
@@ -289,7 +339,7 @@ PyTypeObject JObjectArray_Type = {
     NULL,                         /* tp_getattro */
     NULL,                         /* tp_setattro */
     NULL,                         /* tp_as_buffer */
-    Py_TPFLAGS_DEFAULT,           /* tp_flags */
+    Py_TPFLAGS_DEFAULT|Py_TPFLAGS_BASETYPE,           /* tp_flags */
     "Java Object Array Wrapper",  /* tp_doc */
     NULL,                         /* tp_traverse */
     NULL,                         /* tp_clear */
@@ -305,9 +355,9 @@ PyTypeObject JObjectArray_Type = {
     NULL,                         /* tp_descr_get */
     NULL,                         /* tp_descr_set */
     0,                            /* tp_dictoffset */
-    (initproc) JObject_init,      /* tp_init */
+    (initproc)JObject_init,       /* tp_init */
     NULL,                         /* tp_alloc */
-    NULL,                         /* tp_new */
+    JObject_new,                  /* tp_new */
 };
 
 PyObject* JObjectArray_New(jobjectArray jobjectArrayRef)
