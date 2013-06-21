@@ -10496,7 +10496,7 @@ float Band_getSampleFloat(Band _this, int x, int y)
     return _result;
 }
 
-int* Band_getPixelsInt(Band _this, int x, int y, int w, int h, const int* pixelsElems, int pixelsLength, int* _resultArrayLength)
+int* Band_getPixelsInt(Band _this, int x, int y, int w, int h, int* pixelsElems, int pixelsLength, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
     jboolean ok = 1;
@@ -10515,15 +10515,22 @@ int* Band_getPixelsInt(Band _this, int x, int y, int w, int h, const int* pixels
         }
     }
     pixelsArray = (*jenv)->NewIntArray(jenv, pixelsLength);
-    beam_copyToJArray(pixelsArray, pixelsElems, pixelsLength, sizeof (int));
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method, x, y, w, h, pixelsArray);
-    _result = beam_newCIntArray(_resultArray, _resultArrayLength);
+    if (pixelsElems != NULL && (*jenv)->IsSameObject(jenv, pixelsArray, _resultArray)) {
+        beam_copyFromJArray(_resultArray, pixelsElems, pixelsLength, sizeof (int));
+        _result = pixelsElems;
+        if (_resultArrayLength != NULL) {
+            *_resultArrayLength = pixelsLength;
+        }
+    } else {
+        _result = beam_newCIntArray(_resultArray, _resultArrayLength);
+    }
     (*jenv)->DeleteLocalRef(jenv, pixelsArray);
     (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
 
-float* Band_getPixelsFloat(Band _this, int x, int y, int w, int h, const float* pixelsElems, int pixelsLength, int* _resultArrayLength)
+float* Band_getPixelsFloat(Band _this, int x, int y, int w, int h, float* pixelsElems, int pixelsLength, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
     jboolean ok = 1;
@@ -10542,15 +10549,22 @@ float* Band_getPixelsFloat(Band _this, int x, int y, int w, int h, const float* 
         }
     }
     pixelsArray = (*jenv)->NewFloatArray(jenv, pixelsLength);
-    beam_copyToJArray(pixelsArray, pixelsElems, pixelsLength, sizeof (float));
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method, x, y, w, h, pixelsArray);
-    _result = beam_newCFloatArray(_resultArray, _resultArrayLength);
+    if (pixelsElems != NULL && (*jenv)->IsSameObject(jenv, pixelsArray, _resultArray)) {
+        beam_copyFromJArray(_resultArray, pixelsElems, pixelsLength, sizeof (float));
+        _result = pixelsElems;
+        if (_resultArrayLength != NULL) {
+            *_resultArrayLength = pixelsLength;
+        }
+    } else {
+        _result = beam_newCFloatArray(_resultArray, _resultArrayLength);
+    }
     (*jenv)->DeleteLocalRef(jenv, pixelsArray);
     (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
 }
 
-double* Band_getPixelsDouble(Band _this, int x, int y, int w, int h, const double* pixelsElems, int pixelsLength, int* _resultArrayLength)
+double* Band_getPixelsDouble(Band _this, int x, int y, int w, int h, double* pixelsElems, int pixelsLength, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
     jboolean ok = 1;
@@ -10569,9 +10583,16 @@ double* Band_getPixelsDouble(Band _this, int x, int y, int w, int h, const doubl
         }
     }
     pixelsArray = (*jenv)->NewDoubleArray(jenv, pixelsLength);
-    beam_copyToJArray(pixelsArray, pixelsElems, pixelsLength, sizeof (double));
     _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method, x, y, w, h, pixelsArray);
-    _result = beam_newCDoubleArray(_resultArray, _resultArrayLength);
+    if (pixelsElems != NULL && (*jenv)->IsSameObject(jenv, pixelsArray, _resultArray)) {
+        beam_copyFromJArray(_resultArray, pixelsElems, pixelsLength, sizeof (double));
+        _result = pixelsElems;
+        if (_resultArrayLength != NULL) {
+            *_resultArrayLength = pixelsLength;
+        }
+    } else {
+        _result = beam_newCDoubleArray(_resultArray, _resultArrayLength);
+    }
     (*jenv)->DeleteLocalRef(jenv, pixelsArray);
     (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
