@@ -71,7 +71,8 @@ jarray BPy_NewGenericJPrimitiveArrayFromBuffer(const void* buffer, jint bufferLe
 
 jobject BPy_ConvSuccess(jobject arg, jboolean* ok)
 {
-    *ok = 1;
+    *ok = (jboolean) 1;
+//printf("ok=%d\n", *ok);
     return arg;
 }
 
@@ -80,7 +81,8 @@ jobject BPy_ConvFailure(const char* msg, jboolean* ok)
     if (msg != NULL) {
         PyErr_SetString(PyExc_ValueError, msg);
     }
-    *ok = 0;
+    *ok = (jboolean) 0;
+//printf("ok=%d\n", *ok);
     return NULL;
 }
 
@@ -185,7 +187,7 @@ jobject BPy_NewJNumberFromFloat(PyObject* arg, jboolean* ok)
 
     BPY_CHECK_JPYUTIL()
 
-    v = PyLong_AsDouble(arg);
+    v = PyFloat_AsDouble(arg);
     if (v == (jfloat) v) {
         argJObj = (*jenv)->NewObject(jenv, BPy_FloatClass, BPy_FloatConstr, (jfloat) v);
     } else if (v == (jdouble) v) {
@@ -255,6 +257,8 @@ jobject BPy_NewJListFromSeq(PyObject* arg, jboolean* ok)
     return NULL;
 }
 
+#define MAX_SIZE ((1 << 31) - 1)
+
 jobjectArray BPy_NewJObjectArrayFromSeqT(PyObject* arg, jclass compType, jboolean* ok)
 {
     jarray arrayJObj;
@@ -264,7 +268,7 @@ jobjectArray BPy_NewJObjectArrayFromSeqT(PyObject* arg, jclass compType, jboolea
     BPY_CHECK_JPYUTIL()
 
     size = PySequence_Size(arg);
-    if (size < 0 || size >= (1 << 31)) {
+    if (size < 0 || size >= MAX_SIZE) {
         char msg[256];
         sprintf(msg, "invalid sequence size: %d", size);
         return BPy_ConvFailure(msg, ok);
@@ -306,13 +310,17 @@ jobject BPy_ToJObjectDefault(PyObject* arg, jclass type, jboolean* ok)
     jobject argJObj;
 
     if (arg == Py_None) {
+//printf("BPy_ToJObjectDefault: none\n");
         return BPy_ConvSuccess(NULL, ok);
     }
 
+//printf("BPy_ToJObjectDefault: not none\n");
     argJObj = JObject_AsJObjectRefT(arg, type);
     if (argJObj != NULL) {
+//printf("BPy_ToJObjectDefault: JObject\n");
         return BPy_ConvSuccess((*jenv)->NewLocalRef(jenv, argJObj), ok);
     }
+//printf("BPy_ToJObjectDefault: else\n");
 
     return BPy_ConvFailure(NULL, ok);
 }
@@ -340,37 +348,53 @@ jobjectArray BPy_ToJObjectArrayDefault(PyObject* arg, jclass compType, jboolean*
 jobject BPy_ToJObjectGeneric(PyObject* arg, jboolean* ok)
 {
     jobject argJObj = BPy_ToJObjectDefault(arg, BPy_ObjectClass, ok);
-    if (ok) {
+    if (*ok) {
         return argJObj;
     }
 
+//printf("BPy_ToJObjectGeneric: no default\n");
     if (PyBool_Check(arg)) {
+//printf("BPy_ToJObjectGeneric: bool\n");
         return BPy_NewJBooleanFromBool(arg, ok);
     } else if (PyLong_Check(arg)) {
+//printf("BPy_ToJObjectGeneric: int\n");
         return BPy_NewJNumberFromInt(arg, ok);
     } else if (PyFloat_Check(arg)) {
+//printf("BPy_ToJObjectGeneric: float\n");
         return BPy_NewJNumberFromFloat(arg, ok);
     } else if (PyUnicode_Check(arg)) {
+//printf("BPy_ToJObjectGeneric: unicode\n");
         return BPy_NewJStringFromStr(arg, ok);
     } else if (PyDict_Check(arg)) {
+//printf("BPy_ToJObjectGeneric: dict\n");
         return BPy_NewJMapFromDict(arg, ok);
     } else if (PySequence_Check(arg)) {
+//printf("BPy_ToJObjectGeneric: seq\n");
         return BPy_NewJObjectArrayFromSeq(arg, ok);
     }
+//printf("BPy_ToJObjectGeneric: else\n");
 
     return BPy_ConvFailure("missing appropriate Java representation of argument", ok);
 }
 
 jobject BPy_ToJObjectT(PyObject* arg, jclass type, jboolean* ok)
 {
-    jobject argJObj = BPy_ToJObjectDefault(arg, type, ok);
-    if (ok) {
+    jobject argJObj;
+
+//printf("BPy_ToJObjectT: arg %p, %s\n", arg, arg->ob_type->tp_name);
+
+    argJObj = BPy_ToJObjectDefault(arg, type, ok);
+    if (*ok) {
+//printf("BPy_ToJObjectT: default %p\n", argJObj);
         return argJObj;
     }
 
+//printf("BPy_ToJObjectT: no default\n");
     if (type == BPy_StringClass) {
+//printf("BPy_ToJObjectT: str\n");
         return BPy_ToJString(arg, ok);
     }
+//printf("BPy_ToJObjectT: gen\n");
 
     // todo - this is only correct for type == java.lang.Object. Check type and perform appropriate conversions
     return BPy_ToJObjectGeneric(arg, ok);
@@ -384,13 +408,15 @@ jobject BPy_ToJObject(PyObject* arg, jboolean* ok)
 jstring BPy_ToJString(PyObject* arg, jboolean* ok)
 {
     jobject argJObj = BPy_ToJObjectDefault(arg, BPy_StringClass, ok);
-    if (ok) {
+    if (*ok) {
         return argJObj;
     }
 
     if (PyUnicode_Check(arg)) {
+//printf("BPy_ToJString: str\n");
         return BPy_NewJStringFromStr(arg, ok);
     }
+//printf("BPy_ToJString: err\n");
 
     return BPy_ConvFailure("argument must be a 'str'", ok);
 }
@@ -398,7 +424,7 @@ jstring BPy_ToJString(PyObject* arg, jboolean* ok)
 jobject BPy_ToJMap(PyObject* arg, jboolean* ok)
 {
     jobject argJObj = BPy_ToJObjectDefault(arg, BPy_MapClass, ok);
-    if (ok) {
+    if (*ok) {
         return argJObj;
     }
 
@@ -412,7 +438,7 @@ jobject BPy_ToJMap(PyObject* arg, jboolean* ok)
 jobject BPy_ToJList(PyObject* arg, jboolean* ok)
 {
     jobject argJObj = BPy_ToJObjectDefault(arg, BPy_ListClass, ok);
-    if (ok) {
+    if (*ok) {
         return argJObj;
     }
     return BPy_ConvFailure("TODO - implement conversion from Python sequence to java.util.List", ok);
@@ -432,7 +458,7 @@ jobjectArray BPy_ToJStringArray(PyObject* arg, jboolean* ok)
 jobjectArray BPy_ToJObjectArrayT(PyObject* arg, jclass compType, jboolean* ok)
 {
     jobjectArray argJObj = BPy_ToJObjectArrayDefault(arg, compType, ok);
-    if (ok) {
+    if (*ok) {
         return argJObj;
     }
 
@@ -556,12 +582,13 @@ PyObject* BPy_NewBufferFromJPrimitiveArray(jarray arrayJObj, const char* format)
     arrayLength = (*jenv)->GetArrayLength(jenv, arrayJObj);
 
     addr = (*jenv)->GetPrimitiveArrayCritical(jenv, arrayJObj, NULL);
-    if (addr != NULL) {
-        bufferPyObj = CArray_FromMemory(format, addr, arrayLength, CArray_FreeMemory);
-        (*jenv)->ReleasePrimitiveArrayCritical(jenv, arrayJObj, addr, 0);
-    } else {
-        bufferPyObj = NULL;
+    if (addr == NULL) {
+        PyErr_SetString(PyExc_RuntimeError, "failed to get primitive array data from Java");
+        return NULL;
     }
+
+    bufferPyObj = CArray_FromMemory(format, addr, arrayLength, CArray_FreeMemory);
+    (*jenv)->ReleasePrimitiveArrayCritical(jenv, arrayJObj, addr, 0);
 
     return bufferPyObj;
 }
