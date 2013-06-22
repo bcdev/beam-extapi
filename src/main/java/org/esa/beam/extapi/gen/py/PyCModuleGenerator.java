@@ -285,7 +285,7 @@ public class PyCModuleGenerator extends ModuleGenerator {
             }
         }
 */
-        writer.printf("    {\"py2j\", BPy_Py2J, METH_VARARGS, \"Test function which takes an argument, converts it into a Java object and wraps it by a JObject\"},\n");
+        writer.printf("    {\"to_jobject\", BPy_to_jobject, METH_VARARGS, \"Test function which takes an argument, converts it into a Java object and returns a JObject\"},\n");
         writer.printf("    {NULL, NULL, 0, NULL} /*Sentinel*/\n");
         writer.printf("};\n");
     }

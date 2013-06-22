@@ -24,9 +24,9 @@ jboolean BPy_InitApi()
 }
 
 /**
- * Test Python --> Java conversion
+ * Test Python --> Java conversion. In Python, use e.g.: beampy.to_jobject('abc')
  */
-PyObject* BPy_Py2J(PyObject* self, PyObject* args)
+PyObject* BPy_to_jobject(PyObject* self, PyObject* args)
 {
     jboolean ok = 1;
     PyObject* arg = NULL;
@@ -35,16 +35,13 @@ PyObject* BPy_Py2J(PyObject* self, PyObject* args)
     if (!BPy_InitApi()) {
         return NULL;
     }
-printf("M1\n");
-    if (!PyArg_ParseTuple(args, "O:BPy_Py2J", &arg)) {
+    if (!PyArg_ParseTuple(args, "O:to_jobject", &arg)) {
         return NULL;
     }
-printf("M2\n");
     resultJObj = BPy_ToJObject(arg, &ok);
     if (!ok) {
         return NULL;
     }
-printf("M3\n");
     resultPyObj = BPy_FromJObject(&JObject_Type, resultJObj);
     return resultPyObj;
 }
