@@ -148,7 +148,7 @@ char* beam_createJvmClassPathOption()
 
 boolean beam_createJvmWithDefaults()
 {
-    const char* jvm_options[5];
+    const char* jvm_options[16];
     char* class_path_option;
     boolean result;
 
@@ -165,14 +165,14 @@ boolean beam_createJvmWithDefaults()
 
     fprintf(stdout, "${libName}: %s\n", class_path_option);
 
-    jvm_options[0] = class_path_option;
-    /*jvm_options[1] = "-Djava.library.path=c:\\mylibs";*/
-    jvm_options[1] = "-Djava.awt.headless=true";
-    jvm_options[2] = "-Xms128M";
-    jvm_options[3] = "-Xmx512M";
-    jvm_options[4] = "-verbose:jni";
 
-    result = beam_createJvm(jvm_options, 5);
+    // use "-Djava.library.path=c:\\mylibs";*/
+    // use "-verbose:jni";
+    jvm_options[0] = class_path_option;
+    jvm_options[1] = "-Djava.awt.headless=true";
+    jvm_options[2] = "-Xms256M";
+    jvm_options[3] = "-Xmx1024M";
+    result = beam_createJvm(jvm_options, 4);
 
     free(class_path_option);
 
