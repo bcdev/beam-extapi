@@ -24,7 +24,7 @@ import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.List;
 
-import static org.esa.beam.extapi.gen.JavadocHelpers.*;
+import static org.esa.beam.extapi.gen.JavadocHelpers.convertToPythonDoc;
 import static org.esa.beam.extapi.gen.TemplateEval.eval;
 import static org.esa.beam.extapi.gen.TemplateEval.kv;
 
@@ -163,56 +163,14 @@ public class PyCModuleGenerator extends ModuleGenerator {
     }
 
     private void writeJObjectSubtypesDefinitions(TargetFile file) {
-        TemplateEval templateEval = file.getTemplateEval();
         for (ApiClass apiClass : getApiInfo().getAllClasses()) {
 
             String className = getComponentCClassName(apiClass.getType());
 
-            templateEval.add(kv("className", className),
-                             kv("classDoc", convertToPythonDoc(getApiInfo(), apiClass.getType().asClassDoc(), "", true)));
-
-            file.writeText("static PyMemberDef ${className}_Members[] = {\n");
-            List<ApiConstant> constants = getApiInfo().getConstantsOf(apiClass);
-            if (!constants.isEmpty()) {
-                for (ApiConstant constant : constants) {
-                    Object value = constant.getValue();
-                    String constantValue;
-                    if (value == null) {
-                        constantValue = "NULL";
-                    } else if (value instanceof String) {
-                        constantValue = "\"" + ((String) value).replace("\n", "\\n").replace("\t", "\\t").replace("\n", "\\n").replace("\"", "\\\"") + "\"";
-                    } else {
-                        constantValue = value.toString();
-                    }
-                    // todo - find out how to declare constant members, e.g. how do we assign 'constantValue'?
-                    file.writeText(eval("//     {\"${memberName}\", 0, 0, READONLY, ${doc}}\n",
-                                        kv("memberName", constant.getJavaName()),
-                                        kv("constantValue", constantValue),
-                                        kv("doc", "NULL")));
-                }
-            }
-
-            file.writeText("    {NULL, 0, 0, 0, NULL} /*Sentinel*/\n");
-            file.writeText("};\n");
-            file.writeText("\n");
-
-            file.writeText("static PyMethodDef ${className}_Methods[] = \n" +
-                                   "{\n");
-            List<ApiMethod> methods = getApiInfo().getMethodsOf(apiClass);
-            for (ApiMethod method : methods) {
-
-                String functionName = cModuleGenerator.getFunctionNameFor(method);
-                functionName = functionName.substring(className.length() + 1);
-
-                templateEval.add(kv("methodName", functionName),
-                                 kv("methodDoc", convertToPythonDoc(getApiInfo(), method.getMemberDoc(), "", true)),
-                                 kv("methodFlags", method.getMemberDoc().isStatic() || method.getMemberDoc().isConstructor() ? "METH_VARARGS | METH_STATIC" : "METH_VARARGS"));
-
-                file.writeText("    {\"${methodName}\", (PyCFunction) BeamPy${className}_${methodName}, ${methodFlags}, \"${methodDoc}\"},\n");
-            }
-            file.writeText("    {NULL, NULL, 0, NULL} /*Sentinel*/\n");
-            file.writeText("};\n");
-            file.writeText("\n");
+            file.getTemplateEval().add(kv("className", className),
+                                       kv("classDoc", convertToPythonDoc(getApiInfo(), apiClass.getType().asClassDoc(), "", true)));
+            // Does not work :-(
+            writeClassMethodDefs(file, apiClass);
 
             try {
                 file.writeResource("PyCModuleGenerator-stub-pytype.c");
@@ -224,27 +182,102 @@ public class PyCModuleGenerator extends ModuleGenerator {
         }
     }
 
+    private void writeClassMethodDefs(TargetFile file, ApiClass apiClass) {
+
+        file.writeText("static PyMethodDef ${className}_methods[] = {\n");
+        List<ApiMethod> methods = getApiInfo().getMethodsOf(apiClass);
+        for (ApiMethod method : methods) {
+            // Note: we can't simply take method.getJavaName() because this name may be overloaded in Java.
+            // cModuleGenerator.getFunctionNameFor(method) will return a unique name required by C and Python
+            String cFunctionName = cModuleGenerator.getFunctionNameFor(method);
+            // Strip class name from C function name --> Python method name.
+            String pyFunctionName = cFunctionName.substring(file.getTemplateEval().eval("${className}").length() + 1);
+
+            file.getTemplateEval().add(kv("methodName", pyFunctionName),
+                                       kv("methodDoc", convertToPythonDoc(getApiInfo(), method.getMemberDoc(), "", true)),
+                                       kv("methodFlags", method.getMemberDoc().isStatic() || method.getMemberDoc().isConstructor() ? "METH_VARARGS | METH_STATIC" : "METH_VARARGS"));
+
+            file.writeText("    {\"${methodName}\", (PyCFunction) BeamPy${className}_${methodName}, ${methodFlags}, \"${methodDoc}\"},\n");
+        }
+        file.writeText("    {NULL, NULL, 0, NULL} /*Sentinel*/\n");
+        file.writeText("};\n");
+        file.writeText("\n");
+    }
+
+    private String getConstantPythonValue(Object value) {
+        String constantValue = null;
+        if (value == null) {
+            constantValue = "Py_BuildValue(\"\")";
+        } else if (value instanceof Boolean) {
+            constantValue = String.format("PyBool_FromLong(%d)", (Boolean) value ? 1 : 0);
+        } else if (value instanceof Byte || value instanceof Short || value instanceof Integer) {
+            constantValue = String.format("PyLong_FromLong(%s)", value);
+        } else if (value instanceof Long) {
+            constantValue = String.format("PyLong_FromLongLong(%s)", value);
+        } else if (value instanceof Float || value instanceof Double) {
+            constantValue = String.format("PyFloat_FromDouble(%s)", value);
+        } else if (value instanceof Character) {
+            constantValue = String.format("PyUnicode_FromString(\"%s\")", toCEncodedString(value));
+        } else if (value instanceof String) {
+            constantValue = String.format("PyUnicode_FromString(\"%s\")", toCEncodedString(value));
+        }
+        return constantValue;
+    }
+
+    private String toCEncodedString(Object value) {
+        return value.toString().replace("\n", "\\n").replace("\t", "\\t").replace("\n", "\\n").replace("\"", "\\\"");
+    }
+
 
     private void writeJObjectSubtypesRegistration(PrintWriter writer) {
         writer.printf("" +
                               "int BPy_RegisterJObjectSubtypes(PyObject* module)\n" +
                               "{\n");
         for (ApiClass apiClass : getApiInfo().getAllClasses()) {
+            String className = getComponentCClassName(apiClass.getType());
             writer.printf(eval("" +
                                        "    // Register ${className}:\n" +
                                        "    ${className}_Type.tp_base = &JObject_Type;\n" +
-                                       (DEBUG ? "    printf(\"DEBUG: ${className} M0\\n\");\n" : "") +
                                        "    if (PyType_Ready(&${className}_Type) < 0) {\n" +
-                                       (DEBUG ? "        printf(\"DEBUG: PyType_Ready failed!\\n\");\n" : "") +
                                        "        return 0;\n" +
                                        "    }\n" +
-                                       (DEBUG ? "    printf(\"DEBUG: ${className} M1\\n\");\n" : "") +
                                        "    Py_INCREF(&${className}_Type);\n" +
-                                       (DEBUG ? "    printf(\"DEBUG: ${className} M2\\n\");\n" : "") +
-                                       "    PyModule_AddObject(module, \"${className}\", (PyObject*) &${className}_Type);\n" +
-                                       (DEBUG ? "    printf(\"DEBUG: ${className} added\\n\");\n" : "") +
-                                       "\n",
-                               kv("className", getComponentCClassName(apiClass.getType()))));
+                                       "    PyModule_AddObject(module, \"${className}\", (PyObject*) &${className}_Type);\n",
+                               kv("className", className)));
+
+
+            // Register class constants via the type's dict object.
+            // There seems to be no other way in the Python's C-API to register static class variables  (Class.CONST = 8)
+            // See dicussions in
+            //   http://stackoverflow.com/questions/2374334/static-variables-in-python-c-api
+            //   http://stackoverflow.com/questions/10161609/class-property-using-python-c-api
+            // Unfortunately we loose the member documentation this way.
+            //
+            List<ApiConstant> constants = getApiInfo().getConstantsOf(apiClass);
+            if (!constants.isEmpty()) {
+                writer.print(eval("    // Constants of class ${className}_Type:\n",
+                                  kv("className", className)));
+                for (ApiConstant constant : constants) {
+                    String fieldName = constant.getJavaName();
+                    Object value = constant.getValue();
+                    String constantValue = getConstantPythonValue(value);
+                    if (constantValue != null) {
+                        // todo - Python Doc says, it is unsafe to modify tp_dict, but does not tell what to do else
+                        //        Does not work: PyObject_SetAttrString((PyObject*) &${className}_Type, "${fieldName}", ${constantValue});
+                        writer.print(eval("    PyDict_SetItemString(${className}_Type.tp_dict, \"${fieldName}\", ${constantValue});\n",
+                                          kv("className", className),
+                                          kv("fieldName", fieldName),
+                                          kv("constantValue", constantValue)));
+
+                    } else {
+                        System.out.printf(eval("Warning: constant value of field ${className}.${memberName} cannot be represented in Python: ${constantValue}\n",
+                                               kv("className", className),
+                                               kv("memberName", fieldName),
+                                               kv("constantValue", value.toString())));
+                    }
+                }
+            }
+            writer.print("\n");
         }
         writer.printf("" +
                               "    return 1;\n" +

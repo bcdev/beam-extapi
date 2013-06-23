@@ -126,7 +126,7 @@ public abstract class ModuleGenerator implements GeneratorContext {
         }
         errCode = 2000;
         final Set<String> coreJavaClassNames = getCoreJavaClassNames();
-        for (ApiClass apiClass : getApiClasses()) {
+        for (ApiClass apiClass : getApiInfo().getAllClasses()) {
             if (!coreJavaClassNames.contains(apiClass.getJavaName())) {
                 writeClassDef(writer,
                               getComponentCClassVarName(apiClass.getType()),
@@ -198,8 +198,15 @@ public abstract class ModuleGenerator implements GeneratorContext {
         writer.printf("\n");
 
         final Set<String> coreJavaClassNames = getCoreJavaClassNames();
-
-        writer.printf("/* API classes. */\n");
+        for (ApiClass apiClass : getApiInfo().getAllClasses()) {
+            if (!coreJavaClassNames.contains(apiClass.getType().qualifiedTypeName())) {
+                writer.write(String.format("%sjclass %s;\n",
+                                           extDecl, getComponentCClassVarName(apiClass.getType())));
+            }
+        }
+        writer.printf("\n");
+/*
+        writer.printf("// API classes.\n");
         for (ApiClass apiClass : getApiClasses()) {
             if (!coreJavaClassNames.contains(apiClass.getType().qualifiedTypeName())) {
                 writer.write(String.format("%sjclass %s;\n",
@@ -208,7 +215,7 @@ public abstract class ModuleGenerator implements GeneratorContext {
         }
         writer.printf("\n");
 
-        writer.printf("/* Used non-API classes. */\n");
+        writer.printf("// Used non-API classes.\n");
         for (ApiClass apiClass : getApiInfo().getUsedNonApiClasses()) {
             if (!coreJavaClassNames.contains(apiClass.getType().qualifiedTypeName())) {
                 if (apiClass.getType().asClassDoc().isEnum()) {
@@ -219,6 +226,7 @@ public abstract class ModuleGenerator implements GeneratorContext {
             }
         }
         writer.write("\n");
+*/
     }
 
     private Set<String> getCoreJavaClassNames() {
