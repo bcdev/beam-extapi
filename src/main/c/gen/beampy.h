@@ -5,18 +5,9 @@
 extern "C" {
 #endif
 
-#include "../beampy_carray.h"
-#include "../beampy_jobject.h"
-#include "../beampy_jpyutil.h"
-#include "../beampy_buffer.h"
-// <<<<<<<< Begin include from /org/esa/beam/extapi/gen/c/CModuleGenerator-stub-types.h
-typedef char byte;
-typedef unsigned char boolean;
-typedef long long dlong;
+#include <Python.h>
+#include <structmember.h>
 
-typedef void* Object;
-typedef void* String;
-// >>>>>>>> End include from /org/esa/beam/extapi/gen/c/CModuleGenerator-stub-types.h
 extern PyTypeObject Shape_Type;
 extern PyTypeObject MapTransform_Type;
 extern PyTypeObject ImageGeometry_Type;
@@ -59,6 +50,7 @@ extern PyTypeObject Iterator_Type;
 extern PyTypeObject MathTransform_Type;
 extern PyTypeObject CoordinateReferenceSystem_Type;
 extern PyTypeObject ProductWriterPlugIn_Type;
+extern PyTypeObject Rectangle2D_Type;
 extern PyTypeObject File_Type;
 extern PyTypeObject GeoPos_Type;
 extern PyTypeObject ProductNodeGroup_Type;
