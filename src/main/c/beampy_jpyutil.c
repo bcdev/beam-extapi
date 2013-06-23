@@ -317,7 +317,7 @@ jobject BPy_ToJObjectDefault(PyObject* arg, jclass type, jboolean* ok)
 //printf("BPy_ToJObjectDefault: not none\n");
     argJObj = JObject_AsJObjectRefT(arg, type);
     if (argJObj != NULL) {
-//printf("BPy_ToJObjectDefault: JObject\n");
+//printf("BPy_ToJObjectDefault: JObject argJObj=%p\n", argJObj);
         return BPy_ConvSuccess((*jenv)->NewLocalRef(jenv, argJObj), ok);
     }
 //printf("BPy_ToJObjectDefault: else\n");
