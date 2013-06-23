@@ -1,11 +1,10 @@
-
 #include "${libName}.h"
-
-#include <Python.h>
-#include "structmember.h"
-#include <jni.h>
-
 #include "../beam_util.h"
+#include "../beam_jvm.h"
+#include "../beampy_carray.h"
+#include "../beampy_jobject.h"
+#include "../beampy_jpyutil.h"
+#include "../beampy_buffer.h"
 
 static PyObject* BeamPy_Error;
 
@@ -24,7 +23,9 @@ jboolean BPy_InitApi()
 }
 
 /**
- * Test Python --> Java conversion. In Python, use e.g.: beampy.to_jobject('abc')
+ * Test Python --> Java conversion.
+ * Registered as a beampy-module function.
+ * In Python, use e.g.: beampy.to_jobject('abc')
  */
 PyObject* BPy_to_jobject(PyObject* self, PyObject* args)
 {
@@ -46,8 +47,6 @@ PyObject* BPy_to_jobject(PyObject* self, PyObject* args)
     return resultPyObj;
 }
 
-define JVM_EXCEPTION_MSG  "JVM exception: class ";
-
 #define CHECK_JVM_EXCEPTION()           \
 if ((*jenv)->ExceptionCheck(jenv)) {    \
     (*jenv)->ExceptionDescribe(jenv);   \
@@ -55,3 +54,5 @@ if ((*jenv)->ExceptionCheck(jenv)) {    \
     PyErr_SetString(BeamPy_Error, "JVM exception: class " ## C ## ", method " ## M); \
     return NULL;                        \
 }                                       \
+
+

@@ -1,3 +1,6 @@
+#include "beam_jvm.h"
+#include "beam_util.h"
+#include <stdlib.h>
 
 JavaVM* jvm = NULL;
 JNIEnv* jenv = NULL;
@@ -6,7 +9,7 @@ JNIEnv* jenv = NULL;
 
 JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *vm, void *reserved)
 {
-    fprintf(stdout, "${libName}: JNI_OnLoad() called\n");
+    fprintf(stdout, "beam_jvm: JNI_OnLoad() called\n");
     jvm = vm;
     (*jvm)->GetEnv(vm, &jenv, JNI_VERSION_1_6);
     return JNI_VERSION_1_6;
@@ -14,19 +17,19 @@ JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *vm, void *reserved)
 
 JNIEXPORT void JNICALL JNI_OnUnload(JavaVM *vm, void *reserved)
 {
-    fprintf(stdout, "${libName}: JNI_OnUnload() called\n");
+    fprintf(stdout, "beam_jvm: JNI_OnUnload() called\n");
     jvm = NULL;
     jenv = NULL;
 }
 
 /* Java VM functions that must be used if this module is used in stand-alone mode (= not loaded as shared library by a Java VM) */
 
-boolean beam_isJvmCreated()
+jboolean beam_isJvmCreated()
 {
     return jvm != NULL;
 }
 
-boolean beam_createJvm(const char* option_strings[], int option_count)
+jboolean beam_createJvm(const char* option_strings[], int option_count)
 {
     JavaVMInitArgs vm_args; 
     JavaVMOption* options;
@@ -36,14 +39,14 @@ boolean beam_createJvm(const char* option_strings[], int option_count)
         return JNI_TRUE;
     }
 
-    fprintf(stdout, "${libName}: creating Java VM using %d options\n", option_count);
+    fprintf(stdout, "beam_jvm: creating Java VM using %d options\n", option_count);
 
     options = (JavaVMOption*) calloc(option_count, sizeof (JavaVMOption));
     {
         int i;
         for (i = 0; i < option_count; i++) {
             options[i].optionString = (char*) option_strings[i];
-            fprintf(stdout, "${libName}: option(%d) = \"%s\"\n", i, options[i].optionString);
+            fprintf(stdout, "beam_jvm: option(%d) = \"%s\"\n", i, options[i].optionString);
         }
     }
 
@@ -56,16 +59,16 @@ boolean beam_createJvm(const char* option_strings[], int option_count)
     free(options);
 
     if (res != 0) {
-        fprintf(stderr, "${libName}: JNI_CreateJavaVM failed with exit code %d\n", res);
+        fprintf(stderr, "beam_jvm: JNI_CreateJavaVM failed with exit code %d\n", res);
         return JNI_FALSE;
     } else {
-        fprintf(stdout, "${libName}: Java VM successfully created\n");
+        fprintf(stdout, "beam_jvm: Java VM successfully created\n");
     }
 
     return JNI_TRUE;
 }
 
-boolean beam_destroyJvm()
+jboolean beam_destroyJvm()
 {
     jint res;
 
@@ -75,7 +78,7 @@ boolean beam_destroyJvm()
     
     res = (*jvm)->DestroyJavaVM(jvm);
     if (res != 0) {
-        fprintf(stderr, "${libName}: DestroyJavaVM failed with exit code %d\n", res);
+        fprintf(stderr, "beam_jvm: DestroyJavaVM failed with exit code %d\n", res);
         return JNI_FALSE;
     }
 
@@ -119,8 +122,8 @@ char* beam_createJvmClassPathOption()
 
     beam_home = getenv("BEAM_HOME");
     if (beam_home == NULL) {
-        fprintf(stderr, "${libName}: missing environment variable 'BEAM_HOME'\n");
-        fprintf(stderr, "${libName}: please make sure 'BEAM_HOME' points to a valid BEAM installation directory\n");
+        fprintf(stderr, "beam_jvm: missing environment variable 'BEAM_HOME'\n");
+        fprintf(stderr, "beam_jvm: please make sure 'BEAM_HOME' points to a valid BEAM installation directory\n");
         return NULL;
     }
 
@@ -146,24 +149,24 @@ char* beam_createJvmClassPathOption()
 #undef OS_FILESEP
 #undef OS_PATHSEP
 
-boolean beam_createJvmWithDefaults()
+jboolean beam_createJvmWithDefaults()
 {
     const char* jvm_options[16];
     char* class_path_option;
-    boolean result;
+    jboolean result;
 
     class_path_option = beam_createJvmClassPathOption();
     if (class_path_option == NULL) {
         const char* beam_home = getenv("BEAM_HOME");
         fprintf(stderr, "${libName}: failed to construct Java classpath\n");
         if (beam_home != NULL) {
-            fprintf(stderr, "${libName}: please make sure 'BEAM_HOME' points to a valid BEAM installation directory\n");
-            fprintf(stderr, "${libName}: currently BEAM_HOME = %s\n", beam_home);
+            fprintf(stderr, "beam_jvm: please make sure 'BEAM_HOME' points to a valid BEAM installation directory\n");
+            fprintf(stderr, "beam_jvm: currently BEAM_HOME = %s\n", beam_home);
         }
         return JNI_FALSE;
     }
 
-    fprintf(stdout, "${libName}: %s\n", class_path_option);
+//    fprintf(stdout, "beam_jvm: %s\n", class_path_option);
 
 
     // use "-Djava.library.path=c:\\mylibs";*/
@@ -179,30 +182,13 @@ boolean beam_createJvmWithDefaults()
     return result;
 }
 
-
-
 jclass beam_findJvmClass(const char* classResourceName)
 {
     jclass c = (*jenv)->FindClass(jenv, classResourceName);
     if (c == NULL) {
-        fprintf(stderr, "${libName}: Java class not found: %s\n", classResourceName);
+        fprintf(stderr, "beam_jvm: Java class not found: %s\n", classResourceName);
     }
     return c;
 }
 
-
-// todo - the following functions actually belong in another module because they expect String and Object typedefs to be present
-
-String String_newString(const char* chars)
-{
-    jstring str = (*jenv)->NewStringUTF(jenv, chars);
-    return (*jenv)->NewGlobalRef(jenv, str);
-}
-
-void Object_delete(Object object)
-{
-    if (object != NULL) {
-        (*jenv)->DeleteGlobalRef(jenv, object);
-    }
-}
 

@@ -87,8 +87,6 @@ public class CModuleGenerator extends ModuleGenerator {
         writer.write("\n");
         writeClassTypedefs(writer);
         writer.write("\n");
-        writeTemplateResource(writer, "CModuleGenerator-stub-jvm.h");
-        writer.write("\n");
         writeTemplateResource(writer, "CModuleGenerator-stub-conv.h");
         writer.write("\n");
         writeClassConstantAndFunctionDefinitions(writer);
@@ -144,7 +142,7 @@ public class CModuleGenerator extends ModuleGenerator {
                 writeClassDefinitions(writer);
                 writer.printf("\n");
 
-                writeTemplateResource(writer, "CModuleGenerator-stub-jvm.c");
+                writeTemplateResource(writer, "CModuleGenerator-stub-types.c");
                 writer.printf("\n");
 
                 writeInitApiFunction(writer);

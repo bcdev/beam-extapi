@@ -1,8 +1,6 @@
 LIBRARY "${libName}"
 
 EXPORTS
-	beam_getJavaVM
-	beam_getJNIEnv
 	beam_isJvmCreated
 	beam_createJvm
 	beam_createJvmWithDefaults
