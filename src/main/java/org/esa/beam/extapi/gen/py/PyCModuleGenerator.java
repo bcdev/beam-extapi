@@ -114,9 +114,6 @@ public class PyCModuleGenerator extends ModuleGenerator {
                 writeTemplateResource(writer, "PyCModuleGenerator-stub-init.c");
                 writer.printf("\n");
 
-                cModuleGenerator.writeClassTypedefs(writer);
-                writer.printf("\n");
-
                 writeTemplateResource(writer, "/org/esa/beam/extapi/gen/c/CModuleGenerator-stub-jvm.h");
                 writer.printf("\n");
 
@@ -165,7 +162,7 @@ public class PyCModuleGenerator extends ModuleGenerator {
 
             file.getTemplateEval().add(kv("className", className),
                                        kv("classDoc", convertToPythonDoc(getApiInfo(), apiClass.getType().asClassDoc(), "", true)));
-            // Does not work :-(
+
             writeClassMethodDefs(file, apiClass);
 
             try {
@@ -244,7 +241,7 @@ public class PyCModuleGenerator extends ModuleGenerator {
 
             // Register class constants via the type's dict object.
             // There seems to be no other way in the Python's C-API to register static class variables  (Class.CONST = 8)
-            // See dicussions in
+            // See discussions in
             //   http://stackoverflow.com/questions/2374334/static-variables-in-python-c-api
             //   http://stackoverflow.com/questions/10161609/class-property-using-python-c-api
             // Unfortunately we loose the member documentation this way.
