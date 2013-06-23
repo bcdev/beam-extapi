@@ -205,28 +205,6 @@ public abstract class ModuleGenerator implements GeneratorContext {
             }
         }
         writer.printf("\n");
-/*
-        writer.printf("// API classes.\n");
-        for (ApiClass apiClass : getApiClasses()) {
-            if (!coreJavaClassNames.contains(apiClass.getType().qualifiedTypeName())) {
-                writer.write(String.format("%sjclass %s;\n",
-                                           extDecl, getComponentCClassVarName(apiClass.getType())));
-            }
-        }
-        writer.printf("\n");
-
-        writer.printf("// Used non-API classes.\n");
-        for (ApiClass apiClass : getApiInfo().getUsedNonApiClasses()) {
-            if (!coreJavaClassNames.contains(apiClass.getType().qualifiedTypeName())) {
-                if (apiClass.getType().asClassDoc().isEnum()) {
-                    printUsedButUnhandledEnumWarning(apiClass);
-                }
-                writer.write(String.format("%sjclass %s;\n",
-                                           extDecl, getComponentCClassVarName(apiClass.getType())));
-            }
-        }
-        writer.write("\n");
-*/
     }
 
     private Set<String> getCoreJavaClassNames() {
