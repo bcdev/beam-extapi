@@ -101,7 +101,7 @@ PyObject* JObject_FromType(PyTypeObject* type, jobject jobjectRef)
     result = PyObject_CallFunctionObjArgs((PyObject*) type, arg, NULL);
     Py_DECREF(arg);
 
-    // printf("JObject_FromType: type=%p, jobjectRef=%p, result=%p\n",type,jobjectRef,result);
+// printf("JObject_FromType: type=%p, jobjectRef=%p, result=%p\n",type,jobjectRef,result);
 
     if (result == NULL) {
         char msg[256];
@@ -111,24 +111,9 @@ PyObject* JObject_FromType(PyTypeObject* type, jobject jobjectRef)
     return result;
 }
 
-int JObject_Check(PyObject* anyPyObj)
-{
-/*
-    PyTypeObject* type = anyPyObj->ob_type;
-    while (type != NULL) {
-        if (type == &JObject_Type) {
-            return 1;
-        }
-        type = type->tp_base;
-    }
-    return 0;
-*/
-    return PyObject_TypeCheck(anyPyObj, &JObject_Type);
-}
-
 JObject* JObject_AsJObject(PyObject* anyPyObj)
 {
-    if (anyPyObj == NULL || !JObject_Check(anyPyObj)) {
+    if (anyPyObj == NULL || !PyObject_TypeCheck(anyPyObj, &JObject_Type)) {
         return NULL;
     }
     return (JObject*) anyPyObj;
@@ -145,13 +130,18 @@ jobject JObject_AsJObjectRef(PyObject* anyPyObj)
 
 jobject JObject_AsJObjectRefT(PyObject* anyPyObj, jclass requestedType)
 {
-    JObject* jobjPyObj = JObject_AsJObject(anyPyObj);
+    JObject* jobjPyObj;
+//printf("JObject_AsJObjectRefT: M1 anyPyObj=%p\n", anyPyObj);
+    jobjPyObj = JObject_AsJObject(anyPyObj);
+//printf("JObject_AsJObjectRefT: M2\n");
     if (jobjPyObj == NULL) {
         return NULL;
     }
+//printf("JObject_AsJObjectRefT: M3 jobjPyObj->jobjectRef=%p, requestedType=%p\n", jobjPyObj->jobjectRef, requestedType);
     if (!(*jenv)->IsInstanceOf(jenv, jobjPyObj->jobjectRef, requestedType)) {
         return NULL;
     }
+//printf("JObject_AsJObjectRefT: M4\n");
     return jobjPyObj->jobjectRef;
 }
 
@@ -241,7 +231,7 @@ PyObject* JObject_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
     PyObject* jobjId = NULL;
     jobject jobjectRef;
 
-    // printf("JObject_new: type->tp_name=%s\n", type->tp_name);
+//printf("JObject_new: type->tp_name=%s\n", type->tp_name);
 
     self = (JObject*) type->tp_alloc(type, 0);
 
@@ -261,7 +251,7 @@ PyObject* JObject_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
         return NULL;
     }
 
-    // printf("JObject_new: jobjectRef=%p\n", jobjectRef);
+// printf("JObject_new: jobjectRef=%p\n", jobjectRef);
 
     self->jobjectRef = jobjectRef;
 
