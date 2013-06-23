@@ -113,6 +113,7 @@ PyObject* JObject_FromType(PyTypeObject* type, jobject jobjectRef)
 
 int JObject_Check(PyObject* anyPyObj)
 {
+/*
     PyTypeObject* type = anyPyObj->ob_type;
     while (type != NULL) {
         if (type == &JObject_Type) {
@@ -121,6 +122,8 @@ int JObject_Check(PyObject* anyPyObj)
         type = type->tp_base;
     }
     return 0;
+*/
+    return PyObject_TypeCheck(anyPyObj, &JObject_Type);
 }
 
 JObject* JObject_AsJObject(PyObject* anyPyObj)
