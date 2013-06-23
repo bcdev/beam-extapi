@@ -170,8 +170,8 @@ boolean beam_createJvmWithDefaults()
     // use "-verbose:jni";
     jvm_options[0] = class_path_option;
     jvm_options[1] = "-Djava.awt.headless=true";
-    jvm_options[2] = "-Xms256M";
-    jvm_options[3] = "-Xmx1024M";
+    jvm_options[2] = "-Xms128M";
+    jvm_options[3] = "-Xmx640M";
     result = beam_createJvm(jvm_options, 4);
 
     free(class_path_option);
