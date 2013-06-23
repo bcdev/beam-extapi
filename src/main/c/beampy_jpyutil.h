@@ -1,4 +1,3 @@
-// todo - make use of this file, currently we generate this code from resource templates
 #ifndef BEAM_JPYCONV_H
 #define BEAM_JPYCONV_H
 
