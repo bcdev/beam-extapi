@@ -42,7 +42,7 @@ ndviProduct.getFlagCodingGroup().add(ndviFlagCoding)
 ndviFlagsBand.setSampleCoding(ndviFlagCoding)
 
 ndviProduct.setProductWriter(writer)
-ndviProduct.writeHeader(String.newString('ndvi.dim'))
+ndviProduct.writeHeader('ndvi.dim')
 
 r7  = numpy.zeros(width, dtype=numpy.float32)
 r10 = numpy.zeros(width, dtype=numpy.float32)
