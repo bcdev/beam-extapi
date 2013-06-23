@@ -7,7 +7,7 @@ import com.sun.javadoc.Parameter;
 */
 public class MyGeneratorContext implements GeneratorContext {
     @Override
-    public String getFunctionNameFor(ApiMethod apiMethod) {
+    public String getUniqueFunctionNameFor(ApiMethod apiMethod) {
         return apiMethod.getEnclosingClass().getType().typeName() + "_" + apiMethod.getJavaName();
     }
 

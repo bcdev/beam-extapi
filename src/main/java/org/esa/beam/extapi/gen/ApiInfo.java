@@ -17,6 +17,7 @@ public final class ApiInfo {
     private final Map<ApiClass, ApiMembers> apiClasses;
     private final Map<ApiClass, ApiMembers> allClasses;
     private final Set<ApiClass> usedNonApiClasses;
+    private final Map<ApiMethod, String> uniqueFunctionNames;
 
     private ApiInfo(ApiGeneratorConfig config,
                     Map<ApiClass, ApiMembers> apiClasses,
@@ -26,6 +27,7 @@ public final class ApiInfo {
         this.apiClasses = apiClasses;
         this.allClasses = allClasses;
         this.usedNonApiClasses = usedNonApiClasses;
+        this.uniqueFunctionNames = generateUniqueFunctionNames(this);
     }
 
     public static ClassDoc getObjectDoc() {
@@ -62,6 +64,10 @@ public final class ApiInfo {
 
     public Set<ApiClass> getUsedNonApiClasses() {
         return Collections.unmodifiableSet(usedNonApiClasses);
+    }
+
+    public String getUniqueFunctionNameFor(ApiMethod apiMethod) {
+        return uniqueFunctionNames.get(apiMethod);
     }
 
     public List<ApiConstant> getConstantsOf(ApiClass apiClass) {
@@ -335,6 +341,90 @@ public final class ApiInfo {
             }
         }
         return usedClasses;
+    }
+
+    private static Map<ApiMethod, String> generateUniqueFunctionNames(ApiInfo apiInfo) {
+        Map<String, Set<ApiMethod>> sameTargetFunctionNames = collectApiMethodsWithSameFunctionName(apiInfo);
+
+        ///////////////////////////////////////////
+        final Set<String> keySet = sameTargetFunctionNames.keySet();
+        final String[] keys = keySet.toArray(new String[keySet.size()]);
+        Arrays.sort(keys);
+        ApiClass lastEnclosingClass = null;
+        for (String key : keys) {
+            final Set<ApiMethod> apiMethods = sameTargetFunctionNames.get(key);
+            if (apiMethods.size() > 1) {
+                for (ApiMethod apiMethod : apiMethods) {
+                    final ApiClass enclosingClass = apiMethod.getEnclosingClass();
+                    boolean classChange = !enclosingClass.equals(lastEnclosingClass);
+                    lastEnclosingClass = enclosingClass;
+
+                    if (classChange) {
+                        System.out.printf("</class>\n");
+                        System.out.printf("<class name=\"%s\">\n", enclosingClass.getJavaName());
+                    }
+
+                    System.out.printf("    <method name=\"%s\" sig=\"%s\" renameTo=\"%s...\"/>\n",
+                                      apiMethod.getJavaName().equals("<init>") ? "&lt;init&gt;" : apiMethod.getJavaName(),
+                                      apiMethod.getJavaSignature(),
+                                      apiMethod.getJavaName().equals("<init>") ? "new" : apiMethod.getJavaName());
+
+                }
+            }
+        }
+        ///////////////////////////////////////////
+
+        return createFunctionNames(apiInfo, sameTargetFunctionNames);
+    }
+
+    private static Map<ApiMethod, String> createFunctionNames(ApiInfo apiInfo, Map<String, Set<ApiMethod>> sameTargetFunctionNames) {
+        Set<ApiClass> apiClasses = apiInfo.getApiClasses();
+        Map<ApiMethod, String> targetFunctionNames = new HashMap<ApiMethod, String>(apiClasses.size() * 100);
+        for (ApiClass apiClass : apiClasses) {
+            for (ApiMethod apiMethod : apiInfo.getMethodsOf(apiClass)) {
+                String functionBaseName = getFunctionBaseName(apiInfo, apiMethod);
+                Set<ApiMethod> apiMethods = sameTargetFunctionNames.get(functionBaseName);
+                if (apiMethods.size() > 1) {
+                    int index = 1;
+                    for (ApiMethod m : apiMethods) {
+                        final String renameTo = getFunctionBaseName(apiInfo, m) + index;
+                        targetFunctionNames.put(m, renameTo);
+                        index++;
+                    }
+                } else if (apiMethods.size() == 1) {
+                    final ApiMethod m = apiMethods.iterator().next();
+                    targetFunctionNames.put(m, getFunctionBaseName(apiInfo, m));
+                }
+            }
+        }
+        return targetFunctionNames;
+    }
+
+    private static Map<String, Set<ApiMethod>> collectApiMethodsWithSameFunctionName(ApiInfo apiInfo) {
+        Map<String, Set<ApiMethod>> sameTargetFunctionNames = new HashMap<String, Set<ApiMethod>>(1000);
+        for (ApiClass apiClass : apiInfo.getApiClasses()) {
+            for (ApiMethod apiMethod : apiInfo.getMethodsOf(apiClass)) {
+                String functionBaseName = getFunctionBaseName(apiInfo, apiMethod);
+                Set<ApiMethod> apiMethods = sameTargetFunctionNames.get(functionBaseName);
+                if (apiMethods == null) {
+                    apiMethods = new TreeSet<ApiMethod>();
+                    sameTargetFunctionNames.put(functionBaseName, apiMethods);
+                }
+                apiMethods.add(apiMethod);
+            }
+        }
+        return sameTargetFunctionNames;
+    }
+
+    private static String getFunctionBaseName(ApiInfo apiInfo, ApiMethod apiMethod) {
+        String targetTypeName = ModuleGenerator.getComponentCClassName(apiMethod.getEnclosingClass().getType());
+        String methodCName = apiInfo.getConfig().getFunctionName(apiMethod.getEnclosingClass().getType().qualifiedTypeName(),
+                                                                 apiMethod.getJavaName(),
+                                                                 apiMethod.getJavaSignature());
+        if (methodCName.equals("<init>")) {
+            methodCName = String.format("new%s", targetTypeName);
+        }
+        return String.format("%s_%s", targetTypeName, methodCName);
     }
 
     private final static class ApiMembers {

@@ -53,7 +53,7 @@ public abstract class AbstractFunctionGenerator implements FunctionGenerator {
 
     @Override
     public String generateFunctionName(GeneratorContext context) {
-        return context.getFunctionNameFor(getApiMethod());
+        return context.getUniqueFunctionNameFor(getApiMethod());
     }
 
     @Override

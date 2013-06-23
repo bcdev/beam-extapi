@@ -69,13 +69,9 @@ public class PyCModuleGenerator extends ModuleGenerator {
         getTemplateEval().add("libNameUC", BEAM_PYAPI_NAME.toUpperCase());
     }
 
-    CModuleGenerator getCModuleGenerator() {
-        return cModuleGenerator;
-    }
-
     @Override
-    public String getFunctionNameFor(ApiMethod apiMethod) {
-        return BEAM_PYAPI_VARNAMEPREFIX + cModuleGenerator.getFunctionNameFor(apiMethod);
+    public String getUniqueFunctionNameFor(ApiMethod apiMethod) {
+        return BEAM_PYAPI_VARNAMEPREFIX + cModuleGenerator.getUniqueFunctionNameFor(apiMethod);
     }
 
     @Override
@@ -189,7 +185,7 @@ public class PyCModuleGenerator extends ModuleGenerator {
         for (ApiMethod method : methods) {
             // Note: we can't simply take method.getJavaName() because this name may be overloaded in Java.
             // cModuleGenerator.getFunctionNameFor(method) will return a unique name required by C and Python
-            String cFunctionName = cModuleGenerator.getFunctionNameFor(method);
+            String cFunctionName = cModuleGenerator.getUniqueFunctionNameFor(method);
             // Strip class name from C function name --> Python method name.
             String pyFunctionName = cFunctionName.substring(file.getTemplateEval().eval("${className}").length() + 1);
 

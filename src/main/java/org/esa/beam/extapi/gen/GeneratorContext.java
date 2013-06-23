@@ -6,7 +6,7 @@ package org.esa.beam.extapi.gen;
 public interface GeneratorContext {
     ApiInfo getApiInfo();
 
-    String getFunctionNameFor(ApiMethod apiMethod);
+    String getUniqueFunctionNameFor(ApiMethod apiMethod);
 
     ApiParameter[] getParametersFor(ApiMethod apiMethod);
 }

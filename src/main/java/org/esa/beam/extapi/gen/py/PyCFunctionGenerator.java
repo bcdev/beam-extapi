@@ -47,14 +47,14 @@ public abstract class PyCFunctionGenerator extends AbstractFunctionGenerator {
 
     @Override
     public final String generateFunctionName(GeneratorContext context) {
-        return context.getFunctionNameFor(getApiMethod());
+        return context.getUniqueFunctionNameFor(getApiMethod());
     }
 
     @Override
     public final String generateFunctionSignature(GeneratorContext context) {
         // We have a fixed function signature: PyObject* <function>(PyObject* self, PyObject* args)
         return String.format("PyObject* %s(PyObject* self, PyObject* args)",
-                             context.getFunctionNameFor(getApiMethod()));
+                             context.getUniqueFunctionNameFor(getApiMethod()));
     }
 
     @Override
