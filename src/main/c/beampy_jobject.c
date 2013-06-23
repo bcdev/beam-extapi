@@ -217,7 +217,7 @@ jobjectArray JObject_AsJObjectArrayRefT(PyObject* anyPyObj, jclass requestedComp
  */
 int JObject_init(JObject* self, PyObject* args, PyObject* kwds)
 {
-    // printf("JObject_init: type->tp_name=%s, self->jobjectRef=%p\n", ((PyObject*) self)->ob_type->tp_name, self->jobjectRef);
+// printf("JObject_init: type->tp_name=%s, self->jobjectRef=%p\n", ((PyObject*) self)->ob_type->tp_name, self->jobjectRef);
     return 0;
 }
 
@@ -263,7 +263,7 @@ PyObject* JObject_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
  */
 void JObject_dealloc(JObject* self)
 {
-printf("JObject_dealloc: self->jobjectRef=%p\n", self->jobjectRef);
+//printf("JObject_dealloc: self->jobjectRef=%p\n", self->jobjectRef);
 
     if (self->jobjectRef != NULL) {
         (*jenv)->DeleteGlobalRef(jenv, self->jobjectRef);
