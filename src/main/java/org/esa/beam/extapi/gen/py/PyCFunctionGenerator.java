@@ -7,7 +7,7 @@ import org.esa.beam.extapi.gen.GeneratorContext;
 import org.esa.beam.extapi.gen.JavadocHelpers;
 import org.esa.beam.extapi.gen.ModuleGenerator;
 
-import static org.esa.beam.extapi.gen.JavadocHelpers.firstCharToUpperCase;
+import static org.esa.beam.extapi.gen.JavadocHelpers.firstCharUp;
 import static org.esa.beam.extapi.gen.ModuleGenerator.METHOD_VAR_NAME;
 import static org.esa.beam.extapi.gen.ModuleGenerator.THIS_VAR_NAME;
 import static org.esa.beam.extapi.gen.ModuleGenerator.getComponentCClassName;
@@ -31,18 +31,7 @@ public abstract class PyCFunctionGenerator extends AbstractFunctionGenerator {
 
     @Override
     public String generateDocText(GeneratorContext context) {
-        // todo: generate Python-style documentation string
-        final String text = JavadocHelpers.encodeCCodeString(apiMethod.getMemberDoc().getRawCommentText());
-        if (isInstanceMethod()) {
-            final String thisParamText = String.format("@param this The %s object.", apiMethod.getEnclosingClass().getType().simpleTypeName());
-            final int i = text.indexOf("@param");
-            if (i > 0) {
-                return String.format("%s\\n%s\\n%s", text.substring(0, i), thisParamText, text.substring(i));
-            } else {
-                return String.format("%s\\n%s", text, thisParamText);
-            }
-        }
-        return text;
+        return JavadocHelpers.convertToPythonDoc(context.getApiInfo(), apiMethod.getMemberDoc(), "", true);
     }
 
     @Override
@@ -220,7 +209,7 @@ public abstract class PyCFunctionGenerator extends AbstractFunctionGenerator {
 
         @Override
         public String generateJniResultFromJniCallAssignment(GeneratorContext context) {
-            String typeName = firstCharToUpperCase(getReturnType().simpleTypeName());
+            String typeName = firstCharUp(getReturnType().simpleTypeName());
             return format("${res} = ${call};",
                           kv("call", getJniMethodCall(context, typeName)));
         }
@@ -319,7 +308,7 @@ public abstract class PyCFunctionGenerator extends AbstractFunctionGenerator {
                 // return value ${res}PyObj is already set by return parameter
                 return null;
             } else {
-                String primType = firstCharToUpperCase(getReturnType().simpleTypeName());
+                String primType = firstCharUp(getReturnType().simpleTypeName());
                 return format("${res}PyObj = BPy_FromJ${primType}Array((jarray) ${res}JObj);",
                               kv("primType", primType));
             }

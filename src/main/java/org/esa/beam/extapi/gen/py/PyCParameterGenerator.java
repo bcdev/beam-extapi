@@ -6,7 +6,7 @@ import org.esa.beam.extapi.gen.ApiParameter;
 import org.esa.beam.extapi.gen.GeneratorContext;
 import org.esa.beam.extapi.gen.ParameterGenerator;
 
-import static org.esa.beam.extapi.gen.JavadocHelpers.firstCharToUpperCase;
+import static org.esa.beam.extapi.gen.JavadocHelpers.firstCharUp;
 import static org.esa.beam.extapi.gen.ModuleGenerator.getComponentCClassName;
 import static org.esa.beam.extapi.gen.TemplateEval.eval;
 import static org.esa.beam.extapi.gen.TemplateEval.kv;
@@ -266,10 +266,10 @@ public abstract class PyCParameterGenerator implements ParameterGenerator {
             if (lengthExpr == null) {
                 lengthExpr = "-1";
             }
-            // todo - we should actually check if the Python parameter supports the buffer protocol.
+            // todo - we should actually check if the Python parameter supports the buffer protocol using PyObject_CheckBuffer().
             //        If it is not a buffer, but a sequence, we could try converting the sequence into a primitive Java array.
             //        If bufferMode="Writable", we could check if the Python parameter is a list of appropriate size an set its items.
-            final String primType = firstCharToUpperCase(typeName);
+            final String primType = firstCharUp(typeName);
             return eval("" +
                                 "${arg}PyObj = BPy_ToPrimitiveArrayBuffer${bufferMode}(${arg}PyObj, &${arg}Buf, \"${format}\", ${lengthExpr});\n" +
                                 "if (${arg}PyObj == NULL) {\n" +
@@ -300,7 +300,7 @@ public abstract class PyCParameterGenerator implements ParameterGenerator {
                 return null;
             }
 
-            String primType = firstCharToUpperCase(getType().simpleTypeName());
+            String primType = firstCharUp(getType().simpleTypeName());
             if (parameter.getModifier() == ApiParameter.Modifier.OUT) {
                 return eval("BPy_CopyJ${primType}ArrayToBuffer((jarray) ${arg}JObj, ${arg}Data, ${arg}Length, ${arg}PyObj);",
                             kv("primType", primType),

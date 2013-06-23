@@ -3,7 +3,7 @@ package org.esa.beam.extapi.gen.c;
 import com.sun.javadoc.Type;
 import org.esa.beam.extapi.gen.*;
 
-import static org.esa.beam.extapi.gen.JavadocHelpers.firstCharToUpperCase;
+import static org.esa.beam.extapi.gen.JavadocHelpers.firstCharUp;
 import static org.esa.beam.extapi.gen.JavadocHelpers.getComponentCTypeName;
 import static org.esa.beam.extapi.gen.TemplateEval.eval;
 import static org.esa.beam.extapi.gen.TemplateEval.kv;
@@ -20,7 +20,6 @@ public abstract class CFunctionGenerator extends AbstractFunctionGenerator {
 
     @Override
     public String generateDocText(GeneratorContext context) {
-        // todo: generate Doxygen-style C documentation string
         return JavadocHelpers.convertToDoxygenDoc(context.getApiInfo(), apiMethod.getMemberDoc());
     }
 
@@ -187,7 +186,7 @@ public abstract class CFunctionGenerator extends AbstractFunctionGenerator {
 
         @Override
         public String generateJniResultFromJniCallAssignment(GeneratorContext context) {
-            String typeName = firstCharToUpperCase(getReturnType().simpleTypeName());
+            String typeName = firstCharUp(getReturnType().simpleTypeName());
             return format("${res} = ${call};",
                           kv("res", RESULT_VAR_NAME),
                           kv("call", getJniMethodCall(context, typeName)));
@@ -317,7 +316,7 @@ public abstract class CFunctionGenerator extends AbstractFunctionGenerator {
         @Override
         protected String getArrayAllocFunctionName() {
             return format("beam_newC${type}Array",
-                          kv("type", firstCharToUpperCase(getComponentCTypeName(getReturnType()))));
+                          kv("type", firstCharUp(getComponentCTypeName(getReturnType()))));
         }
     }
 

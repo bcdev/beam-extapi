@@ -58,9 +58,12 @@ public class JavadocHelpers {
         return isArray1D(type) && !type.isPrimitive();
     }
 
-    public static String firstCharToUpperCase(String typeName) {
-        typeName = Character.toUpperCase(typeName.charAt(0)) + typeName.substring(1);
-        return typeName;
+    public static String firstCharUp(String s) {
+        return s.isEmpty() ? s : Character.toUpperCase(s.charAt(0)) + s.substring(1);
+    }
+
+    public static String firstCharDown(String s) {
+        return s.isEmpty() ? s : Character.toLowerCase(s.charAt(0)) + s.substring(1);
     }
 
     public static boolean isInstance(ProgramElementDoc elementDoc) {
@@ -68,6 +71,7 @@ public class JavadocHelpers {
     }
 
     public static String convertToDoxygenDoc(ApiInfo apiInfo, Doc doc) {
+        // todo: generate Doxygen-style C documentation string
         String text = doc.getRawCommentText();
         if (text == null) {
             return "";
@@ -96,32 +100,52 @@ public class JavadocHelpers {
         ArrayList<String> strippedLines = new ArrayList<String>();
         for (String line : lines) {
             String strippedLine = line.trim();
-            if (!strippedLine.trim().startsWith("@version")
-                    && !strippedLine.trim().startsWith("@author")
-                    && !strippedLine.trim().startsWith("@since")) {
-                final String[] packages = apiInfo.getConfig().getPackages();
-                // Remove known package names, because we don't have them in python
-                // todo: instead of using the config, we shall collect *all* packages names
-                // from all classes first and use this list.
-                for (String packageName : packages) {
-                    strippedLine = strippedLine.replace(packageName + ".", "");
+
+
+            // Replace Javadoc tags
+            //
+            strippedLine = strippedLine.replace("@version", "Version: ");
+            strippedLine = strippedLine.replace("@since", "Since version: ");
+            strippedLine = strippedLine.replace("@author", "Author: ");
+            if (strippedLine.startsWith("@param")) {
+                strippedLine = strippedLine.substring("@param".length()).trim();
+                int i = strippedLine.indexOf(' ');
+                if (i < 0) {
+                    i = strippedLine.indexOf('\t');
                 }
-                // Strip away HTML elements.
-                // todo: find better replacements for HTML tags than empty strings
-                // It is important to maintain structural and semantic HTML elements such as <li>, <b>, <pre>, ...
-                strippedLine = strippedLine.replace("<p/>", "");
-                strippedLine = strippedLine.replace("<p>", "");
-                strippedLine = strippedLine.replace("</p>", "");
-/*
-                strippedLine = strippedLine.replace("<b>", "");
-                strippedLine = strippedLine.replace("</b>", "");
-                strippedLine = strippedLine.replace("<i>", "");
-                strippedLine = strippedLine.replace("</i>", "");
-                strippedLine = strippedLine.replace("<code>", "");
-                strippedLine = strippedLine.replace("</code>", "");
-*/
-                strippedLines.add(indent + strippedLine);
+                if (i > 0) {
+                    strippedLine = "Parameter " + strippedLine.substring(0, i) + ": " + strippedLine.substring(i).trim();
+                } else {
+                    strippedLine = strippedLine.replace("@param", "Parameter ");
+                }
+                strippedLine = "Returns " + strippedLine;
+            } else if (strippedLine.startsWith("@return")) {
+                strippedLine = strippedLine.substring("@return".length()).trim();
+                strippedLine = "Returns " + firstCharDown(strippedLine);
             }
+
+            // Remove known package names, because we don't have them in python
+            // todo: instead of using the config, we shall collect *all* packages names from all classes first and use this list.
+            //
+            for (String packageName : apiInfo.getConfig().getPackages()) {
+                strippedLine = strippedLine.replace(packageName + ".", "");
+            }
+
+            // Strip HTML elements.
+            // Note that it is important to maintain structural and semantic HTML elements such as <li>, <b>, <pre>, ...
+            // todo: find better replacements for HTML tags than empty strings
+            //
+            strippedLine = strippedLine.replace("<p/>", "");
+            strippedLine = strippedLine.replace("<p>", "");
+            strippedLine = strippedLine.replace("</p>", "");
+            strippedLine = strippedLine.replace("<b>", "");
+            strippedLine = strippedLine.replace("</b>", "");
+            strippedLine = strippedLine.replace("<i>", "");
+            strippedLine = strippedLine.replace("</i>", "");
+            strippedLine = strippedLine.replace("<code>", "");
+            strippedLine = strippedLine.replace("</code>", "");
+
+            strippedLines.add(indent + strippedLine);
         }
         final String docText = StringUtils.join(strippedLines.toArray(new String[strippedLines.size()]), "\n");
         return cCodeString ? encodeCCodeString(docText) : docText;
