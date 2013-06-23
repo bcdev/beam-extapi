@@ -8,7 +8,7 @@
  */
 PyTypeObject ${className}_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    "beampy.${className}",               /* tp_name */
+    "beampy.${className}",        /* tp_name */
     sizeof (JObject),             /* tp_basicsize */
     0,                            /* tp_itemsize */
     (destructor)JObject_dealloc,  /* tp_dealloc */
@@ -34,8 +34,8 @@ PyTypeObject ${className}_Type = {
     0,                            /* tp_weaklistoffset */
     NULL,                         /* tp_iter */
     NULL,                         /* tp_iternext */
-    ${className}_Methods,         /* tp_methods */
-    ${className}_Members,         /* tp_members */
+    ${className}_methods,         /* tp_methods */
+    NULL,                         /* tp_members */
     NULL,                         /* tp_getset */
     NULL,                         /* tp_base */
     NULL,                         /* tp_dict */
