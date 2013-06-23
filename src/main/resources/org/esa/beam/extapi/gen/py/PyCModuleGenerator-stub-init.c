@@ -46,3 +46,12 @@ PyObject* BPy_to_jobject(PyObject* self, PyObject* args)
     return resultPyObj;
 }
 
+define JVM_EXCEPTION_MSG  "JVM exception: class ";
+
+#define CHECK_JVM_EXCEPTION()           \
+if ((*jenv)->ExceptionCheck(jenv)) {    \
+    (*jenv)->ExceptionDescribe(jenv);   \
+    (*jenv)->ExceptionClear(jenv);      \
+    PyErr_SetString(BeamPy_Error, "JVM exception: class " ## C ## ", method " ## M); \
+    return NULL;                        \
+}                                       \
