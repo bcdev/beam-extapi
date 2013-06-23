@@ -264,7 +264,6 @@ PyObject* JObject_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
     // printf("JObject_new: jobjectRef=%p\n", jobjectRef);
 
     self->jobjectRef = jobjectRef;
-    Py_INCREF(self);
 
     return (PyObject*) self;
 }
