@@ -95,10 +95,17 @@ jarray BPy_NewGenericJPrimitiveArrayFromBuffer(const void* buffer, jint bufferLe
         if (addr != NULL) {
             memcpy(addr, buffer, bufferLength * elemSize);
             (*jenv)->ReleasePrimitiveArrayCritical(jenv, arrayJObj, addr, 0);
+            return arrayJObj;
+        } else {
+            (*jenv)->DeleteLocalRef(jenv, arrayJObj);
+            PyErr_SetString(PyExc_RuntimeError, "jenv->GetPrimitiveArrayCritical() failed");
+            return NULL;
         }
+    } else {
+        PyErr_SetString(PyExc_RuntimeError, "jenv->New<T>Array() failed");
+        return NULL;
     }
 
-    return arrayJObj;
 }
 
 jarray BPy_NewJBooleanArrayFromBuffer(const jboolean* buffer, jint bufferLength)
@@ -150,7 +157,7 @@ jobject BPy_NewJBooleanFromBool(PyObject* arg, jboolean* ok)
 
     argJObj = (*jenv)->NewObject(jenv, BPy_BooleanClass, BPy_BooleanConstr, (jboolean) PyObject_IsTrue(arg));;
     if (argJObj == NULL) {
-        return BPy_ConvFailure("failed to instantiate Java object", ok);
+        return BPy_ConvFailure("jenv->NewObject() failed", ok);
     }
     return BPy_ConvSuccess(argJObj, ok);
 }
@@ -175,7 +182,7 @@ jobject BPy_NewJNumberFromInt(PyObject* arg, jboolean* ok)
         return BPy_ConvFailure("missing appropriate Java representation of argument", ok);
     }
     if (argJObj == NULL) {
-        return BPy_ConvFailure("failed to instantiate Java object", ok);
+        return BPy_ConvFailure("jenv->NewObject() failed", ok);
     }
     return BPy_ConvSuccess(argJObj, ok);
 }
@@ -196,7 +203,7 @@ jobject BPy_NewJNumberFromFloat(PyObject* arg, jboolean* ok)
         return BPy_ConvFailure("missing appropriate Java representation of argument", ok);
     }
     if (argJObj == NULL) {
-        return BPy_ConvFailure("failed to instantiate Java object", ok);
+        return BPy_ConvFailure("jenv->NewObject() failed", ok);
     }
     return BPy_ConvSuccess(argJObj, ok);
 }
@@ -219,7 +226,7 @@ jstring BPy_NewJStringFromStr(PyObject* arg, jboolean* ok)
     Py_DECREF(strPyObj);
 
     if (strJObj == NULL) {
-        return BPy_ConvFailure("failed to instantiate Java String", ok);
+        return BPy_ConvFailure("jenv->NewStringUTF() failed", ok);
     }
 
     return BPy_ConvSuccess(strJObj, ok);
@@ -237,7 +244,7 @@ jobject BPy_NewJMapFromDict(PyObject* arg, jboolean* ok)
 
     mapJObj = (*jenv)->NewObject(jenv, BPy_HashMapClass, BPy_HashMapConstr);
     if (mapJObj == NULL) {
-        return BPy_ConvFailure("failed to instantiate Java HashMap", ok);
+        return BPy_ConvFailure("jenv->NewObject() failed", ok);
     }
 
     while (PyDict_Next(arg, &dictPos, &dictKeyPyObj, &dictValuePyObj)) {
@@ -276,14 +283,14 @@ jobjectArray BPy_NewJObjectArrayFromSeqT(PyObject* arg, jclass compType, jboolea
 
     arrayJObj = (*jenv)->NewObjectArray(jenv, (jsize) size, compType, NULL);
     if (arrayJObj == NULL) {
-        return BPy_ConvFailure("failed to instantiate Java Object[]", ok);
+        return BPy_ConvFailure("jenv->NewObjectArray() failed", ok);
     }
 
     for (i = 0; i < size; i++) {
         PyObject* itemPyObj = PySequence_GetItem(arg, i);
         if (itemPyObj == NULL) {
             (*jenv)->DeleteLocalRef(jenv, arrayJObj);
-            return BPy_ConvFailure("failed to get sequence item", ok);
+            return BPy_ConvFailure("PySequence_GetItem() failed", ok);
         }
         (*jenv)->SetObjectArrayElement(jenv, arrayJObj, (jint) i, BPy_ToJObjectT(itemPyObj, compType, ok));
     }
@@ -469,6 +476,7 @@ jobjectArray BPy_ToJObjectArrayT(PyObject* arg, jclass compType, jboolean* ok)
     return BPy_ConvFailure("argument must be a sequence", ok);
 }
 
+// todo - implement the following BPy_ToJ<T>Array functions
 
 jarray BPy_ToJBooleanArray(PyObject* arg, jboolean* ok)
 {
@@ -618,6 +626,8 @@ PyObject* BPy_FromJString(jstring arg)
 
     return strPyObj;
 }
+
+// todo - implement the following BPy_FromJ<T>Array functions
 
 PyObject* BPy_FromJBooleanArray(jarray arg)
 {
