@@ -477,8 +477,7 @@ jobjectArray BPy_ToJObjectArrayT(PyObject* arg, jclass compType, jboolean* ok)
     return BPy_ConvFailure("argument must be a sequence", ok);
 }
 
-// todo - implement the following BPy_ToJ<T>Array functions
-
+/*
 jarray BPy_ToJBooleanArray(PyObject* arg, jboolean* ok)
 {
     return BPy_ConvFailure("TODO - implement conversion to Java boolean[]", ok);
@@ -518,6 +517,7 @@ jarray BPy_ToJDoubleArray(PyObject* arg, jboolean* ok)
 {
     return BPy_ConvFailure("TODO - implement conversion to Java double[]", ok);
 }
+*/
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Java To Python Conversion Functions
@@ -642,9 +642,7 @@ PyObject* BPy_FromJBooleanArray(jarray arg)
     if (arg == NULL) {
         return Py_BuildValue("");
     }
-
-    PyErr_SetString(PyExc_NotImplementedError, "TODO - implement BPy_NewCArrayFromJBooleanArray");
-    return NULL;
+    return BPy_NewBufferFromJPrimitiveArray(arg, "b");
 }
 
 PyObject* BPy_FromJCharArray(jarray arg)
@@ -652,9 +650,7 @@ PyObject* BPy_FromJCharArray(jarray arg)
     if (arg == NULL) {
         return Py_BuildValue("");
     }
-
-    PyErr_SetString(PyExc_NotImplementedError, "TODO - implement BPy_NewCArrayFromJCharArray");
-    return NULL;
+    return BPy_NewBufferFromJPrimitiveArray(arg, "h");
 }
 
 PyObject* BPy_FromJByteArray(jarray arg)
@@ -662,9 +658,7 @@ PyObject* BPy_FromJByteArray(jarray arg)
     if (arg == NULL) {
         return Py_BuildValue("");
     }
-
-    PyErr_SetString(PyExc_NotImplementedError, "TODO - implement BPy_NewCArrayFromJByteArray");
-    return NULL;
+    return BPy_NewBufferFromJPrimitiveArray(arg, "b");
 }
 
 PyObject* BPy_FromJShortArray(jarray arg)
@@ -672,9 +666,7 @@ PyObject* BPy_FromJShortArray(jarray arg)
     if (arg == NULL) {
         return Py_BuildValue("");
     }
-
-    PyErr_SetString(PyExc_NotImplementedError, "TODO - implement BPy_NewCArrayFromJShortArray");
-    return NULL;
+    return BPy_NewBufferFromJPrimitiveArray(arg, "h");
 }
 
 PyObject* BPy_FromJIntArray(jarray arg)
@@ -682,9 +674,7 @@ PyObject* BPy_FromJIntArray(jarray arg)
     if (arg == NULL) {
         return Py_BuildValue("");
     }
-
-    PyErr_SetString(PyExc_NotImplementedError, "TODO - implement BPy_NewCArrayFromJIntArray");
-    return NULL;
+    return BPy_NewBufferFromJPrimitiveArray(arg, "i");
 }
 
 PyObject* BPy_FromJLongArray(jarray arg)
@@ -692,9 +682,7 @@ PyObject* BPy_FromJLongArray(jarray arg)
     if (arg == NULL) {
         return Py_BuildValue("");
     }
-
-    PyErr_SetString(PyExc_NotImplementedError, "TODO - implement BPy_NewCArrayFromJLongArray");
-    return NULL;
+    return BPy_NewBufferFromJPrimitiveArray(arg, "l");
 }
 
 PyObject* BPy_FromJFloatArray(jarray arg)
@@ -702,9 +690,7 @@ PyObject* BPy_FromJFloatArray(jarray arg)
     if (arg == NULL) {
         return Py_BuildValue("");
     }
-
-    PyErr_SetString(PyExc_NotImplementedError, "TODO - implement BPy_NewCArrayFromJFloatArray");
-    return NULL;
+    return BPy_NewBufferFromJPrimitiveArray(arg, "f");
 }
 
 PyObject* BPy_FromJDoubleArray(jarray arg)
@@ -712,9 +698,7 @@ PyObject* BPy_FromJDoubleArray(jarray arg)
     if (arg == NULL) {
         return Py_BuildValue("");
     }
-
-    PyErr_SetString(PyExc_NotImplementedError, "TODO - implement BPy_NewCArrayFromJDoubleArray");
-    return NULL;
+    return BPy_NewBufferFromJPrimitiveArray(arg, "d");
 }
 
 PyObject* BPy_FromJStringArray(jobjectArray arg)

@@ -92,7 +92,7 @@ jobjectArray BPy_ToJStringArray(PyObject* arg, jboolean* ok);
 
 jobject BPy_ToJMap(PyObject* arg, jboolean* ok);
 jobject BPy_ToJList(PyObject* arg, jboolean* ok);
-
+/*
 jarray BPy_ToJBooleanArray(PyObject* arg, jboolean* ok);
 jarray BPy_ToJCharArray(PyObject* arg, jboolean* ok);
 jarray BPy_ToJByteArray(PyObject* arg, jboolean* ok);
@@ -101,6 +101,7 @@ jarray BPy_ToJIntArray(PyObject* arg, jboolean* ok);
 jarray BPy_ToJLongArray(PyObject* arg, jboolean* ok);
 jarray BPy_ToJFloatArray(PyObject* arg, jboolean* ok);
 jarray BPy_ToJDoubleArray(PyObject* arg, jboolean* ok);
+*/
 /**@}*/
 
 //
