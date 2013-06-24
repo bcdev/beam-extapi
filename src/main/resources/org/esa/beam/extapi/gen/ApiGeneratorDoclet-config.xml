@@ -464,6 +464,10 @@
                 ignore="true"/>
     </class>
 
+    <class name="org.esa.beam.framework.gpf.OperatorSpiRegistry">
+
+    </class>
+
     <!--
        ##########################################################################
        #                              Java Core                                 #
