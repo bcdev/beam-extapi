@@ -16,8 +16,16 @@
 
 package org.esa.beam.extapi.gen.py;
 
-import org.esa.beam.extapi.gen.*;
-import org.esa.beam.extapi.gen.c.CModuleGenerator;
+import org.esa.beam.extapi.gen.ApiClass;
+import org.esa.beam.extapi.gen.ApiConstant;
+import org.esa.beam.extapi.gen.ApiInfo;
+import org.esa.beam.extapi.gen.ApiMethod;
+import org.esa.beam.extapi.gen.FunctionGenerator;
+import org.esa.beam.extapi.gen.FunctionWriter;
+import org.esa.beam.extapi.gen.ModuleGenerator;
+import org.esa.beam.extapi.gen.TargetCFile;
+import org.esa.beam.extapi.gen.TargetCHeaderFile;
+import org.esa.beam.extapi.gen.TargetFile;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -60,18 +68,15 @@ public class PyCModuleGenerator extends ModuleGenerator {
         return format;
     }
 
-    private final CModuleGenerator cModuleGenerator;
-
-    public PyCModuleGenerator(CModuleGenerator cModuleGenerator) {
-        super(cModuleGenerator.getApiInfo(), new PyCFunctionGeneratorFactory(cModuleGenerator.getApiInfo()));
-        this.cModuleGenerator = cModuleGenerator;
+    public PyCModuleGenerator(ApiInfo apiInfo) {
+        super(apiInfo, new PyCFunctionGeneratorFactory(apiInfo));
         getTemplateEval().add("libName", BEAM_PYAPI_NAME);
         getTemplateEval().add("libNameUC", BEAM_PYAPI_NAME.toUpperCase());
     }
 
     @Override
     public String getUniqueFunctionNameFor(ApiMethod apiMethod) {
-        return BEAM_PYAPI_VARNAMEPREFIX + cModuleGenerator.getUniqueFunctionNameFor(apiMethod);
+        return BEAM_PYAPI_VARNAMEPREFIX + getApiInfo().getUniqueFunctionNameFor(apiMethod);
     }
 
     @Override
@@ -172,7 +177,7 @@ public class PyCModuleGenerator extends ModuleGenerator {
         for (ApiMethod method : methods) {
             // Note: we can't simply take method.getJavaName() because this name may be overloaded in Java.
             // cModuleGenerator.getFunctionNameFor(method) will return a unique name required by C and Python
-            String cFunctionName = cModuleGenerator.getUniqueFunctionNameFor(method);
+            String cFunctionName = getApiInfo().getUniqueFunctionNameFor(method);
             // Strip class name from C function name --> Python method name.
             String pyFunctionName = cFunctionName.substring(file.getTemplateEval().eval("${className}").length() + 1);
 
