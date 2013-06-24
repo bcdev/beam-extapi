@@ -19,7 +19,6 @@ jboolean beam_createJvmWithDefaults();
 jboolean beam_destroyJvm();
 /**@}*/
 
-// todo - put somewhere else (e.g. generate for C-API, in Python we have already BPy_FindClass
 jclass beam_findJvmClass(const char* classResourceName);
 
 extern JavaVM* jvm;
