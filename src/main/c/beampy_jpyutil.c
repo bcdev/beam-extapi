@@ -290,7 +290,8 @@ jobjectArray BPy_NewJObjectArrayFromSeqT(PyObject* arg, jclass compType, jboolea
         PyObject* itemPyObj = PySequence_GetItem(arg, i);
         if (itemPyObj == NULL) {
             (*jenv)->DeleteLocalRef(jenv, arrayJObj);
-            return BPy_ConvFailure("PySequence_GetItem() failed", ok);
+            // msg==NULL, because error message already set by PySequence_GetItem
+            return BPy_ConvFailure(NULL, ok);
         }
         (*jenv)->SetObjectArrayElement(jenv, arrayJObj, (jint) i, BPy_ToJObjectT(itemPyObj, compType, ok));
     }
@@ -533,10 +534,13 @@ PyObject* BPy_CopyGenericJPrimitiveArrayToBuffer(jarray arrayJObj, void* buffer,
     }
 
     addr = (*jenv)->GetPrimitiveArrayCritical(jenv, arrayJObj, NULL);
-    if (addr != NULL) {
-        memcpy(buffer, addr, bufferLength * elemSize);
-        (*jenv)->ReleasePrimitiveArrayCritical(jenv, arrayJObj, addr, 0);
+    if (addr == NULL) {
+        PyErr_SetString(PyExc_RuntimeError, "jenv->GetPrimitiveArrayCritical() failed");
+        return NULL;
     }
+
+    memcpy(buffer, addr, bufferLength * elemSize);
+    (*jenv)->ReleasePrimitiveArrayCritical(jenv, arrayJObj, addr, 0);
 
     return bufferPyObj;
 }
@@ -591,7 +595,7 @@ PyObject* BPy_NewBufferFromJPrimitiveArray(jarray arrayJObj, const char* format)
 
     addr = (*jenv)->GetPrimitiveArrayCritical(jenv, arrayJObj, NULL);
     if (addr == NULL) {
-        PyErr_SetString(PyExc_RuntimeError, "failed to get primitive array data from Java");
+        PyErr_SetString(PyExc_RuntimeError, "GetPrimitiveArrayCritical() failed");
         return NULL;
     }
 
@@ -621,6 +625,10 @@ PyObject* BPy_FromJString(jstring arg)
     }
 
     utf8Chars = (*jenv)->GetStringUTFChars(jenv, arg, 0);
+    if (utf8Chars == NULL) {
+        PyErr_SetString(PyExc_RuntimeError, "jenv->GetStringUTFChars() failed");
+        return NULL;
+    }
     strPyObj = PyUnicode_FromString(utf8Chars);
     (*jenv)->ReleaseStringUTFChars(jenv, arg, utf8Chars);
 
@@ -756,7 +764,7 @@ jboolean BPy_InitJClass(jclass* cls, const char* classRef)
         *cls = (*jenv)->FindClass(jenv, classRef);
         if (*cls == NULL) {
             char msg[1024];
-            sprintf(msg, "Java class not found: %s", classRef);
+            sprintf(msg, "BPy_InitJClass: Java class not found: %s", classRef);
             PyErr_SetString(PyExc_RuntimeError, msg);
             return 0;
         }
@@ -777,7 +785,7 @@ jboolean BPy_InitJMethod(jmethodID* methodPtr, jclass cls, const char* className
         }
         if (*methodPtr == NULL) {
             char msg[1024];
-            sprintf(msg, "Java method not found: %s: %s%s", className, methodName, methodSig);
+            sprintf(msg, "BPy_InitJMethod: Java method not found: %s: %s%s", className, methodName, methodSig);
             PyErr_SetString(PyExc_RuntimeError, msg);
             return 0;
         }

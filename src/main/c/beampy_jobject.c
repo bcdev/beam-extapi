@@ -1,4 +1,5 @@
 #include "beampy_jobject.h"
+#include "beampy_jpyutil.h"
 
 PyObject* JObject_new(PyTypeObject *type, PyObject *args, PyObject *kwds);
 PyObject* JObject_repr(JObject* self);
@@ -24,7 +25,7 @@ PyTypeObject JObject_Type = {
     NULL,                         /* tp_as_number */
     NULL,                         /* tp_as_sequence */
     NULL,                         /* tp_as_mapping */
-    NULL,                         /* tp_hash  */           // todo --> Object.hashCode()
+    NULL,                         /* tp_hash  */           // todo - nice to have: Object.hashCode()
     NULL,                         /* tp_call */
     (reprfunc)JObject_str,        /* tp_str */
     NULL,                         /* tp_getattro */
@@ -34,7 +35,7 @@ PyTypeObject JObject_Type = {
     "Java Object Wrapper",        /* tp_doc */
     NULL,                         /* tp_traverse */
     NULL,                         /* tp_clear */
-    NULL,                         /* tp_richcompare */     // todo --> Object.compare() / equals()
+    NULL,                         /* tp_richcompare */     // todo - nice to have: Object.compare() / equals()
     0,                            /* tp_weaklistoffset */
     NULL,                         /* tp_iter */
     NULL,                         /* tp_iternext */
@@ -148,35 +149,30 @@ jobject JObject_AsJObjectRefT(PyObject* anyPyObj, jclass requestedType)
 jobjectArray JObject_AsJObjectArrayRef(PyObject* anyPyObj)
 {
     static jclass objectClass = NULL;
-    if (objectClass == NULL) {
-        objectClass = (*jenv)->FindClass(jenv, "Ljava/lang/Object;");
-    }
+    if (!BPy_InitJClass(&objectClass, "Ljava/lang/Object;"))
+        return NULL;
     return JObject_AsJObjectArrayRefT(anyPyObj, objectClass);
 }
 
 jclass JObject_GetComponentType(jobject arrayJObj)
 {
+    jclass arrayCompType;
+    jobject arrayClassJObj;
+    jobject arrayCompTypeJObj;
+
     static jclass objectClass = NULL;
     static jclass classClass = NULL;
     static jmethodID getClassMethod = NULL;
     static jmethodID getComponentTypeMethod = NULL;
 
-    jclass arrayCompType;
-    jobject arrayClassJObj;
-    jobject arrayCompTypeJObj;
-
-    if (objectClass == NULL) {
-        objectClass = (*jenv)->FindClass(jenv, "Ljava/lang/Object;");
-    }
-    if (classClass == NULL) {
-        classClass = (*jenv)->FindClass(jenv, "Ljava/lang/Class;");
-    }
-    if (getClassMethod == NULL) {
-        getClassMethod = (*jenv)->GetMethodID(jenv, objectClass, "getClass", "()Ljava/lang/Class;");
-    }
-    if (getComponentTypeMethod == NULL) {
-        getComponentTypeMethod = (*jenv)->GetMethodID(jenv, classClass, "getComponentType", "()Ljava/lang/Class;");
-    }
+    if (!BPy_InitJClass(&objectClass, "Ljava/lang/Object;"))
+        return NULL;
+    if (!BPy_InitJClass(&classClass, "Ljava/lang/Class;"))
+        return NULL;
+    if (!BPy_InitJMethod(&getClassMethod, objectClass, "java.lang.Object", "getClass", "()Ljava/lang/Class;", 0))
+        return NULL;
+    if (!BPy_InitJMethod(&getComponentTypeMethod, classClass, "java.lang.Class", "getComponentType", "()Ljava/lang/Class;", 0))
+        return NULL;
 
     arrayClassJObj = (*jenv)->CallObjectMethod(jenv, arrayJObj, getClassMethod);
     arrayCompTypeJObj = (*jenv)->CallObjectMethod(jenv, arrayClassJObj, getComponentTypeMethod);
@@ -247,7 +243,7 @@ PyObject* JObject_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
 
     jobjectRef = (*jenv)->NewGlobalRef(jenv, jobjectRef);
     if (jobjectRef == NULL) {
-        PyErr_SetString(PyExc_MemoryError, "JObject_new: failed to create global Java object reference");
+        PyErr_SetString(PyExc_MemoryError, "JObject_new: jenv->NewGlobalRef() failed");
         return NULL;
     }
 
@@ -290,25 +286,43 @@ Py_ssize_t JObjectArray_sq_length(JObjectArray* self)
 PyObject* JObjectArray_sq_item(JObjectArray* self, Py_ssize_t index)
 {
     jobject elemJObj = (*jenv)->GetObjectArrayElement(jenv, self->jobjectRef, (jsize) index);
+    if ((*jenv)->ExceptionCheck(jenv)) {
+        (*jenv)->ExceptionDescribe(jenv);
+        (*jenv)->ExceptionClear(jenv);
+        PyErr_SetString(PyExc_RuntimeError, "JObjectArray_sq_item: jenv->GetObjectArrayElement() failed");
+        return NULL;
+    }
     return JObject_New(elemJObj);
 }
 
 /*
  * Implements the item assignment method of the <sequence> interface for CArray_Type
  */
-int JObjectArray_sq_ass_item(JObjectArray* self, Py_ssize_t index, PyObject* other)
+int JObjectArray_sq_ass_item(JObjectArray* self, Py_ssize_t index, PyObject* item)
 {
     jobject elemJObj = NULL;
-    if (other != Py_None) {
-        // todo - use a more generic conversion function here...
-        elemJObj = JObject_AsJObjectRef(other);
-        if (elemJObj == NULL) {
-            PyErr_SetString(PyExc_ValueError, "illegal item type, must be a JObject");
+    if (item != Py_None) {
+        jclass compType;
+        jboolean ok = 1;
+
+        // Note: for efficiency, we could store a constant 'jclass compType' member in JObjectArray object
+        compType = JObject_GetComponentType(self->jobjectRef);
+        if (compType == NULL) {
             return -1;
+        }
+
+        elemJObj = BPy_ToJObjectT(item, compType, &ok);
+        if (!ok) {
+            return -2;
         }
     }
     (*jenv)->SetObjectArrayElement(jenv, self->jobjectRef, (jsize) index, elemJObj);
-    // todo - check for any Java exceptions thrown
+    if ((*jenv)->ExceptionCheck(jenv)) {
+        (*jenv)->ExceptionDescribe(jenv);
+        (*jenv)->ExceptionClear(jenv);
+        PyErr_SetString(PyExc_RuntimeError, "JObjectArray_sq_ass_item: jenv->SetObjectArrayElement() failed");
+        return -3;
+    }
     return 0;
 }
 
