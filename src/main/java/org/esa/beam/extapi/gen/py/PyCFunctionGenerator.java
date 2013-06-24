@@ -180,8 +180,10 @@ public abstract class PyCFunctionGenerator extends AbstractFunctionGenerator {
 
         @Override
         public String generateJniResultFromJniCallAssignment(GeneratorContext context) {
-            return format("${call};",
-                          kv("call", getJniMethodCall(context, "Void")));
+            return format("${call};\n" +
+                                  "CHECK_JVM_EXCEPTION(\"${method}\");",
+                          kv("call", getJniMethodCall(context, "Void")),
+                          kv("method", getApiMethod().toString()));
         }
 
         @Override
@@ -210,8 +212,10 @@ public abstract class PyCFunctionGenerator extends AbstractFunctionGenerator {
         @Override
         public String generateJniResultFromJniCallAssignment(GeneratorContext context) {
             String typeName = firstCharUp(getReturnType().simpleTypeName());
-            return format("${res} = ${call};",
-                          kv("call", getJniMethodCall(context, typeName)));
+            return format("${res} = ${call};\n" +
+                                  "CHECK_JVM_EXCEPTION(\"${method}\");",
+                          kv("call", getJniMethodCall(context, typeName)),
+                          kv("method", getApiMethod().toString()));
         }
 
         @Override
@@ -258,8 +262,10 @@ public abstract class PyCFunctionGenerator extends AbstractFunctionGenerator {
 
         @Override
         public String generateJniResultFromJniCallAssignment(GeneratorContext context) {
-            return format("${res}JObj = ${call};",
-                          kv("call", getJniMethodCall(context, "Object")));
+            return format("${res}JObj = ${call};\n" +
+                                  "CHECK_JVM_EXCEPTION(\"${method}\");",
+                          kv("call", getJniMethodCall(context, "Object")),
+                          kv("method", getApiMethod().toString()));
         }
 
         @Override
