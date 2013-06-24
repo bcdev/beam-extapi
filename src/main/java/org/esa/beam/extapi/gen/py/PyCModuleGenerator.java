@@ -16,6 +16,7 @@
 
 package org.esa.beam.extapi.gen.py;
 
+import com.sun.javadoc.Type;
 import org.esa.beam.extapi.gen.ApiClass;
 import org.esa.beam.extapi.gen.ApiConstant;
 import org.esa.beam.extapi.gen.ApiInfo;
@@ -26,11 +27,13 @@ import org.esa.beam.extapi.gen.ModuleGenerator;
 import org.esa.beam.extapi.gen.TargetCFile;
 import org.esa.beam.extapi.gen.TargetCHeaderFile;
 import org.esa.beam.extapi.gen.TargetFile;
+import org.esa.beam.extapi.gen.TemplateEval;
 
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 import static org.esa.beam.extapi.gen.JavadocHelpers.convertToPythonDoc;
 import static org.esa.beam.extapi.gen.TemplateEval.eval;
@@ -45,6 +48,7 @@ public class PyCModuleGenerator extends ModuleGenerator {
     public static final String BEAM_PYAPI_C_SRCDIR = "src/main/c/gen";
     public static final String BEAM_PYAPI_NAME = "beampy";
     public static final String BEAM_PYAPI_VARNAMEPREFIX = "BeamPy";
+    public static final String CLASS_VAR_NAME_PATTERN = "BPy_%s_Class";
 
     final static HashMap<String, String> CARRAY_FORMATS = new HashMap<String, String>();
 
@@ -77,6 +81,11 @@ public class PyCModuleGenerator extends ModuleGenerator {
     @Override
     public String getUniqueFunctionNameFor(ApiMethod apiMethod) {
         return BEAM_PYAPI_VARNAMEPREFIX + getApiInfo().getUniqueFunctionNameFor(apiMethod);
+    }
+
+    @Override
+    public String getComponentCClassVarName(Type type) {
+        return String.format(CLASS_VAR_NAME_PATTERN, getComponentCClassName(type));
     }
 
     @Override
@@ -309,5 +318,89 @@ public class PyCModuleGenerator extends ModuleGenerator {
         writer.printf("    {\"to_jobject\", BPy_to_jobject, METH_VARARGS, \"Test function which takes an argument, converts it into a Java object and returns a JObject\"},\n");
         writer.printf("    {NULL, NULL, 0, NULL} /*Sentinel*/\n");
         writer.printf("};\n");
+    }
+
+    protected void writeInitApiFunction(PrintWriter writer) {
+        writer.write("" +
+                             "jboolean BPy_InitApi()\n" +
+                             "{\n" +
+                             "    static int initialized = 0;\n" +
+                             "\n" +
+                             "    if (initialized) {\n" +
+                             "        return 1;\n" +
+                             "    }\n" +
+                             "\n" +
+                             "    if (!beam_isJvmCreated() && !beam_createJvmWithDefaults()) {\n" +
+                             "        PyErr_SetString(PyExc_RuntimeError, \"BPy_InitApi: failed to create Java VM\");\n" +
+                             "        return 0;\n" +
+                             "    }\n" +
+                             "\n");
+
+        writeClassInitialisations(writer);
+
+        writer.write("" +
+                             "    initialized = 1;\n" +
+                             "    return 1;\n" +
+                             "}\n" +
+                             "\n");
+    }
+
+    private void writeClassInitialisations(PrintWriter writer) {
+        for (String javaLangClass : JAVA_LANG_CLASSES) {
+            writeClassDef(writer,
+                          String.format(CLASS_VAR_NAME_PATTERN, javaLangClass),
+                          "java/lang/" + javaLangClass);
+        }
+        writer.println();
+
+        for (String javaUtilClass : JAVA_UTIL_CLASSES) {
+            writeClassDef(writer,
+                          String.format(CLASS_VAR_NAME_PATTERN, javaUtilClass),
+                          "java/util/" + javaUtilClass);
+        }
+        writer.println();
+
+        final Set<String> coreJavaClassNames = getCoreJavaClassNames();
+        for (ApiClass apiClass : getApiInfo().getAllClasses()) {
+            if (!coreJavaClassNames.contains(apiClass.getJavaName())) {
+                writeClassDef(writer,
+                              getComponentCClassVarName(apiClass.getType()),
+                              apiClass.getResourceName());
+            }
+        }
+        writer.println();
+    }
+
+    private void writeClassDef(PrintWriter writer, String classVarName, String classResourceName) {
+        writer.write(format("    if (!BPy_InitJClass(&${classVar}, \"${classRes}\")) return 0;\n",
+                            new TemplateEval.KV("classVar", classVarName),
+                            new TemplateEval.KV("classRes", classResourceName)));
+    }
+
+    protected void writeClassDefinitions(PrintWriter writer) {
+
+        writer.printf("/* java.lang classes */\n");
+        for (String simpleClassName : JAVA_LANG_CLASSES) {
+            writer.write(String.format("jclass %s;\n",
+                                       String.format(CLASS_VAR_NAME_PATTERN, simpleClassName)));
+        }
+        writer.printf("\n");
+
+        writer.printf("/* java.util classes */\n");
+        for (String simpleClassName : JAVA_UTIL_CLASSES) {
+            writer.write(String.format("jclass %s;\n",
+                                       String.format(CLASS_VAR_NAME_PATTERN, simpleClassName)));
+        }
+        writer.printf("\n");
+
+        writer.printf("/* BEAM API classes */\n");
+        final Set<String> coreJavaClassNames = getCoreJavaClassNames();
+        for (ApiClass apiClass : getApiInfo().getAllClasses()) {
+            if (!coreJavaClassNames.contains(apiClass.getType().qualifiedTypeName())) {
+                writer.write(String.format("jclass %s;\n",
+                                           getComponentCClassVarName(apiClass.getType())));
+            }
+        }
+        writer.printf("\n");
     }
 }

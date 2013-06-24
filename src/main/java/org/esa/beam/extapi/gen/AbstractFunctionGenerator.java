@@ -119,7 +119,7 @@ public abstract class AbstractFunctionGenerator implements FunctionGenerator {
         if (isInstanceMethod()) {
             argumentList.append(thisVarName);
         } else {
-            argumentList.append(ModuleGenerator.getComponentCClassVarName(getEnclosingClass().getType()));
+            argumentList.append(context.getComponentCClassVarName(getEnclosingClass().getType()));
         }
 
         argumentList.append(", ");

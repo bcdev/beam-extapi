@@ -32,7 +32,6 @@ public abstract class ModuleGenerator implements GeneratorContext {
     public static final String THIS_VAR_NAME = "_this";
     public static final String METHOD_VAR_NAME = "_method";
     public static final String RESULT_VAR_NAME = "_result";
-    public static final String CLASS_VAR_NAME_PATTERN = "class%s";
 
     public static final String[] JAVA_LANG_CLASSES = new String[]{"Boolean", "Byte", "Character", "Short", "Integer", "Long", "Float", "Double", "String"};
     public static final String[] JAVA_UTIL_CLASSES = new String[]{"HashMap", "HashSet", "ArrayList"};
@@ -51,9 +50,7 @@ public abstract class ModuleGenerator implements GeneratorContext {
         return type.typeName().replace('.', '_');
     }
 
-    public static String getComponentCClassVarName(Type type) {
-        return String.format(CLASS_VAR_NAME_PATTERN, getComponentCClassName(type));
-    }
+    public abstract String getComponentCClassVarName(Type type);
 
     public Set<ApiClass> getApiClasses() {
         return apiInfo.getApiClasses();
@@ -84,77 +81,6 @@ public abstract class ModuleGenerator implements GeneratorContext {
 
     public abstract void run() throws IOException;
 
-    protected void writeTemplateResource(Writer writer, String resourceName, KV... pairs) throws IOException {
-        final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(resourceName)));
-        boolean isC = resourceName.endsWith(".h") || resourceName.endsWith(".c");
-        try {
-            if (isC) writer.write("// <<<<<<<< Begin include from " + resourceName + "\n");
-            templateEval.add(pairs).eval(bufferedReader, writer);
-            if (isC) writer.write("// >>>>>>>> End include from " + resourceName + "\n");
-        } finally {
-            bufferedReader.close();
-        }
-    }
-
-    protected void writeInitApiFunction(PrintWriter writer) {
-        writer.write("" +
-                             "int beam_initApi()\n" +
-                             "{\n" +
-                             "    static int exitCode = -1;\n" +
-                             "    if (exitCode >= 0) {\n" +
-                             "        return exitCode;\n" +
-                             "    }\n" +
-                             "\n" +
-                             "    if (!beam_isJvmCreated() && !beam_createJvmWithDefaults()) {\n" +
-                             "        exitCode = 1;\n" +
-                             "        return exitCode;\n" +
-                             "    }\n" +
-                             "\n");
-
-        int errCode = 1000;
-        for (String javaLangClass : JAVA_LANG_CLASSES) {
-            writeClassDef(writer,
-                          String.format(CLASS_VAR_NAME_PATTERN, javaLangClass),
-                          "java/lang/" + javaLangClass,
-                          errCode++);
-        }
-        for (String javaUtilClass : JAVA_UTIL_CLASSES) {
-            writeClassDef(writer,
-                          String.format(CLASS_VAR_NAME_PATTERN, javaUtilClass),
-                          "java/util/" + javaUtilClass,
-                          errCode++);
-        }
-        errCode = 2000;
-        final Set<String> coreJavaClassNames = getCoreJavaClassNames();
-        for (ApiClass apiClass : getApiInfo().getAllClasses()) {
-            if (!coreJavaClassNames.contains(apiClass.getJavaName())) {
-                writeClassDef(writer,
-                              getComponentCClassVarName(apiClass.getType()),
-                              apiClass.getResourceName(),
-                              errCode++);
-            }
-        }
-        writer.write("" +
-                             "    exitCode = 0;\n" +
-                             "    return exitCode;\n" +
-                             "}\n" +
-                             "\n");
-    }
-
-    private void writeClassDef(PrintWriter writer, String classVarName, String classResourceName, int errCode) {
-        writer.write(format(""
-                                    + "    ${classVar} = beam_findJvmClass(\"${classRes}\");\n"
-                                    + "    if (${classVar} == NULL) { \n"
-                                    + "        fprintf(stderr, \"${libName}: Java class not found: ${classRes}\\n\");\n"
-                                    + "        exitCode = ${errCode};\n"
-                                    + "        return exitCode;\n"
-                                    + "    }\n",
-                            new TemplateEval.KV("classVar", classVarName),
-                            new TemplateEval.KV("classRes", classResourceName),
-                            new TemplateEval.KV("errCode", errCode)));
-        writer.write("\n");
-    }
-
     private static Map<ApiClass, List<FunctionGenerator>> createFunctionGenerators(ApiInfo apiInfo, FunctionGeneratorFactory factory) {
         Map<ApiClass, List<FunctionGenerator>> map = new HashMap<ApiClass, List<FunctionGenerator>>();
         Set<ApiClass> apiClasses = apiInfo.getApiClasses();
@@ -175,39 +101,19 @@ public abstract class ModuleGenerator implements GeneratorContext {
     }
 
 
-    protected void writeClassDefinitions(PrintWriter writer) {
-        writeClassDefinitions(writer, false);
+    protected void writeTemplateResource(Writer writer, String resourceName, KV... pairs) throws IOException {
+        final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(resourceName)));
+        boolean isC = resourceName.endsWith(".h") || resourceName.endsWith(".c");
+        try {
+            if (isC) writer.write("// <<<<<<<< Begin include from " + resourceName + "\n");
+            templateEval.add(pairs).eval(bufferedReader, writer);
+            if (isC) writer.write("// >>>>>>>> End include from " + resourceName + "\n");
+        } finally {
+            bufferedReader.close();
+        }
     }
 
-    protected void writeClassDefinitions(PrintWriter writer, boolean header) {
-
-        String extDecl = header ? "extern " : "";
-
-        writer.printf("/* java.lang classes. */\n");
-        for (String simpleClassName : JAVA_LANG_CLASSES) {
-            writer.write(String.format("%sjclass %s;\n",
-                                       extDecl, String.format(CLASS_VAR_NAME_PATTERN, simpleClassName)));
-        }
-        writer.printf("\n");
-
-        writer.printf("/* java.util classes. */\n");
-        for (String simpleClassName : JAVA_UTIL_CLASSES) {
-            writer.write(String.format("%sjclass %s;\n",
-                                       extDecl, String.format(CLASS_VAR_NAME_PATTERN, simpleClassName)));
-        }
-        writer.printf("\n");
-
-        final Set<String> coreJavaClassNames = getCoreJavaClassNames();
-        for (ApiClass apiClass : getApiInfo().getAllClasses()) {
-            if (!coreJavaClassNames.contains(apiClass.getType().qualifiedTypeName())) {
-                writer.write(String.format("%sjclass %s;\n",
-                                           extDecl, getComponentCClassVarName(apiClass.getType())));
-            }
-        }
-        writer.printf("\n");
-    }
-
-    private Set<String> getCoreJavaClassNames() {
+    protected Set<String> getCoreJavaClassNames() {
         Set<String> coreJavaClassNames = new HashSet<String>();
         for (String simpleClassName : JAVA_LANG_CLASSES) {
             coreJavaClassNames.add("java.lang." + simpleClassName);

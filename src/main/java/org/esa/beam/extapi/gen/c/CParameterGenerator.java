@@ -242,7 +242,7 @@ public abstract class CParameterGenerator implements ParameterGenerator {
         public String generateJniArgFromTransformedTargetArgAssignment(GeneratorContext context) {
             return eval("${p}Array = beam_newJObjectArray(${p}Elems, ${p}Length, ${c});",
                         kv("p", getName()),
-                        kv("c", ModuleGenerator.getComponentCClassVarName(getType())));
+                        kv("c", context.getComponentCClassVarName(getType())));
         }
 
         @Override

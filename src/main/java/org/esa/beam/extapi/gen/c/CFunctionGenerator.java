@@ -86,7 +86,7 @@ public abstract class CFunctionGenerator extends AbstractFunctionGenerator {
                     kv("mv", METHOD_VAR_NAME),
                     kv("r", RESULT_VAR_NAME),
                     kv("f", apiMethod.getMemberDoc().isStatic() ? "GetStaticMethodID" : "GetMethodID"),
-                    kv("c", ModuleGenerator.getComponentCClassVarName(apiMethod.getEnclosingClass().getType())),
+                    kv("c", context.getComponentCClassVarName(apiMethod.getEnclosingClass().getType())),
                     kv("name", apiMethod.getJavaName()),
                     kv("sig", apiMethod.getJavaSignature()));
     }

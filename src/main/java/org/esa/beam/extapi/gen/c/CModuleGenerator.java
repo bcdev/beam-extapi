@@ -16,6 +16,7 @@
 
 package org.esa.beam.extapi.gen.c;
 
+import com.sun.javadoc.Type;
 import org.esa.beam.extapi.gen.ApiClass;
 import org.esa.beam.extapi.gen.ApiConstant;
 import org.esa.beam.extapi.gen.ApiInfo;
@@ -27,10 +28,12 @@ import org.esa.beam.extapi.gen.ModuleGenerator;
 import org.esa.beam.extapi.gen.TargetCFile;
 import org.esa.beam.extapi.gen.TargetCHeaderFile;
 import org.esa.beam.extapi.gen.TargetFile;
+import org.esa.beam.extapi.gen.TemplateEval;
 
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author Norman Fomferra
@@ -39,6 +42,7 @@ public class CModuleGenerator extends ModuleGenerator {
 
     public static final String BEAM_CAPI_SRCDIR = "src/main/c/gen";
     public static final String BEAM_CAPI_NAME = "beam_capi";
+    public static final String CLASS_VAR_NAME_PATTERN = "class%s";
 
     public CModuleGenerator(ApiInfo apiInfo) {
         super(apiInfo, new CFunctionGeneratorFactory(apiInfo));
@@ -49,6 +53,11 @@ public class CModuleGenerator extends ModuleGenerator {
     @Override
     public String getUniqueFunctionNameFor(ApiMethod apiMethod) {
         return getApiInfo().getUniqueFunctionNameFor(apiMethod);
+    }
+
+    @Override
+    public String getComponentCClassVarName(Type type) {
+        return String.format(CLASS_VAR_NAME_PATTERN, getComponentCClassName(type));
     }
 
     @Override
@@ -158,6 +167,97 @@ public class CModuleGenerator extends ModuleGenerator {
                 writer.printf("\n");
             }
         }.create();
+    }
+
+    protected void writeInitApiFunction(PrintWriter writer) {
+        writer.write("" +
+                             "int beam_initApi()\n" +
+                             "{\n" +
+                             "    static int exitCode = -1;\n" +
+                             "    if (exitCode >= 0) {\n" +
+                             "        return exitCode;\n" +
+                             "    }\n" +
+                             "\n" +
+                             "    if (!beam_isJvmCreated() && !beam_createJvmWithDefaults()) {\n" +
+                             "        exitCode = 1;\n" +
+                             "        return exitCode;\n" +
+                             "    }\n" +
+                             "\n");
+
+        int errCode = 1000;
+        for (String javaLangClass : JAVA_LANG_CLASSES) {
+            writeClassDef(writer,
+                          String.format(CLASS_VAR_NAME_PATTERN, javaLangClass),
+                          "java/lang/" + javaLangClass,
+                          errCode++);
+        }
+        for (String javaUtilClass : JAVA_UTIL_CLASSES) {
+            writeClassDef(writer,
+                          String.format(CLASS_VAR_NAME_PATTERN, javaUtilClass),
+                          "java/util/" + javaUtilClass,
+                          errCode++);
+        }
+        errCode = 2000;
+        final Set<String> coreJavaClassNames = getCoreJavaClassNames();
+        for (ApiClass apiClass : getApiInfo().getAllClasses()) {
+            if (!coreJavaClassNames.contains(apiClass.getJavaName())) {
+                writeClassDef(writer,
+                              getComponentCClassVarName(apiClass.getType()),
+                              apiClass.getResourceName(),
+                              errCode++);
+            }
+        }
+        writer.write("" +
+                             "    exitCode = 0;\n" +
+                             "    return exitCode;\n" +
+                             "}\n" +
+                             "\n");
+    }
+
+    private void writeClassDef(PrintWriter writer, String classVarName, String classResourceName, int errCode) {
+        writer.write(format(""
+                                    + "    ${classVar} = beam_findJvmClass(\"${classRes}\");\n"
+                                    + "    if (${classVar} == NULL) { \n"
+                                    + "        fprintf(stderr, \"${libName}: Java class not found: ${classRes}\\n\");\n"
+                                    + "        exitCode = ${errCode};\n"
+                                    + "        return exitCode;\n"
+                                    + "    }\n",
+                            new TemplateEval.KV("classVar", classVarName),
+                            new TemplateEval.KV("classRes", classResourceName),
+                            new TemplateEval.KV("errCode", errCode)));
+        writer.write("\n");
+    }
+
+    protected void writeClassDefinitions(PrintWriter writer) {
+        writeClassDefinitions(writer, false);
+    }
+
+    protected void writeClassDefinitions(PrintWriter writer, boolean header) {
+
+        String extDecl = header ? "extern " : "";
+
+        writer.printf("/* java.lang classes. */\n");
+        for (String simpleClassName : JAVA_LANG_CLASSES) {
+            writer.write(String.format("%sjclass %s;\n",
+                                       extDecl, String.format(CLASS_VAR_NAME_PATTERN, simpleClassName)));
+        }
+        writer.printf("\n");
+
+        writer.printf("/* java.util classes. */\n");
+        for (String simpleClassName : JAVA_UTIL_CLASSES) {
+            writer.write(String.format("%sjclass %s;\n",
+                                       extDecl, String.format(CLASS_VAR_NAME_PATTERN, simpleClassName)));
+        }
+        writer.printf("\n");
+
+        final Set<String> coreJavaClassNames = getCoreJavaClassNames();
+        for (ApiClass apiClass : getApiInfo().getAllClasses()) {
+            if (!coreJavaClassNames.contains(apiClass.getType().qualifiedTypeName())) {
+                writer.write(String.format("%sjclass %s;\n",
+                                           extDecl, getComponentCClassVarName(apiClass.getType())));
+            }
+        }
+        writer.printf("\n");
     }
 
     private void writeApiConstants(PrintWriter writer) {

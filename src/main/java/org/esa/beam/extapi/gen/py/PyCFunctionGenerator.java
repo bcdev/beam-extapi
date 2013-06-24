@@ -79,19 +79,19 @@ public abstract class PyCFunctionGenerator extends AbstractFunctionGenerator {
                                   "}\n",
                           kv("method", ModuleGenerator.METHOD_VAR_NAME),
                           kv("isstatic", apiMethod.getMemberDoc().isStatic() ? "1" : "0"),
-                          kv("classVar", ModuleGenerator.getComponentCClassVarName(apiMethod.getEnclosingClass().getType())),
+                          kv("classVar", context.getComponentCClassVarName(apiMethod.getEnclosingClass().getType())),
                           kv("className", apiMethod.getEnclosingClass().getType().qualifiedTypeName()),
                           kv("methodName", apiMethod.getJavaName()),
                           kv("methodSig", apiMethod.getJavaSignature()));
         if (isInstanceMethod()) {
-            final String typeName = getComponentCClassName(getEnclosingClass().getType());
             return s + format("" +
-                                      "${this}JObj = JObject_AsJObjectRefT(self, class${typeName});\n" +
+                                      "${this}JObj = JObject_AsJObjectRefT(self, ${classVarName});\n" +
                                       "if (${this}JObj == NULL) {\n" +
                                       "    PyErr_SetString(PyExc_ValueError, \"argument 'self' must be of type '${typeName}' (Java object reference)\");\n" +
                                       "    return NULL;\n" +
                                       "}",
-                              kv("typeName", typeName));
+                              kv("typeName", getComponentCClassName(getEnclosingClass().getType())),
+                              kv("classVarName", context.getComponentCClassVarName(getEnclosingClass().getType())));
         } else {
             return s;
         }

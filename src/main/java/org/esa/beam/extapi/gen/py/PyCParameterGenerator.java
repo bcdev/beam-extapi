@@ -146,14 +146,14 @@ public abstract class PyCParameterGenerator implements ParameterGenerator {
 
         @Override
         public String generateJniArgFromTransformedTargetArgAssignment(GeneratorContext context) {
-            String typeName = getComponentCClassName(getType());
             return eval("" +
-                                "${arg}JObj = BPy_ToJObjectT(${arg}PyObj, class${typeName}, &ok);\n" +
+                                "${arg}JObj = BPy_ToJObjectT(${arg}PyObj, ${classVarName}, &ok);\n" +
                                 "if (!ok) {\n" +
                                 "    return NULL;\n" +
                                 "}",
                         kv("arg", getName()),
-                        kv("typeName", typeName));
+                        kv("typeName", getComponentCClassName(getType())),
+                        kv("classVarName", context.getComponentCClassVarName(getType())));
         }
 
         @Override
@@ -358,14 +358,14 @@ public abstract class PyCParameterGenerator implements ParameterGenerator {
 
         @Override
         public String generateJniArgFromTransformedTargetArgAssignment(GeneratorContext context) {
-            String typeName = getComponentCClassName(getType());
             return eval(""
-                                + "${arg}JObj = BPy_ToJObjectArrayT(${arg}PyObj, class${typeName}, &ok);\n"
+                                + "${arg}JObj = BPy_ToJObjectArrayT(${arg}PyObj, ${classVarName}, &ok);\n"
                                 + "if (!ok) {\n"
                                 + "    return NULL;\n" // todo - goto error label and deref all JNI vars
                                 + "}",
                         kv("arg", getName()),
-                        kv("typeName", typeName));
+                        kv("typeName", getComponentCClassName(getType())),
+                        kv("classVarName", context.getComponentCClassVarName(getType())));
         }
 
         @Override

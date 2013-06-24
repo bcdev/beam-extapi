@@ -8,19 +8,7 @@
 
 static PyObject* BeamPy_Error;
 
-int beam_initApi();
-
-jboolean BPy_InitApi()
-{
-    int errCode = beam_initApi();
-    if (errCode != 0) {
-        char msg[64];
-        sprintf(msg, "beam_initApi() failed with error code %d", errCode);
-        PyErr_SetString(BeamPy_Error, msg);
-        return 0;
-    }
-    return 1;
-}
+jboolean BPy_InitApi();
 
 /**
  * Test Python --> Java conversion.
@@ -47,12 +35,12 @@ PyObject* BPy_to_jobject(PyObject* self, PyObject* args)
     return resultPyObj;
 }
 
-#define CHECK_JVM_EXCEPTION()           \
-if ((*jenv)->ExceptionCheck(jenv)) {    \
-    (*jenv)->ExceptionDescribe(jenv);   \
-    (*jenv)->ExceptionClear(jenv);      \
-    PyErr_SetString(BeamPy_Error, "JVM exception: class " ## C ## ", method " ## M); \
-    return NULL;                        \
-}                                       \
+#define CHECK_JVM_EXCEPTION(M)              \
+    if ((*jenv)->ExceptionCheck(jenv)) {    \
+        (*jenv)->ExceptionDescribe(jenv);   \
+        (*jenv)->ExceptionClear(jenv);      \
+        PyErr_SetString(BeamPy_Error, "Java exception occurred: " ## M); \
+        return NULL;                        \
+    }                                       \
 
 
