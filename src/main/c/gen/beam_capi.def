@@ -393,6 +393,12 @@ EXPORTS
 	ProductManager_removeAllProducts
 	ProductManager_addListener
 	ProductManager_removeListener
+	OperatorSpiRegistry_loadOperatorSpis
+	OperatorSpiRegistry_getServiceRegistry
+	OperatorSpiRegistry_getOperatorSpi
+	OperatorSpiRegistry_addOperatorSpi
+	OperatorSpiRegistry_removeOperatorSpi
+	OperatorSpiRegistry_setAlias
 	ImageGeometry_newImageGeometry
 	ImageGeometry_getImage2MapTransform
 	ImageGeometry_getImageRect

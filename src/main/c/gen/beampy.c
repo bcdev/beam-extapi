@@ -432,6 +432,12 @@ PyObject* BeamPyProductManager_removeProduct(PyObject* self, PyObject* args);
 PyObject* BeamPyProductManager_removeAllProducts(PyObject* self, PyObject* args);
 PyObject* BeamPyProductManager_addListener(PyObject* self, PyObject* args);
 PyObject* BeamPyProductManager_removeListener(PyObject* self, PyObject* args);
+PyObject* BeamPyOperatorSpiRegistry_loadOperatorSpis(PyObject* self, PyObject* args);
+PyObject* BeamPyOperatorSpiRegistry_getServiceRegistry(PyObject* self, PyObject* args);
+PyObject* BeamPyOperatorSpiRegistry_getOperatorSpi(PyObject* self, PyObject* args);
+PyObject* BeamPyOperatorSpiRegistry_addOperatorSpi(PyObject* self, PyObject* args);
+PyObject* BeamPyOperatorSpiRegistry_removeOperatorSpi(PyObject* self, PyObject* args);
+PyObject* BeamPyOperatorSpiRegistry_setAlias(PyObject* self, PyObject* args);
 PyObject* BeamPyImageGeometry_newImageGeometry(PyObject* self, PyObject* args);
 PyObject* BeamPyImageGeometry_getImage2MapTransform(PyObject* self, PyObject* args);
 PyObject* BeamPyImageGeometry_getImageRect(PyObject* self, PyObject* args);
@@ -1153,6 +1159,7 @@ jclass BPy_ImageGeometry_Class;
 jclass BPy_Parser_Class;
 jclass BPy_GeoCoding_Class;
 jclass BPy_ProductData_Class;
+jclass BPy_OperatorSpi_Class;
 jclass BPy_AffineTransform_Class;
 jclass BPy_Mask_Class;
 jclass BPy_GPF_Class;
@@ -1160,6 +1167,7 @@ jclass BPy_IndexCoding_Class;
 jclass BPy_Term_Class;
 jclass BPy_RasterDataNode_Class;
 jclass BPy_Class_Class;
+jclass BPy_ServiceRegistry_Class;
 jclass BPy_Product_AutoGrouping_Class;
 jclass BPy_PixelPos_Class;
 jclass BPy_BitRaster_Class;
@@ -1194,14 +1202,14 @@ jclass BPy_MapProjection_Class;
 jclass BPy_ProductManager_Class;
 jclass BPy_FlagCoding_Class;
 jclass BPy_IndexColorModel_Class;
-jclass BPy_Operator_Class;
 jclass BPy_OperatorSpiRegistry_Class;
+jclass BPy_Operator_Class;
 jclass BPy_ImageInfo_HistogramMatching_Class;
 jclass BPy_BitmaskDef_Class;
 jclass BPy_ProductNodeListener_Class;
-jclass BPy_ProductUtils_Class;
 jclass BPy_Map_Class;
 jclass BPy_MetadataElement_Class;
+jclass BPy_ProductUtils_Class;
 jclass BPy_Datum_Class;
 jclass BPy_Pointing_Class;
 jclass BPy_Color_Class;
@@ -1631,6 +1639,59 @@ PyTypeObject ProductData_Type = {
     NULL,                         /* tp_iter */
     NULL,                         /* tp_iternext */
     ProductData_methods,         /* tp_methods */
+    NULL,                         /* tp_members */
+    NULL,                         /* tp_getset */
+    NULL,                         /* tp_base */
+    NULL,                         /* tp_dict */
+    NULL,                         /* tp_descr_get */
+    NULL,                         /* tp_descr_set */
+    0,                            /* tp_dictoffset */
+    (initproc) JObject_init,      /* tp_init */
+    NULL,                         /* tp_alloc */
+    NULL,                         /* tp_new */
+};
+
+static PyMethodDef OperatorSpi_methods[] = {
+    {NULL, NULL, 0, NULL} /*Sentinel*/
+};
+
+// Note: this is unused, experimental code
+
+/**
+ * Implements the BeamPy_JObjectType class singleton.
+ *
+ * THIS TYPE IS NOT YET IN USE: we currently use
+ * (<type_string>, <pointer>) tuples to represent Java JNI objects.
+ */
+PyTypeObject OperatorSpi_Type = {
+    PyVarObject_HEAD_INIT(NULL, 0)
+    "beampy.OperatorSpi",        /* tp_name */
+    sizeof (JObject),             /* tp_basicsize */
+    0,                            /* tp_itemsize */
+    (destructor)JObject_dealloc,  /* tp_dealloc */
+    NULL,                         /* tp_print */
+    NULL,                         /* tp_getattr */
+    NULL,                         /* tp_setattr */
+    NULL,                         /* tp_reserved */
+    NULL,                         /* tp_repr */
+    NULL,                         /* tp_as_number */
+    NULL,                         /* tp_as_sequence */
+    NULL,                         /* tp_as_mapping */
+    NULL,                         /* tp_hash  */
+    NULL,                         /* tp_call */
+    NULL,                         /* tp_str */
+    NULL,                         /* tp_getattro */
+    NULL,                         /* tp_setattro */
+    NULL,                         /* tp_as_buffer */
+    Py_TPFLAGS_DEFAULT,           /* tp_flags */
+    "The OperatorSpi class is the service provider interface (SPI) for {@link Operator}s.\nTherefore this abstract class is intended to be derived by clients.\nThe SPI is both a descriptor for the operator type and a factory for new {@link Operator} instances.\nAn SPI is required for your operator if you want to make it accessible via an alias name in\nthe various {@link GPF}{@code .create} methods or within GPF Graph XML code.\nSPI are registered either programmatically using the\n{@link GPF#getOperatorSpiRegistry() OperatorSpiRegistry} or\nautomatically via standard Java services lookup mechanism. For the services approach, place a\nfile {@code META-INF/services/OperatorSpi}\nin the JAR file containing your operators and associated SPIs.\nFor each SPI to be automatically registered, place a text line in the file containing the SPI's\nfully qualified class name.\nAuthor:  Norman Fomferra\nAuthor:  Marco Peters\nSince version:  4.1",                /* tp_doc */
+    NULL,                         /* tp_traverse */
+    NULL,                         /* tp_clear */
+    NULL,                         /* tp_richcompare */
+    0,                            /* tp_weaklistoffset */
+    NULL,                         /* tp_iter */
+    NULL,                         /* tp_iternext */
+    OperatorSpi_methods,         /* tp_methods */
     NULL,                         /* tp_members */
     NULL,                         /* tp_getset */
     NULL,                         /* tp_base */
@@ -2124,6 +2185,59 @@ PyTypeObject Class_Type = {
     NULL,                         /* tp_iter */
     NULL,                         /* tp_iternext */
     Class_methods,         /* tp_methods */
+    NULL,                         /* tp_members */
+    NULL,                         /* tp_getset */
+    NULL,                         /* tp_base */
+    NULL,                         /* tp_dict */
+    NULL,                         /* tp_descr_get */
+    NULL,                         /* tp_descr_set */
+    0,                            /* tp_dictoffset */
+    (initproc) JObject_init,      /* tp_init */
+    NULL,                         /* tp_alloc */
+    NULL,                         /* tp_new */
+};
+
+static PyMethodDef ServiceRegistry_methods[] = {
+    {NULL, NULL, 0, NULL} /*Sentinel*/
+};
+
+// Note: this is unused, experimental code
+
+/**
+ * Implements the BeamPy_JObjectType class singleton.
+ *
+ * THIS TYPE IS NOT YET IN USE: we currently use
+ * (<type_string>, <pointer>) tuples to represent Java JNI objects.
+ */
+PyTypeObject ServiceRegistry_Type = {
+    PyVarObject_HEAD_INIT(NULL, 0)
+    "beampy.ServiceRegistry",        /* tp_name */
+    sizeof (JObject),             /* tp_basicsize */
+    0,                            /* tp_itemsize */
+    (destructor)JObject_dealloc,  /* tp_dealloc */
+    NULL,                         /* tp_print */
+    NULL,                         /* tp_getattr */
+    NULL,                         /* tp_setattr */
+    NULL,                         /* tp_reserved */
+    NULL,                         /* tp_repr */
+    NULL,                         /* tp_as_number */
+    NULL,                         /* tp_as_sequence */
+    NULL,                         /* tp_as_mapping */
+    NULL,                         /* tp_hash  */
+    NULL,                         /* tp_call */
+    NULL,                         /* tp_str */
+    NULL,                         /* tp_getattro */
+    NULL,                         /* tp_setattro */
+    NULL,                         /* tp_as_buffer */
+    Py_TPFLAGS_DEFAULT,           /* tp_flags */
+    "",                /* tp_doc */
+    NULL,                         /* tp_traverse */
+    NULL,                         /* tp_clear */
+    NULL,                         /* tp_richcompare */
+    0,                            /* tp_weaklistoffset */
+    NULL,                         /* tp_iter */
+    NULL,                         /* tp_iternext */
+    ServiceRegistry_methods,         /* tp_methods */
     NULL,                         /* tp_members */
     NULL,                         /* tp_getset */
     NULL,                         /* tp_base */
@@ -4334,6 +4448,65 @@ PyTypeObject IndexColorModel_Type = {
     NULL,                         /* tp_new */
 };
 
+static PyMethodDef OperatorSpiRegistry_methods[] = {
+    {"loadOperatorSpis", (PyCFunction) BeamPyOperatorSpiRegistry_loadOperatorSpis, METH_VARARGS, "Loads the SPI's defined in {@code META-INF/services}."},
+    {"getServiceRegistry", (PyCFunction) BeamPyOperatorSpiRegistry_getServiceRegistry, METH_VARARGS, "Gets the {@link ServiceRegistry ServiceRegistry}\nReturns the {@link ServiceRegistry service registry}"},
+    {"getOperatorSpi", (PyCFunction) BeamPyOperatorSpiRegistry_getOperatorSpi, METH_VARARGS, "Gets a registrered operator SPI. The given operatorName can be\neither the fully qualified class name of the {@link OperatorSpi}\nor an alias name.\nReturns Parameter operatorName: a name identifying the operator SPI.\nReturns the operator SPI, or null"},
+    {"addOperatorSpi", (PyCFunction) BeamPyOperatorSpiRegistry_addOperatorSpi, METH_VARARGS, "Adds the given {@link OperatorSpi operatorSpi} to this registry.\nReturns Parameter operatorSpi: the SPI to add\nReturns {@code true}, if the {@link OperatorSpi} could be succesfully added, otherwise {@code false}"},
+    {"removeOperatorSpi", (PyCFunction) BeamPyOperatorSpiRegistry_removeOperatorSpi, METH_VARARGS, "Removes the given {@link OperatorSpi operatorSpi} this registry.\nReturns Parameter operatorSpi: the SPI to remove\nReturns {@code true}, if the SPI could be removed, otherwise {@code false}"},
+    {"setAlias", (PyCFunction) BeamPyOperatorSpiRegistry_setAlias, METH_VARARGS, "Sets an alias for the given SPI class name.\nReturns Parameter aliasName: the alias\nReturns Parameter spiClassName: the name of the SPI class"},
+    {NULL, NULL, 0, NULL} /*Sentinel*/
+};
+
+// Note: this is unused, experimental code
+
+/**
+ * Implements the BeamPy_JObjectType class singleton.
+ *
+ * THIS TYPE IS NOT YET IN USE: we currently use
+ * (<type_string>, <pointer>) tuples to represent Java JNI objects.
+ */
+PyTypeObject OperatorSpiRegistry_Type = {
+    PyVarObject_HEAD_INIT(NULL, 0)
+    "beampy.OperatorSpiRegistry",        /* tp_name */
+    sizeof (JObject),             /* tp_basicsize */
+    0,                            /* tp_itemsize */
+    (destructor)JObject_dealloc,  /* tp_dealloc */
+    NULL,                         /* tp_print */
+    NULL,                         /* tp_getattr */
+    NULL,                         /* tp_setattr */
+    NULL,                         /* tp_reserved */
+    NULL,                         /* tp_repr */
+    NULL,                         /* tp_as_number */
+    NULL,                         /* tp_as_sequence */
+    NULL,                         /* tp_as_mapping */
+    NULL,                         /* tp_hash  */
+    NULL,                         /* tp_call */
+    NULL,                         /* tp_str */
+    NULL,                         /* tp_getattro */
+    NULL,                         /* tp_setattro */
+    NULL,                         /* tp_as_buffer */
+    Py_TPFLAGS_DEFAULT,           /* tp_flags */
+    "A registry for operator SPI instances.\nAuthor:  Norman Fomferra\nAuthor:  Marco Zühlke\nSince version:  4.1",                /* tp_doc */
+    NULL,                         /* tp_traverse */
+    NULL,                         /* tp_clear */
+    NULL,                         /* tp_richcompare */
+    0,                            /* tp_weaklistoffset */
+    NULL,                         /* tp_iter */
+    NULL,                         /* tp_iternext */
+    OperatorSpiRegistry_methods,         /* tp_methods */
+    NULL,                         /* tp_members */
+    NULL,                         /* tp_getset */
+    NULL,                         /* tp_base */
+    NULL,                         /* tp_dict */
+    NULL,                         /* tp_descr_get */
+    NULL,                         /* tp_descr_set */
+    0,                            /* tp_dictoffset */
+    (initproc) JObject_init,      /* tp_init */
+    NULL,                         /* tp_alloc */
+    NULL,                         /* tp_new */
+};
+
 static PyMethodDef Operator_methods[] = {
     {NULL, NULL, 0, NULL} /*Sentinel*/
 };
@@ -4375,59 +4548,6 @@ PyTypeObject Operator_Type = {
     NULL,                         /* tp_iter */
     NULL,                         /* tp_iternext */
     Operator_methods,         /* tp_methods */
-    NULL,                         /* tp_members */
-    NULL,                         /* tp_getset */
-    NULL,                         /* tp_base */
-    NULL,                         /* tp_dict */
-    NULL,                         /* tp_descr_get */
-    NULL,                         /* tp_descr_set */
-    0,                            /* tp_dictoffset */
-    (initproc) JObject_init,      /* tp_init */
-    NULL,                         /* tp_alloc */
-    NULL,                         /* tp_new */
-};
-
-static PyMethodDef OperatorSpiRegistry_methods[] = {
-    {NULL, NULL, 0, NULL} /*Sentinel*/
-};
-
-// Note: this is unused, experimental code
-
-/**
- * Implements the BeamPy_JObjectType class singleton.
- *
- * THIS TYPE IS NOT YET IN USE: we currently use
- * (<type_string>, <pointer>) tuples to represent Java JNI objects.
- */
-PyTypeObject OperatorSpiRegistry_Type = {
-    PyVarObject_HEAD_INIT(NULL, 0)
-    "beampy.OperatorSpiRegistry",        /* tp_name */
-    sizeof (JObject),             /* tp_basicsize */
-    0,                            /* tp_itemsize */
-    (destructor)JObject_dealloc,  /* tp_dealloc */
-    NULL,                         /* tp_print */
-    NULL,                         /* tp_getattr */
-    NULL,                         /* tp_setattr */
-    NULL,                         /* tp_reserved */
-    NULL,                         /* tp_repr */
-    NULL,                         /* tp_as_number */
-    NULL,                         /* tp_as_sequence */
-    NULL,                         /* tp_as_mapping */
-    NULL,                         /* tp_hash  */
-    NULL,                         /* tp_call */
-    NULL,                         /* tp_str */
-    NULL,                         /* tp_getattro */
-    NULL,                         /* tp_setattro */
-    NULL,                         /* tp_as_buffer */
-    Py_TPFLAGS_DEFAULT,           /* tp_flags */
-    "A registry for operator SPI instances.\nAuthor:  Norman Fomferra\nAuthor:  Marco Zühlke\nSince version:  4.1",                /* tp_doc */
-    NULL,                         /* tp_traverse */
-    NULL,                         /* tp_clear */
-    NULL,                         /* tp_richcompare */
-    0,                            /* tp_weaklistoffset */
-    NULL,                         /* tp_iter */
-    NULL,                         /* tp_iternext */
-    OperatorSpiRegistry_methods,         /* tp_methods */
     NULL,                         /* tp_members */
     NULL,                         /* tp_getset */
     NULL,                         /* tp_base */
@@ -4599,130 +4719,6 @@ PyTypeObject ProductNodeListener_Type = {
     NULL,                         /* tp_new */
 };
 
-static PyMethodDef ProductUtils_methods[] = {
-    {"newProductUtils", (PyCFunction) BeamPyProductUtils_newProductUtils, METH_VARARGS | METH_STATIC, ""},
-    {"createImageInfo", (PyCFunction) BeamPyProductUtils_createImageInfo, METH_VARARGS | METH_STATIC, "Creates image creation information.\nReturns Parameter rasters: The raster data nodes.\nReturns Parameter assignMissingImageInfos: if {@code true}, it is ensured that to all {@code RasterDataNode}s a valid {@code ImageInfo} will be assigned.\nReturns Parameter pm: The progress monitor.\nReturns image information\n@throws IOException if an I/O error occurs\nSince version:  BEAM 4.2"},
-    {"createRgbImage", (PyCFunction) BeamPyProductUtils_createRgbImage, METH_VARARGS | METH_STATIC, "Creates a RGB image from the given array of {@link RasterDataNode}s.\nThe given array rasters containing one or three raster data nodes. If three rasters are given\nRGB image is created, if only one raster is provided a gray scale image created.\nReturns Parameter rasters: an array of one or three raster nodes.\nReturns Parameter imageInfo: the image info provides the information how to create the image\nReturns Parameter pm: a monitor to inform the user about progress\nReturns the created image\n@throws IOException if the given raster data is not loaded and reload causes an I/O error\n@see RasterDataNode#setImageInfo(ImageInfo)"},
-    {"createColorIndexedImage", (PyCFunction) BeamPyProductUtils_createColorIndexedImage, METH_VARARGS | METH_STATIC, "Creates a greyscale image from the given {@link RasterDataNode}.\n\nThe method uses the given raster data node's image information (an instance of {@link\nImageInfo}) to create the image.\nReturns Parameter rasterDataNode: the raster data node, must not be null\nReturns Parameter pm: a monitor to inform the user about progress\nReturns the color indexed image\n@throws IOException if the given raster data is not loaded and reload causes an I/O error\n@see RasterDataNode#getImageInfo()"},
-    {"createSuitableMapInfo1", (PyCFunction) BeamPyProductUtils_createSuitableMapInfo1, METH_VARARGS | METH_STATIC, "Retuns a suitable MapInfo instance for the given (geo-coded) product which includes the entire or a\nsubset of the product's scene region for the given map projection. The position of the reference pixel will be\nthe upper left pixel's center (0.5, 0.5).\nReturns Parameter product: the product, must not be null\nReturns Parameter rect: the rectangle in pixel coordinates of the product, if null the entire region is\nconsidered\nReturns Parameter mapProjection: the map projection, must not be null\nReturns the map information instance"},
-    {"createSuitableMapInfo2", (PyCFunction) BeamPyProductUtils_createSuitableMapInfo2, METH_VARARGS | METH_STATIC, "Retuns a suitable MapInfo instance for the given (geo-coded) product which includes the entire or a\nsubset of the product's scene region for the given map projection. The position of the reference pixel will be the scene center.\nReturns Parameter product: the product, must not be null\nReturns Parameter mapProjection: the map projection, must not be null\nReturns Parameter orientation: the orientation angle\nReturns Parameter noDataValue: the no-data value to be used\nReturns the map information instance"},
-    {"getOutputRasterSize", (PyCFunction) BeamPyProductUtils_getOutputRasterSize, METH_VARARGS | METH_STATIC, ""},
-    {"createMapEnvelope2", (PyCFunction) BeamPyProductUtils_createMapEnvelope2, METH_VARARGS | METH_STATIC, "Creates the boundary in map coordinates for the given product, source rectangle (in product pixel coordinates)\nand the given map transfromation. The method delegates to {@link #createMapEnvelope(Product,\njava.awt.Rectangle, int, org.esa.beam.framework.dataop.maptransf.MapTransform) createMapEnvelope(product, rect,\nstep, mapTransform)} where step is the half of the minimum of the product scene raster width and\nheight.\nReturns Parameter product: The product.\nReturns Parameter rect: The rectangle in pixel coordinates.\nReturns Parameter mapTransform: The map transformation.\nReturns the boundary in map coordinates for the given product."},
-    {"createMapEnvelope1", (PyCFunction) BeamPyProductUtils_createMapEnvelope1, METH_VARARGS | METH_STATIC, "Creates the boundary in map coordinates for the given product, source rectangle (in product\npixel coordinates) and the given map transfromation. The method delegates to\n{@link #createMapBoundary(Product, Rectangle, int, MapTransform) createMapBoundary(product, rect,\nstep, mapTransform)} where step is the half of the minimum of the product scene\nraster width and height.\nReturns Parameter product: The product.\nReturns Parameter rect: The rectangle in pixel coordinates.\nReturns Parameter step: The step size in pixels.\nReturns Parameter mapTransform: The map transformation.\nReturns the boundary in map coordinates for the given product."},
-    {"getMinMax", (PyCFunction) BeamPyProductUtils_getMinMax, METH_VARARGS | METH_STATIC, ""},
-    {"createMapBoundary", (PyCFunction) BeamPyProductUtils_createMapBoundary, METH_VARARGS | METH_STATIC, ""},
-    {"createGeoBoundary1", (PyCFunction) BeamPyProductUtils_createGeoBoundary1, METH_VARARGS | METH_STATIC, "Creates the geographical boundary of the given product and returns it as a list of geographical coordinates.\nReturns Parameter product: the input product, must not be null\nReturns Parameter step: the step given in pixels\nReturns an array of geographical coordinates\n@throws IllegalArgumentException if product is null or if the product's {@link GeoCoding} is null"},
-    {"createGeoBoundary2", (PyCFunction) BeamPyProductUtils_createGeoBoundary2, METH_VARARGS | METH_STATIC, "Creates the geographical boundary of the given region within the given product and returns it as a list of\ngeographical coordinates.\n This method delegates to {@link #createGeoBoundary(Product, java.awt.Rectangle, int, boolean) createGeoBoundary(Product, Rectangle, int, boolean)}\nand the additional boolean parameter usePixelCenter is true.\nReturns Parameter product: the input product, must not be null\nReturns Parameter region: the region rectangle in product pixel coordinates, can be null for entire product\nReturns Parameter step: the step given in pixels\nReturns an array of geographical coordinates\n@throws IllegalArgumentException if product is null or if the product's {@link GeoCoding} is null\n@see #createPixelBoundary(RasterDataNode, java.awt.Rectangle, int)"},
-    {"createGeoBoundary3", (PyCFunction) BeamPyProductUtils_createGeoBoundary3, METH_VARARGS | METH_STATIC, "Creates the geographical boundary of the given region within the given product and returns it as a list of\ngeographical coordinates.\nReturns Parameter product: the input product, must not be null\nReturns Parameter region: the region rectangle in product pixel coordinates, can be null for entire product\nReturns Parameter step: the step given in pixels\nReturns Parameter usePixelCenter: true if the pixel center should be used to create the boundary\nReturns an array of geographical coordinates\n@throws IllegalArgumentException if product is null or if the product's {@link GeoCoding} is null\n@see #createPixelBoundary(Product, java.awt.Rectangle, int, boolean)"},
-    {"createGeoBoundary4", (PyCFunction) BeamPyProductUtils_createGeoBoundary4, METH_VARARGS | METH_STATIC, "Creates the geographical boundary of the given region within the given raster and returns it as a list of\ngeographical coordinates.\nReturns Parameter raster: the input raster, must not be null\nReturns Parameter region: the region rectangle in raster pixel coordinates, can be null for entire raster\nReturns Parameter step: the step given in pixels\nReturns an array of geographical coordinates\n@throws IllegalArgumentException if raster is null or if the raster has no {@link GeoCoding} is null\n@see #createPixelBoundary(RasterDataNode, java.awt.Rectangle, int)"},
-    {"createGeoBoundaryPaths1", (PyCFunction) BeamPyProductUtils_createGeoBoundaryPaths1, METH_VARARGS | METH_STATIC, "Converts the geographic boundary entire product into one, two or three shape objects. If the product does not\nintersect the 180 degree meridian, a single general path is returned. Otherwise two or three shapes are created\nand returned in the order from west to east.\n\nThe geographic boundary of the given product are returned as shapes comprising (longitude,latitude) pairs.\nReturns Parameter product: the input product\nReturns an array of shape objects\n@throws IllegalArgumentException if product is null or if the product's {@link GeoCoding} is null\n@see #createGeoBoundary(Product, int)"},
-    {"createGeoBoundaryPaths2", (PyCFunction) BeamPyProductUtils_createGeoBoundaryPaths2, METH_VARARGS | METH_STATIC, "Converts the geographic boundary of the region within the given product into one, two or three shape objects. If\nthe product does not intersect the 180 degree meridian, a single general path is returned. Otherwise two or three\nshapes are created and returned in the order from west to east.\n\nThis method delegates to {@link #createGeoBoundaryPaths(Product, java.awt.Rectangle, int, boolean) createGeoBoundaryPaths(Product, Rectangle, int, boolean)}\nand the additional parameter usePixelCenter is true.\n\nThe geographic boundary of the given product are returned as shapes comprising (longitude,latitude) pairs.\nReturns Parameter product: the input product\nReturns Parameter region: the region rectangle in product pixel coordinates, can be null for entire product\nReturns Parameter step: the step given in pixels\nReturns an array of shape objects\n@throws IllegalArgumentException if product is null or if the product's {@link GeoCoding} is null\n@see #createGeoBoundary(Product, java.awt.Rectangle, int)"},
-    {"createGeoBoundaryPaths3", (PyCFunction) BeamPyProductUtils_createGeoBoundaryPaths3, METH_VARARGS | METH_STATIC, "Converts the geographic boundary of the region within the given product into one, two or three shape objects. If\nthe product does not intersect the 180 degree meridian, a single general path is returned. Otherwise two or three\nshapes are created and returned in the order from west to east.\n\nThe geographic boundary of the given product are returned as shapes comprising (longitude,latitude) pairs.\nReturns Parameter product: the input product\nReturns Parameter region: the region rectangle in product pixel coordinates, can be null for entire product\nReturns Parameter step: the step given in pixels\nReturns Parameter usePixelCenter: true if the pixel center should be used to create the pathes\nReturns an array of shape objects\n@throws IllegalArgumentException if product is null or if the product's {@link GeoCoding} is null\n@see #createGeoBoundary(Product, java.awt.Rectangle, int, boolean)"},
-    {"createPixelBoundary1", (PyCFunction) BeamPyProductUtils_createPixelBoundary1, METH_VARARGS | METH_STATIC, "Creates a rectangular boundary expressed in pixel positions for the given source rectangle. If the source\nrect is 100 x 50 pixels and step is 10 the returned array will countain exactly 2 * 10\n+ 2 * (5 - 2) = 26 pixel positions.\n\nThis method is used for an intermediate step when determining a product boundary expressed in geographical\nco-ordinates.\n This method delegates to {@link #createPixelBoundary(Product, java.awt.Rectangle, int, boolean) createPixelBoundary(Product, Rectangle, int, boolean)}\nand the additional boolean parameter usePixelCenter is true.\nReturns Parameter product: the product\nReturns Parameter rect: the source rectangle\nReturns Parameter step: the mean distance from one pixel position to the other in the returned array\nReturns the rectangular boundary"},
-    {"createPixelBoundary2", (PyCFunction) BeamPyProductUtils_createPixelBoundary2, METH_VARARGS | METH_STATIC, "Creates a rectangular boundary expressed in pixel positions for the given source rectangle. If the source\nrect is 100 x 50 pixels and step is 10 the returned array will countain exactly 2 * 10\n+ 2 * (5 - 2) = 26 pixel positions.\n\nThis method is used for an intermediate step when determining a product boundary expressed in geographical\nco-ordinates.\nReturns Parameter product: the product\nReturns Parameter rect: the source rectangle\nReturns Parameter step: the mean distance from one pixel position to the other in the returned array\nReturns Parameter usePixelCenter: true if the pixel center should be used to create the boundary\nReturns the rectangular boundary"},
-    {"createPixelBoundary3", (PyCFunction) BeamPyProductUtils_createPixelBoundary3, METH_VARARGS | METH_STATIC, "Creates a rectangular boundary expressed in pixel positions for the given source rectangle. If the source\nrect is 100 x 50 pixels and step is 10 the returned array will countain exactly 2 * 10\n+ 2 * (5 - 2) = 26 pixel positions.\n\nThis method is used for an intermediate step when determining a raster boundary expressed in geographical\nco-ordinates.\nReturns Parameter raster: the raster\nReturns Parameter rect: the source rectangle\nReturns Parameter step: the mean distance from one pixel position to the other in the returned array\nReturns the rectangular boundary"},
-    {"createRectBoundary1", (PyCFunction) BeamPyProductUtils_createRectBoundary1, METH_VARARGS | METH_STATIC, "Creates a rectangular boundary expressed in pixel positions for the given source rectangle. If the source\nrect is 100 x 50 pixels and step is 10 the returned array will countain exactly 2 * 10\n+ 2 * (5 - 2) = 26 pixel positions.\nThis method is used for an intermediate step when determining a product boundary expressed in geographical\nco-ordinates.\n This method delegates to {@link #createRectBoundary(java.awt.Rectangle, int, boolean) createRectBoundary(Rectangle, int, boolean)}\nand the additional boolean parameter usePixelCenter is true.\nReturns Parameter rect: the source rectangle\nReturns Parameter step: the mean distance from one pixel position to the other in the returned array\nReturns the rectangular boundary"},
-    {"createRectBoundary2", (PyCFunction) BeamPyProductUtils_createRectBoundary2, METH_VARARGS | METH_STATIC, "Creates a rectangular boundary expressed in pixel positions for the given source rectangle. If the source\nrect is 100 x 50 pixels and step is 10 the returned array will countain exactly 2 * 10\n+ 2 * (5 - 2) = 26 pixel positions.\n\nThis method is used for an intermediate step when determining a product boundary expressed in geographical\nco-ordinates.\n\nReturns Parameter rect: the source rectangle\nReturns Parameter step: the mean distance from one pixel position to the other in the returned array\nReturns Parameter usePixelCenter: true if the pixel center should be used\nReturns the rectangular boundary"},
-    {"copyFlagCodings", (PyCFunction) BeamPyProductUtils_copyFlagCodings, METH_VARARGS | METH_STATIC, "Copies the flag codings from the source product to the target.\nReturns Parameter source: the source product\nReturns Parameter target: the target product"},
-    {"copyFlagCoding", (PyCFunction) BeamPyProductUtils_copyFlagCoding, METH_VARARGS | METH_STATIC, "Copies the given source flag coding to the target product.\nIf it exists already, the method simply returns the existing instance.\nReturns Parameter sourceFlagCoding: the source flag coding\nReturns Parameter target: the target product\nReturns the flag coding."},
-    {"copyIndexCoding", (PyCFunction) BeamPyProductUtils_copyIndexCoding, METH_VARARGS | METH_STATIC, "Copies the given source index coding to the target product\nIf it exists already, the method simply returns the existing instance.\nReturns Parameter sourceIndexCoding: the source index coding\nReturns Parameter target: the target product\nReturns the index coding."},
-    {"copyMasks", (PyCFunction) BeamPyProductUtils_copyMasks, METH_VARARGS | METH_STATIC, "Copies the {@link Mask}s from the source product to the target product.\n\nIMPORTANT NOTE: This method should only be used, if it is known that all masks\nin the source product will also be valid in the target product. This method does\n<em>not</em> copy overlay masks from the source bands to the target bands. Also\nnote that a source mask is not copied to the target product, when there already\nis a mask in the target product with the same name as the source mask.\nReturns Parameter sourceProduct: the source product\nReturns Parameter targetProduct: the target product"},
-    {"copyOverlayMasks", (PyCFunction) BeamPyProductUtils_copyOverlayMasks, METH_VARARGS | METH_STATIC, "Copies the overlay {@link Mask}s from the source product's raster data nodes to\nthe target product's raster data nodes.\n\nIMPORTANT NOTE: This method should only be used, if it is known that all masks\nin the source product will also be valid in the target product. This method does\n<em>not</em> copy overlay masks, which are not contained in the target product's\nmask group.\nReturns Parameter sourceProduct: the source product\nReturns Parameter targetProduct: the target product"},
-    {"copyRoiMasks", (PyCFunction) BeamPyProductUtils_copyRoiMasks, METH_VARARGS | METH_STATIC, "Copies the ROI {@link Mask}s from the source product's raster data nodes to\nthe target product's raster data nodes.\n\nIMPORTANT NOTE: This method should only be used, if it is known that all masks\nin the source product will also be valid in the target product. This method does\n<em>not</em> copy ROI masks, which are not contained in the target product's\nmask group.\nReturns Parameter sourceProduct: the source product\nReturns Parameter targetProduct: the target product\n@deprecated since BEAM 4.10 (no replacement)"},
-    {"copyFlagBands2", (PyCFunction) BeamPyProductUtils_copyFlagBands2, METH_VARARGS | METH_STATIC, "Copies all bands which contain a flagcoding from the source product to the target product.\nReturns Parameter sourceProduct: the source product\nReturns Parameter targetProduct: the target product\nReturns Parameter copySourceImage: whether the source image of the source band should be copied.\nSince version:  BEAM 4.10"},
-    {"copyFlagBands1", (PyCFunction) BeamPyProductUtils_copyFlagBands1, METH_VARARGS | METH_STATIC, "Copies all bands which contain a flagcoding from the source product to the target product.\nReturns Parameter sourceProduct: the source product\nReturns Parameter targetProduct: the target product\n@deprecated since BEAM 4.10, use {@link #copyFlagBands(Product, Product, boolean)} instead."},
-    {"copyTiePointGrid", (PyCFunction) BeamPyProductUtils_copyTiePointGrid, METH_VARARGS | METH_STATIC, "Copies the named tie-point grid from the source product to the target product.\nReturns Parameter gridName: the name of the tie-point grid to be copied.\nReturns Parameter sourceProduct: the source product\nReturns Parameter targetProduct: the target product\nReturns the copied tie-point grid, or null if the sourceProduct does not contain a tie-point grid with the given name."},
-    {"copyBand4", (PyCFunction) BeamPyProductUtils_copyBand4, METH_VARARGS | METH_STATIC, "Copies the named band from the source product to the target product.\nReturns Parameter sourceBandName: the name of the band to be copied.\nReturns Parameter sourceProduct: the source product.\nReturns Parameter targetProduct: the target product.\nReturns Parameter copySourceImage: whether the source image of the source band should be copied.\nReturns the copy of the band, or null if the sourceProduct does not contain a band with the given name.\nSince version:  BEAM 4.10"},
-    {"copyBand2", (PyCFunction) BeamPyProductUtils_copyBand2, METH_VARARGS | METH_STATIC, "Copies the named band from the source product to the target product.\nReturns Parameter sourceBandName: the name of the band to be copied.\nReturns Parameter sourceProduct: the source product.\nReturns Parameter targetBandName: the name of the band copied.\nReturns Parameter targetProduct: the target product.\nReturns Parameter copySourceImage: whether the source image of the source band should be copied.\nReturns the copy of the band, or null if the sourceProduct does not contain a band with the given name.\nSince version:  BEAM 4.10"},
-    {"copyRasterDataNodeProperties", (PyCFunction) BeamPyProductUtils_copyRasterDataNodeProperties, METH_VARARGS | METH_STATIC, "Copies all properties from source band to the target band.\nReturns Parameter sourceRaster: the source band\nReturns Parameter targetRaster: the target band\n@see #copySpectralBandProperties(Band, Band)"},
-    {"copyBand3", (PyCFunction) BeamPyProductUtils_copyBand3, METH_VARARGS | METH_STATIC, "Copies the named band from the source product to the target product.\nReturns Parameter sourceBandName: the name of the band to be copied.\nReturns Parameter sourceProduct: the source product.\nReturns Parameter targetProduct: the target product.\nReturns the copy of the band, or null if the sourceProduct does not contain a band with the given name.\n@deprecated since BEAM 4.10, use {@link #copyBand(String, Product, Product, boolean)} instead."},
-    {"copyBand1", (PyCFunction) BeamPyProductUtils_copyBand1, METH_VARARGS | METH_STATIC, "Copies the named band from the source product to the target product.\nReturns Parameter sourceBandName: the name of the band to be copied.\nReturns Parameter sourceProduct: the source product.\nReturns Parameter targetBandName: the name of the band copied.\nReturns Parameter targetProduct: the target product.\nReturns the copy of the band, or null if the sourceProduct does not contain a band with the given name.\n@deprecated since BEAM 4.10, use {@link #copyBand(String, Product, String, Product, boolean)} instead."},
-    {"copySpectralBandProperties", (PyCFunction) BeamPyProductUtils_copySpectralBandProperties, METH_VARARGS | METH_STATIC, "Copies the spectral properties from source band to target band. These properties are:\n<ul>\n<li>{@link Band#getSpectralBandIndex() spectral band index},</li>\n<li>{@link Band#getSpectralWavelength() the central wavelength},</li>\n<li>{@link Band#getSpectralBandwidth() the spectral bandwidth} and</li>\n<li>{@link Band#getSolarFlux() the solar spectral flux}.</li>\n</ul>\nReturns Parameter sourceBand: the source band\nReturns Parameter targetBand: the target band\n@see #copyRasterDataNodeProperties(RasterDataNode, RasterDataNode)"},
-    {"copyGeoCoding", (PyCFunction) BeamPyProductUtils_copyGeoCoding, METH_VARARGS | METH_STATIC, "Copies the geocoding from the source product to target product.\nReturns Parameter sourceProduct: the source product\nReturns Parameter targetProduct: the target product\n@throws IllegalArgumentException if one of the params is null."},
-    {"copyTiePointGrids", (PyCFunction) BeamPyProductUtils_copyTiePointGrids, METH_VARARGS | METH_STATIC, "Copies all tie point grids from one product to another.\nReturns Parameter sourceProduct: the source product\nReturns Parameter targetProduct: the target product"},
-    {"copyVectorData", (PyCFunction) BeamPyProductUtils_copyVectorData, METH_VARARGS | METH_STATIC, ""},
-    {"canGetPixelPos1", (PyCFunction) BeamPyProductUtils_canGetPixelPos1, METH_VARARGS | METH_STATIC, "Returns whether or not a product can return a pixel position from a given geographical position.\nReturns Parameter product: the product to be checked\nReturns true if the given product can return a pixel position"},
-    {"canGetPixelPos2", (PyCFunction) BeamPyProductUtils_canGetPixelPos2, METH_VARARGS | METH_STATIC, "Returns whether or not a raster can return a pixel position from a given geographical position.\nReturns Parameter raster: the raster to be checked\nReturns true if the given raster can return a pixel position"},
-    {"createDensityPlotImage", (PyCFunction) BeamPyProductUtils_createDensityPlotImage, METH_VARARGS | METH_STATIC, "Creates a density plot image from two raster data nodes.\nReturns Parameter raster1: the first raster data node\nReturns Parameter sampleMin1: the minimum sample value to be considered in the first raster\nReturns Parameter sampleMax1: the maximum sample value to be considered in the first raster\nReturns Parameter raster2: the second raster data node\nReturns Parameter sampleMin2: the minimum sample value to be considered in the second raster\nReturns Parameter sampleMax2: the maximum sample value to be considered in the second raster\nReturns Parameter roiMask: an optional mask to be used as a ROI for the computation\nReturns Parameter width: the width of the output image\nReturns Parameter height: the height of the output image\nReturns Parameter background: the background color of the output image\nReturns Parameter image: an image to be used as output image, if null a new image is created\nReturns Parameter pm: the progress monitor\nReturns the density plot image\n@throws java.io.IOException when an error occurred."},
-    {"overlayMasks", (PyCFunction) BeamPyProductUtils_overlayMasks, METH_VARARGS | METH_STATIC, "Draws all the masks contained overlay mask group of the given raster to the ovelayBIm image.\nReturns Parameter raster: the raster data node which contains all the activated bitmask definitions\nReturns Parameter overlayBIm: the source image which is used as base image for all the overlays.\nReturns Parameter pm: a monitor to inform the user about progress\nReturns the modified given overlayBImm which contains all the activated masks.\n@see RasterDataNode#getOverlayMaskGroup()"},
-    {"getCenterGeoPos", (PyCFunction) BeamPyProductUtils_getCenterGeoPos, METH_VARARGS | METH_STATIC, ""},
-    {"normalizeGeoPolygon", (PyCFunction) BeamPyProductUtils_normalizeGeoPolygon, METH_VARARGS | METH_STATIC, "Normalizes the given geographical polygon so that maximum longitude differences between two points are 180\ndegrees. The method operates only on the longitude values of the given polygon.\nReturns Parameter polygon: a geographical, closed polygon\nReturns 0 if normalizing has not been applied , -1 if negative normalizing has been applied, 1 if positive\nnormalizing has been applied, 2 if positive and negative normalising has been applied\n@see #denormalizeGeoPolygon(GeoPos[])"},
-    {"normalizeGeoPolygon_old", (PyCFunction) BeamPyProductUtils_normalizeGeoPolygon_old, METH_VARARGS | METH_STATIC, ""},
-    {"denormalizeGeoPolygon", (PyCFunction) BeamPyProductUtils_denormalizeGeoPolygon, METH_VARARGS | METH_STATIC, "Denormalizes the longitude values which have been normalized using the\n{@link #normalizeGeoPolygon(GeoPos[])} method. The\nmethod operates only on the longitude values of the given polygon.\nReturns Parameter polygon: a geographical, closed polygon"},
-    {"denormalizeGeoPos", (PyCFunction) BeamPyProductUtils_denormalizeGeoPos, METH_VARARGS | METH_STATIC, ""},
-    {"denormalizeGeoPos_old", (PyCFunction) BeamPyProductUtils_denormalizeGeoPos_old, METH_VARARGS | METH_STATIC, ""},
-    {"getRotationDirection", (PyCFunction) BeamPyProductUtils_getRotationDirection, METH_VARARGS | METH_STATIC, ""},
-    {"getAngleSum", (PyCFunction) BeamPyProductUtils_getAngleSum, METH_VARARGS | METH_STATIC, ""},
-    {"convertToPixelPath", (PyCFunction) BeamPyProductUtils_convertToPixelPath, METH_VARARGS | METH_STATIC, "Converts a GeneralPath given in geographic lon/lat coordinates into a GeneralPath in\npixel coordinates using the supplied geo coding.\nReturns Parameter geoPath: a GeneralPath given in geographic lon/lat coordinates, as returned by the {@link\n#convertToGeoPath(Shape, GeoCoding)} method\nReturns Parameter geoCoding: the geocoding used to convert the geographic coordinates into pixel coordinates.\nReturns a GeneralPath given in pixel coordinates.\n@throws IllegalArgumentException if one of the given parameter is null.\n@throws IllegalStateException    if the given geoPath is not a geo referenced GeneralPath wich\ncontains only SEG_MOVETO, SEG_LINETO, and SEG_CLOSE point types.\n@see #convertToGeoPath(Shape, GeoCoding)"},
-    {"convertToGeoPath", (PyCFunction) BeamPyProductUtils_convertToGeoPath, METH_VARARGS | METH_STATIC, "Converts a Shape given in pixel X/Y coordinates into a GeneralPath in geografic\ncoordinates using the supplied geo coding.\nReturns Parameter shape: a Shape given in pixel X/Y coordinates\nReturns Parameter geoCoding: the geo coding used to convert the pixel coordinates into geografic coordinates.\nReturns a GeneralPath given in geografic coordinates\n@throws IllegalArgumentException if one of the given parameter is null or the given geo coding can\nnot get geografic coordinates.\n@throws IllegalStateException    if this method was used with a java runtime version in which it is not guaranted\nthat a PathIterator returned by {@link Shape#getPathIterator(java.awt.geom.AffineTransform,\ndouble)} returnes only SEG_MOVETO, SEG_LINETO, and SEG_CLOSE point types.\n@see GeoCoding#canGetGeoPos()"},
-    {"copyMetadata2", (PyCFunction) BeamPyProductUtils_copyMetadata2, METH_VARARGS | METH_STATIC, "Copies all metadata elements and attributes of the source product to the target product.\nThe copied elements and attributes are deeply cloned.\nReturns Parameter source: the source product.\nReturns Parameter target: the target product.\n@throws NullPointerException if the source or the target product is {@code null}."},
-    {"copyMetadata1", (PyCFunction) BeamPyProductUtils_copyMetadata1, METH_VARARGS | METH_STATIC, "Copies all metadata elements and attributes of the source element to the target element.\nThe copied elements and attributes are deeply cloned.\nReturns Parameter source: the source element.\nReturns Parameter target: the target element.\n@throws NullPointerException if the source or the target element is {@code null}."},
-    {"copyPreferredTileSize", (PyCFunction) BeamPyProductUtils_copyPreferredTileSize, METH_VARARGS | METH_STATIC, "Copies the source product's preferred tile size (if any) to the target product.\nReturns Parameter sourceProduct: The source product.\nReturns Parameter targetProduct: The target product."},
-    {"createGeoTIFFMetadata2", (PyCFunction) BeamPyProductUtils_createGeoTIFFMetadata2, METH_VARARGS | METH_STATIC, ""},
-    {"createGeoTIFFMetadata1", (PyCFunction) BeamPyProductUtils_createGeoTIFFMetadata1, METH_VARARGS | METH_STATIC, ""},
-    {"areaToPath", (PyCFunction) BeamPyProductUtils_areaToPath, METH_VARARGS | METH_STATIC, ""},
-    {"addElementToHistory", (PyCFunction) BeamPyProductUtils_addElementToHistory, METH_VARARGS | METH_STATIC, "Adds a given elem to the history of the given product. If the products metadata root\ndoes not contain a history entry a new one will be created.\nReturns Parameter product: the product to add the history element.\nReturns Parameter elem: the element to add to the products history. If null nothing will be added."},
-    {"removeInvalidExpressions", (PyCFunction) BeamPyProductUtils_removeInvalidExpressions, METH_VARARGS | METH_STATIC, "Validates all the expressions contained in the given (output) product. If an expression is not applicable to the given\nproduct, the related element is removed.\nReturns Parameter product: the (output) product to be cleaned up\nReturns an array of messages which changes are done to the given product."},
-    {"findSuitableQuicklookBandName", (PyCFunction) BeamPyProductUtils_findSuitableQuicklookBandName, METH_VARARGS | METH_STATIC, "Finds the name of a band in the given product which is suitable to product a good quicklook.\nThe method prefers bands with longer wavelengths, in order to produce good results for night-time scenes.\nReturns Parameter product: the product to be searched\nReturns the name of a suitable band or null if the given product does not contain any bands"},
-    {"computeSourcePixelCoordinates", (PyCFunction) BeamPyProductUtils_computeSourcePixelCoordinates, METH_VARARGS | METH_STATIC, ""},
-    {"computeMinMaxY", (PyCFunction) BeamPyProductUtils_computeMinMaxY, METH_VARARGS | METH_STATIC, "Computes the minimum and maximum y value of the given {@link PixelPos} array.\nReturns Parameter pixelPositions: the {@link PixelPos} array\nReturns an int array which containes the minimum and maximum y value of the given {@link PixelPos} array in the\norder:<br> &nbsp;&nbsp;&nbsp;&nbsp;[0] - the minimum value<br>&nbsp;&nbsp;&nbsp;&nbsp;[1] - the maximum\nvalue<br><br>or null if no minimum or maximum can be retrieved because there given array is\nempty.\n@throws IllegalArgumentException if the given pixelPositions are null."},
-    {"copyBandsForGeomTransform1", (PyCFunction) BeamPyProductUtils_copyBandsForGeomTransform1, METH_VARARGS | METH_STATIC, "Copies only the bands from source to target.\n@see #copyBandsForGeomTransform(Product, Product, boolean, double, java.util.Map)"},
-    {"copyBandsForGeomTransform2", (PyCFunction) BeamPyProductUtils_copyBandsForGeomTransform2, METH_VARARGS | METH_STATIC, "Adds raster data nodes of a source product as bands to the given target product. This method is especially usefull if the target\nproduct is a geometric transformation (e.g. map-projection) of the source product.\nIf\n{@link RasterDataNode#isScalingApplied() sourceBand.scalingApplied} is true,\nthis method will always create the related target band with the raw data type {@link ProductData#TYPE_FLOAT32},\nregardless which raw data type the source band has.\nIn this case, {@link RasterDataNode#getScalingFactor() targetBand.scalingFactor}\nwill always be 1.0, {@link RasterDataNode#getScalingOffset() targetBand.scalingOffset}\nwill always be 0.0 and\n{@link RasterDataNode#isLog10Scaled() targetBand.log10Scaled} will be taken from the source band.\nThis ensures that source pixel resampling methods operating on floating point\ndata can be stored without loss in accuracy in the target band.\n\nFurthermore, the\n{@link RasterDataNode#isNoDataValueSet() targetBands.noDataValueSet}\nand {@link RasterDataNode#isNoDataValueUsed() targetBands.noDataValueUsed}\nproperties will always be true for all added target bands. The {@link RasterDataNode#getGeophysicalNoDataValue() targetBands.geophysicalNoDataValue},\nwill be either the one from the source band, if any, or otherwise the one passed into this method.\nReturns Parameter sourceProduct: the source product as the source for the band specifications. Must be not\nnull.\nReturns Parameter targetProduct: the destination product to receive the bands created. Must be not null.\nReturns Parameter includeTiePointGrids: if {@code true}, tie-point grids of source product will be included as bands in target product\nReturns Parameter defaultNoDataValue: the default, geophysical no-data value to be used if no no-data value is used by the source band.\nReturns Parameter targetToSourceMap: a mapping from a target band to a source raster data node, can be {@code null}"},
-    {"getScanLineTime", (PyCFunction) BeamPyProductUtils_getScanLineTime, METH_VARARGS | METH_STATIC, ""},
-    {"getGeophysicalSampleDouble", (PyCFunction) BeamPyProductUtils_getGeophysicalSampleDouble, METH_VARARGS | METH_STATIC, ""},
-    {"getGeophysicalSampleLong", (PyCFunction) BeamPyProductUtils_getGeophysicalSampleLong, METH_VARARGS | METH_STATIC, ""},
-    {NULL, NULL, 0, NULL} /*Sentinel*/
-};
-
-// Note: this is unused, experimental code
-
-/**
- * Implements the BeamPy_JObjectType class singleton.
- *
- * THIS TYPE IS NOT YET IN USE: we currently use
- * (<type_string>, <pointer>) tuples to represent Java JNI objects.
- */
-PyTypeObject ProductUtils_Type = {
-    PyVarObject_HEAD_INIT(NULL, 0)
-    "beampy.ProductUtils",        /* tp_name */
-    sizeof (JObject),             /* tp_basicsize */
-    0,                            /* tp_itemsize */
-    (destructor)JObject_dealloc,  /* tp_dealloc */
-    NULL,                         /* tp_print */
-    NULL,                         /* tp_getattr */
-    NULL,                         /* tp_setattr */
-    NULL,                         /* tp_reserved */
-    NULL,                         /* tp_repr */
-    NULL,                         /* tp_as_number */
-    NULL,                         /* tp_as_sequence */
-    NULL,                         /* tp_as_mapping */
-    NULL,                         /* tp_hash  */
-    NULL,                         /* tp_call */
-    NULL,                         /* tp_str */
-    NULL,                         /* tp_getattro */
-    NULL,                         /* tp_setattro */
-    NULL,                         /* tp_as_buffer */
-    Py_TPFLAGS_DEFAULT,           /* tp_flags */
-    "This class provides many static factory methods to be used in conjunction with data products.\n@see Product",                /* tp_doc */
-    NULL,                         /* tp_traverse */
-    NULL,                         /* tp_clear */
-    NULL,                         /* tp_richcompare */
-    0,                            /* tp_weaklistoffset */
-    NULL,                         /* tp_iter */
-    NULL,                         /* tp_iternext */
-    ProductUtils_methods,         /* tp_methods */
-    NULL,                         /* tp_members */
-    NULL,                         /* tp_getset */
-    NULL,                         /* tp_base */
-    NULL,                         /* tp_dict */
-    NULL,                         /* tp_descr_get */
-    NULL,                         /* tp_descr_set */
-    0,                            /* tp_dictoffset */
-    (initproc) JObject_init,      /* tp_init */
-    NULL,                         /* tp_alloc */
-    NULL,                         /* tp_new */
-};
-
 static PyMethodDef Map_methods[] = {
     {"size", (PyCFunction) BeamPyMap_size, METH_VARARGS, ""},
     {"isEmpty", (PyCFunction) BeamPyMap_isEmpty, METH_VARARGS, ""},
@@ -4881,6 +4877,130 @@ PyTypeObject MetadataElement_Type = {
     NULL,                         /* tp_iter */
     NULL,                         /* tp_iternext */
     MetadataElement_methods,         /* tp_methods */
+    NULL,                         /* tp_members */
+    NULL,                         /* tp_getset */
+    NULL,                         /* tp_base */
+    NULL,                         /* tp_dict */
+    NULL,                         /* tp_descr_get */
+    NULL,                         /* tp_descr_set */
+    0,                            /* tp_dictoffset */
+    (initproc) JObject_init,      /* tp_init */
+    NULL,                         /* tp_alloc */
+    NULL,                         /* tp_new */
+};
+
+static PyMethodDef ProductUtils_methods[] = {
+    {"newProductUtils", (PyCFunction) BeamPyProductUtils_newProductUtils, METH_VARARGS | METH_STATIC, ""},
+    {"createImageInfo", (PyCFunction) BeamPyProductUtils_createImageInfo, METH_VARARGS | METH_STATIC, "Creates image creation information.\nReturns Parameter rasters: The raster data nodes.\nReturns Parameter assignMissingImageInfos: if {@code true}, it is ensured that to all {@code RasterDataNode}s a valid {@code ImageInfo} will be assigned.\nReturns Parameter pm: The progress monitor.\nReturns image information\n@throws IOException if an I/O error occurs\nSince version:  BEAM 4.2"},
+    {"createRgbImage", (PyCFunction) BeamPyProductUtils_createRgbImage, METH_VARARGS | METH_STATIC, "Creates a RGB image from the given array of {@link RasterDataNode}s.\nThe given array rasters containing one or three raster data nodes. If three rasters are given\nRGB image is created, if only one raster is provided a gray scale image created.\nReturns Parameter rasters: an array of one or three raster nodes.\nReturns Parameter imageInfo: the image info provides the information how to create the image\nReturns Parameter pm: a monitor to inform the user about progress\nReturns the created image\n@throws IOException if the given raster data is not loaded and reload causes an I/O error\n@see RasterDataNode#setImageInfo(ImageInfo)"},
+    {"createColorIndexedImage", (PyCFunction) BeamPyProductUtils_createColorIndexedImage, METH_VARARGS | METH_STATIC, "Creates a greyscale image from the given {@link RasterDataNode}.\n\nThe method uses the given raster data node's image information (an instance of {@link\nImageInfo}) to create the image.\nReturns Parameter rasterDataNode: the raster data node, must not be null\nReturns Parameter pm: a monitor to inform the user about progress\nReturns the color indexed image\n@throws IOException if the given raster data is not loaded and reload causes an I/O error\n@see RasterDataNode#getImageInfo()"},
+    {"createSuitableMapInfo1", (PyCFunction) BeamPyProductUtils_createSuitableMapInfo1, METH_VARARGS | METH_STATIC, "Retuns a suitable MapInfo instance for the given (geo-coded) product which includes the entire or a\nsubset of the product's scene region for the given map projection. The position of the reference pixel will be\nthe upper left pixel's center (0.5, 0.5).\nReturns Parameter product: the product, must not be null\nReturns Parameter rect: the rectangle in pixel coordinates of the product, if null the entire region is\nconsidered\nReturns Parameter mapProjection: the map projection, must not be null\nReturns the map information instance"},
+    {"createSuitableMapInfo2", (PyCFunction) BeamPyProductUtils_createSuitableMapInfo2, METH_VARARGS | METH_STATIC, "Retuns a suitable MapInfo instance for the given (geo-coded) product which includes the entire or a\nsubset of the product's scene region for the given map projection. The position of the reference pixel will be the scene center.\nReturns Parameter product: the product, must not be null\nReturns Parameter mapProjection: the map projection, must not be null\nReturns Parameter orientation: the orientation angle\nReturns Parameter noDataValue: the no-data value to be used\nReturns the map information instance"},
+    {"getOutputRasterSize", (PyCFunction) BeamPyProductUtils_getOutputRasterSize, METH_VARARGS | METH_STATIC, ""},
+    {"createMapEnvelope2", (PyCFunction) BeamPyProductUtils_createMapEnvelope2, METH_VARARGS | METH_STATIC, "Creates the boundary in map coordinates for the given product, source rectangle (in product pixel coordinates)\nand the given map transfromation. The method delegates to {@link #createMapEnvelope(Product,\njava.awt.Rectangle, int, org.esa.beam.framework.dataop.maptransf.MapTransform) createMapEnvelope(product, rect,\nstep, mapTransform)} where step is the half of the minimum of the product scene raster width and\nheight.\nReturns Parameter product: The product.\nReturns Parameter rect: The rectangle in pixel coordinates.\nReturns Parameter mapTransform: The map transformation.\nReturns the boundary in map coordinates for the given product."},
+    {"createMapEnvelope1", (PyCFunction) BeamPyProductUtils_createMapEnvelope1, METH_VARARGS | METH_STATIC, "Creates the boundary in map coordinates for the given product, source rectangle (in product\npixel coordinates) and the given map transfromation. The method delegates to\n{@link #createMapBoundary(Product, Rectangle, int, MapTransform) createMapBoundary(product, rect,\nstep, mapTransform)} where step is the half of the minimum of the product scene\nraster width and height.\nReturns Parameter product: The product.\nReturns Parameter rect: The rectangle in pixel coordinates.\nReturns Parameter step: The step size in pixels.\nReturns Parameter mapTransform: The map transformation.\nReturns the boundary in map coordinates for the given product."},
+    {"getMinMax", (PyCFunction) BeamPyProductUtils_getMinMax, METH_VARARGS | METH_STATIC, ""},
+    {"createMapBoundary", (PyCFunction) BeamPyProductUtils_createMapBoundary, METH_VARARGS | METH_STATIC, ""},
+    {"createGeoBoundary1", (PyCFunction) BeamPyProductUtils_createGeoBoundary1, METH_VARARGS | METH_STATIC, "Creates the geographical boundary of the given product and returns it as a list of geographical coordinates.\nReturns Parameter product: the input product, must not be null\nReturns Parameter step: the step given in pixels\nReturns an array of geographical coordinates\n@throws IllegalArgumentException if product is null or if the product's {@link GeoCoding} is null"},
+    {"createGeoBoundary2", (PyCFunction) BeamPyProductUtils_createGeoBoundary2, METH_VARARGS | METH_STATIC, "Creates the geographical boundary of the given region within the given product and returns it as a list of\ngeographical coordinates.\n This method delegates to {@link #createGeoBoundary(Product, java.awt.Rectangle, int, boolean) createGeoBoundary(Product, Rectangle, int, boolean)}\nand the additional boolean parameter usePixelCenter is true.\nReturns Parameter product: the input product, must not be null\nReturns Parameter region: the region rectangle in product pixel coordinates, can be null for entire product\nReturns Parameter step: the step given in pixels\nReturns an array of geographical coordinates\n@throws IllegalArgumentException if product is null or if the product's {@link GeoCoding} is null\n@see #createPixelBoundary(RasterDataNode, java.awt.Rectangle, int)"},
+    {"createGeoBoundary3", (PyCFunction) BeamPyProductUtils_createGeoBoundary3, METH_VARARGS | METH_STATIC, "Creates the geographical boundary of the given region within the given product and returns it as a list of\ngeographical coordinates.\nReturns Parameter product: the input product, must not be null\nReturns Parameter region: the region rectangle in product pixel coordinates, can be null for entire product\nReturns Parameter step: the step given in pixels\nReturns Parameter usePixelCenter: true if the pixel center should be used to create the boundary\nReturns an array of geographical coordinates\n@throws IllegalArgumentException if product is null or if the product's {@link GeoCoding} is null\n@see #createPixelBoundary(Product, java.awt.Rectangle, int, boolean)"},
+    {"createGeoBoundary4", (PyCFunction) BeamPyProductUtils_createGeoBoundary4, METH_VARARGS | METH_STATIC, "Creates the geographical boundary of the given region within the given raster and returns it as a list of\ngeographical coordinates.\nReturns Parameter raster: the input raster, must not be null\nReturns Parameter region: the region rectangle in raster pixel coordinates, can be null for entire raster\nReturns Parameter step: the step given in pixels\nReturns an array of geographical coordinates\n@throws IllegalArgumentException if raster is null or if the raster has no {@link GeoCoding} is null\n@see #createPixelBoundary(RasterDataNode, java.awt.Rectangle, int)"},
+    {"createGeoBoundaryPaths1", (PyCFunction) BeamPyProductUtils_createGeoBoundaryPaths1, METH_VARARGS | METH_STATIC, "Converts the geographic boundary entire product into one, two or three shape objects. If the product does not\nintersect the 180 degree meridian, a single general path is returned. Otherwise two or three shapes are created\nand returned in the order from west to east.\n\nThe geographic boundary of the given product are returned as shapes comprising (longitude,latitude) pairs.\nReturns Parameter product: the input product\nReturns an array of shape objects\n@throws IllegalArgumentException if product is null or if the product's {@link GeoCoding} is null\n@see #createGeoBoundary(Product, int)"},
+    {"createGeoBoundaryPaths2", (PyCFunction) BeamPyProductUtils_createGeoBoundaryPaths2, METH_VARARGS | METH_STATIC, "Converts the geographic boundary of the region within the given product into one, two or three shape objects. If\nthe product does not intersect the 180 degree meridian, a single general path is returned. Otherwise two or three\nshapes are created and returned in the order from west to east.\n\nThis method delegates to {@link #createGeoBoundaryPaths(Product, java.awt.Rectangle, int, boolean) createGeoBoundaryPaths(Product, Rectangle, int, boolean)}\nand the additional parameter usePixelCenter is true.\n\nThe geographic boundary of the given product are returned as shapes comprising (longitude,latitude) pairs.\nReturns Parameter product: the input product\nReturns Parameter region: the region rectangle in product pixel coordinates, can be null for entire product\nReturns Parameter step: the step given in pixels\nReturns an array of shape objects\n@throws IllegalArgumentException if product is null or if the product's {@link GeoCoding} is null\n@see #createGeoBoundary(Product, java.awt.Rectangle, int)"},
+    {"createGeoBoundaryPaths3", (PyCFunction) BeamPyProductUtils_createGeoBoundaryPaths3, METH_VARARGS | METH_STATIC, "Converts the geographic boundary of the region within the given product into one, two or three shape objects. If\nthe product does not intersect the 180 degree meridian, a single general path is returned. Otherwise two or three\nshapes are created and returned in the order from west to east.\n\nThe geographic boundary of the given product are returned as shapes comprising (longitude,latitude) pairs.\nReturns Parameter product: the input product\nReturns Parameter region: the region rectangle in product pixel coordinates, can be null for entire product\nReturns Parameter step: the step given in pixels\nReturns Parameter usePixelCenter: true if the pixel center should be used to create the pathes\nReturns an array of shape objects\n@throws IllegalArgumentException if product is null or if the product's {@link GeoCoding} is null\n@see #createGeoBoundary(Product, java.awt.Rectangle, int, boolean)"},
+    {"createPixelBoundary1", (PyCFunction) BeamPyProductUtils_createPixelBoundary1, METH_VARARGS | METH_STATIC, "Creates a rectangular boundary expressed in pixel positions for the given source rectangle. If the source\nrect is 100 x 50 pixels and step is 10 the returned array will countain exactly 2 * 10\n+ 2 * (5 - 2) = 26 pixel positions.\n\nThis method is used for an intermediate step when determining a product boundary expressed in geographical\nco-ordinates.\n This method delegates to {@link #createPixelBoundary(Product, java.awt.Rectangle, int, boolean) createPixelBoundary(Product, Rectangle, int, boolean)}\nand the additional boolean parameter usePixelCenter is true.\nReturns Parameter product: the product\nReturns Parameter rect: the source rectangle\nReturns Parameter step: the mean distance from one pixel position to the other in the returned array\nReturns the rectangular boundary"},
+    {"createPixelBoundary2", (PyCFunction) BeamPyProductUtils_createPixelBoundary2, METH_VARARGS | METH_STATIC, "Creates a rectangular boundary expressed in pixel positions for the given source rectangle. If the source\nrect is 100 x 50 pixels and step is 10 the returned array will countain exactly 2 * 10\n+ 2 * (5 - 2) = 26 pixel positions.\n\nThis method is used for an intermediate step when determining a product boundary expressed in geographical\nco-ordinates.\nReturns Parameter product: the product\nReturns Parameter rect: the source rectangle\nReturns Parameter step: the mean distance from one pixel position to the other in the returned array\nReturns Parameter usePixelCenter: true if the pixel center should be used to create the boundary\nReturns the rectangular boundary"},
+    {"createPixelBoundary3", (PyCFunction) BeamPyProductUtils_createPixelBoundary3, METH_VARARGS | METH_STATIC, "Creates a rectangular boundary expressed in pixel positions for the given source rectangle. If the source\nrect is 100 x 50 pixels and step is 10 the returned array will countain exactly 2 * 10\n+ 2 * (5 - 2) = 26 pixel positions.\n\nThis method is used for an intermediate step when determining a raster boundary expressed in geographical\nco-ordinates.\nReturns Parameter raster: the raster\nReturns Parameter rect: the source rectangle\nReturns Parameter step: the mean distance from one pixel position to the other in the returned array\nReturns the rectangular boundary"},
+    {"createRectBoundary1", (PyCFunction) BeamPyProductUtils_createRectBoundary1, METH_VARARGS | METH_STATIC, "Creates a rectangular boundary expressed in pixel positions for the given source rectangle. If the source\nrect is 100 x 50 pixels and step is 10 the returned array will countain exactly 2 * 10\n+ 2 * (5 - 2) = 26 pixel positions.\nThis method is used for an intermediate step when determining a product boundary expressed in geographical\nco-ordinates.\n This method delegates to {@link #createRectBoundary(java.awt.Rectangle, int, boolean) createRectBoundary(Rectangle, int, boolean)}\nand the additional boolean parameter usePixelCenter is true.\nReturns Parameter rect: the source rectangle\nReturns Parameter step: the mean distance from one pixel position to the other in the returned array\nReturns the rectangular boundary"},
+    {"createRectBoundary2", (PyCFunction) BeamPyProductUtils_createRectBoundary2, METH_VARARGS | METH_STATIC, "Creates a rectangular boundary expressed in pixel positions for the given source rectangle. If the source\nrect is 100 x 50 pixels and step is 10 the returned array will countain exactly 2 * 10\n+ 2 * (5 - 2) = 26 pixel positions.\n\nThis method is used for an intermediate step when determining a product boundary expressed in geographical\nco-ordinates.\n\nReturns Parameter rect: the source rectangle\nReturns Parameter step: the mean distance from one pixel position to the other in the returned array\nReturns Parameter usePixelCenter: true if the pixel center should be used\nReturns the rectangular boundary"},
+    {"copyFlagCodings", (PyCFunction) BeamPyProductUtils_copyFlagCodings, METH_VARARGS | METH_STATIC, "Copies the flag codings from the source product to the target.\nReturns Parameter source: the source product\nReturns Parameter target: the target product"},
+    {"copyFlagCoding", (PyCFunction) BeamPyProductUtils_copyFlagCoding, METH_VARARGS | METH_STATIC, "Copies the given source flag coding to the target product.\nIf it exists already, the method simply returns the existing instance.\nReturns Parameter sourceFlagCoding: the source flag coding\nReturns Parameter target: the target product\nReturns the flag coding."},
+    {"copyIndexCoding", (PyCFunction) BeamPyProductUtils_copyIndexCoding, METH_VARARGS | METH_STATIC, "Copies the given source index coding to the target product\nIf it exists already, the method simply returns the existing instance.\nReturns Parameter sourceIndexCoding: the source index coding\nReturns Parameter target: the target product\nReturns the index coding."},
+    {"copyMasks", (PyCFunction) BeamPyProductUtils_copyMasks, METH_VARARGS | METH_STATIC, "Copies the {@link Mask}s from the source product to the target product.\n\nIMPORTANT NOTE: This method should only be used, if it is known that all masks\nin the source product will also be valid in the target product. This method does\n<em>not</em> copy overlay masks from the source bands to the target bands. Also\nnote that a source mask is not copied to the target product, when there already\nis a mask in the target product with the same name as the source mask.\nReturns Parameter sourceProduct: the source product\nReturns Parameter targetProduct: the target product"},
+    {"copyOverlayMasks", (PyCFunction) BeamPyProductUtils_copyOverlayMasks, METH_VARARGS | METH_STATIC, "Copies the overlay {@link Mask}s from the source product's raster data nodes to\nthe target product's raster data nodes.\n\nIMPORTANT NOTE: This method should only be used, if it is known that all masks\nin the source product will also be valid in the target product. This method does\n<em>not</em> copy overlay masks, which are not contained in the target product's\nmask group.\nReturns Parameter sourceProduct: the source product\nReturns Parameter targetProduct: the target product"},
+    {"copyRoiMasks", (PyCFunction) BeamPyProductUtils_copyRoiMasks, METH_VARARGS | METH_STATIC, "Copies the ROI {@link Mask}s from the source product's raster data nodes to\nthe target product's raster data nodes.\n\nIMPORTANT NOTE: This method should only be used, if it is known that all masks\nin the source product will also be valid in the target product. This method does\n<em>not</em> copy ROI masks, which are not contained in the target product's\nmask group.\nReturns Parameter sourceProduct: the source product\nReturns Parameter targetProduct: the target product\n@deprecated since BEAM 4.10 (no replacement)"},
+    {"copyFlagBands2", (PyCFunction) BeamPyProductUtils_copyFlagBands2, METH_VARARGS | METH_STATIC, "Copies all bands which contain a flagcoding from the source product to the target product.\nReturns Parameter sourceProduct: the source product\nReturns Parameter targetProduct: the target product\nReturns Parameter copySourceImage: whether the source image of the source band should be copied.\nSince version:  BEAM 4.10"},
+    {"copyFlagBands1", (PyCFunction) BeamPyProductUtils_copyFlagBands1, METH_VARARGS | METH_STATIC, "Copies all bands which contain a flagcoding from the source product to the target product.\nReturns Parameter sourceProduct: the source product\nReturns Parameter targetProduct: the target product\n@deprecated since BEAM 4.10, use {@link #copyFlagBands(Product, Product, boolean)} instead."},
+    {"copyTiePointGrid", (PyCFunction) BeamPyProductUtils_copyTiePointGrid, METH_VARARGS | METH_STATIC, "Copies the named tie-point grid from the source product to the target product.\nReturns Parameter gridName: the name of the tie-point grid to be copied.\nReturns Parameter sourceProduct: the source product\nReturns Parameter targetProduct: the target product\nReturns the copied tie-point grid, or null if the sourceProduct does not contain a tie-point grid with the given name."},
+    {"copyBand4", (PyCFunction) BeamPyProductUtils_copyBand4, METH_VARARGS | METH_STATIC, "Copies the named band from the source product to the target product.\nReturns Parameter sourceBandName: the name of the band to be copied.\nReturns Parameter sourceProduct: the source product.\nReturns Parameter targetProduct: the target product.\nReturns Parameter copySourceImage: whether the source image of the source band should be copied.\nReturns the copy of the band, or null if the sourceProduct does not contain a band with the given name.\nSince version:  BEAM 4.10"},
+    {"copyBand2", (PyCFunction) BeamPyProductUtils_copyBand2, METH_VARARGS | METH_STATIC, "Copies the named band from the source product to the target product.\nReturns Parameter sourceBandName: the name of the band to be copied.\nReturns Parameter sourceProduct: the source product.\nReturns Parameter targetBandName: the name of the band copied.\nReturns Parameter targetProduct: the target product.\nReturns Parameter copySourceImage: whether the source image of the source band should be copied.\nReturns the copy of the band, or null if the sourceProduct does not contain a band with the given name.\nSince version:  BEAM 4.10"},
+    {"copyRasterDataNodeProperties", (PyCFunction) BeamPyProductUtils_copyRasterDataNodeProperties, METH_VARARGS | METH_STATIC, "Copies all properties from source band to the target band.\nReturns Parameter sourceRaster: the source band\nReturns Parameter targetRaster: the target band\n@see #copySpectralBandProperties(Band, Band)"},
+    {"copyBand3", (PyCFunction) BeamPyProductUtils_copyBand3, METH_VARARGS | METH_STATIC, "Copies the named band from the source product to the target product.\nReturns Parameter sourceBandName: the name of the band to be copied.\nReturns Parameter sourceProduct: the source product.\nReturns Parameter targetProduct: the target product.\nReturns the copy of the band, or null if the sourceProduct does not contain a band with the given name.\n@deprecated since BEAM 4.10, use {@link #copyBand(String, Product, Product, boolean)} instead."},
+    {"copyBand1", (PyCFunction) BeamPyProductUtils_copyBand1, METH_VARARGS | METH_STATIC, "Copies the named band from the source product to the target product.\nReturns Parameter sourceBandName: the name of the band to be copied.\nReturns Parameter sourceProduct: the source product.\nReturns Parameter targetBandName: the name of the band copied.\nReturns Parameter targetProduct: the target product.\nReturns the copy of the band, or null if the sourceProduct does not contain a band with the given name.\n@deprecated since BEAM 4.10, use {@link #copyBand(String, Product, String, Product, boolean)} instead."},
+    {"copySpectralBandProperties", (PyCFunction) BeamPyProductUtils_copySpectralBandProperties, METH_VARARGS | METH_STATIC, "Copies the spectral properties from source band to target band. These properties are:\n<ul>\n<li>{@link Band#getSpectralBandIndex() spectral band index},</li>\n<li>{@link Band#getSpectralWavelength() the central wavelength},</li>\n<li>{@link Band#getSpectralBandwidth() the spectral bandwidth} and</li>\n<li>{@link Band#getSolarFlux() the solar spectral flux}.</li>\n</ul>\nReturns Parameter sourceBand: the source band\nReturns Parameter targetBand: the target band\n@see #copyRasterDataNodeProperties(RasterDataNode, RasterDataNode)"},
+    {"copyGeoCoding", (PyCFunction) BeamPyProductUtils_copyGeoCoding, METH_VARARGS | METH_STATIC, "Copies the geocoding from the source product to target product.\nReturns Parameter sourceProduct: the source product\nReturns Parameter targetProduct: the target product\n@throws IllegalArgumentException if one of the params is null."},
+    {"copyTiePointGrids", (PyCFunction) BeamPyProductUtils_copyTiePointGrids, METH_VARARGS | METH_STATIC, "Copies all tie point grids from one product to another.\nReturns Parameter sourceProduct: the source product\nReturns Parameter targetProduct: the target product"},
+    {"copyVectorData", (PyCFunction) BeamPyProductUtils_copyVectorData, METH_VARARGS | METH_STATIC, ""},
+    {"canGetPixelPos1", (PyCFunction) BeamPyProductUtils_canGetPixelPos1, METH_VARARGS | METH_STATIC, "Returns whether or not a product can return a pixel position from a given geographical position.\nReturns Parameter product: the product to be checked\nReturns true if the given product can return a pixel position"},
+    {"canGetPixelPos2", (PyCFunction) BeamPyProductUtils_canGetPixelPos2, METH_VARARGS | METH_STATIC, "Returns whether or not a raster can return a pixel position from a given geographical position.\nReturns Parameter raster: the raster to be checked\nReturns true if the given raster can return a pixel position"},
+    {"createDensityPlotImage", (PyCFunction) BeamPyProductUtils_createDensityPlotImage, METH_VARARGS | METH_STATIC, "Creates a density plot image from two raster data nodes.\nReturns Parameter raster1: the first raster data node\nReturns Parameter sampleMin1: the minimum sample value to be considered in the first raster\nReturns Parameter sampleMax1: the maximum sample value to be considered in the first raster\nReturns Parameter raster2: the second raster data node\nReturns Parameter sampleMin2: the minimum sample value to be considered in the second raster\nReturns Parameter sampleMax2: the maximum sample value to be considered in the second raster\nReturns Parameter roiMask: an optional mask to be used as a ROI for the computation\nReturns Parameter width: the width of the output image\nReturns Parameter height: the height of the output image\nReturns Parameter background: the background color of the output image\nReturns Parameter image: an image to be used as output image, if null a new image is created\nReturns Parameter pm: the progress monitor\nReturns the density plot image\n@throws java.io.IOException when an error occurred."},
+    {"overlayMasks", (PyCFunction) BeamPyProductUtils_overlayMasks, METH_VARARGS | METH_STATIC, "Draws all the masks contained overlay mask group of the given raster to the ovelayBIm image.\nReturns Parameter raster: the raster data node which contains all the activated bitmask definitions\nReturns Parameter overlayBIm: the source image which is used as base image for all the overlays.\nReturns Parameter pm: a monitor to inform the user about progress\nReturns the modified given overlayBImm which contains all the activated masks.\n@see RasterDataNode#getOverlayMaskGroup()"},
+    {"getCenterGeoPos", (PyCFunction) BeamPyProductUtils_getCenterGeoPos, METH_VARARGS | METH_STATIC, ""},
+    {"normalizeGeoPolygon", (PyCFunction) BeamPyProductUtils_normalizeGeoPolygon, METH_VARARGS | METH_STATIC, "Normalizes the given geographical polygon so that maximum longitude differences between two points are 180\ndegrees. The method operates only on the longitude values of the given polygon.\nReturns Parameter polygon: a geographical, closed polygon\nReturns 0 if normalizing has not been applied , -1 if negative normalizing has been applied, 1 if positive\nnormalizing has been applied, 2 if positive and negative normalising has been applied\n@see #denormalizeGeoPolygon(GeoPos[])"},
+    {"normalizeGeoPolygon_old", (PyCFunction) BeamPyProductUtils_normalizeGeoPolygon_old, METH_VARARGS | METH_STATIC, ""},
+    {"denormalizeGeoPolygon", (PyCFunction) BeamPyProductUtils_denormalizeGeoPolygon, METH_VARARGS | METH_STATIC, "Denormalizes the longitude values which have been normalized using the\n{@link #normalizeGeoPolygon(GeoPos[])} method. The\nmethod operates only on the longitude values of the given polygon.\nReturns Parameter polygon: a geographical, closed polygon"},
+    {"denormalizeGeoPos", (PyCFunction) BeamPyProductUtils_denormalizeGeoPos, METH_VARARGS | METH_STATIC, ""},
+    {"denormalizeGeoPos_old", (PyCFunction) BeamPyProductUtils_denormalizeGeoPos_old, METH_VARARGS | METH_STATIC, ""},
+    {"getRotationDirection", (PyCFunction) BeamPyProductUtils_getRotationDirection, METH_VARARGS | METH_STATIC, ""},
+    {"getAngleSum", (PyCFunction) BeamPyProductUtils_getAngleSum, METH_VARARGS | METH_STATIC, ""},
+    {"convertToPixelPath", (PyCFunction) BeamPyProductUtils_convertToPixelPath, METH_VARARGS | METH_STATIC, "Converts a GeneralPath given in geographic lon/lat coordinates into a GeneralPath in\npixel coordinates using the supplied geo coding.\nReturns Parameter geoPath: a GeneralPath given in geographic lon/lat coordinates, as returned by the {@link\n#convertToGeoPath(Shape, GeoCoding)} method\nReturns Parameter geoCoding: the geocoding used to convert the geographic coordinates into pixel coordinates.\nReturns a GeneralPath given in pixel coordinates.\n@throws IllegalArgumentException if one of the given parameter is null.\n@throws IllegalStateException    if the given geoPath is not a geo referenced GeneralPath wich\ncontains only SEG_MOVETO, SEG_LINETO, and SEG_CLOSE point types.\n@see #convertToGeoPath(Shape, GeoCoding)"},
+    {"convertToGeoPath", (PyCFunction) BeamPyProductUtils_convertToGeoPath, METH_VARARGS | METH_STATIC, "Converts a Shape given in pixel X/Y coordinates into a GeneralPath in geografic\ncoordinates using the supplied geo coding.\nReturns Parameter shape: a Shape given in pixel X/Y coordinates\nReturns Parameter geoCoding: the geo coding used to convert the pixel coordinates into geografic coordinates.\nReturns a GeneralPath given in geografic coordinates\n@throws IllegalArgumentException if one of the given parameter is null or the given geo coding can\nnot get geografic coordinates.\n@throws IllegalStateException    if this method was used with a java runtime version in which it is not guaranted\nthat a PathIterator returned by {@link Shape#getPathIterator(java.awt.geom.AffineTransform,\ndouble)} returnes only SEG_MOVETO, SEG_LINETO, and SEG_CLOSE point types.\n@see GeoCoding#canGetGeoPos()"},
+    {"copyMetadata2", (PyCFunction) BeamPyProductUtils_copyMetadata2, METH_VARARGS | METH_STATIC, "Copies all metadata elements and attributes of the source product to the target product.\nThe copied elements and attributes are deeply cloned.\nReturns Parameter source: the source product.\nReturns Parameter target: the target product.\n@throws NullPointerException if the source or the target product is {@code null}."},
+    {"copyMetadata1", (PyCFunction) BeamPyProductUtils_copyMetadata1, METH_VARARGS | METH_STATIC, "Copies all metadata elements and attributes of the source element to the target element.\nThe copied elements and attributes are deeply cloned.\nReturns Parameter source: the source element.\nReturns Parameter target: the target element.\n@throws NullPointerException if the source or the target element is {@code null}."},
+    {"copyPreferredTileSize", (PyCFunction) BeamPyProductUtils_copyPreferredTileSize, METH_VARARGS | METH_STATIC, "Copies the source product's preferred tile size (if any) to the target product.\nReturns Parameter sourceProduct: The source product.\nReturns Parameter targetProduct: The target product."},
+    {"createGeoTIFFMetadata2", (PyCFunction) BeamPyProductUtils_createGeoTIFFMetadata2, METH_VARARGS | METH_STATIC, ""},
+    {"createGeoTIFFMetadata1", (PyCFunction) BeamPyProductUtils_createGeoTIFFMetadata1, METH_VARARGS | METH_STATIC, ""},
+    {"areaToPath", (PyCFunction) BeamPyProductUtils_areaToPath, METH_VARARGS | METH_STATIC, ""},
+    {"addElementToHistory", (PyCFunction) BeamPyProductUtils_addElementToHistory, METH_VARARGS | METH_STATIC, "Adds a given elem to the history of the given product. If the products metadata root\ndoes not contain a history entry a new one will be created.\nReturns Parameter product: the product to add the history element.\nReturns Parameter elem: the element to add to the products history. If null nothing will be added."},
+    {"removeInvalidExpressions", (PyCFunction) BeamPyProductUtils_removeInvalidExpressions, METH_VARARGS | METH_STATIC, "Validates all the expressions contained in the given (output) product. If an expression is not applicable to the given\nproduct, the related element is removed.\nReturns Parameter product: the (output) product to be cleaned up\nReturns an array of messages which changes are done to the given product."},
+    {"findSuitableQuicklookBandName", (PyCFunction) BeamPyProductUtils_findSuitableQuicklookBandName, METH_VARARGS | METH_STATIC, "Finds the name of a band in the given product which is suitable to product a good quicklook.\nThe method prefers bands with longer wavelengths, in order to produce good results for night-time scenes.\nReturns Parameter product: the product to be searched\nReturns the name of a suitable band or null if the given product does not contain any bands"},
+    {"computeSourcePixelCoordinates", (PyCFunction) BeamPyProductUtils_computeSourcePixelCoordinates, METH_VARARGS | METH_STATIC, ""},
+    {"computeMinMaxY", (PyCFunction) BeamPyProductUtils_computeMinMaxY, METH_VARARGS | METH_STATIC, "Computes the minimum and maximum y value of the given {@link PixelPos} array.\nReturns Parameter pixelPositions: the {@link PixelPos} array\nReturns an int array which containes the minimum and maximum y value of the given {@link PixelPos} array in the\norder:<br> &nbsp;&nbsp;&nbsp;&nbsp;[0] - the minimum value<br>&nbsp;&nbsp;&nbsp;&nbsp;[1] - the maximum\nvalue<br><br>or null if no minimum or maximum can be retrieved because there given array is\nempty.\n@throws IllegalArgumentException if the given pixelPositions are null."},
+    {"copyBandsForGeomTransform1", (PyCFunction) BeamPyProductUtils_copyBandsForGeomTransform1, METH_VARARGS | METH_STATIC, "Copies only the bands from source to target.\n@see #copyBandsForGeomTransform(Product, Product, boolean, double, java.util.Map)"},
+    {"copyBandsForGeomTransform2", (PyCFunction) BeamPyProductUtils_copyBandsForGeomTransform2, METH_VARARGS | METH_STATIC, "Adds raster data nodes of a source product as bands to the given target product. This method is especially usefull if the target\nproduct is a geometric transformation (e.g. map-projection) of the source product.\nIf\n{@link RasterDataNode#isScalingApplied() sourceBand.scalingApplied} is true,\nthis method will always create the related target band with the raw data type {@link ProductData#TYPE_FLOAT32},\nregardless which raw data type the source band has.\nIn this case, {@link RasterDataNode#getScalingFactor() targetBand.scalingFactor}\nwill always be 1.0, {@link RasterDataNode#getScalingOffset() targetBand.scalingOffset}\nwill always be 0.0 and\n{@link RasterDataNode#isLog10Scaled() targetBand.log10Scaled} will be taken from the source band.\nThis ensures that source pixel resampling methods operating on floating point\ndata can be stored without loss in accuracy in the target band.\n\nFurthermore, the\n{@link RasterDataNode#isNoDataValueSet() targetBands.noDataValueSet}\nand {@link RasterDataNode#isNoDataValueUsed() targetBands.noDataValueUsed}\nproperties will always be true for all added target bands. The {@link RasterDataNode#getGeophysicalNoDataValue() targetBands.geophysicalNoDataValue},\nwill be either the one from the source band, if any, or otherwise the one passed into this method.\nReturns Parameter sourceProduct: the source product as the source for the band specifications. Must be not\nnull.\nReturns Parameter targetProduct: the destination product to receive the bands created. Must be not null.\nReturns Parameter includeTiePointGrids: if {@code true}, tie-point grids of source product will be included as bands in target product\nReturns Parameter defaultNoDataValue: the default, geophysical no-data value to be used if no no-data value is used by the source band.\nReturns Parameter targetToSourceMap: a mapping from a target band to a source raster data node, can be {@code null}"},
+    {"getScanLineTime", (PyCFunction) BeamPyProductUtils_getScanLineTime, METH_VARARGS | METH_STATIC, ""},
+    {"getGeophysicalSampleDouble", (PyCFunction) BeamPyProductUtils_getGeophysicalSampleDouble, METH_VARARGS | METH_STATIC, ""},
+    {"getGeophysicalSampleLong", (PyCFunction) BeamPyProductUtils_getGeophysicalSampleLong, METH_VARARGS | METH_STATIC, ""},
+    {NULL, NULL, 0, NULL} /*Sentinel*/
+};
+
+// Note: this is unused, experimental code
+
+/**
+ * Implements the BeamPy_JObjectType class singleton.
+ *
+ * THIS TYPE IS NOT YET IN USE: we currently use
+ * (<type_string>, <pointer>) tuples to represent Java JNI objects.
+ */
+PyTypeObject ProductUtils_Type = {
+    PyVarObject_HEAD_INIT(NULL, 0)
+    "beampy.ProductUtils",        /* tp_name */
+    sizeof (JObject),             /* tp_basicsize */
+    0,                            /* tp_itemsize */
+    (destructor)JObject_dealloc,  /* tp_dealloc */
+    NULL,                         /* tp_print */
+    NULL,                         /* tp_getattr */
+    NULL,                         /* tp_setattr */
+    NULL,                         /* tp_reserved */
+    NULL,                         /* tp_repr */
+    NULL,                         /* tp_as_number */
+    NULL,                         /* tp_as_sequence */
+    NULL,                         /* tp_as_mapping */
+    NULL,                         /* tp_hash  */
+    NULL,                         /* tp_call */
+    NULL,                         /* tp_str */
+    NULL,                         /* tp_getattro */
+    NULL,                         /* tp_setattro */
+    NULL,                         /* tp_as_buffer */
+    Py_TPFLAGS_DEFAULT,           /* tp_flags */
+    "This class provides many static factory methods to be used in conjunction with data products.\n@see Product",                /* tp_doc */
+    NULL,                         /* tp_traverse */
+    NULL,                         /* tp_clear */
+    NULL,                         /* tp_richcompare */
+    0,                            /* tp_weaklistoffset */
+    NULL,                         /* tp_iter */
+    NULL,                         /* tp_iternext */
+    ProductUtils_methods,         /* tp_methods */
     NULL,                         /* tp_members */
     NULL,                         /* tp_getset */
     NULL,                         /* tp_base */
@@ -7310,6 +7430,14 @@ int BPy_RegisterJObjectSubtypes(PyObject* module)
     PyDict_SetItemString(ProductData_Type.tp_dict, "TYPESTRING_ASCII", PyUnicode_FromString("ascii"));
     PyDict_SetItemString(ProductData_Type.tp_dict, "TYPESTRING_UTC", PyUnicode_FromString("utc"));
 
+    // Register OperatorSpi:
+    OperatorSpi_Type.tp_base = &JObject_Type;
+    if (PyType_Ready(&OperatorSpi_Type) < 0) {
+        return 0;
+    }
+    Py_INCREF(&OperatorSpi_Type);
+    PyModule_AddObject(module, "OperatorSpi", (PyObject*) &OperatorSpi_Type);
+
     // Register AffineTransform:
     AffineTransform_Type.tp_base = &JObject_Type;
     if (PyType_Ready(&AffineTransform_Type) < 0) {
@@ -7385,6 +7513,14 @@ int BPy_RegisterJObjectSubtypes(PyObject* module)
     }
     Py_INCREF(&Class_Type);
     PyModule_AddObject(module, "Class", (PyObject*) &Class_Type);
+
+    // Register ServiceRegistry:
+    ServiceRegistry_Type.tp_base = &JObject_Type;
+    if (PyType_Ready(&ServiceRegistry_Type) < 0) {
+        return 0;
+    }
+    Py_INCREF(&ServiceRegistry_Type);
+    PyModule_AddObject(module, "ServiceRegistry", (PyObject*) &ServiceRegistry_Type);
 
     // Register Product_AutoGrouping:
     Product_AutoGrouping_Type.tp_base = &JObject_Type;
@@ -7712,14 +7848,6 @@ int BPy_RegisterJObjectSubtypes(PyObject* module)
     Py_INCREF(&IndexColorModel_Type);
     PyModule_AddObject(module, "IndexColorModel", (PyObject*) &IndexColorModel_Type);
 
-    // Register Operator:
-    Operator_Type.tp_base = &JObject_Type;
-    if (PyType_Ready(&Operator_Type) < 0) {
-        return 0;
-    }
-    Py_INCREF(&Operator_Type);
-    PyModule_AddObject(module, "Operator", (PyObject*) &Operator_Type);
-
     // Register OperatorSpiRegistry:
     OperatorSpiRegistry_Type.tp_base = &JObject_Type;
     if (PyType_Ready(&OperatorSpiRegistry_Type) < 0) {
@@ -7727,6 +7855,14 @@ int BPy_RegisterJObjectSubtypes(PyObject* module)
     }
     Py_INCREF(&OperatorSpiRegistry_Type);
     PyModule_AddObject(module, "OperatorSpiRegistry", (PyObject*) &OperatorSpiRegistry_Type);
+
+    // Register Operator:
+    Operator_Type.tp_base = &JObject_Type;
+    if (PyType_Ready(&Operator_Type) < 0) {
+        return 0;
+    }
+    Py_INCREF(&Operator_Type);
+    PyModule_AddObject(module, "Operator", (PyObject*) &Operator_Type);
 
     // Register ImageInfo_HistogramMatching:
     ImageInfo_HistogramMatching_Type.tp_base = &JObject_Type;
@@ -7752,14 +7888,6 @@ int BPy_RegisterJObjectSubtypes(PyObject* module)
     Py_INCREF(&ProductNodeListener_Type);
     PyModule_AddObject(module, "ProductNodeListener", (PyObject*) &ProductNodeListener_Type);
 
-    // Register ProductUtils:
-    ProductUtils_Type.tp_base = &JObject_Type;
-    if (PyType_Ready(&ProductUtils_Type) < 0) {
-        return 0;
-    }
-    Py_INCREF(&ProductUtils_Type);
-    PyModule_AddObject(module, "ProductUtils", (PyObject*) &ProductUtils_Type);
-
     // Register Map:
     Map_Type.tp_base = &JObject_Type;
     if (PyType_Ready(&Map_Type) < 0) {
@@ -7778,6 +7906,14 @@ int BPy_RegisterJObjectSubtypes(PyObject* module)
     // Constants of class MetadataElement_Type:
     PyDict_SetItemString(MetadataElement_Type.tp_dict, "PROPERTY_NAME_NAME", PyUnicode_FromString("name"));
     PyDict_SetItemString(MetadataElement_Type.tp_dict, "PROPERTY_NAME_DESCRIPTION", PyUnicode_FromString("description"));
+
+    // Register ProductUtils:
+    ProductUtils_Type.tp_base = &JObject_Type;
+    if (PyType_Ready(&ProductUtils_Type) < 0) {
+        return 0;
+    }
+    Py_INCREF(&ProductUtils_Type);
+    PyModule_AddObject(module, "ProductUtils", (PyObject*) &ProductUtils_Type);
 
     // Register Datum:
     Datum_Type.tp_base = &JObject_Type;
@@ -8251,6 +8387,7 @@ jboolean BPy_InitApi()
     if (!BPy_InitJClass(&BPy_Parser_Class, "com/bc/jexp/Parser")) return 0;
     if (!BPy_InitJClass(&BPy_GeoCoding_Class, "org/esa/beam/framework/datamodel/GeoCoding")) return 0;
     if (!BPy_InitJClass(&BPy_ProductData_Class, "org/esa/beam/framework/datamodel/ProductData")) return 0;
+    if (!BPy_InitJClass(&BPy_OperatorSpi_Class, "org/esa/beam/framework/gpf/OperatorSpi")) return 0;
     if (!BPy_InitJClass(&BPy_AffineTransform_Class, "java/awt/geom/AffineTransform")) return 0;
     if (!BPy_InitJClass(&BPy_Mask_Class, "org/esa/beam/framework/datamodel/Mask")) return 0;
     if (!BPy_InitJClass(&BPy_GPF_Class, "org/esa/beam/framework/gpf/GPF")) return 0;
@@ -8258,6 +8395,7 @@ jboolean BPy_InitApi()
     if (!BPy_InitJClass(&BPy_Term_Class, "com/bc/jexp/Term")) return 0;
     if (!BPy_InitJClass(&BPy_RasterDataNode_Class, "org/esa/beam/framework/datamodel/RasterDataNode")) return 0;
     if (!BPy_InitJClass(&BPy_Class_Class, "java/lang/Class")) return 0;
+    if (!BPy_InitJClass(&BPy_ServiceRegistry_Class, "com/bc/ceres/core/ServiceRegistry")) return 0;
     if (!BPy_InitJClass(&BPy_Product_AutoGrouping_Class, "org/esa/beam/framework/datamodel/Product$AutoGrouping")) return 0;
     if (!BPy_InitJClass(&BPy_PixelPos_Class, "org/esa/beam/framework/datamodel/PixelPos")) return 0;
     if (!BPy_InitJClass(&BPy_BitRaster_Class, "org/esa/beam/util/BitRaster")) return 0;
@@ -8292,14 +8430,14 @@ jboolean BPy_InitApi()
     if (!BPy_InitJClass(&BPy_ProductManager_Class, "org/esa/beam/framework/datamodel/ProductManager")) return 0;
     if (!BPy_InitJClass(&BPy_FlagCoding_Class, "org/esa/beam/framework/datamodel/FlagCoding")) return 0;
     if (!BPy_InitJClass(&BPy_IndexColorModel_Class, "java/awt/image/IndexColorModel")) return 0;
-    if (!BPy_InitJClass(&BPy_Operator_Class, "org/esa/beam/framework/gpf/Operator")) return 0;
     if (!BPy_InitJClass(&BPy_OperatorSpiRegistry_Class, "org/esa/beam/framework/gpf/OperatorSpiRegistry")) return 0;
+    if (!BPy_InitJClass(&BPy_Operator_Class, "org/esa/beam/framework/gpf/Operator")) return 0;
     if (!BPy_InitJClass(&BPy_ImageInfo_HistogramMatching_Class, "org/esa/beam/framework/datamodel/ImageInfo$HistogramMatching")) return 0;
     if (!BPy_InitJClass(&BPy_BitmaskDef_Class, "org/esa/beam/framework/datamodel/BitmaskDef")) return 0;
     if (!BPy_InitJClass(&BPy_ProductNodeListener_Class, "org/esa/beam/framework/datamodel/ProductNodeListener")) return 0;
-    if (!BPy_InitJClass(&BPy_ProductUtils_Class, "org/esa/beam/util/ProductUtils")) return 0;
     if (!BPy_InitJClass(&BPy_Map_Class, "java/util/Map")) return 0;
     if (!BPy_InitJClass(&BPy_MetadataElement_Class, "org/esa/beam/framework/datamodel/MetadataElement")) return 0;
+    if (!BPy_InitJClass(&BPy_ProductUtils_Class, "org/esa/beam/util/ProductUtils")) return 0;
     if (!BPy_InitJClass(&BPy_Datum_Class, "org/esa/beam/framework/dataop/maptransf/Datum")) return 0;
     if (!BPy_InitJClass(&BPy_Pointing_Class, "org/esa/beam/framework/datamodel/Pointing")) return 0;
     if (!BPy_InitJClass(&BPy_Color_Class, "java/awt/Color")) return 0;
@@ -19232,6 +19370,184 @@ PyObject* BeamPyProductManager_removeListener(PyObject* self, PyObject* args)
     _result = (*jenv)->CallBooleanMethod(jenv, _thisJObj, _method, listenerJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.ProductManager#removeListener(Lorg/esa/beam/framework/datamodel/ProductManager/Listener;)Z");
     return PyBool_FromLong(_result);
+}
+
+PyObject* BeamPyOperatorSpiRegistry_loadOperatorSpis(PyObject* self, PyObject* args)
+{
+    static jmethodID _method = NULL;
+    jboolean ok = 1;
+    
+    jobject _thisJObj = NULL;
+    if (!BPy_InitApi()) {
+        return NULL;
+    }
+    if (!BPy_InitJMethod(&_method, BPy_OperatorSpiRegistry_Class, "org.esa.beam.framework.gpf.OperatorSpiRegistry", "loadOperatorSpis", "()V", 0)) {
+        return NULL;
+    }
+    _thisJObj = JObject_AsJObjectRefT(self, BPy_OperatorSpiRegistry_Class);
+    if (_thisJObj == NULL) {
+        PyErr_SetString(PyExc_ValueError, "argument 'self' must be of type 'OperatorSpiRegistry' (Java object reference)");
+        return NULL;
+    }
+    (*jenv)->CallVoidMethod(jenv, _thisJObj, _method);
+    CHECK_JVM_EXCEPTION("org.esa.beam.framework.gpf.OperatorSpiRegistry#loadOperatorSpis()V");
+    return Py_BuildValue("");
+}
+
+PyObject* BeamPyOperatorSpiRegistry_getServiceRegistry(PyObject* self, PyObject* args)
+{
+    static jmethodID _method = NULL;
+    jboolean ok = 1;
+    
+    jobject _thisJObj = NULL;
+    PyObject* _resultPyObj = NULL;
+    jobject _resultJObj = NULL;
+    if (!BPy_InitApi()) {
+        return NULL;
+    }
+    if (!BPy_InitJMethod(&_method, BPy_OperatorSpiRegistry_Class, "org.esa.beam.framework.gpf.OperatorSpiRegistry", "getServiceRegistry", "()Lcom/bc/ceres/core/ServiceRegistry;", 0)) {
+        return NULL;
+    }
+    _thisJObj = JObject_AsJObjectRefT(self, BPy_OperatorSpiRegistry_Class);
+    if (_thisJObj == NULL) {
+        PyErr_SetString(PyExc_ValueError, "argument 'self' must be of type 'OperatorSpiRegistry' (Java object reference)");
+        return NULL;
+    }
+    _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
+    CHECK_JVM_EXCEPTION("org.esa.beam.framework.gpf.OperatorSpiRegistry#getServiceRegistry()Lcom/bc/ceres/core/ServiceRegistry;");
+    _resultPyObj = BPy_FromJObject(&ServiceRegistry_Type, _resultJObj);
+    (*jenv)->DeleteLocalRef(jenv, _resultJObj);
+    return _resultPyObj;
+}
+
+PyObject* BeamPyOperatorSpiRegistry_getOperatorSpi(PyObject* self, PyObject* args)
+{
+    static jmethodID _method = NULL;
+    jboolean ok = 1;
+    
+    jobject _thisJObj = NULL;
+    const char* operatorName = NULL;
+    jstring operatorNameJObj = NULL;
+    PyObject* _resultPyObj = NULL;
+    jobject _resultJObj = NULL;
+    if (!BPy_InitApi()) {
+        return NULL;
+    }
+    if (!BPy_InitJMethod(&_method, BPy_OperatorSpiRegistry_Class, "org.esa.beam.framework.gpf.OperatorSpiRegistry", "getOperatorSpi", "(Ljava/lang/String;)Lorg/esa/beam/framework/gpf/OperatorSpi;", 0)) {
+        return NULL;
+    }
+    _thisJObj = JObject_AsJObjectRefT(self, BPy_OperatorSpiRegistry_Class);
+    if (_thisJObj == NULL) {
+        PyErr_SetString(PyExc_ValueError, "argument 'self' must be of type 'OperatorSpiRegistry' (Java object reference)");
+        return NULL;
+    }
+    if (!PyArg_ParseTuple(args, "s:getOperatorSpi", &operatorName)) {
+        return NULL;
+    }
+    operatorNameJObj =(*jenv)->NewStringUTF(jenv, operatorName);
+    _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, operatorNameJObj);
+    CHECK_JVM_EXCEPTION("org.esa.beam.framework.gpf.OperatorSpiRegistry#getOperatorSpi(Ljava/lang/String;)Lorg/esa/beam/framework/gpf/OperatorSpi;");
+    _resultPyObj = BPy_FromJObject(&OperatorSpi_Type, _resultJObj);
+    (*jenv)->DeleteLocalRef(jenv, operatorNameJObj);
+    (*jenv)->DeleteLocalRef(jenv, _resultJObj);
+    return _resultPyObj;
+}
+
+PyObject* BeamPyOperatorSpiRegistry_addOperatorSpi(PyObject* self, PyObject* args)
+{
+    static jmethodID _method = NULL;
+    jboolean ok = 1;
+    
+    jobject _thisJObj = NULL;
+    PyObject* operatorSpiPyObj = NULL;
+    jobject operatorSpiJObj = NULL;
+    jboolean _result = (jboolean) 0;
+    if (!BPy_InitApi()) {
+        return NULL;
+    }
+    if (!BPy_InitJMethod(&_method, BPy_OperatorSpiRegistry_Class, "org.esa.beam.framework.gpf.OperatorSpiRegistry", "addOperatorSpi", "(Lorg/esa/beam/framework/gpf/OperatorSpi;)Z", 0)) {
+        return NULL;
+    }
+    _thisJObj = JObject_AsJObjectRefT(self, BPy_OperatorSpiRegistry_Class);
+    if (_thisJObj == NULL) {
+        PyErr_SetString(PyExc_ValueError, "argument 'self' must be of type 'OperatorSpiRegistry' (Java object reference)");
+        return NULL;
+    }
+    if (!PyArg_ParseTuple(args, "O:addOperatorSpi", &operatorSpiPyObj)) {
+        return NULL;
+    }
+    operatorSpiJObj = BPy_ToJObjectT(operatorSpiPyObj, BPy_OperatorSpi_Class, &ok);
+    if (!ok) {
+        return NULL;
+    }
+    _result = (*jenv)->CallBooleanMethod(jenv, _thisJObj, _method, operatorSpiJObj);
+    CHECK_JVM_EXCEPTION("org.esa.beam.framework.gpf.OperatorSpiRegistry#addOperatorSpi(Lorg/esa/beam/framework/gpf/OperatorSpi;)Z");
+    return PyBool_FromLong(_result);
+}
+
+PyObject* BeamPyOperatorSpiRegistry_removeOperatorSpi(PyObject* self, PyObject* args)
+{
+    static jmethodID _method = NULL;
+    jboolean ok = 1;
+    
+    jobject _thisJObj = NULL;
+    PyObject* operatorSpiPyObj = NULL;
+    jobject operatorSpiJObj = NULL;
+    jboolean _result = (jboolean) 0;
+    if (!BPy_InitApi()) {
+        return NULL;
+    }
+    if (!BPy_InitJMethod(&_method, BPy_OperatorSpiRegistry_Class, "org.esa.beam.framework.gpf.OperatorSpiRegistry", "removeOperatorSpi", "(Lorg/esa/beam/framework/gpf/OperatorSpi;)Z", 0)) {
+        return NULL;
+    }
+    _thisJObj = JObject_AsJObjectRefT(self, BPy_OperatorSpiRegistry_Class);
+    if (_thisJObj == NULL) {
+        PyErr_SetString(PyExc_ValueError, "argument 'self' must be of type 'OperatorSpiRegistry' (Java object reference)");
+        return NULL;
+    }
+    if (!PyArg_ParseTuple(args, "O:removeOperatorSpi", &operatorSpiPyObj)) {
+        return NULL;
+    }
+    operatorSpiJObj = BPy_ToJObjectT(operatorSpiPyObj, BPy_OperatorSpi_Class, &ok);
+    if (!ok) {
+        return NULL;
+    }
+    _result = (*jenv)->CallBooleanMethod(jenv, _thisJObj, _method, operatorSpiJObj);
+    CHECK_JVM_EXCEPTION("org.esa.beam.framework.gpf.OperatorSpiRegistry#removeOperatorSpi(Lorg/esa/beam/framework/gpf/OperatorSpi;)Z");
+    return PyBool_FromLong(_result);
+}
+
+PyObject* BeamPyOperatorSpiRegistry_setAlias(PyObject* self, PyObject* args)
+{
+    static jmethodID _method = NULL;
+    jboolean ok = 1;
+    
+    jobject _thisJObj = NULL;
+    const char* aliasName = NULL;
+    jstring aliasNameJObj = NULL;
+    const char* spiClassName = NULL;
+    jstring spiClassNameJObj = NULL;
+    if (!BPy_InitApi()) {
+        return NULL;
+    }
+    if (!BPy_InitJMethod(&_method, BPy_OperatorSpiRegistry_Class, "org.esa.beam.framework.gpf.OperatorSpiRegistry", "setAlias", "(Ljava/lang/String;Ljava/lang/String;)V", 0)) {
+        return NULL;
+    }
+    _thisJObj = JObject_AsJObjectRefT(self, BPy_OperatorSpiRegistry_Class);
+    if (_thisJObj == NULL) {
+        PyErr_SetString(PyExc_ValueError, "argument 'self' must be of type 'OperatorSpiRegistry' (Java object reference)");
+        return NULL;
+    }
+    if (!PyArg_ParseTuple(args, "ss:setAlias", &aliasName, &spiClassName)) {
+        return NULL;
+    }
+    aliasNameJObj =(*jenv)->NewStringUTF(jenv, aliasName);
+    spiClassNameJObj =(*jenv)->NewStringUTF(jenv, spiClassName);
+    (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, aliasNameJObj, spiClassNameJObj);
+    CHECK_JVM_EXCEPTION("org.esa.beam.framework.gpf.OperatorSpiRegistry#setAlias(Ljava/lang/String;Ljava/lang/String;)V");
+    (*jenv)->DeleteLocalRef(jenv, aliasNameJObj);
+    (*jenv)->DeleteLocalRef(jenv, spiClassNameJObj);
+    return Py_BuildValue("");
 }
 
 PyObject* BeamPyImageGeometry_newImageGeometry(PyObject* self, PyObject* args)

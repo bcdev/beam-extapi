@@ -27,6 +27,7 @@ typedef void* Product;
 typedef void* ColorPaletteDef;
 typedef void* ImageInfo;
 typedef void* ProductManager;
+typedef void* OperatorSpiRegistry;
 typedef void* ImageGeometry;
 typedef void* Band;
 typedef void* PlacemarkGroup;
@@ -46,6 +47,7 @@ typedef void* MetadataAttribute;
 /* Non-API classes used in the API */
 typedef void* String;
 typedef void* ProgressMonitor;
+typedef void* ServiceRegistry;
 typedef void* MultiLevelImage;
 typedef void* Parser;
 typedef void* Term;
@@ -102,7 +104,7 @@ typedef void* MapInfo;
 typedef void* MapProjection;
 typedef void* MapTransform;
 typedef void* Operator;
-typedef void* OperatorSpiRegistry;
+typedef void* OperatorSpi;
 typedef void* BitRaster;
 typedef void* GeoTIFFMetadata;
 typedef void* Histogram;
@@ -589,6 +591,15 @@ boolean ProductManager_removeProduct(ProductManager _this, Product product);
 void ProductManager_removeAllProducts(ProductManager _this);
 boolean ProductManager_addListener(ProductManager _this, ProductManager_Listener listener);
 boolean ProductManager_removeListener(ProductManager _this, ProductManager_Listener listener);
+
+/* Functions for class OperatorSpiRegistry */
+
+void OperatorSpiRegistry_loadOperatorSpis(OperatorSpiRegistry _this);
+ServiceRegistry OperatorSpiRegistry_getServiceRegistry(OperatorSpiRegistry _this);
+OperatorSpi OperatorSpiRegistry_getOperatorSpi(OperatorSpiRegistry _this, const char* operatorName);
+boolean OperatorSpiRegistry_addOperatorSpi(OperatorSpiRegistry _this, OperatorSpi operatorSpi);
+boolean OperatorSpiRegistry_removeOperatorSpi(OperatorSpiRegistry _this, OperatorSpi operatorSpi);
+void OperatorSpiRegistry_setAlias(OperatorSpiRegistry _this, const char* aliasName, const char* spiClassName);
 
 /* Functions for class ImageGeometry */
 
