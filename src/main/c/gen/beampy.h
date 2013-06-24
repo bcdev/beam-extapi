@@ -50,7 +50,6 @@ extern PyTypeObject Iterator_Type;
 extern PyTypeObject MathTransform_Type;
 extern PyTypeObject CoordinateReferenceSystem_Type;
 extern PyTypeObject ProductWriterPlugIn_Type;
-extern PyTypeObject Rectangle2D_Type;
 extern PyTypeObject File_Type;
 extern PyTypeObject GeoPos_Type;
 extern PyTypeObject ProductNodeGroup_Type;
