@@ -141,7 +141,7 @@ public class ApiGeneratorDoclet extends Doclet {
             try {
                 ApiInfo apiInfo = ApiInfo.create(config, root);
                 final CModuleGenerator cModuleGenerator = new CModuleGenerator(apiInfo);
-                final PyCModuleGenerator pyCModuleGenerator = new PyCModuleGenerator(cModuleGenerator);
+                final PyCModuleGenerator pyCModuleGenerator = new PyCModuleGenerator(apiInfo);
                 cModuleGenerator.run();
                 pyCModuleGenerator.run();
                 return true;
