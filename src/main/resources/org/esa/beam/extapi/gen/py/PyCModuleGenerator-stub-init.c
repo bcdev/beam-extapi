@@ -39,7 +39,7 @@ PyObject* BPy_to_jobject(PyObject* self, PyObject* args)
     if ((*jenv)->ExceptionCheck(jenv)) {    \
         (*jenv)->ExceptionDescribe(jenv);   \
         (*jenv)->ExceptionClear(jenv);      \
-        PyErr_SetString(BeamPy_Error, "Java exception occurred: " ## M); \
+        PyErr_SetString(BeamPy_Error, "Java exception occurred: " M); \
         return NULL;                        \
     }                                       \
 
