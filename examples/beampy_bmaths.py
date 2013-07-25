@@ -3,7 +3,7 @@ from beampy import ProductIO
 from beampy import GPF
 
 if len(sys.argv) != 2:
-    printf("usage: %s <file>", sys.argv[0])
+    print("usage: %s <file>" % sys.argv[0])
     sys.exit(1)
 
 file = sys.argv[1]

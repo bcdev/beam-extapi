@@ -10,7 +10,7 @@ from beampy import ProductUtils
 from beampy import FlagCoding
 
 if len(sys.argv) != 2:
-    printf("usage: %s <file>", sys.argv[0])
+    print("usage: %s <file>" % sys.argv[0])
     sys.exit(1)
 
 file = sys.argv[1]

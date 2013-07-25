@@ -8,7 +8,7 @@ from beampy import ProductIO
 from beampy import ProductUtils
 
 if len(sys.argv) != 2:
-    printf("usage: %s <file>", sys.argv[0]);
+    print("usage: %s <file>" % sys.argv[0]);
     sys.exit(1)
 
 sourceProduct = ProductIO.readProduct(sys.argv[1])
