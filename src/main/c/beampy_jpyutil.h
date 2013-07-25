@@ -11,8 +11,8 @@ extern "C" {
 /**
  * CALL THIS FUNCTION BEFORE CALLING ANY OTHER FUNCTIONS!
  */
-jboolean BPy_InitJPyUtil();
-jboolean BPy_CheckJPyUtil();
+jboolean BPy_InitJPyUtil(void);
+jboolean BPy_CheckJPyUtil(void);
 
 jboolean BPy_InitJClass(jclass* cls, const char* classRef);
 jboolean BPy_InitJMethod(jmethodID* methodPtr, jclass cls, const char* className, const char* methodName, const char* methodSig, jboolean isstatic);

@@ -322,7 +322,7 @@ public class PyCModuleGenerator extends ModuleGenerator {
 
     protected void writeInitApiFunction(PrintWriter writer) {
         writer.write("" +
-                             "jboolean BPy_InitApi()\n" +
+                             "jboolean BPy_InitApi(void)\n" +
                              "{\n" +
                              "    static int initialized = 0;\n" +
                              "\n" +

@@ -13,10 +13,10 @@ extern "C" {
  * All return 1 on success, 0 on failure.
  */
 /**@{*/
-jboolean beam_isJvmCreated();
+jboolean beam_isJvmCreated(void);
 jboolean beam_createJvm(const char* option_strings[], int option_count);
-jboolean beam_createJvmWithDefaults();
-jboolean beam_destroyJvm();
+jboolean beam_createJvmWithDefaults(void);
+jboolean beam_destroyJvm(void);
 /**@}*/
 
 jclass beam_findJvmClass(const char* classResourceName);

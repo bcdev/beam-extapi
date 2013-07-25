@@ -114,7 +114,7 @@ void beam_createJvmClassPathOptionHandler(const char* parent_dir, const char* fi
     Util_appendString(class_path, file_name);
 }
 
-char* beam_createJvmClassPathOption()
+char* beam_createJvmClassPathOption(void)
 {
     const char* beam_home;
     char* path;

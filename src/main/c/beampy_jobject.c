@@ -59,7 +59,7 @@ PyObject* JObject_repr(JObject* self)
                                 self->jobjectRef);
 }
 
-jclass JObject_GetJObjectClass()
+jclass JObject_GetJObjectClass(void)
 {
     static jclass objectClass = NULL;
     if (objectClass == NULL) {

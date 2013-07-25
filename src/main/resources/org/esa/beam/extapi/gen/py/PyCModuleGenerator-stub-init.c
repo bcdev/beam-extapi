@@ -8,7 +8,7 @@
 
 static PyObject* BeamPy_Error;
 
-jboolean BPy_InitApi();
+jboolean BPy_InitApi(void);
 
 /**
  * Test Python --> Java conversion.

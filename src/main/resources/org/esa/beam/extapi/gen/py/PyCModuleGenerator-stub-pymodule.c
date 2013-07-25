@@ -22,7 +22,7 @@ int BPy_RegisterJObjectSubtypes(PyObject* module);
 /**
  * Called by the Python interpreter once immediately after the shared lib _${libName}.pyk has been loaded.
  */
-PyMODINIT_FUNC PyInit_${libName}()
+PyMODINIT_FUNC PyInit_${libName}(void)
 {
     PyObject* module;
 
