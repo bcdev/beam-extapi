@@ -12,7 +12,7 @@ JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *vm, void *reserved)
 {
     fprintf(stdout, "beam_jvm: JNI_OnLoad() called\n");
     jvm = vm;
-    (*jvm)->GetEnv(vm, &jenv, JNI_VERSION_1_6);
+    (*jvm)->GetEnv(vm, (void**) &jenv, JNI_VERSION_1_6);
     return JNI_VERSION_1_6;
 }
 
