@@ -210,9 +210,8 @@ jobject BPy_NewJNumberFromFloat(PyObject* arg, jboolean* ok)
 
 jstring BPy_NewJStringFromStr(PyObject* arg, jboolean* ok)
 {
-    char* utf8Chars;
     PyObject* strPyObj;
-    jstring strJObj;
+    jstring strJObj = NULL;
 
     BPY_CHECK_JPYUTIL()
 
@@ -221,12 +220,53 @@ jstring BPy_NewJStringFromStr(PyObject* arg, jboolean* ok)
         return BPy_ConvFailure("argument of type 'str' expected", ok);
     }
 
+    // todo: from Python 3.3 on, remove the following code...
+    if (sizeof (jchar) == sizeof (wchar_t)) {
+        wchar_t* ucStr;
+        Py_ssize_t ucLen;
+        ucStr = PyUnicode_AsWideCharString(strPyObj, &ucLen);
+        if (ucStr == NULL) {
+            Py_DECREF(strPyObj);
+            return BPy_ConvFailure(NULL, ok);
+        }
+        strJObj = (*jenv)->NewString(jenv, (jchar*) ucStr, (jsize) ucLen);
+        PyMem_Free(ucStr);
+    } else if(sizeof (jchar) == sizeof (Py_UNICODE)) {
+        Py_UNICODE* ucStr;
+        Py_ssize_t ucLen;
+        ucStr = PyUnicode_AsUnicode(strPyObj);
+        if (ucStr == NULL) {
+            Py_DECREF(strPyObj);
+            return BPy_ConvFailure(NULL, ok);
+        }
+        ucLen = PyUnicode_GetSize(strPyObj);
+        strJObj = (*jenv)->NewString(jenv, (jchar*) ucStr, (jsize) ucLen);
+    } else {
+        PyObject* ascPyObj;
+        char* ascStr;
+        ascPyObj = PyUnicode_AsASCIIString(strPyObj);
+        if (ascPyObj == NULL) {
+            Py_DECREF(strPyObj);
+            return BPy_ConvFailure(NULL, ok);
+        }
+        ascStr = PyBytes_AsString(ascPyObj);
+        if (ascStr == NULL) {
+            Py_DECREF(strPyObj);
+            return BPy_ConvFailure(NULL, ok);
+        }
+        strJObj = (*jenv)->NewStringUTF(jenv, ascStr);
+    }
+
+    // todo: ... and use this one instead
+    /* // {{{
+    char* utf8Chars;
     utf8Chars = PyUnicode_AsUTF8(strPyObj);
     strJObj = (*jenv)->NewStringUTF(jenv, utf8Chars);
-    Py_DECREF(strPyObj);
+    // }}} */
 
+    Py_DECREF(strPyObj);
     if (strJObj == NULL) {
-        return BPy_ConvFailure("jenv->NewStringUTF() failed", ok);
+        return BPy_ConvFailure("Failed to create Java string from Python string", ok);
     }
 
     return BPy_ConvSuccess(strJObj, ok);
