@@ -126,7 +126,7 @@ public abstract class PyCParameterGenerator implements ParameterGenerator {
         @Override
         public String generateTargetArgDeclaration(GeneratorContext context) {
             return eval("PyObject* ${arg}PyObj = NULL;",
-                                kv("arg", getName()));
+                        kv("arg", getName()));
         }
 
         @Override
@@ -146,11 +146,13 @@ public abstract class PyCParameterGenerator implements ParameterGenerator {
 
         @Override
         public String generateJniArgFromTransformedTargetArgAssignment(GeneratorContext context) {
-            return eval("" +
-                                "${arg}JObj = BPy_ToJObjectT(${arg}PyObj, ${classVarName}, &ok);\n" +
-                                "if (!ok) {\n" +
-                                "    return NULL;\n" +
-                                "}",
+            return eval("{\n"
+                                + "    jboolean ok = 1;\n"
+                                + "    ${arg}JObj = BPy_ToJObjectT(${arg}PyObj, ${classVarName}, &ok);\n"
+                                + "    if (!ok) {\n"
+                                + "        return NULL;\n"
+                                + "    }\n"
+                                + "}",
                         kv("arg", getName()),
                         kv("typeName", getComponentCClassName(getType())),
                         kv("classVarName", context.getComponentCClassVarName(getType())));
@@ -358,10 +360,12 @@ public abstract class PyCParameterGenerator implements ParameterGenerator {
 
         @Override
         public String generateJniArgFromTransformedTargetArgAssignment(GeneratorContext context) {
-            return eval(""
-                                + "${arg}JObj = BPy_ToJObjectArrayT(${arg}PyObj, ${classVarName}, &ok);\n"
-                                + "if (!ok) {\n"
-                                + "    return NULL;\n" // todo - goto error label and deref all JNI vars
+            return eval("{\n"
+                                + "    jboolean ok = 1;\n"
+                                + "    ${arg}JObj = BPy_ToJObjectArrayT(${arg}PyObj, ${classVarName}, &ok);\n"
+                                + "    if (!ok) {\n"
+                                + "        return NULL;\n" // todo - goto error label and deref all JNI vars
+                                + "    }\n"
                                 + "}",
                         kv("arg", getName()),
                         kv("typeName", getComponentCClassName(getType())),
@@ -412,10 +416,12 @@ public abstract class PyCParameterGenerator implements ParameterGenerator {
 
         @Override
         public String generateJniArgFromTransformedTargetArgAssignment(GeneratorContext context) {
-            return eval(""
-                                + "${arg}JObj = BPy_ToJStringArray(${arg}PyObj, &ok);\n"
-                                + "if (!ok) {\n"
-                                + "    return NULL;\n" // todo - goto error label and deref all JNI vars
+            return eval("{\n"
+                                + "    jboolean ok = 1;\n"
+                                + "    ${arg}JObj = BPy_ToJStringArray(${arg}PyObj, &ok);\n"
+                                + "    if (!ok) {\n"
+                                + "        return NULL;\n" // todo - goto error label and deref all JNI vars
+                                + "    }\n"
                                 + "}",
                         kv("arg", getName()),
                         kv("type", getType().simpleTypeName()));

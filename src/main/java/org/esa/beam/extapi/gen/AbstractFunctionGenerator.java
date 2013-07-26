@@ -58,8 +58,7 @@ public abstract class AbstractFunctionGenerator implements FunctionGenerator {
 
     @Override
     public String generateLocalVarDeclarations(GeneratorContext context) {
-        return eval("static jmethodID ${method} = NULL;\n" +
-                            "jboolean ok = 1;\n", kv("method", ModuleGenerator.METHOD_VAR_NAME));
+        return eval("static jmethodID ${method} = NULL;\n", kv("method", ModuleGenerator.METHOD_VAR_NAME));
     }
 
     @Override
