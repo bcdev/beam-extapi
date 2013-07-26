@@ -1,6 +1,7 @@
 #include "beam_jvm.h"
 #include "beam_util.h"
 #include <stdlib.h>
+#include <string.h>
 
 JavaVM* jvm = NULL;
 JNIEnv* jenv = NULL;
