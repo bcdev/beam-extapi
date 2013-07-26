@@ -14,7 +14,7 @@
 
 static PyObject* BeamPy_Error;
 
-jboolean BPy_InitApi();
+jboolean BPy_InitApi(void);
 
 /**
  * Test Python --> Java conversion.
@@ -45,7 +45,7 @@ PyObject* BPy_to_jobject(PyObject* self, PyObject* args)
     if ((*jenv)->ExceptionCheck(jenv)) {    \
         (*jenv)->ExceptionDescribe(jenv);   \
         (*jenv)->ExceptionClear(jenv);      \
-        PyErr_SetString(BeamPy_Error, "Java exception occurred: " ## M); \
+        PyErr_SetString(BeamPy_Error, "Java exception occurred: " M); \
         return NULL;                        \
     }                                       \
 
@@ -286,7 +286,8 @@ PyObject* BeamPyProduct_setStartTime(PyObject* self, PyObject* args);
 PyObject* BeamPyProduct_getEndTime(PyObject* self, PyObject* args);
 PyObject* BeamPyProduct_setEndTime(PyObject* self, PyObject* args);
 PyObject* BeamPyProduct_getMetadataRoot(PyObject* self, PyObject* args);
-PyObject* BeamPyProduct_getBandGroup(PyObject* self, PyObject* args);
+PyObject* BeamPyProduct_getGroups(PyObject* self, PyObject* args);
+PyObject* BeamPyProduct_getGroup(PyObject* self, PyObject* args);
 PyObject* BeamPyProduct_getTiePointGridGroup(PyObject* self, PyObject* args);
 PyObject* BeamPyProduct_addTiePointGrid(PyObject* self, PyObject* args);
 PyObject* BeamPyProduct_removeTiePointGrid(PyObject* self, PyObject* args);
@@ -296,6 +297,7 @@ PyObject* BeamPyProduct_getTiePointGridNames(PyObject* self, PyObject* args);
 PyObject* BeamPyProduct_getTiePointGrids(PyObject* self, PyObject* args);
 PyObject* BeamPyProduct_getTiePointGrid(PyObject* self, PyObject* args);
 PyObject* BeamPyProduct_containsTiePointGrid(PyObject* self, PyObject* args);
+PyObject* BeamPyProduct_getBandGroup(PyObject* self, PyObject* args);
 PyObject* BeamPyProduct_addBand(PyObject* self, PyObject* args);
 PyObject* BeamPyProduct_addNewBand(PyObject* self, PyObject* args);
 PyObject* BeamPyProduct_addComputedBand(PyObject* self, PyObject* args);
@@ -316,6 +318,8 @@ PyObject* BeamPyProduct_getIndexCodingGroup(PyObject* self, PyObject* args);
 PyObject* BeamPyProduct_containsPixel(PyObject* self, PyObject* args);
 PyObject* BeamPyProduct_getGcpGroup(PyObject* self, PyObject* args);
 PyObject* BeamPyProduct_getPinGroup(PyObject* self, PyObject* args);
+PyObject* BeamPyProduct_getNumResolutionsMax(PyObject* self, PyObject* args);
+PyObject* BeamPyProduct_setNumResolutionsMax(PyObject* self, PyObject* args);
 PyObject* BeamPyProduct_isCompatibleProduct(PyObject* self, PyObject* args);
 PyObject* BeamPyProduct_parseExpression(PyObject* self, PyObject* args);
 PyObject* BeamPyProduct_acceptVisitor(PyObject* self, PyObject* args);
@@ -447,6 +451,7 @@ PyObject* BeamPyImageGeometry_calculateEastingNorthing(PyObject* self, PyObject*
 PyObject* BeamPyImageGeometry_calculateProductSize(PyObject* self, PyObject* args);
 PyObject* BeamPyImageGeometry_createTargetGeometry(PyObject* self, PyObject* args);
 PyObject* BeamPyImageGeometry_createCollocationTargetGeometry(PyObject* self, PyObject* args);
+PyObject* BeamPyImageGeometry_createValidRect(PyObject* self, PyObject* args);
 PyObject* BeamPyBand_newBand(PyObject* self, PyObject* args);
 PyObject* BeamPyBand_getFlagCoding(PyObject* self, PyObject* args);
 PyObject* BeamPyBand_isFlagBand(PyObject* self, PyObject* args);
@@ -1031,6 +1036,7 @@ PyObject* BeamPyProductUtils_createMapBoundary(PyObject* self, PyObject* args);
 PyObject* BeamPyProductUtils_createGeoBoundary1(PyObject* self, PyObject* args);
 PyObject* BeamPyProductUtils_createGeoBoundary2(PyObject* self, PyObject* args);
 PyObject* BeamPyProductUtils_createGeoBoundary3(PyObject* self, PyObject* args);
+PyObject* BeamPyProductUtils_getClosestGeoPos(PyObject* self, PyObject* args);
 PyObject* BeamPyProductUtils_createGeoBoundary4(PyObject* self, PyObject* args);
 PyObject* BeamPyProductUtils_createGeoBoundaryPaths1(PyObject* self, PyObject* args);
 PyObject* BeamPyProductUtils_createGeoBoundaryPaths2(PyObject* self, PyObject* args);
@@ -1195,6 +1201,7 @@ jclass BPy_Iterator_Class;
 jclass BPy_MathTransform_Class;
 jclass BPy_CoordinateReferenceSystem_Class;
 jclass BPy_ProductWriterPlugIn_Class;
+jclass BPy_Rectangle2D_Class;
 jclass BPy_File_Class;
 jclass BPy_GeoPos_Class;
 jclass BPy_ProductNodeGroup_Class;
@@ -1363,6 +1370,7 @@ static PyMethodDef ImageGeometry_methods[] = {
     {"calculateProductSize", (PyCFunction) BeamPyImageGeometry_calculateProductSize, METH_VARARGS | METH_STATIC, ""},
     {"createTargetGeometry", (PyCFunction) BeamPyImageGeometry_createTargetGeometry, METH_VARARGS | METH_STATIC, ""},
     {"createCollocationTargetGeometry", (PyCFunction) BeamPyImageGeometry_createCollocationTargetGeometry, METH_VARARGS | METH_STATIC, ""},
+    {"createValidRect", (PyCFunction) BeamPyImageGeometry_createValidRect, METH_VARARGS | METH_STATIC, ""},
     {NULL, NULL, 0, NULL} /*Sentinel*/
 };
 
@@ -3305,7 +3313,7 @@ static PyMethodDef Band_methods[] = {
     {"getNumDataElems", (PyCFunction) BeamPyBand_getNumDataElems, METH_VARARGS, "Gets the number of data elements in this data node."},
     {"setData", (PyCFunction) BeamPyBand_setData, METH_VARARGS, "Sets the data of this data node."},
     {"getData", (PyCFunction) BeamPyBand_getData, METH_VARARGS, "Gets the data of this data node."},
-    {"setDataElems", (PyCFunction) BeamPyBand_setDataElems, METH_VARARGS, "Sets the data elements of this data node.\n@see ProductData#setElems(Object)"},
+    {"setDataElems", (PyCFunction) BeamPyBand_setDataElems, METH_VARARGS, "Sets the data elements of this data node.\n@deprecated since 5.0\n@see ProductData#setElems(Object)"},
     {"getDataElems", (PyCFunction) BeamPyBand_getDataElems, METH_VARARGS, "Gets the data elements of this data node.\n@see ProductData#getElems()"},
     {"getDataElemSize", (PyCFunction) BeamPyBand_getDataElemSize, METH_VARARGS, "Gets the data element size in bytes.\n@see ProductData#getElemSize(int)"},
     {"setReadOnly", (PyCFunction) BeamPyBand_setReadOnly, METH_VARARGS, ""},
@@ -3939,6 +3947,59 @@ PyTypeObject ProductWriterPlugIn_Type = {
     NULL,                         /* tp_iter */
     NULL,                         /* tp_iternext */
     ProductWriterPlugIn_methods,         /* tp_methods */
+    NULL,                         /* tp_members */
+    NULL,                         /* tp_getset */
+    NULL,                         /* tp_base */
+    NULL,                         /* tp_dict */
+    NULL,                         /* tp_descr_get */
+    NULL,                         /* tp_descr_set */
+    0,                            /* tp_dictoffset */
+    (initproc) JObject_init,      /* tp_init */
+    NULL,                         /* tp_alloc */
+    NULL,                         /* tp_new */
+};
+
+static PyMethodDef Rectangle2D_methods[] = {
+    {NULL, NULL, 0, NULL} /*Sentinel*/
+};
+
+// Note: this is unused, experimental code
+
+/**
+ * Implements the BeamPy_JObjectType class singleton.
+ *
+ * THIS TYPE IS NOT YET IN USE: we currently use
+ * (<type_string>, <pointer>) tuples to represent Java JNI objects.
+ */
+PyTypeObject Rectangle2D_Type = {
+    PyVarObject_HEAD_INIT(NULL, 0)
+    "beampy.Rectangle2D",        /* tp_name */
+    sizeof (JObject),             /* tp_basicsize */
+    0,                            /* tp_itemsize */
+    (destructor)JObject_dealloc,  /* tp_dealloc */
+    NULL,                         /* tp_print */
+    NULL,                         /* tp_getattr */
+    NULL,                         /* tp_setattr */
+    NULL,                         /* tp_reserved */
+    NULL,                         /* tp_repr */
+    NULL,                         /* tp_as_number */
+    NULL,                         /* tp_as_sequence */
+    NULL,                         /* tp_as_mapping */
+    NULL,                         /* tp_hash  */
+    NULL,                         /* tp_call */
+    NULL,                         /* tp_str */
+    NULL,                         /* tp_getattro */
+    NULL,                         /* tp_setattro */
+    NULL,                         /* tp_as_buffer */
+    Py_TPFLAGS_DEFAULT,           /* tp_flags */
+    "",                /* tp_doc */
+    NULL,                         /* tp_traverse */
+    NULL,                         /* tp_clear */
+    NULL,                         /* tp_richcompare */
+    0,                            /* tp_weaklistoffset */
+    NULL,                         /* tp_iter */
+    NULL,                         /* tp_iternext */
+    Rectangle2D_methods,         /* tp_methods */
     NULL,                         /* tp_members */
     NULL,                         /* tp_getset */
     NULL,                         /* tp_base */
@@ -4904,6 +4965,7 @@ static PyMethodDef ProductUtils_methods[] = {
     {"createGeoBoundary1", (PyCFunction) BeamPyProductUtils_createGeoBoundary1, METH_VARARGS | METH_STATIC, "Creates the geographical boundary of the given product and returns it as a list of geographical coordinates.\nReturns Parameter product: the input product, must not be null\nReturns Parameter step: the step given in pixels\nReturns an array of geographical coordinates\n@throws IllegalArgumentException if product is null or if the product's {@link GeoCoding} is null"},
     {"createGeoBoundary2", (PyCFunction) BeamPyProductUtils_createGeoBoundary2, METH_VARARGS | METH_STATIC, "Creates the geographical boundary of the given region within the given product and returns it as a list of\ngeographical coordinates.\n This method delegates to {@link #createGeoBoundary(Product, java.awt.Rectangle, int, boolean) createGeoBoundary(Product, Rectangle, int, boolean)}\nand the additional boolean parameter usePixelCenter is true.\nReturns Parameter product: the input product, must not be null\nReturns Parameter region: the region rectangle in product pixel coordinates, can be null for entire product\nReturns Parameter step: the step given in pixels\nReturns an array of geographical coordinates\n@throws IllegalArgumentException if product is null or if the product's {@link GeoCoding} is null\n@see #createPixelBoundary(RasterDataNode, java.awt.Rectangle, int)"},
     {"createGeoBoundary3", (PyCFunction) BeamPyProductUtils_createGeoBoundary3, METH_VARARGS | METH_STATIC, "Creates the geographical boundary of the given region within the given product and returns it as a list of\ngeographical coordinates.\nReturns Parameter product: the input product, must not be null\nReturns Parameter region: the region rectangle in product pixel coordinates, can be null for entire product\nReturns Parameter step: the step given in pixels\nReturns Parameter usePixelCenter: true if the pixel center should be used to create the boundary\nReturns an array of geographical coordinates\n@throws IllegalArgumentException if product is null or if the product's {@link GeoCoding} is null\n@see #createPixelBoundary(Product, java.awt.Rectangle, int, boolean)"},
+    {"getClosestGeoPos", (PyCFunction) BeamPyProductUtils_getClosestGeoPos, METH_VARARGS | METH_STATIC, "Searches for a valid GeoPos by considering the vicinity of a {@link PixelPos}. It does not check\nthe original pixel position, but uses it for determining which pixel positions to examine.\nReturns Parameter gc: the GeoCoding, must not be null\nReturns Parameter origPos: the original pixel position, must not be null\nReturns Parameter region: the rectangle which determines the valid pixel positions, must not be null\nReturns Parameter step: determines the step size between pixels which is used in the search process. Small step\nsizes will increase the accuracy, but need more computational time\nReturns a {@link GeoPos}. This will be valid if the search was successful. If not, a {@link GeoPos} with\nNaN-values for latitude and longitude will be returned."},
     {"createGeoBoundary4", (PyCFunction) BeamPyProductUtils_createGeoBoundary4, METH_VARARGS | METH_STATIC, "Creates the geographical boundary of the given region within the given raster and returns it as a list of\ngeographical coordinates.\nReturns Parameter raster: the input raster, must not be null\nReturns Parameter region: the region rectangle in raster pixel coordinates, can be null for entire raster\nReturns Parameter step: the step given in pixels\nReturns an array of geographical coordinates\n@throws IllegalArgumentException if raster is null or if the raster has no {@link GeoCoding} is null\n@see #createPixelBoundary(RasterDataNode, java.awt.Rectangle, int)"},
     {"createGeoBoundaryPaths1", (PyCFunction) BeamPyProductUtils_createGeoBoundaryPaths1, METH_VARARGS | METH_STATIC, "Converts the geographic boundary entire product into one, two or three shape objects. If the product does not\nintersect the 180 degree meridian, a single general path is returned. Otherwise two or three shapes are created\nand returned in the order from west to east.\n\nThe geographic boundary of the given product are returned as shapes comprising (longitude,latitude) pairs.\nReturns Parameter product: the input product\nReturns an array of shape objects\n@throws IllegalArgumentException if product is null or if the product's {@link GeoCoding} is null\n@see #createGeoBoundary(Product, int)"},
     {"createGeoBoundaryPaths2", (PyCFunction) BeamPyProductUtils_createGeoBoundaryPaths2, METH_VARARGS | METH_STATIC, "Converts the geographic boundary of the region within the given product into one, two or three shape objects. If\nthe product does not intersect the 180 degree meridian, a single general path is returned. Otherwise two or three\nshapes are created and returned in the order from west to east.\n\nThis method delegates to {@link #createGeoBoundaryPaths(Product, java.awt.Rectangle, int, boolean) createGeoBoundaryPaths(Product, Rectangle, int, boolean)}\nand the additional parameter usePixelCenter is true.\n\nThe geographic boundary of the given product are returned as shapes comprising (longitude,latitude) pairs.\nReturns Parameter product: the input product\nReturns Parameter region: the region rectangle in product pixel coordinates, can be null for entire product\nReturns Parameter step: the step given in pixels\nReturns an array of shape objects\n@throws IllegalArgumentException if product is null or if the product's {@link GeoCoding} is null\n@see #createGeoBoundary(Product, java.awt.Rectangle, int)"},
@@ -5459,7 +5521,8 @@ static PyMethodDef Product_methods[] = {
     {"getEndTime", (PyCFunction) BeamPyProduct_getEndTime, METH_VARARGS, "Gets the (sensing) stop time associated with the last raster data line.\n\nFor Level-1/2 products this is\nthe data-take time associated with the last raster data line.\nFor Level-3 products, this could be the end time of last input product\ncontributing data.\nReturns the stop time , can be null e.g. for non-swath products"},
     {"setEndTime", (PyCFunction) BeamPyProduct_setEndTime, METH_VARARGS, "Sets the (sensing) stop time associated with the first raster data line.\n\nFor Level-1/2 products this is\nthe data-take time associated with the last raster data line.\nFor Level-3 products, this could be the end time of last input product\ncontributing data.\nReturns Parameter endTime: the sensing stop time, can be null"},
     {"getMetadataRoot", (PyCFunction) BeamPyProduct_getMetadataRoot, METH_VARARGS, "Gets the root element of the associated metadata.\nReturns the metadata root element"},
-    {"getBandGroup", (PyCFunction) BeamPyProduct_getBandGroup, METH_VARARGS, "Gets the band group of this product.\nReturns the group of all bands.\nSince version:  BEAM 4.7"},
+    {"getGroups", (PyCFunction) BeamPyProduct_getGroups, METH_VARARGS, "Returns the group which contains all other product node groups.\nSince version:  BEAM 5.0"},
+    {"getGroup", (PyCFunction) BeamPyProduct_getGroup, METH_VARARGS, "Returns Parameter name: The group name.\nReturns the group with the given name, or {@code null} if no such group exists.\nSince version:  BEAM 5.0"},
     {"getTiePointGridGroup", (PyCFunction) BeamPyProduct_getTiePointGridGroup, METH_VARARGS, "Gets the tie-point grid group of this product.\nReturns the group of all tie-point grids.\nSince version:  BEAM 4.7"},
     {"addTiePointGrid", (PyCFunction) BeamPyProduct_addTiePointGrid, METH_VARARGS, "Adds the given tie-point grid to this product.\nReturns Parameter tiePointGrid: the tie-point grid to added, ignored if null"},
     {"removeTiePointGrid", (PyCFunction) BeamPyProduct_removeTiePointGrid, METH_VARARGS, "Removes the tie-point grid from this product.\nReturns Parameter tiePointGrid: the tie-point grid to be removed, ignored if null\nReturns true if node could be removed"},
@@ -5469,6 +5532,7 @@ static PyMethodDef Product_methods[] = {
     {"getTiePointGrids", (PyCFunction) BeamPyProduct_getTiePointGrids, METH_VARARGS, "Returns an array of tie-point grids contained in this product\nReturns an array of tie-point grids contained in this product. If this product has no  tie-point grids a\nzero-length-array is returned."},
     {"getTiePointGrid", (PyCFunction) BeamPyProduct_getTiePointGrid, METH_VARARGS, "Returns the tie-point grid with the given name.\nReturns Parameter name: the tie-point grid name\nReturns the tie-point grid with the given name or null if a tie-point grid with the given name is\nnot contained in this product."},
     {"containsTiePointGrid", (PyCFunction) BeamPyProduct_containsTiePointGrid, METH_VARARGS, "Tests if a tie-point grid with the given name is contained in this product.\nReturns Parameter name: the name, must not be null\nReturns true if a tie-point grid with the given name is contained in this product,\nfalse otherwise"},
+    {"getBandGroup", (PyCFunction) BeamPyProduct_getBandGroup, METH_VARARGS, "Gets the band group of this product.\nReturns the group of all bands.\nSince version:  BEAM 4.7"},
     {"addBand", (PyCFunction) BeamPyProduct_addBand, METH_VARARGS, "Adds the given band to this product.\nReturns Parameter band: the band to added, must not be null"},
     {"addNewBand", (PyCFunction) BeamPyProduct_addNewBand, METH_VARARGS, "Creates a new band with the given name and data type and adds it to this product and returns it.\nReturns Parameter bandName: the new band's name\nReturns Parameter dataType: the raster data type, must be one of the multiple ProductData.TYPE_X\nconstants\nReturns the new band which has just been added"},
     {"addComputedBand", (PyCFunction) BeamPyProduct_addComputedBand, METH_VARARGS, "Creates a new band with the given name and adds it to this product and returns it.\nThe new band's data type is {@code float} and it's samples are computed from the given band maths expression.\nReturns Parameter bandName: the new band's name\nReturns Parameter expression: the band maths expression\nReturns the new band which has just been added\nSince version:  BEAM 4.9"},
@@ -5489,6 +5553,8 @@ static PyMethodDef Product_methods[] = {
     {"containsPixel", (PyCFunction) BeamPyProduct_containsPixel, METH_VARARGS, "Tests if the given pixel position is within the product pixel bounds.\nReturns Parameter x: the x coordinate of the pixel position\nReturns Parameter y: the y coordinate of the pixel position\nReturns true, if so\n@see #containsPixel(PixelPos)"},
     {"getGcpGroup", (PyCFunction) BeamPyProduct_getGcpGroup, METH_VARARGS, "Gets the group of ground-control points (GCPs).\nNote that this method will create the group, if none exists already.\nReturns the GCP group."},
     {"getPinGroup", (PyCFunction) BeamPyProduct_getPinGroup, METH_VARARGS, "Gets the group of pins.\nNote that this method will create the group, if none exists already.\nReturns the pin group."},
+    {"getNumResolutionsMax", (PyCFunction) BeamPyProduct_getNumResolutionsMax, METH_VARARGS, "Returns the maximum number of resolution levels common to all band images.\nIf less than or equal to zero, the  number of resolution levels is considered to be unknown.\nSince version:  BEAM 5.0"},
+    {"setNumResolutionsMax", (PyCFunction) BeamPyProduct_setNumResolutionsMax, METH_VARARGS, "Returns Parameter numResolutionsMax: The maximum number of resolution levels common to all band images.\nIf less than or equal to zero, the  number of resolution levels is considered to be unknown.\nSince version:  BEAM 5.0"},
     {"isCompatibleProduct", (PyCFunction) BeamPyProduct_isCompatibleProduct, METH_VARARGS, "Checks whether or not the given product is compatible with this product.\nReturns Parameter product: the product to compare with\nReturns Parameter eps: the maximum lat/lon error in degree\nReturns false if the scene dimensions or geocoding are different, true otherwise."},
     {"parseExpression", (PyCFunction) BeamPyProduct_parseExpression, METH_VARARGS, "Parses a mathematical expression given as a text string.\nReturns Parameter expression: a expression given as a text string, e.g. \"radiance_4 / (1.0 + radiance_11)\".\nReturns a term parsed from the given expression string\n@throws ParseException if the expression could not successfully be parsed"},
     {"acceptVisitor", (PyCFunction) BeamPyProduct_acceptVisitor, METH_VARARGS, "Accepts the given visitor. This method implements the well known 'Visitor' design pattern of the gang-of-four.\nThe visitor pattern allows to define new operations on the product data model without the need to add more code\nto it. The new operation is implemented by the visitor.\n\nThe method subsequentially visits (calls acceptVisitor for) all bands, tie-point grids and flag\ncodings. Finally it visits product metadata root element and calls visitor.visit(this).\nReturns Parameter visitor: the visitor, must not be null"},
@@ -5521,9 +5587,9 @@ static PyMethodDef Product_methods[] = {
     {"getValidMask", (PyCFunction) BeamPyProduct_getValidMask, METH_VARARGS, "Gets a valid-mask for the given ID.\nReturns Parameter id: the ID\nReturns a cached valid mask for the given ID or null\n@see #createValidMask(String, com.bc.ceres.core.ProgressMonitor)\n@deprecated since BEAM 4.7, use {@link #getMaskGroup()} instead"},
     {"setValidMask", (PyCFunction) BeamPyProduct_setValidMask, METH_VARARGS, "Sets a valid-mask for the given ID.\nReturns Parameter id: the ID\nReturns Parameter validMask: the pixel mask\n@see #createValidMask(String, com.bc.ceres.core.ProgressMonitor)\n@deprecated since BEAM 4.7, use {@link #getMaskGroup()} instead"},
     {"createValidMask2", (PyCFunction) BeamPyProduct_createValidMask2, METH_VARARGS, "Creates a bit-packed valid-mask for all pixels of the scene covered by this product.\nThe given expression is considered to be boolean, if it evaluates to true\nthe related bit in the mask is set.\nReturns Parameter expression: the boolean expression, e.g. \"l2_flags.LAND && reflec_10 >= 0.0\"\nReturns Parameter pm: a progress monitor\nReturns a bit-packed mask for all pixels of the scene, never null\n@throws IOException if an I/O error occurs\n@see #parseExpression(String)\n@deprecated since BEAM 4.7, use {@link #getMaskGroup()} instead"},
-    {"createValidMask1", (PyCFunction) BeamPyProduct_createValidMask1, METH_VARARGS, "Creates a bit-packed mask for all pixels of the scene covered by this product.\nThe given term is considered to be boolean, if it evaluates to true\nthe related bit in the mask is set.\nReturns Parameter term: the boolean term, e.g. \"l2_flags.LAND && reflec_10 >= 0.0\"\nReturns Parameter pm: a progress monitor\nReturns a bit-packed mask for all pixels of the scene, never null\n@throws IOException if an I/O error occurs\n@see #createValidMask(String, com.bc.ceres.core.ProgressMonitor)\n@deprecated since BEAM 4.7, use {@link #getMaskGroup()} instead"},
-    {"readBitmask2", (PyCFunction) BeamPyProduct_readBitmask2, METH_VARARGS, "Creates a bit-mask by evaluating the given bit-mask term.\n The method first creates an evaluation context for the given bit-mask term and the specified region and then\nevaluates the term for each pixel in the subset (line-by-line, X varies fastest). The result of each evaluation -\nthe resulting bitmask - is stored in the given boolean array buffer bitmask in the same order as\npixels appear in the given region. The buffer must at least have a length equal to width * height\nelements.\n\n If flag providing datasets are referenced in the given bit-mask expression which are currently not completely\nloaded, the method reloads the spatial subset from the data source in order to create the evaluation context.\n\n The {@link #parseExpression(String)} method can be used to create a bit-mask\nterm from a textual bit-mask expression.\n\nReturns Parameter offsetX: the X-offset of the spatial subset in pixel co-ordinates\nReturns Parameter offsetY: the Y-offset of the spatial subset in pixel co-ordinates\nReturns Parameter width: the width of the spatial subset in pixel co-ordinates\nReturns Parameter height: the height of the spatial subset in pixel co-ordinates\nReturns Parameter bitmaskTerm: a bit-mask term, as returned by the {@link #parseExpression(String)} method\nReturns Parameter bitmask: a buffer used to hold the results of the bit-mask evaluations for each pixel in the given\nspatial subset\nReturns Parameter pm: a monitor to inform the user about progress\n@throws IOException if an I/O error occurs, when referenced flag datasets are reloaded\n@see #parseExpression(String)\n@deprecated since BEAM 4.7, use {@link #getMaskGroup()} instead"},
-    {"readBitmask1", (PyCFunction) BeamPyProduct_readBitmask1, METH_VARARGS, "Creates a bit-mask by evaluating the given bit-mask term.\n\n The method first creates an evaluation context for the given bit-mask term and the specified region and then\nevaluates the term for each pixel in the subset (line-by-line, X varies fastest). The result of each evaluation -\nthe resulting bitmask - is stored in the given boolean array buffer bitmask in the same order as\npixels appear in the given region. The buffer must at least have a length equal to width * height\nelements.\n\n If flag providing datasets are referenced in the given bit-mask expression which are currently not completely\nloaded, the method reloads the spatial subset from the data source in order to create the evaluation context.\n\n The {@link #parseExpression(String)} method can be used to create a bit-mask\nterm from a textual bit-mask expression.\nReturns Parameter offsetX: the X-offset of the spatial subset in pixel co-ordinates\nReturns Parameter offsetY: the Y-offset of the spatial subset in pixel co-ordinates\nReturns Parameter width: the width of the spatial subset in pixel co-ordinates\nReturns Parameter height: the height of the spatial subset in pixel co-ordinates\nReturns Parameter bitmaskTerm: a bit-mask term, as returned by the {@link #parseExpression(String)}\nmethod\nReturns Parameter bitmask: a byte buffer used to hold the results of the bit-mask evaluations for each pixel in the given\nspatial subset\nReturns Parameter trueValue: the byte value to be set if the bitmask-term evauates to true\nReturns Parameter falseValue: the byte value to be set if the bitmask-term evauates to false\n@throws IOException if an I/O error occurs, when referenced flag datasets are reloaded\n@see #parseExpression(String)\n@deprecated since BEAM 4.7, use {@link #getMaskGroup()} instead"},
+    {"createValidMask1", (PyCFunction) BeamPyProduct_createValidMask1, METH_VARARGS, "Creates a bit-packed mask for all pixels of the scene covered by this product.\nThe given term is considered to be boolean, if it evaluates to true\nthe related bit in the mask is set.\nReturns Parameter term: the boolean term, e.g. \"l2_flags.LAND && reflec_10 >= 0.0\"\nReturns Parameter pm: a progress monitor\nReturns a bit-packed mask for all pixels of the scene, never null\n@throws IOException if an I/O error occurs\n@see #createValidMask(String, com.bc.ceres.core.ProgressMonitor)\n@deprecated since BEAM 4.7, use {@link Mask.BandMathsType.create()} and {@link #getMaskGroup()}) instead"},
+    {"readBitmask2", (PyCFunction) BeamPyProduct_readBitmask2, METH_VARARGS, "Creates a bit-mask by evaluating the given bit-mask term.\n The method first creates an evaluation context for the given bit-mask term and the specified region and then\nevaluates the term for each pixel in the subset (line-by-line, X varies fastest). The result of each evaluation -\nthe resulting bitmask - is stored in the given boolean array buffer bitmask in the same order as\npixels appear in the given region. The buffer must at least have a length equal to width * height\nelements.\n\n If flag providing datasets are referenced in the given bit-mask expression which are currently not completely\nloaded, the method reloads the spatial subset from the data source in order to create the evaluation context.\n\n The {@link #parseExpression(String)} method can be used to create a bit-mask\nterm from a textual bit-mask expression.\n\nReturns Parameter offsetX: the X-offset of the spatial subset in pixel co-ordinates\nReturns Parameter offsetY: the Y-offset of the spatial subset in pixel co-ordinates\nReturns Parameter width: the width of the spatial subset in pixel co-ordinates\nReturns Parameter height: the height of the spatial subset in pixel co-ordinates\nReturns Parameter bitmaskTerm: a bit-mask term, as returned by the {@link #parseExpression(String)} method\nReturns Parameter bitmask: a buffer used to hold the results of the bit-mask evaluations for each pixel in the given\nspatial subset\nReturns Parameter pm: a monitor to inform the user about progress\n@throws IOException if an I/O error occurs, when referenced flag datasets are reloaded\n@see #parseExpression(String)\n@deprecated since BEAM 4.7, add a new mask to product (see {@link Mask.BandMathsType.create()} and {@link #getMaskGroup()}) and use its source image instead"},
+    {"readBitmask1", (PyCFunction) BeamPyProduct_readBitmask1, METH_VARARGS, "Creates a bit-mask by evaluating the given bit-mask term.\n\n The method first creates an evaluation context for the given bit-mask term and the specified region and then\nevaluates the term for each pixel in the subset (line-by-line, X varies fastest). The result of each evaluation -\nthe resulting bitmask - is stored in the given boolean array buffer bitmask in the same order as\npixels appear in the given region. The buffer must at least have a length equal to width * height\nelements.\n\n If flag providing datasets are referenced in the given bit-mask expression which are currently not completely\nloaded, the method reloads the spatial subset from the data source in order to create the evaluation context.\n\n The {@link #parseExpression(String)} method can be used to create a bit-mask\nterm from a textual bit-mask expression.\nReturns Parameter offsetX: the X-offset of the spatial subset in pixel co-ordinates\nReturns Parameter offsetY: the Y-offset of the spatial subset in pixel co-ordinates\nReturns Parameter width: the width of the spatial subset in pixel co-ordinates\nReturns Parameter height: the height of the spatial subset in pixel co-ordinates\nReturns Parameter bitmaskTerm: a bit-mask term, as returned by the {@link #parseExpression(String)}\nmethod\nReturns Parameter bitmask: a byte buffer used to hold the results of the bit-mask evaluations for each pixel in the given\nspatial subset\nReturns Parameter trueValue: the byte value to be set if the bitmask-term evauates to true\nReturns Parameter falseValue: the byte value to be set if the bitmask-term evauates to false\n@throws IOException if an I/O error occurs, when referenced flag datasets are reloaded\n@see #parseExpression(String)\n@deprecated since BEAM 4.7, add a new mask to product (see {@link Mask.BandMathsType.create()} and {@link #getMaskGroup()}) and use its source image instead"},
     {"getOwner", (PyCFunction) BeamPyProduct_getOwner, METH_VARARGS, "Returns the owner node of this node."},
     {"getName", (PyCFunction) BeamPyProduct_getName, METH_VARARGS, "Returns this node's name."},
     {"setName", (PyCFunction) BeamPyProduct_setName, METH_VARARGS, "Sets this product's name.\nReturns Parameter name: The name."},
@@ -6748,7 +6814,7 @@ static PyMethodDef TiePointGrid_methods[] = {
     {"getNumDataElems", (PyCFunction) BeamPyTiePointGrid_getNumDataElems, METH_VARARGS, "Gets the number of data elements in this data node."},
     {"setData", (PyCFunction) BeamPyTiePointGrid_setData, METH_VARARGS, "Sets the data of this data node."},
     {"getData", (PyCFunction) BeamPyTiePointGrid_getData, METH_VARARGS, "Gets the data of this data node."},
-    {"setDataElems", (PyCFunction) BeamPyTiePointGrid_setDataElems, METH_VARARGS, "Sets the data elements of this data node.\n@see ProductData#setElems(Object)"},
+    {"setDataElems", (PyCFunction) BeamPyTiePointGrid_setDataElems, METH_VARARGS, "Sets the data elements of this data node.\n@deprecated since 5.0\n@see ProductData#setElems(Object)"},
     {"getDataElems", (PyCFunction) BeamPyTiePointGrid_getDataElems, METH_VARARGS, "Gets the data elements of this data node.\n@see ProductData#getElems()"},
     {"getDataElemSize", (PyCFunction) BeamPyTiePointGrid_getDataElemSize, METH_VARARGS, "Gets the data element size in bytes.\n@see ProductData#getElemSize(int)"},
     {"setReadOnly", (PyCFunction) BeamPyTiePointGrid_setReadOnly, METH_VARARGS, ""},
@@ -7011,7 +7077,7 @@ static PyMethodDef MetadataAttribute_methods[] = {
     {"getNumDataElems", (PyCFunction) BeamPyMetadataAttribute_getNumDataElems, METH_VARARGS, "Gets the number of data elements in this data node."},
     {"setData", (PyCFunction) BeamPyMetadataAttribute_setData, METH_VARARGS, "Sets the data of this data node."},
     {"getData", (PyCFunction) BeamPyMetadataAttribute_getData, METH_VARARGS, "Gets the data of this data node."},
-    {"setDataElems", (PyCFunction) BeamPyMetadataAttribute_setDataElems, METH_VARARGS, "Sets the data elements of this data node.\n@see ProductData#setElems(Object)"},
+    {"setDataElems", (PyCFunction) BeamPyMetadataAttribute_setDataElems, METH_VARARGS, "Sets the data elements of this data node.\n@deprecated since 5.0\n@see ProductData#setElems(Object)"},
     {"getDataElems", (PyCFunction) BeamPyMetadataAttribute_getDataElems, METH_VARARGS, "Gets the data elements of this data node.\n@see ProductData#getElems()"},
     {"getDataElemSize", (PyCFunction) BeamPyMetadataAttribute_getDataElemSize, METH_VARARGS, "Gets the data element size in bytes.\n@see ProductData#getElemSize(int)"},
     {"setReadOnly", (PyCFunction) BeamPyMetadataAttribute_setReadOnly, METH_VARARGS, ""},
@@ -7786,6 +7852,14 @@ int BPy_RegisterJObjectSubtypes(PyObject* module)
     Py_INCREF(&ProductWriterPlugIn_Type);
     PyModule_AddObject(module, "ProductWriterPlugIn", (PyObject*) &ProductWriterPlugIn_Type);
 
+    // Register Rectangle2D:
+    Rectangle2D_Type.tp_base = &JObject_Type;
+    if (PyType_Ready(&Rectangle2D_Type) < 0) {
+        return 0;
+    }
+    Py_INCREF(&Rectangle2D_Type);
+    PyModule_AddObject(module, "Rectangle2D", (PyObject*) &Rectangle2D_Type);
+
     // Register File:
     File_Type.tp_base = &JObject_Type;
     if (PyType_Ready(&File_Type) < 0) {
@@ -8276,7 +8350,7 @@ int BPy_RegisterJObjectSubtypes(PyObject* module);
 /**
  * Called by the Python interpreter once immediately after the shared lib _beampy.pyk has been loaded.
  */
-PyMODINIT_FUNC PyInit_beampy()
+PyMODINIT_FUNC PyInit_beampy(void)
 {
     PyObject* module;
 
@@ -8354,7 +8428,7 @@ PyMODINIT_FUNC PyInit_beampy()
 
 // >>>>>>>> End include from PyCModuleGenerator-stub-pymodule.c
 
-jboolean BPy_InitApi()
+jboolean BPy_InitApi(void)
 {
     static int initialized = 0;
 
@@ -8423,6 +8497,7 @@ jboolean BPy_InitApi()
     if (!BPy_InitJClass(&BPy_MathTransform_Class, "org/opengis/referencing/operation/MathTransform")) return 0;
     if (!BPy_InitJClass(&BPy_CoordinateReferenceSystem_Class, "org/opengis/referencing/crs/CoordinateReferenceSystem")) return 0;
     if (!BPy_InitJClass(&BPy_ProductWriterPlugIn_Class, "org/esa/beam/framework/dataio/ProductWriterPlugIn")) return 0;
+    if (!BPy_InitJClass(&BPy_Rectangle2D_Class, "java/awt/geom/Rectangle2D")) return 0;
     if (!BPy_InitJClass(&BPy_File_Class, "java/io/File")) return 0;
     if (!BPy_InitJClass(&BPy_GeoPos_Class, "org/esa/beam/framework/datamodel/GeoPos")) return 0;
     if (!BPy_InitJClass(&BPy_ProductNodeGroup_Class, "org/esa/beam/framework/datamodel/ProductNodeGroup")) return 0;
@@ -8482,7 +8557,6 @@ jboolean BPy_InitApi()
 PyObject* BeamPyGeoCoding_isCrossingMeridianAt180(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jboolean _result = (jboolean) 0;
@@ -8505,7 +8579,6 @@ PyObject* BeamPyGeoCoding_isCrossingMeridianAt180(PyObject* self, PyObject* args
 PyObject* BeamPyGeoCoding_canGetPixelPos(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jboolean _result = (jboolean) 0;
@@ -8528,7 +8601,6 @@ PyObject* BeamPyGeoCoding_canGetPixelPos(PyObject* self, PyObject* args)
 PyObject* BeamPyGeoCoding_canGetGeoPos(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jboolean _result = (jboolean) 0;
@@ -8551,7 +8623,6 @@ PyObject* BeamPyGeoCoding_canGetGeoPos(PyObject* self, PyObject* args)
 PyObject* BeamPyGeoCoding_getPixelPos(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* geoPosPyObj = NULL;
@@ -8574,13 +8645,19 @@ PyObject* BeamPyGeoCoding_getPixelPos(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "OO:getPixelPos", &geoPosPyObj, &pixelPosPyObj)) {
         return NULL;
     }
-    geoPosJObj = BPy_ToJObjectT(geoPosPyObj, BPy_GeoPos_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        geoPosJObj = BPy_ToJObjectT(geoPosPyObj, BPy_GeoPos_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
-    pixelPosJObj = BPy_ToJObjectT(pixelPosPyObj, BPy_PixelPos_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        pixelPosJObj = BPy_ToJObjectT(pixelPosPyObj, BPy_PixelPos_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, geoPosJObj, pixelPosJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.GeoCoding#getPixelPos(Lorg/esa/beam/framework/datamodel/GeoPos;Lorg/esa/beam/framework/datamodel/PixelPos;)Lorg/esa/beam/framework/datamodel/PixelPos;");
@@ -8592,7 +8669,6 @@ PyObject* BeamPyGeoCoding_getPixelPos(PyObject* self, PyObject* args)
 PyObject* BeamPyGeoCoding_getGeoPos(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* pixelPosPyObj = NULL;
@@ -8615,13 +8691,19 @@ PyObject* BeamPyGeoCoding_getGeoPos(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "OO:getGeoPos", &pixelPosPyObj, &geoPosPyObj)) {
         return NULL;
     }
-    pixelPosJObj = BPy_ToJObjectT(pixelPosPyObj, BPy_PixelPos_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        pixelPosJObj = BPy_ToJObjectT(pixelPosPyObj, BPy_PixelPos_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
-    geoPosJObj = BPy_ToJObjectT(geoPosPyObj, BPy_GeoPos_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        geoPosJObj = BPy_ToJObjectT(geoPosPyObj, BPy_GeoPos_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, pixelPosJObj, geoPosJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.GeoCoding#getGeoPos(Lorg/esa/beam/framework/datamodel/PixelPos;Lorg/esa/beam/framework/datamodel/GeoPos;)Lorg/esa/beam/framework/datamodel/GeoPos;");
@@ -8633,7 +8715,6 @@ PyObject* BeamPyGeoCoding_getGeoPos(PyObject* self, PyObject* args)
 PyObject* BeamPyGeoCoding_getDatum(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -8659,7 +8740,6 @@ PyObject* BeamPyGeoCoding_getDatum(PyObject* self, PyObject* args)
 PyObject* BeamPyGeoCoding_dispose(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     if (!BPy_InitApi()) {
@@ -8681,7 +8761,6 @@ PyObject* BeamPyGeoCoding_dispose(PyObject* self, PyObject* args)
 PyObject* BeamPyGeoCoding_getImageCRS(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -8707,7 +8786,6 @@ PyObject* BeamPyGeoCoding_getImageCRS(PyObject* self, PyObject* args)
 PyObject* BeamPyGeoCoding_getMapCRS(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -8733,7 +8811,6 @@ PyObject* BeamPyGeoCoding_getMapCRS(PyObject* self, PyObject* args)
 PyObject* BeamPyGeoCoding_getGeoCRS(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -8759,7 +8836,6 @@ PyObject* BeamPyGeoCoding_getGeoCRS(PyObject* self, PyObject* args)
 PyObject* BeamPyGeoCoding_getImageToMapTransform(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -8785,7 +8861,6 @@ PyObject* BeamPyGeoCoding_getImageToMapTransform(PyObject* self, PyObject* args)
 PyObject* BeamPyProductWriter_getWriterPlugIn(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -8811,7 +8886,6 @@ PyObject* BeamPyProductWriter_getWriterPlugIn(PyObject* self, PyObject* args)
 PyObject* BeamPyProductWriter_getOutput(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -8837,7 +8911,6 @@ PyObject* BeamPyProductWriter_getOutput(PyObject* self, PyObject* args)
 PyObject* BeamPyProductWriter_writeProductNodes(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* productPyObj = NULL;
@@ -8858,13 +8931,19 @@ PyObject* BeamPyProductWriter_writeProductNodes(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "OO:writeProductNodes", &productPyObj, &outputPyObj)) {
         return NULL;
     }
-    productJObj = BPy_ToJObjectT(productPyObj, BPy_Product_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        productJObj = BPy_ToJObjectT(productPyObj, BPy_Product_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
-    outputJObj = BPy_ToJObjectT(outputPyObj, BPy_Object_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        outputJObj = BPy_ToJObjectT(outputPyObj, BPy_Object_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, productJObj, outputJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.dataio.ProductWriter#writeProductNodes(Lorg/esa/beam/framework/datamodel/Product;Ljava/lang/Object;)V");
@@ -8874,7 +8953,6 @@ PyObject* BeamPyProductWriter_writeProductNodes(PyObject* self, PyObject* args)
 PyObject* BeamPyProductWriter_writeBandRasterData(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* sourceBandPyObj = NULL;
@@ -8901,17 +8979,26 @@ PyObject* BeamPyProductWriter_writeBandRasterData(PyObject* self, PyObject* args
     if (!PyArg_ParseTuple(args, "OiiiiOO:writeBandRasterData", &sourceBandPyObj, &sourceOffsetX, &sourceOffsetY, &sourceWidth, &sourceHeight, &sourceBufferPyObj, &pmPyObj)) {
         return NULL;
     }
-    sourceBandJObj = BPy_ToJObjectT(sourceBandPyObj, BPy_Band_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        sourceBandJObj = BPy_ToJObjectT(sourceBandPyObj, BPy_Band_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
-    sourceBufferJObj = BPy_ToJObjectT(sourceBufferPyObj, BPy_ProductData_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        sourceBufferJObj = BPy_ToJObjectT(sourceBufferPyObj, BPy_ProductData_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
-    pmJObj = BPy_ToJObjectT(pmPyObj, BPy_ProgressMonitor_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        pmJObj = BPy_ToJObjectT(pmPyObj, BPy_ProgressMonitor_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, sourceBandJObj, sourceOffsetX, sourceOffsetY, sourceWidth, sourceHeight, sourceBufferJObj, pmJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.dataio.ProductWriter#writeBandRasterData(Lorg/esa/beam/framework/datamodel/Band;IIIILorg/esa/beam/framework/datamodel/ProductData;Lcom/bc/ceres/core/ProgressMonitor;)V");
@@ -8921,7 +9008,6 @@ PyObject* BeamPyProductWriter_writeBandRasterData(PyObject* self, PyObject* args
 PyObject* BeamPyProductWriter_flush(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     if (!BPy_InitApi()) {
@@ -8943,7 +9029,6 @@ PyObject* BeamPyProductWriter_flush(PyObject* self, PyObject* args)
 PyObject* BeamPyProductWriter_close(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     if (!BPy_InitApi()) {
@@ -8965,7 +9050,6 @@ PyObject* BeamPyProductWriter_close(PyObject* self, PyObject* args)
 PyObject* BeamPyProductWriter_shouldWrite(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* nodePyObj = NULL;
@@ -8985,9 +9069,12 @@ PyObject* BeamPyProductWriter_shouldWrite(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:shouldWrite", &nodePyObj)) {
         return NULL;
     }
-    nodeJObj = BPy_ToJObjectT(nodePyObj, BPy_ProductNode_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        nodeJObj = BPy_ToJObjectT(nodePyObj, BPy_ProductNode_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _result = (*jenv)->CallBooleanMethod(jenv, _thisJObj, _method, nodeJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.dataio.ProductWriter#shouldWrite(Lorg/esa/beam/framework/datamodel/ProductNode;)Z");
@@ -8997,7 +9084,6 @@ PyObject* BeamPyProductWriter_shouldWrite(PyObject* self, PyObject* args)
 PyObject* BeamPyProductWriter_isIncrementalMode(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jboolean _result = (jboolean) 0;
@@ -9020,7 +9106,6 @@ PyObject* BeamPyProductWriter_isIncrementalMode(PyObject* self, PyObject* args)
 PyObject* BeamPyProductWriter_setIncrementalMode(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jboolean enabled = (jboolean) 0;
@@ -9046,7 +9131,6 @@ PyObject* BeamPyProductWriter_setIncrementalMode(PyObject* self, PyObject* args)
 PyObject* BeamPyProductWriter_deleteOutput(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     if (!BPy_InitApi()) {
@@ -9068,7 +9152,6 @@ PyObject* BeamPyProductWriter_deleteOutput(PyObject* self, PyObject* args)
 PyObject* BeamPyProductWriter_removeBand(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* bandPyObj = NULL;
@@ -9087,9 +9170,12 @@ PyObject* BeamPyProductWriter_removeBand(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:removeBand", &bandPyObj)) {
         return NULL;
     }
-    bandJObj = BPy_ToJObjectT(bandPyObj, BPy_Band_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        bandJObj = BPy_ToJObjectT(bandPyObj, BPy_Band_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, bandJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.dataio.ProductWriter#removeBand(Lorg/esa/beam/framework/datamodel/Band;)V");
@@ -9099,7 +9185,6 @@ PyObject* BeamPyProductWriter_removeBand(PyObject* self, PyObject* args)
 PyObject* BeamPyGPF_createProductWithoutSourceProducts(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     const char* operatorName = NULL;
     jstring operatorNameJObj = NULL;
     PyObject* parametersPyObj = NULL;
@@ -9116,9 +9201,12 @@ PyObject* BeamPyGPF_createProductWithoutSourceProducts(PyObject* self, PyObject*
         return NULL;
     }
     operatorNameJObj =(*jenv)->NewStringUTF(jenv, operatorName);
-    parametersJObj = BPy_ToJObjectT(parametersPyObj, BPy_Map_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        parametersJObj = BPy_ToJObjectT(parametersPyObj, BPy_Map_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, BPy_GPF_Class, _method, operatorNameJObj, parametersJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.gpf.GPF#createProduct(Ljava/lang/String;Ljava/util/Map;)Lorg/esa/beam/framework/datamodel/Product;");
@@ -9131,7 +9219,6 @@ PyObject* BeamPyGPF_createProductWithoutSourceProducts(PyObject* self, PyObject*
 PyObject* BeamPyGPF_createProductFromSourceProduct(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     const char* operatorName = NULL;
     jstring operatorNameJObj = NULL;
     PyObject* parametersPyObj = NULL;
@@ -9150,13 +9237,19 @@ PyObject* BeamPyGPF_createProductFromSourceProduct(PyObject* self, PyObject* arg
         return NULL;
     }
     operatorNameJObj =(*jenv)->NewStringUTF(jenv, operatorName);
-    parametersJObj = BPy_ToJObjectT(parametersPyObj, BPy_Map_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        parametersJObj = BPy_ToJObjectT(parametersPyObj, BPy_Map_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
-    sourceProductJObj = BPy_ToJObjectT(sourceProductPyObj, BPy_Product_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        sourceProductJObj = BPy_ToJObjectT(sourceProductPyObj, BPy_Product_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, BPy_GPF_Class, _method, operatorNameJObj, parametersJObj, sourceProductJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.gpf.GPF#createProduct(Ljava/lang/String;Ljava/util/Map;Lorg/esa/beam/framework/datamodel/Product;)Lorg/esa/beam/framework/datamodel/Product;");
@@ -9169,7 +9262,6 @@ PyObject* BeamPyGPF_createProductFromSourceProduct(PyObject* self, PyObject* arg
 PyObject* BeamPyGPF_createProductFromSourceProducts(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     const char* operatorName = NULL;
     jstring operatorNameJObj = NULL;
     PyObject* parametersPyObj = NULL;
@@ -9188,13 +9280,19 @@ PyObject* BeamPyGPF_createProductFromSourceProducts(PyObject* self, PyObject* ar
         return NULL;
     }
     operatorNameJObj =(*jenv)->NewStringUTF(jenv, operatorName);
-    parametersJObj = BPy_ToJObjectT(parametersPyObj, BPy_Map_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        parametersJObj = BPy_ToJObjectT(parametersPyObj, BPy_Map_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
-    sourceProductsJObj = BPy_ToJObjectArrayT(sourceProductsPyObj, BPy_Product_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        sourceProductsJObj = BPy_ToJObjectArrayT(sourceProductsPyObj, BPy_Product_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, BPy_GPF_Class, _method, operatorNameJObj, parametersJObj, sourceProductsJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.gpf.GPF#createProduct(Ljava/lang/String;Ljava/util/Map;[Lorg/esa/beam/framework/datamodel/Product;)Lorg/esa/beam/framework/datamodel/Product;");
@@ -9208,7 +9306,6 @@ PyObject* BeamPyGPF_createProductFromSourceProducts(PyObject* self, PyObject* ar
 PyObject* BeamPyGPF_createProductFromNamedSourceProducts(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     const char* operatorName = NULL;
     jstring operatorNameJObj = NULL;
     PyObject* parametersPyObj = NULL;
@@ -9227,13 +9324,19 @@ PyObject* BeamPyGPF_createProductFromNamedSourceProducts(PyObject* self, PyObjec
         return NULL;
     }
     operatorNameJObj =(*jenv)->NewStringUTF(jenv, operatorName);
-    parametersJObj = BPy_ToJObjectT(parametersPyObj, BPy_Map_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        parametersJObj = BPy_ToJObjectT(parametersPyObj, BPy_Map_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
-    sourceProductsJObj = BPy_ToJObjectT(sourceProductsPyObj, BPy_Map_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        sourceProductsJObj = BPy_ToJObjectT(sourceProductsPyObj, BPy_Map_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, BPy_GPF_Class, _method, operatorNameJObj, parametersJObj, sourceProductsJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.gpf.GPF#createProduct(Ljava/lang/String;Ljava/util/Map;Ljava/util/Map;)Lorg/esa/beam/framework/datamodel/Product;");
@@ -9246,7 +9349,6 @@ PyObject* BeamPyGPF_createProductFromNamedSourceProducts(PyObject* self, PyObjec
 PyObject* BeamPyGPF_createProductNS(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     const char* operatorName = NULL;
@@ -9274,17 +9376,26 @@ PyObject* BeamPyGPF_createProductNS(PyObject* self, PyObject* args)
         return NULL;
     }
     operatorNameJObj =(*jenv)->NewStringUTF(jenv, operatorName);
-    parametersJObj = BPy_ToJObjectT(parametersPyObj, BPy_Map_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        parametersJObj = BPy_ToJObjectT(parametersPyObj, BPy_Map_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
-    sourceProductsJObj = BPy_ToJObjectT(sourceProductsPyObj, BPy_Map_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        sourceProductsJObj = BPy_ToJObjectT(sourceProductsPyObj, BPy_Map_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
-    renderingHintsJObj = BPy_ToJObjectT(renderingHintsPyObj, BPy_RenderingHints_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        renderingHintsJObj = BPy_ToJObjectT(renderingHintsPyObj, BPy_RenderingHints_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, operatorNameJObj, parametersJObj, sourceProductsJObj, renderingHintsJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.gpf.GPF#createProductNS(Ljava/lang/String;Ljava/util/Map;Ljava/util/Map;Ljava/awt/RenderingHints;)Lorg/esa/beam/framework/datamodel/Product;");
@@ -9297,7 +9408,6 @@ PyObject* BeamPyGPF_createProductNS(PyObject* self, PyObject* args)
 PyObject* BeamPyGPF_createOperator(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     const char* operatorName = NULL;
@@ -9325,17 +9435,26 @@ PyObject* BeamPyGPF_createOperator(PyObject* self, PyObject* args)
         return NULL;
     }
     operatorNameJObj =(*jenv)->NewStringUTF(jenv, operatorName);
-    parametersJObj = BPy_ToJObjectT(parametersPyObj, BPy_Map_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        parametersJObj = BPy_ToJObjectT(parametersPyObj, BPy_Map_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
-    sourceProductsJObj = BPy_ToJObjectT(sourceProductsPyObj, BPy_Map_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        sourceProductsJObj = BPy_ToJObjectT(sourceProductsPyObj, BPy_Map_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
-    renderingHintsJObj = BPy_ToJObjectT(renderingHintsPyObj, BPy_RenderingHints_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        renderingHintsJObj = BPy_ToJObjectT(renderingHintsPyObj, BPy_RenderingHints_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, operatorNameJObj, parametersJObj, sourceProductsJObj, renderingHintsJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.gpf.GPF#createOperator(Ljava/lang/String;Ljava/util/Map;Ljava/util/Map;Ljava/awt/RenderingHints;)Lorg/esa/beam/framework/gpf/Operator;");
@@ -9348,7 +9467,6 @@ PyObject* BeamPyGPF_createOperator(PyObject* self, PyObject* args)
 PyObject* BeamPyGPF_getOperatorSpiRegistry(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -9374,7 +9492,6 @@ PyObject* BeamPyGPF_getOperatorSpiRegistry(PyObject* self, PyObject* args)
 PyObject* BeamPyGPF_setOperatorSpiRegistry(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* spiRegistryPyObj = NULL;
@@ -9393,9 +9510,12 @@ PyObject* BeamPyGPF_setOperatorSpiRegistry(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:setOperatorSpiRegistry", &spiRegistryPyObj)) {
         return NULL;
     }
-    spiRegistryJObj = BPy_ToJObjectT(spiRegistryPyObj, BPy_OperatorSpiRegistry_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        spiRegistryJObj = BPy_ToJObjectT(spiRegistryPyObj, BPy_OperatorSpiRegistry_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, spiRegistryJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.gpf.GPF#setOperatorSpiRegistry(Lorg/esa/beam/framework/gpf/OperatorSpiRegistry;)V");
@@ -9405,7 +9525,6 @@ PyObject* BeamPyGPF_setOperatorSpiRegistry(PyObject* self, PyObject* args)
 PyObject* BeamPyGPF_getDefaultInstance(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     PyObject* _resultPyObj = NULL;
     jobject _resultJObj = NULL;
     if (!BPy_InitApi()) {
@@ -9424,7 +9543,6 @@ PyObject* BeamPyGPF_getDefaultInstance(PyObject* self, PyObject* args)
 PyObject* BeamPyGPF_setDefaultInstance(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     PyObject* defaultInstancePyObj = NULL;
     jobject defaultInstanceJObj = NULL;
     if (!BPy_InitApi()) {
@@ -9436,9 +9554,12 @@ PyObject* BeamPyGPF_setDefaultInstance(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:setDefaultInstance", &defaultInstancePyObj)) {
         return NULL;
     }
-    defaultInstanceJObj = BPy_ToJObjectT(defaultInstancePyObj, BPy_GPF_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        defaultInstanceJObj = BPy_ToJObjectT(defaultInstancePyObj, BPy_GPF_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallStaticVoidMethod(jenv, BPy_GPF_Class, _method, defaultInstanceJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.gpf.GPF#setDefaultInstance(Lorg/esa/beam/framework/gpf/GPF;)V");
@@ -9448,7 +9569,6 @@ PyObject* BeamPyGPF_setDefaultInstance(PyObject* self, PyObject* args)
 PyObject* BeamPyGPF_writeProduct(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     PyObject* productPyObj = NULL;
     jobject productJObj = NULL;
     PyObject* filePyObj = NULL;
@@ -9467,18 +9587,27 @@ PyObject* BeamPyGPF_writeProduct(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "OOsbO:writeProduct", &productPyObj, &filePyObj, &formatName, &incremental, &pmPyObj)) {
         return NULL;
     }
-    productJObj = BPy_ToJObjectT(productPyObj, BPy_Product_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        productJObj = BPy_ToJObjectT(productPyObj, BPy_Product_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
-    fileJObj = BPy_ToJObjectT(filePyObj, BPy_File_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        fileJObj = BPy_ToJObjectT(filePyObj, BPy_File_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     formatNameJObj =(*jenv)->NewStringUTF(jenv, formatName);
-    pmJObj = BPy_ToJObjectT(pmPyObj, BPy_ProgressMonitor_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        pmJObj = BPy_ToJObjectT(pmPyObj, BPy_ProgressMonitor_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallStaticVoidMethod(jenv, BPy_GPF_Class, _method, productJObj, fileJObj, formatNameJObj, incremental, pmJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.gpf.GPF#writeProduct(Lorg/esa/beam/framework/datamodel/Product;Ljava/io/File;Ljava/lang/String;ZLcom/bc/ceres/core/ProgressMonitor;)V");
@@ -9489,7 +9618,6 @@ PyObject* BeamPyGPF_writeProduct(PyObject* self, PyObject* args)
 PyObject* BeamPyIndexCoding_newIndexCoding(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     const char* name = NULL;
     jstring nameJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -9515,7 +9643,6 @@ PyObject* BeamPyIndexCoding_newIndexCoding(PyObject* self, PyObject* args)
 PyObject* BeamPyIndexCoding_getIndex(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     const char* name = NULL;
@@ -9548,7 +9675,6 @@ PyObject* BeamPyIndexCoding_getIndex(PyObject* self, PyObject* args)
 PyObject* BeamPyIndexCoding_getIndexNames(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -9574,7 +9700,6 @@ PyObject* BeamPyIndexCoding_getIndexNames(PyObject* self, PyObject* args)
 PyObject* BeamPyIndexCoding_addIndex(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     const char* name = NULL;
@@ -9612,7 +9737,6 @@ PyObject* BeamPyIndexCoding_addIndex(PyObject* self, PyObject* args)
 PyObject* BeamPyIndexCoding_getIndexValue(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     const char* name = NULL;
@@ -9642,7 +9766,6 @@ PyObject* BeamPyIndexCoding_getIndexValue(PyObject* self, PyObject* args)
 PyObject* BeamPyIndexCoding_acceptVisitor(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* visitorPyObj = NULL;
@@ -9661,9 +9784,12 @@ PyObject* BeamPyIndexCoding_acceptVisitor(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:acceptVisitor", &visitorPyObj)) {
         return NULL;
     }
-    visitorJObj = BPy_ToJObjectT(visitorPyObj, BPy_ProductVisitor_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        visitorJObj = BPy_ToJObjectT(visitorPyObj, BPy_ProductVisitor_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, visitorJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.IndexCoding#acceptVisitor(Lorg/esa/beam/framework/datamodel/ProductVisitor;)V");
@@ -9673,7 +9799,6 @@ PyObject* BeamPyIndexCoding_acceptVisitor(PyObject* self, PyObject* args)
 PyObject* BeamPyIndexCoding_addElement(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* elementPyObj = NULL;
@@ -9692,9 +9817,12 @@ PyObject* BeamPyIndexCoding_addElement(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:addElement", &elementPyObj)) {
         return NULL;
     }
-    elementJObj = BPy_ToJObjectT(elementPyObj, BPy_MetadataElement_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        elementJObj = BPy_ToJObjectT(elementPyObj, BPy_MetadataElement_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, elementJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.IndexCoding#addElement(Lorg/esa/beam/framework/datamodel/MetadataElement;)V");
@@ -9704,7 +9832,6 @@ PyObject* BeamPyIndexCoding_addElement(PyObject* self, PyObject* args)
 PyObject* BeamPyIndexCoding_addAttribute(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* attributePyObj = NULL;
@@ -9723,9 +9850,12 @@ PyObject* BeamPyIndexCoding_addAttribute(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:addAttribute", &attributePyObj)) {
         return NULL;
     }
-    attributeJObj = BPy_ToJObjectT(attributePyObj, BPy_MetadataAttribute_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        attributeJObj = BPy_ToJObjectT(attributePyObj, BPy_MetadataAttribute_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, attributeJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.IndexCoding#addAttribute(Lorg/esa/beam/framework/datamodel/MetadataAttribute;)V");
@@ -9735,7 +9865,6 @@ PyObject* BeamPyIndexCoding_addAttribute(PyObject* self, PyObject* args)
 PyObject* BeamPyIndexCoding_addSample(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     const char* name = NULL;
@@ -9773,7 +9902,6 @@ PyObject* BeamPyIndexCoding_addSample(PyObject* self, PyObject* args)
 PyObject* BeamPyIndexCoding_getSampleCount(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint _result = (jint) 0;
@@ -9796,7 +9924,6 @@ PyObject* BeamPyIndexCoding_getSampleCount(PyObject* self, PyObject* args)
 PyObject* BeamPyIndexCoding_getSampleName(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint index = (jint) 0;
@@ -9826,7 +9953,6 @@ PyObject* BeamPyIndexCoding_getSampleName(PyObject* self, PyObject* args)
 PyObject* BeamPyIndexCoding_getSampleValue(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint index = (jint) 0;
@@ -9853,7 +9979,6 @@ PyObject* BeamPyIndexCoding_getSampleValue(PyObject* self, PyObject* args)
 PyObject* BeamPyIndexCoding_getElementGroup(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -9879,7 +10004,6 @@ PyObject* BeamPyIndexCoding_getElementGroup(PyObject* self, PyObject* args)
 PyObject* BeamPyIndexCoding_getParentElement(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -9905,7 +10029,6 @@ PyObject* BeamPyIndexCoding_getParentElement(PyObject* self, PyObject* args)
 PyObject* BeamPyIndexCoding_addElementAt(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* elementPyObj = NULL;
@@ -9925,9 +10048,12 @@ PyObject* BeamPyIndexCoding_addElementAt(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "Oi:addElementAt", &elementPyObj, &index)) {
         return NULL;
     }
-    elementJObj = BPy_ToJObjectT(elementPyObj, BPy_MetadataElement_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        elementJObj = BPy_ToJObjectT(elementPyObj, BPy_MetadataElement_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, elementJObj, index);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.IndexCoding#addElementAt(Lorg/esa/beam/framework/datamodel/MetadataElement;I)V");
@@ -9937,7 +10063,6 @@ PyObject* BeamPyIndexCoding_addElementAt(PyObject* self, PyObject* args)
 PyObject* BeamPyIndexCoding_removeElement(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* elementPyObj = NULL;
@@ -9957,9 +10082,12 @@ PyObject* BeamPyIndexCoding_removeElement(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:removeElement", &elementPyObj)) {
         return NULL;
     }
-    elementJObj = BPy_ToJObjectT(elementPyObj, BPy_MetadataElement_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        elementJObj = BPy_ToJObjectT(elementPyObj, BPy_MetadataElement_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _result = (*jenv)->CallBooleanMethod(jenv, _thisJObj, _method, elementJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.IndexCoding#removeElement(Lorg/esa/beam/framework/datamodel/MetadataElement;)Z");
@@ -9969,7 +10097,6 @@ PyObject* BeamPyIndexCoding_removeElement(PyObject* self, PyObject* args)
 PyObject* BeamPyIndexCoding_getNumElements(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint _result = (jint) 0;
@@ -9992,7 +10119,6 @@ PyObject* BeamPyIndexCoding_getNumElements(PyObject* self, PyObject* args)
 PyObject* BeamPyIndexCoding_getElementAt(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint index = (jint) 0;
@@ -10022,7 +10148,6 @@ PyObject* BeamPyIndexCoding_getElementAt(PyObject* self, PyObject* args)
 PyObject* BeamPyIndexCoding_getElementNames(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -10048,7 +10173,6 @@ PyObject* BeamPyIndexCoding_getElementNames(PyObject* self, PyObject* args)
 PyObject* BeamPyIndexCoding_getElements(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -10074,7 +10198,6 @@ PyObject* BeamPyIndexCoding_getElements(PyObject* self, PyObject* args)
 PyObject* BeamPyIndexCoding_getElement(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     const char* name = NULL;
@@ -10107,7 +10230,6 @@ PyObject* BeamPyIndexCoding_getElement(PyObject* self, PyObject* args)
 PyObject* BeamPyIndexCoding_containsElement(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     const char* name = NULL;
@@ -10137,7 +10259,6 @@ PyObject* BeamPyIndexCoding_containsElement(PyObject* self, PyObject* args)
 PyObject* BeamPyIndexCoding_getElementIndex(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* elementPyObj = NULL;
@@ -10157,9 +10278,12 @@ PyObject* BeamPyIndexCoding_getElementIndex(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:getElementIndex", &elementPyObj)) {
         return NULL;
     }
-    elementJObj = BPy_ToJObjectT(elementPyObj, BPy_MetadataElement_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        elementJObj = BPy_ToJObjectT(elementPyObj, BPy_MetadataElement_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _result = (*jenv)->CallIntMethod(jenv, _thisJObj, _method, elementJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.IndexCoding#getElementIndex(Lorg/esa/beam/framework/datamodel/MetadataElement;)I");
@@ -10169,7 +10293,6 @@ PyObject* BeamPyIndexCoding_getElementIndex(PyObject* self, PyObject* args)
 PyObject* BeamPyIndexCoding_removeAttribute(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* attributePyObj = NULL;
@@ -10189,9 +10312,12 @@ PyObject* BeamPyIndexCoding_removeAttribute(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:removeAttribute", &attributePyObj)) {
         return NULL;
     }
-    attributeJObj = BPy_ToJObjectT(attributePyObj, BPy_MetadataAttribute_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        attributeJObj = BPy_ToJObjectT(attributePyObj, BPy_MetadataAttribute_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _result = (*jenv)->CallBooleanMethod(jenv, _thisJObj, _method, attributeJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.IndexCoding#removeAttribute(Lorg/esa/beam/framework/datamodel/MetadataAttribute;)Z");
@@ -10201,7 +10327,6 @@ PyObject* BeamPyIndexCoding_removeAttribute(PyObject* self, PyObject* args)
 PyObject* BeamPyIndexCoding_getNumAttributes(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint _result = (jint) 0;
@@ -10224,7 +10349,6 @@ PyObject* BeamPyIndexCoding_getNumAttributes(PyObject* self, PyObject* args)
 PyObject* BeamPyIndexCoding_getAttributeAt(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint index = (jint) 0;
@@ -10254,7 +10378,6 @@ PyObject* BeamPyIndexCoding_getAttributeAt(PyObject* self, PyObject* args)
 PyObject* BeamPyIndexCoding_getAttributeNames(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -10280,7 +10403,6 @@ PyObject* BeamPyIndexCoding_getAttributeNames(PyObject* self, PyObject* args)
 PyObject* BeamPyIndexCoding_getAttributes(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -10306,7 +10428,6 @@ PyObject* BeamPyIndexCoding_getAttributes(PyObject* self, PyObject* args)
 PyObject* BeamPyIndexCoding_getAttribute(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     const char* name = NULL;
@@ -10339,7 +10460,6 @@ PyObject* BeamPyIndexCoding_getAttribute(PyObject* self, PyObject* args)
 PyObject* BeamPyIndexCoding_containsAttribute(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     const char* name = NULL;
@@ -10369,7 +10489,6 @@ PyObject* BeamPyIndexCoding_containsAttribute(PyObject* self, PyObject* args)
 PyObject* BeamPyIndexCoding_getAttributeIndex(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* attributePyObj = NULL;
@@ -10389,9 +10508,12 @@ PyObject* BeamPyIndexCoding_getAttributeIndex(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:getAttributeIndex", &attributePyObj)) {
         return NULL;
     }
-    attributeJObj = BPy_ToJObjectT(attributePyObj, BPy_MetadataAttribute_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        attributeJObj = BPy_ToJObjectT(attributePyObj, BPy_MetadataAttribute_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _result = (*jenv)->CallIntMethod(jenv, _thisJObj, _method, attributeJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.IndexCoding#getAttributeIndex(Lorg/esa/beam/framework/datamodel/MetadataAttribute;)I");
@@ -10401,7 +10523,6 @@ PyObject* BeamPyIndexCoding_getAttributeIndex(PyObject* self, PyObject* args)
 PyObject* BeamPyIndexCoding_getAttributeDouble(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     const char* name = NULL;
@@ -10432,7 +10553,6 @@ PyObject* BeamPyIndexCoding_getAttributeDouble(PyObject* self, PyObject* args)
 PyObject* BeamPyIndexCoding_getAttributeUTC(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     const char* name = NULL;
@@ -10456,9 +10576,12 @@ PyObject* BeamPyIndexCoding_getAttributeUTC(PyObject* self, PyObject* args)
         return NULL;
     }
     nameJObj =(*jenv)->NewStringUTF(jenv, name);
-    defaultValueJObj = BPy_ToJObjectT(defaultValuePyObj, BPy_ProductData_UTC_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        defaultValueJObj = BPy_ToJObjectT(defaultValuePyObj, BPy_ProductData_UTC_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, nameJObj, defaultValueJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.IndexCoding#getAttributeUTC(Ljava/lang/String;Lorg/esa/beam/framework/datamodel/ProductData/UTC;)Lorg/esa/beam/framework/datamodel/ProductData/UTC;");
@@ -10471,7 +10594,6 @@ PyObject* BeamPyIndexCoding_getAttributeUTC(PyObject* self, PyObject* args)
 PyObject* BeamPyIndexCoding_getAttributeInt(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     const char* name = NULL;
@@ -10502,7 +10624,6 @@ PyObject* BeamPyIndexCoding_getAttributeInt(PyObject* self, PyObject* args)
 PyObject* BeamPyIndexCoding_setAttributeInt(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     const char* name = NULL;
@@ -10532,7 +10653,6 @@ PyObject* BeamPyIndexCoding_setAttributeInt(PyObject* self, PyObject* args)
 PyObject* BeamPyIndexCoding_setAttributeDouble(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     const char* name = NULL;
@@ -10562,7 +10682,6 @@ PyObject* BeamPyIndexCoding_setAttributeDouble(PyObject* self, PyObject* args)
 PyObject* BeamPyIndexCoding_setAttributeUTC(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     const char* name = NULL;
@@ -10584,9 +10703,12 @@ PyObject* BeamPyIndexCoding_setAttributeUTC(PyObject* self, PyObject* args)
         return NULL;
     }
     nameJObj =(*jenv)->NewStringUTF(jenv, name);
-    valueJObj = BPy_ToJObjectT(valuePyObj, BPy_ProductData_UTC_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        valueJObj = BPy_ToJObjectT(valuePyObj, BPy_ProductData_UTC_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, nameJObj, valueJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.IndexCoding#setAttributeUTC(Ljava/lang/String;Lorg/esa/beam/framework/datamodel/ProductData/UTC;)V");
@@ -10597,7 +10719,6 @@ PyObject* BeamPyIndexCoding_setAttributeUTC(PyObject* self, PyObject* args)
 PyObject* BeamPyIndexCoding_getAttributeString(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     const char* name = NULL;
@@ -10634,7 +10755,6 @@ PyObject* BeamPyIndexCoding_getAttributeString(PyObject* self, PyObject* args)
 PyObject* BeamPyIndexCoding_setAttributeString(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     const char* name = NULL;
@@ -10667,7 +10787,6 @@ PyObject* BeamPyIndexCoding_setAttributeString(PyObject* self, PyObject* args)
 PyObject* BeamPyIndexCoding_setModified(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jboolean modified = (jboolean) 0;
@@ -10693,7 +10812,6 @@ PyObject* BeamPyIndexCoding_setModified(PyObject* self, PyObject* args)
 PyObject* BeamPyIndexCoding_createDeepClone(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -10719,7 +10837,6 @@ PyObject* BeamPyIndexCoding_createDeepClone(PyObject* self, PyObject* args)
 PyObject* BeamPyIndexCoding_dispose(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     if (!BPy_InitApi()) {
@@ -10741,7 +10858,6 @@ PyObject* BeamPyIndexCoding_dispose(PyObject* self, PyObject* args)
 PyObject* BeamPyIndexCoding_getOwner(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -10767,7 +10883,6 @@ PyObject* BeamPyIndexCoding_getOwner(PyObject* self, PyObject* args)
 PyObject* BeamPyIndexCoding_getName(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -10793,7 +10908,6 @@ PyObject* BeamPyIndexCoding_getName(PyObject* self, PyObject* args)
 PyObject* BeamPyIndexCoding_setName(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     const char* name = NULL;
@@ -10822,7 +10936,6 @@ PyObject* BeamPyIndexCoding_setName(PyObject* self, PyObject* args)
 PyObject* BeamPyIndexCoding_getDescription(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -10848,7 +10961,6 @@ PyObject* BeamPyIndexCoding_getDescription(PyObject* self, PyObject* args)
 PyObject* BeamPyIndexCoding_setDescription(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     const char* description = NULL;
@@ -10877,7 +10989,6 @@ PyObject* BeamPyIndexCoding_setDescription(PyObject* self, PyObject* args)
 PyObject* BeamPyIndexCoding_isModified(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jboolean _result = (jboolean) 0;
@@ -10900,7 +11011,6 @@ PyObject* BeamPyIndexCoding_isModified(PyObject* self, PyObject* args)
 PyObject* BeamPyIndexCoding_toString(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -10926,7 +11036,6 @@ PyObject* BeamPyIndexCoding_toString(PyObject* self, PyObject* args)
 PyObject* BeamPyIndexCoding_isValidNodeName(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     const char* name = NULL;
     jstring nameJObj = NULL;
     jboolean _result = (jboolean) 0;
@@ -10949,7 +11058,6 @@ PyObject* BeamPyIndexCoding_isValidNodeName(PyObject* self, PyObject* args)
 PyObject* BeamPyIndexCoding_getProduct(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -10975,7 +11083,6 @@ PyObject* BeamPyIndexCoding_getProduct(PyObject* self, PyObject* args)
 PyObject* BeamPyIndexCoding_getProductReader(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -11001,7 +11108,6 @@ PyObject* BeamPyIndexCoding_getProductReader(PyObject* self, PyObject* args)
 PyObject* BeamPyIndexCoding_getProductWriter(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -11027,7 +11133,6 @@ PyObject* BeamPyIndexCoding_getProductWriter(PyObject* self, PyObject* args)
 PyObject* BeamPyIndexCoding_getDisplayName(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -11053,7 +11158,6 @@ PyObject* BeamPyIndexCoding_getDisplayName(PyObject* self, PyObject* args)
 PyObject* BeamPyIndexCoding_getProductRefString(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -11079,7 +11183,6 @@ PyObject* BeamPyIndexCoding_getProductRefString(PyObject* self, PyObject* args)
 PyObject* BeamPyIndexCoding_updateExpression(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     const char* oldExternalName = NULL;
@@ -11112,7 +11215,6 @@ PyObject* BeamPyIndexCoding_updateExpression(PyObject* self, PyObject* args)
 PyObject* BeamPyIndexCoding_removeFromFile(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* productWriterPyObj = NULL;
@@ -11131,9 +11233,12 @@ PyObject* BeamPyIndexCoding_removeFromFile(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:removeFromFile", &productWriterPyObj)) {
         return NULL;
     }
-    productWriterJObj = BPy_ToJObjectT(productWriterPyObj, BPy_ProductWriter_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        productWriterJObj = BPy_ToJObjectT(productWriterPyObj, BPy_ProductWriter_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, productWriterJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.IndexCoding#removeFromFile(Lorg/esa/beam/framework/dataio/ProductWriter;)V");
@@ -11143,7 +11248,6 @@ PyObject* BeamPyIndexCoding_removeFromFile(PyObject* self, PyObject* args)
 PyObject* BeamPyIndexCoding_getExtension(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* arg0PyObj = NULL;
@@ -11164,9 +11268,12 @@ PyObject* BeamPyIndexCoding_getExtension(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:getExtension", &arg0PyObj)) {
         return NULL;
     }
-    arg0JObj = BPy_ToJObjectT(arg0PyObj, BPy_Class_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        arg0JObj = BPy_ToJObjectT(arg0PyObj, BPy_Class_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, arg0JObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.IndexCoding#getExtension(Ljava/lang/Class;)Ljava/lang/Object;");
@@ -11178,7 +11285,6 @@ PyObject* BeamPyIndexCoding_getExtension(PyObject* self, PyObject* args)
 PyObject* BeamPyPixelPos_newPixelPos1(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     PyObject* _resultPyObj = NULL;
     jobject _resultJObj = NULL;
     if (!BPy_InitApi()) {
@@ -11197,7 +11303,6 @@ PyObject* BeamPyPixelPos_newPixelPos1(PyObject* self, PyObject* args)
 PyObject* BeamPyPixelPos_newPixelPos2(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     jfloat x = (jfloat) 0;
     jfloat y = (jfloat) 0;
     PyObject* _resultPyObj = NULL;
@@ -11221,7 +11326,6 @@ PyObject* BeamPyPixelPos_newPixelPos2(PyObject* self, PyObject* args)
 PyObject* BeamPyPixelPos_isValid(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jboolean _result = (jboolean) 0;
@@ -11244,7 +11348,6 @@ PyObject* BeamPyPixelPos_isValid(PyObject* self, PyObject* args)
 PyObject* BeamPyPixelPos_setInvalid(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     if (!BPy_InitApi()) {
@@ -11266,7 +11369,6 @@ PyObject* BeamPyPixelPos_setInvalid(PyObject* self, PyObject* args)
 PyObject* BeamPyPixelPos_getX(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jdouble _result = (jdouble) 0;
@@ -11289,7 +11391,6 @@ PyObject* BeamPyPixelPos_getX(PyObject* self, PyObject* args)
 PyObject* BeamPyPixelPos_getY(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jdouble _result = (jdouble) 0;
@@ -11312,7 +11413,6 @@ PyObject* BeamPyPixelPos_getY(PyObject* self, PyObject* args)
 PyObject* BeamPyPixelPos_setLocation1(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jdouble arg0 = (jdouble) 0;
@@ -11339,7 +11439,6 @@ PyObject* BeamPyPixelPos_setLocation1(PyObject* self, PyObject* args)
 PyObject* BeamPyPixelPos_setLocation2(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jfloat arg0 = (jfloat) 0;
@@ -11366,7 +11465,6 @@ PyObject* BeamPyPixelPos_setLocation2(PyObject* self, PyObject* args)
 PyObject* BeamPyPixelPos_toString(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -11392,7 +11490,6 @@ PyObject* BeamPyPixelPos_toString(PyObject* self, PyObject* args)
 PyObject* BeamPyPixelPos_setLocation3(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* arg0PyObj = NULL;
@@ -11411,9 +11508,12 @@ PyObject* BeamPyPixelPos_setLocation3(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:setLocation", &arg0PyObj)) {
         return NULL;
     }
-    arg0JObj = BPy_ToJObjectT(arg0PyObj, BPy_Point2D_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        arg0JObj = BPy_ToJObjectT(arg0PyObj, BPy_Point2D_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, arg0JObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.PixelPos#setLocation(Ljava/awt/geom/Point2D;)V");
@@ -11423,7 +11523,6 @@ PyObject* BeamPyPixelPos_setLocation3(PyObject* self, PyObject* args)
 PyObject* BeamPyPixelPos_distanceSq2(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     jdouble arg0 = (jdouble) 0;
     jdouble arg1 = (jdouble) 0;
     jdouble arg2 = (jdouble) 0;
@@ -11446,7 +11545,6 @@ PyObject* BeamPyPixelPos_distanceSq2(PyObject* self, PyObject* args)
 PyObject* BeamPyPixelPos_distance2(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     jdouble arg0 = (jdouble) 0;
     jdouble arg1 = (jdouble) 0;
     jdouble arg2 = (jdouble) 0;
@@ -11469,7 +11567,6 @@ PyObject* BeamPyPixelPos_distance2(PyObject* self, PyObject* args)
 PyObject* BeamPyPixelPos_distanceSq1(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jdouble arg0 = (jdouble) 0;
@@ -11497,7 +11594,6 @@ PyObject* BeamPyPixelPos_distanceSq1(PyObject* self, PyObject* args)
 PyObject* BeamPyPixelPos_distanceSq3(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* arg0PyObj = NULL;
@@ -11517,9 +11613,12 @@ PyObject* BeamPyPixelPos_distanceSq3(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:distanceSq", &arg0PyObj)) {
         return NULL;
     }
-    arg0JObj = BPy_ToJObjectT(arg0PyObj, BPy_Point2D_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        arg0JObj = BPy_ToJObjectT(arg0PyObj, BPy_Point2D_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _result = (*jenv)->CallDoubleMethod(jenv, _thisJObj, _method, arg0JObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.PixelPos#distanceSq(Ljava/awt/geom/Point2D;)D");
@@ -11529,7 +11628,6 @@ PyObject* BeamPyPixelPos_distanceSq3(PyObject* self, PyObject* args)
 PyObject* BeamPyPixelPos_distance1(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jdouble arg0 = (jdouble) 0;
@@ -11557,7 +11655,6 @@ PyObject* BeamPyPixelPos_distance1(PyObject* self, PyObject* args)
 PyObject* BeamPyPixelPos_distance3(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* arg0PyObj = NULL;
@@ -11577,9 +11674,12 @@ PyObject* BeamPyPixelPos_distance3(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:distance", &arg0PyObj)) {
         return NULL;
     }
-    arg0JObj = BPy_ToJObjectT(arg0PyObj, BPy_Point2D_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        arg0JObj = BPy_ToJObjectT(arg0PyObj, BPy_Point2D_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _result = (*jenv)->CallDoubleMethod(jenv, _thisJObj, _method, arg0JObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.PixelPos#distance(Ljava/awt/geom/Point2D;)D");
@@ -11589,7 +11689,6 @@ PyObject* BeamPyPixelPos_distance3(PyObject* self, PyObject* args)
 PyObject* BeamPyPixelPos_clone(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -11615,7 +11714,6 @@ PyObject* BeamPyPixelPos_clone(PyObject* self, PyObject* args)
 PyObject* BeamPyPixelPos_hashCode(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint _result = (jint) 0;
@@ -11638,7 +11736,6 @@ PyObject* BeamPyPixelPos_hashCode(PyObject* self, PyObject* args)
 PyObject* BeamPyPixelPos_equals(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* arg0PyObj = NULL;
@@ -11658,9 +11755,12 @@ PyObject* BeamPyPixelPos_equals(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:equals", &arg0PyObj)) {
         return NULL;
     }
-    arg0JObj = BPy_ToJObjectT(arg0PyObj, BPy_Object_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        arg0JObj = BPy_ToJObjectT(arg0PyObj, BPy_Object_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _result = (*jenv)->CallBooleanMethod(jenv, _thisJObj, _method, arg0JObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.PixelPos#equals(Ljava/lang/Object;)Z");
@@ -11670,7 +11770,6 @@ PyObject* BeamPyPixelPos_equals(PyObject* self, PyObject* args)
 PyObject* BeamPyProductIO_getProductReader(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     const char* formatName = NULL;
     jstring formatNameJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -11696,7 +11795,6 @@ PyObject* BeamPyProductIO_getProductReader(PyObject* self, PyObject* args)
 PyObject* BeamPyProductIO_getProductWriterExtensions(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     const char* formatName = NULL;
     jstring formatNameJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -11722,7 +11820,6 @@ PyObject* BeamPyProductIO_getProductWriterExtensions(PyObject* self, PyObject* a
 PyObject* BeamPyProductIO_getProductWriter(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     const char* formatName = NULL;
     jstring formatNameJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -11748,7 +11845,6 @@ PyObject* BeamPyProductIO_getProductWriter(PyObject* self, PyObject* args)
 PyObject* BeamPyProductIO_readProduct(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     const char* filePath = NULL;
     jstring filePathJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -11774,7 +11870,6 @@ PyObject* BeamPyProductIO_readProduct(PyObject* self, PyObject* args)
 PyObject* BeamPyProductIO_getProductReaderForFile(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     PyObject* filePyObj = NULL;
     jobject fileJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -11788,9 +11883,12 @@ PyObject* BeamPyProductIO_getProductReaderForFile(PyObject* self, PyObject* args
     if (!PyArg_ParseTuple(args, "O:getProductReaderForFile", &filePyObj)) {
         return NULL;
     }
-    fileJObj = BPy_ToJObjectT(filePyObj, BPy_File_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        fileJObj = BPy_ToJObjectT(filePyObj, BPy_File_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, BPy_ProductIO_Class, _method, fileJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.dataio.ProductIO#getProductReaderForFile(Ljava/io/File;)Lorg/esa/beam/framework/dataio/ProductReader;");
@@ -11802,7 +11900,6 @@ PyObject* BeamPyProductIO_getProductReaderForFile(PyObject* self, PyObject* args
 PyObject* BeamPyProductIO_getProductReaderForInput(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     PyObject* inputPyObj = NULL;
     jobject inputJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -11816,9 +11913,12 @@ PyObject* BeamPyProductIO_getProductReaderForInput(PyObject* self, PyObject* arg
     if (!PyArg_ParseTuple(args, "O:getProductReaderForInput", &inputPyObj)) {
         return NULL;
     }
-    inputJObj = BPy_ToJObjectT(inputPyObj, BPy_Object_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        inputJObj = BPy_ToJObjectT(inputPyObj, BPy_Object_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, BPy_ProductIO_Class, _method, inputJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.dataio.ProductIO#getProductReaderForInput(Ljava/lang/Object;)Lorg/esa/beam/framework/dataio/ProductReader;");
@@ -11830,7 +11930,6 @@ PyObject* BeamPyProductIO_getProductReaderForInput(PyObject* self, PyObject* arg
 PyObject* BeamPyProductIO_writeProduct(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     PyObject* productPyObj = NULL;
     jobject productJObj = NULL;
     const char* filePath = NULL;
@@ -11846,9 +11945,12 @@ PyObject* BeamPyProductIO_writeProduct(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "Oss:writeProduct", &productPyObj, &filePath, &formatName)) {
         return NULL;
     }
-    productJObj = BPy_ToJObjectT(productPyObj, BPy_Product_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        productJObj = BPy_ToJObjectT(productPyObj, BPy_Product_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     filePathJObj =(*jenv)->NewStringUTF(jenv, filePath);
     formatNameJObj =(*jenv)->NewStringUTF(jenv, formatName);
@@ -11862,7 +11964,6 @@ PyObject* BeamPyProductIO_writeProduct(PyObject* self, PyObject* args)
 PyObject* BeamPyPlacemark_newPlacemark(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     PyObject* descriptorPyObj = NULL;
     jobject descriptorJObj = NULL;
     PyObject* featurePyObj = NULL;
@@ -11878,13 +11979,19 @@ PyObject* BeamPyPlacemark_newPlacemark(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "OO:<init>", &descriptorPyObj, &featurePyObj)) {
         return NULL;
     }
-    descriptorJObj = BPy_ToJObjectT(descriptorPyObj, BPy_PlacemarkDescriptor_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        descriptorJObj = BPy_ToJObjectT(descriptorPyObj, BPy_PlacemarkDescriptor_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
-    featureJObj = BPy_ToJObjectT(featurePyObj, BPy_SimpleFeature_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        featureJObj = BPy_ToJObjectT(featurePyObj, BPy_SimpleFeature_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _resultJObj = (*jenv)->NewObject(jenv, BPy_Placemark_Class, _method, descriptorJObj, featureJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.Placemark#<init>(Lorg/esa/beam/framework/datamodel/PlacemarkDescriptor;Lorg/opengis/feature/simple/SimpleFeature;)V");
@@ -11896,7 +12003,6 @@ PyObject* BeamPyPlacemark_newPlacemark(PyObject* self, PyObject* args)
 PyObject* BeamPyPlacemark_createPointPlacemark(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     PyObject* descriptorPyObj = NULL;
     jobject descriptorJObj = NULL;
     const char* name = NULL;
@@ -11922,24 +12028,36 @@ PyObject* BeamPyPlacemark_createPointPlacemark(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "OsssOOO:createPointPlacemark", &descriptorPyObj, &name, &label, &text, &pixelPosPyObj, &geoPosPyObj, &geoCodingPyObj)) {
         return NULL;
     }
-    descriptorJObj = BPy_ToJObjectT(descriptorPyObj, BPy_PlacemarkDescriptor_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        descriptorJObj = BPy_ToJObjectT(descriptorPyObj, BPy_PlacemarkDescriptor_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     nameJObj =(*jenv)->NewStringUTF(jenv, name);
     labelJObj =(*jenv)->NewStringUTF(jenv, label);
     textJObj =(*jenv)->NewStringUTF(jenv, text);
-    pixelPosJObj = BPy_ToJObjectT(pixelPosPyObj, BPy_PixelPos_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        pixelPosJObj = BPy_ToJObjectT(pixelPosPyObj, BPy_PixelPos_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
-    geoPosJObj = BPy_ToJObjectT(geoPosPyObj, BPy_GeoPos_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        geoPosJObj = BPy_ToJObjectT(geoPosPyObj, BPy_GeoPos_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
-    geoCodingJObj = BPy_ToJObjectT(geoCodingPyObj, BPy_GeoCoding_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        geoCodingJObj = BPy_ToJObjectT(geoCodingPyObj, BPy_GeoCoding_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, BPy_Placemark_Class, _method, descriptorJObj, nameJObj, labelJObj, textJObj, pixelPosJObj, geoPosJObj, geoCodingJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.Placemark#createPointPlacemark(Lorg/esa/beam/framework/datamodel/PlacemarkDescriptor;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lorg/esa/beam/framework/datamodel/PixelPos;Lorg/esa/beam/framework/datamodel/GeoPos;Lorg/esa/beam/framework/datamodel/GeoCoding;)Lorg/esa/beam/framework/datamodel/Placemark;");
@@ -11954,7 +12072,6 @@ PyObject* BeamPyPlacemark_createPointPlacemark(PyObject* self, PyObject* args)
 PyObject* BeamPyPlacemark_getDescriptor(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -11980,7 +12097,6 @@ PyObject* BeamPyPlacemark_getDescriptor(PyObject* self, PyObject* args)
 PyObject* BeamPyPlacemark_getFeature(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -12006,7 +12122,6 @@ PyObject* BeamPyPlacemark_getFeature(PyObject* self, PyObject* args)
 PyObject* BeamPyPlacemark_getAttributeValue(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     const char* attributeName = NULL;
@@ -12039,7 +12154,6 @@ PyObject* BeamPyPlacemark_getAttributeValue(PyObject* self, PyObject* args)
 PyObject* BeamPyPlacemark_setAttributeValue(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     const char* attributeName = NULL;
@@ -12061,9 +12175,12 @@ PyObject* BeamPyPlacemark_setAttributeValue(PyObject* self, PyObject* args)
         return NULL;
     }
     attributeNameJObj =(*jenv)->NewStringUTF(jenv, attributeName);
-    attributeValueJObj = BPy_ToJObjectT(attributeValuePyObj, BPy_Object_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        attributeValueJObj = BPy_ToJObjectT(attributeValuePyObj, BPy_Object_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, attributeNameJObj, attributeValueJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.Placemark#setAttributeValue(Ljava/lang/String;Ljava/lang/Object;)V");
@@ -12074,7 +12191,6 @@ PyObject* BeamPyPlacemark_setAttributeValue(PyObject* self, PyObject* args)
 PyObject* BeamPyPlacemark_setLabel(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     const char* label = NULL;
@@ -12103,7 +12219,6 @@ PyObject* BeamPyPlacemark_setLabel(PyObject* self, PyObject* args)
 PyObject* BeamPyPlacemark_getLabel(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -12129,7 +12244,6 @@ PyObject* BeamPyPlacemark_getLabel(PyObject* self, PyObject* args)
 PyObject* BeamPyPlacemark_setText(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     const char* text = NULL;
@@ -12158,7 +12272,6 @@ PyObject* BeamPyPlacemark_setText(PyObject* self, PyObject* args)
 PyObject* BeamPyPlacemark_getText(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -12184,7 +12297,6 @@ PyObject* BeamPyPlacemark_getText(PyObject* self, PyObject* args)
 PyObject* BeamPyPlacemark_setStyleCss(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     const char* styleCss = NULL;
@@ -12213,7 +12325,6 @@ PyObject* BeamPyPlacemark_setStyleCss(PyObject* self, PyObject* args)
 PyObject* BeamPyPlacemark_getStyleCss(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -12239,7 +12350,6 @@ PyObject* BeamPyPlacemark_getStyleCss(PyObject* self, PyObject* args)
 PyObject* BeamPyPlacemark_acceptVisitor(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* visitorPyObj = NULL;
@@ -12258,9 +12368,12 @@ PyObject* BeamPyPlacemark_acceptVisitor(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:acceptVisitor", &visitorPyObj)) {
         return NULL;
     }
-    visitorJObj = BPy_ToJObjectT(visitorPyObj, BPy_ProductVisitor_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        visitorJObj = BPy_ToJObjectT(visitorPyObj, BPy_ProductVisitor_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, visitorJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.Placemark#acceptVisitor(Lorg/esa/beam/framework/datamodel/ProductVisitor;)V");
@@ -12270,7 +12383,6 @@ PyObject* BeamPyPlacemark_acceptVisitor(PyObject* self, PyObject* args)
 PyObject* BeamPyPlacemark_getPixelPos(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -12296,7 +12408,6 @@ PyObject* BeamPyPlacemark_getPixelPos(PyObject* self, PyObject* args)
 PyObject* BeamPyPlacemark_setPixelPos(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* pixelPosPyObj = NULL;
@@ -12315,9 +12426,12 @@ PyObject* BeamPyPlacemark_setPixelPos(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:setPixelPos", &pixelPosPyObj)) {
         return NULL;
     }
-    pixelPosJObj = BPy_ToJObjectT(pixelPosPyObj, BPy_PixelPos_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        pixelPosJObj = BPy_ToJObjectT(pixelPosPyObj, BPy_PixelPos_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, pixelPosJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.Placemark#setPixelPos(Lorg/esa/beam/framework/datamodel/PixelPos;)V");
@@ -12327,7 +12441,6 @@ PyObject* BeamPyPlacemark_setPixelPos(PyObject* self, PyObject* args)
 PyObject* BeamPyPlacemark_getGeoPos(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -12353,7 +12466,6 @@ PyObject* BeamPyPlacemark_getGeoPos(PyObject* self, PyObject* args)
 PyObject* BeamPyPlacemark_setGeoPos(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* geoPosPyObj = NULL;
@@ -12372,9 +12484,12 @@ PyObject* BeamPyPlacemark_setGeoPos(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:setGeoPos", &geoPosPyObj)) {
         return NULL;
     }
-    geoPosJObj = BPy_ToJObjectT(geoPosPyObj, BPy_GeoPos_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        geoPosJObj = BPy_ToJObjectT(geoPosPyObj, BPy_GeoPos_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, geoPosJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.Placemark#setGeoPos(Lorg/esa/beam/framework/datamodel/GeoPos;)V");
@@ -12384,7 +12499,6 @@ PyObject* BeamPyPlacemark_setGeoPos(PyObject* self, PyObject* args)
 PyObject* BeamPyPlacemark_updatePositions(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     if (!BPy_InitApi()) {
@@ -12406,7 +12520,6 @@ PyObject* BeamPyPlacemark_updatePositions(PyObject* self, PyObject* args)
 PyObject* BeamPyPlacemark_createPinFeatureType(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     PyObject* _resultPyObj = NULL;
     jobject _resultJObj = NULL;
     if (!BPy_InitApi()) {
@@ -12425,7 +12538,6 @@ PyObject* BeamPyPlacemark_createPinFeatureType(PyObject* self, PyObject* args)
 PyObject* BeamPyPlacemark_createGcpFeatureType(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     PyObject* _resultPyObj = NULL;
     jobject _resultJObj = NULL;
     if (!BPy_InitApi()) {
@@ -12444,7 +12556,6 @@ PyObject* BeamPyPlacemark_createGcpFeatureType(PyObject* self, PyObject* args)
 PyObject* BeamPyPlacemark_createGeometryFeatureType(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     PyObject* _resultPyObj = NULL;
     jobject _resultJObj = NULL;
     if (!BPy_InitApi()) {
@@ -12463,7 +12574,6 @@ PyObject* BeamPyPlacemark_createGeometryFeatureType(PyObject* self, PyObject* ar
 PyObject* BeamPyPlacemark_createPointFeatureType(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     const char* name = NULL;
     jstring nameJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -12489,7 +12599,6 @@ PyObject* BeamPyPlacemark_createPointFeatureType(PyObject* self, PyObject* args)
 PyObject* BeamPyPlacemark_getOwner(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -12515,7 +12624,6 @@ PyObject* BeamPyPlacemark_getOwner(PyObject* self, PyObject* args)
 PyObject* BeamPyPlacemark_getName(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -12541,7 +12649,6 @@ PyObject* BeamPyPlacemark_getName(PyObject* self, PyObject* args)
 PyObject* BeamPyPlacemark_setName(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     const char* name = NULL;
@@ -12570,7 +12677,6 @@ PyObject* BeamPyPlacemark_setName(PyObject* self, PyObject* args)
 PyObject* BeamPyPlacemark_getDescription(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -12596,7 +12702,6 @@ PyObject* BeamPyPlacemark_getDescription(PyObject* self, PyObject* args)
 PyObject* BeamPyPlacemark_setDescription(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     const char* description = NULL;
@@ -12625,7 +12730,6 @@ PyObject* BeamPyPlacemark_setDescription(PyObject* self, PyObject* args)
 PyObject* BeamPyPlacemark_isModified(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jboolean _result = (jboolean) 0;
@@ -12648,7 +12752,6 @@ PyObject* BeamPyPlacemark_isModified(PyObject* self, PyObject* args)
 PyObject* BeamPyPlacemark_setModified(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jboolean modified = (jboolean) 0;
@@ -12674,7 +12777,6 @@ PyObject* BeamPyPlacemark_setModified(PyObject* self, PyObject* args)
 PyObject* BeamPyPlacemark_toString(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -12700,7 +12802,6 @@ PyObject* BeamPyPlacemark_toString(PyObject* self, PyObject* args)
 PyObject* BeamPyPlacemark_dispose(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     if (!BPy_InitApi()) {
@@ -12722,7 +12823,6 @@ PyObject* BeamPyPlacemark_dispose(PyObject* self, PyObject* args)
 PyObject* BeamPyPlacemark_isValidNodeName(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     const char* name = NULL;
     jstring nameJObj = NULL;
     jboolean _result = (jboolean) 0;
@@ -12745,7 +12845,6 @@ PyObject* BeamPyPlacemark_isValidNodeName(PyObject* self, PyObject* args)
 PyObject* BeamPyPlacemark_getProduct(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -12771,7 +12870,6 @@ PyObject* BeamPyPlacemark_getProduct(PyObject* self, PyObject* args)
 PyObject* BeamPyPlacemark_getProductReader(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -12797,7 +12895,6 @@ PyObject* BeamPyPlacemark_getProductReader(PyObject* self, PyObject* args)
 PyObject* BeamPyPlacemark_getProductWriter(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -12823,7 +12920,6 @@ PyObject* BeamPyPlacemark_getProductWriter(PyObject* self, PyObject* args)
 PyObject* BeamPyPlacemark_getDisplayName(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -12849,7 +12945,6 @@ PyObject* BeamPyPlacemark_getDisplayName(PyObject* self, PyObject* args)
 PyObject* BeamPyPlacemark_getProductRefString(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -12875,7 +12970,6 @@ PyObject* BeamPyPlacemark_getProductRefString(PyObject* self, PyObject* args)
 PyObject* BeamPyPlacemark_updateExpression(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     const char* oldExternalName = NULL;
@@ -12908,7 +13002,6 @@ PyObject* BeamPyPlacemark_updateExpression(PyObject* self, PyObject* args)
 PyObject* BeamPyPlacemark_removeFromFile(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* productWriterPyObj = NULL;
@@ -12927,9 +13020,12 @@ PyObject* BeamPyPlacemark_removeFromFile(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:removeFromFile", &productWriterPyObj)) {
         return NULL;
     }
-    productWriterJObj = BPy_ToJObjectT(productWriterPyObj, BPy_ProductWriter_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        productWriterJObj = BPy_ToJObjectT(productWriterPyObj, BPy_ProductWriter_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, productWriterJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.Placemark#removeFromFile(Lorg/esa/beam/framework/dataio/ProductWriter;)V");
@@ -12939,7 +13035,6 @@ PyObject* BeamPyPlacemark_removeFromFile(PyObject* self, PyObject* args)
 PyObject* BeamPyPlacemark_getExtension(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* arg0PyObj = NULL;
@@ -12960,9 +13055,12 @@ PyObject* BeamPyPlacemark_getExtension(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:getExtension", &arg0PyObj)) {
         return NULL;
     }
-    arg0JObj = BPy_ToJObjectT(arg0PyObj, BPy_Class_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        arg0JObj = BPy_ToJObjectT(arg0PyObj, BPy_Class_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, arg0JObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.Placemark#getExtension(Ljava/lang/Class;)Ljava/lang/Object;");
@@ -12974,7 +13072,6 @@ PyObject* BeamPyPlacemark_getExtension(PyObject* self, PyObject* args)
 PyObject* BeamPyMetadataElement_newMetadataElement(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     const char* name = NULL;
     jstring nameJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -13000,7 +13097,6 @@ PyObject* BeamPyMetadataElement_newMetadataElement(PyObject* self, PyObject* arg
 PyObject* BeamPyMetadataElement_getElementGroup(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -13026,7 +13122,6 @@ PyObject* BeamPyMetadataElement_getElementGroup(PyObject* self, PyObject* args)
 PyObject* BeamPyMetadataElement_getParentElement(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -13052,7 +13147,6 @@ PyObject* BeamPyMetadataElement_getParentElement(PyObject* self, PyObject* args)
 PyObject* BeamPyMetadataElement_addElement(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* elementPyObj = NULL;
@@ -13071,9 +13165,12 @@ PyObject* BeamPyMetadataElement_addElement(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:addElement", &elementPyObj)) {
         return NULL;
     }
-    elementJObj = BPy_ToJObjectT(elementPyObj, BPy_MetadataElement_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        elementJObj = BPy_ToJObjectT(elementPyObj, BPy_MetadataElement_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, elementJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.MetadataElement#addElement(Lorg/esa/beam/framework/datamodel/MetadataElement;)V");
@@ -13083,7 +13180,6 @@ PyObject* BeamPyMetadataElement_addElement(PyObject* self, PyObject* args)
 PyObject* BeamPyMetadataElement_addElementAt(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* elementPyObj = NULL;
@@ -13103,9 +13199,12 @@ PyObject* BeamPyMetadataElement_addElementAt(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "Oi:addElementAt", &elementPyObj, &index)) {
         return NULL;
     }
-    elementJObj = BPy_ToJObjectT(elementPyObj, BPy_MetadataElement_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        elementJObj = BPy_ToJObjectT(elementPyObj, BPy_MetadataElement_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, elementJObj, index);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.MetadataElement#addElementAt(Lorg/esa/beam/framework/datamodel/MetadataElement;I)V");
@@ -13115,7 +13214,6 @@ PyObject* BeamPyMetadataElement_addElementAt(PyObject* self, PyObject* args)
 PyObject* BeamPyMetadataElement_removeElement(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* elementPyObj = NULL;
@@ -13135,9 +13233,12 @@ PyObject* BeamPyMetadataElement_removeElement(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:removeElement", &elementPyObj)) {
         return NULL;
     }
-    elementJObj = BPy_ToJObjectT(elementPyObj, BPy_MetadataElement_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        elementJObj = BPy_ToJObjectT(elementPyObj, BPy_MetadataElement_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _result = (*jenv)->CallBooleanMethod(jenv, _thisJObj, _method, elementJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.MetadataElement#removeElement(Lorg/esa/beam/framework/datamodel/MetadataElement;)Z");
@@ -13147,7 +13248,6 @@ PyObject* BeamPyMetadataElement_removeElement(PyObject* self, PyObject* args)
 PyObject* BeamPyMetadataElement_getNumElements(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint _result = (jint) 0;
@@ -13170,7 +13270,6 @@ PyObject* BeamPyMetadataElement_getNumElements(PyObject* self, PyObject* args)
 PyObject* BeamPyMetadataElement_getElementAt(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint index = (jint) 0;
@@ -13200,7 +13299,6 @@ PyObject* BeamPyMetadataElement_getElementAt(PyObject* self, PyObject* args)
 PyObject* BeamPyMetadataElement_getElementNames(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -13226,7 +13324,6 @@ PyObject* BeamPyMetadataElement_getElementNames(PyObject* self, PyObject* args)
 PyObject* BeamPyMetadataElement_getElements(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -13252,7 +13349,6 @@ PyObject* BeamPyMetadataElement_getElements(PyObject* self, PyObject* args)
 PyObject* BeamPyMetadataElement_getElement(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     const char* name = NULL;
@@ -13285,7 +13381,6 @@ PyObject* BeamPyMetadataElement_getElement(PyObject* self, PyObject* args)
 PyObject* BeamPyMetadataElement_containsElement(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     const char* name = NULL;
@@ -13315,7 +13410,6 @@ PyObject* BeamPyMetadataElement_containsElement(PyObject* self, PyObject* args)
 PyObject* BeamPyMetadataElement_getElementIndex(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* elementPyObj = NULL;
@@ -13335,9 +13429,12 @@ PyObject* BeamPyMetadataElement_getElementIndex(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:getElementIndex", &elementPyObj)) {
         return NULL;
     }
-    elementJObj = BPy_ToJObjectT(elementPyObj, BPy_MetadataElement_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        elementJObj = BPy_ToJObjectT(elementPyObj, BPy_MetadataElement_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _result = (*jenv)->CallIntMethod(jenv, _thisJObj, _method, elementJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.MetadataElement#getElementIndex(Lorg/esa/beam/framework/datamodel/MetadataElement;)I");
@@ -13347,7 +13444,6 @@ PyObject* BeamPyMetadataElement_getElementIndex(PyObject* self, PyObject* args)
 PyObject* BeamPyMetadataElement_addAttribute(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* attributePyObj = NULL;
@@ -13366,9 +13462,12 @@ PyObject* BeamPyMetadataElement_addAttribute(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:addAttribute", &attributePyObj)) {
         return NULL;
     }
-    attributeJObj = BPy_ToJObjectT(attributePyObj, BPy_MetadataAttribute_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        attributeJObj = BPy_ToJObjectT(attributePyObj, BPy_MetadataAttribute_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, attributeJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.MetadataElement#addAttribute(Lorg/esa/beam/framework/datamodel/MetadataAttribute;)V");
@@ -13378,7 +13477,6 @@ PyObject* BeamPyMetadataElement_addAttribute(PyObject* self, PyObject* args)
 PyObject* BeamPyMetadataElement_removeAttribute(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* attributePyObj = NULL;
@@ -13398,9 +13496,12 @@ PyObject* BeamPyMetadataElement_removeAttribute(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:removeAttribute", &attributePyObj)) {
         return NULL;
     }
-    attributeJObj = BPy_ToJObjectT(attributePyObj, BPy_MetadataAttribute_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        attributeJObj = BPy_ToJObjectT(attributePyObj, BPy_MetadataAttribute_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _result = (*jenv)->CallBooleanMethod(jenv, _thisJObj, _method, attributeJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.MetadataElement#removeAttribute(Lorg/esa/beam/framework/datamodel/MetadataAttribute;)Z");
@@ -13410,7 +13511,6 @@ PyObject* BeamPyMetadataElement_removeAttribute(PyObject* self, PyObject* args)
 PyObject* BeamPyMetadataElement_getNumAttributes(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint _result = (jint) 0;
@@ -13433,7 +13533,6 @@ PyObject* BeamPyMetadataElement_getNumAttributes(PyObject* self, PyObject* args)
 PyObject* BeamPyMetadataElement_getAttributeAt(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint index = (jint) 0;
@@ -13463,7 +13562,6 @@ PyObject* BeamPyMetadataElement_getAttributeAt(PyObject* self, PyObject* args)
 PyObject* BeamPyMetadataElement_getAttributeNames(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -13489,7 +13587,6 @@ PyObject* BeamPyMetadataElement_getAttributeNames(PyObject* self, PyObject* args
 PyObject* BeamPyMetadataElement_getAttributes(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -13515,7 +13612,6 @@ PyObject* BeamPyMetadataElement_getAttributes(PyObject* self, PyObject* args)
 PyObject* BeamPyMetadataElement_getAttribute(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     const char* name = NULL;
@@ -13548,7 +13644,6 @@ PyObject* BeamPyMetadataElement_getAttribute(PyObject* self, PyObject* args)
 PyObject* BeamPyMetadataElement_containsAttribute(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     const char* name = NULL;
@@ -13578,7 +13673,6 @@ PyObject* BeamPyMetadataElement_containsAttribute(PyObject* self, PyObject* args
 PyObject* BeamPyMetadataElement_getAttributeIndex(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* attributePyObj = NULL;
@@ -13598,9 +13692,12 @@ PyObject* BeamPyMetadataElement_getAttributeIndex(PyObject* self, PyObject* args
     if (!PyArg_ParseTuple(args, "O:getAttributeIndex", &attributePyObj)) {
         return NULL;
     }
-    attributeJObj = BPy_ToJObjectT(attributePyObj, BPy_MetadataAttribute_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        attributeJObj = BPy_ToJObjectT(attributePyObj, BPy_MetadataAttribute_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _result = (*jenv)->CallIntMethod(jenv, _thisJObj, _method, attributeJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.MetadataElement#getAttributeIndex(Lorg/esa/beam/framework/datamodel/MetadataAttribute;)I");
@@ -13610,7 +13707,6 @@ PyObject* BeamPyMetadataElement_getAttributeIndex(PyObject* self, PyObject* args
 PyObject* BeamPyMetadataElement_getAttributeDouble(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     const char* name = NULL;
@@ -13641,7 +13737,6 @@ PyObject* BeamPyMetadataElement_getAttributeDouble(PyObject* self, PyObject* arg
 PyObject* BeamPyMetadataElement_getAttributeUTC(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     const char* name = NULL;
@@ -13665,9 +13760,12 @@ PyObject* BeamPyMetadataElement_getAttributeUTC(PyObject* self, PyObject* args)
         return NULL;
     }
     nameJObj =(*jenv)->NewStringUTF(jenv, name);
-    defaultValueJObj = BPy_ToJObjectT(defaultValuePyObj, BPy_ProductData_UTC_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        defaultValueJObj = BPy_ToJObjectT(defaultValuePyObj, BPy_ProductData_UTC_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, nameJObj, defaultValueJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.MetadataElement#getAttributeUTC(Ljava/lang/String;Lorg/esa/beam/framework/datamodel/ProductData/UTC;)Lorg/esa/beam/framework/datamodel/ProductData/UTC;");
@@ -13680,7 +13778,6 @@ PyObject* BeamPyMetadataElement_getAttributeUTC(PyObject* self, PyObject* args)
 PyObject* BeamPyMetadataElement_getAttributeInt(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     const char* name = NULL;
@@ -13711,7 +13808,6 @@ PyObject* BeamPyMetadataElement_getAttributeInt(PyObject* self, PyObject* args)
 PyObject* BeamPyMetadataElement_setAttributeInt(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     const char* name = NULL;
@@ -13741,7 +13837,6 @@ PyObject* BeamPyMetadataElement_setAttributeInt(PyObject* self, PyObject* args)
 PyObject* BeamPyMetadataElement_setAttributeDouble(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     const char* name = NULL;
@@ -13771,7 +13866,6 @@ PyObject* BeamPyMetadataElement_setAttributeDouble(PyObject* self, PyObject* arg
 PyObject* BeamPyMetadataElement_setAttributeUTC(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     const char* name = NULL;
@@ -13793,9 +13887,12 @@ PyObject* BeamPyMetadataElement_setAttributeUTC(PyObject* self, PyObject* args)
         return NULL;
     }
     nameJObj =(*jenv)->NewStringUTF(jenv, name);
-    valueJObj = BPy_ToJObjectT(valuePyObj, BPy_ProductData_UTC_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        valueJObj = BPy_ToJObjectT(valuePyObj, BPy_ProductData_UTC_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, nameJObj, valueJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.MetadataElement#setAttributeUTC(Ljava/lang/String;Lorg/esa/beam/framework/datamodel/ProductData/UTC;)V");
@@ -13806,7 +13903,6 @@ PyObject* BeamPyMetadataElement_setAttributeUTC(PyObject* self, PyObject* args)
 PyObject* BeamPyMetadataElement_getAttributeString(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     const char* name = NULL;
@@ -13843,7 +13939,6 @@ PyObject* BeamPyMetadataElement_getAttributeString(PyObject* self, PyObject* arg
 PyObject* BeamPyMetadataElement_setAttributeString(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     const char* name = NULL;
@@ -13876,7 +13971,6 @@ PyObject* BeamPyMetadataElement_setAttributeString(PyObject* self, PyObject* arg
 PyObject* BeamPyMetadataElement_setModified(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jboolean modified = (jboolean) 0;
@@ -13902,7 +13996,6 @@ PyObject* BeamPyMetadataElement_setModified(PyObject* self, PyObject* args)
 PyObject* BeamPyMetadataElement_acceptVisitor(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* visitorPyObj = NULL;
@@ -13921,9 +14014,12 @@ PyObject* BeamPyMetadataElement_acceptVisitor(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:acceptVisitor", &visitorPyObj)) {
         return NULL;
     }
-    visitorJObj = BPy_ToJObjectT(visitorPyObj, BPy_ProductVisitor_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        visitorJObj = BPy_ToJObjectT(visitorPyObj, BPy_ProductVisitor_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, visitorJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.MetadataElement#acceptVisitor(Lorg/esa/beam/framework/datamodel/ProductVisitor;)V");
@@ -13933,7 +14029,6 @@ PyObject* BeamPyMetadataElement_acceptVisitor(PyObject* self, PyObject* args)
 PyObject* BeamPyMetadataElement_createDeepClone(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -13959,7 +14054,6 @@ PyObject* BeamPyMetadataElement_createDeepClone(PyObject* self, PyObject* args)
 PyObject* BeamPyMetadataElement_dispose(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     if (!BPy_InitApi()) {
@@ -13981,7 +14075,6 @@ PyObject* BeamPyMetadataElement_dispose(PyObject* self, PyObject* args)
 PyObject* BeamPyMetadataElement_getOwner(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -14007,7 +14100,6 @@ PyObject* BeamPyMetadataElement_getOwner(PyObject* self, PyObject* args)
 PyObject* BeamPyMetadataElement_getName(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -14033,7 +14125,6 @@ PyObject* BeamPyMetadataElement_getName(PyObject* self, PyObject* args)
 PyObject* BeamPyMetadataElement_setName(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     const char* name = NULL;
@@ -14062,7 +14153,6 @@ PyObject* BeamPyMetadataElement_setName(PyObject* self, PyObject* args)
 PyObject* BeamPyMetadataElement_getDescription(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -14088,7 +14178,6 @@ PyObject* BeamPyMetadataElement_getDescription(PyObject* self, PyObject* args)
 PyObject* BeamPyMetadataElement_setDescription(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     const char* description = NULL;
@@ -14117,7 +14206,6 @@ PyObject* BeamPyMetadataElement_setDescription(PyObject* self, PyObject* args)
 PyObject* BeamPyMetadataElement_isModified(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jboolean _result = (jboolean) 0;
@@ -14140,7 +14228,6 @@ PyObject* BeamPyMetadataElement_isModified(PyObject* self, PyObject* args)
 PyObject* BeamPyMetadataElement_toString(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -14166,7 +14253,6 @@ PyObject* BeamPyMetadataElement_toString(PyObject* self, PyObject* args)
 PyObject* BeamPyMetadataElement_isValidNodeName(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     const char* name = NULL;
     jstring nameJObj = NULL;
     jboolean _result = (jboolean) 0;
@@ -14189,7 +14275,6 @@ PyObject* BeamPyMetadataElement_isValidNodeName(PyObject* self, PyObject* args)
 PyObject* BeamPyMetadataElement_getProduct(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -14215,7 +14300,6 @@ PyObject* BeamPyMetadataElement_getProduct(PyObject* self, PyObject* args)
 PyObject* BeamPyMetadataElement_getProductReader(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -14241,7 +14325,6 @@ PyObject* BeamPyMetadataElement_getProductReader(PyObject* self, PyObject* args)
 PyObject* BeamPyMetadataElement_getProductWriter(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -14267,7 +14350,6 @@ PyObject* BeamPyMetadataElement_getProductWriter(PyObject* self, PyObject* args)
 PyObject* BeamPyMetadataElement_getDisplayName(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -14293,7 +14375,6 @@ PyObject* BeamPyMetadataElement_getDisplayName(PyObject* self, PyObject* args)
 PyObject* BeamPyMetadataElement_getProductRefString(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -14319,7 +14400,6 @@ PyObject* BeamPyMetadataElement_getProductRefString(PyObject* self, PyObject* ar
 PyObject* BeamPyMetadataElement_updateExpression(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     const char* oldExternalName = NULL;
@@ -14352,7 +14432,6 @@ PyObject* BeamPyMetadataElement_updateExpression(PyObject* self, PyObject* args)
 PyObject* BeamPyMetadataElement_removeFromFile(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* productWriterPyObj = NULL;
@@ -14371,9 +14450,12 @@ PyObject* BeamPyMetadataElement_removeFromFile(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:removeFromFile", &productWriterPyObj)) {
         return NULL;
     }
-    productWriterJObj = BPy_ToJObjectT(productWriterPyObj, BPy_ProductWriter_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        productWriterJObj = BPy_ToJObjectT(productWriterPyObj, BPy_ProductWriter_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, productWriterJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.MetadataElement#removeFromFile(Lorg/esa/beam/framework/dataio/ProductWriter;)V");
@@ -14383,7 +14465,6 @@ PyObject* BeamPyMetadataElement_removeFromFile(PyObject* self, PyObject* args)
 PyObject* BeamPyMetadataElement_getExtension(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* arg0PyObj = NULL;
@@ -14404,9 +14485,12 @@ PyObject* BeamPyMetadataElement_getExtension(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:getExtension", &arg0PyObj)) {
         return NULL;
     }
-    arg0JObj = BPy_ToJObjectT(arg0PyObj, BPy_Class_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        arg0JObj = BPy_ToJObjectT(arg0PyObj, BPy_Class_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, arg0JObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.MetadataElement#getExtension(Ljava/lang/Class;)Ljava/lang/Object;");
@@ -14418,7 +14502,6 @@ PyObject* BeamPyMetadataElement_getExtension(PyObject* self, PyObject* args)
 PyObject* BeamPyProduct_newProduct(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     const char* name = NULL;
     jstring nameJObj = NULL;
     const char* type = NULL;
@@ -14450,7 +14533,6 @@ PyObject* BeamPyProduct_newProduct(PyObject* self, PyObject* args)
 PyObject* BeamPyProduct_getFileLocation(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -14476,7 +14558,6 @@ PyObject* BeamPyProduct_getFileLocation(PyObject* self, PyObject* args)
 PyObject* BeamPyProduct_setFileLocation(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* fileLocationPyObj = NULL;
@@ -14495,9 +14576,12 @@ PyObject* BeamPyProduct_setFileLocation(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:setFileLocation", &fileLocationPyObj)) {
         return NULL;
     }
-    fileLocationJObj = BPy_ToJObjectT(fileLocationPyObj, BPy_File_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        fileLocationJObj = BPy_ToJObjectT(fileLocationPyObj, BPy_File_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, fileLocationJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.Product#setFileLocation(Ljava/io/File;)V");
@@ -14507,7 +14591,6 @@ PyObject* BeamPyProduct_setFileLocation(PyObject* self, PyObject* args)
 PyObject* BeamPyProduct_getProductType(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -14533,7 +14616,6 @@ PyObject* BeamPyProduct_getProductType(PyObject* self, PyObject* args)
 PyObject* BeamPyProduct_setProductType(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     const char* productType = NULL;
@@ -14562,7 +14644,6 @@ PyObject* BeamPyProduct_setProductType(PyObject* self, PyObject* args)
 PyObject* BeamPyProduct_setProductReader(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* readerPyObj = NULL;
@@ -14581,9 +14662,12 @@ PyObject* BeamPyProduct_setProductReader(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:setProductReader", &readerPyObj)) {
         return NULL;
     }
-    readerJObj = BPy_ToJObjectT(readerPyObj, BPy_ProductReader_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        readerJObj = BPy_ToJObjectT(readerPyObj, BPy_ProductReader_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, readerJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.Product#setProductReader(Lorg/esa/beam/framework/dataio/ProductReader;)V");
@@ -14593,7 +14677,6 @@ PyObject* BeamPyProduct_setProductReader(PyObject* self, PyObject* args)
 PyObject* BeamPyProduct_getProductReader(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -14619,7 +14702,6 @@ PyObject* BeamPyProduct_getProductReader(PyObject* self, PyObject* args)
 PyObject* BeamPyProduct_setProductWriter(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* writerPyObj = NULL;
@@ -14638,9 +14720,12 @@ PyObject* BeamPyProduct_setProductWriter(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:setProductWriter", &writerPyObj)) {
         return NULL;
     }
-    writerJObj = BPy_ToJObjectT(writerPyObj, BPy_ProductWriter_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        writerJObj = BPy_ToJObjectT(writerPyObj, BPy_ProductWriter_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, writerJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.Product#setProductWriter(Lorg/esa/beam/framework/dataio/ProductWriter;)V");
@@ -14650,7 +14735,6 @@ PyObject* BeamPyProduct_setProductWriter(PyObject* self, PyObject* args)
 PyObject* BeamPyProduct_getProductWriter(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -14676,7 +14760,6 @@ PyObject* BeamPyProduct_getProductWriter(PyObject* self, PyObject* args)
 PyObject* BeamPyProduct_writeHeader(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* outputPyObj = NULL;
@@ -14695,9 +14778,12 @@ PyObject* BeamPyProduct_writeHeader(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:writeHeader", &outputPyObj)) {
         return NULL;
     }
-    outputJObj = BPy_ToJObjectT(outputPyObj, BPy_Object_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        outputJObj = BPy_ToJObjectT(outputPyObj, BPy_Object_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, outputJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.Product#writeHeader(Ljava/lang/Object;)V");
@@ -14707,7 +14793,6 @@ PyObject* BeamPyProduct_writeHeader(PyObject* self, PyObject* args)
 PyObject* BeamPyProduct_closeProductReader(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     if (!BPy_InitApi()) {
@@ -14729,7 +14814,6 @@ PyObject* BeamPyProduct_closeProductReader(PyObject* self, PyObject* args)
 PyObject* BeamPyProduct_closeProductWriter(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     if (!BPy_InitApi()) {
@@ -14751,7 +14835,6 @@ PyObject* BeamPyProduct_closeProductWriter(PyObject* self, PyObject* args)
 PyObject* BeamPyProduct_closeIO(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     if (!BPy_InitApi()) {
@@ -14773,7 +14856,6 @@ PyObject* BeamPyProduct_closeIO(PyObject* self, PyObject* args)
 PyObject* BeamPyProduct_dispose(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     if (!BPy_InitApi()) {
@@ -14795,7 +14877,6 @@ PyObject* BeamPyProduct_dispose(PyObject* self, PyObject* args)
 PyObject* BeamPyProduct_getPointingFactory(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -14821,7 +14902,6 @@ PyObject* BeamPyProduct_getPointingFactory(PyObject* self, PyObject* args)
 PyObject* BeamPyProduct_setPointingFactory(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* pointingFactoryPyObj = NULL;
@@ -14840,9 +14920,12 @@ PyObject* BeamPyProduct_setPointingFactory(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:setPointingFactory", &pointingFactoryPyObj)) {
         return NULL;
     }
-    pointingFactoryJObj = BPy_ToJObjectT(pointingFactoryPyObj, BPy_PointingFactory_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        pointingFactoryJObj = BPy_ToJObjectT(pointingFactoryPyObj, BPy_PointingFactory_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, pointingFactoryJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.Product#setPointingFactory(Lorg/esa/beam/framework/datamodel/PointingFactory;)V");
@@ -14852,7 +14935,6 @@ PyObject* BeamPyProduct_setPointingFactory(PyObject* self, PyObject* args)
 PyObject* BeamPyProduct_setGeoCoding(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* geoCodingPyObj = NULL;
@@ -14871,9 +14953,12 @@ PyObject* BeamPyProduct_setGeoCoding(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:setGeoCoding", &geoCodingPyObj)) {
         return NULL;
     }
-    geoCodingJObj = BPy_ToJObjectT(geoCodingPyObj, BPy_GeoCoding_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        geoCodingJObj = BPy_ToJObjectT(geoCodingPyObj, BPy_GeoCoding_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, geoCodingJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.Product#setGeoCoding(Lorg/esa/beam/framework/datamodel/GeoCoding;)V");
@@ -14883,7 +14968,6 @@ PyObject* BeamPyProduct_setGeoCoding(PyObject* self, PyObject* args)
 PyObject* BeamPyProduct_getGeoCoding(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -14909,7 +14993,6 @@ PyObject* BeamPyProduct_getGeoCoding(PyObject* self, PyObject* args)
 PyObject* BeamPyProduct_isUsingSingleGeoCoding(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jboolean _result = (jboolean) 0;
@@ -14932,7 +15015,6 @@ PyObject* BeamPyProduct_isUsingSingleGeoCoding(PyObject* self, PyObject* args)
 PyObject* BeamPyProduct_transferGeoCodingTo(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* destProductPyObj = NULL;
@@ -14954,13 +15036,19 @@ PyObject* BeamPyProduct_transferGeoCodingTo(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "OO:transferGeoCodingTo", &destProductPyObj, &subsetDefPyObj)) {
         return NULL;
     }
-    destProductJObj = BPy_ToJObjectT(destProductPyObj, BPy_Product_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        destProductJObj = BPy_ToJObjectT(destProductPyObj, BPy_Product_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
-    subsetDefJObj = BPy_ToJObjectT(subsetDefPyObj, BPy_ProductSubsetDef_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        subsetDefJObj = BPy_ToJObjectT(subsetDefPyObj, BPy_ProductSubsetDef_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _result = (*jenv)->CallBooleanMethod(jenv, _thisJObj, _method, destProductJObj, subsetDefJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.Product#transferGeoCodingTo(Lorg/esa/beam/framework/datamodel/Product;Lorg/esa/beam/framework/dataio/ProductSubsetDef;)Z");
@@ -14970,7 +15058,6 @@ PyObject* BeamPyProduct_transferGeoCodingTo(PyObject* self, PyObject* args)
 PyObject* BeamPyProduct_getSceneRasterWidth(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint _result = (jint) 0;
@@ -14993,7 +15080,6 @@ PyObject* BeamPyProduct_getSceneRasterWidth(PyObject* self, PyObject* args)
 PyObject* BeamPyProduct_getSceneRasterHeight(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint _result = (jint) 0;
@@ -15016,7 +15102,6 @@ PyObject* BeamPyProduct_getSceneRasterHeight(PyObject* self, PyObject* args)
 PyObject* BeamPyProduct_getStartTime(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -15042,7 +15127,6 @@ PyObject* BeamPyProduct_getStartTime(PyObject* self, PyObject* args)
 PyObject* BeamPyProduct_setStartTime(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* startTimePyObj = NULL;
@@ -15061,9 +15145,12 @@ PyObject* BeamPyProduct_setStartTime(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:setStartTime", &startTimePyObj)) {
         return NULL;
     }
-    startTimeJObj = BPy_ToJObjectT(startTimePyObj, BPy_ProductData_UTC_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        startTimeJObj = BPy_ToJObjectT(startTimePyObj, BPy_ProductData_UTC_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, startTimeJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.Product#setStartTime(Lorg/esa/beam/framework/datamodel/ProductData/UTC;)V");
@@ -15073,7 +15160,6 @@ PyObject* BeamPyProduct_setStartTime(PyObject* self, PyObject* args)
 PyObject* BeamPyProduct_getEndTime(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -15099,7 +15185,6 @@ PyObject* BeamPyProduct_getEndTime(PyObject* self, PyObject* args)
 PyObject* BeamPyProduct_setEndTime(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* endTimePyObj = NULL;
@@ -15118,9 +15203,12 @@ PyObject* BeamPyProduct_setEndTime(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:setEndTime", &endTimePyObj)) {
         return NULL;
     }
-    endTimeJObj = BPy_ToJObjectT(endTimePyObj, BPy_ProductData_UTC_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        endTimeJObj = BPy_ToJObjectT(endTimePyObj, BPy_ProductData_UTC_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, endTimeJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.Product#setEndTime(Lorg/esa/beam/framework/datamodel/ProductData/UTC;)V");
@@ -15130,7 +15218,6 @@ PyObject* BeamPyProduct_setEndTime(PyObject* self, PyObject* args)
 PyObject* BeamPyProduct_getMetadataRoot(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -15153,10 +15240,9 @@ PyObject* BeamPyProduct_getMetadataRoot(PyObject* self, PyObject* args)
     return _resultPyObj;
 }
 
-PyObject* BeamPyProduct_getBandGroup(PyObject* self, PyObject* args)
+PyObject* BeamPyProduct_getGroups(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -15164,7 +15250,7 @@ PyObject* BeamPyProduct_getBandGroup(PyObject* self, PyObject* args)
     if (!BPy_InitApi()) {
         return NULL;
     }
-    if (!BPy_InitJMethod(&_method, BPy_Product_Class, "org.esa.beam.framework.datamodel.Product", "getBandGroup", "()Lorg/esa/beam/framework/datamodel/ProductNodeGroup;", 0)) {
+    if (!BPy_InitJMethod(&_method, BPy_Product_Class, "org.esa.beam.framework.datamodel.Product", "getGroups", "()Lorg/esa/beam/framework/datamodel/ProductNodeGroup;", 0)) {
         return NULL;
     }
     _thisJObj = JObject_AsJObjectRefT(self, BPy_Product_Class);
@@ -15173,8 +15259,40 @@ PyObject* BeamPyProduct_getBandGroup(PyObject* self, PyObject* args)
         return NULL;
     }
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.Product#getBandGroup()Lorg/esa/beam/framework/datamodel/ProductNodeGroup;");
+    CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.Product#getGroups()Lorg/esa/beam/framework/datamodel/ProductNodeGroup;");
     _resultPyObj = BPy_FromJObject(&ProductNodeGroup_Type, _resultJObj);
+    (*jenv)->DeleteLocalRef(jenv, _resultJObj);
+    return _resultPyObj;
+}
+
+PyObject* BeamPyProduct_getGroup(PyObject* self, PyObject* args)
+{
+    static jmethodID _method = NULL;
+    
+    jobject _thisJObj = NULL;
+    const char* name = NULL;
+    jstring nameJObj = NULL;
+    PyObject* _resultPyObj = NULL;
+    jobject _resultJObj = NULL;
+    if (!BPy_InitApi()) {
+        return NULL;
+    }
+    if (!BPy_InitJMethod(&_method, BPy_Product_Class, "org.esa.beam.framework.datamodel.Product", "getGroup", "(Ljava/lang/String;)Lorg/esa/beam/framework/datamodel/ProductNodeGroup;", 0)) {
+        return NULL;
+    }
+    _thisJObj = JObject_AsJObjectRefT(self, BPy_Product_Class);
+    if (_thisJObj == NULL) {
+        PyErr_SetString(PyExc_ValueError, "argument 'self' must be of type 'Product' (Java object reference)");
+        return NULL;
+    }
+    if (!PyArg_ParseTuple(args, "s:getGroup", &name)) {
+        return NULL;
+    }
+    nameJObj =(*jenv)->NewStringUTF(jenv, name);
+    _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, nameJObj);
+    CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.Product#getGroup(Ljava/lang/String;)Lorg/esa/beam/framework/datamodel/ProductNodeGroup;");
+    _resultPyObj = BPy_FromJObject(&ProductNodeGroup_Type, _resultJObj);
+    (*jenv)->DeleteLocalRef(jenv, nameJObj);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -15182,7 +15300,6 @@ PyObject* BeamPyProduct_getBandGroup(PyObject* self, PyObject* args)
 PyObject* BeamPyProduct_getTiePointGridGroup(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -15208,7 +15325,6 @@ PyObject* BeamPyProduct_getTiePointGridGroup(PyObject* self, PyObject* args)
 PyObject* BeamPyProduct_addTiePointGrid(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* tiePointGridPyObj = NULL;
@@ -15227,9 +15343,12 @@ PyObject* BeamPyProduct_addTiePointGrid(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:addTiePointGrid", &tiePointGridPyObj)) {
         return NULL;
     }
-    tiePointGridJObj = BPy_ToJObjectT(tiePointGridPyObj, BPy_TiePointGrid_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        tiePointGridJObj = BPy_ToJObjectT(tiePointGridPyObj, BPy_TiePointGrid_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, tiePointGridJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.Product#addTiePointGrid(Lorg/esa/beam/framework/datamodel/TiePointGrid;)V");
@@ -15239,7 +15358,6 @@ PyObject* BeamPyProduct_addTiePointGrid(PyObject* self, PyObject* args)
 PyObject* BeamPyProduct_removeTiePointGrid(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* tiePointGridPyObj = NULL;
@@ -15259,9 +15377,12 @@ PyObject* BeamPyProduct_removeTiePointGrid(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:removeTiePointGrid", &tiePointGridPyObj)) {
         return NULL;
     }
-    tiePointGridJObj = BPy_ToJObjectT(tiePointGridPyObj, BPy_TiePointGrid_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        tiePointGridJObj = BPy_ToJObjectT(tiePointGridPyObj, BPy_TiePointGrid_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _result = (*jenv)->CallBooleanMethod(jenv, _thisJObj, _method, tiePointGridJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.Product#removeTiePointGrid(Lorg/esa/beam/framework/datamodel/TiePointGrid;)Z");
@@ -15271,7 +15392,6 @@ PyObject* BeamPyProduct_removeTiePointGrid(PyObject* self, PyObject* args)
 PyObject* BeamPyProduct_getNumTiePointGrids(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint _result = (jint) 0;
@@ -15294,7 +15414,6 @@ PyObject* BeamPyProduct_getNumTiePointGrids(PyObject* self, PyObject* args)
 PyObject* BeamPyProduct_getTiePointGridAt(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint index = (jint) 0;
@@ -15324,7 +15443,6 @@ PyObject* BeamPyProduct_getTiePointGridAt(PyObject* self, PyObject* args)
 PyObject* BeamPyProduct_getTiePointGridNames(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -15350,7 +15468,6 @@ PyObject* BeamPyProduct_getTiePointGridNames(PyObject* self, PyObject* args)
 PyObject* BeamPyProduct_getTiePointGrids(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -15376,7 +15493,6 @@ PyObject* BeamPyProduct_getTiePointGrids(PyObject* self, PyObject* args)
 PyObject* BeamPyProduct_getTiePointGrid(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     const char* name = NULL;
@@ -15409,7 +15525,6 @@ PyObject* BeamPyProduct_getTiePointGrid(PyObject* self, PyObject* args)
 PyObject* BeamPyProduct_containsTiePointGrid(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     const char* name = NULL;
@@ -15436,10 +15551,34 @@ PyObject* BeamPyProduct_containsTiePointGrid(PyObject* self, PyObject* args)
     return PyBool_FromLong(_result);
 }
 
+PyObject* BeamPyProduct_getBandGroup(PyObject* self, PyObject* args)
+{
+    static jmethodID _method = NULL;
+    
+    jobject _thisJObj = NULL;
+    PyObject* _resultPyObj = NULL;
+    jobject _resultJObj = NULL;
+    if (!BPy_InitApi()) {
+        return NULL;
+    }
+    if (!BPy_InitJMethod(&_method, BPy_Product_Class, "org.esa.beam.framework.datamodel.Product", "getBandGroup", "()Lorg/esa/beam/framework/datamodel/ProductNodeGroup;", 0)) {
+        return NULL;
+    }
+    _thisJObj = JObject_AsJObjectRefT(self, BPy_Product_Class);
+    if (_thisJObj == NULL) {
+        PyErr_SetString(PyExc_ValueError, "argument 'self' must be of type 'Product' (Java object reference)");
+        return NULL;
+    }
+    _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
+    CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.Product#getBandGroup()Lorg/esa/beam/framework/datamodel/ProductNodeGroup;");
+    _resultPyObj = BPy_FromJObject(&ProductNodeGroup_Type, _resultJObj);
+    (*jenv)->DeleteLocalRef(jenv, _resultJObj);
+    return _resultPyObj;
+}
+
 PyObject* BeamPyProduct_addBand(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* bandPyObj = NULL;
@@ -15458,9 +15597,12 @@ PyObject* BeamPyProduct_addBand(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:addBand", &bandPyObj)) {
         return NULL;
     }
-    bandJObj = BPy_ToJObjectT(bandPyObj, BPy_Band_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        bandJObj = BPy_ToJObjectT(bandPyObj, BPy_Band_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, bandJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.Product#addBand(Lorg/esa/beam/framework/datamodel/Band;)V");
@@ -15470,7 +15612,6 @@ PyObject* BeamPyProduct_addBand(PyObject* self, PyObject* args)
 PyObject* BeamPyProduct_addNewBand(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     const char* bandName = NULL;
@@ -15504,7 +15645,6 @@ PyObject* BeamPyProduct_addNewBand(PyObject* self, PyObject* args)
 PyObject* BeamPyProduct_addComputedBand(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     const char* bandName = NULL;
@@ -15541,7 +15681,6 @@ PyObject* BeamPyProduct_addComputedBand(PyObject* self, PyObject* args)
 PyObject* BeamPyProduct_removeBand(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* bandPyObj = NULL;
@@ -15561,9 +15700,12 @@ PyObject* BeamPyProduct_removeBand(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:removeBand", &bandPyObj)) {
         return NULL;
     }
-    bandJObj = BPy_ToJObjectT(bandPyObj, BPy_Band_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        bandJObj = BPy_ToJObjectT(bandPyObj, BPy_Band_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _result = (*jenv)->CallBooleanMethod(jenv, _thisJObj, _method, bandJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.Product#removeBand(Lorg/esa/beam/framework/datamodel/Band;)Z");
@@ -15573,7 +15715,6 @@ PyObject* BeamPyProduct_removeBand(PyObject* self, PyObject* args)
 PyObject* BeamPyProduct_getNumBands(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint _result = (jint) 0;
@@ -15596,7 +15737,6 @@ PyObject* BeamPyProduct_getNumBands(PyObject* self, PyObject* args)
 PyObject* BeamPyProduct_getBandAt(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint index = (jint) 0;
@@ -15626,7 +15766,6 @@ PyObject* BeamPyProduct_getBandAt(PyObject* self, PyObject* args)
 PyObject* BeamPyProduct_getBandNames(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -15652,7 +15791,6 @@ PyObject* BeamPyProduct_getBandNames(PyObject* self, PyObject* args)
 PyObject* BeamPyProduct_getBands(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -15678,7 +15816,6 @@ PyObject* BeamPyProduct_getBands(PyObject* self, PyObject* args)
 PyObject* BeamPyProduct_getBand(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     const char* name = NULL;
@@ -15711,7 +15848,6 @@ PyObject* BeamPyProduct_getBand(PyObject* self, PyObject* args)
 PyObject* BeamPyProduct_getBandIndex(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     const char* name = NULL;
@@ -15741,7 +15877,6 @@ PyObject* BeamPyProduct_getBandIndex(PyObject* self, PyObject* args)
 PyObject* BeamPyProduct_containsBand(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     const char* name = NULL;
@@ -15771,7 +15906,6 @@ PyObject* BeamPyProduct_containsBand(PyObject* self, PyObject* args)
 PyObject* BeamPyProduct_containsRasterDataNode(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     const char* name = NULL;
@@ -15801,7 +15935,6 @@ PyObject* BeamPyProduct_containsRasterDataNode(PyObject* self, PyObject* args)
 PyObject* BeamPyProduct_getRasterDataNode(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     const char* name = NULL;
@@ -15834,7 +15967,6 @@ PyObject* BeamPyProduct_getRasterDataNode(PyObject* self, PyObject* args)
 PyObject* BeamPyProduct_getMaskGroup(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -15860,7 +15992,6 @@ PyObject* BeamPyProduct_getMaskGroup(PyObject* self, PyObject* args)
 PyObject* BeamPyProduct_getVectorDataGroup(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -15886,7 +16017,6 @@ PyObject* BeamPyProduct_getVectorDataGroup(PyObject* self, PyObject* args)
 PyObject* BeamPyProduct_getFlagCodingGroup(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -15912,7 +16042,6 @@ PyObject* BeamPyProduct_getFlagCodingGroup(PyObject* self, PyObject* args)
 PyObject* BeamPyProduct_getIndexCodingGroup(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -15938,7 +16067,6 @@ PyObject* BeamPyProduct_getIndexCodingGroup(PyObject* self, PyObject* args)
 PyObject* BeamPyProduct_containsPixel(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jfloat x = (jfloat) 0;
@@ -15966,7 +16094,6 @@ PyObject* BeamPyProduct_containsPixel(PyObject* self, PyObject* args)
 PyObject* BeamPyProduct_getGcpGroup(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -15992,7 +16119,6 @@ PyObject* BeamPyProduct_getGcpGroup(PyObject* self, PyObject* args)
 PyObject* BeamPyProduct_getPinGroup(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -16015,10 +16141,56 @@ PyObject* BeamPyProduct_getPinGroup(PyObject* self, PyObject* args)
     return _resultPyObj;
 }
 
+PyObject* BeamPyProduct_getNumResolutionsMax(PyObject* self, PyObject* args)
+{
+    static jmethodID _method = NULL;
+    
+    jobject _thisJObj = NULL;
+    jint _result = (jint) 0;
+    if (!BPy_InitApi()) {
+        return NULL;
+    }
+    if (!BPy_InitJMethod(&_method, BPy_Product_Class, "org.esa.beam.framework.datamodel.Product", "getNumResolutionsMax", "()I", 0)) {
+        return NULL;
+    }
+    _thisJObj = JObject_AsJObjectRefT(self, BPy_Product_Class);
+    if (_thisJObj == NULL) {
+        PyErr_SetString(PyExc_ValueError, "argument 'self' must be of type 'Product' (Java object reference)");
+        return NULL;
+    }
+    _result = (*jenv)->CallIntMethod(jenv, _thisJObj, _method);
+    CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.Product#getNumResolutionsMax()I");
+    return PyLong_FromLong(_result);
+}
+
+PyObject* BeamPyProduct_setNumResolutionsMax(PyObject* self, PyObject* args)
+{
+    static jmethodID _method = NULL;
+    
+    jobject _thisJObj = NULL;
+    jint numResolutionsMax = (jint) 0;
+    if (!BPy_InitApi()) {
+        return NULL;
+    }
+    if (!BPy_InitJMethod(&_method, BPy_Product_Class, "org.esa.beam.framework.datamodel.Product", "setNumResolutionsMax", "(I)V", 0)) {
+        return NULL;
+    }
+    _thisJObj = JObject_AsJObjectRefT(self, BPy_Product_Class);
+    if (_thisJObj == NULL) {
+        PyErr_SetString(PyExc_ValueError, "argument 'self' must be of type 'Product' (Java object reference)");
+        return NULL;
+    }
+    if (!PyArg_ParseTuple(args, "i:setNumResolutionsMax", &numResolutionsMax)) {
+        return NULL;
+    }
+    (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, numResolutionsMax);
+    CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.Product#setNumResolutionsMax(I)V");
+    return Py_BuildValue("");
+}
+
 PyObject* BeamPyProduct_isCompatibleProduct(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* productPyObj = NULL;
@@ -16039,9 +16211,12 @@ PyObject* BeamPyProduct_isCompatibleProduct(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "Of:isCompatibleProduct", &productPyObj, &eps)) {
         return NULL;
     }
-    productJObj = BPy_ToJObjectT(productPyObj, BPy_Product_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        productJObj = BPy_ToJObjectT(productPyObj, BPy_Product_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _result = (*jenv)->CallBooleanMethod(jenv, _thisJObj, _method, productJObj, eps);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.Product#isCompatibleProduct(Lorg/esa/beam/framework/datamodel/Product;F)Z");
@@ -16051,7 +16226,6 @@ PyObject* BeamPyProduct_isCompatibleProduct(PyObject* self, PyObject* args)
 PyObject* BeamPyProduct_parseExpression(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     const char* expression = NULL;
@@ -16084,7 +16258,6 @@ PyObject* BeamPyProduct_parseExpression(PyObject* self, PyObject* args)
 PyObject* BeamPyProduct_acceptVisitor(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* visitorPyObj = NULL;
@@ -16103,9 +16276,12 @@ PyObject* BeamPyProduct_acceptVisitor(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:acceptVisitor", &visitorPyObj)) {
         return NULL;
     }
-    visitorJObj = BPy_ToJObjectT(visitorPyObj, BPy_ProductVisitor_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        visitorJObj = BPy_ToJObjectT(visitorPyObj, BPy_ProductVisitor_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, visitorJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.Product#acceptVisitor(Lorg/esa/beam/framework/datamodel/ProductVisitor;)V");
@@ -16115,7 +16291,6 @@ PyObject* BeamPyProduct_acceptVisitor(PyObject* self, PyObject* args)
 PyObject* BeamPyProduct_addProductNodeListener(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* listenerPyObj = NULL;
@@ -16135,9 +16310,12 @@ PyObject* BeamPyProduct_addProductNodeListener(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:addProductNodeListener", &listenerPyObj)) {
         return NULL;
     }
-    listenerJObj = BPy_ToJObjectT(listenerPyObj, BPy_ProductNodeListener_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        listenerJObj = BPy_ToJObjectT(listenerPyObj, BPy_ProductNodeListener_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _result = (*jenv)->CallBooleanMethod(jenv, _thisJObj, _method, listenerJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.Product#addProductNodeListener(Lorg/esa/beam/framework/datamodel/ProductNodeListener;)Z");
@@ -16147,7 +16325,6 @@ PyObject* BeamPyProduct_addProductNodeListener(PyObject* self, PyObject* args)
 PyObject* BeamPyProduct_removeProductNodeListener(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* listenerPyObj = NULL;
@@ -16166,9 +16343,12 @@ PyObject* BeamPyProduct_removeProductNodeListener(PyObject* self, PyObject* args
     if (!PyArg_ParseTuple(args, "O:removeProductNodeListener", &listenerPyObj)) {
         return NULL;
     }
-    listenerJObj = BPy_ToJObjectT(listenerPyObj, BPy_ProductNodeListener_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        listenerJObj = BPy_ToJObjectT(listenerPyObj, BPy_ProductNodeListener_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, listenerJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.Product#removeProductNodeListener(Lorg/esa/beam/framework/datamodel/ProductNodeListener;)V");
@@ -16178,7 +16358,6 @@ PyObject* BeamPyProduct_removeProductNodeListener(PyObject* self, PyObject* args
 PyObject* BeamPyProduct_getProductNodeListeners(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -16204,7 +16383,6 @@ PyObject* BeamPyProduct_getProductNodeListeners(PyObject* self, PyObject* args)
 PyObject* BeamPyProduct_getRefNo(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint _result = (jint) 0;
@@ -16227,7 +16405,6 @@ PyObject* BeamPyProduct_getRefNo(PyObject* self, PyObject* args)
 PyObject* BeamPyProduct_setRefNo(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint refNo = (jint) 0;
@@ -16253,7 +16430,6 @@ PyObject* BeamPyProduct_setRefNo(PyObject* self, PyObject* args)
 PyObject* BeamPyProduct_resetRefNo(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     if (!BPy_InitApi()) {
@@ -16275,7 +16451,6 @@ PyObject* BeamPyProduct_resetRefNo(PyObject* self, PyObject* args)
 PyObject* BeamPyProduct_getProductManager(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -16301,7 +16476,6 @@ PyObject* BeamPyProduct_getProductManager(PyObject* self, PyObject* args)
 PyObject* BeamPyProduct_createBandArithmeticParser(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -16327,7 +16501,6 @@ PyObject* BeamPyProduct_createBandArithmeticParser(PyObject* self, PyObject* arg
 PyObject* BeamPyProduct_createBandArithmeticDefaultNamespace(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -16353,7 +16526,6 @@ PyObject* BeamPyProduct_createBandArithmeticDefaultNamespace(PyObject* self, PyO
 PyObject* BeamPyProduct_createSubset(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* subsetDefPyObj = NULL;
@@ -16378,9 +16550,12 @@ PyObject* BeamPyProduct_createSubset(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "Oss:createSubset", &subsetDefPyObj, &name, &desc)) {
         return NULL;
     }
-    subsetDefJObj = BPy_ToJObjectT(subsetDefPyObj, BPy_ProductSubsetDef_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        subsetDefJObj = BPy_ToJObjectT(subsetDefPyObj, BPy_ProductSubsetDef_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     nameJObj =(*jenv)->NewStringUTF(jenv, name);
     descJObj =(*jenv)->NewStringUTF(jenv, desc);
@@ -16396,7 +16571,6 @@ PyObject* BeamPyProduct_createSubset(PyObject* self, PyObject* args)
 PyObject* BeamPyProduct_createFlippedProduct(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint flipType = (jint) 0;
@@ -16434,7 +16608,6 @@ PyObject* BeamPyProduct_createFlippedProduct(PyObject* self, PyObject* args)
 PyObject* BeamPyProduct_setModified(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jboolean modified = (jboolean) 0;
@@ -16460,7 +16633,6 @@ PyObject* BeamPyProduct_setModified(PyObject* self, PyObject* args)
 PyObject* BeamPyProduct_getQuicklookBandName(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -16486,7 +16658,6 @@ PyObject* BeamPyProduct_getQuicklookBandName(PyObject* self, PyObject* args)
 PyObject* BeamPyProduct_setQuicklookBandName(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     const char* quicklookBandName = NULL;
@@ -16515,7 +16686,6 @@ PyObject* BeamPyProduct_setQuicklookBandName(PyObject* self, PyObject* args)
 PyObject* BeamPyProduct_createPixelInfoString(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint pixelX = (jint) 0;
@@ -16546,7 +16716,6 @@ PyObject* BeamPyProduct_createPixelInfoString(PyObject* self, PyObject* args)
 PyObject* BeamPyProduct_getRemovedChildNodes(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -16572,7 +16741,6 @@ PyObject* BeamPyProduct_getRemovedChildNodes(PyObject* self, PyObject* args)
 PyObject* BeamPyProduct_canBeOrthorectified(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jboolean _result = (jboolean) 0;
@@ -16595,7 +16763,6 @@ PyObject* BeamPyProduct_canBeOrthorectified(PyObject* self, PyObject* args)
 PyObject* BeamPyProduct_getPreferredTileSize(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -16621,7 +16788,6 @@ PyObject* BeamPyProduct_getPreferredTileSize(PyObject* self, PyObject* args)
 PyObject* BeamPyProduct_setPreferredTileSize(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint tileWidth = (jint) 0;
@@ -16648,7 +16814,6 @@ PyObject* BeamPyProduct_setPreferredTileSize(PyObject* self, PyObject* args)
 PyObject* BeamPyProduct_getAllFlagNames(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -16674,7 +16839,6 @@ PyObject* BeamPyProduct_getAllFlagNames(PyObject* self, PyObject* args)
 PyObject* BeamPyProduct_getAutoGrouping(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -16700,7 +16864,6 @@ PyObject* BeamPyProduct_getAutoGrouping(PyObject* self, PyObject* args)
 PyObject* BeamPyProduct_setAutoGrouping(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     const char* pattern = NULL;
@@ -16729,7 +16892,6 @@ PyObject* BeamPyProduct_setAutoGrouping(PyObject* self, PyObject* args)
 PyObject* BeamPyProduct_addComputedMask(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     const char* maskName = NULL;
@@ -16760,9 +16922,12 @@ PyObject* BeamPyProduct_addComputedMask(PyObject* self, PyObject* args)
     maskNameJObj =(*jenv)->NewStringUTF(jenv, maskName);
     expressionJObj =(*jenv)->NewStringUTF(jenv, expression);
     descriptionJObj =(*jenv)->NewStringUTF(jenv, description);
-    colorJObj = BPy_ToJObjectT(colorPyObj, BPy_Color_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        colorJObj = BPy_ToJObjectT(colorPyObj, BPy_Color_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, maskNameJObj, expressionJObj, descriptionJObj, colorJObj, transparency);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.Product#addMask(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/awt/Color;D)Lorg/esa/beam/framework/datamodel/Mask;");
@@ -16777,7 +16942,6 @@ PyObject* BeamPyProduct_addComputedMask(PyObject* self, PyObject* args)
 PyObject* BeamPyProduct_addBitmaskDef(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* bitmaskDefPyObj = NULL;
@@ -16796,9 +16960,12 @@ PyObject* BeamPyProduct_addBitmaskDef(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:addBitmaskDef", &bitmaskDefPyObj)) {
         return NULL;
     }
-    bitmaskDefJObj = BPy_ToJObjectT(bitmaskDefPyObj, BPy_BitmaskDef_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        bitmaskDefJObj = BPy_ToJObjectT(bitmaskDefPyObj, BPy_BitmaskDef_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, bitmaskDefJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.Product#addBitmaskDef(Lorg/esa/beam/framework/datamodel/BitmaskDef;)V");
@@ -16808,7 +16975,6 @@ PyObject* BeamPyProduct_addBitmaskDef(PyObject* self, PyObject* args)
 PyObject* BeamPyProduct_getBitmaskDefNames(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -16834,7 +17000,6 @@ PyObject* BeamPyProduct_getBitmaskDefNames(PyObject* self, PyObject* args)
 PyObject* BeamPyProduct_getBitmaskDef(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     const char* name = NULL;
@@ -16867,7 +17032,6 @@ PyObject* BeamPyProduct_getBitmaskDef(PyObject* self, PyObject* args)
 PyObject* BeamPyProduct_getValidMask(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     const char* id = NULL;
@@ -16900,7 +17064,6 @@ PyObject* BeamPyProduct_getValidMask(PyObject* self, PyObject* args)
 PyObject* BeamPyProduct_setValidMask(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     const char* id = NULL;
@@ -16922,9 +17085,12 @@ PyObject* BeamPyProduct_setValidMask(PyObject* self, PyObject* args)
         return NULL;
     }
     idJObj =(*jenv)->NewStringUTF(jenv, id);
-    validMaskJObj = BPy_ToJObjectT(validMaskPyObj, BPy_BitRaster_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        validMaskJObj = BPy_ToJObjectT(validMaskPyObj, BPy_BitRaster_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, idJObj, validMaskJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.Product#setValidMask(Ljava/lang/String;Lorg/esa/beam/util/BitRaster;)V");
@@ -16935,7 +17101,6 @@ PyObject* BeamPyProduct_setValidMask(PyObject* self, PyObject* args)
 PyObject* BeamPyProduct_createValidMask2(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     const char* expression = NULL;
@@ -16959,9 +17124,12 @@ PyObject* BeamPyProduct_createValidMask2(PyObject* self, PyObject* args)
         return NULL;
     }
     expressionJObj =(*jenv)->NewStringUTF(jenv, expression);
-    pmJObj = BPy_ToJObjectT(pmPyObj, BPy_ProgressMonitor_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        pmJObj = BPy_ToJObjectT(pmPyObj, BPy_ProgressMonitor_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, expressionJObj, pmJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.Product#createValidMask(Ljava/lang/String;Lcom/bc/ceres/core/ProgressMonitor;)Lorg/esa/beam/util/BitRaster;");
@@ -16974,7 +17142,6 @@ PyObject* BeamPyProduct_createValidMask2(PyObject* self, PyObject* args)
 PyObject* BeamPyProduct_createValidMask1(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* termPyObj = NULL;
@@ -16997,13 +17164,19 @@ PyObject* BeamPyProduct_createValidMask1(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "OO:createValidMask", &termPyObj, &pmPyObj)) {
         return NULL;
     }
-    termJObj = BPy_ToJObjectT(termPyObj, BPy_Term_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        termJObj = BPy_ToJObjectT(termPyObj, BPy_Term_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
-    pmJObj = BPy_ToJObjectT(pmPyObj, BPy_ProgressMonitor_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        pmJObj = BPy_ToJObjectT(pmPyObj, BPy_ProgressMonitor_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, termJObj, pmJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.Product#createValidMask(Lcom/bc/jexp/Term;Lcom/bc/ceres/core/ProgressMonitor;)Lorg/esa/beam/util/BitRaster;");
@@ -17015,7 +17188,6 @@ PyObject* BeamPyProduct_createValidMask1(PyObject* self, PyObject* args)
 PyObject* BeamPyProduct_readBitmask2(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint offsetX = (jint) 0;
@@ -17045,9 +17217,12 @@ PyObject* BeamPyProduct_readBitmask2(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "iiiiOOO:readBitmask", &offsetX, &offsetY, &width, &height, &bitmaskTermPyObj, &bitmaskPyObj, &pmPyObj)) {
         return NULL;
     }
-    bitmaskTermJObj = BPy_ToJObjectT(bitmaskTermPyObj, BPy_Term_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        bitmaskTermJObj = BPy_ToJObjectT(bitmaskTermPyObj, BPy_Term_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     bitmaskPyObj = BPy_ToPrimitiveArrayBufferReadOnly(bitmaskPyObj, &bitmaskBuf, "b", -1);
     if (bitmaskPyObj == NULL) {
@@ -17059,9 +17234,12 @@ PyObject* BeamPyProduct_readBitmask2(PyObject* self, PyObject* args)
     if (bitmaskJObj == NULL) {
         return NULL;
     }
-    pmJObj = BPy_ToJObjectT(pmPyObj, BPy_ProgressMonitor_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        pmJObj = BPy_ToJObjectT(pmPyObj, BPy_ProgressMonitor_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, offsetX, offsetY, width, height, bitmaskTermJObj, bitmaskJObj, pmJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.Product#readBitmask(IIIILcom/bc/jexp/Term;[ZLcom/bc/ceres/core/ProgressMonitor;)V");
@@ -17073,7 +17251,6 @@ PyObject* BeamPyProduct_readBitmask2(PyObject* self, PyObject* args)
 PyObject* BeamPyProduct_readBitmask1(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint offsetX = (jint) 0;
@@ -17105,9 +17282,12 @@ PyObject* BeamPyProduct_readBitmask1(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "iiiiOObbO:readBitmask", &offsetX, &offsetY, &width, &height, &bitmaskTermPyObj, &bitmaskPyObj, &trueValue, &falseValue, &pmPyObj)) {
         return NULL;
     }
-    bitmaskTermJObj = BPy_ToJObjectT(bitmaskTermPyObj, BPy_Term_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        bitmaskTermJObj = BPy_ToJObjectT(bitmaskTermPyObj, BPy_Term_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     bitmaskPyObj = BPy_ToPrimitiveArrayBufferReadOnly(bitmaskPyObj, &bitmaskBuf, "b", -1);
     if (bitmaskPyObj == NULL) {
@@ -17119,9 +17299,12 @@ PyObject* BeamPyProduct_readBitmask1(PyObject* self, PyObject* args)
     if (bitmaskJObj == NULL) {
         return NULL;
     }
-    pmJObj = BPy_ToJObjectT(pmPyObj, BPy_ProgressMonitor_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        pmJObj = BPy_ToJObjectT(pmPyObj, BPy_ProgressMonitor_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, offsetX, offsetY, width, height, bitmaskTermJObj, bitmaskJObj, trueValue, falseValue, pmJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.Product#readBitmask(IIIILcom/bc/jexp/Term;[BBBLcom/bc/ceres/core/ProgressMonitor;)V");
@@ -17133,7 +17316,6 @@ PyObject* BeamPyProduct_readBitmask1(PyObject* self, PyObject* args)
 PyObject* BeamPyProduct_getOwner(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -17159,7 +17341,6 @@ PyObject* BeamPyProduct_getOwner(PyObject* self, PyObject* args)
 PyObject* BeamPyProduct_getName(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -17185,7 +17366,6 @@ PyObject* BeamPyProduct_getName(PyObject* self, PyObject* args)
 PyObject* BeamPyProduct_setName(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     const char* name = NULL;
@@ -17214,7 +17394,6 @@ PyObject* BeamPyProduct_setName(PyObject* self, PyObject* args)
 PyObject* BeamPyProduct_getDescription(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -17240,7 +17419,6 @@ PyObject* BeamPyProduct_getDescription(PyObject* self, PyObject* args)
 PyObject* BeamPyProduct_setDescription(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     const char* description = NULL;
@@ -17269,7 +17447,6 @@ PyObject* BeamPyProduct_setDescription(PyObject* self, PyObject* args)
 PyObject* BeamPyProduct_isModified(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jboolean _result = (jboolean) 0;
@@ -17292,7 +17469,6 @@ PyObject* BeamPyProduct_isModified(PyObject* self, PyObject* args)
 PyObject* BeamPyProduct_toString(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -17318,7 +17494,6 @@ PyObject* BeamPyProduct_toString(PyObject* self, PyObject* args)
 PyObject* BeamPyProduct_isValidNodeName(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     const char* name = NULL;
     jstring nameJObj = NULL;
     jboolean _result = (jboolean) 0;
@@ -17341,7 +17516,6 @@ PyObject* BeamPyProduct_isValidNodeName(PyObject* self, PyObject* args)
 PyObject* BeamPyProduct_getProduct(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -17367,7 +17541,6 @@ PyObject* BeamPyProduct_getProduct(PyObject* self, PyObject* args)
 PyObject* BeamPyProduct_getDisplayName(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -17393,7 +17566,6 @@ PyObject* BeamPyProduct_getDisplayName(PyObject* self, PyObject* args)
 PyObject* BeamPyProduct_getProductRefString(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -17419,7 +17591,6 @@ PyObject* BeamPyProduct_getProductRefString(PyObject* self, PyObject* args)
 PyObject* BeamPyProduct_updateExpression(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     const char* oldExternalName = NULL;
@@ -17452,7 +17623,6 @@ PyObject* BeamPyProduct_updateExpression(PyObject* self, PyObject* args)
 PyObject* BeamPyProduct_removeFromFile(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* productWriterPyObj = NULL;
@@ -17471,9 +17641,12 @@ PyObject* BeamPyProduct_removeFromFile(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:removeFromFile", &productWriterPyObj)) {
         return NULL;
     }
-    productWriterJObj = BPy_ToJObjectT(productWriterPyObj, BPy_ProductWriter_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        productWriterJObj = BPy_ToJObjectT(productWriterPyObj, BPy_ProductWriter_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, productWriterJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.Product#removeFromFile(Lorg/esa/beam/framework/dataio/ProductWriter;)V");
@@ -17483,7 +17656,6 @@ PyObject* BeamPyProduct_removeFromFile(PyObject* self, PyObject* args)
 PyObject* BeamPyProduct_getExtension(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* arg0PyObj = NULL;
@@ -17504,9 +17676,12 @@ PyObject* BeamPyProduct_getExtension(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:getExtension", &arg0PyObj)) {
         return NULL;
     }
-    arg0JObj = BPy_ToJObjectT(arg0PyObj, BPy_Class_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        arg0JObj = BPy_ToJObjectT(arg0PyObj, BPy_Class_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, arg0JObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.Product#getExtension(Ljava/lang/Class;)Ljava/lang/Object;");
@@ -17518,7 +17693,6 @@ PyObject* BeamPyProduct_getExtension(PyObject* self, PyObject* args)
 PyObject* BeamPyColorPaletteDef_newColorPaletteDefFromRange(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     jdouble minSample = (jdouble) 0;
     jdouble maxSample = (jdouble) 0;
     PyObject* _resultPyObj = NULL;
@@ -17542,7 +17716,6 @@ PyObject* BeamPyColorPaletteDef_newColorPaletteDefFromRange(PyObject* self, PyOb
 PyObject* BeamPyColorPaletteDef_newColorPaletteDefFromPoints(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     PyObject* pointsPyObj = NULL;
     jarray pointsJObj = NULL;
     jint numColors = (jint) 0;
@@ -17557,9 +17730,12 @@ PyObject* BeamPyColorPaletteDef_newColorPaletteDefFromPoints(PyObject* self, PyO
     if (!PyArg_ParseTuple(args, "Oi:<init>", &pointsPyObj, &numColors)) {
         return NULL;
     }
-    pointsJObj = BPy_ToJObjectArrayT(pointsPyObj, BPy_ColorPaletteDef_Point_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        pointsJObj = BPy_ToJObjectArrayT(pointsPyObj, BPy_ColorPaletteDef_Point_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _resultJObj = (*jenv)->NewObject(jenv, BPy_ColorPaletteDef_Class, _method, pointsJObj, numColors);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.ColorPaletteDef#<init>([Lorg/esa/beam/framework/datamodel/ColorPaletteDef/Point;I)V");
@@ -17572,7 +17748,6 @@ PyObject* BeamPyColorPaletteDef_newColorPaletteDefFromPoints(PyObject* self, PyO
 PyObject* BeamPyColorPaletteDef_isDiscrete(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jboolean _result = (jboolean) 0;
@@ -17595,7 +17770,6 @@ PyObject* BeamPyColorPaletteDef_isDiscrete(PyObject* self, PyObject* args)
 PyObject* BeamPyColorPaletteDef_setDiscrete(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jboolean discrete = (jboolean) 0;
@@ -17621,7 +17795,6 @@ PyObject* BeamPyColorPaletteDef_setDiscrete(PyObject* self, PyObject* args)
 PyObject* BeamPyColorPaletteDef_getNumColors(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint _result = (jint) 0;
@@ -17644,7 +17817,6 @@ PyObject* BeamPyColorPaletteDef_getNumColors(PyObject* self, PyObject* args)
 PyObject* BeamPyColorPaletteDef_setNumColors(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint numColors = (jint) 0;
@@ -17670,7 +17842,6 @@ PyObject* BeamPyColorPaletteDef_setNumColors(PyObject* self, PyObject* args)
 PyObject* BeamPyColorPaletteDef_getNumPoints(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint _result = (jint) 0;
@@ -17693,7 +17864,6 @@ PyObject* BeamPyColorPaletteDef_getNumPoints(PyObject* self, PyObject* args)
 PyObject* BeamPyColorPaletteDef_setNumPoints(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint numPoints = (jint) 0;
@@ -17719,7 +17889,6 @@ PyObject* BeamPyColorPaletteDef_setNumPoints(PyObject* self, PyObject* args)
 PyObject* BeamPyColorPaletteDef_isAutoDistribute(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jboolean _result = (jboolean) 0;
@@ -17742,7 +17911,6 @@ PyObject* BeamPyColorPaletteDef_isAutoDistribute(PyObject* self, PyObject* args)
 PyObject* BeamPyColorPaletteDef_setAutoDistribute(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jboolean autoDistribute = (jboolean) 0;
@@ -17768,7 +17936,6 @@ PyObject* BeamPyColorPaletteDef_setAutoDistribute(PyObject* self, PyObject* args
 PyObject* BeamPyColorPaletteDef_getPointAt(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint index = (jint) 0;
@@ -17798,7 +17965,6 @@ PyObject* BeamPyColorPaletteDef_getPointAt(PyObject* self, PyObject* args)
 PyObject* BeamPyColorPaletteDef_getFirstPoint(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -17824,7 +17990,6 @@ PyObject* BeamPyColorPaletteDef_getFirstPoint(PyObject* self, PyObject* args)
 PyObject* BeamPyColorPaletteDef_getLastPoint(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -17850,7 +18015,6 @@ PyObject* BeamPyColorPaletteDef_getLastPoint(PyObject* self, PyObject* args)
 PyObject* BeamPyColorPaletteDef_getMinDisplaySample(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jdouble _result = (jdouble) 0;
@@ -17873,7 +18037,6 @@ PyObject* BeamPyColorPaletteDef_getMinDisplaySample(PyObject* self, PyObject* ar
 PyObject* BeamPyColorPaletteDef_getMaxDisplaySample(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jdouble _result = (jdouble) 0;
@@ -17896,7 +18059,6 @@ PyObject* BeamPyColorPaletteDef_getMaxDisplaySample(PyObject* self, PyObject* ar
 PyObject* BeamPyColorPaletteDef_insertPointAfter(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint index = (jint) 0;
@@ -17916,9 +18078,12 @@ PyObject* BeamPyColorPaletteDef_insertPointAfter(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "iO:insertPointAfter", &index, &pointPyObj)) {
         return NULL;
     }
-    pointJObj = BPy_ToJObjectT(pointPyObj, BPy_ColorPaletteDef_Point_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        pointJObj = BPy_ToJObjectT(pointPyObj, BPy_ColorPaletteDef_Point_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, index, pointJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.ColorPaletteDef#insertPointAfter(ILorg/esa/beam/framework/datamodel/ColorPaletteDef/Point;)V");
@@ -17928,7 +18093,6 @@ PyObject* BeamPyColorPaletteDef_insertPointAfter(PyObject* self, PyObject* args)
 PyObject* BeamPyColorPaletteDef_createPointAfter(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint index = (jint) 0;
@@ -17949,9 +18113,12 @@ PyObject* BeamPyColorPaletteDef_createPointAfter(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "iO:createPointAfter", &index, &scalingPyObj)) {
         return NULL;
     }
-    scalingJObj = BPy_ToJObjectT(scalingPyObj, BPy_Scaling_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        scalingJObj = BPy_ToJObjectT(scalingPyObj, BPy_Scaling_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _result = (*jenv)->CallBooleanMethod(jenv, _thisJObj, _method, index, scalingJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.ColorPaletteDef#createPointAfter(ILorg/esa/beam/framework/datamodel/Scaling;)Z");
@@ -17961,7 +18128,6 @@ PyObject* BeamPyColorPaletteDef_createPointAfter(PyObject* self, PyObject* args)
 PyObject* BeamPyColorPaletteDef_getCenterColor(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     PyObject* c1PyObj = NULL;
     jobject c1JObj = NULL;
     PyObject* c2PyObj = NULL;
@@ -17977,13 +18143,19 @@ PyObject* BeamPyColorPaletteDef_getCenterColor(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "OO:getCenterColor", &c1PyObj, &c2PyObj)) {
         return NULL;
     }
-    c1JObj = BPy_ToJObjectT(c1PyObj, BPy_Color_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        c1JObj = BPy_ToJObjectT(c1PyObj, BPy_Color_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
-    c2JObj = BPy_ToJObjectT(c2PyObj, BPy_Color_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        c2JObj = BPy_ToJObjectT(c2PyObj, BPy_Color_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, BPy_ColorPaletteDef_Class, _method, c1JObj, c2JObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.ColorPaletteDef#getCenterColor(Ljava/awt/Color;Ljava/awt/Color;)Ljava/awt/Color;");
@@ -17995,7 +18167,6 @@ PyObject* BeamPyColorPaletteDef_getCenterColor(PyObject* self, PyObject* args)
 PyObject* BeamPyColorPaletteDef_removePointAt(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint index = (jint) 0;
@@ -18021,7 +18192,6 @@ PyObject* BeamPyColorPaletteDef_removePointAt(PyObject* self, PyObject* args)
 PyObject* BeamPyColorPaletteDef_addPoint(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* pointPyObj = NULL;
@@ -18040,9 +18210,12 @@ PyObject* BeamPyColorPaletteDef_addPoint(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:addPoint", &pointPyObj)) {
         return NULL;
     }
-    pointJObj = BPy_ToJObjectT(pointPyObj, BPy_ColorPaletteDef_Point_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        pointJObj = BPy_ToJObjectT(pointPyObj, BPy_ColorPaletteDef_Point_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, pointJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.ColorPaletteDef#addPoint(Lorg/esa/beam/framework/datamodel/ColorPaletteDef/Point;)V");
@@ -18052,7 +18225,6 @@ PyObject* BeamPyColorPaletteDef_addPoint(PyObject* self, PyObject* args)
 PyObject* BeamPyColorPaletteDef_getPoints(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -18078,7 +18250,6 @@ PyObject* BeamPyColorPaletteDef_getPoints(PyObject* self, PyObject* args)
 PyObject* BeamPyColorPaletteDef_setPoints(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* pointsPyObj = NULL;
@@ -18097,9 +18268,12 @@ PyObject* BeamPyColorPaletteDef_setPoints(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:setPoints", &pointsPyObj)) {
         return NULL;
     }
-    pointsJObj = BPy_ToJObjectArrayT(pointsPyObj, BPy_ColorPaletteDef_Point_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        pointsJObj = BPy_ToJObjectArrayT(pointsPyObj, BPy_ColorPaletteDef_Point_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, pointsJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.ColorPaletteDef#setPoints([Lorg/esa/beam/framework/datamodel/ColorPaletteDef/Point;)V");
@@ -18110,7 +18284,6 @@ PyObject* BeamPyColorPaletteDef_setPoints(PyObject* self, PyObject* args)
 PyObject* BeamPyColorPaletteDef_getIterator(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -18136,7 +18309,6 @@ PyObject* BeamPyColorPaletteDef_getIterator(PyObject* self, PyObject* args)
 PyObject* BeamPyColorPaletteDef_clone(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -18162,7 +18334,6 @@ PyObject* BeamPyColorPaletteDef_clone(PyObject* self, PyObject* args)
 PyObject* BeamPyColorPaletteDef_createDeepCopy(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -18188,7 +18359,6 @@ PyObject* BeamPyColorPaletteDef_createDeepCopy(PyObject* self, PyObject* args)
 PyObject* BeamPyColorPaletteDef_loadColorPaletteDef(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     PyObject* filePyObj = NULL;
     jobject fileJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -18202,9 +18372,12 @@ PyObject* BeamPyColorPaletteDef_loadColorPaletteDef(PyObject* self, PyObject* ar
     if (!PyArg_ParseTuple(args, "O:loadColorPaletteDef", &filePyObj)) {
         return NULL;
     }
-    fileJObj = BPy_ToJObjectT(filePyObj, BPy_File_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        fileJObj = BPy_ToJObjectT(filePyObj, BPy_File_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, BPy_ColorPaletteDef_Class, _method, fileJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.ColorPaletteDef#loadColorPaletteDef(Ljava/io/File;)Lorg/esa/beam/framework/datamodel/ColorPaletteDef;");
@@ -18216,7 +18389,6 @@ PyObject* BeamPyColorPaletteDef_loadColorPaletteDef(PyObject* self, PyObject* ar
 PyObject* BeamPyColorPaletteDef_storeColorPaletteDef(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     PyObject* colorPaletteDefPyObj = NULL;
     jobject colorPaletteDefJObj = NULL;
     PyObject* filePyObj = NULL;
@@ -18230,13 +18402,19 @@ PyObject* BeamPyColorPaletteDef_storeColorPaletteDef(PyObject* self, PyObject* a
     if (!PyArg_ParseTuple(args, "OO:storeColorPaletteDef", &colorPaletteDefPyObj, &filePyObj)) {
         return NULL;
     }
-    colorPaletteDefJObj = BPy_ToJObjectT(colorPaletteDefPyObj, BPy_ColorPaletteDef_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        colorPaletteDefJObj = BPy_ToJObjectT(colorPaletteDefPyObj, BPy_ColorPaletteDef_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
-    fileJObj = BPy_ToJObjectT(filePyObj, BPy_File_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        fileJObj = BPy_ToJObjectT(filePyObj, BPy_File_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallStaticVoidMethod(jenv, BPy_ColorPaletteDef_Class, _method, colorPaletteDefJObj, fileJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.ColorPaletteDef#storeColorPaletteDef(Lorg/esa/beam/framework/datamodel/ColorPaletteDef;Ljava/io/File;)V");
@@ -18246,7 +18424,6 @@ PyObject* BeamPyColorPaletteDef_storeColorPaletteDef(PyObject* self, PyObject* a
 PyObject* BeamPyColorPaletteDef_dispose(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     if (!BPy_InitApi()) {
@@ -18268,7 +18445,6 @@ PyObject* BeamPyColorPaletteDef_dispose(PyObject* self, PyObject* args)
 PyObject* BeamPyColorPaletteDef_getColors(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -18294,7 +18470,6 @@ PyObject* BeamPyColorPaletteDef_getColors(PyObject* self, PyObject* args)
 PyObject* BeamPyColorPaletteDef_createColorPalette(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* scalingPyObj = NULL;
@@ -18315,9 +18490,12 @@ PyObject* BeamPyColorPaletteDef_createColorPalette(PyObject* self, PyObject* arg
     if (!PyArg_ParseTuple(args, "O:createColorPalette", &scalingPyObj)) {
         return NULL;
     }
-    scalingJObj = BPy_ToJObjectT(scalingPyObj, BPy_Scaling_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        scalingJObj = BPy_ToJObjectT(scalingPyObj, BPy_Scaling_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, scalingJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.ColorPaletteDef#createColorPalette(Lorg/esa/beam/framework/datamodel/Scaling;)[Ljava/awt/Color;");
@@ -18329,7 +18507,6 @@ PyObject* BeamPyColorPaletteDef_createColorPalette(PyObject* self, PyObject* arg
 PyObject* BeamPyColorPaletteDef_computeColor(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* scalingPyObj = NULL;
@@ -18351,9 +18528,12 @@ PyObject* BeamPyColorPaletteDef_computeColor(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "Od:computeColor", &scalingPyObj, &sample)) {
         return NULL;
     }
-    scalingJObj = BPy_ToJObjectT(scalingPyObj, BPy_Scaling_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        scalingJObj = BPy_ToJObjectT(scalingPyObj, BPy_Scaling_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, scalingJObj, sample);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.ColorPaletteDef#computeColor(Lorg/esa/beam/framework/datamodel/Scaling;D)Ljava/awt/Color;");
@@ -18365,7 +18545,6 @@ PyObject* BeamPyColorPaletteDef_computeColor(PyObject* self, PyObject* args)
 PyObject* BeamPyImageInfo_newImageInfoPalette(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     PyObject* colorPaletteDefPyObj = NULL;
     jobject colorPaletteDefJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -18379,9 +18558,12 @@ PyObject* BeamPyImageInfo_newImageInfoPalette(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:<init>", &colorPaletteDefPyObj)) {
         return NULL;
     }
-    colorPaletteDefJObj = BPy_ToJObjectT(colorPaletteDefPyObj, BPy_ColorPaletteDef_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        colorPaletteDefJObj = BPy_ToJObjectT(colorPaletteDefPyObj, BPy_ColorPaletteDef_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _resultJObj = (*jenv)->NewObject(jenv, BPy_ImageInfo_Class, _method, colorPaletteDefJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.ImageInfo#<init>(Lorg/esa/beam/framework/datamodel/ColorPaletteDef;)V");
@@ -18393,7 +18575,6 @@ PyObject* BeamPyImageInfo_newImageInfoPalette(PyObject* self, PyObject* args)
 PyObject* BeamPyImageInfo_newImageInfoRGB(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     PyObject* rgbChannelDefPyObj = NULL;
     jobject rgbChannelDefJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -18407,9 +18588,12 @@ PyObject* BeamPyImageInfo_newImageInfoRGB(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:<init>", &rgbChannelDefPyObj)) {
         return NULL;
     }
-    rgbChannelDefJObj = BPy_ToJObjectT(rgbChannelDefPyObj, BPy_RGBChannelDef_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        rgbChannelDefJObj = BPy_ToJObjectT(rgbChannelDefPyObj, BPy_RGBChannelDef_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _resultJObj = (*jenv)->NewObject(jenv, BPy_ImageInfo_Class, _method, rgbChannelDefJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.ImageInfo#<init>(Lorg/esa/beam/framework/datamodel/RGBChannelDef;)V");
@@ -18421,7 +18605,6 @@ PyObject* BeamPyImageInfo_newImageInfoRGB(PyObject* self, PyObject* args)
 PyObject* BeamPyImageInfo_getColorPaletteDef(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -18447,7 +18630,6 @@ PyObject* BeamPyImageInfo_getColorPaletteDef(PyObject* self, PyObject* args)
 PyObject* BeamPyImageInfo_getRgbChannelDef(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -18473,7 +18655,6 @@ PyObject* BeamPyImageInfo_getRgbChannelDef(PyObject* self, PyObject* args)
 PyObject* BeamPyImageInfo_getNoDataColor(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -18499,7 +18680,6 @@ PyObject* BeamPyImageInfo_getNoDataColor(PyObject* self, PyObject* args)
 PyObject* BeamPyImageInfo_setNoDataColor(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* noDataColorPyObj = NULL;
@@ -18518,9 +18698,12 @@ PyObject* BeamPyImageInfo_setNoDataColor(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:setNoDataColor", &noDataColorPyObj)) {
         return NULL;
     }
-    noDataColorJObj = BPy_ToJObjectT(noDataColorPyObj, BPy_Color_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        noDataColorJObj = BPy_ToJObjectT(noDataColorPyObj, BPy_Color_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, noDataColorJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.ImageInfo#setNoDataColor(Ljava/awt/Color;)V");
@@ -18530,7 +18713,6 @@ PyObject* BeamPyImageInfo_setNoDataColor(PyObject* self, PyObject* args)
 PyObject* BeamPyImageInfo_setHistogramMatching(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* histogramMatchingPyObj = NULL;
@@ -18549,9 +18731,12 @@ PyObject* BeamPyImageInfo_setHistogramMatching(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:setHistogramMatching", &histogramMatchingPyObj)) {
         return NULL;
     }
-    histogramMatchingJObj = BPy_ToJObjectT(histogramMatchingPyObj, BPy_ImageInfo_HistogramMatching_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        histogramMatchingJObj = BPy_ToJObjectT(histogramMatchingPyObj, BPy_ImageInfo_HistogramMatching_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, histogramMatchingJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.ImageInfo#setHistogramMatching(Lorg/esa/beam/framework/datamodel/ImageInfo/HistogramMatching;)V");
@@ -18561,7 +18746,6 @@ PyObject* BeamPyImageInfo_setHistogramMatching(PyObject* self, PyObject* args)
 PyObject* BeamPyImageInfo_isLogScaled(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jboolean _result = (jboolean) 0;
@@ -18584,7 +18768,6 @@ PyObject* BeamPyImageInfo_isLogScaled(PyObject* self, PyObject* args)
 PyObject* BeamPyImageInfo_setLogScaled(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jboolean logScaled = (jboolean) 0;
@@ -18610,7 +18793,6 @@ PyObject* BeamPyImageInfo_setLogScaled(PyObject* self, PyObject* args)
 PyObject* BeamPyImageInfo_getColors(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -18636,7 +18818,6 @@ PyObject* BeamPyImageInfo_getColors(PyObject* self, PyObject* args)
 PyObject* BeamPyImageInfo_getColorComponentCount(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint _result = (jint) 0;
@@ -18659,7 +18840,6 @@ PyObject* BeamPyImageInfo_getColorComponentCount(PyObject* self, PyObject* args)
 PyObject* BeamPyImageInfo_createIndexColorModel(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* scalingPyObj = NULL;
@@ -18680,9 +18860,12 @@ PyObject* BeamPyImageInfo_createIndexColorModel(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:createIndexColorModel", &scalingPyObj)) {
         return NULL;
     }
-    scalingJObj = BPy_ToJObjectT(scalingPyObj, BPy_Scaling_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        scalingJObj = BPy_ToJObjectT(scalingPyObj, BPy_Scaling_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, scalingJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.ImageInfo#createIndexColorModel(Lorg/esa/beam/framework/datamodel/Scaling;)Ljava/awt/image/IndexColorModel;");
@@ -18694,7 +18877,6 @@ PyObject* BeamPyImageInfo_createIndexColorModel(PyObject* self, PyObject* args)
 PyObject* BeamPyImageInfo_createComponentColorModel(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -18720,7 +18902,6 @@ PyObject* BeamPyImageInfo_createComponentColorModel(PyObject* self, PyObject* ar
 PyObject* BeamPyImageInfo_clone(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -18746,7 +18927,6 @@ PyObject* BeamPyImageInfo_clone(PyObject* self, PyObject* args)
 PyObject* BeamPyImageInfo_createDeepCopy(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -18772,7 +18952,6 @@ PyObject* BeamPyImageInfo_createDeepCopy(PyObject* self, PyObject* args)
 PyObject* BeamPyImageInfo_dispose(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     if (!BPy_InitApi()) {
@@ -18794,7 +18973,6 @@ PyObject* BeamPyImageInfo_dispose(PyObject* self, PyObject* args)
 PyObject* BeamPyImageInfo_setColors(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* colorsPyObj = NULL;
@@ -18813,9 +18991,12 @@ PyObject* BeamPyImageInfo_setColors(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:setColors", &colorsPyObj)) {
         return NULL;
     }
-    colorsJObj = BPy_ToJObjectArrayT(colorsPyObj, BPy_Color_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        colorsJObj = BPy_ToJObjectArrayT(colorsPyObj, BPy_Color_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, colorsJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.ImageInfo#setColors([Ljava/awt/Color;)V");
@@ -18826,7 +19007,6 @@ PyObject* BeamPyImageInfo_setColors(PyObject* self, PyObject* args)
 PyObject* BeamPyImageInfo_setColorPaletteDef(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* colorPaletteDefPyObj = NULL;
@@ -18848,9 +19028,12 @@ PyObject* BeamPyImageInfo_setColorPaletteDef(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "Oddb:setColorPaletteDef", &colorPaletteDefPyObj, &minSample, &maxSample, &autoDistribute)) {
         return NULL;
     }
-    colorPaletteDefJObj = BPy_ToJObjectT(colorPaletteDefPyObj, BPy_ColorPaletteDef_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        colorPaletteDefJObj = BPy_ToJObjectT(colorPaletteDefPyObj, BPy_ColorPaletteDef_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, colorPaletteDefJObj, minSample, maxSample, autoDistribute);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.ImageInfo#setColorPaletteDef(Lorg/esa/beam/framework/datamodel/ColorPaletteDef;DDZ)V");
@@ -18860,7 +19043,6 @@ PyObject* BeamPyImageInfo_setColorPaletteDef(PyObject* self, PyObject* args)
 PyObject* BeamPyImageInfo_getHistogramMatching(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     const char* mode = NULL;
     jstring modeJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -18886,7 +19068,6 @@ PyObject* BeamPyImageInfo_getHistogramMatching(PyObject* self, PyObject* args)
 PyObject* BeamPyProductManager_newProductManager(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     PyObject* _resultPyObj = NULL;
     jobject _resultJObj = NULL;
     if (!BPy_InitApi()) {
@@ -18905,7 +19086,6 @@ PyObject* BeamPyProductManager_newProductManager(PyObject* self, PyObject* args)
 PyObject* BeamPyProductManager_getProductCount(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint _result = (jint) 0;
@@ -18928,7 +19108,6 @@ PyObject* BeamPyProductManager_getProductCount(PyObject* self, PyObject* args)
 PyObject* BeamPyProductManager_getProduct(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint index = (jint) 0;
@@ -18958,7 +19137,6 @@ PyObject* BeamPyProductManager_getProduct(PyObject* self, PyObject* args)
 PyObject* BeamPyProductManager_getProductDisplayNames(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -18984,7 +19162,6 @@ PyObject* BeamPyProductManager_getProductDisplayNames(PyObject* self, PyObject* 
 PyObject* BeamPyProductManager_getProductNames(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -19010,7 +19187,6 @@ PyObject* BeamPyProductManager_getProductNames(PyObject* self, PyObject* args)
 PyObject* BeamPyProductManager_getProducts(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -19036,7 +19212,6 @@ PyObject* BeamPyProductManager_getProducts(PyObject* self, PyObject* args)
 PyObject* BeamPyProductManager_getProductByDisplayName(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     const char* displayName = NULL;
@@ -19069,7 +19244,6 @@ PyObject* BeamPyProductManager_getProductByDisplayName(PyObject* self, PyObject*
 PyObject* BeamPyProductManager_getProductByRefNo(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint refNo = (jint) 0;
@@ -19099,7 +19273,6 @@ PyObject* BeamPyProductManager_getProductByRefNo(PyObject* self, PyObject* args)
 PyObject* BeamPyProductManager_getProductByName(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     const char* name = NULL;
@@ -19132,7 +19305,6 @@ PyObject* BeamPyProductManager_getProductByName(PyObject* self, PyObject* args)
 PyObject* BeamPyProductManager_getProductIndex(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* productPyObj = NULL;
@@ -19152,9 +19324,12 @@ PyObject* BeamPyProductManager_getProductIndex(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:getProductIndex", &productPyObj)) {
         return NULL;
     }
-    productJObj = BPy_ToJObjectT(productPyObj, BPy_Product_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        productJObj = BPy_ToJObjectT(productPyObj, BPy_Product_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _result = (*jenv)->CallIntMethod(jenv, _thisJObj, _method, productJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.ProductManager#getProductIndex(Lorg/esa/beam/framework/datamodel/Product;)I");
@@ -19164,7 +19339,6 @@ PyObject* BeamPyProductManager_getProductIndex(PyObject* self, PyObject* args)
 PyObject* BeamPyProductManager_containsProduct(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     const char* name = NULL;
@@ -19194,7 +19368,6 @@ PyObject* BeamPyProductManager_containsProduct(PyObject* self, PyObject* args)
 PyObject* BeamPyProductManager_contains(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* productPyObj = NULL;
@@ -19214,9 +19387,12 @@ PyObject* BeamPyProductManager_contains(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:contains", &productPyObj)) {
         return NULL;
     }
-    productJObj = BPy_ToJObjectT(productPyObj, BPy_Product_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        productJObj = BPy_ToJObjectT(productPyObj, BPy_Product_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _result = (*jenv)->CallBooleanMethod(jenv, _thisJObj, _method, productJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.ProductManager#contains(Lorg/esa/beam/framework/datamodel/Product;)Z");
@@ -19226,7 +19402,6 @@ PyObject* BeamPyProductManager_contains(PyObject* self, PyObject* args)
 PyObject* BeamPyProductManager_addProduct(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* productPyObj = NULL;
@@ -19245,9 +19420,12 @@ PyObject* BeamPyProductManager_addProduct(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:addProduct", &productPyObj)) {
         return NULL;
     }
-    productJObj = BPy_ToJObjectT(productPyObj, BPy_Product_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        productJObj = BPy_ToJObjectT(productPyObj, BPy_Product_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, productJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.ProductManager#addProduct(Lorg/esa/beam/framework/datamodel/Product;)V");
@@ -19257,7 +19435,6 @@ PyObject* BeamPyProductManager_addProduct(PyObject* self, PyObject* args)
 PyObject* BeamPyProductManager_removeProduct(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* productPyObj = NULL;
@@ -19277,9 +19454,12 @@ PyObject* BeamPyProductManager_removeProduct(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:removeProduct", &productPyObj)) {
         return NULL;
     }
-    productJObj = BPy_ToJObjectT(productPyObj, BPy_Product_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        productJObj = BPy_ToJObjectT(productPyObj, BPy_Product_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _result = (*jenv)->CallBooleanMethod(jenv, _thisJObj, _method, productJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.ProductManager#removeProduct(Lorg/esa/beam/framework/datamodel/Product;)Z");
@@ -19289,7 +19469,6 @@ PyObject* BeamPyProductManager_removeProduct(PyObject* self, PyObject* args)
 PyObject* BeamPyProductManager_removeAllProducts(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     if (!BPy_InitApi()) {
@@ -19311,7 +19490,6 @@ PyObject* BeamPyProductManager_removeAllProducts(PyObject* self, PyObject* args)
 PyObject* BeamPyProductManager_addListener(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* listenerPyObj = NULL;
@@ -19331,9 +19509,12 @@ PyObject* BeamPyProductManager_addListener(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:addListener", &listenerPyObj)) {
         return NULL;
     }
-    listenerJObj = BPy_ToJObjectT(listenerPyObj, BPy_ProductManager_Listener_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        listenerJObj = BPy_ToJObjectT(listenerPyObj, BPy_ProductManager_Listener_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _result = (*jenv)->CallBooleanMethod(jenv, _thisJObj, _method, listenerJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.ProductManager#addListener(Lorg/esa/beam/framework/datamodel/ProductManager/Listener;)Z");
@@ -19343,7 +19524,6 @@ PyObject* BeamPyProductManager_addListener(PyObject* self, PyObject* args)
 PyObject* BeamPyProductManager_removeListener(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* listenerPyObj = NULL;
@@ -19363,9 +19543,12 @@ PyObject* BeamPyProductManager_removeListener(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:removeListener", &listenerPyObj)) {
         return NULL;
     }
-    listenerJObj = BPy_ToJObjectT(listenerPyObj, BPy_ProductManager_Listener_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        listenerJObj = BPy_ToJObjectT(listenerPyObj, BPy_ProductManager_Listener_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _result = (*jenv)->CallBooleanMethod(jenv, _thisJObj, _method, listenerJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.ProductManager#removeListener(Lorg/esa/beam/framework/datamodel/ProductManager/Listener;)Z");
@@ -19375,7 +19558,6 @@ PyObject* BeamPyProductManager_removeListener(PyObject* self, PyObject* args)
 PyObject* BeamPyOperatorSpiRegistry_loadOperatorSpis(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     if (!BPy_InitApi()) {
@@ -19397,7 +19579,6 @@ PyObject* BeamPyOperatorSpiRegistry_loadOperatorSpis(PyObject* self, PyObject* a
 PyObject* BeamPyOperatorSpiRegistry_getServiceRegistry(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -19423,7 +19604,6 @@ PyObject* BeamPyOperatorSpiRegistry_getServiceRegistry(PyObject* self, PyObject*
 PyObject* BeamPyOperatorSpiRegistry_getOperatorSpi(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     const char* operatorName = NULL;
@@ -19456,7 +19636,6 @@ PyObject* BeamPyOperatorSpiRegistry_getOperatorSpi(PyObject* self, PyObject* arg
 PyObject* BeamPyOperatorSpiRegistry_addOperatorSpi(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* operatorSpiPyObj = NULL;
@@ -19476,9 +19655,12 @@ PyObject* BeamPyOperatorSpiRegistry_addOperatorSpi(PyObject* self, PyObject* arg
     if (!PyArg_ParseTuple(args, "O:addOperatorSpi", &operatorSpiPyObj)) {
         return NULL;
     }
-    operatorSpiJObj = BPy_ToJObjectT(operatorSpiPyObj, BPy_OperatorSpi_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        operatorSpiJObj = BPy_ToJObjectT(operatorSpiPyObj, BPy_OperatorSpi_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _result = (*jenv)->CallBooleanMethod(jenv, _thisJObj, _method, operatorSpiJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.gpf.OperatorSpiRegistry#addOperatorSpi(Lorg/esa/beam/framework/gpf/OperatorSpi;)Z");
@@ -19488,7 +19670,6 @@ PyObject* BeamPyOperatorSpiRegistry_addOperatorSpi(PyObject* self, PyObject* arg
 PyObject* BeamPyOperatorSpiRegistry_removeOperatorSpi(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* operatorSpiPyObj = NULL;
@@ -19508,9 +19689,12 @@ PyObject* BeamPyOperatorSpiRegistry_removeOperatorSpi(PyObject* self, PyObject* 
     if (!PyArg_ParseTuple(args, "O:removeOperatorSpi", &operatorSpiPyObj)) {
         return NULL;
     }
-    operatorSpiJObj = BPy_ToJObjectT(operatorSpiPyObj, BPy_OperatorSpi_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        operatorSpiJObj = BPy_ToJObjectT(operatorSpiPyObj, BPy_OperatorSpi_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _result = (*jenv)->CallBooleanMethod(jenv, _thisJObj, _method, operatorSpiJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.gpf.OperatorSpiRegistry#removeOperatorSpi(Lorg/esa/beam/framework/gpf/OperatorSpi;)Z");
@@ -19520,7 +19704,6 @@ PyObject* BeamPyOperatorSpiRegistry_removeOperatorSpi(PyObject* self, PyObject* 
 PyObject* BeamPyOperatorSpiRegistry_setAlias(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     const char* aliasName = NULL;
@@ -19553,7 +19736,6 @@ PyObject* BeamPyOperatorSpiRegistry_setAlias(PyObject* self, PyObject* args)
 PyObject* BeamPyImageGeometry_newImageGeometry(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     PyObject* boundsPyObj = NULL;
     jobject boundsJObj = NULL;
     PyObject* mapCrsPyObj = NULL;
@@ -19571,17 +19753,26 @@ PyObject* BeamPyImageGeometry_newImageGeometry(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "OOO:<init>", &boundsPyObj, &mapCrsPyObj, &image2mapPyObj)) {
         return NULL;
     }
-    boundsJObj = BPy_ToJObjectT(boundsPyObj, BPy_Rectangle_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        boundsJObj = BPy_ToJObjectT(boundsPyObj, BPy_Rectangle_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
-    mapCrsJObj = BPy_ToJObjectT(mapCrsPyObj, BPy_CoordinateReferenceSystem_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        mapCrsJObj = BPy_ToJObjectT(mapCrsPyObj, BPy_CoordinateReferenceSystem_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
-    image2mapJObj = BPy_ToJObjectT(image2mapPyObj, BPy_AffineTransform_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        image2mapJObj = BPy_ToJObjectT(image2mapPyObj, BPy_AffineTransform_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _resultJObj = (*jenv)->NewObject(jenv, BPy_ImageGeometry_Class, _method, boundsJObj, mapCrsJObj, image2mapJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.ImageGeometry#<init>(Ljava/awt/Rectangle;Lorg/opengis/referencing/crs/CoordinateReferenceSystem;Ljava/awt/geom/AffineTransform;)V");
@@ -19593,7 +19784,6 @@ PyObject* BeamPyImageGeometry_newImageGeometry(PyObject* self, PyObject* args)
 PyObject* BeamPyImageGeometry_getImage2MapTransform(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -19619,7 +19809,6 @@ PyObject* BeamPyImageGeometry_getImage2MapTransform(PyObject* self, PyObject* ar
 PyObject* BeamPyImageGeometry_getImageRect(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -19645,7 +19834,6 @@ PyObject* BeamPyImageGeometry_getImageRect(PyObject* self, PyObject* args)
 PyObject* BeamPyImageGeometry_getMapCrs(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -19671,7 +19859,6 @@ PyObject* BeamPyImageGeometry_getMapCrs(PyObject* self, PyObject* args)
 PyObject* BeamPyImageGeometry_changeYAxisDirection(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     if (!BPy_InitApi()) {
@@ -19693,7 +19880,6 @@ PyObject* BeamPyImageGeometry_changeYAxisDirection(PyObject* self, PyObject* arg
 PyObject* BeamPyImageGeometry_calculateEastingNorthing(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     PyObject* sourceProductPyObj = NULL;
     jobject sourceProductJObj = NULL;
     PyObject* targetCrsPyObj = NULL;
@@ -19713,13 +19899,19 @@ PyObject* BeamPyImageGeometry_calculateEastingNorthing(PyObject* self, PyObject*
     if (!PyArg_ParseTuple(args, "OOdddd:calculateEastingNorthing", &sourceProductPyObj, &targetCrsPyObj, &referencePixelX, &referencePixelY, &pixelSizeX, &pixelSizeY)) {
         return NULL;
     }
-    sourceProductJObj = BPy_ToJObjectT(sourceProductPyObj, BPy_Product_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        sourceProductJObj = BPy_ToJObjectT(sourceProductPyObj, BPy_Product_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
-    targetCrsJObj = BPy_ToJObjectT(targetCrsPyObj, BPy_CoordinateReferenceSystem_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        targetCrsJObj = BPy_ToJObjectT(targetCrsPyObj, BPy_CoordinateReferenceSystem_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, BPy_ImageGeometry_Class, _method, sourceProductJObj, targetCrsJObj, referencePixelX, referencePixelY, pixelSizeX, pixelSizeY);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.ImageGeometry#calculateEastingNorthing(Lorg/esa/beam/framework/datamodel/Product;Lorg/opengis/referencing/crs/CoordinateReferenceSystem;DDDD)Ljava/awt/geom/Point2D;");
@@ -19731,7 +19923,6 @@ PyObject* BeamPyImageGeometry_calculateEastingNorthing(PyObject* self, PyObject*
 PyObject* BeamPyImageGeometry_calculateProductSize(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     PyObject* sourceProductPyObj = NULL;
     jobject sourceProductJObj = NULL;
     PyObject* targetCrsPyObj = NULL;
@@ -19749,13 +19940,19 @@ PyObject* BeamPyImageGeometry_calculateProductSize(PyObject* self, PyObject* arg
     if (!PyArg_ParseTuple(args, "OOdd:calculateProductSize", &sourceProductPyObj, &targetCrsPyObj, &pixelSizeX, &pixelSizeY)) {
         return NULL;
     }
-    sourceProductJObj = BPy_ToJObjectT(sourceProductPyObj, BPy_Product_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        sourceProductJObj = BPy_ToJObjectT(sourceProductPyObj, BPy_Product_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
-    targetCrsJObj = BPy_ToJObjectT(targetCrsPyObj, BPy_CoordinateReferenceSystem_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        targetCrsJObj = BPy_ToJObjectT(targetCrsPyObj, BPy_CoordinateReferenceSystem_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, BPy_ImageGeometry_Class, _method, sourceProductJObj, targetCrsJObj, pixelSizeX, pixelSizeY);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.ImageGeometry#calculateProductSize(Lorg/esa/beam/framework/datamodel/Product;Lorg/opengis/referencing/crs/CoordinateReferenceSystem;DD)Ljava/awt/Rectangle;");
@@ -19767,7 +19964,6 @@ PyObject* BeamPyImageGeometry_calculateProductSize(PyObject* self, PyObject* arg
 PyObject* BeamPyImageGeometry_createTargetGeometry(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     PyObject* sourceProductPyObj = NULL;
     jobject sourceProductJObj = NULL;
     PyObject* targetCrsPyObj = NULL;
@@ -19801,49 +19997,82 @@ PyObject* BeamPyImageGeometry_createTargetGeometry(PyObject* self, PyObject* arg
     if (!PyArg_ParseTuple(args, "OOOOOOOOOOO:createTargetGeometry", &sourceProductPyObj, &targetCrsPyObj, &pixelSizeXPyObj, &pixelSizeYPyObj, &widthPyObj, &heightPyObj, &orientationPyObj, &eastingPyObj, &northingPyObj, &referencePixelXPyObj, &referencePixelYPyObj)) {
         return NULL;
     }
-    sourceProductJObj = BPy_ToJObjectT(sourceProductPyObj, BPy_Product_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        sourceProductJObj = BPy_ToJObjectT(sourceProductPyObj, BPy_Product_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
-    targetCrsJObj = BPy_ToJObjectT(targetCrsPyObj, BPy_CoordinateReferenceSystem_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        targetCrsJObj = BPy_ToJObjectT(targetCrsPyObj, BPy_CoordinateReferenceSystem_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
-    pixelSizeXJObj = BPy_ToJObjectT(pixelSizeXPyObj, BPy_Double_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        pixelSizeXJObj = BPy_ToJObjectT(pixelSizeXPyObj, BPy_Double_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
-    pixelSizeYJObj = BPy_ToJObjectT(pixelSizeYPyObj, BPy_Double_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        pixelSizeYJObj = BPy_ToJObjectT(pixelSizeYPyObj, BPy_Double_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
-    widthJObj = BPy_ToJObjectT(widthPyObj, BPy_Integer_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        widthJObj = BPy_ToJObjectT(widthPyObj, BPy_Integer_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
-    heightJObj = BPy_ToJObjectT(heightPyObj, BPy_Integer_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        heightJObj = BPy_ToJObjectT(heightPyObj, BPy_Integer_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
-    orientationJObj = BPy_ToJObjectT(orientationPyObj, BPy_Double_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        orientationJObj = BPy_ToJObjectT(orientationPyObj, BPy_Double_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
-    eastingJObj = BPy_ToJObjectT(eastingPyObj, BPy_Double_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        eastingJObj = BPy_ToJObjectT(eastingPyObj, BPy_Double_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
-    northingJObj = BPy_ToJObjectT(northingPyObj, BPy_Double_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        northingJObj = BPy_ToJObjectT(northingPyObj, BPy_Double_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
-    referencePixelXJObj = BPy_ToJObjectT(referencePixelXPyObj, BPy_Double_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        referencePixelXJObj = BPy_ToJObjectT(referencePixelXPyObj, BPy_Double_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
-    referencePixelYJObj = BPy_ToJObjectT(referencePixelYPyObj, BPy_Double_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        referencePixelYJObj = BPy_ToJObjectT(referencePixelYPyObj, BPy_Double_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, BPy_ImageGeometry_Class, _method, sourceProductJObj, targetCrsJObj, pixelSizeXJObj, pixelSizeYJObj, widthJObj, heightJObj, orientationJObj, eastingJObj, northingJObj, referencePixelXJObj, referencePixelYJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.ImageGeometry#createTargetGeometry(Lorg/esa/beam/framework/datamodel/Product;Lorg/opengis/referencing/crs/CoordinateReferenceSystem;Ljava/lang/Double;Ljava/lang/Double;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Double;Ljava/lang/Double;Ljava/lang/Double;Ljava/lang/Double;Ljava/lang/Double;)Lorg/esa/beam/framework/datamodel/ImageGeometry;");
@@ -19855,7 +20084,6 @@ PyObject* BeamPyImageGeometry_createTargetGeometry(PyObject* self, PyObject* arg
 PyObject* BeamPyImageGeometry_createCollocationTargetGeometry(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     PyObject* targetProductPyObj = NULL;
     jobject targetProductJObj = NULL;
     PyObject* collocationProductPyObj = NULL;
@@ -19871,13 +20099,19 @@ PyObject* BeamPyImageGeometry_createCollocationTargetGeometry(PyObject* self, Py
     if (!PyArg_ParseTuple(args, "OO:createCollocationTargetGeometry", &targetProductPyObj, &collocationProductPyObj)) {
         return NULL;
     }
-    targetProductJObj = BPy_ToJObjectT(targetProductPyObj, BPy_Product_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        targetProductJObj = BPy_ToJObjectT(targetProductPyObj, BPy_Product_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
-    collocationProductJObj = BPy_ToJObjectT(collocationProductPyObj, BPy_Product_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        collocationProductJObj = BPy_ToJObjectT(collocationProductPyObj, BPy_Product_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, BPy_ImageGeometry_Class, _method, targetProductJObj, collocationProductJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.ImageGeometry#createCollocationTargetGeometry(Lorg/esa/beam/framework/datamodel/Product;Lorg/esa/beam/framework/datamodel/Product;)Lorg/esa/beam/framework/datamodel/ImageGeometry;");
@@ -19886,10 +20120,39 @@ PyObject* BeamPyImageGeometry_createCollocationTargetGeometry(PyObject* self, Py
     return _resultPyObj;
 }
 
+PyObject* BeamPyImageGeometry_createValidRect(PyObject* self, PyObject* args)
+{
+    static jmethodID _method = NULL;
+    PyObject* productPyObj = NULL;
+    jobject productJObj = NULL;
+    PyObject* _resultPyObj = NULL;
+    jobject _resultJObj = NULL;
+    if (!BPy_InitApi()) {
+        return NULL;
+    }
+    if (!BPy_InitJMethod(&_method, BPy_ImageGeometry_Class, "org.esa.beam.framework.datamodel.ImageGeometry", "createValidRect", "(Lorg/esa/beam/framework/datamodel/Product;)Ljava/awt/geom/Rectangle2D;", 1)) {
+        return NULL;
+    }
+    if (!PyArg_ParseTuple(args, "O:createValidRect", &productPyObj)) {
+        return NULL;
+    }
+    {
+        jboolean ok = 1;
+        productJObj = BPy_ToJObjectT(productPyObj, BPy_Product_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
+    }
+    _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, BPy_ImageGeometry_Class, _method, productJObj);
+    CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.ImageGeometry#createValidRect(Lorg/esa/beam/framework/datamodel/Product;)Ljava/awt/geom/Rectangle2D;");
+    _resultPyObj = BPy_FromJObject(&Rectangle2D_Type, _resultJObj);
+    (*jenv)->DeleteLocalRef(jenv, _resultJObj);
+    return _resultPyObj;
+}
+
 PyObject* BeamPyBand_newBand(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     const char* name = NULL;
     jstring nameJObj = NULL;
     jint dataType = (jint) 0;
@@ -19918,7 +20181,6 @@ PyObject* BeamPyBand_newBand(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_getFlagCoding(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -19944,7 +20206,6 @@ PyObject* BeamPyBand_getFlagCoding(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_isFlagBand(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jboolean _result = (jboolean) 0;
@@ -19967,7 +20228,6 @@ PyObject* BeamPyBand_isFlagBand(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_getIndexCoding(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -19993,7 +20253,6 @@ PyObject* BeamPyBand_getIndexCoding(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_isIndexBand(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jboolean _result = (jboolean) 0;
@@ -20016,7 +20275,6 @@ PyObject* BeamPyBand_isIndexBand(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_getSampleCoding(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -20042,7 +20300,6 @@ PyObject* BeamPyBand_getSampleCoding(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_setSampleCoding(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* sampleCodingPyObj = NULL;
@@ -20061,9 +20318,12 @@ PyObject* BeamPyBand_setSampleCoding(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:setSampleCoding", &sampleCodingPyObj)) {
         return NULL;
     }
-    sampleCodingJObj = BPy_ToJObjectT(sampleCodingPyObj, BPy_SampleCoding_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        sampleCodingJObj = BPy_ToJObjectT(sampleCodingPyObj, BPy_SampleCoding_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, sampleCodingJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.Band#setSampleCoding(Lorg/esa/beam/framework/datamodel/SampleCoding;)V");
@@ -20073,7 +20333,6 @@ PyObject* BeamPyBand_setSampleCoding(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_getSpectralBandIndex(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint _result = (jint) 0;
@@ -20096,7 +20355,6 @@ PyObject* BeamPyBand_getSpectralBandIndex(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_setSpectralBandIndex(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint spectralBandIndex = (jint) 0;
@@ -20122,7 +20380,6 @@ PyObject* BeamPyBand_setSpectralBandIndex(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_getSpectralWavelength(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jfloat _result = (jfloat) 0;
@@ -20145,7 +20402,6 @@ PyObject* BeamPyBand_getSpectralWavelength(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_setSpectralWavelength(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jfloat spectralWavelength = (jfloat) 0;
@@ -20171,7 +20427,6 @@ PyObject* BeamPyBand_setSpectralWavelength(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_getSpectralBandwidth(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jfloat _result = (jfloat) 0;
@@ -20194,7 +20449,6 @@ PyObject* BeamPyBand_getSpectralBandwidth(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_setSpectralBandwidth(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jfloat spectralBandwidth = (jfloat) 0;
@@ -20220,7 +20474,6 @@ PyObject* BeamPyBand_setSpectralBandwidth(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_getSolarFlux(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jfloat _result = (jfloat) 0;
@@ -20243,7 +20496,6 @@ PyObject* BeamPyBand_getSolarFlux(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_setSolarFlux(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jfloat solarFlux = (jfloat) 0;
@@ -20269,7 +20521,6 @@ PyObject* BeamPyBand_setSolarFlux(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_acceptVisitor(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* visitorPyObj = NULL;
@@ -20288,9 +20539,12 @@ PyObject* BeamPyBand_acceptVisitor(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:acceptVisitor", &visitorPyObj)) {
         return NULL;
     }
-    visitorJObj = BPy_ToJObjectT(visitorPyObj, BPy_ProductVisitor_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        visitorJObj = BPy_ToJObjectT(visitorPyObj, BPy_ProductVisitor_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, visitorJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.Band#acceptVisitor(Lorg/esa/beam/framework/datamodel/ProductVisitor;)V");
@@ -20300,7 +20554,6 @@ PyObject* BeamPyBand_acceptVisitor(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_toString(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -20326,7 +20579,6 @@ PyObject* BeamPyBand_toString(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_removeFromFile(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* productWriterPyObj = NULL;
@@ -20345,9 +20597,12 @@ PyObject* BeamPyBand_removeFromFile(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:removeFromFile", &productWriterPyObj)) {
         return NULL;
     }
-    productWriterJObj = BPy_ToJObjectT(productWriterPyObj, BPy_ProductWriter_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        productWriterJObj = BPy_ToJObjectT(productWriterPyObj, BPy_ProductWriter_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, productWriterJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.Band#removeFromFile(Lorg/esa/beam/framework/dataio/ProductWriter;)V");
@@ -20357,7 +20612,6 @@ PyObject* BeamPyBand_removeFromFile(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_dispose(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     if (!BPy_InitApi()) {
@@ -20379,7 +20633,6 @@ PyObject* BeamPyBand_dispose(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_getViewModeId(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     const char* bandName = NULL;
@@ -20412,7 +20665,6 @@ PyObject* BeamPyBand_getViewModeId(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_computeBand(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     const char* expression = NULL;
@@ -20444,13 +20696,19 @@ PyObject* BeamPyBand_computeBand(PyObject* self, PyObject* args)
     }
     expressionJObj =(*jenv)->NewStringUTF(jenv, expression);
     validMaskExpressionJObj =(*jenv)->NewStringUTF(jenv, validMaskExpression);
-    sourceProductsJObj = BPy_ToJObjectArrayT(sourceProductsPyObj, BPy_Product_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        sourceProductsJObj = BPy_ToJObjectArrayT(sourceProductsPyObj, BPy_Product_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
-    pmJObj = BPy_ToJObjectT(pmPyObj, BPy_ProgressMonitor_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        pmJObj = BPy_ToJObjectT(pmPyObj, BPy_ProgressMonitor_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _result = (*jenv)->CallIntMethod(jenv, _thisJObj, _method, expressionJObj, validMaskExpressionJObj, sourceProductsJObj, defaultProductIndex, checkInvalids, useInvalidValue, noDataValue, pmJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.Band#computeBand(Ljava/lang/String;Ljava/lang/String;[Lorg/esa/beam/framework/datamodel/Product;IZZDLcom/bc/ceres/core/ProgressMonitor;)I");
@@ -20463,7 +20721,6 @@ PyObject* BeamPyBand_computeBand(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_getSceneRasterData(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -20489,7 +20746,6 @@ PyObject* BeamPyBand_getSceneRasterData(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_getPixelInt(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint x = (jint) 0;
@@ -20517,7 +20773,6 @@ PyObject* BeamPyBand_getPixelInt(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_getPixelFloat(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint x = (jint) 0;
@@ -20545,7 +20800,6 @@ PyObject* BeamPyBand_getPixelFloat(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_getPixelDouble(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint x = (jint) 0;
@@ -20573,7 +20827,6 @@ PyObject* BeamPyBand_getPixelDouble(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_setPixelInt(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint x = (jint) 0;
@@ -20601,7 +20854,6 @@ PyObject* BeamPyBand_setPixelInt(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_setPixelFloat(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint x = (jint) 0;
@@ -20629,7 +20881,6 @@ PyObject* BeamPyBand_setPixelFloat(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_setPixelDouble(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint x = (jint) 0;
@@ -20657,7 +20908,6 @@ PyObject* BeamPyBand_setPixelDouble(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_setPixelsInt(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint x = (jint) 0;
@@ -20703,7 +20953,6 @@ PyObject* BeamPyBand_setPixelsInt(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_setPixelsFloat(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint x = (jint) 0;
@@ -20749,7 +20998,6 @@ PyObject* BeamPyBand_setPixelsFloat(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_setPixelsDouble(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint x = (jint) 0;
@@ -20795,7 +21043,6 @@ PyObject* BeamPyBand_setPixelsDouble(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_ensureRasterData(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     if (!BPy_InitApi()) {
@@ -20817,7 +21064,6 @@ PyObject* BeamPyBand_ensureRasterData(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_unloadRasterData(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     if (!BPy_InitApi()) {
@@ -20839,7 +21085,6 @@ PyObject* BeamPyBand_unloadRasterData(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_getSceneRasterWidth(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint _result = (jint) 0;
@@ -20862,7 +21107,6 @@ PyObject* BeamPyBand_getSceneRasterWidth(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_getSceneRasterHeight(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint _result = (jint) 0;
@@ -20885,7 +21129,6 @@ PyObject* BeamPyBand_getSceneRasterHeight(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_getRasterWidth(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint _result = (jint) 0;
@@ -20908,7 +21151,6 @@ PyObject* BeamPyBand_getRasterWidth(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_getRasterHeight(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint _result = (jint) 0;
@@ -20931,7 +21173,6 @@ PyObject* BeamPyBand_getRasterHeight(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_setModified(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jboolean modified = (jboolean) 0;
@@ -20957,7 +21198,6 @@ PyObject* BeamPyBand_setModified(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_getGeoCoding(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -20983,7 +21223,6 @@ PyObject* BeamPyBand_getGeoCoding(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_setGeoCoding(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* geoCodingPyObj = NULL;
@@ -21002,9 +21241,12 @@ PyObject* BeamPyBand_setGeoCoding(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:setGeoCoding", &geoCodingPyObj)) {
         return NULL;
     }
-    geoCodingJObj = BPy_ToJObjectT(geoCodingPyObj, BPy_GeoCoding_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        geoCodingJObj = BPy_ToJObjectT(geoCodingPyObj, BPy_GeoCoding_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, geoCodingJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.Band#setGeoCoding(Lorg/esa/beam/framework/datamodel/GeoCoding;)V");
@@ -21014,7 +21256,6 @@ PyObject* BeamPyBand_setGeoCoding(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_getPointing(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -21040,7 +21281,6 @@ PyObject* BeamPyBand_getPointing(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_canBeOrthorectified(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jboolean _result = (jboolean) 0;
@@ -21063,7 +21303,6 @@ PyObject* BeamPyBand_canBeOrthorectified(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_isFloatingPointType(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jboolean _result = (jboolean) 0;
@@ -21086,7 +21325,6 @@ PyObject* BeamPyBand_isFloatingPointType(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_getGeophysicalDataType(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint _result = (jint) 0;
@@ -21109,7 +21347,6 @@ PyObject* BeamPyBand_getGeophysicalDataType(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_getScalingFactor(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jdouble _result = (jdouble) 0;
@@ -21132,7 +21369,6 @@ PyObject* BeamPyBand_getScalingFactor(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_setScalingFactor(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jdouble scalingFactor = (jdouble) 0;
@@ -21158,7 +21394,6 @@ PyObject* BeamPyBand_setScalingFactor(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_getScalingOffset(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jdouble _result = (jdouble) 0;
@@ -21181,7 +21416,6 @@ PyObject* BeamPyBand_getScalingOffset(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_setScalingOffset(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jdouble scalingOffset = (jdouble) 0;
@@ -21207,7 +21441,6 @@ PyObject* BeamPyBand_setScalingOffset(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_isLog10Scaled(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jboolean _result = (jboolean) 0;
@@ -21230,7 +21463,6 @@ PyObject* BeamPyBand_isLog10Scaled(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_setLog10Scaled(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jboolean log10Scaled = (jboolean) 0;
@@ -21256,7 +21488,6 @@ PyObject* BeamPyBand_setLog10Scaled(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_isScalingApplied(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jboolean _result = (jboolean) 0;
@@ -21279,7 +21510,6 @@ PyObject* BeamPyBand_isScalingApplied(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_isValidMaskProperty(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     const char* propertyName = NULL;
     jstring propertyNameJObj = NULL;
     jboolean _result = (jboolean) 0;
@@ -21302,7 +21532,6 @@ PyObject* BeamPyBand_isValidMaskProperty(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_isNoDataValueSet(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jboolean _result = (jboolean) 0;
@@ -21325,7 +21554,6 @@ PyObject* BeamPyBand_isNoDataValueSet(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_clearNoDataValue(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     if (!BPy_InitApi()) {
@@ -21347,7 +21575,6 @@ PyObject* BeamPyBand_clearNoDataValue(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_isNoDataValueUsed(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jboolean _result = (jboolean) 0;
@@ -21370,7 +21597,6 @@ PyObject* BeamPyBand_isNoDataValueUsed(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_setNoDataValueUsed(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jboolean noDataValueUsed = (jboolean) 0;
@@ -21396,7 +21622,6 @@ PyObject* BeamPyBand_setNoDataValueUsed(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_getNoDataValue(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jdouble _result = (jdouble) 0;
@@ -21419,7 +21644,6 @@ PyObject* BeamPyBand_getNoDataValue(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_setNoDataValue(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jdouble noDataValue = (jdouble) 0;
@@ -21445,7 +21669,6 @@ PyObject* BeamPyBand_setNoDataValue(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_getGeophysicalNoDataValue(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jdouble _result = (jdouble) 0;
@@ -21468,7 +21691,6 @@ PyObject* BeamPyBand_getGeophysicalNoDataValue(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_setGeophysicalNoDataValue(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jdouble noDataValue = (jdouble) 0;
@@ -21494,7 +21716,6 @@ PyObject* BeamPyBand_setGeophysicalNoDataValue(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_getValidPixelExpression(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -21520,7 +21741,6 @@ PyObject* BeamPyBand_getValidPixelExpression(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_setValidPixelExpression(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     const char* validPixelExpression = NULL;
@@ -21549,7 +21769,6 @@ PyObject* BeamPyBand_setValidPixelExpression(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_isValidMaskUsed(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jboolean _result = (jboolean) 0;
@@ -21572,7 +21791,6 @@ PyObject* BeamPyBand_isValidMaskUsed(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_resetValidMask(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     if (!BPy_InitApi()) {
@@ -21594,7 +21812,6 @@ PyObject* BeamPyBand_resetValidMask(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_getValidMaskExpression(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -21620,7 +21837,6 @@ PyObject* BeamPyBand_getValidMaskExpression(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_updateExpression(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     const char* oldExternalName = NULL;
@@ -21653,7 +21869,6 @@ PyObject* BeamPyBand_updateExpression(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_hasRasterData(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jboolean _result = (jboolean) 0;
@@ -21676,7 +21891,6 @@ PyObject* BeamPyBand_hasRasterData(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_getRasterData(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -21702,7 +21916,6 @@ PyObject* BeamPyBand_getRasterData(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_setRasterData(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* rasterDataPyObj = NULL;
@@ -21721,9 +21934,12 @@ PyObject* BeamPyBand_setRasterData(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:setRasterData", &rasterDataPyObj)) {
         return NULL;
     }
-    rasterDataJObj = BPy_ToJObjectT(rasterDataPyObj, BPy_ProductData_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        rasterDataJObj = BPy_ToJObjectT(rasterDataPyObj, BPy_ProductData_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, rasterDataJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.Band#setRasterData(Lorg/esa/beam/framework/datamodel/ProductData;)V");
@@ -21733,7 +21949,6 @@ PyObject* BeamPyBand_setRasterData(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_loadRasterData(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     if (!BPy_InitApi()) {
@@ -21755,7 +21970,6 @@ PyObject* BeamPyBand_loadRasterData(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_isPixelValid(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint x = (jint) 0;
@@ -21783,7 +21997,6 @@ PyObject* BeamPyBand_isPixelValid(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_getSampleInt(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint x = (jint) 0;
@@ -21811,7 +22024,6 @@ PyObject* BeamPyBand_getSampleInt(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_getSampleFloat(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint x = (jint) 0;
@@ -21839,7 +22051,6 @@ PyObject* BeamPyBand_getSampleFloat(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_getPixelsInt(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint x = (jint) 0;
@@ -21893,7 +22104,6 @@ PyObject* BeamPyBand_getPixelsInt(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_getPixelsFloat(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint x = (jint) 0;
@@ -21947,7 +22157,6 @@ PyObject* BeamPyBand_getPixelsFloat(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_getPixelsDouble(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint x = (jint) 0;
@@ -22001,7 +22210,6 @@ PyObject* BeamPyBand_getPixelsDouble(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_readPixelsInt(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint x = (jint) 0;
@@ -22055,7 +22263,6 @@ PyObject* BeamPyBand_readPixelsInt(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_readPixelsFloat(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint x = (jint) 0;
@@ -22109,7 +22316,6 @@ PyObject* BeamPyBand_readPixelsFloat(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_readPixelsDouble(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint x = (jint) 0;
@@ -22163,7 +22369,6 @@ PyObject* BeamPyBand_readPixelsDouble(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_writePixelsInt(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint x = (jint) 0;
@@ -22209,7 +22414,6 @@ PyObject* BeamPyBand_writePixelsInt(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_writePixelsFloat(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint x = (jint) 0;
@@ -22255,7 +22459,6 @@ PyObject* BeamPyBand_writePixelsFloat(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_writePixelsDouble(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint x = (jint) 0;
@@ -22301,7 +22504,6 @@ PyObject* BeamPyBand_writePixelsDouble(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_readValidMask(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint x = (jint) 0;
@@ -22355,7 +22557,6 @@ PyObject* BeamPyBand_readValidMask(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_writeRasterDataFully(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     if (!BPy_InitApi()) {
@@ -22377,7 +22578,6 @@ PyObject* BeamPyBand_writeRasterDataFully(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_writeRasterData(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint offsetX = (jint) 0;
@@ -22400,9 +22600,12 @@ PyObject* BeamPyBand_writeRasterData(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "iiiiO:writeRasterData", &offsetX, &offsetY, &width, &height, &rasterDataPyObj)) {
         return NULL;
     }
-    rasterDataJObj = BPy_ToJObjectT(rasterDataPyObj, BPy_ProductData_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        rasterDataJObj = BPy_ToJObjectT(rasterDataPyObj, BPy_ProductData_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, offsetX, offsetY, width, height, rasterDataJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.Band#writeRasterData(IIIILorg/esa/beam/framework/datamodel/ProductData;)V");
@@ -22412,7 +22615,6 @@ PyObject* BeamPyBand_writeRasterData(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_createCompatibleRasterData(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -22438,7 +22640,6 @@ PyObject* BeamPyBand_createCompatibleRasterData(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_createCompatibleSceneRasterData(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -22464,7 +22665,6 @@ PyObject* BeamPyBand_createCompatibleSceneRasterData(PyObject* self, PyObject* a
 PyObject* BeamPyBand_createCompatibleRasterDataForRect(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint width = (jint) 0;
@@ -22495,7 +22695,6 @@ PyObject* BeamPyBand_createCompatibleRasterDataForRect(PyObject* self, PyObject*
 PyObject* BeamPyBand_isCompatibleRasterData(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* rasterDataPyObj = NULL;
@@ -22517,9 +22716,12 @@ PyObject* BeamPyBand_isCompatibleRasterData(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "Oii:isCompatibleRasterData", &rasterDataPyObj, &w, &h)) {
         return NULL;
     }
-    rasterDataJObj = BPy_ToJObjectT(rasterDataPyObj, BPy_ProductData_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        rasterDataJObj = BPy_ToJObjectT(rasterDataPyObj, BPy_ProductData_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _result = (*jenv)->CallBooleanMethod(jenv, _thisJObj, _method, rasterDataJObj, w, h);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.Band#isCompatibleRasterData(Lorg/esa/beam/framework/datamodel/ProductData;II)Z");
@@ -22529,7 +22731,6 @@ PyObject* BeamPyBand_isCompatibleRasterData(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_checkCompatibleRasterData(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* rasterDataPyObj = NULL;
@@ -22550,9 +22751,12 @@ PyObject* BeamPyBand_checkCompatibleRasterData(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "Oii:checkCompatibleRasterData", &rasterDataPyObj, &w, &h)) {
         return NULL;
     }
-    rasterDataJObj = BPy_ToJObjectT(rasterDataPyObj, BPy_ProductData_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        rasterDataJObj = BPy_ToJObjectT(rasterDataPyObj, BPy_ProductData_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, rasterDataJObj, w, h);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.Band#checkCompatibleRasterData(Lorg/esa/beam/framework/datamodel/ProductData;II)V");
@@ -22562,7 +22766,6 @@ PyObject* BeamPyBand_checkCompatibleRasterData(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_hasIntPixels(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jboolean _result = (jboolean) 0;
@@ -22585,7 +22788,6 @@ PyObject* BeamPyBand_hasIntPixels(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_createTransectProfileData(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* shapePyObj = NULL;
@@ -22606,9 +22808,12 @@ PyObject* BeamPyBand_createTransectProfileData(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:createTransectProfileData", &shapePyObj)) {
         return NULL;
     }
-    shapeJObj = BPy_ToJObjectT(shapePyObj, BPy_Shape_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        shapeJObj = BPy_ToJObjectT(shapePyObj, BPy_Shape_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, shapeJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.Band#createTransectProfileData(Ljava/awt/Shape;)Lorg/esa/beam/framework/datamodel/TransectProfileData;");
@@ -22620,7 +22825,6 @@ PyObject* BeamPyBand_createTransectProfileData(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_getImageInfo(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -22646,7 +22850,6 @@ PyObject* BeamPyBand_getImageInfo(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_setImageInfo(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* imageInfoPyObj = NULL;
@@ -22665,9 +22868,12 @@ PyObject* BeamPyBand_setImageInfo(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:setImageInfo", &imageInfoPyObj)) {
         return NULL;
     }
-    imageInfoJObj = BPy_ToJObjectT(imageInfoPyObj, BPy_ImageInfo_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        imageInfoJObj = BPy_ToJObjectT(imageInfoPyObj, BPy_ImageInfo_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, imageInfoJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.Band#setImageInfo(Lorg/esa/beam/framework/datamodel/ImageInfo;)V");
@@ -22677,7 +22883,6 @@ PyObject* BeamPyBand_setImageInfo(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_fireImageInfoChanged(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     if (!BPy_InitApi()) {
@@ -22699,7 +22904,6 @@ PyObject* BeamPyBand_fireImageInfoChanged(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_createDefaultImageInfo(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jdouble* histoSkipAreasData = NULL;
@@ -22735,9 +22939,12 @@ PyObject* BeamPyBand_createDefaultImageInfo(PyObject* self, PyObject* args)
     if (histoSkipAreasJObj == NULL) {
         return NULL;
     }
-    histogramJObj = BPy_ToJObjectT(histogramPyObj, BPy_Histogram_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        histogramJObj = BPy_ToJObjectT(histogramPyObj, BPy_Histogram_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, histoSkipAreasJObj, histogramJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.Band#createDefaultImageInfo([DLorg/esa/beam/util/math/Histogram;)Lorg/esa/beam/framework/datamodel/ImageInfo;");
@@ -22751,7 +22958,6 @@ PyObject* BeamPyBand_createDefaultImageInfo(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_getOverlayMaskGroup(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -22777,7 +22983,6 @@ PyObject* BeamPyBand_getOverlayMaskGroup(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_createColorIndexedImage(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* pmPyObj = NULL;
@@ -22798,9 +23003,12 @@ PyObject* BeamPyBand_createColorIndexedImage(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:createColorIndexedImage", &pmPyObj)) {
         return NULL;
     }
-    pmJObj = BPy_ToJObjectT(pmPyObj, BPy_ProgressMonitor_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        pmJObj = BPy_ToJObjectT(pmPyObj, BPy_ProgressMonitor_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, pmJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.Band#createColorIndexedImage(Lcom/bc/ceres/core/ProgressMonitor;)Ljava/awt/image/BufferedImage;");
@@ -22812,7 +23020,6 @@ PyObject* BeamPyBand_createColorIndexedImage(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_createRgbImage(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* pmPyObj = NULL;
@@ -22833,9 +23040,12 @@ PyObject* BeamPyBand_createRgbImage(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:createRgbImage", &pmPyObj)) {
         return NULL;
     }
-    pmJObj = BPy_ToJObjectT(pmPyObj, BPy_ProgressMonitor_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        pmJObj = BPy_ToJObjectT(pmPyObj, BPy_ProgressMonitor_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, pmJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.Band#createRgbImage(Lcom/bc/ceres/core/ProgressMonitor;)Ljava/awt/image/BufferedImage;");
@@ -22847,7 +23057,6 @@ PyObject* BeamPyBand_createRgbImage(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_createPixelValidator(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint lineOffset = (jint) 0;
@@ -22869,9 +23078,12 @@ PyObject* BeamPyBand_createPixelValidator(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "iO:createPixelValidator", &lineOffset, &roiPyObj)) {
         return NULL;
     }
-    roiJObj = BPy_ToJObjectT(roiPyObj, BPy_ROI_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        roiJObj = BPy_ToJObjectT(roiPyObj, BPy_ROI_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, lineOffset, roiJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.Band#createPixelValidator(ILjavax/media/jai/ROI;)Lorg/esa/beam/util/math/IndexValidator;");
@@ -22883,7 +23095,6 @@ PyObject* BeamPyBand_createPixelValidator(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_scale(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jdouble v = (jdouble) 0;
@@ -22910,7 +23121,6 @@ PyObject* BeamPyBand_scale(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_scaleInverse(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jdouble v = (jdouble) 0;
@@ -22937,7 +23147,6 @@ PyObject* BeamPyBand_scaleInverse(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_getPixelString(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint x = (jint) 0;
@@ -22968,7 +23177,6 @@ PyObject* BeamPyBand_getPixelString(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_isSourceImageSet(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jboolean _result = (jboolean) 0;
@@ -22991,7 +23199,6 @@ PyObject* BeamPyBand_isSourceImageSet(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_getSourceImage(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -23017,7 +23224,6 @@ PyObject* BeamPyBand_getSourceImage(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_isGeophysicalImageSet(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jboolean _result = (jboolean) 0;
@@ -23040,7 +23246,6 @@ PyObject* BeamPyBand_isGeophysicalImageSet(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_getGeophysicalImage(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -23066,7 +23271,6 @@ PyObject* BeamPyBand_getGeophysicalImage(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_isValidMaskImageSet(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jboolean _result = (jboolean) 0;
@@ -23089,7 +23293,6 @@ PyObject* BeamPyBand_isValidMaskImageSet(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_getValidMaskImage(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -23115,7 +23318,6 @@ PyObject* BeamPyBand_getValidMaskImage(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_isStxSet(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jboolean _result = (jboolean) 0;
@@ -23138,7 +23340,6 @@ PyObject* BeamPyBand_isStxSet(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_getStx(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -23164,7 +23365,6 @@ PyObject* BeamPyBand_getStx(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_setStx(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* stxPyObj = NULL;
@@ -23183,9 +23383,12 @@ PyObject* BeamPyBand_setStx(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:setStx", &stxPyObj)) {
         return NULL;
     }
-    stxJObj = BPy_ToJObjectT(stxPyObj, BPy_Stx_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        stxJObj = BPy_ToJObjectT(stxPyObj, BPy_Stx_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, stxJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.Band#setStx(Lorg/esa/beam/framework/datamodel/Stx;)V");
@@ -23195,7 +23398,6 @@ PyObject* BeamPyBand_setStx(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_getValidShape(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -23221,7 +23423,6 @@ PyObject* BeamPyBand_getValidShape(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_getRoiMaskGroup(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -23247,7 +23448,6 @@ PyObject* BeamPyBand_getRoiMaskGroup(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_getDataType(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint _result = (jint) 0;
@@ -23270,7 +23470,6 @@ PyObject* BeamPyBand_getDataType(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_getNumDataElems(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jlong _result = (jlong) 0;
@@ -23293,7 +23492,6 @@ PyObject* BeamPyBand_getNumDataElems(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_setData(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* dataPyObj = NULL;
@@ -23312,9 +23510,12 @@ PyObject* BeamPyBand_setData(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:setData", &dataPyObj)) {
         return NULL;
     }
-    dataJObj = BPy_ToJObjectT(dataPyObj, BPy_ProductData_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        dataJObj = BPy_ToJObjectT(dataPyObj, BPy_ProductData_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, dataJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.Band#setData(Lorg/esa/beam/framework/datamodel/ProductData;)V");
@@ -23324,7 +23525,6 @@ PyObject* BeamPyBand_setData(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_getData(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -23350,7 +23550,6 @@ PyObject* BeamPyBand_getData(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_setDataElems(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* elemsPyObj = NULL;
@@ -23369,9 +23568,12 @@ PyObject* BeamPyBand_setDataElems(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:setDataElems", &elemsPyObj)) {
         return NULL;
     }
-    elemsJObj = BPy_ToJObjectT(elemsPyObj, BPy_Object_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        elemsJObj = BPy_ToJObjectT(elemsPyObj, BPy_Object_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, elemsJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.Band#setDataElems(Ljava/lang/Object;)V");
@@ -23381,7 +23583,6 @@ PyObject* BeamPyBand_setDataElems(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_getDataElems(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -23407,7 +23608,6 @@ PyObject* BeamPyBand_getDataElems(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_getDataElemSize(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint _result = (jint) 0;
@@ -23430,7 +23630,6 @@ PyObject* BeamPyBand_getDataElemSize(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_setReadOnly(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jboolean readOnly = (jboolean) 0;
@@ -23456,7 +23655,6 @@ PyObject* BeamPyBand_setReadOnly(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_isReadOnly(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jboolean _result = (jboolean) 0;
@@ -23479,7 +23677,6 @@ PyObject* BeamPyBand_isReadOnly(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_setUnit(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     const char* unit = NULL;
@@ -23508,7 +23705,6 @@ PyObject* BeamPyBand_setUnit(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_getUnit(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -23534,7 +23730,6 @@ PyObject* BeamPyBand_getUnit(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_isSynthetic(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jboolean _result = (jboolean) 0;
@@ -23557,7 +23752,6 @@ PyObject* BeamPyBand_isSynthetic(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_setSynthetic(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jboolean synthetic = (jboolean) 0;
@@ -23583,7 +23777,6 @@ PyObject* BeamPyBand_setSynthetic(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_fireProductNodeDataChanged(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     if (!BPy_InitApi()) {
@@ -23605,7 +23798,6 @@ PyObject* BeamPyBand_fireProductNodeDataChanged(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_createCompatibleProductData(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint numElems = (jint) 0;
@@ -23635,7 +23827,6 @@ PyObject* BeamPyBand_createCompatibleProductData(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_getOwner(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -23661,7 +23852,6 @@ PyObject* BeamPyBand_getOwner(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_getName(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -23687,7 +23877,6 @@ PyObject* BeamPyBand_getName(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_setName(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     const char* name = NULL;
@@ -23716,7 +23905,6 @@ PyObject* BeamPyBand_setName(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_getDescription(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -23742,7 +23930,6 @@ PyObject* BeamPyBand_getDescription(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_setDescription(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     const char* description = NULL;
@@ -23771,7 +23958,6 @@ PyObject* BeamPyBand_setDescription(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_isModified(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jboolean _result = (jboolean) 0;
@@ -23794,7 +23980,6 @@ PyObject* BeamPyBand_isModified(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_isValidNodeName(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     const char* name = NULL;
     jstring nameJObj = NULL;
     jboolean _result = (jboolean) 0;
@@ -23817,7 +24002,6 @@ PyObject* BeamPyBand_isValidNodeName(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_getProduct(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -23843,7 +24027,6 @@ PyObject* BeamPyBand_getProduct(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_getProductReader(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -23869,7 +24052,6 @@ PyObject* BeamPyBand_getProductReader(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_getProductWriter(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -23895,7 +24077,6 @@ PyObject* BeamPyBand_getProductWriter(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_getDisplayName(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -23921,7 +24102,6 @@ PyObject* BeamPyBand_getDisplayName(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_getProductRefString(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -23947,7 +24127,6 @@ PyObject* BeamPyBand_getProductRefString(PyObject* self, PyObject* args)
 PyObject* BeamPyBand_getExtension(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* arg0PyObj = NULL;
@@ -23968,9 +24147,12 @@ PyObject* BeamPyBand_getExtension(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:getExtension", &arg0PyObj)) {
         return NULL;
     }
-    arg0JObj = BPy_ToJObjectT(arg0PyObj, BPy_Class_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        arg0JObj = BPy_ToJObjectT(arg0PyObj, BPy_Class_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, arg0JObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.Band#getExtension(Ljava/lang/Class;)Ljava/lang/Object;");
@@ -23982,7 +24164,6 @@ PyObject* BeamPyBand_getExtension(PyObject* self, PyObject* args)
 PyObject* BeamPyPlacemarkGroup_getVectorDataNode(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -24008,7 +24189,6 @@ PyObject* BeamPyPlacemarkGroup_getVectorDataNode(PyObject* self, PyObject* args)
 PyObject* BeamPyPlacemarkGroup_getPlacemark(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* featurePyObj = NULL;
@@ -24029,9 +24209,12 @@ PyObject* BeamPyPlacemarkGroup_getPlacemark(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:getPlacemark", &featurePyObj)) {
         return NULL;
     }
-    featureJObj = BPy_ToJObjectT(featurePyObj, BPy_SimpleFeature_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        featureJObj = BPy_ToJObjectT(featurePyObj, BPy_SimpleFeature_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, featureJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.PlacemarkGroup#getPlacemark(Lorg/opengis/feature/simple/SimpleFeature;)Lorg/esa/beam/framework/datamodel/Placemark;");
@@ -24043,7 +24226,6 @@ PyObject* BeamPyPlacemarkGroup_getPlacemark(PyObject* self, PyObject* args)
 PyObject* BeamPyPlacemarkGroup_add3(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* placemarkPyObj = NULL;
@@ -24063,9 +24245,12 @@ PyObject* BeamPyPlacemarkGroup_add3(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:add", &placemarkPyObj)) {
         return NULL;
     }
-    placemarkJObj = BPy_ToJObjectT(placemarkPyObj, BPy_Placemark_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        placemarkJObj = BPy_ToJObjectT(placemarkPyObj, BPy_Placemark_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _result = (*jenv)->CallBooleanMethod(jenv, _thisJObj, _method, placemarkJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.PlacemarkGroup#add(Lorg/esa/beam/framework/datamodel/Placemark;)Z");
@@ -24075,7 +24260,6 @@ PyObject* BeamPyPlacemarkGroup_add3(PyObject* self, PyObject* args)
 PyObject* BeamPyPlacemarkGroup_add1(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint index = (jint) 0;
@@ -24095,9 +24279,12 @@ PyObject* BeamPyPlacemarkGroup_add1(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "iO:add", &index, &placemarkPyObj)) {
         return NULL;
     }
-    placemarkJObj = BPy_ToJObjectT(placemarkPyObj, BPy_Placemark_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        placemarkJObj = BPy_ToJObjectT(placemarkPyObj, BPy_Placemark_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, index, placemarkJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.PlacemarkGroup#add(ILorg/esa/beam/framework/datamodel/Placemark;)V");
@@ -24107,7 +24294,6 @@ PyObject* BeamPyPlacemarkGroup_add1(PyObject* self, PyObject* args)
 PyObject* BeamPyPlacemarkGroup_remove1(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* placemarkPyObj = NULL;
@@ -24127,9 +24313,12 @@ PyObject* BeamPyPlacemarkGroup_remove1(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:remove", &placemarkPyObj)) {
         return NULL;
     }
-    placemarkJObj = BPy_ToJObjectT(placemarkPyObj, BPy_Placemark_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        placemarkJObj = BPy_ToJObjectT(placemarkPyObj, BPy_Placemark_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _result = (*jenv)->CallBooleanMethod(jenv, _thisJObj, _method, placemarkJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.PlacemarkGroup#remove(Lorg/esa/beam/framework/datamodel/Placemark;)Z");
@@ -24139,7 +24328,6 @@ PyObject* BeamPyPlacemarkGroup_remove1(PyObject* self, PyObject* args)
 PyObject* BeamPyPlacemarkGroup_dispose(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     if (!BPy_InitApi()) {
@@ -24161,7 +24349,6 @@ PyObject* BeamPyPlacemarkGroup_dispose(PyObject* self, PyObject* args)
 PyObject* BeamPyPlacemarkGroup_isTakingOverNodeOwnership(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jboolean _result = (jboolean) 0;
@@ -24184,7 +24371,6 @@ PyObject* BeamPyPlacemarkGroup_isTakingOverNodeOwnership(PyObject* self, PyObjec
 PyObject* BeamPyPlacemarkGroup_getNodeCount(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint _result = (jint) 0;
@@ -24207,7 +24393,6 @@ PyObject* BeamPyPlacemarkGroup_getNodeCount(PyObject* self, PyObject* args)
 PyObject* BeamPyPlacemarkGroup_get1(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint index = (jint) 0;
@@ -24237,7 +24422,6 @@ PyObject* BeamPyPlacemarkGroup_get1(PyObject* self, PyObject* args)
 PyObject* BeamPyPlacemarkGroup_getNodeDisplayNames(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -24263,7 +24447,6 @@ PyObject* BeamPyPlacemarkGroup_getNodeDisplayNames(PyObject* self, PyObject* arg
 PyObject* BeamPyPlacemarkGroup_getNodeNames(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -24289,7 +24472,6 @@ PyObject* BeamPyPlacemarkGroup_getNodeNames(PyObject* self, PyObject* args)
 PyObject* BeamPyPlacemarkGroup_toArray1(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -24315,7 +24497,6 @@ PyObject* BeamPyPlacemarkGroup_toArray1(PyObject* self, PyObject* args)
 PyObject* BeamPyPlacemarkGroup_toArray2(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* arrayPyObj = NULL;
@@ -24336,9 +24517,12 @@ PyObject* BeamPyPlacemarkGroup_toArray2(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:toArray", &arrayPyObj)) {
         return NULL;
     }
-    arrayJObj = BPy_ToJObjectArrayT(arrayPyObj, BPy_ProductNode_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        arrayJObj = BPy_ToJObjectArrayT(arrayPyObj, BPy_ProductNode_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, arrayJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.PlacemarkGroup#toArray([Lorg/esa/beam/framework/datamodel/ProductNode;)[Lorg/esa/beam/framework/datamodel/ProductNode;");
@@ -24351,7 +24535,6 @@ PyObject* BeamPyPlacemarkGroup_toArray2(PyObject* self, PyObject* args)
 PyObject* BeamPyPlacemarkGroup_indexOf1(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     const char* name = NULL;
@@ -24381,7 +24564,6 @@ PyObject* BeamPyPlacemarkGroup_indexOf1(PyObject* self, PyObject* args)
 PyObject* BeamPyPlacemarkGroup_indexOf2(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* elementPyObj = NULL;
@@ -24401,9 +24583,12 @@ PyObject* BeamPyPlacemarkGroup_indexOf2(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:indexOf", &elementPyObj)) {
         return NULL;
     }
-    elementJObj = BPy_ToJObjectT(elementPyObj, BPy_ProductNode_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        elementJObj = BPy_ToJObjectT(elementPyObj, BPy_ProductNode_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _result = (*jenv)->CallIntMethod(jenv, _thisJObj, _method, elementJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.PlacemarkGroup#indexOf(Lorg/esa/beam/framework/datamodel/ProductNode;)I");
@@ -24413,7 +24598,6 @@ PyObject* BeamPyPlacemarkGroup_indexOf2(PyObject* self, PyObject* args)
 PyObject* BeamPyPlacemarkGroup_getByDisplayName(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     const char* displayName = NULL;
@@ -24446,7 +24630,6 @@ PyObject* BeamPyPlacemarkGroup_getByDisplayName(PyObject* self, PyObject* args)
 PyObject* BeamPyPlacemarkGroup_get2(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     const char* name = NULL;
@@ -24479,7 +24662,6 @@ PyObject* BeamPyPlacemarkGroup_get2(PyObject* self, PyObject* args)
 PyObject* BeamPyPlacemarkGroup_contains1(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     const char* name = NULL;
@@ -24509,7 +24691,6 @@ PyObject* BeamPyPlacemarkGroup_contains1(PyObject* self, PyObject* args)
 PyObject* BeamPyPlacemarkGroup_contains2(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* nodePyObj = NULL;
@@ -24529,9 +24710,12 @@ PyObject* BeamPyPlacemarkGroup_contains2(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:contains", &nodePyObj)) {
         return NULL;
     }
-    nodeJObj = BPy_ToJObjectT(nodePyObj, BPy_ProductNode_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        nodeJObj = BPy_ToJObjectT(nodePyObj, BPy_ProductNode_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _result = (*jenv)->CallBooleanMethod(jenv, _thisJObj, _method, nodeJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.PlacemarkGroup#contains(Lorg/esa/beam/framework/datamodel/ProductNode;)Z");
@@ -24541,7 +24725,6 @@ PyObject* BeamPyPlacemarkGroup_contains2(PyObject* self, PyObject* args)
 PyObject* BeamPyPlacemarkGroup_add4(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* nodePyObj = NULL;
@@ -24561,9 +24744,12 @@ PyObject* BeamPyPlacemarkGroup_add4(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:add", &nodePyObj)) {
         return NULL;
     }
-    nodeJObj = BPy_ToJObjectT(nodePyObj, BPy_ProductNode_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        nodeJObj = BPy_ToJObjectT(nodePyObj, BPy_ProductNode_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _result = (*jenv)->CallBooleanMethod(jenv, _thisJObj, _method, nodeJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.PlacemarkGroup#add(Lorg/esa/beam/framework/datamodel/ProductNode;)Z");
@@ -24573,7 +24759,6 @@ PyObject* BeamPyPlacemarkGroup_add4(PyObject* self, PyObject* args)
 PyObject* BeamPyPlacemarkGroup_add2(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint index = (jint) 0;
@@ -24593,9 +24778,12 @@ PyObject* BeamPyPlacemarkGroup_add2(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "iO:add", &index, &nodePyObj)) {
         return NULL;
     }
-    nodeJObj = BPy_ToJObjectT(nodePyObj, BPy_ProductNode_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        nodeJObj = BPy_ToJObjectT(nodePyObj, BPy_ProductNode_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, index, nodeJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.PlacemarkGroup#add(ILorg/esa/beam/framework/datamodel/ProductNode;)V");
@@ -24605,7 +24793,6 @@ PyObject* BeamPyPlacemarkGroup_add2(PyObject* self, PyObject* args)
 PyObject* BeamPyPlacemarkGroup_remove2(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* nodePyObj = NULL;
@@ -24625,9 +24812,12 @@ PyObject* BeamPyPlacemarkGroup_remove2(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:remove", &nodePyObj)) {
         return NULL;
     }
-    nodeJObj = BPy_ToJObjectT(nodePyObj, BPy_ProductNode_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        nodeJObj = BPy_ToJObjectT(nodePyObj, BPy_ProductNode_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _result = (*jenv)->CallBooleanMethod(jenv, _thisJObj, _method, nodeJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.PlacemarkGroup#remove(Lorg/esa/beam/framework/datamodel/ProductNode;)Z");
@@ -24637,7 +24827,6 @@ PyObject* BeamPyPlacemarkGroup_remove2(PyObject* self, PyObject* args)
 PyObject* BeamPyPlacemarkGroup_removeAll(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     if (!BPy_InitApi()) {
@@ -24659,7 +24848,6 @@ PyObject* BeamPyPlacemarkGroup_removeAll(PyObject* self, PyObject* args)
 PyObject* BeamPyPlacemarkGroup_clearRemovedList(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     if (!BPy_InitApi()) {
@@ -24681,7 +24869,6 @@ PyObject* BeamPyPlacemarkGroup_clearRemovedList(PyObject* self, PyObject* args)
 PyObject* BeamPyPlacemarkGroup_getRemovedNodes(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -24707,7 +24894,6 @@ PyObject* BeamPyPlacemarkGroup_getRemovedNodes(PyObject* self, PyObject* args)
 PyObject* BeamPyPlacemarkGroup_getRawStorageSize2(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* subsetDefPyObj = NULL;
@@ -24727,9 +24913,12 @@ PyObject* BeamPyPlacemarkGroup_getRawStorageSize2(PyObject* self, PyObject* args
     if (!PyArg_ParseTuple(args, "O:getRawStorageSize", &subsetDefPyObj)) {
         return NULL;
     }
-    subsetDefJObj = BPy_ToJObjectT(subsetDefPyObj, BPy_ProductSubsetDef_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        subsetDefJObj = BPy_ToJObjectT(subsetDefPyObj, BPy_ProductSubsetDef_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _result = (*jenv)->CallLongMethod(jenv, _thisJObj, _method, subsetDefJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.PlacemarkGroup#getRawStorageSize(Lorg/esa/beam/framework/dataio/ProductSubsetDef;)J");
@@ -24739,7 +24928,6 @@ PyObject* BeamPyPlacemarkGroup_getRawStorageSize2(PyObject* self, PyObject* args
 PyObject* BeamPyPlacemarkGroup_setModified(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jboolean modified = (jboolean) 0;
@@ -24765,7 +24953,6 @@ PyObject* BeamPyPlacemarkGroup_setModified(PyObject* self, PyObject* args)
 PyObject* BeamPyPlacemarkGroup_acceptVisitor(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* visitorPyObj = NULL;
@@ -24784,9 +24971,12 @@ PyObject* BeamPyPlacemarkGroup_acceptVisitor(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:acceptVisitor", &visitorPyObj)) {
         return NULL;
     }
-    visitorJObj = BPy_ToJObjectT(visitorPyObj, BPy_ProductVisitor_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        visitorJObj = BPy_ToJObjectT(visitorPyObj, BPy_ProductVisitor_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, visitorJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.PlacemarkGroup#acceptVisitor(Lorg/esa/beam/framework/datamodel/ProductVisitor;)V");
@@ -24796,7 +24986,6 @@ PyObject* BeamPyPlacemarkGroup_acceptVisitor(PyObject* self, PyObject* args)
 PyObject* BeamPyPlacemarkGroup_updateExpression(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     const char* oldExternalName = NULL;
@@ -24829,7 +25018,6 @@ PyObject* BeamPyPlacemarkGroup_updateExpression(PyObject* self, PyObject* args)
 PyObject* BeamPyPlacemarkGroup_getOwner(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -24855,7 +25043,6 @@ PyObject* BeamPyPlacemarkGroup_getOwner(PyObject* self, PyObject* args)
 PyObject* BeamPyPlacemarkGroup_getName(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -24881,7 +25068,6 @@ PyObject* BeamPyPlacemarkGroup_getName(PyObject* self, PyObject* args)
 PyObject* BeamPyPlacemarkGroup_setName(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     const char* name = NULL;
@@ -24910,7 +25096,6 @@ PyObject* BeamPyPlacemarkGroup_setName(PyObject* self, PyObject* args)
 PyObject* BeamPyPlacemarkGroup_getDescription(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -24936,7 +25121,6 @@ PyObject* BeamPyPlacemarkGroup_getDescription(PyObject* self, PyObject* args)
 PyObject* BeamPyPlacemarkGroup_setDescription(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     const char* description = NULL;
@@ -24965,7 +25149,6 @@ PyObject* BeamPyPlacemarkGroup_setDescription(PyObject* self, PyObject* args)
 PyObject* BeamPyPlacemarkGroup_isModified(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jboolean _result = (jboolean) 0;
@@ -24988,7 +25171,6 @@ PyObject* BeamPyPlacemarkGroup_isModified(PyObject* self, PyObject* args)
 PyObject* BeamPyPlacemarkGroup_toString(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -25014,7 +25196,6 @@ PyObject* BeamPyPlacemarkGroup_toString(PyObject* self, PyObject* args)
 PyObject* BeamPyPlacemarkGroup_isValidNodeName(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     const char* name = NULL;
     jstring nameJObj = NULL;
     jboolean _result = (jboolean) 0;
@@ -25037,7 +25218,6 @@ PyObject* BeamPyPlacemarkGroup_isValidNodeName(PyObject* self, PyObject* args)
 PyObject* BeamPyPlacemarkGroup_getProduct(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -25063,7 +25243,6 @@ PyObject* BeamPyPlacemarkGroup_getProduct(PyObject* self, PyObject* args)
 PyObject* BeamPyPlacemarkGroup_getProductReader(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -25089,7 +25268,6 @@ PyObject* BeamPyPlacemarkGroup_getProductReader(PyObject* self, PyObject* args)
 PyObject* BeamPyPlacemarkGroup_getProductWriter(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -25115,7 +25293,6 @@ PyObject* BeamPyPlacemarkGroup_getProductWriter(PyObject* self, PyObject* args)
 PyObject* BeamPyPlacemarkGroup_getDisplayName(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -25141,7 +25318,6 @@ PyObject* BeamPyPlacemarkGroup_getDisplayName(PyObject* self, PyObject* args)
 PyObject* BeamPyPlacemarkGroup_getProductRefString(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -25167,7 +25343,6 @@ PyObject* BeamPyPlacemarkGroup_getProductRefString(PyObject* self, PyObject* arg
 PyObject* BeamPyPlacemarkGroup_getRawStorageSize1(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jlong _result = (jlong) 0;
@@ -25190,7 +25365,6 @@ PyObject* BeamPyPlacemarkGroup_getRawStorageSize1(PyObject* self, PyObject* args
 PyObject* BeamPyPlacemarkGroup_fireProductNodeChanged1(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     const char* propertyName = NULL;
@@ -25219,7 +25393,6 @@ PyObject* BeamPyPlacemarkGroup_fireProductNodeChanged1(PyObject* self, PyObject*
 PyObject* BeamPyPlacemarkGroup_fireProductNodeChanged2(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     const char* propertyName = NULL;
@@ -25243,13 +25416,19 @@ PyObject* BeamPyPlacemarkGroup_fireProductNodeChanged2(PyObject* self, PyObject*
         return NULL;
     }
     propertyNameJObj =(*jenv)->NewStringUTF(jenv, propertyName);
-    oldValueJObj = BPy_ToJObjectT(oldValuePyObj, BPy_Object_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        oldValueJObj = BPy_ToJObjectT(oldValuePyObj, BPy_Object_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
-    newValueJObj = BPy_ToJObjectT(newValuePyObj, BPy_Object_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        newValueJObj = BPy_ToJObjectT(newValuePyObj, BPy_Object_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, propertyNameJObj, oldValueJObj, newValueJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.PlacemarkGroup#fireProductNodeChanged(Ljava/lang/String;Ljava/lang/Object;Ljava/lang/Object;)V");
@@ -25260,7 +25439,6 @@ PyObject* BeamPyPlacemarkGroup_fireProductNodeChanged2(PyObject* self, PyObject*
 PyObject* BeamPyPlacemarkGroup_removeFromFile(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* productWriterPyObj = NULL;
@@ -25279,9 +25457,12 @@ PyObject* BeamPyPlacemarkGroup_removeFromFile(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:removeFromFile", &productWriterPyObj)) {
         return NULL;
     }
-    productWriterJObj = BPy_ToJObjectT(productWriterPyObj, BPy_ProductWriter_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        productWriterJObj = BPy_ToJObjectT(productWriterPyObj, BPy_ProductWriter_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, productWriterJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.PlacemarkGroup#removeFromFile(Lorg/esa/beam/framework/dataio/ProductWriter;)V");
@@ -25291,7 +25472,6 @@ PyObject* BeamPyPlacemarkGroup_removeFromFile(PyObject* self, PyObject* args)
 PyObject* BeamPyPlacemarkGroup_getExtension(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* arg0PyObj = NULL;
@@ -25312,9 +25492,12 @@ PyObject* BeamPyPlacemarkGroup_getExtension(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:getExtension", &arg0PyObj)) {
         return NULL;
     }
-    arg0JObj = BPy_ToJObjectT(arg0PyObj, BPy_Class_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        arg0JObj = BPy_ToJObjectT(arg0PyObj, BPy_Class_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, arg0JObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.PlacemarkGroup#getExtension(Ljava/lang/Class;)Ljava/lang/Object;");
@@ -25326,7 +25509,6 @@ PyObject* BeamPyPlacemarkGroup_getExtension(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_newTiePointGrid1(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     const char* name = NULL;
     jstring nameJObj = NULL;
     jint gridWidth = (jint) 0;
@@ -25375,7 +25557,6 @@ PyObject* BeamPyTiePointGrid_newTiePointGrid1(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_newTiePointGrid2(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     const char* name = NULL;
     jstring nameJObj = NULL;
     jint gridWidth = (jint) 0;
@@ -25425,7 +25606,6 @@ PyObject* BeamPyTiePointGrid_newTiePointGrid2(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_newTiePointGrid3(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     const char* name = NULL;
     jstring nameJObj = NULL;
     jint gridWidth = (jint) 0;
@@ -25475,7 +25655,6 @@ PyObject* BeamPyTiePointGrid_newTiePointGrid3(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_getDiscontinuity2(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     jfloat* tiePointsData = NULL;
     int tiePointsLength = 0;
     PyObject* tiePointsPyObj = NULL;
@@ -25511,7 +25690,6 @@ PyObject* BeamPyTiePointGrid_getDiscontinuity2(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_getDiscontinuity1(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint _result = (jint) 0;
@@ -25534,7 +25712,6 @@ PyObject* BeamPyTiePointGrid_getDiscontinuity1(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_setDiscontinuity(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint discontinuity = (jint) 0;
@@ -25560,7 +25737,6 @@ PyObject* BeamPyTiePointGrid_setDiscontinuity(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_isFloatingPointType(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jboolean _result = (jboolean) 0;
@@ -25583,7 +25759,6 @@ PyObject* BeamPyTiePointGrid_isFloatingPointType(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_getGeophysicalDataType(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint _result = (jint) 0;
@@ -25606,7 +25781,6 @@ PyObject* BeamPyTiePointGrid_getGeophysicalDataType(PyObject* self, PyObject* ar
 PyObject* BeamPyTiePointGrid_getSceneRasterData(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -25632,7 +25806,6 @@ PyObject* BeamPyTiePointGrid_getSceneRasterData(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_getSceneRasterWidth(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint _result = (jint) 0;
@@ -25655,7 +25828,6 @@ PyObject* BeamPyTiePointGrid_getSceneRasterWidth(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_getSceneRasterHeight(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint _result = (jint) 0;
@@ -25678,7 +25850,6 @@ PyObject* BeamPyTiePointGrid_getSceneRasterHeight(PyObject* self, PyObject* args
 PyObject* BeamPyTiePointGrid_getOffsetX(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jfloat _result = (jfloat) 0;
@@ -25701,7 +25872,6 @@ PyObject* BeamPyTiePointGrid_getOffsetX(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_getOffsetY(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jfloat _result = (jfloat) 0;
@@ -25724,7 +25894,6 @@ PyObject* BeamPyTiePointGrid_getOffsetY(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_getSubSamplingX(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jfloat _result = (jfloat) 0;
@@ -25747,7 +25916,6 @@ PyObject* BeamPyTiePointGrid_getSubSamplingX(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_getSubSamplingY(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jfloat _result = (jfloat) 0;
@@ -25770,7 +25938,6 @@ PyObject* BeamPyTiePointGrid_getSubSamplingY(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_getTiePoints(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -25796,7 +25963,6 @@ PyObject* BeamPyTiePointGrid_getTiePoints(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_getPixelInt(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint x = (jint) 0;
@@ -25824,7 +25990,6 @@ PyObject* BeamPyTiePointGrid_getPixelInt(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_dispose(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     if (!BPy_InitApi()) {
@@ -25846,7 +26011,6 @@ PyObject* BeamPyTiePointGrid_dispose(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_getPixelFloat2(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint x = (jint) 0;
@@ -25874,7 +26038,6 @@ PyObject* BeamPyTiePointGrid_getPixelFloat2(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_getPixelFloat1(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jfloat x = (jfloat) 0;
@@ -25902,7 +26065,6 @@ PyObject* BeamPyTiePointGrid_getPixelFloat1(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_getPixelDouble(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint x = (jint) 0;
@@ -25930,7 +26092,6 @@ PyObject* BeamPyTiePointGrid_getPixelDouble(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_setPixelInt(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint x = (jint) 0;
@@ -25958,7 +26119,6 @@ PyObject* BeamPyTiePointGrid_setPixelInt(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_setPixelFloat(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint x = (jint) 0;
@@ -25986,7 +26146,6 @@ PyObject* BeamPyTiePointGrid_setPixelFloat(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_setPixelDouble(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint x = (jint) 0;
@@ -26014,7 +26173,6 @@ PyObject* BeamPyTiePointGrid_setPixelDouble(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_getPixels6(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint x = (jint) 0;
@@ -26054,9 +26212,12 @@ PyObject* BeamPyTiePointGrid_getPixels6(PyObject* self, PyObject* args)
     if (pixelsJObj == NULL) {
         return NULL;
     }
-    pmJObj = BPy_ToJObjectT(pmPyObj, BPy_ProgressMonitor_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        pmJObj = BPy_ToJObjectT(pmPyObj, BPy_ProgressMonitor_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, x, y, w, h, pixelsJObj, pmJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.TiePointGrid#getPixels(IIII[ILcom/bc/ceres/core/ProgressMonitor;)[I");
@@ -26070,7 +26231,6 @@ PyObject* BeamPyTiePointGrid_getPixels6(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_getPixels4(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint x = (jint) 0;
@@ -26110,9 +26270,12 @@ PyObject* BeamPyTiePointGrid_getPixels4(PyObject* self, PyObject* args)
     if (pixelsJObj == NULL) {
         return NULL;
     }
-    pmJObj = BPy_ToJObjectT(pmPyObj, BPy_ProgressMonitor_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        pmJObj = BPy_ToJObjectT(pmPyObj, BPy_ProgressMonitor_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, x, y, w, h, pixelsJObj, pmJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.TiePointGrid#getPixels(IIII[FLcom/bc/ceres/core/ProgressMonitor;)[F");
@@ -26126,7 +26289,6 @@ PyObject* BeamPyTiePointGrid_getPixels4(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_getPixels2(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint x = (jint) 0;
@@ -26166,9 +26328,12 @@ PyObject* BeamPyTiePointGrid_getPixels2(PyObject* self, PyObject* args)
     if (pixelsJObj == NULL) {
         return NULL;
     }
-    pmJObj = BPy_ToJObjectT(pmPyObj, BPy_ProgressMonitor_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        pmJObj = BPy_ToJObjectT(pmPyObj, BPy_ProgressMonitor_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, x, y, w, h, pixelsJObj, pmJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.TiePointGrid#getPixels(IIII[DLcom/bc/ceres/core/ProgressMonitor;)[D");
@@ -26182,7 +26347,6 @@ PyObject* BeamPyTiePointGrid_getPixels2(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_setPixels3(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint x = (jint) 0;
@@ -26228,7 +26392,6 @@ PyObject* BeamPyTiePointGrid_setPixels3(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_setPixels2(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint x = (jint) 0;
@@ -26274,7 +26437,6 @@ PyObject* BeamPyTiePointGrid_setPixels2(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_setPixels1(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint x = (jint) 0;
@@ -26320,7 +26482,6 @@ PyObject* BeamPyTiePointGrid_setPixels1(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_readPixels6(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint x = (jint) 0;
@@ -26360,9 +26521,12 @@ PyObject* BeamPyTiePointGrid_readPixels6(PyObject* self, PyObject* args)
     if (pixelsJObj == NULL) {
         return NULL;
     }
-    pmJObj = BPy_ToJObjectT(pmPyObj, BPy_ProgressMonitor_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        pmJObj = BPy_ToJObjectT(pmPyObj, BPy_ProgressMonitor_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, x, y, w, h, pixelsJObj, pmJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.TiePointGrid#readPixels(IIII[ILcom/bc/ceres/core/ProgressMonitor;)[I");
@@ -26376,7 +26540,6 @@ PyObject* BeamPyTiePointGrid_readPixels6(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_readPixels4(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint x = (jint) 0;
@@ -26416,9 +26579,12 @@ PyObject* BeamPyTiePointGrid_readPixels4(PyObject* self, PyObject* args)
     if (pixelsJObj == NULL) {
         return NULL;
     }
-    pmJObj = BPy_ToJObjectT(pmPyObj, BPy_ProgressMonitor_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        pmJObj = BPy_ToJObjectT(pmPyObj, BPy_ProgressMonitor_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, x, y, w, h, pixelsJObj, pmJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.TiePointGrid#readPixels(IIII[FLcom/bc/ceres/core/ProgressMonitor;)[F");
@@ -26432,7 +26598,6 @@ PyObject* BeamPyTiePointGrid_readPixels4(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_readPixels2(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint x = (jint) 0;
@@ -26472,9 +26637,12 @@ PyObject* BeamPyTiePointGrid_readPixels2(PyObject* self, PyObject* args)
     if (pixelsJObj == NULL) {
         return NULL;
     }
-    pmJObj = BPy_ToJObjectT(pmPyObj, BPy_ProgressMonitor_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        pmJObj = BPy_ToJObjectT(pmPyObj, BPy_ProgressMonitor_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, x, y, w, h, pixelsJObj, pmJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.TiePointGrid#readPixels(IIII[DLcom/bc/ceres/core/ProgressMonitor;)[D");
@@ -26488,7 +26656,6 @@ PyObject* BeamPyTiePointGrid_readPixels2(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_writePixels6(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint x = (jint) 0;
@@ -26526,9 +26693,12 @@ PyObject* BeamPyTiePointGrid_writePixels6(PyObject* self, PyObject* args)
     if (pixelsJObj == NULL) {
         return NULL;
     }
-    pmJObj = BPy_ToJObjectT(pmPyObj, BPy_ProgressMonitor_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        pmJObj = BPy_ToJObjectT(pmPyObj, BPy_ProgressMonitor_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, x, y, w, h, pixelsJObj, pmJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.TiePointGrid#writePixels(IIII[ILcom/bc/ceres/core/ProgressMonitor;)V");
@@ -26540,7 +26710,6 @@ PyObject* BeamPyTiePointGrid_writePixels6(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_writePixels4(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint x = (jint) 0;
@@ -26578,9 +26747,12 @@ PyObject* BeamPyTiePointGrid_writePixels4(PyObject* self, PyObject* args)
     if (pixelsJObj == NULL) {
         return NULL;
     }
-    pmJObj = BPy_ToJObjectT(pmPyObj, BPy_ProgressMonitor_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        pmJObj = BPy_ToJObjectT(pmPyObj, BPy_ProgressMonitor_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, x, y, w, h, pixelsJObj, pmJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.TiePointGrid#writePixels(IIII[FLcom/bc/ceres/core/ProgressMonitor;)V");
@@ -26592,7 +26764,6 @@ PyObject* BeamPyTiePointGrid_writePixels4(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_writePixels2(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint x = (jint) 0;
@@ -26630,9 +26801,12 @@ PyObject* BeamPyTiePointGrid_writePixels2(PyObject* self, PyObject* args)
     if (pixelsJObj == NULL) {
         return NULL;
     }
-    pmJObj = BPy_ToJObjectT(pmPyObj, BPy_ProgressMonitor_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        pmJObj = BPy_ToJObjectT(pmPyObj, BPy_ProgressMonitor_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, x, y, w, h, pixelsJObj, pmJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.TiePointGrid#writePixels(IIII[DLcom/bc/ceres/core/ProgressMonitor;)V");
@@ -26644,7 +26818,6 @@ PyObject* BeamPyTiePointGrid_writePixels2(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_readRasterData2(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint offsetX = (jint) 0;
@@ -26669,13 +26842,19 @@ PyObject* BeamPyTiePointGrid_readRasterData2(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "iiiiOO:readRasterData", &offsetX, &offsetY, &width, &height, &rasterDataPyObj, &pmPyObj)) {
         return NULL;
     }
-    rasterDataJObj = BPy_ToJObjectT(rasterDataPyObj, BPy_ProductData_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        rasterDataJObj = BPy_ToJObjectT(rasterDataPyObj, BPy_ProductData_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
-    pmJObj = BPy_ToJObjectT(pmPyObj, BPy_ProgressMonitor_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        pmJObj = BPy_ToJObjectT(pmPyObj, BPy_ProgressMonitor_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, offsetX, offsetY, width, height, rasterDataJObj, pmJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.TiePointGrid#readRasterData(IIIILorg/esa/beam/framework/datamodel/ProductData;Lcom/bc/ceres/core/ProgressMonitor;)V");
@@ -26685,7 +26864,6 @@ PyObject* BeamPyTiePointGrid_readRasterData2(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_readRasterDataFully2(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* pmPyObj = NULL;
@@ -26704,9 +26882,12 @@ PyObject* BeamPyTiePointGrid_readRasterDataFully2(PyObject* self, PyObject* args
     if (!PyArg_ParseTuple(args, "O:readRasterDataFully", &pmPyObj)) {
         return NULL;
     }
-    pmJObj = BPy_ToJObjectT(pmPyObj, BPy_ProgressMonitor_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        pmJObj = BPy_ToJObjectT(pmPyObj, BPy_ProgressMonitor_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, pmJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.TiePointGrid#readRasterDataFully(Lcom/bc/ceres/core/ProgressMonitor;)V");
@@ -26716,7 +26897,6 @@ PyObject* BeamPyTiePointGrid_readRasterDataFully2(PyObject* self, PyObject* args
 PyObject* BeamPyTiePointGrid_writeRasterData2(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint offsetX = (jint) 0;
@@ -26741,13 +26921,19 @@ PyObject* BeamPyTiePointGrid_writeRasterData2(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "iiiiOO:writeRasterData", &offsetX, &offsetY, &width, &height, &rasterDataPyObj, &pmPyObj)) {
         return NULL;
     }
-    rasterDataJObj = BPy_ToJObjectT(rasterDataPyObj, BPy_ProductData_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        rasterDataJObj = BPy_ToJObjectT(rasterDataPyObj, BPy_ProductData_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
-    pmJObj = BPy_ToJObjectT(pmPyObj, BPy_ProgressMonitor_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        pmJObj = BPy_ToJObjectT(pmPyObj, BPy_ProgressMonitor_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, offsetX, offsetY, width, height, rasterDataJObj, pmJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.TiePointGrid#writeRasterData(IIIILorg/esa/beam/framework/datamodel/ProductData;Lcom/bc/ceres/core/ProgressMonitor;)V");
@@ -26757,7 +26943,6 @@ PyObject* BeamPyTiePointGrid_writeRasterData2(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_writeRasterDataFully2(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* pmPyObj = NULL;
@@ -26776,9 +26961,12 @@ PyObject* BeamPyTiePointGrid_writeRasterDataFully2(PyObject* self, PyObject* arg
     if (!PyArg_ParseTuple(args, "O:writeRasterDataFully", &pmPyObj)) {
         return NULL;
     }
-    pmJObj = BPy_ToJObjectT(pmPyObj, BPy_ProgressMonitor_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        pmJObj = BPy_ToJObjectT(pmPyObj, BPy_ProgressMonitor_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, pmJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.TiePointGrid#writeRasterDataFully(Lcom/bc/ceres/core/ProgressMonitor;)V");
@@ -26788,7 +26976,6 @@ PyObject* BeamPyTiePointGrid_writeRasterDataFully2(PyObject* self, PyObject* arg
 PyObject* BeamPyTiePointGrid_acceptVisitor(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* visitorPyObj = NULL;
@@ -26807,9 +26994,12 @@ PyObject* BeamPyTiePointGrid_acceptVisitor(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:acceptVisitor", &visitorPyObj)) {
         return NULL;
     }
-    visitorJObj = BPy_ToJObjectT(visitorPyObj, BPy_ProductVisitor_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        visitorJObj = BPy_ToJObjectT(visitorPyObj, BPy_ProductVisitor_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, visitorJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.TiePointGrid#acceptVisitor(Lorg/esa/beam/framework/datamodel/ProductVisitor;)V");
@@ -26819,7 +27009,6 @@ PyObject* BeamPyTiePointGrid_acceptVisitor(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_cloneTiePointGrid(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -26845,7 +27034,6 @@ PyObject* BeamPyTiePointGrid_cloneTiePointGrid(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_createZenithFromElevationAngleTiePointGrid(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     PyObject* elevationAngleGridPyObj = NULL;
     jobject elevationAngleGridJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -26859,9 +27047,12 @@ PyObject* BeamPyTiePointGrid_createZenithFromElevationAngleTiePointGrid(PyObject
     if (!PyArg_ParseTuple(args, "O:createZenithFromElevationAngleTiePointGrid", &elevationAngleGridPyObj)) {
         return NULL;
     }
-    elevationAngleGridJObj = BPy_ToJObjectT(elevationAngleGridPyObj, BPy_TiePointGrid_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        elevationAngleGridJObj = BPy_ToJObjectT(elevationAngleGridPyObj, BPy_TiePointGrid_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, BPy_TiePointGrid_Class, _method, elevationAngleGridJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.TiePointGrid#createZenithFromElevationAngleTiePointGrid(Lorg/esa/beam/framework/datamodel/TiePointGrid;)Lorg/esa/beam/framework/datamodel/TiePointGrid;");
@@ -26873,7 +27064,6 @@ PyObject* BeamPyTiePointGrid_createZenithFromElevationAngleTiePointGrid(PyObject
 PyObject* BeamPyTiePointGrid_createSubset(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     PyObject* sourceTiePointGridPyObj = NULL;
     jobject sourceTiePointGridJObj = NULL;
     PyObject* subsetDefPyObj = NULL;
@@ -26889,13 +27079,19 @@ PyObject* BeamPyTiePointGrid_createSubset(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "OO:createSubset", &sourceTiePointGridPyObj, &subsetDefPyObj)) {
         return NULL;
     }
-    sourceTiePointGridJObj = BPy_ToJObjectT(sourceTiePointGridPyObj, BPy_TiePointGrid_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        sourceTiePointGridJObj = BPy_ToJObjectT(sourceTiePointGridPyObj, BPy_TiePointGrid_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
-    subsetDefJObj = BPy_ToJObjectT(subsetDefPyObj, BPy_ProductSubsetDef_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        subsetDefJObj = BPy_ToJObjectT(subsetDefPyObj, BPy_ProductSubsetDef_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, BPy_TiePointGrid_Class, _method, sourceTiePointGridJObj, subsetDefJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.TiePointGrid#createSubset(Lorg/esa/beam/framework/datamodel/TiePointGrid;Lorg/esa/beam/framework/dataio/ProductSubsetDef;)Lorg/esa/beam/framework/datamodel/TiePointGrid;");
@@ -26907,7 +27103,6 @@ PyObject* BeamPyTiePointGrid_createSubset(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_getRasterWidth(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint _result = (jint) 0;
@@ -26930,7 +27125,6 @@ PyObject* BeamPyTiePointGrid_getRasterWidth(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_getRasterHeight(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint _result = (jint) 0;
@@ -26953,7 +27147,6 @@ PyObject* BeamPyTiePointGrid_getRasterHeight(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_setModified(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jboolean modified = (jboolean) 0;
@@ -26979,7 +27172,6 @@ PyObject* BeamPyTiePointGrid_setModified(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_getGeoCoding(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -27005,7 +27197,6 @@ PyObject* BeamPyTiePointGrid_getGeoCoding(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_setGeoCoding(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* geoCodingPyObj = NULL;
@@ -27024,9 +27215,12 @@ PyObject* BeamPyTiePointGrid_setGeoCoding(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:setGeoCoding", &geoCodingPyObj)) {
         return NULL;
     }
-    geoCodingJObj = BPy_ToJObjectT(geoCodingPyObj, BPy_GeoCoding_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        geoCodingJObj = BPy_ToJObjectT(geoCodingPyObj, BPy_GeoCoding_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, geoCodingJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.TiePointGrid#setGeoCoding(Lorg/esa/beam/framework/datamodel/GeoCoding;)V");
@@ -27036,7 +27230,6 @@ PyObject* BeamPyTiePointGrid_setGeoCoding(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_getPointing(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -27062,7 +27255,6 @@ PyObject* BeamPyTiePointGrid_getPointing(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_canBeOrthorectified(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jboolean _result = (jboolean) 0;
@@ -27085,7 +27277,6 @@ PyObject* BeamPyTiePointGrid_canBeOrthorectified(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_getScalingFactor(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jdouble _result = (jdouble) 0;
@@ -27108,7 +27299,6 @@ PyObject* BeamPyTiePointGrid_getScalingFactor(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_setScalingFactor(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jdouble scalingFactor = (jdouble) 0;
@@ -27134,7 +27324,6 @@ PyObject* BeamPyTiePointGrid_setScalingFactor(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_getScalingOffset(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jdouble _result = (jdouble) 0;
@@ -27157,7 +27346,6 @@ PyObject* BeamPyTiePointGrid_getScalingOffset(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_setScalingOffset(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jdouble scalingOffset = (jdouble) 0;
@@ -27183,7 +27371,6 @@ PyObject* BeamPyTiePointGrid_setScalingOffset(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_isLog10Scaled(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jboolean _result = (jboolean) 0;
@@ -27206,7 +27393,6 @@ PyObject* BeamPyTiePointGrid_isLog10Scaled(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_setLog10Scaled(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jboolean log10Scaled = (jboolean) 0;
@@ -27232,7 +27418,6 @@ PyObject* BeamPyTiePointGrid_setLog10Scaled(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_isScalingApplied(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jboolean _result = (jboolean) 0;
@@ -27255,7 +27440,6 @@ PyObject* BeamPyTiePointGrid_isScalingApplied(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_isValidMaskProperty(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     const char* propertyName = NULL;
     jstring propertyNameJObj = NULL;
     jboolean _result = (jboolean) 0;
@@ -27278,7 +27462,6 @@ PyObject* BeamPyTiePointGrid_isValidMaskProperty(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_isNoDataValueSet(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jboolean _result = (jboolean) 0;
@@ -27301,7 +27484,6 @@ PyObject* BeamPyTiePointGrid_isNoDataValueSet(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_clearNoDataValue(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     if (!BPy_InitApi()) {
@@ -27323,7 +27505,6 @@ PyObject* BeamPyTiePointGrid_clearNoDataValue(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_isNoDataValueUsed(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jboolean _result = (jboolean) 0;
@@ -27346,7 +27527,6 @@ PyObject* BeamPyTiePointGrid_isNoDataValueUsed(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_setNoDataValueUsed(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jboolean noDataValueUsed = (jboolean) 0;
@@ -27372,7 +27552,6 @@ PyObject* BeamPyTiePointGrid_setNoDataValueUsed(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_getNoDataValue(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jdouble _result = (jdouble) 0;
@@ -27395,7 +27574,6 @@ PyObject* BeamPyTiePointGrid_getNoDataValue(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_setNoDataValue(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jdouble noDataValue = (jdouble) 0;
@@ -27421,7 +27599,6 @@ PyObject* BeamPyTiePointGrid_setNoDataValue(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_getGeophysicalNoDataValue(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jdouble _result = (jdouble) 0;
@@ -27444,7 +27621,6 @@ PyObject* BeamPyTiePointGrid_getGeophysicalNoDataValue(PyObject* self, PyObject*
 PyObject* BeamPyTiePointGrid_setGeophysicalNoDataValue(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jdouble noDataValue = (jdouble) 0;
@@ -27470,7 +27646,6 @@ PyObject* BeamPyTiePointGrid_setGeophysicalNoDataValue(PyObject* self, PyObject*
 PyObject* BeamPyTiePointGrid_getValidPixelExpression(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -27496,7 +27671,6 @@ PyObject* BeamPyTiePointGrid_getValidPixelExpression(PyObject* self, PyObject* a
 PyObject* BeamPyTiePointGrid_setValidPixelExpression(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     const char* validPixelExpression = NULL;
@@ -27525,7 +27699,6 @@ PyObject* BeamPyTiePointGrid_setValidPixelExpression(PyObject* self, PyObject* a
 PyObject* BeamPyTiePointGrid_isValidMaskUsed(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jboolean _result = (jboolean) 0;
@@ -27548,7 +27721,6 @@ PyObject* BeamPyTiePointGrid_isValidMaskUsed(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_resetValidMask(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     if (!BPy_InitApi()) {
@@ -27570,7 +27742,6 @@ PyObject* BeamPyTiePointGrid_resetValidMask(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_getValidMaskExpression(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -27596,7 +27767,6 @@ PyObject* BeamPyTiePointGrid_getValidMaskExpression(PyObject* self, PyObject* ar
 PyObject* BeamPyTiePointGrid_updateExpression(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     const char* oldExternalName = NULL;
@@ -27629,7 +27799,6 @@ PyObject* BeamPyTiePointGrid_updateExpression(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_hasRasterData(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jboolean _result = (jboolean) 0;
@@ -27652,7 +27821,6 @@ PyObject* BeamPyTiePointGrid_hasRasterData(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_getRasterData(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -27678,7 +27846,6 @@ PyObject* BeamPyTiePointGrid_getRasterData(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_setRasterData(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* rasterDataPyObj = NULL;
@@ -27697,9 +27864,12 @@ PyObject* BeamPyTiePointGrid_setRasterData(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:setRasterData", &rasterDataPyObj)) {
         return NULL;
     }
-    rasterDataJObj = BPy_ToJObjectT(rasterDataPyObj, BPy_ProductData_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        rasterDataJObj = BPy_ToJObjectT(rasterDataPyObj, BPy_ProductData_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, rasterDataJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.TiePointGrid#setRasterData(Lorg/esa/beam/framework/datamodel/ProductData;)V");
@@ -27709,7 +27879,6 @@ PyObject* BeamPyTiePointGrid_setRasterData(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_loadRasterData1(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     if (!BPy_InitApi()) {
@@ -27731,7 +27900,6 @@ PyObject* BeamPyTiePointGrid_loadRasterData1(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_loadRasterData2(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* pmPyObj = NULL;
@@ -27750,9 +27918,12 @@ PyObject* BeamPyTiePointGrid_loadRasterData2(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:loadRasterData", &pmPyObj)) {
         return NULL;
     }
-    pmJObj = BPy_ToJObjectT(pmPyObj, BPy_ProgressMonitor_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        pmJObj = BPy_ToJObjectT(pmPyObj, BPy_ProgressMonitor_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, pmJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.TiePointGrid#loadRasterData(Lcom/bc/ceres/core/ProgressMonitor;)V");
@@ -27762,7 +27933,6 @@ PyObject* BeamPyTiePointGrid_loadRasterData2(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_unloadRasterData(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     if (!BPy_InitApi()) {
@@ -27784,7 +27954,6 @@ PyObject* BeamPyTiePointGrid_unloadRasterData(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_isPixelValid2(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint x = (jint) 0;
@@ -27812,7 +27981,6 @@ PyObject* BeamPyTiePointGrid_isPixelValid2(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_getSampleInt(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint x = (jint) 0;
@@ -27840,7 +28008,6 @@ PyObject* BeamPyTiePointGrid_getSampleInt(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_getSampleFloat(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint x = (jint) 0;
@@ -27868,7 +28035,6 @@ PyObject* BeamPyTiePointGrid_getSampleFloat(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_isPixelValid1(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint pixelIndex = (jint) 0;
@@ -27895,7 +28061,6 @@ PyObject* BeamPyTiePointGrid_isPixelValid1(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_isPixelValid3(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint x = (jint) 0;
@@ -27917,9 +28082,12 @@ PyObject* BeamPyTiePointGrid_isPixelValid3(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "iiO:isPixelValid", &x, &y, &roiPyObj)) {
         return NULL;
     }
-    roiJObj = BPy_ToJObjectT(roiPyObj, BPy_ROI_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        roiJObj = BPy_ToJObjectT(roiPyObj, BPy_ROI_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _result = (*jenv)->CallBooleanMethod(jenv, _thisJObj, _method, x, y, roiJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.TiePointGrid#isPixelValid(IILjavax/media/jai/ROI;)Z");
@@ -27929,7 +28097,6 @@ PyObject* BeamPyTiePointGrid_isPixelValid3(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_getPixels5(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint x = (jint) 0;
@@ -27979,7 +28146,6 @@ PyObject* BeamPyTiePointGrid_getPixels5(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_getPixels3(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint x = (jint) 0;
@@ -28029,7 +28195,6 @@ PyObject* BeamPyTiePointGrid_getPixels3(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_getPixels1(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint x = (jint) 0;
@@ -28079,7 +28244,6 @@ PyObject* BeamPyTiePointGrid_getPixels1(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_readPixels5(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint x = (jint) 0;
@@ -28129,7 +28293,6 @@ PyObject* BeamPyTiePointGrid_readPixels5(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_readPixels3(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint x = (jint) 0;
@@ -28179,7 +28342,6 @@ PyObject* BeamPyTiePointGrid_readPixels3(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_readPixels1(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint x = (jint) 0;
@@ -28229,7 +28391,6 @@ PyObject* BeamPyTiePointGrid_readPixels1(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_writePixels5(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint x = (jint) 0;
@@ -28275,7 +28436,6 @@ PyObject* BeamPyTiePointGrid_writePixels5(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_writePixels3(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint x = (jint) 0;
@@ -28321,7 +28481,6 @@ PyObject* BeamPyTiePointGrid_writePixels3(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_writePixels1(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint x = (jint) 0;
@@ -28367,7 +28526,6 @@ PyObject* BeamPyTiePointGrid_writePixels1(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_readValidMask(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint x = (jint) 0;
@@ -28417,7 +28575,6 @@ PyObject* BeamPyTiePointGrid_readValidMask(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_readRasterDataFully1(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     if (!BPy_InitApi()) {
@@ -28439,7 +28596,6 @@ PyObject* BeamPyTiePointGrid_readRasterDataFully1(PyObject* self, PyObject* args
 PyObject* BeamPyTiePointGrid_readRasterData1(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint offsetX = (jint) 0;
@@ -28462,9 +28618,12 @@ PyObject* BeamPyTiePointGrid_readRasterData1(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "iiiiO:readRasterData", &offsetX, &offsetY, &width, &height, &rasterDataPyObj)) {
         return NULL;
     }
-    rasterDataJObj = BPy_ToJObjectT(rasterDataPyObj, BPy_ProductData_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        rasterDataJObj = BPy_ToJObjectT(rasterDataPyObj, BPy_ProductData_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, offsetX, offsetY, width, height, rasterDataJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.TiePointGrid#readRasterData(IIIILorg/esa/beam/framework/datamodel/ProductData;)V");
@@ -28474,7 +28633,6 @@ PyObject* BeamPyTiePointGrid_readRasterData1(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_writeRasterDataFully1(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     if (!BPy_InitApi()) {
@@ -28496,7 +28654,6 @@ PyObject* BeamPyTiePointGrid_writeRasterDataFully1(PyObject* self, PyObject* arg
 PyObject* BeamPyTiePointGrid_writeRasterData1(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint offsetX = (jint) 0;
@@ -28519,9 +28676,12 @@ PyObject* BeamPyTiePointGrid_writeRasterData1(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "iiiiO:writeRasterData", &offsetX, &offsetY, &width, &height, &rasterDataPyObj)) {
         return NULL;
     }
-    rasterDataJObj = BPy_ToJObjectT(rasterDataPyObj, BPy_ProductData_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        rasterDataJObj = BPy_ToJObjectT(rasterDataPyObj, BPy_ProductData_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, offsetX, offsetY, width, height, rasterDataJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.TiePointGrid#writeRasterData(IIIILorg/esa/beam/framework/datamodel/ProductData;)V");
@@ -28531,7 +28691,6 @@ PyObject* BeamPyTiePointGrid_writeRasterData1(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_createCompatibleRasterData1(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -28557,7 +28716,6 @@ PyObject* BeamPyTiePointGrid_createCompatibleRasterData1(PyObject* self, PyObjec
 PyObject* BeamPyTiePointGrid_createCompatibleSceneRasterData(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -28583,7 +28741,6 @@ PyObject* BeamPyTiePointGrid_createCompatibleSceneRasterData(PyObject* self, PyO
 PyObject* BeamPyTiePointGrid_createCompatibleRasterData2(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint width = (jint) 0;
@@ -28614,7 +28771,6 @@ PyObject* BeamPyTiePointGrid_createCompatibleRasterData2(PyObject* self, PyObjec
 PyObject* BeamPyTiePointGrid_isCompatibleRasterData(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* rasterDataPyObj = NULL;
@@ -28636,9 +28792,12 @@ PyObject* BeamPyTiePointGrid_isCompatibleRasterData(PyObject* self, PyObject* ar
     if (!PyArg_ParseTuple(args, "Oii:isCompatibleRasterData", &rasterDataPyObj, &w, &h)) {
         return NULL;
     }
-    rasterDataJObj = BPy_ToJObjectT(rasterDataPyObj, BPy_ProductData_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        rasterDataJObj = BPy_ToJObjectT(rasterDataPyObj, BPy_ProductData_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _result = (*jenv)->CallBooleanMethod(jenv, _thisJObj, _method, rasterDataJObj, w, h);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.TiePointGrid#isCompatibleRasterData(Lorg/esa/beam/framework/datamodel/ProductData;II)Z");
@@ -28648,7 +28807,6 @@ PyObject* BeamPyTiePointGrid_isCompatibleRasterData(PyObject* self, PyObject* ar
 PyObject* BeamPyTiePointGrid_checkCompatibleRasterData(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* rasterDataPyObj = NULL;
@@ -28669,9 +28827,12 @@ PyObject* BeamPyTiePointGrid_checkCompatibleRasterData(PyObject* self, PyObject*
     if (!PyArg_ParseTuple(args, "Oii:checkCompatibleRasterData", &rasterDataPyObj, &w, &h)) {
         return NULL;
     }
-    rasterDataJObj = BPy_ToJObjectT(rasterDataPyObj, BPy_ProductData_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        rasterDataJObj = BPy_ToJObjectT(rasterDataPyObj, BPy_ProductData_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, rasterDataJObj, w, h);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.TiePointGrid#checkCompatibleRasterData(Lorg/esa/beam/framework/datamodel/ProductData;II)V");
@@ -28681,7 +28842,6 @@ PyObject* BeamPyTiePointGrid_checkCompatibleRasterData(PyObject* self, PyObject*
 PyObject* BeamPyTiePointGrid_hasIntPixels(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jboolean _result = (jboolean) 0;
@@ -28704,7 +28864,6 @@ PyObject* BeamPyTiePointGrid_hasIntPixels(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_createTransectProfileData(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* shapePyObj = NULL;
@@ -28725,9 +28884,12 @@ PyObject* BeamPyTiePointGrid_createTransectProfileData(PyObject* self, PyObject*
     if (!PyArg_ParseTuple(args, "O:createTransectProfileData", &shapePyObj)) {
         return NULL;
     }
-    shapeJObj = BPy_ToJObjectT(shapePyObj, BPy_Shape_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        shapeJObj = BPy_ToJObjectT(shapePyObj, BPy_Shape_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, shapeJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.TiePointGrid#createTransectProfileData(Ljava/awt/Shape;)Lorg/esa/beam/framework/datamodel/TransectProfileData;");
@@ -28739,7 +28901,6 @@ PyObject* BeamPyTiePointGrid_createTransectProfileData(PyObject* self, PyObject*
 PyObject* BeamPyTiePointGrid_getImageInfo1(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -28765,7 +28926,6 @@ PyObject* BeamPyTiePointGrid_getImageInfo1(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_setImageInfo(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* imageInfoPyObj = NULL;
@@ -28784,9 +28944,12 @@ PyObject* BeamPyTiePointGrid_setImageInfo(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:setImageInfo", &imageInfoPyObj)) {
         return NULL;
     }
-    imageInfoJObj = BPy_ToJObjectT(imageInfoPyObj, BPy_ImageInfo_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        imageInfoJObj = BPy_ToJObjectT(imageInfoPyObj, BPy_ImageInfo_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, imageInfoJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.TiePointGrid#setImageInfo(Lorg/esa/beam/framework/datamodel/ImageInfo;)V");
@@ -28796,7 +28959,6 @@ PyObject* BeamPyTiePointGrid_setImageInfo(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_fireImageInfoChanged(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     if (!BPy_InitApi()) {
@@ -28818,7 +28980,6 @@ PyObject* BeamPyTiePointGrid_fireImageInfoChanged(PyObject* self, PyObject* args
 PyObject* BeamPyTiePointGrid_getImageInfo2(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* pmPyObj = NULL;
@@ -28839,9 +29000,12 @@ PyObject* BeamPyTiePointGrid_getImageInfo2(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:getImageInfo", &pmPyObj)) {
         return NULL;
     }
-    pmJObj = BPy_ToJObjectT(pmPyObj, BPy_ProgressMonitor_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        pmJObj = BPy_ToJObjectT(pmPyObj, BPy_ProgressMonitor_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, pmJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.TiePointGrid#getImageInfo(Lcom/bc/ceres/core/ProgressMonitor;)Lorg/esa/beam/framework/datamodel/ImageInfo;");
@@ -28853,7 +29017,6 @@ PyObject* BeamPyTiePointGrid_getImageInfo2(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_getImageInfo3(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jdouble* histoSkipAreasData = NULL;
@@ -28889,9 +29052,12 @@ PyObject* BeamPyTiePointGrid_getImageInfo3(PyObject* self, PyObject* args)
     if (histoSkipAreasJObj == NULL) {
         return NULL;
     }
-    pmJObj = BPy_ToJObjectT(pmPyObj, BPy_ProgressMonitor_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        pmJObj = BPy_ToJObjectT(pmPyObj, BPy_ProgressMonitor_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, histoSkipAreasJObj, pmJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.TiePointGrid#getImageInfo([DLcom/bc/ceres/core/ProgressMonitor;)Lorg/esa/beam/framework/datamodel/ImageInfo;");
@@ -28905,7 +29071,6 @@ PyObject* BeamPyTiePointGrid_getImageInfo3(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_createDefaultImageInfo1(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jdouble* histoSkipAreasData = NULL;
@@ -28941,9 +29106,12 @@ PyObject* BeamPyTiePointGrid_createDefaultImageInfo1(PyObject* self, PyObject* a
     if (histoSkipAreasJObj == NULL) {
         return NULL;
     }
-    pmJObj = BPy_ToJObjectT(pmPyObj, BPy_ProgressMonitor_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        pmJObj = BPy_ToJObjectT(pmPyObj, BPy_ProgressMonitor_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, histoSkipAreasJObj, pmJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.TiePointGrid#createDefaultImageInfo([DLcom/bc/ceres/core/ProgressMonitor;)Lorg/esa/beam/framework/datamodel/ImageInfo;");
@@ -28957,7 +29125,6 @@ PyObject* BeamPyTiePointGrid_createDefaultImageInfo1(PyObject* self, PyObject* a
 PyObject* BeamPyTiePointGrid_createDefaultImageInfo2(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jdouble* histoSkipAreasData = NULL;
@@ -28993,9 +29160,12 @@ PyObject* BeamPyTiePointGrid_createDefaultImageInfo2(PyObject* self, PyObject* a
     if (histoSkipAreasJObj == NULL) {
         return NULL;
     }
-    histogramJObj = BPy_ToJObjectT(histogramPyObj, BPy_Histogram_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        histogramJObj = BPy_ToJObjectT(histogramPyObj, BPy_Histogram_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, histoSkipAreasJObj, histogramJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.TiePointGrid#createDefaultImageInfo([DLorg/esa/beam/util/math/Histogram;)Lorg/esa/beam/framework/datamodel/ImageInfo;");
@@ -29009,7 +29179,6 @@ PyObject* BeamPyTiePointGrid_createDefaultImageInfo2(PyObject* self, PyObject* a
 PyObject* BeamPyTiePointGrid_getOverlayMaskGroup(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -29035,7 +29204,6 @@ PyObject* BeamPyTiePointGrid_getOverlayMaskGroup(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_createColorIndexedImage(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* pmPyObj = NULL;
@@ -29056,9 +29224,12 @@ PyObject* BeamPyTiePointGrid_createColorIndexedImage(PyObject* self, PyObject* a
     if (!PyArg_ParseTuple(args, "O:createColorIndexedImage", &pmPyObj)) {
         return NULL;
     }
-    pmJObj = BPy_ToJObjectT(pmPyObj, BPy_ProgressMonitor_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        pmJObj = BPy_ToJObjectT(pmPyObj, BPy_ProgressMonitor_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, pmJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.TiePointGrid#createColorIndexedImage(Lcom/bc/ceres/core/ProgressMonitor;)Ljava/awt/image/BufferedImage;");
@@ -29070,7 +29241,6 @@ PyObject* BeamPyTiePointGrid_createColorIndexedImage(PyObject* self, PyObject* a
 PyObject* BeamPyTiePointGrid_createRgbImage(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* pmPyObj = NULL;
@@ -29091,9 +29261,12 @@ PyObject* BeamPyTiePointGrid_createRgbImage(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:createRgbImage", &pmPyObj)) {
         return NULL;
     }
-    pmJObj = BPy_ToJObjectT(pmPyObj, BPy_ProgressMonitor_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        pmJObj = BPy_ToJObjectT(pmPyObj, BPy_ProgressMonitor_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, pmJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.TiePointGrid#createRgbImage(Lcom/bc/ceres/core/ProgressMonitor;)Ljava/awt/image/BufferedImage;");
@@ -29105,7 +29278,6 @@ PyObject* BeamPyTiePointGrid_createRgbImage(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_quantizeRasterData1(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jdouble newMin = (jdouble) 0;
@@ -29129,9 +29301,12 @@ PyObject* BeamPyTiePointGrid_quantizeRasterData1(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "dddO:quantizeRasterData", &newMin, &newMax, &gamma, &pmPyObj)) {
         return NULL;
     }
-    pmJObj = BPy_ToJObjectT(pmPyObj, BPy_ProgressMonitor_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        pmJObj = BPy_ToJObjectT(pmPyObj, BPy_ProgressMonitor_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, newMin, newMax, gamma, pmJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.TiePointGrid#quantizeRasterData(DDDLcom/bc/ceres/core/ProgressMonitor;)[B");
@@ -29143,7 +29318,6 @@ PyObject* BeamPyTiePointGrid_quantizeRasterData1(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_quantizeRasterData2(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jdouble newMin = (jdouble) 0;
@@ -29182,9 +29356,12 @@ PyObject* BeamPyTiePointGrid_quantizeRasterData2(PyObject* self, PyObject* args)
     if (samplesJObj == NULL) {
         return NULL;
     }
-    pmJObj = BPy_ToJObjectT(pmPyObj, BPy_ProgressMonitor_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        pmJObj = BPy_ToJObjectT(pmPyObj, BPy_ProgressMonitor_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, newMin, newMax, gamma, samplesJObj, offset, stride, pmJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.TiePointGrid#quantizeRasterData(DDD[BIILcom/bc/ceres/core/ProgressMonitor;)V");
@@ -29196,7 +29373,6 @@ PyObject* BeamPyTiePointGrid_quantizeRasterData2(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_createPixelValidator(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint lineOffset = (jint) 0;
@@ -29218,9 +29394,12 @@ PyObject* BeamPyTiePointGrid_createPixelValidator(PyObject* self, PyObject* args
     if (!PyArg_ParseTuple(args, "iO:createPixelValidator", &lineOffset, &roiPyObj)) {
         return NULL;
     }
-    roiJObj = BPy_ToJObjectT(roiPyObj, BPy_ROI_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        roiJObj = BPy_ToJObjectT(roiPyObj, BPy_ROI_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, lineOffset, roiJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.TiePointGrid#createPixelValidator(ILjavax/media/jai/ROI;)Lorg/esa/beam/util/math/IndexValidator;");
@@ -29232,7 +29411,6 @@ PyObject* BeamPyTiePointGrid_createPixelValidator(PyObject* self, PyObject* args
 PyObject* BeamPyTiePointGrid_scale(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jdouble v = (jdouble) 0;
@@ -29259,7 +29437,6 @@ PyObject* BeamPyTiePointGrid_scale(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_scaleInverse(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jdouble v = (jdouble) 0;
@@ -29286,7 +29463,6 @@ PyObject* BeamPyTiePointGrid_scaleInverse(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_getPixelString(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint x = (jint) 0;
@@ -29317,7 +29493,6 @@ PyObject* BeamPyTiePointGrid_getPixelString(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_isSourceImageSet(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jboolean _result = (jboolean) 0;
@@ -29340,7 +29515,6 @@ PyObject* BeamPyTiePointGrid_isSourceImageSet(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_getSourceImage(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -29366,7 +29540,6 @@ PyObject* BeamPyTiePointGrid_getSourceImage(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_setSourceImage2(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* sourceImagePyObj = NULL;
@@ -29385,9 +29558,12 @@ PyObject* BeamPyTiePointGrid_setSourceImage2(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:setSourceImage", &sourceImagePyObj)) {
         return NULL;
     }
-    sourceImageJObj = BPy_ToJObjectT(sourceImagePyObj, BPy_RenderedImage_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        sourceImageJObj = BPy_ToJObjectT(sourceImagePyObj, BPy_RenderedImage_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, sourceImageJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.TiePointGrid#setSourceImage(Ljava/awt/image/RenderedImage;)V");
@@ -29397,7 +29573,6 @@ PyObject* BeamPyTiePointGrid_setSourceImage2(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_setSourceImage1(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* sourceImagePyObj = NULL;
@@ -29416,9 +29591,12 @@ PyObject* BeamPyTiePointGrid_setSourceImage1(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:setSourceImage", &sourceImagePyObj)) {
         return NULL;
     }
-    sourceImageJObj = BPy_ToJObjectT(sourceImagePyObj, BPy_MultiLevelImage_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        sourceImageJObj = BPy_ToJObjectT(sourceImagePyObj, BPy_MultiLevelImage_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, sourceImageJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.TiePointGrid#setSourceImage(Lcom/bc/ceres/glevel/MultiLevelImage;)V");
@@ -29428,7 +29606,6 @@ PyObject* BeamPyTiePointGrid_setSourceImage1(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_isGeophysicalImageSet(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jboolean _result = (jboolean) 0;
@@ -29451,7 +29628,6 @@ PyObject* BeamPyTiePointGrid_isGeophysicalImageSet(PyObject* self, PyObject* arg
 PyObject* BeamPyTiePointGrid_getGeophysicalImage(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -29477,7 +29653,6 @@ PyObject* BeamPyTiePointGrid_getGeophysicalImage(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_isValidMaskImageSet(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jboolean _result = (jboolean) 0;
@@ -29500,7 +29675,6 @@ PyObject* BeamPyTiePointGrid_isValidMaskImageSet(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_getValidMaskImage(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -29526,7 +29700,6 @@ PyObject* BeamPyTiePointGrid_getValidMaskImage(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_isStxSet(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jboolean _result = (jboolean) 0;
@@ -29549,7 +29722,6 @@ PyObject* BeamPyTiePointGrid_isStxSet(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_getStx1(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -29575,7 +29747,6 @@ PyObject* BeamPyTiePointGrid_getStx1(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_getStx2(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jboolean accurate = (jboolean) 0;
@@ -29597,9 +29768,12 @@ PyObject* BeamPyTiePointGrid_getStx2(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "bO:getStx", &accurate, &pmPyObj)) {
         return NULL;
     }
-    pmJObj = BPy_ToJObjectT(pmPyObj, BPy_ProgressMonitor_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        pmJObj = BPy_ToJObjectT(pmPyObj, BPy_ProgressMonitor_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, accurate, pmJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.TiePointGrid#getStx(ZLcom/bc/ceres/core/ProgressMonitor;)Lorg/esa/beam/framework/datamodel/Stx;");
@@ -29611,7 +29785,6 @@ PyObject* BeamPyTiePointGrid_getStx2(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_setStx(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* stxPyObj = NULL;
@@ -29630,9 +29803,12 @@ PyObject* BeamPyTiePointGrid_setStx(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:setStx", &stxPyObj)) {
         return NULL;
     }
-    stxJObj = BPy_ToJObjectT(stxPyObj, BPy_Stx_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        stxJObj = BPy_ToJObjectT(stxPyObj, BPy_Stx_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, stxJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.TiePointGrid#setStx(Lorg/esa/beam/framework/datamodel/Stx;)V");
@@ -29642,7 +29818,6 @@ PyObject* BeamPyTiePointGrid_setStx(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_getValidShape(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -29668,7 +29843,6 @@ PyObject* BeamPyTiePointGrid_getValidShape(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_getRoiMaskGroup(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -29694,7 +29868,6 @@ PyObject* BeamPyTiePointGrid_getRoiMaskGroup(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_getDataType(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint _result = (jint) 0;
@@ -29717,7 +29890,6 @@ PyObject* BeamPyTiePointGrid_getDataType(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_getNumDataElems(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jlong _result = (jlong) 0;
@@ -29740,7 +29912,6 @@ PyObject* BeamPyTiePointGrid_getNumDataElems(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_setData(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* dataPyObj = NULL;
@@ -29759,9 +29930,12 @@ PyObject* BeamPyTiePointGrid_setData(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:setData", &dataPyObj)) {
         return NULL;
     }
-    dataJObj = BPy_ToJObjectT(dataPyObj, BPy_ProductData_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        dataJObj = BPy_ToJObjectT(dataPyObj, BPy_ProductData_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, dataJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.TiePointGrid#setData(Lorg/esa/beam/framework/datamodel/ProductData;)V");
@@ -29771,7 +29945,6 @@ PyObject* BeamPyTiePointGrid_setData(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_getData(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -29797,7 +29970,6 @@ PyObject* BeamPyTiePointGrid_getData(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_setDataElems(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* elemsPyObj = NULL;
@@ -29816,9 +29988,12 @@ PyObject* BeamPyTiePointGrid_setDataElems(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:setDataElems", &elemsPyObj)) {
         return NULL;
     }
-    elemsJObj = BPy_ToJObjectT(elemsPyObj, BPy_Object_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        elemsJObj = BPy_ToJObjectT(elemsPyObj, BPy_Object_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, elemsJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.TiePointGrid#setDataElems(Ljava/lang/Object;)V");
@@ -29828,7 +30003,6 @@ PyObject* BeamPyTiePointGrid_setDataElems(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_getDataElems(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -29854,7 +30028,6 @@ PyObject* BeamPyTiePointGrid_getDataElems(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_getDataElemSize(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint _result = (jint) 0;
@@ -29877,7 +30050,6 @@ PyObject* BeamPyTiePointGrid_getDataElemSize(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_setReadOnly(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jboolean readOnly = (jboolean) 0;
@@ -29903,7 +30075,6 @@ PyObject* BeamPyTiePointGrid_setReadOnly(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_isReadOnly(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jboolean _result = (jboolean) 0;
@@ -29926,7 +30097,6 @@ PyObject* BeamPyTiePointGrid_isReadOnly(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_setUnit(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     const char* unit = NULL;
@@ -29955,7 +30125,6 @@ PyObject* BeamPyTiePointGrid_setUnit(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_getUnit(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -29981,7 +30150,6 @@ PyObject* BeamPyTiePointGrid_getUnit(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_isSynthetic(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jboolean _result = (jboolean) 0;
@@ -30004,7 +30172,6 @@ PyObject* BeamPyTiePointGrid_isSynthetic(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_setSynthetic(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jboolean synthetic = (jboolean) 0;
@@ -30030,7 +30197,6 @@ PyObject* BeamPyTiePointGrid_setSynthetic(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_fireProductNodeDataChanged(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     if (!BPy_InitApi()) {
@@ -30052,7 +30218,6 @@ PyObject* BeamPyTiePointGrid_fireProductNodeDataChanged(PyObject* self, PyObject
 PyObject* BeamPyTiePointGrid_getRawStorageSize2(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* subsetDefPyObj = NULL;
@@ -30072,9 +30237,12 @@ PyObject* BeamPyTiePointGrid_getRawStorageSize2(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:getRawStorageSize", &subsetDefPyObj)) {
         return NULL;
     }
-    subsetDefJObj = BPy_ToJObjectT(subsetDefPyObj, BPy_ProductSubsetDef_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        subsetDefJObj = BPy_ToJObjectT(subsetDefPyObj, BPy_ProductSubsetDef_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _result = (*jenv)->CallLongMethod(jenv, _thisJObj, _method, subsetDefJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.TiePointGrid#getRawStorageSize(Lorg/esa/beam/framework/dataio/ProductSubsetDef;)J");
@@ -30084,7 +30252,6 @@ PyObject* BeamPyTiePointGrid_getRawStorageSize2(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_createCompatibleProductData(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint numElems = (jint) 0;
@@ -30114,7 +30281,6 @@ PyObject* BeamPyTiePointGrid_createCompatibleProductData(PyObject* self, PyObjec
 PyObject* BeamPyTiePointGrid_getOwner(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -30140,7 +30306,6 @@ PyObject* BeamPyTiePointGrid_getOwner(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_getName(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -30166,7 +30331,6 @@ PyObject* BeamPyTiePointGrid_getName(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_setName(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     const char* name = NULL;
@@ -30195,7 +30359,6 @@ PyObject* BeamPyTiePointGrid_setName(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_getDescription(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -30221,7 +30384,6 @@ PyObject* BeamPyTiePointGrid_getDescription(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_setDescription(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     const char* description = NULL;
@@ -30250,7 +30412,6 @@ PyObject* BeamPyTiePointGrid_setDescription(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_isModified(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jboolean _result = (jboolean) 0;
@@ -30273,7 +30434,6 @@ PyObject* BeamPyTiePointGrid_isModified(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_toString(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -30299,7 +30459,6 @@ PyObject* BeamPyTiePointGrid_toString(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_isValidNodeName(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     const char* name = NULL;
     jstring nameJObj = NULL;
     jboolean _result = (jboolean) 0;
@@ -30322,7 +30481,6 @@ PyObject* BeamPyTiePointGrid_isValidNodeName(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_getProduct(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -30348,7 +30506,6 @@ PyObject* BeamPyTiePointGrid_getProduct(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_getProductReader(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -30374,7 +30531,6 @@ PyObject* BeamPyTiePointGrid_getProductReader(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_getProductWriter(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -30400,7 +30556,6 @@ PyObject* BeamPyTiePointGrid_getProductWriter(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_getDisplayName(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -30426,7 +30581,6 @@ PyObject* BeamPyTiePointGrid_getDisplayName(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_getProductRefString(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -30452,7 +30606,6 @@ PyObject* BeamPyTiePointGrid_getProductRefString(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_getRawStorageSize1(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jlong _result = (jlong) 0;
@@ -30475,7 +30628,6 @@ PyObject* BeamPyTiePointGrid_getRawStorageSize1(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_fireProductNodeChanged1(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     const char* propertyName = NULL;
@@ -30504,7 +30656,6 @@ PyObject* BeamPyTiePointGrid_fireProductNodeChanged1(PyObject* self, PyObject* a
 PyObject* BeamPyTiePointGrid_fireProductNodeChanged2(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     const char* propertyName = NULL;
@@ -30528,13 +30679,19 @@ PyObject* BeamPyTiePointGrid_fireProductNodeChanged2(PyObject* self, PyObject* a
         return NULL;
     }
     propertyNameJObj =(*jenv)->NewStringUTF(jenv, propertyName);
-    oldValueJObj = BPy_ToJObjectT(oldValuePyObj, BPy_Object_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        oldValueJObj = BPy_ToJObjectT(oldValuePyObj, BPy_Object_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
-    newValueJObj = BPy_ToJObjectT(newValuePyObj, BPy_Object_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        newValueJObj = BPy_ToJObjectT(newValuePyObj, BPy_Object_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, propertyNameJObj, oldValueJObj, newValueJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.TiePointGrid#fireProductNodeChanged(Ljava/lang/String;Ljava/lang/Object;Ljava/lang/Object;)V");
@@ -30545,7 +30702,6 @@ PyObject* BeamPyTiePointGrid_fireProductNodeChanged2(PyObject* self, PyObject* a
 PyObject* BeamPyTiePointGrid_removeFromFile(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* productWriterPyObj = NULL;
@@ -30564,9 +30720,12 @@ PyObject* BeamPyTiePointGrid_removeFromFile(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:removeFromFile", &productWriterPyObj)) {
         return NULL;
     }
-    productWriterJObj = BPy_ToJObjectT(productWriterPyObj, BPy_ProductWriter_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        productWriterJObj = BPy_ToJObjectT(productWriterPyObj, BPy_ProductWriter_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, productWriterJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.TiePointGrid#removeFromFile(Lorg/esa/beam/framework/dataio/ProductWriter;)V");
@@ -30576,7 +30735,6 @@ PyObject* BeamPyTiePointGrid_removeFromFile(PyObject* self, PyObject* args)
 PyObject* BeamPyTiePointGrid_getExtension(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* arg0PyObj = NULL;
@@ -30597,9 +30755,12 @@ PyObject* BeamPyTiePointGrid_getExtension(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:getExtension", &arg0PyObj)) {
         return NULL;
     }
-    arg0JObj = BPy_ToJObjectT(arg0PyObj, BPy_Class_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        arg0JObj = BPy_ToJObjectT(arg0PyObj, BPy_Class_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, arg0JObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.TiePointGrid#getExtension(Ljava/lang/Class;)Ljava/lang/Object;");
@@ -30611,7 +30772,6 @@ PyObject* BeamPyTiePointGrid_getExtension(PyObject* self, PyObject* args)
 PyObject* BeamPyAngularDirection_newAngularDirection(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     jdouble azimuth = (jdouble) 0;
     jdouble zenith = (jdouble) 0;
     PyObject* _resultPyObj = NULL;
@@ -30635,7 +30795,6 @@ PyObject* BeamPyAngularDirection_newAngularDirection(PyObject* self, PyObject* a
 PyObject* BeamPyAngularDirection_equals(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* objPyObj = NULL;
@@ -30655,9 +30814,12 @@ PyObject* BeamPyAngularDirection_equals(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:equals", &objPyObj)) {
         return NULL;
     }
-    objJObj = BPy_ToJObjectT(objPyObj, BPy_Object_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        objJObj = BPy_ToJObjectT(objPyObj, BPy_Object_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _result = (*jenv)->CallBooleanMethod(jenv, _thisJObj, _method, objJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.AngularDirection#equals(Ljava/lang/Object;)Z");
@@ -30667,7 +30829,6 @@ PyObject* BeamPyAngularDirection_equals(PyObject* self, PyObject* args)
 PyObject* BeamPyAngularDirection_toString(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -30693,7 +30854,6 @@ PyObject* BeamPyAngularDirection_toString(PyObject* self, PyObject* args)
 PyObject* BeamPyFlagCoding_newFlagCoding(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     const char* name = NULL;
     jstring nameJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -30719,7 +30879,6 @@ PyObject* BeamPyFlagCoding_newFlagCoding(PyObject* self, PyObject* args)
 PyObject* BeamPyFlagCoding_getFlag(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     const char* name = NULL;
@@ -30752,7 +30911,6 @@ PyObject* BeamPyFlagCoding_getFlag(PyObject* self, PyObject* args)
 PyObject* BeamPyFlagCoding_getFlagNames(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -30778,7 +30936,6 @@ PyObject* BeamPyFlagCoding_getFlagNames(PyObject* self, PyObject* args)
 PyObject* BeamPyFlagCoding_addFlag(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     const char* name = NULL;
@@ -30816,7 +30973,6 @@ PyObject* BeamPyFlagCoding_addFlag(PyObject* self, PyObject* args)
 PyObject* BeamPyFlagCoding_getFlagMask(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     const char* name = NULL;
@@ -30846,7 +31002,6 @@ PyObject* BeamPyFlagCoding_getFlagMask(PyObject* self, PyObject* args)
 PyObject* BeamPyFlagCoding_acceptVisitor(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* visitorPyObj = NULL;
@@ -30865,9 +31020,12 @@ PyObject* BeamPyFlagCoding_acceptVisitor(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:acceptVisitor", &visitorPyObj)) {
         return NULL;
     }
-    visitorJObj = BPy_ToJObjectT(visitorPyObj, BPy_ProductVisitor_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        visitorJObj = BPy_ToJObjectT(visitorPyObj, BPy_ProductVisitor_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, visitorJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.FlagCoding#acceptVisitor(Lorg/esa/beam/framework/datamodel/ProductVisitor;)V");
@@ -30877,7 +31035,6 @@ PyObject* BeamPyFlagCoding_acceptVisitor(PyObject* self, PyObject* args)
 PyObject* BeamPyFlagCoding_addElement(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* elementPyObj = NULL;
@@ -30896,9 +31053,12 @@ PyObject* BeamPyFlagCoding_addElement(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:addElement", &elementPyObj)) {
         return NULL;
     }
-    elementJObj = BPy_ToJObjectT(elementPyObj, BPy_MetadataElement_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        elementJObj = BPy_ToJObjectT(elementPyObj, BPy_MetadataElement_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, elementJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.FlagCoding#addElement(Lorg/esa/beam/framework/datamodel/MetadataElement;)V");
@@ -30908,7 +31068,6 @@ PyObject* BeamPyFlagCoding_addElement(PyObject* self, PyObject* args)
 PyObject* BeamPyFlagCoding_addAttribute(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* attributePyObj = NULL;
@@ -30927,9 +31086,12 @@ PyObject* BeamPyFlagCoding_addAttribute(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:addAttribute", &attributePyObj)) {
         return NULL;
     }
-    attributeJObj = BPy_ToJObjectT(attributePyObj, BPy_MetadataAttribute_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        attributeJObj = BPy_ToJObjectT(attributePyObj, BPy_MetadataAttribute_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, attributeJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.FlagCoding#addAttribute(Lorg/esa/beam/framework/datamodel/MetadataAttribute;)V");
@@ -30939,7 +31101,6 @@ PyObject* BeamPyFlagCoding_addAttribute(PyObject* self, PyObject* args)
 PyObject* BeamPyFlagCoding_addSample(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     const char* name = NULL;
@@ -30977,7 +31138,6 @@ PyObject* BeamPyFlagCoding_addSample(PyObject* self, PyObject* args)
 PyObject* BeamPyFlagCoding_getSampleCount(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint _result = (jint) 0;
@@ -31000,7 +31160,6 @@ PyObject* BeamPyFlagCoding_getSampleCount(PyObject* self, PyObject* args)
 PyObject* BeamPyFlagCoding_getSampleName(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint index = (jint) 0;
@@ -31030,7 +31189,6 @@ PyObject* BeamPyFlagCoding_getSampleName(PyObject* self, PyObject* args)
 PyObject* BeamPyFlagCoding_getSampleValue(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint index = (jint) 0;
@@ -31057,7 +31215,6 @@ PyObject* BeamPyFlagCoding_getSampleValue(PyObject* self, PyObject* args)
 PyObject* BeamPyFlagCoding_getElementGroup(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -31083,7 +31240,6 @@ PyObject* BeamPyFlagCoding_getElementGroup(PyObject* self, PyObject* args)
 PyObject* BeamPyFlagCoding_getParentElement(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -31109,7 +31265,6 @@ PyObject* BeamPyFlagCoding_getParentElement(PyObject* self, PyObject* args)
 PyObject* BeamPyFlagCoding_addElementAt(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* elementPyObj = NULL;
@@ -31129,9 +31284,12 @@ PyObject* BeamPyFlagCoding_addElementAt(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "Oi:addElementAt", &elementPyObj, &index)) {
         return NULL;
     }
-    elementJObj = BPy_ToJObjectT(elementPyObj, BPy_MetadataElement_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        elementJObj = BPy_ToJObjectT(elementPyObj, BPy_MetadataElement_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, elementJObj, index);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.FlagCoding#addElementAt(Lorg/esa/beam/framework/datamodel/MetadataElement;I)V");
@@ -31141,7 +31299,6 @@ PyObject* BeamPyFlagCoding_addElementAt(PyObject* self, PyObject* args)
 PyObject* BeamPyFlagCoding_removeElement(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* elementPyObj = NULL;
@@ -31161,9 +31318,12 @@ PyObject* BeamPyFlagCoding_removeElement(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:removeElement", &elementPyObj)) {
         return NULL;
     }
-    elementJObj = BPy_ToJObjectT(elementPyObj, BPy_MetadataElement_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        elementJObj = BPy_ToJObjectT(elementPyObj, BPy_MetadataElement_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _result = (*jenv)->CallBooleanMethod(jenv, _thisJObj, _method, elementJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.FlagCoding#removeElement(Lorg/esa/beam/framework/datamodel/MetadataElement;)Z");
@@ -31173,7 +31333,6 @@ PyObject* BeamPyFlagCoding_removeElement(PyObject* self, PyObject* args)
 PyObject* BeamPyFlagCoding_getNumElements(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint _result = (jint) 0;
@@ -31196,7 +31355,6 @@ PyObject* BeamPyFlagCoding_getNumElements(PyObject* self, PyObject* args)
 PyObject* BeamPyFlagCoding_getElementAt(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint index = (jint) 0;
@@ -31226,7 +31384,6 @@ PyObject* BeamPyFlagCoding_getElementAt(PyObject* self, PyObject* args)
 PyObject* BeamPyFlagCoding_getElementNames(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -31252,7 +31409,6 @@ PyObject* BeamPyFlagCoding_getElementNames(PyObject* self, PyObject* args)
 PyObject* BeamPyFlagCoding_getElements(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -31278,7 +31434,6 @@ PyObject* BeamPyFlagCoding_getElements(PyObject* self, PyObject* args)
 PyObject* BeamPyFlagCoding_getElement(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     const char* name = NULL;
@@ -31311,7 +31466,6 @@ PyObject* BeamPyFlagCoding_getElement(PyObject* self, PyObject* args)
 PyObject* BeamPyFlagCoding_containsElement(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     const char* name = NULL;
@@ -31341,7 +31495,6 @@ PyObject* BeamPyFlagCoding_containsElement(PyObject* self, PyObject* args)
 PyObject* BeamPyFlagCoding_getElementIndex(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* elementPyObj = NULL;
@@ -31361,9 +31514,12 @@ PyObject* BeamPyFlagCoding_getElementIndex(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:getElementIndex", &elementPyObj)) {
         return NULL;
     }
-    elementJObj = BPy_ToJObjectT(elementPyObj, BPy_MetadataElement_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        elementJObj = BPy_ToJObjectT(elementPyObj, BPy_MetadataElement_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _result = (*jenv)->CallIntMethod(jenv, _thisJObj, _method, elementJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.FlagCoding#getElementIndex(Lorg/esa/beam/framework/datamodel/MetadataElement;)I");
@@ -31373,7 +31529,6 @@ PyObject* BeamPyFlagCoding_getElementIndex(PyObject* self, PyObject* args)
 PyObject* BeamPyFlagCoding_removeAttribute(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* attributePyObj = NULL;
@@ -31393,9 +31548,12 @@ PyObject* BeamPyFlagCoding_removeAttribute(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:removeAttribute", &attributePyObj)) {
         return NULL;
     }
-    attributeJObj = BPy_ToJObjectT(attributePyObj, BPy_MetadataAttribute_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        attributeJObj = BPy_ToJObjectT(attributePyObj, BPy_MetadataAttribute_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _result = (*jenv)->CallBooleanMethod(jenv, _thisJObj, _method, attributeJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.FlagCoding#removeAttribute(Lorg/esa/beam/framework/datamodel/MetadataAttribute;)Z");
@@ -31405,7 +31563,6 @@ PyObject* BeamPyFlagCoding_removeAttribute(PyObject* self, PyObject* args)
 PyObject* BeamPyFlagCoding_getNumAttributes(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint _result = (jint) 0;
@@ -31428,7 +31585,6 @@ PyObject* BeamPyFlagCoding_getNumAttributes(PyObject* self, PyObject* args)
 PyObject* BeamPyFlagCoding_getAttributeAt(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint index = (jint) 0;
@@ -31458,7 +31614,6 @@ PyObject* BeamPyFlagCoding_getAttributeAt(PyObject* self, PyObject* args)
 PyObject* BeamPyFlagCoding_getAttributeNames(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -31484,7 +31639,6 @@ PyObject* BeamPyFlagCoding_getAttributeNames(PyObject* self, PyObject* args)
 PyObject* BeamPyFlagCoding_getAttributes(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -31510,7 +31664,6 @@ PyObject* BeamPyFlagCoding_getAttributes(PyObject* self, PyObject* args)
 PyObject* BeamPyFlagCoding_getAttribute(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     const char* name = NULL;
@@ -31543,7 +31696,6 @@ PyObject* BeamPyFlagCoding_getAttribute(PyObject* self, PyObject* args)
 PyObject* BeamPyFlagCoding_containsAttribute(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     const char* name = NULL;
@@ -31573,7 +31725,6 @@ PyObject* BeamPyFlagCoding_containsAttribute(PyObject* self, PyObject* args)
 PyObject* BeamPyFlagCoding_getAttributeIndex(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* attributePyObj = NULL;
@@ -31593,9 +31744,12 @@ PyObject* BeamPyFlagCoding_getAttributeIndex(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:getAttributeIndex", &attributePyObj)) {
         return NULL;
     }
-    attributeJObj = BPy_ToJObjectT(attributePyObj, BPy_MetadataAttribute_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        attributeJObj = BPy_ToJObjectT(attributePyObj, BPy_MetadataAttribute_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _result = (*jenv)->CallIntMethod(jenv, _thisJObj, _method, attributeJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.FlagCoding#getAttributeIndex(Lorg/esa/beam/framework/datamodel/MetadataAttribute;)I");
@@ -31605,7 +31759,6 @@ PyObject* BeamPyFlagCoding_getAttributeIndex(PyObject* self, PyObject* args)
 PyObject* BeamPyFlagCoding_getAttributeDouble(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     const char* name = NULL;
@@ -31636,7 +31789,6 @@ PyObject* BeamPyFlagCoding_getAttributeDouble(PyObject* self, PyObject* args)
 PyObject* BeamPyFlagCoding_getAttributeUTC(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     const char* name = NULL;
@@ -31660,9 +31812,12 @@ PyObject* BeamPyFlagCoding_getAttributeUTC(PyObject* self, PyObject* args)
         return NULL;
     }
     nameJObj =(*jenv)->NewStringUTF(jenv, name);
-    defaultValueJObj = BPy_ToJObjectT(defaultValuePyObj, BPy_ProductData_UTC_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        defaultValueJObj = BPy_ToJObjectT(defaultValuePyObj, BPy_ProductData_UTC_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, nameJObj, defaultValueJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.FlagCoding#getAttributeUTC(Ljava/lang/String;Lorg/esa/beam/framework/datamodel/ProductData/UTC;)Lorg/esa/beam/framework/datamodel/ProductData/UTC;");
@@ -31675,7 +31830,6 @@ PyObject* BeamPyFlagCoding_getAttributeUTC(PyObject* self, PyObject* args)
 PyObject* BeamPyFlagCoding_getAttributeInt(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     const char* name = NULL;
@@ -31706,7 +31860,6 @@ PyObject* BeamPyFlagCoding_getAttributeInt(PyObject* self, PyObject* args)
 PyObject* BeamPyFlagCoding_setAttributeInt(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     const char* name = NULL;
@@ -31736,7 +31889,6 @@ PyObject* BeamPyFlagCoding_setAttributeInt(PyObject* self, PyObject* args)
 PyObject* BeamPyFlagCoding_setAttributeDouble(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     const char* name = NULL;
@@ -31766,7 +31918,6 @@ PyObject* BeamPyFlagCoding_setAttributeDouble(PyObject* self, PyObject* args)
 PyObject* BeamPyFlagCoding_setAttributeUTC(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     const char* name = NULL;
@@ -31788,9 +31939,12 @@ PyObject* BeamPyFlagCoding_setAttributeUTC(PyObject* self, PyObject* args)
         return NULL;
     }
     nameJObj =(*jenv)->NewStringUTF(jenv, name);
-    valueJObj = BPy_ToJObjectT(valuePyObj, BPy_ProductData_UTC_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        valueJObj = BPy_ToJObjectT(valuePyObj, BPy_ProductData_UTC_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, nameJObj, valueJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.FlagCoding#setAttributeUTC(Ljava/lang/String;Lorg/esa/beam/framework/datamodel/ProductData/UTC;)V");
@@ -31801,7 +31955,6 @@ PyObject* BeamPyFlagCoding_setAttributeUTC(PyObject* self, PyObject* args)
 PyObject* BeamPyFlagCoding_getAttributeString(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     const char* name = NULL;
@@ -31838,7 +31991,6 @@ PyObject* BeamPyFlagCoding_getAttributeString(PyObject* self, PyObject* args)
 PyObject* BeamPyFlagCoding_setAttributeString(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     const char* name = NULL;
@@ -31871,7 +32023,6 @@ PyObject* BeamPyFlagCoding_setAttributeString(PyObject* self, PyObject* args)
 PyObject* BeamPyFlagCoding_setModified(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jboolean modified = (jboolean) 0;
@@ -31897,7 +32048,6 @@ PyObject* BeamPyFlagCoding_setModified(PyObject* self, PyObject* args)
 PyObject* BeamPyFlagCoding_createDeepClone(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -31923,7 +32073,6 @@ PyObject* BeamPyFlagCoding_createDeepClone(PyObject* self, PyObject* args)
 PyObject* BeamPyFlagCoding_dispose(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     if (!BPy_InitApi()) {
@@ -31945,7 +32094,6 @@ PyObject* BeamPyFlagCoding_dispose(PyObject* self, PyObject* args)
 PyObject* BeamPyFlagCoding_getOwner(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -31971,7 +32119,6 @@ PyObject* BeamPyFlagCoding_getOwner(PyObject* self, PyObject* args)
 PyObject* BeamPyFlagCoding_getName(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -31997,7 +32144,6 @@ PyObject* BeamPyFlagCoding_getName(PyObject* self, PyObject* args)
 PyObject* BeamPyFlagCoding_setName(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     const char* name = NULL;
@@ -32026,7 +32172,6 @@ PyObject* BeamPyFlagCoding_setName(PyObject* self, PyObject* args)
 PyObject* BeamPyFlagCoding_getDescription(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -32052,7 +32197,6 @@ PyObject* BeamPyFlagCoding_getDescription(PyObject* self, PyObject* args)
 PyObject* BeamPyFlagCoding_setDescription(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     const char* description = NULL;
@@ -32081,7 +32225,6 @@ PyObject* BeamPyFlagCoding_setDescription(PyObject* self, PyObject* args)
 PyObject* BeamPyFlagCoding_isModified(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jboolean _result = (jboolean) 0;
@@ -32104,7 +32247,6 @@ PyObject* BeamPyFlagCoding_isModified(PyObject* self, PyObject* args)
 PyObject* BeamPyFlagCoding_toString(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -32130,7 +32272,6 @@ PyObject* BeamPyFlagCoding_toString(PyObject* self, PyObject* args)
 PyObject* BeamPyFlagCoding_isValidNodeName(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     const char* name = NULL;
     jstring nameJObj = NULL;
     jboolean _result = (jboolean) 0;
@@ -32153,7 +32294,6 @@ PyObject* BeamPyFlagCoding_isValidNodeName(PyObject* self, PyObject* args)
 PyObject* BeamPyFlagCoding_getProduct(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -32179,7 +32319,6 @@ PyObject* BeamPyFlagCoding_getProduct(PyObject* self, PyObject* args)
 PyObject* BeamPyFlagCoding_getProductReader(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -32205,7 +32344,6 @@ PyObject* BeamPyFlagCoding_getProductReader(PyObject* self, PyObject* args)
 PyObject* BeamPyFlagCoding_getProductWriter(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -32231,7 +32369,6 @@ PyObject* BeamPyFlagCoding_getProductWriter(PyObject* self, PyObject* args)
 PyObject* BeamPyFlagCoding_getDisplayName(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -32257,7 +32394,6 @@ PyObject* BeamPyFlagCoding_getDisplayName(PyObject* self, PyObject* args)
 PyObject* BeamPyFlagCoding_getProductRefString(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -32283,7 +32419,6 @@ PyObject* BeamPyFlagCoding_getProductRefString(PyObject* self, PyObject* args)
 PyObject* BeamPyFlagCoding_updateExpression(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     const char* oldExternalName = NULL;
@@ -32316,7 +32451,6 @@ PyObject* BeamPyFlagCoding_updateExpression(PyObject* self, PyObject* args)
 PyObject* BeamPyFlagCoding_removeFromFile(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* productWriterPyObj = NULL;
@@ -32335,9 +32469,12 @@ PyObject* BeamPyFlagCoding_removeFromFile(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:removeFromFile", &productWriterPyObj)) {
         return NULL;
     }
-    productWriterJObj = BPy_ToJObjectT(productWriterPyObj, BPy_ProductWriter_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        productWriterJObj = BPy_ToJObjectT(productWriterPyObj, BPy_ProductWriter_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, productWriterJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.FlagCoding#removeFromFile(Lorg/esa/beam/framework/dataio/ProductWriter;)V");
@@ -32347,7 +32484,6 @@ PyObject* BeamPyFlagCoding_removeFromFile(PyObject* self, PyObject* args)
 PyObject* BeamPyFlagCoding_getExtension(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* arg0PyObj = NULL;
@@ -32368,9 +32504,12 @@ PyObject* BeamPyFlagCoding_getExtension(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:getExtension", &arg0PyObj)) {
         return NULL;
     }
-    arg0JObj = BPy_ToJObjectT(arg0PyObj, BPy_Class_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        arg0JObj = BPy_ToJObjectT(arg0PyObj, BPy_Class_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, arg0JObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.FlagCoding#getExtension(Ljava/lang/Class;)Ljava/lang/Object;");
@@ -32382,7 +32521,6 @@ PyObject* BeamPyFlagCoding_getExtension(PyObject* self, PyObject* args)
 PyObject* BeamPyMap_size(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint _result = (jint) 0;
@@ -32405,7 +32543,6 @@ PyObject* BeamPyMap_size(PyObject* self, PyObject* args)
 PyObject* BeamPyMap_isEmpty(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jboolean _result = (jboolean) 0;
@@ -32428,7 +32565,6 @@ PyObject* BeamPyMap_isEmpty(PyObject* self, PyObject* args)
 PyObject* BeamPyMap_containsKey(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* arg0PyObj = NULL;
@@ -32448,9 +32584,12 @@ PyObject* BeamPyMap_containsKey(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:containsKey", &arg0PyObj)) {
         return NULL;
     }
-    arg0JObj = BPy_ToJObjectT(arg0PyObj, BPy_Object_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        arg0JObj = BPy_ToJObjectT(arg0PyObj, BPy_Object_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _result = (*jenv)->CallBooleanMethod(jenv, _thisJObj, _method, arg0JObj);
     CHECK_JVM_EXCEPTION("java.util.Map#containsKey(Ljava/lang/Object;)Z");
@@ -32460,7 +32599,6 @@ PyObject* BeamPyMap_containsKey(PyObject* self, PyObject* args)
 PyObject* BeamPyMap_containsValue(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* arg0PyObj = NULL;
@@ -32480,9 +32618,12 @@ PyObject* BeamPyMap_containsValue(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:containsValue", &arg0PyObj)) {
         return NULL;
     }
-    arg0JObj = BPy_ToJObjectT(arg0PyObj, BPy_Object_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        arg0JObj = BPy_ToJObjectT(arg0PyObj, BPy_Object_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _result = (*jenv)->CallBooleanMethod(jenv, _thisJObj, _method, arg0JObj);
     CHECK_JVM_EXCEPTION("java.util.Map#containsValue(Ljava/lang/Object;)Z");
@@ -32492,7 +32633,6 @@ PyObject* BeamPyMap_containsValue(PyObject* self, PyObject* args)
 PyObject* BeamPyMap_get(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* arg0PyObj = NULL;
@@ -32513,9 +32653,12 @@ PyObject* BeamPyMap_get(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:get", &arg0PyObj)) {
         return NULL;
     }
-    arg0JObj = BPy_ToJObjectT(arg0PyObj, BPy_Object_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        arg0JObj = BPy_ToJObjectT(arg0PyObj, BPy_Object_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, arg0JObj);
     CHECK_JVM_EXCEPTION("java.util.Map#get(Ljava/lang/Object;)Ljava/lang/Object;");
@@ -32527,7 +32670,6 @@ PyObject* BeamPyMap_get(PyObject* self, PyObject* args)
 PyObject* BeamPyMap_put(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* arg0PyObj = NULL;
@@ -32550,13 +32692,19 @@ PyObject* BeamPyMap_put(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "OO:put", &arg0PyObj, &arg1PyObj)) {
         return NULL;
     }
-    arg0JObj = BPy_ToJObjectT(arg0PyObj, BPy_Object_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        arg0JObj = BPy_ToJObjectT(arg0PyObj, BPy_Object_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
-    arg1JObj = BPy_ToJObjectT(arg1PyObj, BPy_Object_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        arg1JObj = BPy_ToJObjectT(arg1PyObj, BPy_Object_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, arg0JObj, arg1JObj);
     CHECK_JVM_EXCEPTION("java.util.Map#put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;");
@@ -32568,7 +32716,6 @@ PyObject* BeamPyMap_put(PyObject* self, PyObject* args)
 PyObject* BeamPyMap_remove(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* arg0PyObj = NULL;
@@ -32589,9 +32736,12 @@ PyObject* BeamPyMap_remove(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:remove", &arg0PyObj)) {
         return NULL;
     }
-    arg0JObj = BPy_ToJObjectT(arg0PyObj, BPy_Object_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        arg0JObj = BPy_ToJObjectT(arg0PyObj, BPy_Object_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, arg0JObj);
     CHECK_JVM_EXCEPTION("java.util.Map#remove(Ljava/lang/Object;)Ljava/lang/Object;");
@@ -32603,7 +32753,6 @@ PyObject* BeamPyMap_remove(PyObject* self, PyObject* args)
 PyObject* BeamPyMap_putAll(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* arg0PyObj = NULL;
@@ -32622,9 +32771,12 @@ PyObject* BeamPyMap_putAll(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:putAll", &arg0PyObj)) {
         return NULL;
     }
-    arg0JObj = BPy_ToJObjectT(arg0PyObj, BPy_Map_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        arg0JObj = BPy_ToJObjectT(arg0PyObj, BPy_Map_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, arg0JObj);
     CHECK_JVM_EXCEPTION("java.util.Map#putAll(Ljava/util/Map;)V");
@@ -32634,7 +32786,6 @@ PyObject* BeamPyMap_putAll(PyObject* self, PyObject* args)
 PyObject* BeamPyMap_clear(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     if (!BPy_InitApi()) {
@@ -32656,7 +32807,6 @@ PyObject* BeamPyMap_clear(PyObject* self, PyObject* args)
 PyObject* BeamPyMap_keySet(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -32682,7 +32832,6 @@ PyObject* BeamPyMap_keySet(PyObject* self, PyObject* args)
 PyObject* BeamPyMap_values(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -32708,7 +32857,6 @@ PyObject* BeamPyMap_values(PyObject* self, PyObject* args)
 PyObject* BeamPyMap_entrySet(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -32734,7 +32882,6 @@ PyObject* BeamPyMap_entrySet(PyObject* self, PyObject* args)
 PyObject* BeamPyMap_equals(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* arg0PyObj = NULL;
@@ -32754,9 +32901,12 @@ PyObject* BeamPyMap_equals(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:equals", &arg0PyObj)) {
         return NULL;
     }
-    arg0JObj = BPy_ToJObjectT(arg0PyObj, BPy_Object_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        arg0JObj = BPy_ToJObjectT(arg0PyObj, BPy_Object_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _result = (*jenv)->CallBooleanMethod(jenv, _thisJObj, _method, arg0JObj);
     CHECK_JVM_EXCEPTION("java.util.Map#equals(Ljava/lang/Object;)Z");
@@ -32766,7 +32916,6 @@ PyObject* BeamPyMap_equals(PyObject* self, PyObject* args)
 PyObject* BeamPyMap_hashCode(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint _result = (jint) 0;
@@ -32789,7 +32938,6 @@ PyObject* BeamPyMap_hashCode(PyObject* self, PyObject* args)
 PyObject* BeamPyProductReader_getReaderPlugIn(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -32815,7 +32963,6 @@ PyObject* BeamPyProductReader_getReaderPlugIn(PyObject* self, PyObject* args)
 PyObject* BeamPyProductReader_getInput(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -32841,7 +32988,6 @@ PyObject* BeamPyProductReader_getInput(PyObject* self, PyObject* args)
 PyObject* BeamPyProductReader_getSubsetDef(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -32867,7 +33013,6 @@ PyObject* BeamPyProductReader_getSubsetDef(PyObject* self, PyObject* args)
 PyObject* BeamPyProductReader_readProductNodes(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* inputPyObj = NULL;
@@ -32890,13 +33035,19 @@ PyObject* BeamPyProductReader_readProductNodes(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "OO:readProductNodes", &inputPyObj, &subsetDefPyObj)) {
         return NULL;
     }
-    inputJObj = BPy_ToJObjectT(inputPyObj, BPy_Object_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        inputJObj = BPy_ToJObjectT(inputPyObj, BPy_Object_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
-    subsetDefJObj = BPy_ToJObjectT(subsetDefPyObj, BPy_ProductSubsetDef_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        subsetDefJObj = BPy_ToJObjectT(subsetDefPyObj, BPy_ProductSubsetDef_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, inputJObj, subsetDefJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.dataio.ProductReader#readProductNodes(Ljava/lang/Object;Lorg/esa/beam/framework/dataio/ProductSubsetDef;)Lorg/esa/beam/framework/datamodel/Product;");
@@ -32908,7 +33059,6 @@ PyObject* BeamPyProductReader_readProductNodes(PyObject* self, PyObject* args)
 PyObject* BeamPyProductReader_readBandRasterData(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* destBandPyObj = NULL;
@@ -32935,17 +33085,26 @@ PyObject* BeamPyProductReader_readBandRasterData(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "OiiiiOO:readBandRasterData", &destBandPyObj, &destOffsetX, &destOffsetY, &destWidth, &destHeight, &destBufferPyObj, &pmPyObj)) {
         return NULL;
     }
-    destBandJObj = BPy_ToJObjectT(destBandPyObj, BPy_Band_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        destBandJObj = BPy_ToJObjectT(destBandPyObj, BPy_Band_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
-    destBufferJObj = BPy_ToJObjectT(destBufferPyObj, BPy_ProductData_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        destBufferJObj = BPy_ToJObjectT(destBufferPyObj, BPy_ProductData_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
-    pmJObj = BPy_ToJObjectT(pmPyObj, BPy_ProgressMonitor_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        pmJObj = BPy_ToJObjectT(pmPyObj, BPy_ProgressMonitor_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, destBandJObj, destOffsetX, destOffsetY, destWidth, destHeight, destBufferJObj, pmJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.dataio.ProductReader#readBandRasterData(Lorg/esa/beam/framework/datamodel/Band;IIIILorg/esa/beam/framework/datamodel/ProductData;Lcom/bc/ceres/core/ProgressMonitor;)V");
@@ -32955,7 +33114,6 @@ PyObject* BeamPyProductReader_readBandRasterData(PyObject* self, PyObject* args)
 PyObject* BeamPyProductReader_close(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     if (!BPy_InitApi()) {
@@ -32977,7 +33135,6 @@ PyObject* BeamPyProductReader_close(PyObject* self, PyObject* args)
 PyObject* BeamPyRGBChannelDef_newRGBChannelDef(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     PyObject* _resultPyObj = NULL;
     jobject _resultJObj = NULL;
     if (!BPy_InitApi()) {
@@ -32996,7 +33153,6 @@ PyObject* BeamPyRGBChannelDef_newRGBChannelDef(PyObject* self, PyObject* args)
 PyObject* BeamPyRGBChannelDef_getSourceName(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint index = (jint) 0;
@@ -33026,7 +33182,6 @@ PyObject* BeamPyRGBChannelDef_getSourceName(PyObject* self, PyObject* args)
 PyObject* BeamPyRGBChannelDef_setSourceName(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint index = (jint) 0;
@@ -33056,7 +33211,6 @@ PyObject* BeamPyRGBChannelDef_setSourceName(PyObject* self, PyObject* args)
 PyObject* BeamPyRGBChannelDef_getSourceNames(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -33082,7 +33236,6 @@ PyObject* BeamPyRGBChannelDef_getSourceNames(PyObject* self, PyObject* args)
 PyObject* BeamPyRGBChannelDef_setSourceNames(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* bandNamesPyObj = NULL;
@@ -33101,9 +33254,12 @@ PyObject* BeamPyRGBChannelDef_setSourceNames(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:setSourceNames", &bandNamesPyObj)) {
         return NULL;
     }
-    bandNamesJObj = BPy_ToJStringArray(bandNamesPyObj, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        bandNamesJObj = BPy_ToJStringArray(bandNamesPyObj, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, bandNamesJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.RGBChannelDef#setSourceNames([Ljava/lang/String;)V");
@@ -33114,7 +33270,6 @@ PyObject* BeamPyRGBChannelDef_setSourceNames(PyObject* self, PyObject* args)
 PyObject* BeamPyRGBChannelDef_isAlphaUsed(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jboolean _result = (jboolean) 0;
@@ -33137,7 +33292,6 @@ PyObject* BeamPyRGBChannelDef_isAlphaUsed(PyObject* self, PyObject* args)
 PyObject* BeamPyRGBChannelDef_isGammaUsed(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint index = (jint) 0;
@@ -33164,7 +33318,6 @@ PyObject* BeamPyRGBChannelDef_isGammaUsed(PyObject* self, PyObject* args)
 PyObject* BeamPyRGBChannelDef_getGamma(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint index = (jint) 0;
@@ -33191,7 +33344,6 @@ PyObject* BeamPyRGBChannelDef_getGamma(PyObject* self, PyObject* args)
 PyObject* BeamPyRGBChannelDef_setGamma(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint index = (jint) 0;
@@ -33218,7 +33370,6 @@ PyObject* BeamPyRGBChannelDef_setGamma(PyObject* self, PyObject* args)
 PyObject* BeamPyRGBChannelDef_getMinDisplaySample(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint index = (jint) 0;
@@ -33245,7 +33396,6 @@ PyObject* BeamPyRGBChannelDef_getMinDisplaySample(PyObject* self, PyObject* args
 PyObject* BeamPyRGBChannelDef_setMinDisplaySample(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint index = (jint) 0;
@@ -33272,7 +33422,6 @@ PyObject* BeamPyRGBChannelDef_setMinDisplaySample(PyObject* self, PyObject* args
 PyObject* BeamPyRGBChannelDef_getMaxDisplaySample(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint index = (jint) 0;
@@ -33299,7 +33448,6 @@ PyObject* BeamPyRGBChannelDef_getMaxDisplaySample(PyObject* self, PyObject* args
 PyObject* BeamPyRGBChannelDef_setMaxDisplaySample(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint index = (jint) 0;
@@ -33326,7 +33474,6 @@ PyObject* BeamPyRGBChannelDef_setMaxDisplaySample(PyObject* self, PyObject* args
 PyObject* BeamPyRGBChannelDef_clone(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -33352,7 +33499,6 @@ PyObject* BeamPyRGBChannelDef_clone(PyObject* self, PyObject* args)
 PyObject* BeamPyProductData_createInstance1(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     jint type = (jint) 0;
     PyObject* _resultPyObj = NULL;
     jobject _resultJObj = NULL;
@@ -33375,7 +33521,6 @@ PyObject* BeamPyProductData_createInstance1(PyObject* self, PyObject* args)
 PyObject* BeamPyProductData_createInstance2(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     jint type = (jint) 0;
     jint numElems = (jint) 0;
     PyObject* _resultPyObj = NULL;
@@ -33399,7 +33544,6 @@ PyObject* BeamPyProductData_createInstance2(PyObject* self, PyObject* args)
 PyObject* BeamPyProductData_createInstance3(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     jint type = (jint) 0;
     PyObject* dataPyObj = NULL;
     jobject dataJObj = NULL;
@@ -33414,9 +33558,12 @@ PyObject* BeamPyProductData_createInstance3(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "iO:createInstance", &type, &dataPyObj)) {
         return NULL;
     }
-    dataJObj = BPy_ToJObjectT(dataPyObj, BPy_Object_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        dataJObj = BPy_ToJObjectT(dataPyObj, BPy_Object_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, BPy_ProductData_Class, _method, type, dataJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.ProductData#createInstance(ILjava/lang/Object;)Lorg/esa/beam/framework/datamodel/ProductData;");
@@ -33428,7 +33575,6 @@ PyObject* BeamPyProductData_createInstance3(PyObject* self, PyObject* args)
 PyObject* BeamPyProductData_createInstance5(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     jbyte* elemsData = NULL;
     int elemsLength = 0;
     PyObject* elemsPyObj = NULL;
@@ -33467,7 +33613,6 @@ PyObject* BeamPyProductData_createInstance5(PyObject* self, PyObject* args)
 PyObject* BeamPyProductData_createUnsignedInstance1(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     jbyte* elemsData = NULL;
     int elemsLength = 0;
     PyObject* elemsPyObj = NULL;
@@ -33506,7 +33651,6 @@ PyObject* BeamPyProductData_createUnsignedInstance1(PyObject* self, PyObject* ar
 PyObject* BeamPyProductData_createInstance10(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     jshort* elemsData = NULL;
     int elemsLength = 0;
     PyObject* elemsPyObj = NULL;
@@ -33545,7 +33689,6 @@ PyObject* BeamPyProductData_createInstance10(PyObject* self, PyObject* args)
 PyObject* BeamPyProductData_createUnsignedInstance3(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     jshort* elemsData = NULL;
     int elemsLength = 0;
     PyObject* elemsPyObj = NULL;
@@ -33584,7 +33727,6 @@ PyObject* BeamPyProductData_createUnsignedInstance3(PyObject* self, PyObject* ar
 PyObject* BeamPyProductData_createInstance8(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     jint* elemsData = NULL;
     int elemsLength = 0;
     PyObject* elemsPyObj = NULL;
@@ -33623,7 +33765,6 @@ PyObject* BeamPyProductData_createInstance8(PyObject* self, PyObject* args)
 PyObject* BeamPyProductData_createUnsignedInstance2(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     jint* elemsData = NULL;
     int elemsLength = 0;
     PyObject* elemsPyObj = NULL;
@@ -33662,7 +33803,6 @@ PyObject* BeamPyProductData_createUnsignedInstance2(PyObject* self, PyObject* ar
 PyObject* BeamPyProductData_createInstance9(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     jlong* elemsData = NULL;
     int elemsLength = 0;
     PyObject* elemsPyObj = NULL;
@@ -33701,7 +33841,6 @@ PyObject* BeamPyProductData_createInstance9(PyObject* self, PyObject* args)
 PyObject* BeamPyProductData_createInstance4(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     const char* strData = NULL;
     jstring strDataJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -33727,7 +33866,6 @@ PyObject* BeamPyProductData_createInstance4(PyObject* self, PyObject* args)
 PyObject* BeamPyProductData_createInstance7(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     jfloat* elemsData = NULL;
     int elemsLength = 0;
     PyObject* elemsPyObj = NULL;
@@ -33766,7 +33904,6 @@ PyObject* BeamPyProductData_createInstance7(PyObject* self, PyObject* args)
 PyObject* BeamPyProductData_createInstance6(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     jdouble* elemsData = NULL;
     int elemsLength = 0;
     PyObject* elemsPyObj = NULL;
@@ -33805,7 +33942,6 @@ PyObject* BeamPyProductData_createInstance6(PyObject* self, PyObject* args)
 PyObject* BeamPyProductData_getType1(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint _result = (jint) 0;
@@ -33828,7 +33964,6 @@ PyObject* BeamPyProductData_getType1(PyObject* self, PyObject* args)
 PyObject* BeamPyProductData_getElemSize2(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     jint type = (jint) 0;
     jint _result = (jint) 0;
     if (!BPy_InitApi()) {
@@ -33848,7 +33983,6 @@ PyObject* BeamPyProductData_getElemSize2(PyObject* self, PyObject* args)
 PyObject* BeamPyProductData_getElemSize1(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint _result = (jint) 0;
@@ -33871,7 +34005,6 @@ PyObject* BeamPyProductData_getElemSize1(PyObject* self, PyObject* args)
 PyObject* BeamPyProductData_getTypeString2(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     jint type = (jint) 0;
     PyObject* _resultPyObj = NULL;
     jobject _resultJObj = NULL;
@@ -33894,7 +34027,6 @@ PyObject* BeamPyProductData_getTypeString2(PyObject* self, PyObject* args)
 PyObject* BeamPyProductData_getType2(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     const char* type = NULL;
     jstring typeJObj = NULL;
     jint _result = (jint) 0;
@@ -33917,7 +34049,6 @@ PyObject* BeamPyProductData_getType2(PyObject* self, PyObject* args)
 PyObject* BeamPyProductData_getTypeString1(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -33943,7 +34074,6 @@ PyObject* BeamPyProductData_getTypeString1(PyObject* self, PyObject* args)
 PyObject* BeamPyProductData_isInt(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jboolean _result = (jboolean) 0;
@@ -33966,7 +34096,6 @@ PyObject* BeamPyProductData_isInt(PyObject* self, PyObject* args)
 PyObject* BeamPyProductData_isIntType(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     jint type = (jint) 0;
     jboolean _result = (jboolean) 0;
     if (!BPy_InitApi()) {
@@ -33986,7 +34115,6 @@ PyObject* BeamPyProductData_isIntType(PyObject* self, PyObject* args)
 PyObject* BeamPyProductData_isSigned(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jboolean _result = (jboolean) 0;
@@ -34009,7 +34137,6 @@ PyObject* BeamPyProductData_isSigned(PyObject* self, PyObject* args)
 PyObject* BeamPyProductData_isUnsigned(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jboolean _result = (jboolean) 0;
@@ -34032,7 +34159,6 @@ PyObject* BeamPyProductData_isUnsigned(PyObject* self, PyObject* args)
 PyObject* BeamPyProductData_isUIntType(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     jint type = (jint) 0;
     jboolean _result = (jboolean) 0;
     if (!BPy_InitApi()) {
@@ -34052,7 +34178,6 @@ PyObject* BeamPyProductData_isUIntType(PyObject* self, PyObject* args)
 PyObject* BeamPyProductData_isFloatingPointType(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     jint type = (jint) 0;
     jboolean _result = (jboolean) 0;
     if (!BPy_InitApi()) {
@@ -34072,7 +34197,6 @@ PyObject* BeamPyProductData_isFloatingPointType(PyObject* self, PyObject* args)
 PyObject* BeamPyProductData_isScalar(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jboolean _result = (jboolean) 0;
@@ -34095,7 +34219,6 @@ PyObject* BeamPyProductData_isScalar(PyObject* self, PyObject* args)
 PyObject* BeamPyProductData_getNumElems(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint _result = (jint) 0;
@@ -34118,7 +34241,6 @@ PyObject* BeamPyProductData_getNumElems(PyObject* self, PyObject* args)
 PyObject* BeamPyProductData_getElemInt(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint _result = (jint) 0;
@@ -34141,7 +34263,6 @@ PyObject* BeamPyProductData_getElemInt(PyObject* self, PyObject* args)
 PyObject* BeamPyProductData_getElemUInt(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jlong _result = (jlong) 0;
@@ -34164,7 +34285,6 @@ PyObject* BeamPyProductData_getElemUInt(PyObject* self, PyObject* args)
 PyObject* BeamPyProductData_getElemFloat(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jfloat _result = (jfloat) 0;
@@ -34187,7 +34307,6 @@ PyObject* BeamPyProductData_getElemFloat(PyObject* self, PyObject* args)
 PyObject* BeamPyProductData_getElemDouble(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jdouble _result = (jdouble) 0;
@@ -34210,7 +34329,6 @@ PyObject* BeamPyProductData_getElemDouble(PyObject* self, PyObject* args)
 PyObject* BeamPyProductData_getElemString(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -34236,7 +34354,6 @@ PyObject* BeamPyProductData_getElemString(PyObject* self, PyObject* args)
 PyObject* BeamPyProductData_getElemBoolean(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jboolean _result = (jboolean) 0;
@@ -34259,7 +34376,6 @@ PyObject* BeamPyProductData_getElemBoolean(PyObject* self, PyObject* args)
 PyObject* BeamPyProductData_getElemIntAt(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint index = (jint) 0;
@@ -34286,7 +34402,6 @@ PyObject* BeamPyProductData_getElemIntAt(PyObject* self, PyObject* args)
 PyObject* BeamPyProductData_getElemUIntAt(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint index = (jint) 0;
@@ -34313,7 +34428,6 @@ PyObject* BeamPyProductData_getElemUIntAt(PyObject* self, PyObject* args)
 PyObject* BeamPyProductData_getElemFloatAt(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint index = (jint) 0;
@@ -34340,7 +34454,6 @@ PyObject* BeamPyProductData_getElemFloatAt(PyObject* self, PyObject* args)
 PyObject* BeamPyProductData_getElemDoubleAt(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint index = (jint) 0;
@@ -34367,7 +34480,6 @@ PyObject* BeamPyProductData_getElemDoubleAt(PyObject* self, PyObject* args)
 PyObject* BeamPyProductData_getElemStringAt(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint index = (jint) 0;
@@ -34397,7 +34509,6 @@ PyObject* BeamPyProductData_getElemStringAt(PyObject* self, PyObject* args)
 PyObject* BeamPyProductData_getElemBooleanAt(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint index = (jint) 0;
@@ -34424,7 +34535,6 @@ PyObject* BeamPyProductData_getElemBooleanAt(PyObject* self, PyObject* args)
 PyObject* BeamPyProductData_setElemInt(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint value = (jint) 0;
@@ -34450,7 +34560,6 @@ PyObject* BeamPyProductData_setElemInt(PyObject* self, PyObject* args)
 PyObject* BeamPyProductData_setElemUInt(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jlong value = (jlong) 0;
@@ -34476,7 +34585,6 @@ PyObject* BeamPyProductData_setElemUInt(PyObject* self, PyObject* args)
 PyObject* BeamPyProductData_setElemFloat(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jfloat value = (jfloat) 0;
@@ -34502,7 +34610,6 @@ PyObject* BeamPyProductData_setElemFloat(PyObject* self, PyObject* args)
 PyObject* BeamPyProductData_setElemDouble(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jdouble value = (jdouble) 0;
@@ -34528,7 +34635,6 @@ PyObject* BeamPyProductData_setElemDouble(PyObject* self, PyObject* args)
 PyObject* BeamPyProductData_setElemString(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     const char* value = NULL;
@@ -34557,7 +34663,6 @@ PyObject* BeamPyProductData_setElemString(PyObject* self, PyObject* args)
 PyObject* BeamPyProductData_setElemBoolean(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jboolean value = (jboolean) 0;
@@ -34583,7 +34688,6 @@ PyObject* BeamPyProductData_setElemBoolean(PyObject* self, PyObject* args)
 PyObject* BeamPyProductData_setElemIntAt(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint index = (jint) 0;
@@ -34610,7 +34714,6 @@ PyObject* BeamPyProductData_setElemIntAt(PyObject* self, PyObject* args)
 PyObject* BeamPyProductData_setElemUIntAt(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint index = (jint) 0;
@@ -34637,7 +34740,6 @@ PyObject* BeamPyProductData_setElemUIntAt(PyObject* self, PyObject* args)
 PyObject* BeamPyProductData_setElemFloatAt(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint index = (jint) 0;
@@ -34664,7 +34766,6 @@ PyObject* BeamPyProductData_setElemFloatAt(PyObject* self, PyObject* args)
 PyObject* BeamPyProductData_setElemDoubleAt(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint index = (jint) 0;
@@ -34691,7 +34792,6 @@ PyObject* BeamPyProductData_setElemDoubleAt(PyObject* self, PyObject* args)
 PyObject* BeamPyProductData_setElemStringAt(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint index = (jint) 0;
@@ -34721,7 +34821,6 @@ PyObject* BeamPyProductData_setElemStringAt(PyObject* self, PyObject* args)
 PyObject* BeamPyProductData_setElemBooleanAt(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint index = (jint) 0;
@@ -34748,7 +34847,6 @@ PyObject* BeamPyProductData_setElemBooleanAt(PyObject* self, PyObject* args)
 PyObject* BeamPyProductData_getElems(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -34774,7 +34872,6 @@ PyObject* BeamPyProductData_getElems(PyObject* self, PyObject* args)
 PyObject* BeamPyProductData_setElems(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* dataPyObj = NULL;
@@ -34793,9 +34890,12 @@ PyObject* BeamPyProductData_setElems(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:setElems", &dataPyObj)) {
         return NULL;
     }
-    dataJObj = BPy_ToJObjectT(dataPyObj, BPy_Object_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        dataJObj = BPy_ToJObjectT(dataPyObj, BPy_Object_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, dataJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.ProductData#setElems(Ljava/lang/Object;)V");
@@ -34805,7 +34905,6 @@ PyObject* BeamPyProductData_setElems(PyObject* self, PyObject* args)
 PyObject* BeamPyProductData_readFrom4(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* inputPyObj = NULL;
@@ -34824,9 +34923,12 @@ PyObject* BeamPyProductData_readFrom4(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:readFrom", &inputPyObj)) {
         return NULL;
     }
-    inputJObj = BPy_ToJObjectT(inputPyObj, BPy_ImageInputStream_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        inputJObj = BPy_ToJObjectT(inputPyObj, BPy_ImageInputStream_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, inputJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.ProductData#readFrom(Ljavax/imageio/stream/ImageInputStream;)V");
@@ -34836,7 +34938,6 @@ PyObject* BeamPyProductData_readFrom4(PyObject* self, PyObject* args)
 PyObject* BeamPyProductData_readFrom3(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint pos = (jint) 0;
@@ -34856,9 +34957,12 @@ PyObject* BeamPyProductData_readFrom3(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "iO:readFrom", &pos, &inputPyObj)) {
         return NULL;
     }
-    inputJObj = BPy_ToJObjectT(inputPyObj, BPy_ImageInputStream_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        inputJObj = BPy_ToJObjectT(inputPyObj, BPy_ImageInputStream_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, pos, inputJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.ProductData#readFrom(ILjavax/imageio/stream/ImageInputStream;)V");
@@ -34868,7 +34972,6 @@ PyObject* BeamPyProductData_readFrom3(PyObject* self, PyObject* args)
 PyObject* BeamPyProductData_readFrom1(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint startPos = (jint) 0;
@@ -34889,9 +34992,12 @@ PyObject* BeamPyProductData_readFrom1(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "iiO:readFrom", &startPos, &numElems, &inputPyObj)) {
         return NULL;
     }
-    inputJObj = BPy_ToJObjectT(inputPyObj, BPy_ImageInputStream_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        inputJObj = BPy_ToJObjectT(inputPyObj, BPy_ImageInputStream_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, startPos, numElems, inputJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.ProductData#readFrom(IILjavax/imageio/stream/ImageInputStream;)V");
@@ -34901,7 +35007,6 @@ PyObject* BeamPyProductData_readFrom1(PyObject* self, PyObject* args)
 PyObject* BeamPyProductData_readFrom2(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint startPos = (jint) 0;
@@ -34923,9 +35028,12 @@ PyObject* BeamPyProductData_readFrom2(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "iiOL:readFrom", &startPos, &numElems, &inputPyObj, &inputPos)) {
         return NULL;
     }
-    inputJObj = BPy_ToJObjectT(inputPyObj, BPy_ImageInputStream_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        inputJObj = BPy_ToJObjectT(inputPyObj, BPy_ImageInputStream_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, startPos, numElems, inputJObj, inputPos);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.ProductData#readFrom(IILjavax/imageio/stream/ImageInputStream;J)V");
@@ -34935,7 +35043,6 @@ PyObject* BeamPyProductData_readFrom2(PyObject* self, PyObject* args)
 PyObject* BeamPyProductData_writeTo4(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* outputPyObj = NULL;
@@ -34954,9 +35061,12 @@ PyObject* BeamPyProductData_writeTo4(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:writeTo", &outputPyObj)) {
         return NULL;
     }
-    outputJObj = BPy_ToJObjectT(outputPyObj, BPy_ImageOutputStream_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        outputJObj = BPy_ToJObjectT(outputPyObj, BPy_ImageOutputStream_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, outputJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.ProductData#writeTo(Ljavax/imageio/stream/ImageOutputStream;)V");
@@ -34966,7 +35076,6 @@ PyObject* BeamPyProductData_writeTo4(PyObject* self, PyObject* args)
 PyObject* BeamPyProductData_writeTo3(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint pos = (jint) 0;
@@ -34986,9 +35095,12 @@ PyObject* BeamPyProductData_writeTo3(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "iO:writeTo", &pos, &outputPyObj)) {
         return NULL;
     }
-    outputJObj = BPy_ToJObjectT(outputPyObj, BPy_ImageOutputStream_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        outputJObj = BPy_ToJObjectT(outputPyObj, BPy_ImageOutputStream_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, pos, outputJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.ProductData#writeTo(ILjavax/imageio/stream/ImageOutputStream;)V");
@@ -34998,7 +35110,6 @@ PyObject* BeamPyProductData_writeTo3(PyObject* self, PyObject* args)
 PyObject* BeamPyProductData_writeTo1(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint startPos = (jint) 0;
@@ -35019,9 +35130,12 @@ PyObject* BeamPyProductData_writeTo1(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "iiO:writeTo", &startPos, &numElems, &outputPyObj)) {
         return NULL;
     }
-    outputJObj = BPy_ToJObjectT(outputPyObj, BPy_ImageOutputStream_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        outputJObj = BPy_ToJObjectT(outputPyObj, BPy_ImageOutputStream_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, startPos, numElems, outputJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.ProductData#writeTo(IILjavax/imageio/stream/ImageOutputStream;)V");
@@ -35031,7 +35145,6 @@ PyObject* BeamPyProductData_writeTo1(PyObject* self, PyObject* args)
 PyObject* BeamPyProductData_writeTo2(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint startPos = (jint) 0;
@@ -35053,9 +35166,12 @@ PyObject* BeamPyProductData_writeTo2(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "iiOL:writeTo", &startPos, &numElems, &outputPyObj, &outputPos)) {
         return NULL;
     }
-    outputJObj = BPy_ToJObjectT(outputPyObj, BPy_ImageOutputStream_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        outputJObj = BPy_ToJObjectT(outputPyObj, BPy_ImageOutputStream_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, startPos, numElems, outputJObj, outputPos);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.ProductData#writeTo(IILjavax/imageio/stream/ImageOutputStream;J)V");
@@ -35065,7 +35181,6 @@ PyObject* BeamPyProductData_writeTo2(PyObject* self, PyObject* args)
 PyObject* BeamPyProductData_toString(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -35091,7 +35206,6 @@ PyObject* BeamPyProductData_toString(PyObject* self, PyObject* args)
 PyObject* BeamPyProductData_hashCode(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint _result = (jint) 0;
@@ -35114,7 +35228,6 @@ PyObject* BeamPyProductData_hashCode(PyObject* self, PyObject* args)
 PyObject* BeamPyProductData_equals(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* otherPyObj = NULL;
@@ -35134,9 +35247,12 @@ PyObject* BeamPyProductData_equals(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:equals", &otherPyObj)) {
         return NULL;
     }
-    otherJObj = BPy_ToJObjectT(otherPyObj, BPy_Object_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        otherJObj = BPy_ToJObjectT(otherPyObj, BPy_Object_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _result = (*jenv)->CallBooleanMethod(jenv, _thisJObj, _method, otherJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.ProductData#equals(Ljava/lang/Object;)Z");
@@ -35146,7 +35262,6 @@ PyObject* BeamPyProductData_equals(PyObject* self, PyObject* args)
 PyObject* BeamPyProductData_equalElems(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* otherPyObj = NULL;
@@ -35166,9 +35281,12 @@ PyObject* BeamPyProductData_equalElems(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:equalElems", &otherPyObj)) {
         return NULL;
     }
-    otherJObj = BPy_ToJObjectT(otherPyObj, BPy_ProductData_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        otherJObj = BPy_ToJObjectT(otherPyObj, BPy_ProductData_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _result = (*jenv)->CallBooleanMethod(jenv, _thisJObj, _method, otherJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.ProductData#equalElems(Lorg/esa/beam/framework/datamodel/ProductData;)Z");
@@ -35178,7 +35296,6 @@ PyObject* BeamPyProductData_equalElems(PyObject* self, PyObject* args)
 PyObject* BeamPyProductData_dispose(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     if (!BPy_InitApi()) {
@@ -35200,7 +35317,6 @@ PyObject* BeamPyProductData_dispose(PyObject* self, PyObject* args)
 PyObject* BeamPyGeoPos_newGeoPos(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     jfloat lat = (jfloat) 0;
     jfloat lon = (jfloat) 0;
     PyObject* _resultPyObj = NULL;
@@ -35224,7 +35340,6 @@ PyObject* BeamPyGeoPos_newGeoPos(PyObject* self, PyObject* args)
 PyObject* BeamPyGeoPos_getLat(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jfloat _result = (jfloat) 0;
@@ -35247,7 +35362,6 @@ PyObject* BeamPyGeoPos_getLat(PyObject* self, PyObject* args)
 PyObject* BeamPyGeoPos_getLon(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jfloat _result = (jfloat) 0;
@@ -35270,7 +35384,6 @@ PyObject* BeamPyGeoPos_getLon(PyObject* self, PyObject* args)
 PyObject* BeamPyGeoPos_setLocation(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jfloat lat = (jfloat) 0;
@@ -35297,7 +35410,6 @@ PyObject* BeamPyGeoPos_setLocation(PyObject* self, PyObject* args)
 PyObject* BeamPyGeoPos_isValid(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jboolean _result = (jboolean) 0;
@@ -35320,7 +35432,6 @@ PyObject* BeamPyGeoPos_isValid(PyObject* self, PyObject* args)
 PyObject* BeamPyGeoPos_areValid(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     PyObject* aPyObj = NULL;
     jarray aJObj = NULL;
     jboolean _result = (jboolean) 0;
@@ -35333,9 +35444,12 @@ PyObject* BeamPyGeoPos_areValid(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:areValid", &aPyObj)) {
         return NULL;
     }
-    aJObj = BPy_ToJObjectArrayT(aPyObj, BPy_GeoPos_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        aJObj = BPy_ToJObjectArrayT(aPyObj, BPy_GeoPos_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _result = (*jenv)->CallStaticBooleanMethod(jenv, BPy_GeoPos_Class, _method, aJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.GeoPos#areValid([Lorg/esa/beam/framework/datamodel/GeoPos;)Z");
@@ -35346,7 +35460,6 @@ PyObject* BeamPyGeoPos_areValid(PyObject* self, PyObject* args)
 PyObject* BeamPyGeoPos_setInvalid(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     if (!BPy_InitApi()) {
@@ -35368,7 +35481,6 @@ PyObject* BeamPyGeoPos_setInvalid(PyObject* self, PyObject* args)
 PyObject* BeamPyGeoPos_equals(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* objPyObj = NULL;
@@ -35388,9 +35500,12 @@ PyObject* BeamPyGeoPos_equals(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:equals", &objPyObj)) {
         return NULL;
     }
-    objJObj = BPy_ToJObjectT(objPyObj, BPy_Object_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        objJObj = BPy_ToJObjectT(objPyObj, BPy_Object_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _result = (*jenv)->CallBooleanMethod(jenv, _thisJObj, _method, objJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.GeoPos#equals(Ljava/lang/Object;)Z");
@@ -35400,7 +35515,6 @@ PyObject* BeamPyGeoPos_equals(PyObject* self, PyObject* args)
 PyObject* BeamPyGeoPos_hashCode(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint _result = (jint) 0;
@@ -35423,7 +35537,6 @@ PyObject* BeamPyGeoPos_hashCode(PyObject* self, PyObject* args)
 PyObject* BeamPyGeoPos_toString(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -35449,7 +35562,6 @@ PyObject* BeamPyGeoPos_toString(PyObject* self, PyObject* args)
 PyObject* BeamPyGeoPos_normalize(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     if (!BPy_InitApi()) {
@@ -35471,7 +35583,6 @@ PyObject* BeamPyGeoPos_normalize(PyObject* self, PyObject* args)
 PyObject* BeamPyGeoPos_normalizeLon(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     jfloat lon = (jfloat) 0;
     jfloat _result = (jfloat) 0;
     if (!BPy_InitApi()) {
@@ -35491,7 +35602,6 @@ PyObject* BeamPyGeoPos_normalizeLon(PyObject* self, PyObject* args)
 PyObject* BeamPyGeoPos_getLatString(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -35517,7 +35627,6 @@ PyObject* BeamPyGeoPos_getLatString(PyObject* self, PyObject* args)
 PyObject* BeamPyGeoPos_getLonString(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -35543,7 +35652,6 @@ PyObject* BeamPyGeoPos_getLonString(PyObject* self, PyObject* args)
 PyObject* BeamPyProductNodeGroup_newProductNodeGroup(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     const char* name = NULL;
     jstring nameJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -35569,7 +35677,6 @@ PyObject* BeamPyProductNodeGroup_newProductNodeGroup(PyObject* self, PyObject* a
 PyObject* BeamPyProductNodeGroup_isTakingOverNodeOwnership(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jboolean _result = (jboolean) 0;
@@ -35592,7 +35699,6 @@ PyObject* BeamPyProductNodeGroup_isTakingOverNodeOwnership(PyObject* self, PyObj
 PyObject* BeamPyProductNodeGroup_getNodeCount(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint _result = (jint) 0;
@@ -35615,7 +35721,6 @@ PyObject* BeamPyProductNodeGroup_getNodeCount(PyObject* self, PyObject* args)
 PyObject* BeamPyProductNodeGroup_getAt(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint index = (jint) 0;
@@ -35645,7 +35750,6 @@ PyObject* BeamPyProductNodeGroup_getAt(PyObject* self, PyObject* args)
 PyObject* BeamPyProductNodeGroup_getNodeDisplayNames(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -35671,7 +35775,6 @@ PyObject* BeamPyProductNodeGroup_getNodeDisplayNames(PyObject* self, PyObject* a
 PyObject* BeamPyProductNodeGroup_getNodeNames(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -35697,7 +35800,6 @@ PyObject* BeamPyProductNodeGroup_getNodeNames(PyObject* self, PyObject* args)
 PyObject* BeamPyProductNodeGroup_indexOfName(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     const char* name = NULL;
@@ -35727,7 +35829,6 @@ PyObject* BeamPyProductNodeGroup_indexOfName(PyObject* self, PyObject* args)
 PyObject* BeamPyProductNodeGroup_indexOf(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* elementPyObj = NULL;
@@ -35747,9 +35848,12 @@ PyObject* BeamPyProductNodeGroup_indexOf(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:indexOf", &elementPyObj)) {
         return NULL;
     }
-    elementJObj = BPy_ToJObjectT(elementPyObj, BPy_ProductNode_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        elementJObj = BPy_ToJObjectT(elementPyObj, BPy_ProductNode_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _result = (*jenv)->CallIntMethod(jenv, _thisJObj, _method, elementJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.ProductNodeGroup#indexOf(Lorg/esa/beam/framework/datamodel/ProductNode;)I");
@@ -35759,7 +35863,6 @@ PyObject* BeamPyProductNodeGroup_indexOf(PyObject* self, PyObject* args)
 PyObject* BeamPyProductNodeGroup_getByDisplayName(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     const char* displayName = NULL;
@@ -35792,7 +35895,6 @@ PyObject* BeamPyProductNodeGroup_getByDisplayName(PyObject* self, PyObject* args
 PyObject* BeamPyProductNodeGroup_get(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     const char* name = NULL;
@@ -35825,7 +35927,6 @@ PyObject* BeamPyProductNodeGroup_get(PyObject* self, PyObject* args)
 PyObject* BeamPyProductNodeGroup_containsName(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     const char* name = NULL;
@@ -35855,7 +35956,6 @@ PyObject* BeamPyProductNodeGroup_containsName(PyObject* self, PyObject* args)
 PyObject* BeamPyProductNodeGroup_contains(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* nodePyObj = NULL;
@@ -35875,9 +35975,12 @@ PyObject* BeamPyProductNodeGroup_contains(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:contains", &nodePyObj)) {
         return NULL;
     }
-    nodeJObj = BPy_ToJObjectT(nodePyObj, BPy_ProductNode_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        nodeJObj = BPy_ToJObjectT(nodePyObj, BPy_ProductNode_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _result = (*jenv)->CallBooleanMethod(jenv, _thisJObj, _method, nodeJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.ProductNodeGroup#contains(Lorg/esa/beam/framework/datamodel/ProductNode;)Z");
@@ -35887,7 +35990,6 @@ PyObject* BeamPyProductNodeGroup_contains(PyObject* self, PyObject* args)
 PyObject* BeamPyProductNodeGroup_add(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* nodePyObj = NULL;
@@ -35907,9 +36009,12 @@ PyObject* BeamPyProductNodeGroup_add(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:add", &nodePyObj)) {
         return NULL;
     }
-    nodeJObj = BPy_ToJObjectT(nodePyObj, BPy_ProductNode_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        nodeJObj = BPy_ToJObjectT(nodePyObj, BPy_ProductNode_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _result = (*jenv)->CallBooleanMethod(jenv, _thisJObj, _method, nodeJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.ProductNodeGroup#add(Lorg/esa/beam/framework/datamodel/ProductNode;)Z");
@@ -35919,7 +36024,6 @@ PyObject* BeamPyProductNodeGroup_add(PyObject* self, PyObject* args)
 PyObject* BeamPyProductNodeGroup_addAt(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint index = (jint) 0;
@@ -35939,9 +36043,12 @@ PyObject* BeamPyProductNodeGroup_addAt(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "iO:add", &index, &nodePyObj)) {
         return NULL;
     }
-    nodeJObj = BPy_ToJObjectT(nodePyObj, BPy_ProductNode_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        nodeJObj = BPy_ToJObjectT(nodePyObj, BPy_ProductNode_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, index, nodeJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.ProductNodeGroup#add(ILorg/esa/beam/framework/datamodel/ProductNode;)V");
@@ -35951,7 +36058,6 @@ PyObject* BeamPyProductNodeGroup_addAt(PyObject* self, PyObject* args)
 PyObject* BeamPyProductNodeGroup_remove(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* nodePyObj = NULL;
@@ -35971,9 +36077,12 @@ PyObject* BeamPyProductNodeGroup_remove(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:remove", &nodePyObj)) {
         return NULL;
     }
-    nodeJObj = BPy_ToJObjectT(nodePyObj, BPy_ProductNode_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        nodeJObj = BPy_ToJObjectT(nodePyObj, BPy_ProductNode_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _result = (*jenv)->CallBooleanMethod(jenv, _thisJObj, _method, nodeJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.ProductNodeGroup#remove(Lorg/esa/beam/framework/datamodel/ProductNode;)Z");
@@ -35983,7 +36092,6 @@ PyObject* BeamPyProductNodeGroup_remove(PyObject* self, PyObject* args)
 PyObject* BeamPyProductNodeGroup_removeAll(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     if (!BPy_InitApi()) {
@@ -36005,7 +36113,6 @@ PyObject* BeamPyProductNodeGroup_removeAll(PyObject* self, PyObject* args)
 PyObject* BeamPyProductNodeGroup_clearRemovedList(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     if (!BPy_InitApi()) {
@@ -36027,7 +36134,6 @@ PyObject* BeamPyProductNodeGroup_clearRemovedList(PyObject* self, PyObject* args
 PyObject* BeamPyProductNodeGroup_getRemovedNodes(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -36053,7 +36159,6 @@ PyObject* BeamPyProductNodeGroup_getRemovedNodes(PyObject* self, PyObject* args)
 PyObject* BeamPyProductNodeGroup_setModified(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jboolean modified = (jboolean) 0;
@@ -36079,7 +36184,6 @@ PyObject* BeamPyProductNodeGroup_setModified(PyObject* self, PyObject* args)
 PyObject* BeamPyProductNodeGroup_acceptVisitor(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* visitorPyObj = NULL;
@@ -36098,9 +36202,12 @@ PyObject* BeamPyProductNodeGroup_acceptVisitor(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:acceptVisitor", &visitorPyObj)) {
         return NULL;
     }
-    visitorJObj = BPy_ToJObjectT(visitorPyObj, BPy_ProductVisitor_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        visitorJObj = BPy_ToJObjectT(visitorPyObj, BPy_ProductVisitor_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, visitorJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.ProductNodeGroup#acceptVisitor(Lorg/esa/beam/framework/datamodel/ProductVisitor;)V");
@@ -36110,7 +36217,6 @@ PyObject* BeamPyProductNodeGroup_acceptVisitor(PyObject* self, PyObject* args)
 PyObject* BeamPyProductNodeGroup_dispose(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     if (!BPy_InitApi()) {
@@ -36132,7 +36238,6 @@ PyObject* BeamPyProductNodeGroup_dispose(PyObject* self, PyObject* args)
 PyObject* BeamPyProductNodeGroup_updateExpression(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     const char* oldExternalName = NULL;
@@ -36165,7 +36270,6 @@ PyObject* BeamPyProductNodeGroup_updateExpression(PyObject* self, PyObject* args
 PyObject* BeamPyProductNodeGroup_getOwner(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -36191,7 +36295,6 @@ PyObject* BeamPyProductNodeGroup_getOwner(PyObject* self, PyObject* args)
 PyObject* BeamPyProductNodeGroup_getName(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -36217,7 +36320,6 @@ PyObject* BeamPyProductNodeGroup_getName(PyObject* self, PyObject* args)
 PyObject* BeamPyProductNodeGroup_setName(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     const char* name = NULL;
@@ -36246,7 +36348,6 @@ PyObject* BeamPyProductNodeGroup_setName(PyObject* self, PyObject* args)
 PyObject* BeamPyProductNodeGroup_getDescription(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -36272,7 +36373,6 @@ PyObject* BeamPyProductNodeGroup_getDescription(PyObject* self, PyObject* args)
 PyObject* BeamPyProductNodeGroup_setDescription(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     const char* description = NULL;
@@ -36301,7 +36401,6 @@ PyObject* BeamPyProductNodeGroup_setDescription(PyObject* self, PyObject* args)
 PyObject* BeamPyProductNodeGroup_isModified(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jboolean _result = (jboolean) 0;
@@ -36324,7 +36423,6 @@ PyObject* BeamPyProductNodeGroup_isModified(PyObject* self, PyObject* args)
 PyObject* BeamPyProductNodeGroup_toString(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -36350,7 +36448,6 @@ PyObject* BeamPyProductNodeGroup_toString(PyObject* self, PyObject* args)
 PyObject* BeamPyProductNodeGroup_isValidNodeName(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     const char* name = NULL;
     jstring nameJObj = NULL;
     jboolean _result = (jboolean) 0;
@@ -36373,7 +36470,6 @@ PyObject* BeamPyProductNodeGroup_isValidNodeName(PyObject* self, PyObject* args)
 PyObject* BeamPyProductNodeGroup_getProduct(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -36399,7 +36495,6 @@ PyObject* BeamPyProductNodeGroup_getProduct(PyObject* self, PyObject* args)
 PyObject* BeamPyProductNodeGroup_getProductReader(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -36425,7 +36520,6 @@ PyObject* BeamPyProductNodeGroup_getProductReader(PyObject* self, PyObject* args
 PyObject* BeamPyProductNodeGroup_getProductWriter(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -36451,7 +36545,6 @@ PyObject* BeamPyProductNodeGroup_getProductWriter(PyObject* self, PyObject* args
 PyObject* BeamPyProductNodeGroup_getDisplayName(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -36477,7 +36570,6 @@ PyObject* BeamPyProductNodeGroup_getDisplayName(PyObject* self, PyObject* args)
 PyObject* BeamPyProductNodeGroup_getProductRefString(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -36503,7 +36595,6 @@ PyObject* BeamPyProductNodeGroup_getProductRefString(PyObject* self, PyObject* a
 PyObject* BeamPyProductNodeGroup_removeFromFile(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* productWriterPyObj = NULL;
@@ -36522,9 +36613,12 @@ PyObject* BeamPyProductNodeGroup_removeFromFile(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:removeFromFile", &productWriterPyObj)) {
         return NULL;
     }
-    productWriterJObj = BPy_ToJObjectT(productWriterPyObj, BPy_ProductWriter_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        productWriterJObj = BPy_ToJObjectT(productWriterPyObj, BPy_ProductWriter_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, productWriterJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.ProductNodeGroup#removeFromFile(Lorg/esa/beam/framework/dataio/ProductWriter;)V");
@@ -36534,7 +36628,6 @@ PyObject* BeamPyProductNodeGroup_removeFromFile(PyObject* self, PyObject* args)
 PyObject* BeamPyProductNodeGroup_getExtension(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* arg0PyObj = NULL;
@@ -36555,9 +36648,12 @@ PyObject* BeamPyProductNodeGroup_getExtension(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:getExtension", &arg0PyObj)) {
         return NULL;
     }
-    arg0JObj = BPy_ToJObjectT(arg0PyObj, BPy_Class_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        arg0JObj = BPy_ToJObjectT(arg0PyObj, BPy_Class_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, arg0JObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.ProductNodeGroup#getExtension(Ljava/lang/Class;)Ljava/lang/Object;");
@@ -36569,7 +36665,6 @@ PyObject* BeamPyProductNodeGroup_getExtension(PyObject* self, PyObject* args)
 PyObject* BeamPyProductUtils_newProductUtils(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     PyObject* _resultPyObj = NULL;
     jobject _resultJObj = NULL;
     if (!BPy_InitApi()) {
@@ -36588,7 +36683,6 @@ PyObject* BeamPyProductUtils_newProductUtils(PyObject* self, PyObject* args)
 PyObject* BeamPyProductUtils_createImageInfo(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     PyObject* rastersPyObj = NULL;
     jarray rastersJObj = NULL;
     jboolean assignMissingImageInfos = (jboolean) 0;
@@ -36605,13 +36699,19 @@ PyObject* BeamPyProductUtils_createImageInfo(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "ObO:createImageInfo", &rastersPyObj, &assignMissingImageInfos, &pmPyObj)) {
         return NULL;
     }
-    rastersJObj = BPy_ToJObjectArrayT(rastersPyObj, BPy_RasterDataNode_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        rastersJObj = BPy_ToJObjectArrayT(rastersPyObj, BPy_RasterDataNode_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
-    pmJObj = BPy_ToJObjectT(pmPyObj, BPy_ProgressMonitor_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        pmJObj = BPy_ToJObjectT(pmPyObj, BPy_ProgressMonitor_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, BPy_ProductUtils_Class, _method, rastersJObj, assignMissingImageInfos, pmJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.util.ProductUtils#createImageInfo([Lorg/esa/beam/framework/datamodel/RasterDataNode;ZLcom/bc/ceres/core/ProgressMonitor;)Lorg/esa/beam/framework/datamodel/ImageInfo;");
@@ -36624,7 +36724,6 @@ PyObject* BeamPyProductUtils_createImageInfo(PyObject* self, PyObject* args)
 PyObject* BeamPyProductUtils_createRgbImage(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     PyObject* rastersPyObj = NULL;
     jarray rastersJObj = NULL;
     PyObject* imageInfoPyObj = NULL;
@@ -36642,17 +36741,26 @@ PyObject* BeamPyProductUtils_createRgbImage(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "OOO:createRgbImage", &rastersPyObj, &imageInfoPyObj, &pmPyObj)) {
         return NULL;
     }
-    rastersJObj = BPy_ToJObjectArrayT(rastersPyObj, BPy_RasterDataNode_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        rastersJObj = BPy_ToJObjectArrayT(rastersPyObj, BPy_RasterDataNode_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
-    imageInfoJObj = BPy_ToJObjectT(imageInfoPyObj, BPy_ImageInfo_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        imageInfoJObj = BPy_ToJObjectT(imageInfoPyObj, BPy_ImageInfo_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
-    pmJObj = BPy_ToJObjectT(pmPyObj, BPy_ProgressMonitor_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        pmJObj = BPy_ToJObjectT(pmPyObj, BPy_ProgressMonitor_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, BPy_ProductUtils_Class, _method, rastersJObj, imageInfoJObj, pmJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.util.ProductUtils#createRgbImage([Lorg/esa/beam/framework/datamodel/RasterDataNode;Lorg/esa/beam/framework/datamodel/ImageInfo;Lcom/bc/ceres/core/ProgressMonitor;)Ljava/awt/image/BufferedImage;");
@@ -36665,7 +36773,6 @@ PyObject* BeamPyProductUtils_createRgbImage(PyObject* self, PyObject* args)
 PyObject* BeamPyProductUtils_createColorIndexedImage(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     PyObject* rasterDataNodePyObj = NULL;
     jobject rasterDataNodeJObj = NULL;
     PyObject* pmPyObj = NULL;
@@ -36681,13 +36788,19 @@ PyObject* BeamPyProductUtils_createColorIndexedImage(PyObject* self, PyObject* a
     if (!PyArg_ParseTuple(args, "OO:createColorIndexedImage", &rasterDataNodePyObj, &pmPyObj)) {
         return NULL;
     }
-    rasterDataNodeJObj = BPy_ToJObjectT(rasterDataNodePyObj, BPy_RasterDataNode_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        rasterDataNodeJObj = BPy_ToJObjectT(rasterDataNodePyObj, BPy_RasterDataNode_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
-    pmJObj = BPy_ToJObjectT(pmPyObj, BPy_ProgressMonitor_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        pmJObj = BPy_ToJObjectT(pmPyObj, BPy_ProgressMonitor_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, BPy_ProductUtils_Class, _method, rasterDataNodeJObj, pmJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.util.ProductUtils#createColorIndexedImage(Lorg/esa/beam/framework/datamodel/RasterDataNode;Lcom/bc/ceres/core/ProgressMonitor;)Ljava/awt/image/BufferedImage;");
@@ -36699,7 +36812,6 @@ PyObject* BeamPyProductUtils_createColorIndexedImage(PyObject* self, PyObject* a
 PyObject* BeamPyProductUtils_createSuitableMapInfo1(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     PyObject* productPyObj = NULL;
     jobject productJObj = NULL;
     PyObject* rectPyObj = NULL;
@@ -36717,17 +36829,26 @@ PyObject* BeamPyProductUtils_createSuitableMapInfo1(PyObject* self, PyObject* ar
     if (!PyArg_ParseTuple(args, "OOO:createSuitableMapInfo", &productPyObj, &rectPyObj, &mapProjectionPyObj)) {
         return NULL;
     }
-    productJObj = BPy_ToJObjectT(productPyObj, BPy_Product_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        productJObj = BPy_ToJObjectT(productPyObj, BPy_Product_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
-    rectJObj = BPy_ToJObjectT(rectPyObj, BPy_Rectangle_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        rectJObj = BPy_ToJObjectT(rectPyObj, BPy_Rectangle_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
-    mapProjectionJObj = BPy_ToJObjectT(mapProjectionPyObj, BPy_MapProjection_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        mapProjectionJObj = BPy_ToJObjectT(mapProjectionPyObj, BPy_MapProjection_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, BPy_ProductUtils_Class, _method, productJObj, rectJObj, mapProjectionJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.util.ProductUtils#createSuitableMapInfo(Lorg/esa/beam/framework/datamodel/Product;Ljava/awt/Rectangle;Lorg/esa/beam/framework/dataop/maptransf/MapProjection;)Lorg/esa/beam/framework/dataop/maptransf/MapInfo;");
@@ -36739,7 +36860,6 @@ PyObject* BeamPyProductUtils_createSuitableMapInfo1(PyObject* self, PyObject* ar
 PyObject* BeamPyProductUtils_createSuitableMapInfo2(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     PyObject* productPyObj = NULL;
     jobject productJObj = NULL;
     PyObject* mapProjectionPyObj = NULL;
@@ -36757,13 +36877,19 @@ PyObject* BeamPyProductUtils_createSuitableMapInfo2(PyObject* self, PyObject* ar
     if (!PyArg_ParseTuple(args, "OOdd:createSuitableMapInfo", &productPyObj, &mapProjectionPyObj, &orientation, &noDataValue)) {
         return NULL;
     }
-    productJObj = BPy_ToJObjectT(productPyObj, BPy_Product_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        productJObj = BPy_ToJObjectT(productPyObj, BPy_Product_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
-    mapProjectionJObj = BPy_ToJObjectT(mapProjectionPyObj, BPy_MapProjection_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        mapProjectionJObj = BPy_ToJObjectT(mapProjectionPyObj, BPy_MapProjection_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, BPy_ProductUtils_Class, _method, productJObj, mapProjectionJObj, orientation, noDataValue);
     CHECK_JVM_EXCEPTION("org.esa.beam.util.ProductUtils#createSuitableMapInfo(Lorg/esa/beam/framework/datamodel/Product;Lorg/esa/beam/framework/dataop/maptransf/MapProjection;DD)Lorg/esa/beam/framework/dataop/maptransf/MapInfo;");
@@ -36775,7 +36901,6 @@ PyObject* BeamPyProductUtils_createSuitableMapInfo2(PyObject* self, PyObject* ar
 PyObject* BeamPyProductUtils_getOutputRasterSize(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     PyObject* productPyObj = NULL;
     jobject productJObj = NULL;
     PyObject* rectPyObj = NULL;
@@ -36795,17 +36920,26 @@ PyObject* BeamPyProductUtils_getOutputRasterSize(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "OOOdd:getOutputRasterSize", &productPyObj, &rectPyObj, &mapTransformPyObj, &pixelSizeX, &pixelSizeY)) {
         return NULL;
     }
-    productJObj = BPy_ToJObjectT(productPyObj, BPy_Product_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        productJObj = BPy_ToJObjectT(productPyObj, BPy_Product_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
-    rectJObj = BPy_ToJObjectT(rectPyObj, BPy_Rectangle_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        rectJObj = BPy_ToJObjectT(rectPyObj, BPy_Rectangle_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
-    mapTransformJObj = BPy_ToJObjectT(mapTransformPyObj, BPy_MapTransform_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        mapTransformJObj = BPy_ToJObjectT(mapTransformPyObj, BPy_MapTransform_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, BPy_ProductUtils_Class, _method, productJObj, rectJObj, mapTransformJObj, pixelSizeX, pixelSizeY);
     CHECK_JVM_EXCEPTION("org.esa.beam.util.ProductUtils#getOutputRasterSize(Lorg/esa/beam/framework/datamodel/Product;Ljava/awt/Rectangle;Lorg/esa/beam/framework/dataop/maptransf/MapTransform;DD)Ljava/awt/Dimension;");
@@ -36817,7 +36951,6 @@ PyObject* BeamPyProductUtils_getOutputRasterSize(PyObject* self, PyObject* args)
 PyObject* BeamPyProductUtils_createMapEnvelope2(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     PyObject* productPyObj = NULL;
     jobject productJObj = NULL;
     PyObject* rectPyObj = NULL;
@@ -36835,17 +36968,26 @@ PyObject* BeamPyProductUtils_createMapEnvelope2(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "OOO:createMapEnvelope", &productPyObj, &rectPyObj, &mapTransformPyObj)) {
         return NULL;
     }
-    productJObj = BPy_ToJObjectT(productPyObj, BPy_Product_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        productJObj = BPy_ToJObjectT(productPyObj, BPy_Product_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
-    rectJObj = BPy_ToJObjectT(rectPyObj, BPy_Rectangle_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        rectJObj = BPy_ToJObjectT(rectPyObj, BPy_Rectangle_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
-    mapTransformJObj = BPy_ToJObjectT(mapTransformPyObj, BPy_MapTransform_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        mapTransformJObj = BPy_ToJObjectT(mapTransformPyObj, BPy_MapTransform_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, BPy_ProductUtils_Class, _method, productJObj, rectJObj, mapTransformJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.util.ProductUtils#createMapEnvelope(Lorg/esa/beam/framework/datamodel/Product;Ljava/awt/Rectangle;Lorg/esa/beam/framework/dataop/maptransf/MapTransform;)[Ljava/awt/geom/Point2D;");
@@ -36857,7 +36999,6 @@ PyObject* BeamPyProductUtils_createMapEnvelope2(PyObject* self, PyObject* args)
 PyObject* BeamPyProductUtils_createMapEnvelope1(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     PyObject* productPyObj = NULL;
     jobject productJObj = NULL;
     PyObject* rectPyObj = NULL;
@@ -36876,17 +37017,26 @@ PyObject* BeamPyProductUtils_createMapEnvelope1(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "OOiO:createMapEnvelope", &productPyObj, &rectPyObj, &step, &mapTransformPyObj)) {
         return NULL;
     }
-    productJObj = BPy_ToJObjectT(productPyObj, BPy_Product_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        productJObj = BPy_ToJObjectT(productPyObj, BPy_Product_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
-    rectJObj = BPy_ToJObjectT(rectPyObj, BPy_Rectangle_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        rectJObj = BPy_ToJObjectT(rectPyObj, BPy_Rectangle_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
-    mapTransformJObj = BPy_ToJObjectT(mapTransformPyObj, BPy_MapTransform_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        mapTransformJObj = BPy_ToJObjectT(mapTransformPyObj, BPy_MapTransform_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, BPy_ProductUtils_Class, _method, productJObj, rectJObj, step, mapTransformJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.util.ProductUtils#createMapEnvelope(Lorg/esa/beam/framework/datamodel/Product;Ljava/awt/Rectangle;ILorg/esa/beam/framework/dataop/maptransf/MapTransform;)[Ljava/awt/geom/Point2D;");
@@ -36898,7 +37048,6 @@ PyObject* BeamPyProductUtils_createMapEnvelope1(PyObject* self, PyObject* args)
 PyObject* BeamPyProductUtils_getMinMax(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     PyObject* boundaryPyObj = NULL;
     jarray boundaryJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -36912,9 +37061,12 @@ PyObject* BeamPyProductUtils_getMinMax(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:getMinMax", &boundaryPyObj)) {
         return NULL;
     }
-    boundaryJObj = BPy_ToJObjectArrayT(boundaryPyObj, BPy_Point2D_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        boundaryJObj = BPy_ToJObjectArrayT(boundaryPyObj, BPy_Point2D_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, BPy_ProductUtils_Class, _method, boundaryJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.util.ProductUtils#getMinMax([Ljava/awt/geom/Point2D;)[Ljava/awt/geom/Point2D;");
@@ -36927,7 +37079,6 @@ PyObject* BeamPyProductUtils_getMinMax(PyObject* self, PyObject* args)
 PyObject* BeamPyProductUtils_createMapBoundary(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     PyObject* productPyObj = NULL;
     jobject productJObj = NULL;
     PyObject* rectPyObj = NULL;
@@ -36946,17 +37097,26 @@ PyObject* BeamPyProductUtils_createMapBoundary(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "OOiO:createMapBoundary", &productPyObj, &rectPyObj, &step, &mapTransformPyObj)) {
         return NULL;
     }
-    productJObj = BPy_ToJObjectT(productPyObj, BPy_Product_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        productJObj = BPy_ToJObjectT(productPyObj, BPy_Product_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
-    rectJObj = BPy_ToJObjectT(rectPyObj, BPy_Rectangle_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        rectJObj = BPy_ToJObjectT(rectPyObj, BPy_Rectangle_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
-    mapTransformJObj = BPy_ToJObjectT(mapTransformPyObj, BPy_MapTransform_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        mapTransformJObj = BPy_ToJObjectT(mapTransformPyObj, BPy_MapTransform_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, BPy_ProductUtils_Class, _method, productJObj, rectJObj, step, mapTransformJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.util.ProductUtils#createMapBoundary(Lorg/esa/beam/framework/datamodel/Product;Ljava/awt/Rectangle;ILorg/esa/beam/framework/dataop/maptransf/MapTransform;)[Ljava/awt/geom/Point2D;");
@@ -36968,7 +37128,6 @@ PyObject* BeamPyProductUtils_createMapBoundary(PyObject* self, PyObject* args)
 PyObject* BeamPyProductUtils_createGeoBoundary1(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     PyObject* productPyObj = NULL;
     jobject productJObj = NULL;
     jint step = (jint) 0;
@@ -36983,9 +37142,12 @@ PyObject* BeamPyProductUtils_createGeoBoundary1(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "Oi:createGeoBoundary", &productPyObj, &step)) {
         return NULL;
     }
-    productJObj = BPy_ToJObjectT(productPyObj, BPy_Product_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        productJObj = BPy_ToJObjectT(productPyObj, BPy_Product_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, BPy_ProductUtils_Class, _method, productJObj, step);
     CHECK_JVM_EXCEPTION("org.esa.beam.util.ProductUtils#createGeoBoundary(Lorg/esa/beam/framework/datamodel/Product;I)[Lorg/esa/beam/framework/datamodel/GeoPos;");
@@ -36997,7 +37159,6 @@ PyObject* BeamPyProductUtils_createGeoBoundary1(PyObject* self, PyObject* args)
 PyObject* BeamPyProductUtils_createGeoBoundary2(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     PyObject* productPyObj = NULL;
     jobject productJObj = NULL;
     PyObject* regionPyObj = NULL;
@@ -37014,13 +37175,19 @@ PyObject* BeamPyProductUtils_createGeoBoundary2(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "OOi:createGeoBoundary", &productPyObj, &regionPyObj, &step)) {
         return NULL;
     }
-    productJObj = BPy_ToJObjectT(productPyObj, BPy_Product_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        productJObj = BPy_ToJObjectT(productPyObj, BPy_Product_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
-    regionJObj = BPy_ToJObjectT(regionPyObj, BPy_Rectangle_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        regionJObj = BPy_ToJObjectT(regionPyObj, BPy_Rectangle_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, BPy_ProductUtils_Class, _method, productJObj, regionJObj, step);
     CHECK_JVM_EXCEPTION("org.esa.beam.util.ProductUtils#createGeoBoundary(Lorg/esa/beam/framework/datamodel/Product;Ljava/awt/Rectangle;I)[Lorg/esa/beam/framework/datamodel/GeoPos;");
@@ -37032,7 +37199,6 @@ PyObject* BeamPyProductUtils_createGeoBoundary2(PyObject* self, PyObject* args)
 PyObject* BeamPyProductUtils_createGeoBoundary3(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     PyObject* productPyObj = NULL;
     jobject productJObj = NULL;
     PyObject* regionPyObj = NULL;
@@ -37050,13 +37216,19 @@ PyObject* BeamPyProductUtils_createGeoBoundary3(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "OOib:createGeoBoundary", &productPyObj, &regionPyObj, &step, &usePixelCenter)) {
         return NULL;
     }
-    productJObj = BPy_ToJObjectT(productPyObj, BPy_Product_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        productJObj = BPy_ToJObjectT(productPyObj, BPy_Product_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
-    regionJObj = BPy_ToJObjectT(regionPyObj, BPy_Rectangle_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        regionJObj = BPy_ToJObjectT(regionPyObj, BPy_Rectangle_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, BPy_ProductUtils_Class, _method, productJObj, regionJObj, step, usePixelCenter);
     CHECK_JVM_EXCEPTION("org.esa.beam.util.ProductUtils#createGeoBoundary(Lorg/esa/beam/framework/datamodel/Product;Ljava/awt/Rectangle;IZ)[Lorg/esa/beam/framework/datamodel/GeoPos;");
@@ -37065,10 +37237,58 @@ PyObject* BeamPyProductUtils_createGeoBoundary3(PyObject* self, PyObject* args)
     return _resultPyObj;
 }
 
+PyObject* BeamPyProductUtils_getClosestGeoPos(PyObject* self, PyObject* args)
+{
+    static jmethodID _method = NULL;
+    PyObject* gcPyObj = NULL;
+    jobject gcJObj = NULL;
+    PyObject* origPosPyObj = NULL;
+    jobject origPosJObj = NULL;
+    PyObject* regionPyObj = NULL;
+    jobject regionJObj = NULL;
+    jint step = (jint) 0;
+    PyObject* _resultPyObj = NULL;
+    jobject _resultJObj = NULL;
+    if (!BPy_InitApi()) {
+        return NULL;
+    }
+    if (!BPy_InitJMethod(&_method, BPy_ProductUtils_Class, "org.esa.beam.util.ProductUtils", "getClosestGeoPos", "(Lorg/esa/beam/framework/datamodel/GeoCoding;Lorg/esa/beam/framework/datamodel/PixelPos;Ljava/awt/Rectangle;I)Lorg/esa/beam/framework/datamodel/GeoPos;", 1)) {
+        return NULL;
+    }
+    if (!PyArg_ParseTuple(args, "OOOi:getClosestGeoPos", &gcPyObj, &origPosPyObj, &regionPyObj, &step)) {
+        return NULL;
+    }
+    {
+        jboolean ok = 1;
+        gcJObj = BPy_ToJObjectT(gcPyObj, BPy_GeoCoding_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
+    }
+    {
+        jboolean ok = 1;
+        origPosJObj = BPy_ToJObjectT(origPosPyObj, BPy_PixelPos_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
+    }
+    {
+        jboolean ok = 1;
+        regionJObj = BPy_ToJObjectT(regionPyObj, BPy_Rectangle_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
+    }
+    _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, BPy_ProductUtils_Class, _method, gcJObj, origPosJObj, regionJObj, step);
+    CHECK_JVM_EXCEPTION("org.esa.beam.util.ProductUtils#getClosestGeoPos(Lorg/esa/beam/framework/datamodel/GeoCoding;Lorg/esa/beam/framework/datamodel/PixelPos;Ljava/awt/Rectangle;I)Lorg/esa/beam/framework/datamodel/GeoPos;");
+    _resultPyObj = BPy_FromJObject(&GeoPos_Type, _resultJObj);
+    (*jenv)->DeleteLocalRef(jenv, _resultJObj);
+    return _resultPyObj;
+}
+
 PyObject* BeamPyProductUtils_createGeoBoundary4(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     PyObject* rasterPyObj = NULL;
     jobject rasterJObj = NULL;
     PyObject* regionPyObj = NULL;
@@ -37085,13 +37305,19 @@ PyObject* BeamPyProductUtils_createGeoBoundary4(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "OOi:createGeoBoundary", &rasterPyObj, &regionPyObj, &step)) {
         return NULL;
     }
-    rasterJObj = BPy_ToJObjectT(rasterPyObj, BPy_RasterDataNode_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        rasterJObj = BPy_ToJObjectT(rasterPyObj, BPy_RasterDataNode_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
-    regionJObj = BPy_ToJObjectT(regionPyObj, BPy_Rectangle_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        regionJObj = BPy_ToJObjectT(regionPyObj, BPy_Rectangle_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, BPy_ProductUtils_Class, _method, rasterJObj, regionJObj, step);
     CHECK_JVM_EXCEPTION("org.esa.beam.util.ProductUtils#createGeoBoundary(Lorg/esa/beam/framework/datamodel/RasterDataNode;Ljava/awt/Rectangle;I)[Lorg/esa/beam/framework/datamodel/GeoPos;");
@@ -37103,7 +37329,6 @@ PyObject* BeamPyProductUtils_createGeoBoundary4(PyObject* self, PyObject* args)
 PyObject* BeamPyProductUtils_createGeoBoundaryPaths1(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     PyObject* productPyObj = NULL;
     jobject productJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -37117,9 +37342,12 @@ PyObject* BeamPyProductUtils_createGeoBoundaryPaths1(PyObject* self, PyObject* a
     if (!PyArg_ParseTuple(args, "O:createGeoBoundaryPaths", &productPyObj)) {
         return NULL;
     }
-    productJObj = BPy_ToJObjectT(productPyObj, BPy_Product_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        productJObj = BPy_ToJObjectT(productPyObj, BPy_Product_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, BPy_ProductUtils_Class, _method, productJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.util.ProductUtils#createGeoBoundaryPaths(Lorg/esa/beam/framework/datamodel/Product;)[Ljava/awt/geom/GeneralPath;");
@@ -37131,7 +37359,6 @@ PyObject* BeamPyProductUtils_createGeoBoundaryPaths1(PyObject* self, PyObject* a
 PyObject* BeamPyProductUtils_createGeoBoundaryPaths2(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     PyObject* productPyObj = NULL;
     jobject productJObj = NULL;
     PyObject* regionPyObj = NULL;
@@ -37148,13 +37375,19 @@ PyObject* BeamPyProductUtils_createGeoBoundaryPaths2(PyObject* self, PyObject* a
     if (!PyArg_ParseTuple(args, "OOi:createGeoBoundaryPaths", &productPyObj, &regionPyObj, &step)) {
         return NULL;
     }
-    productJObj = BPy_ToJObjectT(productPyObj, BPy_Product_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        productJObj = BPy_ToJObjectT(productPyObj, BPy_Product_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
-    regionJObj = BPy_ToJObjectT(regionPyObj, BPy_Rectangle_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        regionJObj = BPy_ToJObjectT(regionPyObj, BPy_Rectangle_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, BPy_ProductUtils_Class, _method, productJObj, regionJObj, step);
     CHECK_JVM_EXCEPTION("org.esa.beam.util.ProductUtils#createGeoBoundaryPaths(Lorg/esa/beam/framework/datamodel/Product;Ljava/awt/Rectangle;I)[Ljava/awt/geom/GeneralPath;");
@@ -37166,7 +37399,6 @@ PyObject* BeamPyProductUtils_createGeoBoundaryPaths2(PyObject* self, PyObject* a
 PyObject* BeamPyProductUtils_createGeoBoundaryPaths3(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     PyObject* productPyObj = NULL;
     jobject productJObj = NULL;
     PyObject* regionPyObj = NULL;
@@ -37184,13 +37416,19 @@ PyObject* BeamPyProductUtils_createGeoBoundaryPaths3(PyObject* self, PyObject* a
     if (!PyArg_ParseTuple(args, "OOib:createGeoBoundaryPaths", &productPyObj, &regionPyObj, &step, &usePixelCenter)) {
         return NULL;
     }
-    productJObj = BPy_ToJObjectT(productPyObj, BPy_Product_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        productJObj = BPy_ToJObjectT(productPyObj, BPy_Product_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
-    regionJObj = BPy_ToJObjectT(regionPyObj, BPy_Rectangle_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        regionJObj = BPy_ToJObjectT(regionPyObj, BPy_Rectangle_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, BPy_ProductUtils_Class, _method, productJObj, regionJObj, step, usePixelCenter);
     CHECK_JVM_EXCEPTION("org.esa.beam.util.ProductUtils#createGeoBoundaryPaths(Lorg/esa/beam/framework/datamodel/Product;Ljava/awt/Rectangle;IZ)[Ljava/awt/geom/GeneralPath;");
@@ -37202,7 +37440,6 @@ PyObject* BeamPyProductUtils_createGeoBoundaryPaths3(PyObject* self, PyObject* a
 PyObject* BeamPyProductUtils_createPixelBoundary1(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     PyObject* productPyObj = NULL;
     jobject productJObj = NULL;
     PyObject* rectPyObj = NULL;
@@ -37219,13 +37456,19 @@ PyObject* BeamPyProductUtils_createPixelBoundary1(PyObject* self, PyObject* args
     if (!PyArg_ParseTuple(args, "OOi:createPixelBoundary", &productPyObj, &rectPyObj, &step)) {
         return NULL;
     }
-    productJObj = BPy_ToJObjectT(productPyObj, BPy_Product_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        productJObj = BPy_ToJObjectT(productPyObj, BPy_Product_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
-    rectJObj = BPy_ToJObjectT(rectPyObj, BPy_Rectangle_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        rectJObj = BPy_ToJObjectT(rectPyObj, BPy_Rectangle_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, BPy_ProductUtils_Class, _method, productJObj, rectJObj, step);
     CHECK_JVM_EXCEPTION("org.esa.beam.util.ProductUtils#createPixelBoundary(Lorg/esa/beam/framework/datamodel/Product;Ljava/awt/Rectangle;I)[Lorg/esa/beam/framework/datamodel/PixelPos;");
@@ -37237,7 +37480,6 @@ PyObject* BeamPyProductUtils_createPixelBoundary1(PyObject* self, PyObject* args
 PyObject* BeamPyProductUtils_createPixelBoundary2(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     PyObject* productPyObj = NULL;
     jobject productJObj = NULL;
     PyObject* rectPyObj = NULL;
@@ -37255,13 +37497,19 @@ PyObject* BeamPyProductUtils_createPixelBoundary2(PyObject* self, PyObject* args
     if (!PyArg_ParseTuple(args, "OOib:createPixelBoundary", &productPyObj, &rectPyObj, &step, &usePixelCenter)) {
         return NULL;
     }
-    productJObj = BPy_ToJObjectT(productPyObj, BPy_Product_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        productJObj = BPy_ToJObjectT(productPyObj, BPy_Product_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
-    rectJObj = BPy_ToJObjectT(rectPyObj, BPy_Rectangle_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        rectJObj = BPy_ToJObjectT(rectPyObj, BPy_Rectangle_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, BPy_ProductUtils_Class, _method, productJObj, rectJObj, step, usePixelCenter);
     CHECK_JVM_EXCEPTION("org.esa.beam.util.ProductUtils#createPixelBoundary(Lorg/esa/beam/framework/datamodel/Product;Ljava/awt/Rectangle;IZ)[Lorg/esa/beam/framework/datamodel/PixelPos;");
@@ -37273,7 +37521,6 @@ PyObject* BeamPyProductUtils_createPixelBoundary2(PyObject* self, PyObject* args
 PyObject* BeamPyProductUtils_createPixelBoundary3(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     PyObject* rasterPyObj = NULL;
     jobject rasterJObj = NULL;
     PyObject* rectPyObj = NULL;
@@ -37290,13 +37537,19 @@ PyObject* BeamPyProductUtils_createPixelBoundary3(PyObject* self, PyObject* args
     if (!PyArg_ParseTuple(args, "OOi:createPixelBoundary", &rasterPyObj, &rectPyObj, &step)) {
         return NULL;
     }
-    rasterJObj = BPy_ToJObjectT(rasterPyObj, BPy_RasterDataNode_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        rasterJObj = BPy_ToJObjectT(rasterPyObj, BPy_RasterDataNode_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
-    rectJObj = BPy_ToJObjectT(rectPyObj, BPy_Rectangle_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        rectJObj = BPy_ToJObjectT(rectPyObj, BPy_Rectangle_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, BPy_ProductUtils_Class, _method, rasterJObj, rectJObj, step);
     CHECK_JVM_EXCEPTION("org.esa.beam.util.ProductUtils#createPixelBoundary(Lorg/esa/beam/framework/datamodel/RasterDataNode;Ljava/awt/Rectangle;I)[Lorg/esa/beam/framework/datamodel/PixelPos;");
@@ -37308,7 +37561,6 @@ PyObject* BeamPyProductUtils_createPixelBoundary3(PyObject* self, PyObject* args
 PyObject* BeamPyProductUtils_createRectBoundary1(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     PyObject* rectPyObj = NULL;
     jobject rectJObj = NULL;
     jint step = (jint) 0;
@@ -37323,9 +37575,12 @@ PyObject* BeamPyProductUtils_createRectBoundary1(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "Oi:createRectBoundary", &rectPyObj, &step)) {
         return NULL;
     }
-    rectJObj = BPy_ToJObjectT(rectPyObj, BPy_Rectangle_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        rectJObj = BPy_ToJObjectT(rectPyObj, BPy_Rectangle_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, BPy_ProductUtils_Class, _method, rectJObj, step);
     CHECK_JVM_EXCEPTION("org.esa.beam.util.ProductUtils#createRectBoundary(Ljava/awt/Rectangle;I)[Lorg/esa/beam/framework/datamodel/PixelPos;");
@@ -37337,7 +37592,6 @@ PyObject* BeamPyProductUtils_createRectBoundary1(PyObject* self, PyObject* args)
 PyObject* BeamPyProductUtils_createRectBoundary2(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     PyObject* rectPyObj = NULL;
     jobject rectJObj = NULL;
     jint step = (jint) 0;
@@ -37353,9 +37607,12 @@ PyObject* BeamPyProductUtils_createRectBoundary2(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "Oib:createRectBoundary", &rectPyObj, &step, &usePixelCenter)) {
         return NULL;
     }
-    rectJObj = BPy_ToJObjectT(rectPyObj, BPy_Rectangle_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        rectJObj = BPy_ToJObjectT(rectPyObj, BPy_Rectangle_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, BPy_ProductUtils_Class, _method, rectJObj, step, usePixelCenter);
     CHECK_JVM_EXCEPTION("org.esa.beam.util.ProductUtils#createRectBoundary(Ljava/awt/Rectangle;IZ)[Lorg/esa/beam/framework/datamodel/PixelPos;");
@@ -37367,7 +37624,6 @@ PyObject* BeamPyProductUtils_createRectBoundary2(PyObject* self, PyObject* args)
 PyObject* BeamPyProductUtils_copyFlagCodings(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     PyObject* sourcePyObj = NULL;
     jobject sourceJObj = NULL;
     PyObject* targetPyObj = NULL;
@@ -37381,13 +37637,19 @@ PyObject* BeamPyProductUtils_copyFlagCodings(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "OO:copyFlagCodings", &sourcePyObj, &targetPyObj)) {
         return NULL;
     }
-    sourceJObj = BPy_ToJObjectT(sourcePyObj, BPy_Product_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        sourceJObj = BPy_ToJObjectT(sourcePyObj, BPy_Product_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
-    targetJObj = BPy_ToJObjectT(targetPyObj, BPy_Product_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        targetJObj = BPy_ToJObjectT(targetPyObj, BPy_Product_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallStaticVoidMethod(jenv, BPy_ProductUtils_Class, _method, sourceJObj, targetJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.util.ProductUtils#copyFlagCodings(Lorg/esa/beam/framework/datamodel/Product;Lorg/esa/beam/framework/datamodel/Product;)V");
@@ -37397,7 +37659,6 @@ PyObject* BeamPyProductUtils_copyFlagCodings(PyObject* self, PyObject* args)
 PyObject* BeamPyProductUtils_copyFlagCoding(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     PyObject* sourceFlagCodingPyObj = NULL;
     jobject sourceFlagCodingJObj = NULL;
     PyObject* targetPyObj = NULL;
@@ -37413,13 +37674,19 @@ PyObject* BeamPyProductUtils_copyFlagCoding(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "OO:copyFlagCoding", &sourceFlagCodingPyObj, &targetPyObj)) {
         return NULL;
     }
-    sourceFlagCodingJObj = BPy_ToJObjectT(sourceFlagCodingPyObj, BPy_FlagCoding_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        sourceFlagCodingJObj = BPy_ToJObjectT(sourceFlagCodingPyObj, BPy_FlagCoding_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
-    targetJObj = BPy_ToJObjectT(targetPyObj, BPy_Product_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        targetJObj = BPy_ToJObjectT(targetPyObj, BPy_Product_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, BPy_ProductUtils_Class, _method, sourceFlagCodingJObj, targetJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.util.ProductUtils#copyFlagCoding(Lorg/esa/beam/framework/datamodel/FlagCoding;Lorg/esa/beam/framework/datamodel/Product;)Lorg/esa/beam/framework/datamodel/FlagCoding;");
@@ -37431,7 +37698,6 @@ PyObject* BeamPyProductUtils_copyFlagCoding(PyObject* self, PyObject* args)
 PyObject* BeamPyProductUtils_copyIndexCoding(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     PyObject* sourceIndexCodingPyObj = NULL;
     jobject sourceIndexCodingJObj = NULL;
     PyObject* targetPyObj = NULL;
@@ -37447,13 +37713,19 @@ PyObject* BeamPyProductUtils_copyIndexCoding(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "OO:copyIndexCoding", &sourceIndexCodingPyObj, &targetPyObj)) {
         return NULL;
     }
-    sourceIndexCodingJObj = BPy_ToJObjectT(sourceIndexCodingPyObj, BPy_IndexCoding_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        sourceIndexCodingJObj = BPy_ToJObjectT(sourceIndexCodingPyObj, BPy_IndexCoding_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
-    targetJObj = BPy_ToJObjectT(targetPyObj, BPy_Product_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        targetJObj = BPy_ToJObjectT(targetPyObj, BPy_Product_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, BPy_ProductUtils_Class, _method, sourceIndexCodingJObj, targetJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.util.ProductUtils#copyIndexCoding(Lorg/esa/beam/framework/datamodel/IndexCoding;Lorg/esa/beam/framework/datamodel/Product;)Lorg/esa/beam/framework/datamodel/IndexCoding;");
@@ -37465,7 +37737,6 @@ PyObject* BeamPyProductUtils_copyIndexCoding(PyObject* self, PyObject* args)
 PyObject* BeamPyProductUtils_copyMasks(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     PyObject* sourceProductPyObj = NULL;
     jobject sourceProductJObj = NULL;
     PyObject* targetProductPyObj = NULL;
@@ -37479,13 +37750,19 @@ PyObject* BeamPyProductUtils_copyMasks(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "OO:copyMasks", &sourceProductPyObj, &targetProductPyObj)) {
         return NULL;
     }
-    sourceProductJObj = BPy_ToJObjectT(sourceProductPyObj, BPy_Product_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        sourceProductJObj = BPy_ToJObjectT(sourceProductPyObj, BPy_Product_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
-    targetProductJObj = BPy_ToJObjectT(targetProductPyObj, BPy_Product_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        targetProductJObj = BPy_ToJObjectT(targetProductPyObj, BPy_Product_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallStaticVoidMethod(jenv, BPy_ProductUtils_Class, _method, sourceProductJObj, targetProductJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.util.ProductUtils#copyMasks(Lorg/esa/beam/framework/datamodel/Product;Lorg/esa/beam/framework/datamodel/Product;)V");
@@ -37495,7 +37772,6 @@ PyObject* BeamPyProductUtils_copyMasks(PyObject* self, PyObject* args)
 PyObject* BeamPyProductUtils_copyOverlayMasks(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     PyObject* sourceProductPyObj = NULL;
     jobject sourceProductJObj = NULL;
     PyObject* targetProductPyObj = NULL;
@@ -37509,13 +37785,19 @@ PyObject* BeamPyProductUtils_copyOverlayMasks(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "OO:copyOverlayMasks", &sourceProductPyObj, &targetProductPyObj)) {
         return NULL;
     }
-    sourceProductJObj = BPy_ToJObjectT(sourceProductPyObj, BPy_Product_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        sourceProductJObj = BPy_ToJObjectT(sourceProductPyObj, BPy_Product_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
-    targetProductJObj = BPy_ToJObjectT(targetProductPyObj, BPy_Product_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        targetProductJObj = BPy_ToJObjectT(targetProductPyObj, BPy_Product_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallStaticVoidMethod(jenv, BPy_ProductUtils_Class, _method, sourceProductJObj, targetProductJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.util.ProductUtils#copyOverlayMasks(Lorg/esa/beam/framework/datamodel/Product;Lorg/esa/beam/framework/datamodel/Product;)V");
@@ -37525,7 +37807,6 @@ PyObject* BeamPyProductUtils_copyOverlayMasks(PyObject* self, PyObject* args)
 PyObject* BeamPyProductUtils_copyRoiMasks(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     PyObject* sourceProductPyObj = NULL;
     jobject sourceProductJObj = NULL;
     PyObject* targetProductPyObj = NULL;
@@ -37539,13 +37820,19 @@ PyObject* BeamPyProductUtils_copyRoiMasks(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "OO:copyRoiMasks", &sourceProductPyObj, &targetProductPyObj)) {
         return NULL;
     }
-    sourceProductJObj = BPy_ToJObjectT(sourceProductPyObj, BPy_Product_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        sourceProductJObj = BPy_ToJObjectT(sourceProductPyObj, BPy_Product_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
-    targetProductJObj = BPy_ToJObjectT(targetProductPyObj, BPy_Product_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        targetProductJObj = BPy_ToJObjectT(targetProductPyObj, BPy_Product_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallStaticVoidMethod(jenv, BPy_ProductUtils_Class, _method, sourceProductJObj, targetProductJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.util.ProductUtils#copyRoiMasks(Lorg/esa/beam/framework/datamodel/Product;Lorg/esa/beam/framework/datamodel/Product;)V");
@@ -37555,7 +37842,6 @@ PyObject* BeamPyProductUtils_copyRoiMasks(PyObject* self, PyObject* args)
 PyObject* BeamPyProductUtils_copyFlagBands2(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     PyObject* sourceProductPyObj = NULL;
     jobject sourceProductJObj = NULL;
     PyObject* targetProductPyObj = NULL;
@@ -37570,13 +37856,19 @@ PyObject* BeamPyProductUtils_copyFlagBands2(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "OOb:copyFlagBands", &sourceProductPyObj, &targetProductPyObj, &copySourceImage)) {
         return NULL;
     }
-    sourceProductJObj = BPy_ToJObjectT(sourceProductPyObj, BPy_Product_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        sourceProductJObj = BPy_ToJObjectT(sourceProductPyObj, BPy_Product_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
-    targetProductJObj = BPy_ToJObjectT(targetProductPyObj, BPy_Product_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        targetProductJObj = BPy_ToJObjectT(targetProductPyObj, BPy_Product_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallStaticVoidMethod(jenv, BPy_ProductUtils_Class, _method, sourceProductJObj, targetProductJObj, copySourceImage);
     CHECK_JVM_EXCEPTION("org.esa.beam.util.ProductUtils#copyFlagBands(Lorg/esa/beam/framework/datamodel/Product;Lorg/esa/beam/framework/datamodel/Product;Z)V");
@@ -37586,7 +37878,6 @@ PyObject* BeamPyProductUtils_copyFlagBands2(PyObject* self, PyObject* args)
 PyObject* BeamPyProductUtils_copyFlagBands1(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     PyObject* sourceProductPyObj = NULL;
     jobject sourceProductJObj = NULL;
     PyObject* targetProductPyObj = NULL;
@@ -37600,13 +37891,19 @@ PyObject* BeamPyProductUtils_copyFlagBands1(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "OO:copyFlagBands", &sourceProductPyObj, &targetProductPyObj)) {
         return NULL;
     }
-    sourceProductJObj = BPy_ToJObjectT(sourceProductPyObj, BPy_Product_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        sourceProductJObj = BPy_ToJObjectT(sourceProductPyObj, BPy_Product_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
-    targetProductJObj = BPy_ToJObjectT(targetProductPyObj, BPy_Product_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        targetProductJObj = BPy_ToJObjectT(targetProductPyObj, BPy_Product_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallStaticVoidMethod(jenv, BPy_ProductUtils_Class, _method, sourceProductJObj, targetProductJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.util.ProductUtils#copyFlagBands(Lorg/esa/beam/framework/datamodel/Product;Lorg/esa/beam/framework/datamodel/Product;)V");
@@ -37616,7 +37913,6 @@ PyObject* BeamPyProductUtils_copyFlagBands1(PyObject* self, PyObject* args)
 PyObject* BeamPyProductUtils_copyTiePointGrid(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     const char* gridName = NULL;
     jstring gridNameJObj = NULL;
     PyObject* sourceProductPyObj = NULL;
@@ -37635,13 +37931,19 @@ PyObject* BeamPyProductUtils_copyTiePointGrid(PyObject* self, PyObject* args)
         return NULL;
     }
     gridNameJObj =(*jenv)->NewStringUTF(jenv, gridName);
-    sourceProductJObj = BPy_ToJObjectT(sourceProductPyObj, BPy_Product_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        sourceProductJObj = BPy_ToJObjectT(sourceProductPyObj, BPy_Product_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
-    targetProductJObj = BPy_ToJObjectT(targetProductPyObj, BPy_Product_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        targetProductJObj = BPy_ToJObjectT(targetProductPyObj, BPy_Product_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, BPy_ProductUtils_Class, _method, gridNameJObj, sourceProductJObj, targetProductJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.util.ProductUtils#copyTiePointGrid(Ljava/lang/String;Lorg/esa/beam/framework/datamodel/Product;Lorg/esa/beam/framework/datamodel/Product;)Lorg/esa/beam/framework/datamodel/TiePointGrid;");
@@ -37654,7 +37956,6 @@ PyObject* BeamPyProductUtils_copyTiePointGrid(PyObject* self, PyObject* args)
 PyObject* BeamPyProductUtils_copyBand4(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     const char* sourceBandName = NULL;
     jstring sourceBandNameJObj = NULL;
     PyObject* sourceProductPyObj = NULL;
@@ -37674,13 +37975,19 @@ PyObject* BeamPyProductUtils_copyBand4(PyObject* self, PyObject* args)
         return NULL;
     }
     sourceBandNameJObj =(*jenv)->NewStringUTF(jenv, sourceBandName);
-    sourceProductJObj = BPy_ToJObjectT(sourceProductPyObj, BPy_Product_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        sourceProductJObj = BPy_ToJObjectT(sourceProductPyObj, BPy_Product_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
-    targetProductJObj = BPy_ToJObjectT(targetProductPyObj, BPy_Product_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        targetProductJObj = BPy_ToJObjectT(targetProductPyObj, BPy_Product_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, BPy_ProductUtils_Class, _method, sourceBandNameJObj, sourceProductJObj, targetProductJObj, copySourceImage);
     CHECK_JVM_EXCEPTION("org.esa.beam.util.ProductUtils#copyBand(Ljava/lang/String;Lorg/esa/beam/framework/datamodel/Product;Lorg/esa/beam/framework/datamodel/Product;Z)Lorg/esa/beam/framework/datamodel/Band;");
@@ -37693,7 +38000,6 @@ PyObject* BeamPyProductUtils_copyBand4(PyObject* self, PyObject* args)
 PyObject* BeamPyProductUtils_copyBand2(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     const char* sourceBandName = NULL;
     jstring sourceBandNameJObj = NULL;
     PyObject* sourceProductPyObj = NULL;
@@ -37715,14 +38021,20 @@ PyObject* BeamPyProductUtils_copyBand2(PyObject* self, PyObject* args)
         return NULL;
     }
     sourceBandNameJObj =(*jenv)->NewStringUTF(jenv, sourceBandName);
-    sourceProductJObj = BPy_ToJObjectT(sourceProductPyObj, BPy_Product_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        sourceProductJObj = BPy_ToJObjectT(sourceProductPyObj, BPy_Product_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     targetBandNameJObj =(*jenv)->NewStringUTF(jenv, targetBandName);
-    targetProductJObj = BPy_ToJObjectT(targetProductPyObj, BPy_Product_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        targetProductJObj = BPy_ToJObjectT(targetProductPyObj, BPy_Product_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, BPy_ProductUtils_Class, _method, sourceBandNameJObj, sourceProductJObj, targetBandNameJObj, targetProductJObj, copySourceImage);
     CHECK_JVM_EXCEPTION("org.esa.beam.util.ProductUtils#copyBand(Ljava/lang/String;Lorg/esa/beam/framework/datamodel/Product;Ljava/lang/String;Lorg/esa/beam/framework/datamodel/Product;Z)Lorg/esa/beam/framework/datamodel/Band;");
@@ -37736,7 +38048,6 @@ PyObject* BeamPyProductUtils_copyBand2(PyObject* self, PyObject* args)
 PyObject* BeamPyProductUtils_copyRasterDataNodeProperties(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     PyObject* sourceRasterPyObj = NULL;
     jobject sourceRasterJObj = NULL;
     PyObject* targetRasterPyObj = NULL;
@@ -37750,13 +38061,19 @@ PyObject* BeamPyProductUtils_copyRasterDataNodeProperties(PyObject* self, PyObje
     if (!PyArg_ParseTuple(args, "OO:copyRasterDataNodeProperties", &sourceRasterPyObj, &targetRasterPyObj)) {
         return NULL;
     }
-    sourceRasterJObj = BPy_ToJObjectT(sourceRasterPyObj, BPy_RasterDataNode_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        sourceRasterJObj = BPy_ToJObjectT(sourceRasterPyObj, BPy_RasterDataNode_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
-    targetRasterJObj = BPy_ToJObjectT(targetRasterPyObj, BPy_RasterDataNode_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        targetRasterJObj = BPy_ToJObjectT(targetRasterPyObj, BPy_RasterDataNode_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallStaticVoidMethod(jenv, BPy_ProductUtils_Class, _method, sourceRasterJObj, targetRasterJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.util.ProductUtils#copyRasterDataNodeProperties(Lorg/esa/beam/framework/datamodel/RasterDataNode;Lorg/esa/beam/framework/datamodel/RasterDataNode;)V");
@@ -37766,7 +38083,6 @@ PyObject* BeamPyProductUtils_copyRasterDataNodeProperties(PyObject* self, PyObje
 PyObject* BeamPyProductUtils_copyBand3(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     const char* sourceBandName = NULL;
     jstring sourceBandNameJObj = NULL;
     PyObject* sourceProductPyObj = NULL;
@@ -37785,13 +38101,19 @@ PyObject* BeamPyProductUtils_copyBand3(PyObject* self, PyObject* args)
         return NULL;
     }
     sourceBandNameJObj =(*jenv)->NewStringUTF(jenv, sourceBandName);
-    sourceProductJObj = BPy_ToJObjectT(sourceProductPyObj, BPy_Product_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        sourceProductJObj = BPy_ToJObjectT(sourceProductPyObj, BPy_Product_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
-    targetProductJObj = BPy_ToJObjectT(targetProductPyObj, BPy_Product_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        targetProductJObj = BPy_ToJObjectT(targetProductPyObj, BPy_Product_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, BPy_ProductUtils_Class, _method, sourceBandNameJObj, sourceProductJObj, targetProductJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.util.ProductUtils#copyBand(Ljava/lang/String;Lorg/esa/beam/framework/datamodel/Product;Lorg/esa/beam/framework/datamodel/Product;)Lorg/esa/beam/framework/datamodel/Band;");
@@ -37804,7 +38126,6 @@ PyObject* BeamPyProductUtils_copyBand3(PyObject* self, PyObject* args)
 PyObject* BeamPyProductUtils_copyBand1(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     const char* sourceBandName = NULL;
     jstring sourceBandNameJObj = NULL;
     PyObject* sourceProductPyObj = NULL;
@@ -37825,14 +38146,20 @@ PyObject* BeamPyProductUtils_copyBand1(PyObject* self, PyObject* args)
         return NULL;
     }
     sourceBandNameJObj =(*jenv)->NewStringUTF(jenv, sourceBandName);
-    sourceProductJObj = BPy_ToJObjectT(sourceProductPyObj, BPy_Product_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        sourceProductJObj = BPy_ToJObjectT(sourceProductPyObj, BPy_Product_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     targetBandNameJObj =(*jenv)->NewStringUTF(jenv, targetBandName);
-    targetProductJObj = BPy_ToJObjectT(targetProductPyObj, BPy_Product_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        targetProductJObj = BPy_ToJObjectT(targetProductPyObj, BPy_Product_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, BPy_ProductUtils_Class, _method, sourceBandNameJObj, sourceProductJObj, targetBandNameJObj, targetProductJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.util.ProductUtils#copyBand(Ljava/lang/String;Lorg/esa/beam/framework/datamodel/Product;Ljava/lang/String;Lorg/esa/beam/framework/datamodel/Product;)Lorg/esa/beam/framework/datamodel/Band;");
@@ -37846,7 +38173,6 @@ PyObject* BeamPyProductUtils_copyBand1(PyObject* self, PyObject* args)
 PyObject* BeamPyProductUtils_copySpectralBandProperties(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     PyObject* sourceBandPyObj = NULL;
     jobject sourceBandJObj = NULL;
     PyObject* targetBandPyObj = NULL;
@@ -37860,13 +38186,19 @@ PyObject* BeamPyProductUtils_copySpectralBandProperties(PyObject* self, PyObject
     if (!PyArg_ParseTuple(args, "OO:copySpectralBandProperties", &sourceBandPyObj, &targetBandPyObj)) {
         return NULL;
     }
-    sourceBandJObj = BPy_ToJObjectT(sourceBandPyObj, BPy_Band_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        sourceBandJObj = BPy_ToJObjectT(sourceBandPyObj, BPy_Band_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
-    targetBandJObj = BPy_ToJObjectT(targetBandPyObj, BPy_Band_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        targetBandJObj = BPy_ToJObjectT(targetBandPyObj, BPy_Band_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallStaticVoidMethod(jenv, BPy_ProductUtils_Class, _method, sourceBandJObj, targetBandJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.util.ProductUtils#copySpectralBandProperties(Lorg/esa/beam/framework/datamodel/Band;Lorg/esa/beam/framework/datamodel/Band;)V");
@@ -37876,7 +38208,6 @@ PyObject* BeamPyProductUtils_copySpectralBandProperties(PyObject* self, PyObject
 PyObject* BeamPyProductUtils_copyGeoCoding(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     PyObject* sourceProductPyObj = NULL;
     jobject sourceProductJObj = NULL;
     PyObject* targetProductPyObj = NULL;
@@ -37890,13 +38221,19 @@ PyObject* BeamPyProductUtils_copyGeoCoding(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "OO:copyGeoCoding", &sourceProductPyObj, &targetProductPyObj)) {
         return NULL;
     }
-    sourceProductJObj = BPy_ToJObjectT(sourceProductPyObj, BPy_Product_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        sourceProductJObj = BPy_ToJObjectT(sourceProductPyObj, BPy_Product_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
-    targetProductJObj = BPy_ToJObjectT(targetProductPyObj, BPy_Product_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        targetProductJObj = BPy_ToJObjectT(targetProductPyObj, BPy_Product_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallStaticVoidMethod(jenv, BPy_ProductUtils_Class, _method, sourceProductJObj, targetProductJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.util.ProductUtils#copyGeoCoding(Lorg/esa/beam/framework/datamodel/Product;Lorg/esa/beam/framework/datamodel/Product;)V");
@@ -37906,7 +38243,6 @@ PyObject* BeamPyProductUtils_copyGeoCoding(PyObject* self, PyObject* args)
 PyObject* BeamPyProductUtils_copyTiePointGrids(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     PyObject* sourceProductPyObj = NULL;
     jobject sourceProductJObj = NULL;
     PyObject* targetProductPyObj = NULL;
@@ -37920,13 +38256,19 @@ PyObject* BeamPyProductUtils_copyTiePointGrids(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "OO:copyTiePointGrids", &sourceProductPyObj, &targetProductPyObj)) {
         return NULL;
     }
-    sourceProductJObj = BPy_ToJObjectT(sourceProductPyObj, BPy_Product_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        sourceProductJObj = BPy_ToJObjectT(sourceProductPyObj, BPy_Product_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
-    targetProductJObj = BPy_ToJObjectT(targetProductPyObj, BPy_Product_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        targetProductJObj = BPy_ToJObjectT(targetProductPyObj, BPy_Product_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallStaticVoidMethod(jenv, BPy_ProductUtils_Class, _method, sourceProductJObj, targetProductJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.util.ProductUtils#copyTiePointGrids(Lorg/esa/beam/framework/datamodel/Product;Lorg/esa/beam/framework/datamodel/Product;)V");
@@ -37936,7 +38278,6 @@ PyObject* BeamPyProductUtils_copyTiePointGrids(PyObject* self, PyObject* args)
 PyObject* BeamPyProductUtils_copyVectorData(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     PyObject* sourceProductPyObj = NULL;
     jobject sourceProductJObj = NULL;
     PyObject* targetProductPyObj = NULL;
@@ -37950,13 +38291,19 @@ PyObject* BeamPyProductUtils_copyVectorData(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "OO:copyVectorData", &sourceProductPyObj, &targetProductPyObj)) {
         return NULL;
     }
-    sourceProductJObj = BPy_ToJObjectT(sourceProductPyObj, BPy_Product_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        sourceProductJObj = BPy_ToJObjectT(sourceProductPyObj, BPy_Product_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
-    targetProductJObj = BPy_ToJObjectT(targetProductPyObj, BPy_Product_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        targetProductJObj = BPy_ToJObjectT(targetProductPyObj, BPy_Product_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallStaticVoidMethod(jenv, BPy_ProductUtils_Class, _method, sourceProductJObj, targetProductJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.util.ProductUtils#copyVectorData(Lorg/esa/beam/framework/datamodel/Product;Lorg/esa/beam/framework/datamodel/Product;)V");
@@ -37966,7 +38313,6 @@ PyObject* BeamPyProductUtils_copyVectorData(PyObject* self, PyObject* args)
 PyObject* BeamPyProductUtils_canGetPixelPos1(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     PyObject* productPyObj = NULL;
     jobject productJObj = NULL;
     jboolean _result = (jboolean) 0;
@@ -37979,9 +38325,12 @@ PyObject* BeamPyProductUtils_canGetPixelPos1(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:canGetPixelPos", &productPyObj)) {
         return NULL;
     }
-    productJObj = BPy_ToJObjectT(productPyObj, BPy_Product_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        productJObj = BPy_ToJObjectT(productPyObj, BPy_Product_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _result = (*jenv)->CallStaticBooleanMethod(jenv, BPy_ProductUtils_Class, _method, productJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.util.ProductUtils#canGetPixelPos(Lorg/esa/beam/framework/datamodel/Product;)Z");
@@ -37991,7 +38340,6 @@ PyObject* BeamPyProductUtils_canGetPixelPos1(PyObject* self, PyObject* args)
 PyObject* BeamPyProductUtils_canGetPixelPos2(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     PyObject* rasterPyObj = NULL;
     jobject rasterJObj = NULL;
     jboolean _result = (jboolean) 0;
@@ -38004,9 +38352,12 @@ PyObject* BeamPyProductUtils_canGetPixelPos2(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:canGetPixelPos", &rasterPyObj)) {
         return NULL;
     }
-    rasterJObj = BPy_ToJObjectT(rasterPyObj, BPy_RasterDataNode_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        rasterJObj = BPy_ToJObjectT(rasterPyObj, BPy_RasterDataNode_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _result = (*jenv)->CallStaticBooleanMethod(jenv, BPy_ProductUtils_Class, _method, rasterJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.util.ProductUtils#canGetPixelPos(Lorg/esa/beam/framework/datamodel/RasterDataNode;)Z");
@@ -38016,7 +38367,6 @@ PyObject* BeamPyProductUtils_canGetPixelPos2(PyObject* self, PyObject* args)
 PyObject* BeamPyProductUtils_createDensityPlotImage(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     PyObject* raster1PyObj = NULL;
     jobject raster1JObj = NULL;
     jfloat sampleMin1 = (jfloat) 0;
@@ -38046,29 +38396,47 @@ PyObject* BeamPyProductUtils_createDensityPlotImage(PyObject* self, PyObject* ar
     if (!PyArg_ParseTuple(args, "OffOffOiiOOO:createDensityPlotImage", &raster1PyObj, &sampleMin1, &sampleMax1, &raster2PyObj, &sampleMin2, &sampleMax2, &roiMaskPyObj, &width, &height, &backgroundPyObj, &imagePyObj, &pmPyObj)) {
         return NULL;
     }
-    raster1JObj = BPy_ToJObjectT(raster1PyObj, BPy_RasterDataNode_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        raster1JObj = BPy_ToJObjectT(raster1PyObj, BPy_RasterDataNode_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
-    raster2JObj = BPy_ToJObjectT(raster2PyObj, BPy_RasterDataNode_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        raster2JObj = BPy_ToJObjectT(raster2PyObj, BPy_RasterDataNode_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
-    roiMaskJObj = BPy_ToJObjectT(roiMaskPyObj, BPy_Mask_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        roiMaskJObj = BPy_ToJObjectT(roiMaskPyObj, BPy_Mask_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
-    backgroundJObj = BPy_ToJObjectT(backgroundPyObj, BPy_Color_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        backgroundJObj = BPy_ToJObjectT(backgroundPyObj, BPy_Color_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
-    imageJObj = BPy_ToJObjectT(imagePyObj, BPy_BufferedImage_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        imageJObj = BPy_ToJObjectT(imagePyObj, BPy_BufferedImage_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
-    pmJObj = BPy_ToJObjectT(pmPyObj, BPy_ProgressMonitor_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        pmJObj = BPy_ToJObjectT(pmPyObj, BPy_ProgressMonitor_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, BPy_ProductUtils_Class, _method, raster1JObj, sampleMin1, sampleMax1, raster2JObj, sampleMin2, sampleMax2, roiMaskJObj, width, height, backgroundJObj, imageJObj, pmJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.util.ProductUtils#createDensityPlotImage(Lorg/esa/beam/framework/datamodel/RasterDataNode;FFLorg/esa/beam/framework/datamodel/RasterDataNode;FFLorg/esa/beam/framework/datamodel/Mask;IILjava/awt/Color;Ljava/awt/image/BufferedImage;Lcom/bc/ceres/core/ProgressMonitor;)Ljava/awt/image/BufferedImage;");
@@ -38080,7 +38448,6 @@ PyObject* BeamPyProductUtils_createDensityPlotImage(PyObject* self, PyObject* ar
 PyObject* BeamPyProductUtils_overlayMasks(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     PyObject* rasterPyObj = NULL;
     jobject rasterJObj = NULL;
     PyObject* overlayBImPyObj = NULL;
@@ -38098,17 +38465,26 @@ PyObject* BeamPyProductUtils_overlayMasks(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "OOO:overlayMasks", &rasterPyObj, &overlayBImPyObj, &pmPyObj)) {
         return NULL;
     }
-    rasterJObj = BPy_ToJObjectT(rasterPyObj, BPy_RasterDataNode_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        rasterJObj = BPy_ToJObjectT(rasterPyObj, BPy_RasterDataNode_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
-    overlayBImJObj = BPy_ToJObjectT(overlayBImPyObj, BPy_BufferedImage_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        overlayBImJObj = BPy_ToJObjectT(overlayBImPyObj, BPy_BufferedImage_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
-    pmJObj = BPy_ToJObjectT(pmPyObj, BPy_ProgressMonitor_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        pmJObj = BPy_ToJObjectT(pmPyObj, BPy_ProgressMonitor_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, BPy_ProductUtils_Class, _method, rasterJObj, overlayBImJObj, pmJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.util.ProductUtils#overlayMasks(Lorg/esa/beam/framework/datamodel/RasterDataNode;Ljava/awt/image/BufferedImage;Lcom/bc/ceres/core/ProgressMonitor;)Ljava/awt/image/BufferedImage;");
@@ -38120,7 +38496,6 @@ PyObject* BeamPyProductUtils_overlayMasks(PyObject* self, PyObject* args)
 PyObject* BeamPyProductUtils_getCenterGeoPos(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     PyObject* productPyObj = NULL;
     jobject productJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -38134,9 +38509,12 @@ PyObject* BeamPyProductUtils_getCenterGeoPos(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:getCenterGeoPos", &productPyObj)) {
         return NULL;
     }
-    productJObj = BPy_ToJObjectT(productPyObj, BPy_Product_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        productJObj = BPy_ToJObjectT(productPyObj, BPy_Product_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, BPy_ProductUtils_Class, _method, productJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.util.ProductUtils#getCenterGeoPos(Lorg/esa/beam/framework/datamodel/Product;)Lorg/esa/beam/framework/datamodel/GeoPos;");
@@ -38148,7 +38526,6 @@ PyObject* BeamPyProductUtils_getCenterGeoPos(PyObject* self, PyObject* args)
 PyObject* BeamPyProductUtils_normalizeGeoPolygon(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     PyObject* polygonPyObj = NULL;
     jarray polygonJObj = NULL;
     jint _result = (jint) 0;
@@ -38161,9 +38538,12 @@ PyObject* BeamPyProductUtils_normalizeGeoPolygon(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:normalizeGeoPolygon", &polygonPyObj)) {
         return NULL;
     }
-    polygonJObj = BPy_ToJObjectArrayT(polygonPyObj, BPy_GeoPos_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        polygonJObj = BPy_ToJObjectArrayT(polygonPyObj, BPy_GeoPos_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _result = (*jenv)->CallStaticIntMethod(jenv, BPy_ProductUtils_Class, _method, polygonJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.util.ProductUtils#normalizeGeoPolygon([Lorg/esa/beam/framework/datamodel/GeoPos;)I");
@@ -38174,7 +38554,6 @@ PyObject* BeamPyProductUtils_normalizeGeoPolygon(PyObject* self, PyObject* args)
 PyObject* BeamPyProductUtils_normalizeGeoPolygon_old(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     PyObject* polygonPyObj = NULL;
     jarray polygonJObj = NULL;
     jint _result = (jint) 0;
@@ -38187,9 +38566,12 @@ PyObject* BeamPyProductUtils_normalizeGeoPolygon_old(PyObject* self, PyObject* a
     if (!PyArg_ParseTuple(args, "O:normalizeGeoPolygon_old", &polygonPyObj)) {
         return NULL;
     }
-    polygonJObj = BPy_ToJObjectArrayT(polygonPyObj, BPy_GeoPos_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        polygonJObj = BPy_ToJObjectArrayT(polygonPyObj, BPy_GeoPos_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _result = (*jenv)->CallStaticIntMethod(jenv, BPy_ProductUtils_Class, _method, polygonJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.util.ProductUtils#normalizeGeoPolygon_old([Lorg/esa/beam/framework/datamodel/GeoPos;)I");
@@ -38200,7 +38582,6 @@ PyObject* BeamPyProductUtils_normalizeGeoPolygon_old(PyObject* self, PyObject* a
 PyObject* BeamPyProductUtils_denormalizeGeoPolygon(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     PyObject* polygonPyObj = NULL;
     jarray polygonJObj = NULL;
     if (!BPy_InitApi()) {
@@ -38212,9 +38593,12 @@ PyObject* BeamPyProductUtils_denormalizeGeoPolygon(PyObject* self, PyObject* arg
     if (!PyArg_ParseTuple(args, "O:denormalizeGeoPolygon", &polygonPyObj)) {
         return NULL;
     }
-    polygonJObj = BPy_ToJObjectArrayT(polygonPyObj, BPy_GeoPos_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        polygonJObj = BPy_ToJObjectArrayT(polygonPyObj, BPy_GeoPos_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallStaticVoidMethod(jenv, BPy_ProductUtils_Class, _method, polygonJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.util.ProductUtils#denormalizeGeoPolygon([Lorg/esa/beam/framework/datamodel/GeoPos;)V");
@@ -38225,7 +38609,6 @@ PyObject* BeamPyProductUtils_denormalizeGeoPolygon(PyObject* self, PyObject* arg
 PyObject* BeamPyProductUtils_denormalizeGeoPos(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     PyObject* geoPosPyObj = NULL;
     jobject geoPosJObj = NULL;
     if (!BPy_InitApi()) {
@@ -38237,9 +38620,12 @@ PyObject* BeamPyProductUtils_denormalizeGeoPos(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:denormalizeGeoPos", &geoPosPyObj)) {
         return NULL;
     }
-    geoPosJObj = BPy_ToJObjectT(geoPosPyObj, BPy_GeoPos_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        geoPosJObj = BPy_ToJObjectT(geoPosPyObj, BPy_GeoPos_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallStaticVoidMethod(jenv, BPy_ProductUtils_Class, _method, geoPosJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.util.ProductUtils#denormalizeGeoPos(Lorg/esa/beam/framework/datamodel/GeoPos;)V");
@@ -38249,7 +38635,6 @@ PyObject* BeamPyProductUtils_denormalizeGeoPos(PyObject* self, PyObject* args)
 PyObject* BeamPyProductUtils_denormalizeGeoPos_old(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     PyObject* geoPosPyObj = NULL;
     jobject geoPosJObj = NULL;
     if (!BPy_InitApi()) {
@@ -38261,9 +38646,12 @@ PyObject* BeamPyProductUtils_denormalizeGeoPos_old(PyObject* self, PyObject* arg
     if (!PyArg_ParseTuple(args, "O:denormalizeGeoPos_old", &geoPosPyObj)) {
         return NULL;
     }
-    geoPosJObj = BPy_ToJObjectT(geoPosPyObj, BPy_GeoPos_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        geoPosJObj = BPy_ToJObjectT(geoPosPyObj, BPy_GeoPos_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallStaticVoidMethod(jenv, BPy_ProductUtils_Class, _method, geoPosJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.util.ProductUtils#denormalizeGeoPos_old(Lorg/esa/beam/framework/datamodel/GeoPos;)V");
@@ -38273,7 +38661,6 @@ PyObject* BeamPyProductUtils_denormalizeGeoPos_old(PyObject* self, PyObject* arg
 PyObject* BeamPyProductUtils_getRotationDirection(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     PyObject* polygonPyObj = NULL;
     jarray polygonJObj = NULL;
     jint _result = (jint) 0;
@@ -38286,9 +38673,12 @@ PyObject* BeamPyProductUtils_getRotationDirection(PyObject* self, PyObject* args
     if (!PyArg_ParseTuple(args, "O:getRotationDirection", &polygonPyObj)) {
         return NULL;
     }
-    polygonJObj = BPy_ToJObjectArrayT(polygonPyObj, BPy_GeoPos_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        polygonJObj = BPy_ToJObjectArrayT(polygonPyObj, BPy_GeoPos_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _result = (*jenv)->CallStaticIntMethod(jenv, BPy_ProductUtils_Class, _method, polygonJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.util.ProductUtils#getRotationDirection([Lorg/esa/beam/framework/datamodel/GeoPos;)I");
@@ -38299,7 +38689,6 @@ PyObject* BeamPyProductUtils_getRotationDirection(PyObject* self, PyObject* args
 PyObject* BeamPyProductUtils_getAngleSum(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     PyObject* polygonPyObj = NULL;
     jarray polygonJObj = NULL;
     jdouble _result = (jdouble) 0;
@@ -38312,9 +38701,12 @@ PyObject* BeamPyProductUtils_getAngleSum(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:getAngleSum", &polygonPyObj)) {
         return NULL;
     }
-    polygonJObj = BPy_ToJObjectArrayT(polygonPyObj, BPy_GeoPos_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        polygonJObj = BPy_ToJObjectArrayT(polygonPyObj, BPy_GeoPos_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _result = (*jenv)->CallStaticDoubleMethod(jenv, BPy_ProductUtils_Class, _method, polygonJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.util.ProductUtils#getAngleSum([Lorg/esa/beam/framework/datamodel/GeoPos;)D");
@@ -38325,7 +38717,6 @@ PyObject* BeamPyProductUtils_getAngleSum(PyObject* self, PyObject* args)
 PyObject* BeamPyProductUtils_convertToPixelPath(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     PyObject* geoPathPyObj = NULL;
     jobject geoPathJObj = NULL;
     PyObject* geoCodingPyObj = NULL;
@@ -38341,13 +38732,19 @@ PyObject* BeamPyProductUtils_convertToPixelPath(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "OO:convertToPixelPath", &geoPathPyObj, &geoCodingPyObj)) {
         return NULL;
     }
-    geoPathJObj = BPy_ToJObjectT(geoPathPyObj, BPy_GeneralPath_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        geoPathJObj = BPy_ToJObjectT(geoPathPyObj, BPy_GeneralPath_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
-    geoCodingJObj = BPy_ToJObjectT(geoCodingPyObj, BPy_GeoCoding_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        geoCodingJObj = BPy_ToJObjectT(geoCodingPyObj, BPy_GeoCoding_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, BPy_ProductUtils_Class, _method, geoPathJObj, geoCodingJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.util.ProductUtils#convertToPixelPath(Ljava/awt/geom/GeneralPath;Lorg/esa/beam/framework/datamodel/GeoCoding;)Ljava/awt/geom/GeneralPath;");
@@ -38359,7 +38756,6 @@ PyObject* BeamPyProductUtils_convertToPixelPath(PyObject* self, PyObject* args)
 PyObject* BeamPyProductUtils_convertToGeoPath(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     PyObject* shapePyObj = NULL;
     jobject shapeJObj = NULL;
     PyObject* geoCodingPyObj = NULL;
@@ -38375,13 +38771,19 @@ PyObject* BeamPyProductUtils_convertToGeoPath(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "OO:convertToGeoPath", &shapePyObj, &geoCodingPyObj)) {
         return NULL;
     }
-    shapeJObj = BPy_ToJObjectT(shapePyObj, BPy_Shape_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        shapeJObj = BPy_ToJObjectT(shapePyObj, BPy_Shape_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
-    geoCodingJObj = BPy_ToJObjectT(geoCodingPyObj, BPy_GeoCoding_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        geoCodingJObj = BPy_ToJObjectT(geoCodingPyObj, BPy_GeoCoding_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, BPy_ProductUtils_Class, _method, shapeJObj, geoCodingJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.util.ProductUtils#convertToGeoPath(Ljava/awt/Shape;Lorg/esa/beam/framework/datamodel/GeoCoding;)Ljava/awt/geom/GeneralPath;");
@@ -38393,7 +38795,6 @@ PyObject* BeamPyProductUtils_convertToGeoPath(PyObject* self, PyObject* args)
 PyObject* BeamPyProductUtils_copyMetadata2(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     PyObject* sourcePyObj = NULL;
     jobject sourceJObj = NULL;
     PyObject* targetPyObj = NULL;
@@ -38407,13 +38808,19 @@ PyObject* BeamPyProductUtils_copyMetadata2(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "OO:copyMetadata", &sourcePyObj, &targetPyObj)) {
         return NULL;
     }
-    sourceJObj = BPy_ToJObjectT(sourcePyObj, BPy_Product_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        sourceJObj = BPy_ToJObjectT(sourcePyObj, BPy_Product_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
-    targetJObj = BPy_ToJObjectT(targetPyObj, BPy_Product_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        targetJObj = BPy_ToJObjectT(targetPyObj, BPy_Product_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallStaticVoidMethod(jenv, BPy_ProductUtils_Class, _method, sourceJObj, targetJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.util.ProductUtils#copyMetadata(Lorg/esa/beam/framework/datamodel/Product;Lorg/esa/beam/framework/datamodel/Product;)V");
@@ -38423,7 +38830,6 @@ PyObject* BeamPyProductUtils_copyMetadata2(PyObject* self, PyObject* args)
 PyObject* BeamPyProductUtils_copyMetadata1(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     PyObject* sourcePyObj = NULL;
     jobject sourceJObj = NULL;
     PyObject* targetPyObj = NULL;
@@ -38437,13 +38843,19 @@ PyObject* BeamPyProductUtils_copyMetadata1(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "OO:copyMetadata", &sourcePyObj, &targetPyObj)) {
         return NULL;
     }
-    sourceJObj = BPy_ToJObjectT(sourcePyObj, BPy_MetadataElement_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        sourceJObj = BPy_ToJObjectT(sourcePyObj, BPy_MetadataElement_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
-    targetJObj = BPy_ToJObjectT(targetPyObj, BPy_MetadataElement_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        targetJObj = BPy_ToJObjectT(targetPyObj, BPy_MetadataElement_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallStaticVoidMethod(jenv, BPy_ProductUtils_Class, _method, sourceJObj, targetJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.util.ProductUtils#copyMetadata(Lorg/esa/beam/framework/datamodel/MetadataElement;Lorg/esa/beam/framework/datamodel/MetadataElement;)V");
@@ -38453,7 +38865,6 @@ PyObject* BeamPyProductUtils_copyMetadata1(PyObject* self, PyObject* args)
 PyObject* BeamPyProductUtils_copyPreferredTileSize(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     PyObject* sourceProductPyObj = NULL;
     jobject sourceProductJObj = NULL;
     PyObject* targetProductPyObj = NULL;
@@ -38467,13 +38878,19 @@ PyObject* BeamPyProductUtils_copyPreferredTileSize(PyObject* self, PyObject* arg
     if (!PyArg_ParseTuple(args, "OO:copyPreferredTileSize", &sourceProductPyObj, &targetProductPyObj)) {
         return NULL;
     }
-    sourceProductJObj = BPy_ToJObjectT(sourceProductPyObj, BPy_Product_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        sourceProductJObj = BPy_ToJObjectT(sourceProductPyObj, BPy_Product_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
-    targetProductJObj = BPy_ToJObjectT(targetProductPyObj, BPy_Product_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        targetProductJObj = BPy_ToJObjectT(targetProductPyObj, BPy_Product_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallStaticVoidMethod(jenv, BPy_ProductUtils_Class, _method, sourceProductJObj, targetProductJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.util.ProductUtils#copyPreferredTileSize(Lorg/esa/beam/framework/datamodel/Product;Lorg/esa/beam/framework/datamodel/Product;)V");
@@ -38483,7 +38900,6 @@ PyObject* BeamPyProductUtils_copyPreferredTileSize(PyObject* self, PyObject* arg
 PyObject* BeamPyProductUtils_createGeoTIFFMetadata2(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     PyObject* productPyObj = NULL;
     jobject productJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -38497,9 +38913,12 @@ PyObject* BeamPyProductUtils_createGeoTIFFMetadata2(PyObject* self, PyObject* ar
     if (!PyArg_ParseTuple(args, "O:createGeoTIFFMetadata", &productPyObj)) {
         return NULL;
     }
-    productJObj = BPy_ToJObjectT(productPyObj, BPy_Product_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        productJObj = BPy_ToJObjectT(productPyObj, BPy_Product_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, BPy_ProductUtils_Class, _method, productJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.util.ProductUtils#createGeoTIFFMetadata(Lorg/esa/beam/framework/datamodel/Product;)Lorg/esa/beam/util/geotiff/GeoTIFFMetadata;");
@@ -38511,7 +38930,6 @@ PyObject* BeamPyProductUtils_createGeoTIFFMetadata2(PyObject* self, PyObject* ar
 PyObject* BeamPyProductUtils_createGeoTIFFMetadata1(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     PyObject* geoCodingPyObj = NULL;
     jobject geoCodingJObj = NULL;
     jint width = (jint) 0;
@@ -38527,9 +38945,12 @@ PyObject* BeamPyProductUtils_createGeoTIFFMetadata1(PyObject* self, PyObject* ar
     if (!PyArg_ParseTuple(args, "Oii:createGeoTIFFMetadata", &geoCodingPyObj, &width, &height)) {
         return NULL;
     }
-    geoCodingJObj = BPy_ToJObjectT(geoCodingPyObj, BPy_GeoCoding_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        geoCodingJObj = BPy_ToJObjectT(geoCodingPyObj, BPy_GeoCoding_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, BPy_ProductUtils_Class, _method, geoCodingJObj, width, height);
     CHECK_JVM_EXCEPTION("org.esa.beam.util.ProductUtils#createGeoTIFFMetadata(Lorg/esa/beam/framework/datamodel/GeoCoding;II)Lorg/esa/beam/util/geotiff/GeoTIFFMetadata;");
@@ -38541,7 +38962,6 @@ PyObject* BeamPyProductUtils_createGeoTIFFMetadata1(PyObject* self, PyObject* ar
 PyObject* BeamPyProductUtils_areaToPath(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     PyObject* negativeAreaPyObj = NULL;
     jobject negativeAreaJObj = NULL;
     jdouble deltaX = (jdouble) 0;
@@ -38556,9 +38976,12 @@ PyObject* BeamPyProductUtils_areaToPath(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "Od:areaToPath", &negativeAreaPyObj, &deltaX)) {
         return NULL;
     }
-    negativeAreaJObj = BPy_ToJObjectT(negativeAreaPyObj, BPy_Area_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        negativeAreaJObj = BPy_ToJObjectT(negativeAreaPyObj, BPy_Area_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, BPy_ProductUtils_Class, _method, negativeAreaJObj, deltaX);
     CHECK_JVM_EXCEPTION("org.esa.beam.util.ProductUtils#areaToPath(Ljava/awt/geom/Area;D)Ljava/awt/geom/GeneralPath;");
@@ -38570,7 +38993,6 @@ PyObject* BeamPyProductUtils_areaToPath(PyObject* self, PyObject* args)
 PyObject* BeamPyProductUtils_addElementToHistory(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     PyObject* productPyObj = NULL;
     jobject productJObj = NULL;
     PyObject* elemPyObj = NULL;
@@ -38584,13 +39006,19 @@ PyObject* BeamPyProductUtils_addElementToHistory(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "OO:addElementToHistory", &productPyObj, &elemPyObj)) {
         return NULL;
     }
-    productJObj = BPy_ToJObjectT(productPyObj, BPy_Product_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        productJObj = BPy_ToJObjectT(productPyObj, BPy_Product_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
-    elemJObj = BPy_ToJObjectT(elemPyObj, BPy_MetadataElement_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        elemJObj = BPy_ToJObjectT(elemPyObj, BPy_MetadataElement_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallStaticVoidMethod(jenv, BPy_ProductUtils_Class, _method, productJObj, elemJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.util.ProductUtils#addElementToHistory(Lorg/esa/beam/framework/datamodel/Product;Lorg/esa/beam/framework/datamodel/MetadataElement;)V");
@@ -38600,7 +39028,6 @@ PyObject* BeamPyProductUtils_addElementToHistory(PyObject* self, PyObject* args)
 PyObject* BeamPyProductUtils_removeInvalidExpressions(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     PyObject* productPyObj = NULL;
     jobject productJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -38614,9 +39041,12 @@ PyObject* BeamPyProductUtils_removeInvalidExpressions(PyObject* self, PyObject* 
     if (!PyArg_ParseTuple(args, "O:removeInvalidExpressions", &productPyObj)) {
         return NULL;
     }
-    productJObj = BPy_ToJObjectT(productPyObj, BPy_Product_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        productJObj = BPy_ToJObjectT(productPyObj, BPy_Product_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, BPy_ProductUtils_Class, _method, productJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.util.ProductUtils#removeInvalidExpressions(Lorg/esa/beam/framework/datamodel/Product;)[Ljava/lang/String;");
@@ -38628,7 +39058,6 @@ PyObject* BeamPyProductUtils_removeInvalidExpressions(PyObject* self, PyObject* 
 PyObject* BeamPyProductUtils_findSuitableQuicklookBandName(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     PyObject* productPyObj = NULL;
     jobject productJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -38642,9 +39071,12 @@ PyObject* BeamPyProductUtils_findSuitableQuicklookBandName(PyObject* self, PyObj
     if (!PyArg_ParseTuple(args, "O:findSuitableQuicklookBandName", &productPyObj)) {
         return NULL;
     }
-    productJObj = BPy_ToJObjectT(productPyObj, BPy_Product_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        productJObj = BPy_ToJObjectT(productPyObj, BPy_Product_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, BPy_ProductUtils_Class, _method, productJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.util.ProductUtils#findSuitableQuicklookBandName(Lorg/esa/beam/framework/datamodel/Product;)Ljava/lang/String;");
@@ -38656,7 +39088,6 @@ PyObject* BeamPyProductUtils_findSuitableQuicklookBandName(PyObject* self, PyObj
 PyObject* BeamPyProductUtils_computeSourcePixelCoordinates(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     PyObject* sourceGeoCodingPyObj = NULL;
     jobject sourceGeoCodingJObj = NULL;
     jint sourceWidth = (jint) 0;
@@ -38676,17 +39107,26 @@ PyObject* BeamPyProductUtils_computeSourcePixelCoordinates(PyObject* self, PyObj
     if (!PyArg_ParseTuple(args, "OiiOO:computeSourcePixelCoordinates", &sourceGeoCodingPyObj, &sourceWidth, &sourceHeight, &destGeoCodingPyObj, &destAreaPyObj)) {
         return NULL;
     }
-    sourceGeoCodingJObj = BPy_ToJObjectT(sourceGeoCodingPyObj, BPy_GeoCoding_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        sourceGeoCodingJObj = BPy_ToJObjectT(sourceGeoCodingPyObj, BPy_GeoCoding_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
-    destGeoCodingJObj = BPy_ToJObjectT(destGeoCodingPyObj, BPy_GeoCoding_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        destGeoCodingJObj = BPy_ToJObjectT(destGeoCodingPyObj, BPy_GeoCoding_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
-    destAreaJObj = BPy_ToJObjectT(destAreaPyObj, BPy_Rectangle_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        destAreaJObj = BPy_ToJObjectT(destAreaPyObj, BPy_Rectangle_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, BPy_ProductUtils_Class, _method, sourceGeoCodingJObj, sourceWidth, sourceHeight, destGeoCodingJObj, destAreaJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.util.ProductUtils#computeSourcePixelCoordinates(Lorg/esa/beam/framework/datamodel/GeoCoding;IILorg/esa/beam/framework/datamodel/GeoCoding;Ljava/awt/Rectangle;)[Lorg/esa/beam/framework/datamodel/PixelPos;");
@@ -38698,7 +39138,6 @@ PyObject* BeamPyProductUtils_computeSourcePixelCoordinates(PyObject* self, PyObj
 PyObject* BeamPyProductUtils_computeMinMaxY(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     PyObject* pixelPositionsPyObj = NULL;
     jarray pixelPositionsJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -38712,9 +39151,12 @@ PyObject* BeamPyProductUtils_computeMinMaxY(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:computeMinMaxY", &pixelPositionsPyObj)) {
         return NULL;
     }
-    pixelPositionsJObj = BPy_ToJObjectArrayT(pixelPositionsPyObj, BPy_PixelPos_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        pixelPositionsJObj = BPy_ToJObjectArrayT(pixelPositionsPyObj, BPy_PixelPos_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, BPy_ProductUtils_Class, _method, pixelPositionsJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.util.ProductUtils#computeMinMaxY([Lorg/esa/beam/framework/datamodel/PixelPos;)[F");
@@ -38727,7 +39169,6 @@ PyObject* BeamPyProductUtils_computeMinMaxY(PyObject* self, PyObject* args)
 PyObject* BeamPyProductUtils_copyBandsForGeomTransform1(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     PyObject* sourceProductPyObj = NULL;
     jobject sourceProductJObj = NULL;
     PyObject* targetProductPyObj = NULL;
@@ -38744,17 +39185,26 @@ PyObject* BeamPyProductUtils_copyBandsForGeomTransform1(PyObject* self, PyObject
     if (!PyArg_ParseTuple(args, "OOdO:copyBandsForGeomTransform", &sourceProductPyObj, &targetProductPyObj, &defaultNoDataValue, &addedRasterDataNodesPyObj)) {
         return NULL;
     }
-    sourceProductJObj = BPy_ToJObjectT(sourceProductPyObj, BPy_Product_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        sourceProductJObj = BPy_ToJObjectT(sourceProductPyObj, BPy_Product_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
-    targetProductJObj = BPy_ToJObjectT(targetProductPyObj, BPy_Product_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        targetProductJObj = BPy_ToJObjectT(targetProductPyObj, BPy_Product_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
-    addedRasterDataNodesJObj = BPy_ToJObjectT(addedRasterDataNodesPyObj, BPy_Map_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        addedRasterDataNodesJObj = BPy_ToJObjectT(addedRasterDataNodesPyObj, BPy_Map_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallStaticVoidMethod(jenv, BPy_ProductUtils_Class, _method, sourceProductJObj, targetProductJObj, defaultNoDataValue, addedRasterDataNodesJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.util.ProductUtils#copyBandsForGeomTransform(Lorg/esa/beam/framework/datamodel/Product;Lorg/esa/beam/framework/datamodel/Product;DLjava/util/Map;)V");
@@ -38764,7 +39214,6 @@ PyObject* BeamPyProductUtils_copyBandsForGeomTransform1(PyObject* self, PyObject
 PyObject* BeamPyProductUtils_copyBandsForGeomTransform2(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     PyObject* sourceProductPyObj = NULL;
     jobject sourceProductJObj = NULL;
     PyObject* targetProductPyObj = NULL;
@@ -38782,17 +39231,26 @@ PyObject* BeamPyProductUtils_copyBandsForGeomTransform2(PyObject* self, PyObject
     if (!PyArg_ParseTuple(args, "OObdO:copyBandsForGeomTransform", &sourceProductPyObj, &targetProductPyObj, &includeTiePointGrids, &defaultNoDataValue, &targetToSourceMapPyObj)) {
         return NULL;
     }
-    sourceProductJObj = BPy_ToJObjectT(sourceProductPyObj, BPy_Product_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        sourceProductJObj = BPy_ToJObjectT(sourceProductPyObj, BPy_Product_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
-    targetProductJObj = BPy_ToJObjectT(targetProductPyObj, BPy_Product_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        targetProductJObj = BPy_ToJObjectT(targetProductPyObj, BPy_Product_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
-    targetToSourceMapJObj = BPy_ToJObjectT(targetToSourceMapPyObj, BPy_Map_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        targetToSourceMapJObj = BPy_ToJObjectT(targetToSourceMapPyObj, BPy_Map_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallStaticVoidMethod(jenv, BPy_ProductUtils_Class, _method, sourceProductJObj, targetProductJObj, includeTiePointGrids, defaultNoDataValue, targetToSourceMapJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.util.ProductUtils#copyBandsForGeomTransform(Lorg/esa/beam/framework/datamodel/Product;Lorg/esa/beam/framework/datamodel/Product;ZDLjava/util/Map;)V");
@@ -38802,7 +39260,6 @@ PyObject* BeamPyProductUtils_copyBandsForGeomTransform2(PyObject* self, PyObject
 PyObject* BeamPyProductUtils_getScanLineTime(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     PyObject* productPyObj = NULL;
     jobject productJObj = NULL;
     jdouble y = (jdouble) 0;
@@ -38817,9 +39274,12 @@ PyObject* BeamPyProductUtils_getScanLineTime(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "Od:getScanLineTime", &productPyObj, &y)) {
         return NULL;
     }
-    productJObj = BPy_ToJObjectT(productPyObj, BPy_Product_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        productJObj = BPy_ToJObjectT(productPyObj, BPy_Product_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, BPy_ProductUtils_Class, _method, productJObj, y);
     CHECK_JVM_EXCEPTION("org.esa.beam.util.ProductUtils#getScanLineTime(Lorg/esa/beam/framework/datamodel/Product;D)Lorg/esa/beam/framework/datamodel/ProductData/UTC;");
@@ -38831,7 +39291,6 @@ PyObject* BeamPyProductUtils_getScanLineTime(PyObject* self, PyObject* args)
 PyObject* BeamPyProductUtils_getGeophysicalSampleDouble(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     PyObject* bandPyObj = NULL;
     jobject bandJObj = NULL;
     jint pixelX = (jint) 0;
@@ -38847,9 +39306,12 @@ PyObject* BeamPyProductUtils_getGeophysicalSampleDouble(PyObject* self, PyObject
     if (!PyArg_ParseTuple(args, "Oiii:getGeophysicalSampleDouble", &bandPyObj, &pixelX, &pixelY, &level)) {
         return NULL;
     }
-    bandJObj = BPy_ToJObjectT(bandPyObj, BPy_Band_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        bandJObj = BPy_ToJObjectT(bandPyObj, BPy_Band_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _result = (*jenv)->CallStaticDoubleMethod(jenv, BPy_ProductUtils_Class, _method, bandJObj, pixelX, pixelY, level);
     CHECK_JVM_EXCEPTION("org.esa.beam.util.ProductUtils#getGeophysicalSampleDouble(Lorg/esa/beam/framework/datamodel/Band;III)D");
@@ -38859,7 +39321,6 @@ PyObject* BeamPyProductUtils_getGeophysicalSampleDouble(PyObject* self, PyObject
 PyObject* BeamPyProductUtils_getGeophysicalSampleLong(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     PyObject* bandPyObj = NULL;
     jobject bandJObj = NULL;
     jint pixelX = (jint) 0;
@@ -38875,9 +39336,12 @@ PyObject* BeamPyProductUtils_getGeophysicalSampleLong(PyObject* self, PyObject* 
     if (!PyArg_ParseTuple(args, "Oiii:getGeophysicalSampleLong", &bandPyObj, &pixelX, &pixelY, &level)) {
         return NULL;
     }
-    bandJObj = BPy_ToJObjectT(bandPyObj, BPy_Band_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        bandJObj = BPy_ToJObjectT(bandPyObj, BPy_Band_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _result = (*jenv)->CallStaticLongMethod(jenv, BPy_ProductUtils_Class, _method, bandJObj, pixelX, pixelY, level);
     CHECK_JVM_EXCEPTION("org.esa.beam.util.ProductUtils#getGeophysicalSampleLong(Lorg/esa/beam/framework/datamodel/Band;III)J");
@@ -38887,7 +39351,6 @@ PyObject* BeamPyProductUtils_getGeophysicalSampleLong(PyObject* self, PyObject* 
 PyObject* BeamPyMetadataAttribute_newMetadataAttribute(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     const char* name = NULL;
     jstring nameJObj = NULL;
     PyObject* dataPyObj = NULL;
@@ -38905,9 +39368,12 @@ PyObject* BeamPyMetadataAttribute_newMetadataAttribute(PyObject* self, PyObject*
         return NULL;
     }
     nameJObj =(*jenv)->NewStringUTF(jenv, name);
-    dataJObj = BPy_ToJObjectT(dataPyObj, BPy_ProductData_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        dataJObj = BPy_ToJObjectT(dataPyObj, BPy_ProductData_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _resultJObj = (*jenv)->NewObject(jenv, BPy_MetadataAttribute_Class, _method, nameJObj, dataJObj, readOnly);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.MetadataAttribute#<init>(Ljava/lang/String;Lorg/esa/beam/framework/datamodel/ProductData;Z)V");
@@ -38920,7 +39386,6 @@ PyObject* BeamPyMetadataAttribute_newMetadataAttribute(PyObject* self, PyObject*
 PyObject* BeamPyMetadataAttribute_getParentElement(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -38946,7 +39411,6 @@ PyObject* BeamPyMetadataAttribute_getParentElement(PyObject* self, PyObject* arg
 PyObject* BeamPyMetadataAttribute_equals(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* objectPyObj = NULL;
@@ -38966,9 +39430,12 @@ PyObject* BeamPyMetadataAttribute_equals(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:equals", &objectPyObj)) {
         return NULL;
     }
-    objectJObj = BPy_ToJObjectT(objectPyObj, BPy_Object_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        objectJObj = BPy_ToJObjectT(objectPyObj, BPy_Object_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _result = (*jenv)->CallBooleanMethod(jenv, _thisJObj, _method, objectJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.MetadataAttribute#equals(Ljava/lang/Object;)Z");
@@ -38978,7 +39445,6 @@ PyObject* BeamPyMetadataAttribute_equals(PyObject* self, PyObject* args)
 PyObject* BeamPyMetadataAttribute_acceptVisitor(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* visitorPyObj = NULL;
@@ -38997,9 +39463,12 @@ PyObject* BeamPyMetadataAttribute_acceptVisitor(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:acceptVisitor", &visitorPyObj)) {
         return NULL;
     }
-    visitorJObj = BPy_ToJObjectT(visitorPyObj, BPy_ProductVisitor_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        visitorJObj = BPy_ToJObjectT(visitorPyObj, BPy_ProductVisitor_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, visitorJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.MetadataAttribute#acceptVisitor(Lorg/esa/beam/framework/datamodel/ProductVisitor;)V");
@@ -39009,7 +39478,6 @@ PyObject* BeamPyMetadataAttribute_acceptVisitor(PyObject* self, PyObject* args)
 PyObject* BeamPyMetadataAttribute_createDeepClone(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -39035,7 +39503,6 @@ PyObject* BeamPyMetadataAttribute_createDeepClone(PyObject* self, PyObject* args
 PyObject* BeamPyMetadataAttribute_getDataType(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint _result = (jint) 0;
@@ -39058,7 +39525,6 @@ PyObject* BeamPyMetadataAttribute_getDataType(PyObject* self, PyObject* args)
 PyObject* BeamPyMetadataAttribute_isFloatingPointType(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jboolean _result = (jboolean) 0;
@@ -39081,7 +39547,6 @@ PyObject* BeamPyMetadataAttribute_isFloatingPointType(PyObject* self, PyObject* 
 PyObject* BeamPyMetadataAttribute_getNumDataElems(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jlong _result = (jlong) 0;
@@ -39104,7 +39569,6 @@ PyObject* BeamPyMetadataAttribute_getNumDataElems(PyObject* self, PyObject* args
 PyObject* BeamPyMetadataAttribute_setData(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* dataPyObj = NULL;
@@ -39123,9 +39587,12 @@ PyObject* BeamPyMetadataAttribute_setData(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:setData", &dataPyObj)) {
         return NULL;
     }
-    dataJObj = BPy_ToJObjectT(dataPyObj, BPy_ProductData_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        dataJObj = BPy_ToJObjectT(dataPyObj, BPy_ProductData_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, dataJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.MetadataAttribute#setData(Lorg/esa/beam/framework/datamodel/ProductData;)V");
@@ -39135,7 +39602,6 @@ PyObject* BeamPyMetadataAttribute_setData(PyObject* self, PyObject* args)
 PyObject* BeamPyMetadataAttribute_getData(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -39161,7 +39627,6 @@ PyObject* BeamPyMetadataAttribute_getData(PyObject* self, PyObject* args)
 PyObject* BeamPyMetadataAttribute_setDataElems(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* elemsPyObj = NULL;
@@ -39180,9 +39645,12 @@ PyObject* BeamPyMetadataAttribute_setDataElems(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:setDataElems", &elemsPyObj)) {
         return NULL;
     }
-    elemsJObj = BPy_ToJObjectT(elemsPyObj, BPy_Object_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        elemsJObj = BPy_ToJObjectT(elemsPyObj, BPy_Object_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, elemsJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.MetadataAttribute#setDataElems(Ljava/lang/Object;)V");
@@ -39192,7 +39660,6 @@ PyObject* BeamPyMetadataAttribute_setDataElems(PyObject* self, PyObject* args)
 PyObject* BeamPyMetadataAttribute_getDataElems(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -39218,7 +39685,6 @@ PyObject* BeamPyMetadataAttribute_getDataElems(PyObject* self, PyObject* args)
 PyObject* BeamPyMetadataAttribute_getDataElemSize(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint _result = (jint) 0;
@@ -39241,7 +39707,6 @@ PyObject* BeamPyMetadataAttribute_getDataElemSize(PyObject* self, PyObject* args
 PyObject* BeamPyMetadataAttribute_setReadOnly(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jboolean readOnly = (jboolean) 0;
@@ -39267,7 +39732,6 @@ PyObject* BeamPyMetadataAttribute_setReadOnly(PyObject* self, PyObject* args)
 PyObject* BeamPyMetadataAttribute_isReadOnly(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jboolean _result = (jboolean) 0;
@@ -39290,7 +39754,6 @@ PyObject* BeamPyMetadataAttribute_isReadOnly(PyObject* self, PyObject* args)
 PyObject* BeamPyMetadataAttribute_setUnit(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     const char* unit = NULL;
@@ -39319,7 +39782,6 @@ PyObject* BeamPyMetadataAttribute_setUnit(PyObject* self, PyObject* args)
 PyObject* BeamPyMetadataAttribute_getUnit(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -39345,7 +39807,6 @@ PyObject* BeamPyMetadataAttribute_getUnit(PyObject* self, PyObject* args)
 PyObject* BeamPyMetadataAttribute_isSynthetic(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jboolean _result = (jboolean) 0;
@@ -39368,7 +39829,6 @@ PyObject* BeamPyMetadataAttribute_isSynthetic(PyObject* self, PyObject* args)
 PyObject* BeamPyMetadataAttribute_setSynthetic(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jboolean synthetic = (jboolean) 0;
@@ -39394,7 +39854,6 @@ PyObject* BeamPyMetadataAttribute_setSynthetic(PyObject* self, PyObject* args)
 PyObject* BeamPyMetadataAttribute_fireProductNodeDataChanged(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     if (!BPy_InitApi()) {
@@ -39416,7 +39875,6 @@ PyObject* BeamPyMetadataAttribute_fireProductNodeDataChanged(PyObject* self, PyO
 PyObject* BeamPyMetadataAttribute_dispose(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     if (!BPy_InitApi()) {
@@ -39438,7 +39896,6 @@ PyObject* BeamPyMetadataAttribute_dispose(PyObject* self, PyObject* args)
 PyObject* BeamPyMetadataAttribute_createCompatibleProductData(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jint numElems = (jint) 0;
@@ -39468,7 +39925,6 @@ PyObject* BeamPyMetadataAttribute_createCompatibleProductData(PyObject* self, Py
 PyObject* BeamPyMetadataAttribute_getOwner(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -39494,7 +39950,6 @@ PyObject* BeamPyMetadataAttribute_getOwner(PyObject* self, PyObject* args)
 PyObject* BeamPyMetadataAttribute_getName(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -39520,7 +39975,6 @@ PyObject* BeamPyMetadataAttribute_getName(PyObject* self, PyObject* args)
 PyObject* BeamPyMetadataAttribute_setName(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     const char* name = NULL;
@@ -39549,7 +40003,6 @@ PyObject* BeamPyMetadataAttribute_setName(PyObject* self, PyObject* args)
 PyObject* BeamPyMetadataAttribute_getDescription(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -39575,7 +40028,6 @@ PyObject* BeamPyMetadataAttribute_getDescription(PyObject* self, PyObject* args)
 PyObject* BeamPyMetadataAttribute_setDescription(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     const char* description = NULL;
@@ -39604,7 +40056,6 @@ PyObject* BeamPyMetadataAttribute_setDescription(PyObject* self, PyObject* args)
 PyObject* BeamPyMetadataAttribute_isModified(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jboolean _result = (jboolean) 0;
@@ -39627,7 +40078,6 @@ PyObject* BeamPyMetadataAttribute_isModified(PyObject* self, PyObject* args)
 PyObject* BeamPyMetadataAttribute_setModified(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     jboolean modified = (jboolean) 0;
@@ -39653,7 +40103,6 @@ PyObject* BeamPyMetadataAttribute_setModified(PyObject* self, PyObject* args)
 PyObject* BeamPyMetadataAttribute_toString(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -39679,7 +40128,6 @@ PyObject* BeamPyMetadataAttribute_toString(PyObject* self, PyObject* args)
 PyObject* BeamPyMetadataAttribute_isValidNodeName(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     const char* name = NULL;
     jstring nameJObj = NULL;
     jboolean _result = (jboolean) 0;
@@ -39702,7 +40150,6 @@ PyObject* BeamPyMetadataAttribute_isValidNodeName(PyObject* self, PyObject* args
 PyObject* BeamPyMetadataAttribute_getProduct(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -39728,7 +40175,6 @@ PyObject* BeamPyMetadataAttribute_getProduct(PyObject* self, PyObject* args)
 PyObject* BeamPyMetadataAttribute_getProductReader(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -39754,7 +40200,6 @@ PyObject* BeamPyMetadataAttribute_getProductReader(PyObject* self, PyObject* arg
 PyObject* BeamPyMetadataAttribute_getProductWriter(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -39780,7 +40225,6 @@ PyObject* BeamPyMetadataAttribute_getProductWriter(PyObject* self, PyObject* arg
 PyObject* BeamPyMetadataAttribute_getDisplayName(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -39806,7 +40250,6 @@ PyObject* BeamPyMetadataAttribute_getDisplayName(PyObject* self, PyObject* args)
 PyObject* BeamPyMetadataAttribute_getProductRefString(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
@@ -39832,7 +40275,6 @@ PyObject* BeamPyMetadataAttribute_getProductRefString(PyObject* self, PyObject* 
 PyObject* BeamPyMetadataAttribute_updateExpression(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     const char* oldExternalName = NULL;
@@ -39865,7 +40307,6 @@ PyObject* BeamPyMetadataAttribute_updateExpression(PyObject* self, PyObject* arg
 PyObject* BeamPyMetadataAttribute_removeFromFile(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* productWriterPyObj = NULL;
@@ -39884,9 +40325,12 @@ PyObject* BeamPyMetadataAttribute_removeFromFile(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:removeFromFile", &productWriterPyObj)) {
         return NULL;
     }
-    productWriterJObj = BPy_ToJObjectT(productWriterPyObj, BPy_ProductWriter_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        productWriterJObj = BPy_ToJObjectT(productWriterPyObj, BPy_ProductWriter_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, productWriterJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.MetadataAttribute#removeFromFile(Lorg/esa/beam/framework/dataio/ProductWriter;)V");
@@ -39896,7 +40340,6 @@ PyObject* BeamPyMetadataAttribute_removeFromFile(PyObject* self, PyObject* args)
 PyObject* BeamPyMetadataAttribute_getExtension(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
-    jboolean ok = 1;
     
     jobject _thisJObj = NULL;
     PyObject* arg0PyObj = NULL;
@@ -39917,9 +40360,12 @@ PyObject* BeamPyMetadataAttribute_getExtension(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "O:getExtension", &arg0PyObj)) {
         return NULL;
     }
-    arg0JObj = BPy_ToJObjectT(arg0PyObj, BPy_Class_Class, &ok);
-    if (!ok) {
-        return NULL;
+    {
+        jboolean ok = 1;
+        arg0JObj = BPy_ToJObjectT(arg0PyObj, BPy_Class_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
     }
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, arg0JObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.MetadataAttribute#getExtension(Ljava/lang/Class;)Ljava/lang/Object;");
