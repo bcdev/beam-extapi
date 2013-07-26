@@ -302,7 +302,7 @@ jobject BPy_NewJListFromSeq(PyObject* arg, jboolean* ok)
     return NULL;
 }
 
-#define MAX_JARRAY_SIZE ((1 << 31) - 1)
+#define MAX_JARRAY_SIZE  ((int)(((unsigned int)1 << 31) - 1))
 
 jobjectArray BPy_NewJObjectArrayFromSeqT(PyObject* arg, jclass compType, jboolean* ok)
 {
