@@ -17,9 +17,6 @@ static jmethodID BPy_BooleanConstr = NULL;
 static jclass BPy_CharacterClass = NULL;
 static jmethodID BPy_CharacterConstr = NULL;
 
-static jclass BPy_CharClass = NULL;
-static jmethodID BPy_CharConstr = NULL;
-
 static jclass BPy_ByteClass = NULL;
 static jmethodID BPy_ByteConstr = NULL;
 
@@ -47,12 +44,13 @@ static jclass  BPy_HashMapClass = NULL;
 static jmethodID BPy_HashMapConstr = NULL;
 static jmethodID BPy_HashMapPut = NULL;
 
+/*
 static jclass  BPy_ArrayListClass = NULL;
 static jmethodID BPy_ArrayListConstr = NULL;
 static jmethodID BPy_ArrayListSet = NULL;
 static jmethodID BPy_ArrayListGet = NULL;
 static jmethodID BPy_ArrayListSize = NULL;
-
+*/
 
 #define BPY_CHECK_JPYUTIL() if (!BPy_CheckJPyUtil()) { return BPy_ConvFailure(NULL, ok); } else {}
 
@@ -304,7 +302,7 @@ jobject BPy_NewJListFromSeq(PyObject* arg, jboolean* ok)
     return NULL;
 }
 
-#define MAX_SIZE ((1 << 31) - 1)
+#define MAX_JARRAY_SIZE ((1 << 31) - 1)
 
 jobjectArray BPy_NewJObjectArrayFromSeqT(PyObject* arg, jclass compType, jboolean* ok)
 {
@@ -315,7 +313,7 @@ jobjectArray BPy_NewJObjectArrayFromSeqT(PyObject* arg, jclass compType, jboolea
     BPY_CHECK_JPYUTIL()
 
     size = PySequence_Size(arg);
-    if (size < 0 || size >= MAX_SIZE) {
+    if (size < 0 || size >= MAX_JARRAY_SIZE) {
         char msg[256];
         sprintf(msg, "invalid sequence size: %d", size);
         return BPy_ConvFailure(msg, ok);
