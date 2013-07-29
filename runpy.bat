@@ -1,1 +1,0 @@
-python examples/beampy_ndvi.py %1

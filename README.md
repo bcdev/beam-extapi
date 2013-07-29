@@ -7,29 +7,47 @@ How to build the Python API
 ---------------------------
 
 
-Install `beampy` into your local Python installation:
+1. Install required tools
 
-    python setup.py install
+- gcc (Unix only)
+- Visual C++ 2010 (Windows only, if Express version is used then all libs must be 32-bit)
+- Git
+- Python 3.2 or higher (--> python3)
+- Python numpy
+- Oracle Java SDK 6
+- BEAM 4.11
+
+2. Build BEAM Python API code generator
+
+    git clone https://github.com/bcdev/beam-extapi.git
+    cd beam-extapi
+    git checkout -b beampy_directly_uses_jni
+
+3. Compile generated BEAM Python API code and install Python module
+
+Unix:
+    export BEAM_HOME=<your-beam-home>
+    export LD_LIBRARY_PATH=$BEAM_HOME/jre/lib/client:$LD_LIBRARY_PATH
+    export JDK_HOME=<your-jdk-home>
+    python3 setup.py install
+
+Windows:
+    set BEAM_HOME=<your-beam-home>
+    set PATH=%BEAM_HOME%/jre/lib/client;%PATH%
+    set JDK_HOME=<your-jdk-home>
+    python3 setup.py install
+
+4. Test
+
+    python3 examples/beampy_ndvi.py <some-meris-l1b-file>
+
+Then find a new data product 'ndvi.dim' in the current directory. Open in VISAT and check.
 
 
-The setup.py script depends on the JDK_HOME environment variable.
+For Windows builds only
+-----------------------
 
-For Windows installations only: This must be set to a 32-bit Java JDK (1.6 or 1.7).
-
-    SET JDK_HOME=%JDK32_HOME%
-
-
-To use the BEAM Python API you need to set BEAM_HOME environment variable.
-On Windows, the path needs to be modified, so the Java 32-bit JVM can be found by the Python interpreter.
-Example python scripts can be found in the examples directory. So, on Windows try something like:
-
-    SET BEAM_HOME=C:\Users\Norman\beam-4.11.1
-    SET PATH=%JDK_HOME%\jre\bin\server;%PATH%
-    cd examples
-    python beampy_ndvi.py <file>
-
-
-For Windows installations only: While running setup.py for package installations Python 2.7 (and 3.3, Norman) searches for an installed Visual Studio 2008.
+While running setup.py for package installations Python 2.7 (and 3.3, Norman) searches for an installed Visual Studio 2008.
 You can trick Python to use newer Visual Studio by setting correct path in VS90COMNTOOLS environment variable before calling setup.py.
 (from http://stackoverflow.com/questions/6551724/how-do-i-point-easy-install-to-vcvarsall-bat)
 
@@ -43,7 +61,7 @@ or with Visual Studio 2012 installed (this is not working; at least not with our
     SET VS90COMNTOOLS=%VS110COMNTOOLS%
 
 
-Build Windows native installer:
+This is how to build a Windows native installer:
 
     python setup.py bdist_wininst
 
