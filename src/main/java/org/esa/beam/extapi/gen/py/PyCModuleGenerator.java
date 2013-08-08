@@ -315,6 +315,8 @@ public class PyCModuleGenerator extends ModuleGenerator {
             }
         }
 */
+        writer.printf("    {\"newRectangle\", BPy_NewRectangle, METH_VARARGS, \"Creates a Java 'Rectangle' object from x, y, width, height (all integers)\"},\n");
+        writer.printf("    {\"newFile\", BPy_NewFile, METH_VARARGS, \"Creates a Java 'File' object from a given string.\"},\n");
         writer.printf("    {\"to_jobject\", BPy_to_jobject, METH_VARARGS, \"Test function which takes an argument, converts it into a Java object and returns a JObject\"},\n");
         writer.printf("    {NULL, NULL, 0, NULL} /*Sentinel*/\n");
         writer.printf("};\n");

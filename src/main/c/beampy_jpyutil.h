@@ -104,6 +104,16 @@ jarray BPy_ToJDoubleArray(PyObject* arg, jboolean* ok);
 */
 /**@}*/
 
+
+/*
+ * @defgroup g5 Factory functions.
+ * Factory functions for special Java objects used by the BEAM Java API, e.g. File, Rectangle
+ */
+/**@{*/
+PyObject* BPy_NewFile(PyObject* self, PyObject* args);
+PyObject* BPy_NewRectangle(PyObject* self, PyObject* args);
+/**@}*/
+
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

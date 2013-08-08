@@ -52,6 +52,14 @@ static jmethodID BPy_ArrayListGet = NULL;
 static jmethodID BPy_ArrayListSize = NULL;
 */
 
+
+static jclass  BPy_RectangleClass = NULL;
+static jmethodID BPy_RectangleConstr = NULL;
+
+static jclass  BPy_FileClass = NULL;
+static jmethodID BPy_FileConstr = NULL;
+
+
 #define BPY_CHECK_JPYUTIL() if (!BPy_CheckJPyUtil()) { return BPy_ConvFailure(NULL, ok); } else {}
 
 
@@ -777,6 +785,63 @@ PyObject* BPy_FromJObjectArray(jobjectArray arg)
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Factory functions for special Java objects used by the BEAM Java API, e.g. File, Rectangle
+
+PyObject* BPy_NewRectangle(PyObject* self, PyObject* args)
+{
+    jint x = 0;
+    jint y = 0;
+    jint width = 0;
+    jint height = 0;
+    jobject rectangleJObj = NULL;
+
+    if (!BPy_CheckJPyUtil()) {
+        return NULL;
+    }
+
+    if (!PyArg_ParseTuple(args, "iiii:newRectangle", &x, &y, &width, &height)) {
+        return NULL;
+    }
+
+    rectangleJObj = (*jenv)->NewObject(jenv, BPy_RectangleClass, BPy_RectangleConstr, x, y, width, height);
+    if (rectangleJObj == NULL) {
+        PyErr_SetString(PyExc_ValueError, "jenv->NewObject() failed");
+        return NULL;
+    }
+
+    return BPy_FromJObject(&JObject_Type, rectangleJObj);
+}
+
+PyObject* BPy_NewFile(PyObject* self, PyObject* args)
+{
+    const char* path = NULL;
+    jobject pathJObj = NULL;
+    jobject fileJObj = NULL;
+
+    if (!BPy_CheckJPyUtil()) {
+        return NULL;
+    }
+
+    if (!PyArg_ParseTuple(args, "s:newFile", &path)) {
+        return NULL;
+    }
+
+    pathJObj = (*jenv)->NewStringUTF(jenv, path);
+    if (pathJObj == NULL) {
+        PyErr_SetString(PyExc_ValueError, "jenv->NewStringUTF() failed");
+        return NULL;
+    }
+
+    fileJObj = (*jenv)->NewObject(jenv, BPy_FileClass, BPy_FileConstr, pathJObj);
+    if (fileJObj == NULL) {
+        PyErr_SetString(PyExc_ValueError, "jenv->NewObject() failed");
+        return NULL;
+    }
+
+    return BPy_FromJObject(&JObject_Type, fileJObj);
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Initialisation
 
 
@@ -870,6 +935,12 @@ jboolean BPy_InitJPyUtil()
         if (!BPy_InitJClass(&BPy_HashMapClass, "Ljava/util/HashMap;")) {
             return 0;
         }
+        if (!BPy_InitJClass(&BPy_FileClass, "Ljava/io/File;")) {
+            return 0;
+        }
+        if (!BPy_InitJClass(&BPy_RectangleClass, "Ljava/awt/Rectangle;")) {
+            return 0;
+        }
 
 
         if (!BPy_InitJMethod(&BPy_BooleanConstr, BPy_BooleanClass, "java.lang.Boolean", "<init>", "(Z)V", 0)) {
@@ -900,6 +971,12 @@ jboolean BPy_InitJPyUtil()
             return 0;
         }
         if (!BPy_InitJMethod(&BPy_HashMapPut, BPy_HashMapClass, "java.util.HashMap", "put", "(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;", 0)) {
+            return 0;
+        }
+        if (!BPy_InitJMethod(&BPy_FileConstr, BPy_FileClass, "java.io.File", "<init>", "(Ljava/lang/String;)V", 0)) {
+            return 0;
+        }
+        if (!BPy_InitJMethod(&BPy_RectangleConstr, BPy_RectangleClass, "java.awt.Rectangle", "<init>", "(IIII)V", 0)) {
             return 0;
         }
 
