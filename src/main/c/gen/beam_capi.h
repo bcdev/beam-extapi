@@ -16,6 +16,8 @@ typedef void* String;
 
 /* Wrapped API classes */
 typedef void* GeoCoding;
+typedef void* JtsGeometryConverter;
+typedef void* ProductSubsetDef;
 typedef void* ProductWriter;
 typedef void* GPF;
 typedef void* IndexCoding;
@@ -80,7 +82,6 @@ typedef void* ImageInputStream;
 typedef void* ImageOutputStream;
 typedef void* ROI;
 typedef void* ProductReaderPlugIn;
-typedef void* ProductSubsetDef;
 typedef void* ProductWriterPlugIn;
 typedef void* BitmaskDef;
 typedef void* ColorPaletteDef_Point;
@@ -142,6 +143,40 @@ CoordinateReferenceSystem GeoCoding_getImageCRS(GeoCoding _this);
 CoordinateReferenceSystem GeoCoding_getMapCRS(GeoCoding _this);
 CoordinateReferenceSystem GeoCoding_getGeoCRS(GeoCoding _this);
 MathTransform GeoCoding_getImageToMapTransform(GeoCoding _this);
+
+/* Functions for class JtsGeometryConverter */
+
+JtsGeometryConverter JtsGeometryConverter_newJtsGeometryConverter();
+Class JtsGeometryConverter_getValueType(JtsGeometryConverter _this);
+Geometry JtsGeometryConverter_parse(JtsGeometryConverter _this, const char* text);
+char* JtsGeometryConverter_format(JtsGeometryConverter _this, Geometry value);
+void JtsGeometryConverter_registerConverter();
+
+/* Functions for class ProductSubsetDef */
+
+ProductSubsetDef ProductSubsetDef_newProductSubsetDef1();
+ProductSubsetDef ProductSubsetDef_newProductSubsetDef2(const char* subsetName);
+char* ProductSubsetDef_getSubsetName(ProductSubsetDef _this);
+void ProductSubsetDef_setSubsetName(ProductSubsetDef _this, const char* subsetName);
+void ProductSubsetDef_setTreatVirtualBandsAsRealBands(ProductSubsetDef _this, boolean flag);
+boolean ProductSubsetDef_getTreatVirtualBandsAsRealBands(ProductSubsetDef _this);
+char** ProductSubsetDef_getNodeNames(ProductSubsetDef _this, int* _resultArrayLength);
+void ProductSubsetDef_setNodeNames(ProductSubsetDef _this, const char** namesElems, int namesLength);
+void ProductSubsetDef_addNodeName(ProductSubsetDef _this, const char* name);
+void ProductSubsetDef_addNodeNames(ProductSubsetDef _this, const char** namesElems, int namesLength);
+boolean ProductSubsetDef_removeNodeName(ProductSubsetDef _this, const char* name);
+boolean ProductSubsetDef_containsNodeName(ProductSubsetDef _this, const char* name);
+boolean ProductSubsetDef_isNodeAccepted(ProductSubsetDef _this, const char* name);
+Rectangle ProductSubsetDef_getRegion(ProductSubsetDef _this);
+void ProductSubsetDef_setRegion2(ProductSubsetDef _this, Rectangle region);
+void ProductSubsetDef_setRegion1(ProductSubsetDef _this, int x, int y, int w, int h);
+void ProductSubsetDef_setSubSampling(ProductSubsetDef _this, int subSamplingX, int subSamplingY);
+int ProductSubsetDef_getSubSamplingX(ProductSubsetDef _this);
+int ProductSubsetDef_getSubSamplingY(ProductSubsetDef _this);
+Dimension ProductSubsetDef_getSceneRasterSize(ProductSubsetDef _this, int maxWidth, int maxHeight);
+void ProductSubsetDef_setIgnoreMetadata(ProductSubsetDef _this, boolean ignoreMetadata);
+boolean ProductSubsetDef_isIgnoreMetadata(ProductSubsetDef _this);
+boolean ProductSubsetDef_isEntireProductSelected(ProductSubsetDef _this);
 
 /* Functions for class ProductWriter */
 

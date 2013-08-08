@@ -63,6 +63,34 @@ PyObject* BeamPyGeoCoding_getImageCRS(PyObject* self, PyObject* args);
 PyObject* BeamPyGeoCoding_getMapCRS(PyObject* self, PyObject* args);
 PyObject* BeamPyGeoCoding_getGeoCRS(PyObject* self, PyObject* args);
 PyObject* BeamPyGeoCoding_getImageToMapTransform(PyObject* self, PyObject* args);
+PyObject* BeamPyJtsGeometryConverter_newJtsGeometryConverter(PyObject* self, PyObject* args);
+PyObject* BeamPyJtsGeometryConverter_getValueType(PyObject* self, PyObject* args);
+PyObject* BeamPyJtsGeometryConverter_parse(PyObject* self, PyObject* args);
+PyObject* BeamPyJtsGeometryConverter_format(PyObject* self, PyObject* args);
+PyObject* BeamPyJtsGeometryConverter_registerConverter(PyObject* self, PyObject* args);
+PyObject* BeamPyProductSubsetDef_newProductSubsetDef1(PyObject* self, PyObject* args);
+PyObject* BeamPyProductSubsetDef_newProductSubsetDef2(PyObject* self, PyObject* args);
+PyObject* BeamPyProductSubsetDef_getSubsetName(PyObject* self, PyObject* args);
+PyObject* BeamPyProductSubsetDef_setSubsetName(PyObject* self, PyObject* args);
+PyObject* BeamPyProductSubsetDef_setTreatVirtualBandsAsRealBands(PyObject* self, PyObject* args);
+PyObject* BeamPyProductSubsetDef_getTreatVirtualBandsAsRealBands(PyObject* self, PyObject* args);
+PyObject* BeamPyProductSubsetDef_getNodeNames(PyObject* self, PyObject* args);
+PyObject* BeamPyProductSubsetDef_setNodeNames(PyObject* self, PyObject* args);
+PyObject* BeamPyProductSubsetDef_addNodeName(PyObject* self, PyObject* args);
+PyObject* BeamPyProductSubsetDef_addNodeNames(PyObject* self, PyObject* args);
+PyObject* BeamPyProductSubsetDef_removeNodeName(PyObject* self, PyObject* args);
+PyObject* BeamPyProductSubsetDef_containsNodeName(PyObject* self, PyObject* args);
+PyObject* BeamPyProductSubsetDef_isNodeAccepted(PyObject* self, PyObject* args);
+PyObject* BeamPyProductSubsetDef_getRegion(PyObject* self, PyObject* args);
+PyObject* BeamPyProductSubsetDef_setRegion2(PyObject* self, PyObject* args);
+PyObject* BeamPyProductSubsetDef_setRegion1(PyObject* self, PyObject* args);
+PyObject* BeamPyProductSubsetDef_setSubSampling(PyObject* self, PyObject* args);
+PyObject* BeamPyProductSubsetDef_getSubSamplingX(PyObject* self, PyObject* args);
+PyObject* BeamPyProductSubsetDef_getSubSamplingY(PyObject* self, PyObject* args);
+PyObject* BeamPyProductSubsetDef_getSceneRasterSize(PyObject* self, PyObject* args);
+PyObject* BeamPyProductSubsetDef_setIgnoreMetadata(PyObject* self, PyObject* args);
+PyObject* BeamPyProductSubsetDef_isIgnoreMetadata(PyObject* self, PyObject* args);
+PyObject* BeamPyProductSubsetDef_isEntireProductSelected(PyObject* self, PyObject* args);
 PyObject* BeamPyProductWriter_getWriterPlugIn(PyObject* self, PyObject* args);
 PyObject* BeamPyProductWriter_getOutput(PyObject* self, PyObject* args);
 PyObject* BeamPyProductWriter_writeProductNodes(PyObject* self, PyObject* args);
@@ -1158,6 +1186,8 @@ PyObject* BeamPyMetadataAttribute_getExtension(PyObject* self, PyObject* args);
 // Global functions of module ${libName}
 //
 static PyMethodDef BeamPy_Functions[] = {
+    {"newRectangle", BPy_NewRectangle, METH_VARARGS, "Creates a Java 'Rectangle' object from x, y, width, height (all integers)"},
+    {"newFile", BPy_NewFile, METH_VARARGS, "Creates a Java 'File' object from a given string."},
     {"to_jobject", BPy_to_jobject, METH_VARARGS, "Test function which takes an argument, converts it into a Java object and returns a JObject"},
     {NULL, NULL, 0, NULL} /*Sentinel*/
 };
@@ -1190,8 +1220,8 @@ jclass BPy_ServiceRegistry_Class;
 jclass BPy_PixelPos_Class;
 jclass BPy_BitRaster_Class;
 jclass BPy_ProductNode_Class;
-jclass BPy_ProductIO_Class;
 jclass BPy_Rectangle_Class;
+jclass BPy_ProductIO_Class;
 jclass BPy_SampleCoding_Class;
 jclass BPy_Object_Class;
 jclass BPy_ProductReader_Class;
@@ -1233,14 +1263,15 @@ jclass BPy_MapTransform_Class;
 jclass BPy_Parser_Class;
 jclass BPy_ProductData_Class;
 jclass BPy_OperatorSpi_Class;
+jclass BPy_JtsGeometryConverter_Class;
 jclass BPy_Term_Class;
 jclass BPy_RasterDataNode_Class;
 jclass BPy_Product_AutoGrouping_Class;
 jclass BPy_Dimension_Class;
 jclass BPy_Stx_Class;
 jclass BPy_ImageOutputStream_Class;
-jclass BPy_SimpleFeatureType_Class;
 jclass BPy_AngularDirection_Class;
+jclass BPy_SimpleFeatureType_Class;
 jclass BPy_ProductData_UTC_Class;
 jclass BPy_RenderedImage_Class;
 jclass BPy_Iterator_Class;
@@ -1259,8 +1290,8 @@ jclass BPy_ProductUtils_Class;
 jclass BPy_Map_Class;
 jclass BPy_SubsetOp_Class;
 jclass BPy_Pointing_Class;
-jclass BPy_PointingFactory_Class;
 jclass BPy_PlacemarkDescriptor_Class;
+jclass BPy_PointingFactory_Class;
 jclass BPy_Point2D_Class;
 jclass BPy_Scaling_Class;
 jclass BPy_Collection_Class;
@@ -1966,6 +1997,59 @@ PyTypeObject ProductNode_Type = {
     NULL,                         /* tp_new */
 };
 
+static PyMethodDef Rectangle_methods[] = {
+    {NULL, NULL, 0, NULL} /*Sentinel*/
+};
+
+// Note: this is unused, experimental code
+
+/**
+ * Implements the BeamPy_JObjectType class singleton.
+ *
+ * THIS TYPE IS NOT YET IN USE: we currently use
+ * (<type_string>, <pointer>) tuples to represent Java JNI objects.
+ */
+PyTypeObject Rectangle_Type = {
+    PyVarObject_HEAD_INIT(NULL, 0)
+    "beampy.Rectangle",        /* tp_name */
+    sizeof (JObject),             /* tp_basicsize */
+    0,                            /* tp_itemsize */
+    (destructor)JObject_dealloc,  /* tp_dealloc */
+    NULL,                         /* tp_print */
+    NULL,                         /* tp_getattr */
+    NULL,                         /* tp_setattr */
+    NULL,                         /* tp_reserved */
+    NULL,                         /* tp_repr */
+    NULL,                         /* tp_as_number */
+    NULL,                         /* tp_as_sequence */
+    NULL,                         /* tp_as_mapping */
+    NULL,                         /* tp_hash  */
+    NULL,                         /* tp_call */
+    NULL,                         /* tp_str */
+    NULL,                         /* tp_getattro */
+    NULL,                         /* tp_setattro */
+    NULL,                         /* tp_as_buffer */
+    Py_TPFLAGS_DEFAULT,           /* tp_flags */
+    "",                /* tp_doc */
+    NULL,                         /* tp_traverse */
+    NULL,                         /* tp_clear */
+    NULL,                         /* tp_richcompare */
+    0,                            /* tp_weaklistoffset */
+    NULL,                         /* tp_iter */
+    NULL,                         /* tp_iternext */
+    Rectangle_methods,         /* tp_methods */
+    NULL,                         /* tp_members */
+    NULL,                         /* tp_getset */
+    NULL,                         /* tp_base */
+    NULL,                         /* tp_dict */
+    NULL,                         /* tp_descr_get */
+    NULL,                         /* tp_descr_set */
+    0,                            /* tp_dictoffset */
+    (initproc) JObject_init,      /* tp_init */
+    NULL,                         /* tp_alloc */
+    NULL,                         /* tp_new */
+};
+
 static PyMethodDef ProductIO_methods[] = {
     {"getProductReader", (PyCFunction) BeamPyProductIO_getProductReader, METH_VARARGS | METH_STATIC, "Gets a product reader for the given format name.\nReturns Parameter formatName: the product format name\nReturns a suitable product reader or null if none was found"},
     {"getProductWriterExtensions", (PyCFunction) BeamPyProductIO_getProductWriterExtensions, METH_VARARGS | METH_STATIC, "Gets an array of writer product file extensions for the given format name.\nReturns Parameter formatName: the format name\nReturns an array of extensions or null if the format does not exist"},
@@ -2014,59 +2098,6 @@ PyTypeObject ProductIO_Type = {
     NULL,                         /* tp_iter */
     NULL,                         /* tp_iternext */
     ProductIO_methods,         /* tp_methods */
-    NULL,                         /* tp_members */
-    NULL,                         /* tp_getset */
-    NULL,                         /* tp_base */
-    NULL,                         /* tp_dict */
-    NULL,                         /* tp_descr_get */
-    NULL,                         /* tp_descr_set */
-    0,                            /* tp_dictoffset */
-    (initproc) JObject_init,      /* tp_init */
-    NULL,                         /* tp_alloc */
-    NULL,                         /* tp_new */
-};
-
-static PyMethodDef Rectangle_methods[] = {
-    {NULL, NULL, 0, NULL} /*Sentinel*/
-};
-
-// Note: this is unused, experimental code
-
-/**
- * Implements the BeamPy_JObjectType class singleton.
- *
- * THIS TYPE IS NOT YET IN USE: we currently use
- * (<type_string>, <pointer>) tuples to represent Java JNI objects.
- */
-PyTypeObject Rectangle_Type = {
-    PyVarObject_HEAD_INIT(NULL, 0)
-    "beampy.Rectangle",        /* tp_name */
-    sizeof (JObject),             /* tp_basicsize */
-    0,                            /* tp_itemsize */
-    (destructor)JObject_dealloc,  /* tp_dealloc */
-    NULL,                         /* tp_print */
-    NULL,                         /* tp_getattr */
-    NULL,                         /* tp_setattr */
-    NULL,                         /* tp_reserved */
-    NULL,                         /* tp_repr */
-    NULL,                         /* tp_as_number */
-    NULL,                         /* tp_as_sequence */
-    NULL,                         /* tp_as_mapping */
-    NULL,                         /* tp_hash  */
-    NULL,                         /* tp_call */
-    NULL,                         /* tp_str */
-    NULL,                         /* tp_getattro */
-    NULL,                         /* tp_setattro */
-    NULL,                         /* tp_as_buffer */
-    Py_TPFLAGS_DEFAULT,           /* tp_flags */
-    "",                /* tp_doc */
-    NULL,                         /* tp_traverse */
-    NULL,                         /* tp_clear */
-    NULL,                         /* tp_richcompare */
-    0,                            /* tp_weaklistoffset */
-    NULL,                         /* tp_iter */
-    NULL,                         /* tp_iternext */
-    Rectangle_methods,         /* tp_methods */
     NULL,                         /* tp_members */
     NULL,                         /* tp_getset */
     NULL,                         /* tp_base */
@@ -4995,6 +5026,64 @@ PyTypeObject OperatorSpi_Type = {
     NULL,                         /* tp_new */
 };
 
+static PyMethodDef JtsGeometryConverter_methods[] = {
+    {"newJtsGeometryConverter", (PyCFunction) BeamPyJtsGeometryConverter_newJtsGeometryConverter, METH_VARARGS | METH_STATIC, ""},
+    {"getValueType", (PyCFunction) BeamPyJtsGeometryConverter_getValueType, METH_VARARGS, ""},
+    {"parse", (PyCFunction) BeamPyJtsGeometryConverter_parse, METH_VARARGS, ""},
+    {"format", (PyCFunction) BeamPyJtsGeometryConverter_format, METH_VARARGS, ""},
+    {"registerConverter", (PyCFunction) BeamPyJtsGeometryConverter_registerConverter, METH_VARARGS | METH_STATIC, ""},
+    {NULL, NULL, 0, NULL} /*Sentinel*/
+};
+
+// Note: this is unused, experimental code
+
+/**
+ * Implements the BeamPy_JObjectType class singleton.
+ *
+ * THIS TYPE IS NOT YET IN USE: we currently use
+ * (<type_string>, <pointer>) tuples to represent Java JNI objects.
+ */
+PyTypeObject JtsGeometryConverter_Type = {
+    PyVarObject_HEAD_INIT(NULL, 0)
+    "beampy.JtsGeometryConverter",        /* tp_name */
+    sizeof (JObject),             /* tp_basicsize */
+    0,                            /* tp_itemsize */
+    (destructor)JObject_dealloc,  /* tp_dealloc */
+    NULL,                         /* tp_print */
+    NULL,                         /* tp_getattr */
+    NULL,                         /* tp_setattr */
+    NULL,                         /* tp_reserved */
+    NULL,                         /* tp_repr */
+    NULL,                         /* tp_as_number */
+    NULL,                         /* tp_as_sequence */
+    NULL,                         /* tp_as_mapping */
+    NULL,                         /* tp_hash  */
+    NULL,                         /* tp_call */
+    NULL,                         /* tp_str */
+    NULL,                         /* tp_getattro */
+    NULL,                         /* tp_setattro */
+    NULL,                         /* tp_as_buffer */
+    Py_TPFLAGS_DEFAULT,           /* tp_flags */
+    "",                /* tp_doc */
+    NULL,                         /* tp_traverse */
+    NULL,                         /* tp_clear */
+    NULL,                         /* tp_richcompare */
+    0,                            /* tp_weaklistoffset */
+    NULL,                         /* tp_iter */
+    NULL,                         /* tp_iternext */
+    JtsGeometryConverter_methods,         /* tp_methods */
+    NULL,                         /* tp_members */
+    NULL,                         /* tp_getset */
+    NULL,                         /* tp_base */
+    NULL,                         /* tp_dict */
+    NULL,                         /* tp_descr_get */
+    NULL,                         /* tp_descr_set */
+    0,                            /* tp_dictoffset */
+    (initproc) JObject_init,      /* tp_init */
+    NULL,                         /* tp_alloc */
+    NULL,                         /* tp_new */
+};
+
 static PyMethodDef Double_methods[] = {
     {NULL, NULL, 0, NULL} /*Sentinel*/
 };
@@ -5366,59 +5455,6 @@ PyTypeObject ImageOutputStream_Type = {
     NULL,                         /* tp_new */
 };
 
-static PyMethodDef SimpleFeatureType_methods[] = {
-    {NULL, NULL, 0, NULL} /*Sentinel*/
-};
-
-// Note: this is unused, experimental code
-
-/**
- * Implements the BeamPy_JObjectType class singleton.
- *
- * THIS TYPE IS NOT YET IN USE: we currently use
- * (<type_string>, <pointer>) tuples to represent Java JNI objects.
- */
-PyTypeObject SimpleFeatureType_Type = {
-    PyVarObject_HEAD_INIT(NULL, 0)
-    "beampy.SimpleFeatureType",        /* tp_name */
-    sizeof (JObject),             /* tp_basicsize */
-    0,                            /* tp_itemsize */
-    (destructor)JObject_dealloc,  /* tp_dealloc */
-    NULL,                         /* tp_print */
-    NULL,                         /* tp_getattr */
-    NULL,                         /* tp_setattr */
-    NULL,                         /* tp_reserved */
-    NULL,                         /* tp_repr */
-    NULL,                         /* tp_as_number */
-    NULL,                         /* tp_as_sequence */
-    NULL,                         /* tp_as_mapping */
-    NULL,                         /* tp_hash  */
-    NULL,                         /* tp_call */
-    NULL,                         /* tp_str */
-    NULL,                         /* tp_getattro */
-    NULL,                         /* tp_setattro */
-    NULL,                         /* tp_as_buffer */
-    Py_TPFLAGS_DEFAULT,           /* tp_flags */
-    "",                /* tp_doc */
-    NULL,                         /* tp_traverse */
-    NULL,                         /* tp_clear */
-    NULL,                         /* tp_richcompare */
-    0,                            /* tp_weaklistoffset */
-    NULL,                         /* tp_iter */
-    NULL,                         /* tp_iternext */
-    SimpleFeatureType_methods,         /* tp_methods */
-    NULL,                         /* tp_members */
-    NULL,                         /* tp_getset */
-    NULL,                         /* tp_base */
-    NULL,                         /* tp_dict */
-    NULL,                         /* tp_descr_get */
-    NULL,                         /* tp_descr_set */
-    0,                            /* tp_dictoffset */
-    (initproc) JObject_init,      /* tp_init */
-    NULL,                         /* tp_alloc */
-    NULL,                         /* tp_new */
-};
-
 static PyMethodDef AngularDirection_methods[] = {
     {"newAngularDirection", (PyCFunction) BeamPyAngularDirection_newAngularDirection, METH_VARARGS | METH_STATIC, ""},
     {"equals", (PyCFunction) BeamPyAngularDirection_equals, METH_VARARGS, ""},
@@ -5463,6 +5499,59 @@ PyTypeObject AngularDirection_Type = {
     NULL,                         /* tp_iter */
     NULL,                         /* tp_iternext */
     AngularDirection_methods,         /* tp_methods */
+    NULL,                         /* tp_members */
+    NULL,                         /* tp_getset */
+    NULL,                         /* tp_base */
+    NULL,                         /* tp_dict */
+    NULL,                         /* tp_descr_get */
+    NULL,                         /* tp_descr_set */
+    0,                            /* tp_dictoffset */
+    (initproc) JObject_init,      /* tp_init */
+    NULL,                         /* tp_alloc */
+    NULL,                         /* tp_new */
+};
+
+static PyMethodDef SimpleFeatureType_methods[] = {
+    {NULL, NULL, 0, NULL} /*Sentinel*/
+};
+
+// Note: this is unused, experimental code
+
+/**
+ * Implements the BeamPy_JObjectType class singleton.
+ *
+ * THIS TYPE IS NOT YET IN USE: we currently use
+ * (<type_string>, <pointer>) tuples to represent Java JNI objects.
+ */
+PyTypeObject SimpleFeatureType_Type = {
+    PyVarObject_HEAD_INIT(NULL, 0)
+    "beampy.SimpleFeatureType",        /* tp_name */
+    sizeof (JObject),             /* tp_basicsize */
+    0,                            /* tp_itemsize */
+    (destructor)JObject_dealloc,  /* tp_dealloc */
+    NULL,                         /* tp_print */
+    NULL,                         /* tp_getattr */
+    NULL,                         /* tp_setattr */
+    NULL,                         /* tp_reserved */
+    NULL,                         /* tp_repr */
+    NULL,                         /* tp_as_number */
+    NULL,                         /* tp_as_sequence */
+    NULL,                         /* tp_as_mapping */
+    NULL,                         /* tp_hash  */
+    NULL,                         /* tp_call */
+    NULL,                         /* tp_str */
+    NULL,                         /* tp_getattro */
+    NULL,                         /* tp_setattro */
+    NULL,                         /* tp_as_buffer */
+    Py_TPFLAGS_DEFAULT,           /* tp_flags */
+    "",                /* tp_doc */
+    NULL,                         /* tp_traverse */
+    NULL,                         /* tp_clear */
+    NULL,                         /* tp_richcompare */
+    0,                            /* tp_weaklistoffset */
+    NULL,                         /* tp_iter */
+    NULL,                         /* tp_iternext */
+    SimpleFeatureType_methods,         /* tp_methods */
     NULL,                         /* tp_members */
     NULL,                         /* tp_getset */
     NULL,                         /* tp_base */
@@ -6725,59 +6814,6 @@ PyTypeObject Pointing_Type = {
     NULL,                         /* tp_new */
 };
 
-static PyMethodDef PointingFactory_methods[] = {
-    {NULL, NULL, 0, NULL} /*Sentinel*/
-};
-
-// Note: this is unused, experimental code
-
-/**
- * Implements the BeamPy_JObjectType class singleton.
- *
- * THIS TYPE IS NOT YET IN USE: we currently use
- * (<type_string>, <pointer>) tuples to represent Java JNI objects.
- */
-PyTypeObject PointingFactory_Type = {
-    PyVarObject_HEAD_INIT(NULL, 0)
-    "beampy.PointingFactory",        /* tp_name */
-    sizeof (JObject),             /* tp_basicsize */
-    0,                            /* tp_itemsize */
-    (destructor)JObject_dealloc,  /* tp_dealloc */
-    NULL,                         /* tp_print */
-    NULL,                         /* tp_getattr */
-    NULL,                         /* tp_setattr */
-    NULL,                         /* tp_reserved */
-    NULL,                         /* tp_repr */
-    NULL,                         /* tp_as_number */
-    NULL,                         /* tp_as_sequence */
-    NULL,                         /* tp_as_mapping */
-    NULL,                         /* tp_hash  */
-    NULL,                         /* tp_call */
-    NULL,                         /* tp_str */
-    NULL,                         /* tp_getattro */
-    NULL,                         /* tp_setattro */
-    NULL,                         /* tp_as_buffer */
-    Py_TPFLAGS_DEFAULT,           /* tp_flags */
-    "A factory which creates instances of a {@link Pointing} for a given raster data node.\nA PointingFactory is usually assigned to data {@link Product} by its {@link ProductReader ProductReader}",                /* tp_doc */
-    NULL,                         /* tp_traverse */
-    NULL,                         /* tp_clear */
-    NULL,                         /* tp_richcompare */
-    0,                            /* tp_weaklistoffset */
-    NULL,                         /* tp_iter */
-    NULL,                         /* tp_iternext */
-    PointingFactory_methods,         /* tp_methods */
-    NULL,                         /* tp_members */
-    NULL,                         /* tp_getset */
-    NULL,                         /* tp_base */
-    NULL,                         /* tp_dict */
-    NULL,                         /* tp_descr_get */
-    NULL,                         /* tp_descr_set */
-    0,                            /* tp_dictoffset */
-    (initproc) JObject_init,      /* tp_init */
-    NULL,                         /* tp_alloc */
-    NULL,                         /* tp_new */
-};
-
 static PyMethodDef PlacemarkDescriptor_methods[] = {
     {NULL, NULL, 0, NULL} /*Sentinel*/
 };
@@ -6819,6 +6855,59 @@ PyTypeObject PlacemarkDescriptor_Type = {
     NULL,                         /* tp_iter */
     NULL,                         /* tp_iternext */
     PlacemarkDescriptor_methods,         /* tp_methods */
+    NULL,                         /* tp_members */
+    NULL,                         /* tp_getset */
+    NULL,                         /* tp_base */
+    NULL,                         /* tp_dict */
+    NULL,                         /* tp_descr_get */
+    NULL,                         /* tp_descr_set */
+    0,                            /* tp_dictoffset */
+    (initproc) JObject_init,      /* tp_init */
+    NULL,                         /* tp_alloc */
+    NULL,                         /* tp_new */
+};
+
+static PyMethodDef PointingFactory_methods[] = {
+    {NULL, NULL, 0, NULL} /*Sentinel*/
+};
+
+// Note: this is unused, experimental code
+
+/**
+ * Implements the BeamPy_JObjectType class singleton.
+ *
+ * THIS TYPE IS NOT YET IN USE: we currently use
+ * (<type_string>, <pointer>) tuples to represent Java JNI objects.
+ */
+PyTypeObject PointingFactory_Type = {
+    PyVarObject_HEAD_INIT(NULL, 0)
+    "beampy.PointingFactory",        /* tp_name */
+    sizeof (JObject),             /* tp_basicsize */
+    0,                            /* tp_itemsize */
+    (destructor)JObject_dealloc,  /* tp_dealloc */
+    NULL,                         /* tp_print */
+    NULL,                         /* tp_getattr */
+    NULL,                         /* tp_setattr */
+    NULL,                         /* tp_reserved */
+    NULL,                         /* tp_repr */
+    NULL,                         /* tp_as_number */
+    NULL,                         /* tp_as_sequence */
+    NULL,                         /* tp_as_mapping */
+    NULL,                         /* tp_hash  */
+    NULL,                         /* tp_call */
+    NULL,                         /* tp_str */
+    NULL,                         /* tp_getattro */
+    NULL,                         /* tp_setattro */
+    NULL,                         /* tp_as_buffer */
+    Py_TPFLAGS_DEFAULT,           /* tp_flags */
+    "A factory which creates instances of a {@link Pointing} for a given raster data node.\nA PointingFactory is usually assigned to data {@link Product} by its {@link ProductReader ProductReader}",                /* tp_doc */
+    NULL,                         /* tp_traverse */
+    NULL,                         /* tp_clear */
+    NULL,                         /* tp_richcompare */
+    0,                            /* tp_weaklistoffset */
+    NULL,                         /* tp_iter */
+    NULL,                         /* tp_iternext */
+    PointingFactory_methods,         /* tp_methods */
     NULL,                         /* tp_members */
     NULL,                         /* tp_getset */
     NULL,                         /* tp_base */
@@ -7203,6 +7292,29 @@ PyTypeObject SimpleFeature_Type = {
 };
 
 static PyMethodDef ProductSubsetDef_methods[] = {
+    {"newProductSubsetDef1", (PyCFunction) BeamPyProductSubsetDef_newProductSubsetDef1, METH_VARARGS | METH_STATIC, "Constructs a new and empty subset info."},
+    {"newProductSubsetDef2", (PyCFunction) BeamPyProductSubsetDef_newProductSubsetDef2, METH_VARARGS | METH_STATIC, "Constructs a new and empty subset info.\nReturns Parameter subsetName: The name of the subset to be created."},
+    {"getSubsetName", (PyCFunction) BeamPyProductSubsetDef_getSubsetName, METH_VARARGS, ""},
+    {"setSubsetName", (PyCFunction) BeamPyProductSubsetDef_setSubsetName, METH_VARARGS, ""},
+    {"setTreatVirtualBandsAsRealBands", (PyCFunction) BeamPyProductSubsetDef_setTreatVirtualBandsAsRealBands, METH_VARARGS, ""},
+    {"getTreatVirtualBandsAsRealBands", (PyCFunction) BeamPyProductSubsetDef_getTreatVirtualBandsAsRealBands, METH_VARARGS, ""},
+    {"getNodeNames", (PyCFunction) BeamPyProductSubsetDef_getNodeNames, METH_VARARGS, "Gets the names of all product nodes contained in this subset. A return value of null means all nodes\nare selected.\nReturns an array of names, or null if the no node subset is given"},
+    {"setNodeNames", (PyCFunction) BeamPyProductSubsetDef_setNodeNames, METH_VARARGS, "Sets the names of all product nodes contained in this subset. A value of null means all nodes are\nselected.\nReturns Parameter names: the band names, can be null in order to reset the node subset"},
+    {"addNodeName", (PyCFunction) BeamPyProductSubsetDef_addNodeName, METH_VARARGS, "Adds a new product node name to this subset.\nReturns Parameter name: the node's name, must not be empty or null"},
+    {"addNodeNames", (PyCFunction) BeamPyProductSubsetDef_addNodeNames, METH_VARARGS, "Adds the given product node names to this subset.\nReturns Parameter names: the nodename's to be added"},
+    {"removeNodeName", (PyCFunction) BeamPyProductSubsetDef_removeNodeName, METH_VARARGS, "Removes a band from the spectral subset. If the band is not contained in this subset, the method returns\nfalse.\nReturns Parameter name: the band's name\nReturns true for success, false otherwise"},
+    {"containsNodeName", (PyCFunction) BeamPyProductSubsetDef_containsNodeName, METH_VARARGS, "Checks whether or not a node name is already contained in this subset.\nReturns Parameter name: the node name\nReturns true if so"},
+    {"isNodeAccepted", (PyCFunction) BeamPyProductSubsetDef_isNodeAccepted, METH_VARARGS, "Checks whether or not a node (a band, a tie-point grid or metadata element) with the given name will be part of\nthe product subset.\nReturns Parameter name: the node name\nReturns true if so"},
+    {"getRegion", (PyCFunction) BeamPyProductSubsetDef_getRegion, METH_VARARGS, "Gets the spatial subset as a rectangular region. Creates a new rectangle each time it is called. This prevents\nfrom modifying this subset by modifying the returned region.\nReturns the spatial subset as a rectangular region, or null if no spatial region was defined"},
+    {"setRegion2", (PyCFunction) BeamPyProductSubsetDef_setRegion2, METH_VARARGS, "Sets the spatial subset as a rectangular region.\nReturns Parameter region: the spatial subset as a rectangular region, null if no spatial region shall be\ndefined"},
+    {"setRegion1", (PyCFunction) BeamPyProductSubsetDef_setRegion1, METH_VARARGS, "Sets the spatial subset as a rectangular region.\nReturns Parameter x: the X-offset in pixels\nReturns Parameter y: the Y-offset in pixels\nReturns Parameter w: the width of the subset in pixels\nReturns Parameter h: the height of the subset in pixels"},
+    {"setSubSampling", (PyCFunction) BeamPyProductSubsetDef_setSubSampling, METH_VARARGS, "Gets the sub-sampling in X- and Y-direction (vertical and horizontal).\nReturns Parameter subSamplingX: sub-sampling in X-direction, must always be greater than zero\nReturns Parameter subSamplingY: sub-sampling in Y-direction, must always be greater than zero"},
+    {"getSubSamplingX", (PyCFunction) BeamPyProductSubsetDef_getSubSamplingX, METH_VARARGS, "Gets the sub-sampling in X-direction (horizontal).\nReturns the sub-sampling in X-direction which is always greater than zero"},
+    {"getSubSamplingY", (PyCFunction) BeamPyProductSubsetDef_getSubSamplingY, METH_VARARGS, "Gets the sub-sampling in Y-direction (vertical).\nReturns the sub-sampling in Y-direction which is always greater than zero"},
+    {"getSceneRasterSize", (PyCFunction) BeamPyProductSubsetDef_getSceneRasterSize, METH_VARARGS, "Gets the required size for a raster required to hold all pixels for the spatial subset for the given maximum\nraster width and height.\nReturns Parameter maxWidth: the maximum raster width\nReturns Parameter maxHeight: the maximum raster height\nReturns the required raster size, never null"},
+    {"setIgnoreMetadata", (PyCFunction) BeamPyProductSubsetDef_setIgnoreMetadata, METH_VARARGS, "Sets the ignore metadata information\nReturns Parameter ignoreMetadata: if true, metadata may be ignored during write or read a product."},
+    {"isIgnoreMetadata", (PyCFunction) BeamPyProductSubsetDef_isIgnoreMetadata, METH_VARARGS, "Gets the ignore metadata information"},
+    {"isEntireProductSelected", (PyCFunction) BeamPyProductSubsetDef_isEntireProductSelected, METH_VARARGS, "Checks whether or not this subset definition select the entire product."},
     {NULL, NULL, 0, NULL} /*Sentinel*/
 };
 
@@ -7620,6 +7732,14 @@ int BPy_RegisterJObjectSubtypes(PyObject* module)
     Py_INCREF(&ProductNode_Type);
     PyModule_AddObject(module, "ProductNode", (PyObject*) &ProductNode_Type);
 
+    // Register Rectangle:
+    Rectangle_Type.tp_base = &JObject_Type;
+    if (PyType_Ready(&Rectangle_Type) < 0) {
+        return 0;
+    }
+    Py_INCREF(&Rectangle_Type);
+    PyModule_AddObject(module, "Rectangle", (PyObject*) &Rectangle_Type);
+
     // Register ProductIO:
     ProductIO_Type.tp_base = &JObject_Type;
     if (PyType_Ready(&ProductIO_Type) < 0) {
@@ -7629,14 +7749,6 @@ int BPy_RegisterJObjectSubtypes(PyObject* module)
     PyModule_AddObject(module, "ProductIO", (PyObject*) &ProductIO_Type);
     // Constants of class ProductIO_Type:
     PyDict_SetItemString(ProductIO_Type.tp_dict, "DEFAULT_FORMAT_NAME", PyUnicode_FromString("BEAM-DIMAP"));
-
-    // Register Rectangle:
-    Rectangle_Type.tp_base = &JObject_Type;
-    if (PyType_Ready(&Rectangle_Type) < 0) {
-        return 0;
-    }
-    Py_INCREF(&Rectangle_Type);
-    PyModule_AddObject(module, "Rectangle", (PyObject*) &Rectangle_Type);
 
     // Register SampleCoding:
     SampleCoding_Type.tp_base = &JObject_Type;
@@ -8075,6 +8187,14 @@ int BPy_RegisterJObjectSubtypes(PyObject* module)
     Py_INCREF(&OperatorSpi_Type);
     PyModule_AddObject(module, "OperatorSpi", (PyObject*) &OperatorSpi_Type);
 
+    // Register JtsGeometryConverter:
+    JtsGeometryConverter_Type.tp_base = &JObject_Type;
+    if (PyType_Ready(&JtsGeometryConverter_Type) < 0) {
+        return 0;
+    }
+    Py_INCREF(&JtsGeometryConverter_Type);
+    PyModule_AddObject(module, "JtsGeometryConverter", (PyObject*) &JtsGeometryConverter_Type);
+
     // Register Double:
     Double_Type.tp_base = &JObject_Type;
     if (PyType_Ready(&Double_Type) < 0) {
@@ -8131,14 +8251,6 @@ int BPy_RegisterJObjectSubtypes(PyObject* module)
     Py_INCREF(&ImageOutputStream_Type);
     PyModule_AddObject(module, "ImageOutputStream", (PyObject*) &ImageOutputStream_Type);
 
-    // Register SimpleFeatureType:
-    SimpleFeatureType_Type.tp_base = &JObject_Type;
-    if (PyType_Ready(&SimpleFeatureType_Type) < 0) {
-        return 0;
-    }
-    Py_INCREF(&SimpleFeatureType_Type);
-    PyModule_AddObject(module, "SimpleFeatureType", (PyObject*) &SimpleFeatureType_Type);
-
     // Register AngularDirection:
     AngularDirection_Type.tp_base = &JObject_Type;
     if (PyType_Ready(&AngularDirection_Type) < 0) {
@@ -8146,6 +8258,14 @@ int BPy_RegisterJObjectSubtypes(PyObject* module)
     }
     Py_INCREF(&AngularDirection_Type);
     PyModule_AddObject(module, "AngularDirection", (PyObject*) &AngularDirection_Type);
+
+    // Register SimpleFeatureType:
+    SimpleFeatureType_Type.tp_base = &JObject_Type;
+    if (PyType_Ready(&SimpleFeatureType_Type) < 0) {
+        return 0;
+    }
+    Py_INCREF(&SimpleFeatureType_Type);
+    PyModule_AddObject(module, "SimpleFeatureType", (PyObject*) &SimpleFeatureType_Type);
 
     // Register ProductData_UTC:
     ProductData_UTC_Type.tp_base = &JObject_Type;
@@ -8305,14 +8425,6 @@ int BPy_RegisterJObjectSubtypes(PyObject* module)
     Py_INCREF(&Pointing_Type);
     PyModule_AddObject(module, "Pointing", (PyObject*) &Pointing_Type);
 
-    // Register PointingFactory:
-    PointingFactory_Type.tp_base = &JObject_Type;
-    if (PyType_Ready(&PointingFactory_Type) < 0) {
-        return 0;
-    }
-    Py_INCREF(&PointingFactory_Type);
-    PyModule_AddObject(module, "PointingFactory", (PyObject*) &PointingFactory_Type);
-
     // Register PlacemarkDescriptor:
     PlacemarkDescriptor_Type.tp_base = &JObject_Type;
     if (PyType_Ready(&PlacemarkDescriptor_Type) < 0) {
@@ -8320,6 +8432,14 @@ int BPy_RegisterJObjectSubtypes(PyObject* module)
     }
     Py_INCREF(&PlacemarkDescriptor_Type);
     PyModule_AddObject(module, "PlacemarkDescriptor", (PyObject*) &PlacemarkDescriptor_Type);
+
+    // Register PointingFactory:
+    PointingFactory_Type.tp_base = &JObject_Type;
+    if (PyType_Ready(&PointingFactory_Type) < 0) {
+        return 0;
+    }
+    Py_INCREF(&PointingFactory_Type);
+    PyModule_AddObject(module, "PointingFactory", (PyObject*) &PointingFactory_Type);
 
     // Register Point2D:
     Point2D_Type.tp_base = &JObject_Type;
@@ -8568,8 +8688,8 @@ jboolean BPy_InitApi(void)
     if (!BPy_InitJClass(&BPy_PixelPos_Class, "org/esa/beam/framework/datamodel/PixelPos")) return 0;
     if (!BPy_InitJClass(&BPy_BitRaster_Class, "org/esa/beam/util/BitRaster")) return 0;
     if (!BPy_InitJClass(&BPy_ProductNode_Class, "org/esa/beam/framework/datamodel/ProductNode")) return 0;
-    if (!BPy_InitJClass(&BPy_ProductIO_Class, "org/esa/beam/framework/dataio/ProductIO")) return 0;
     if (!BPy_InitJClass(&BPy_Rectangle_Class, "java/awt/Rectangle")) return 0;
+    if (!BPy_InitJClass(&BPy_ProductIO_Class, "org/esa/beam/framework/dataio/ProductIO")) return 0;
     if (!BPy_InitJClass(&BPy_SampleCoding_Class, "org/esa/beam/framework/datamodel/SampleCoding")) return 0;
     if (!BPy_InitJClass(&BPy_Object_Class, "java/lang/Object")) return 0;
     if (!BPy_InitJClass(&BPy_ProductReader_Class, "org/esa/beam/framework/dataio/ProductReader")) return 0;
@@ -8611,14 +8731,15 @@ jboolean BPy_InitApi(void)
     if (!BPy_InitJClass(&BPy_Parser_Class, "com/bc/jexp/Parser")) return 0;
     if (!BPy_InitJClass(&BPy_ProductData_Class, "org/esa/beam/framework/datamodel/ProductData")) return 0;
     if (!BPy_InitJClass(&BPy_OperatorSpi_Class, "org/esa/beam/framework/gpf/OperatorSpi")) return 0;
+    if (!BPy_InitJClass(&BPy_JtsGeometryConverter_Class, "org/esa/beam/util/converters/JtsGeometryConverter")) return 0;
     if (!BPy_InitJClass(&BPy_Term_Class, "com/bc/jexp/Term")) return 0;
     if (!BPy_InitJClass(&BPy_RasterDataNode_Class, "org/esa/beam/framework/datamodel/RasterDataNode")) return 0;
     if (!BPy_InitJClass(&BPy_Product_AutoGrouping_Class, "org/esa/beam/framework/datamodel/Product$AutoGrouping")) return 0;
     if (!BPy_InitJClass(&BPy_Dimension_Class, "java/awt/Dimension")) return 0;
     if (!BPy_InitJClass(&BPy_Stx_Class, "org/esa/beam/framework/datamodel/Stx")) return 0;
     if (!BPy_InitJClass(&BPy_ImageOutputStream_Class, "javax/imageio/stream/ImageOutputStream")) return 0;
-    if (!BPy_InitJClass(&BPy_SimpleFeatureType_Class, "org/opengis/feature/simple/SimpleFeatureType")) return 0;
     if (!BPy_InitJClass(&BPy_AngularDirection_Class, "org/esa/beam/framework/datamodel/AngularDirection")) return 0;
+    if (!BPy_InitJClass(&BPy_SimpleFeatureType_Class, "org/opengis/feature/simple/SimpleFeatureType")) return 0;
     if (!BPy_InitJClass(&BPy_ProductData_UTC_Class, "org/esa/beam/framework/datamodel/ProductData$UTC")) return 0;
     if (!BPy_InitJClass(&BPy_RenderedImage_Class, "java/awt/image/RenderedImage")) return 0;
     if (!BPy_InitJClass(&BPy_Iterator_Class, "java/util/Iterator")) return 0;
@@ -8637,8 +8758,8 @@ jboolean BPy_InitApi(void)
     if (!BPy_InitJClass(&BPy_Map_Class, "java/util/Map")) return 0;
     if (!BPy_InitJClass(&BPy_SubsetOp_Class, "org/esa/beam/gpf/operators/standard/SubsetOp")) return 0;
     if (!BPy_InitJClass(&BPy_Pointing_Class, "org/esa/beam/framework/datamodel/Pointing")) return 0;
-    if (!BPy_InitJClass(&BPy_PointingFactory_Class, "org/esa/beam/framework/datamodel/PointingFactory")) return 0;
     if (!BPy_InitJClass(&BPy_PlacemarkDescriptor_Class, "org/esa/beam/framework/datamodel/PlacemarkDescriptor")) return 0;
+    if (!BPy_InitJClass(&BPy_PointingFactory_Class, "org/esa/beam/framework/datamodel/PointingFactory")) return 0;
     if (!BPy_InitJClass(&BPy_Point2D_Class, "java/awt/geom/Point2D")) return 0;
     if (!BPy_InitJClass(&BPy_Scaling_Class, "org/esa/beam/framework/datamodel/Scaling")) return 0;
     if (!BPy_InitJClass(&BPy_Collection_Class, "java/util/Collection")) return 0;
@@ -8959,6 +9080,738 @@ PyObject* BeamPyGeoCoding_getImageToMapTransform(PyObject* self, PyObject* args)
     _resultPyObj = BPy_FromJObject(&MathTransform_Type, _resultJObj);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
+}
+
+PyObject* BeamPyJtsGeometryConverter_newJtsGeometryConverter(PyObject* self, PyObject* args)
+{
+    static jmethodID _method = NULL;
+    PyObject* _resultPyObj = NULL;
+    jobject _resultJObj = NULL;
+    if (!BPy_InitApi()) {
+        return NULL;
+    }
+    if (!BPy_InitJMethod(&_method, BPy_JtsGeometryConverter_Class, "org.esa.beam.util.converters.JtsGeometryConverter", "<init>", "()V", 0)) {
+        return NULL;
+    }
+    _resultJObj = (*jenv)->NewObject(jenv, BPy_JtsGeometryConverter_Class, _method);
+    CHECK_JVM_EXCEPTION("org.esa.beam.util.converters.JtsGeometryConverter#<init>()V");
+    _resultPyObj = BPy_FromJObject(&JtsGeometryConverter_Type, _resultJObj);
+    (*jenv)->DeleteLocalRef(jenv, _resultJObj);
+    return _resultPyObj;
+}
+
+PyObject* BeamPyJtsGeometryConverter_getValueType(PyObject* self, PyObject* args)
+{
+    static jmethodID _method = NULL;
+    
+    jobject _thisJObj = NULL;
+    PyObject* _resultPyObj = NULL;
+    jobject _resultJObj = NULL;
+    if (!BPy_InitApi()) {
+        return NULL;
+    }
+    if (!BPy_InitJMethod(&_method, BPy_JtsGeometryConverter_Class, "org.esa.beam.util.converters.JtsGeometryConverter", "getValueType", "()Ljava/lang/Class;", 0)) {
+        return NULL;
+    }
+    _thisJObj = JObject_AsJObjectRefT(self, BPy_JtsGeometryConverter_Class);
+    if (_thisJObj == NULL) {
+        PyErr_SetString(PyExc_ValueError, "argument 'self' must be of type 'JtsGeometryConverter' (Java object reference)");
+        return NULL;
+    }
+    _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
+    CHECK_JVM_EXCEPTION("org.esa.beam.util.converters.JtsGeometryConverter#getValueType()Ljava/lang/Class;");
+    _resultPyObj = BPy_FromJObject(&Class_Type, _resultJObj);
+    (*jenv)->DeleteLocalRef(jenv, _resultJObj);
+    return _resultPyObj;
+}
+
+PyObject* BeamPyJtsGeometryConverter_parse(PyObject* self, PyObject* args)
+{
+    static jmethodID _method = NULL;
+    
+    jobject _thisJObj = NULL;
+    const char* text = NULL;
+    jstring textJObj = NULL;
+    PyObject* _resultPyObj = NULL;
+    jobject _resultJObj = NULL;
+    if (!BPy_InitApi()) {
+        return NULL;
+    }
+    if (!BPy_InitJMethod(&_method, BPy_JtsGeometryConverter_Class, "org.esa.beam.util.converters.JtsGeometryConverter", "parse", "(Ljava/lang/String;)Lcom/vividsolutions/jts/geom/Geometry;", 0)) {
+        return NULL;
+    }
+    _thisJObj = JObject_AsJObjectRefT(self, BPy_JtsGeometryConverter_Class);
+    if (_thisJObj == NULL) {
+        PyErr_SetString(PyExc_ValueError, "argument 'self' must be of type 'JtsGeometryConverter' (Java object reference)");
+        return NULL;
+    }
+    if (!PyArg_ParseTuple(args, "s:parse", &text)) {
+        return NULL;
+    }
+    textJObj =(*jenv)->NewStringUTF(jenv, text);
+    _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, textJObj);
+    CHECK_JVM_EXCEPTION("org.esa.beam.util.converters.JtsGeometryConverter#parse(Ljava/lang/String;)Lcom/vividsolutions/jts/geom/Geometry;");
+    _resultPyObj = BPy_FromJObject(&Geometry_Type, _resultJObj);
+    (*jenv)->DeleteLocalRef(jenv, textJObj);
+    (*jenv)->DeleteLocalRef(jenv, _resultJObj);
+    return _resultPyObj;
+}
+
+PyObject* BeamPyJtsGeometryConverter_format(PyObject* self, PyObject* args)
+{
+    static jmethodID _method = NULL;
+    
+    jobject _thisJObj = NULL;
+    PyObject* valuePyObj = NULL;
+    jobject valueJObj = NULL;
+    PyObject* _resultPyObj = NULL;
+    jobject _resultJObj = NULL;
+    if (!BPy_InitApi()) {
+        return NULL;
+    }
+    if (!BPy_InitJMethod(&_method, BPy_JtsGeometryConverter_Class, "org.esa.beam.util.converters.JtsGeometryConverter", "format", "(Lcom/vividsolutions/jts/geom/Geometry;)Ljava/lang/String;", 0)) {
+        return NULL;
+    }
+    _thisJObj = JObject_AsJObjectRefT(self, BPy_JtsGeometryConverter_Class);
+    if (_thisJObj == NULL) {
+        PyErr_SetString(PyExc_ValueError, "argument 'self' must be of type 'JtsGeometryConverter' (Java object reference)");
+        return NULL;
+    }
+    if (!PyArg_ParseTuple(args, "O:format", &valuePyObj)) {
+        return NULL;
+    }
+    {
+        jboolean ok = 1;
+        valueJObj = BPy_ToJObjectT(valuePyObj, BPy_Geometry_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
+    }
+    _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, valueJObj);
+    CHECK_JVM_EXCEPTION("org.esa.beam.util.converters.JtsGeometryConverter#format(Lcom/vividsolutions/jts/geom/Geometry;)Ljava/lang/String;");
+    _resultPyObj = BPy_FromJString((jstring) _resultJObj);
+    (*jenv)->DeleteLocalRef(jenv, _resultJObj);
+    return _resultPyObj;
+}
+
+PyObject* BeamPyJtsGeometryConverter_registerConverter(PyObject* self, PyObject* args)
+{
+    static jmethodID _method = NULL;
+    if (!BPy_InitApi()) {
+        return NULL;
+    }
+    if (!BPy_InitJMethod(&_method, BPy_JtsGeometryConverter_Class, "org.esa.beam.util.converters.JtsGeometryConverter", "registerConverter", "()V", 1)) {
+        return NULL;
+    }
+    (*jenv)->CallStaticVoidMethod(jenv, BPy_JtsGeometryConverter_Class, _method);
+    CHECK_JVM_EXCEPTION("org.esa.beam.util.converters.JtsGeometryConverter#registerConverter()V");
+    return Py_BuildValue("");
+}
+
+PyObject* BeamPyProductSubsetDef_newProductSubsetDef1(PyObject* self, PyObject* args)
+{
+    static jmethodID _method = NULL;
+    PyObject* _resultPyObj = NULL;
+    jobject _resultJObj = NULL;
+    if (!BPy_InitApi()) {
+        return NULL;
+    }
+    if (!BPy_InitJMethod(&_method, BPy_ProductSubsetDef_Class, "org.esa.beam.framework.dataio.ProductSubsetDef", "<init>", "()V", 0)) {
+        return NULL;
+    }
+    _resultJObj = (*jenv)->NewObject(jenv, BPy_ProductSubsetDef_Class, _method);
+    CHECK_JVM_EXCEPTION("org.esa.beam.framework.dataio.ProductSubsetDef#<init>()V");
+    _resultPyObj = BPy_FromJObject(&ProductSubsetDef_Type, _resultJObj);
+    (*jenv)->DeleteLocalRef(jenv, _resultJObj);
+    return _resultPyObj;
+}
+
+PyObject* BeamPyProductSubsetDef_newProductSubsetDef2(PyObject* self, PyObject* args)
+{
+    static jmethodID _method = NULL;
+    const char* subsetName = NULL;
+    jstring subsetNameJObj = NULL;
+    PyObject* _resultPyObj = NULL;
+    jobject _resultJObj = NULL;
+    if (!BPy_InitApi()) {
+        return NULL;
+    }
+    if (!BPy_InitJMethod(&_method, BPy_ProductSubsetDef_Class, "org.esa.beam.framework.dataio.ProductSubsetDef", "<init>", "(Ljava/lang/String;)V", 0)) {
+        return NULL;
+    }
+    if (!PyArg_ParseTuple(args, "s:<init>", &subsetName)) {
+        return NULL;
+    }
+    subsetNameJObj =(*jenv)->NewStringUTF(jenv, subsetName);
+    _resultJObj = (*jenv)->NewObject(jenv, BPy_ProductSubsetDef_Class, _method, subsetNameJObj);
+    CHECK_JVM_EXCEPTION("org.esa.beam.framework.dataio.ProductSubsetDef#<init>(Ljava/lang/String;)V");
+    _resultPyObj = BPy_FromJObject(&ProductSubsetDef_Type, _resultJObj);
+    (*jenv)->DeleteLocalRef(jenv, subsetNameJObj);
+    (*jenv)->DeleteLocalRef(jenv, _resultJObj);
+    return _resultPyObj;
+}
+
+PyObject* BeamPyProductSubsetDef_getSubsetName(PyObject* self, PyObject* args)
+{
+    static jmethodID _method = NULL;
+    
+    jobject _thisJObj = NULL;
+    PyObject* _resultPyObj = NULL;
+    jobject _resultJObj = NULL;
+    if (!BPy_InitApi()) {
+        return NULL;
+    }
+    if (!BPy_InitJMethod(&_method, BPy_ProductSubsetDef_Class, "org.esa.beam.framework.dataio.ProductSubsetDef", "getSubsetName", "()Ljava/lang/String;", 0)) {
+        return NULL;
+    }
+    _thisJObj = JObject_AsJObjectRefT(self, BPy_ProductSubsetDef_Class);
+    if (_thisJObj == NULL) {
+        PyErr_SetString(PyExc_ValueError, "argument 'self' must be of type 'ProductSubsetDef' (Java object reference)");
+        return NULL;
+    }
+    _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
+    CHECK_JVM_EXCEPTION("org.esa.beam.framework.dataio.ProductSubsetDef#getSubsetName()Ljava/lang/String;");
+    _resultPyObj = BPy_FromJString((jstring) _resultJObj);
+    (*jenv)->DeleteLocalRef(jenv, _resultJObj);
+    return _resultPyObj;
+}
+
+PyObject* BeamPyProductSubsetDef_setSubsetName(PyObject* self, PyObject* args)
+{
+    static jmethodID _method = NULL;
+    
+    jobject _thisJObj = NULL;
+    const char* subsetName = NULL;
+    jstring subsetNameJObj = NULL;
+    if (!BPy_InitApi()) {
+        return NULL;
+    }
+    if (!BPy_InitJMethod(&_method, BPy_ProductSubsetDef_Class, "org.esa.beam.framework.dataio.ProductSubsetDef", "setSubsetName", "(Ljava/lang/String;)V", 0)) {
+        return NULL;
+    }
+    _thisJObj = JObject_AsJObjectRefT(self, BPy_ProductSubsetDef_Class);
+    if (_thisJObj == NULL) {
+        PyErr_SetString(PyExc_ValueError, "argument 'self' must be of type 'ProductSubsetDef' (Java object reference)");
+        return NULL;
+    }
+    if (!PyArg_ParseTuple(args, "s:setSubsetName", &subsetName)) {
+        return NULL;
+    }
+    subsetNameJObj =(*jenv)->NewStringUTF(jenv, subsetName);
+    (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, subsetNameJObj);
+    CHECK_JVM_EXCEPTION("org.esa.beam.framework.dataio.ProductSubsetDef#setSubsetName(Ljava/lang/String;)V");
+    (*jenv)->DeleteLocalRef(jenv, subsetNameJObj);
+    return Py_BuildValue("");
+}
+
+PyObject* BeamPyProductSubsetDef_setTreatVirtualBandsAsRealBands(PyObject* self, PyObject* args)
+{
+    static jmethodID _method = NULL;
+    
+    jobject _thisJObj = NULL;
+    jboolean flag = (jboolean) 0;
+    if (!BPy_InitApi()) {
+        return NULL;
+    }
+    if (!BPy_InitJMethod(&_method, BPy_ProductSubsetDef_Class, "org.esa.beam.framework.dataio.ProductSubsetDef", "setTreatVirtualBandsAsRealBands", "(Z)V", 0)) {
+        return NULL;
+    }
+    _thisJObj = JObject_AsJObjectRefT(self, BPy_ProductSubsetDef_Class);
+    if (_thisJObj == NULL) {
+        PyErr_SetString(PyExc_ValueError, "argument 'self' must be of type 'ProductSubsetDef' (Java object reference)");
+        return NULL;
+    }
+    if (!PyArg_ParseTuple(args, "b:setTreatVirtualBandsAsRealBands", &flag)) {
+        return NULL;
+    }
+    (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, flag);
+    CHECK_JVM_EXCEPTION("org.esa.beam.framework.dataio.ProductSubsetDef#setTreatVirtualBandsAsRealBands(Z)V");
+    return Py_BuildValue("");
+}
+
+PyObject* BeamPyProductSubsetDef_getTreatVirtualBandsAsRealBands(PyObject* self, PyObject* args)
+{
+    static jmethodID _method = NULL;
+    
+    jobject _thisJObj = NULL;
+    jboolean _result = (jboolean) 0;
+    if (!BPy_InitApi()) {
+        return NULL;
+    }
+    if (!BPy_InitJMethod(&_method, BPy_ProductSubsetDef_Class, "org.esa.beam.framework.dataio.ProductSubsetDef", "getTreatVirtualBandsAsRealBands", "()Z", 0)) {
+        return NULL;
+    }
+    _thisJObj = JObject_AsJObjectRefT(self, BPy_ProductSubsetDef_Class);
+    if (_thisJObj == NULL) {
+        PyErr_SetString(PyExc_ValueError, "argument 'self' must be of type 'ProductSubsetDef' (Java object reference)");
+        return NULL;
+    }
+    _result = (*jenv)->CallBooleanMethod(jenv, _thisJObj, _method);
+    CHECK_JVM_EXCEPTION("org.esa.beam.framework.dataio.ProductSubsetDef#getTreatVirtualBandsAsRealBands()Z");
+    return PyBool_FromLong(_result);
+}
+
+PyObject* BeamPyProductSubsetDef_getNodeNames(PyObject* self, PyObject* args)
+{
+    static jmethodID _method = NULL;
+    
+    jobject _thisJObj = NULL;
+    PyObject* _resultPyObj = NULL;
+    jobject _resultJObj = NULL;
+    if (!BPy_InitApi()) {
+        return NULL;
+    }
+    if (!BPy_InitJMethod(&_method, BPy_ProductSubsetDef_Class, "org.esa.beam.framework.dataio.ProductSubsetDef", "getNodeNames", "()[Ljava/lang/String;", 0)) {
+        return NULL;
+    }
+    _thisJObj = JObject_AsJObjectRefT(self, BPy_ProductSubsetDef_Class);
+    if (_thisJObj == NULL) {
+        PyErr_SetString(PyExc_ValueError, "argument 'self' must be of type 'ProductSubsetDef' (Java object reference)");
+        return NULL;
+    }
+    _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
+    CHECK_JVM_EXCEPTION("org.esa.beam.framework.dataio.ProductSubsetDef#getNodeNames()[Ljava/lang/String;");
+    _resultPyObj = BPy_FromJStringArray((jarray) _resultJObj);
+    (*jenv)->DeleteLocalRef(jenv, _resultJObj);
+    return _resultPyObj;
+}
+
+PyObject* BeamPyProductSubsetDef_setNodeNames(PyObject* self, PyObject* args)
+{
+    static jmethodID _method = NULL;
+    
+    jobject _thisJObj = NULL;
+    PyObject* namesPyObj = NULL;
+    jarray namesJObj = NULL;
+    if (!BPy_InitApi()) {
+        return NULL;
+    }
+    if (!BPy_InitJMethod(&_method, BPy_ProductSubsetDef_Class, "org.esa.beam.framework.dataio.ProductSubsetDef", "setNodeNames", "([Ljava/lang/String;)V", 0)) {
+        return NULL;
+    }
+    _thisJObj = JObject_AsJObjectRefT(self, BPy_ProductSubsetDef_Class);
+    if (_thisJObj == NULL) {
+        PyErr_SetString(PyExc_ValueError, "argument 'self' must be of type 'ProductSubsetDef' (Java object reference)");
+        return NULL;
+    }
+    if (!PyArg_ParseTuple(args, "O:setNodeNames", &namesPyObj)) {
+        return NULL;
+    }
+    {
+        jboolean ok = 1;
+        namesJObj = BPy_ToJStringArray(namesPyObj, &ok);
+        if (!ok) {
+            return NULL;
+        }
+    }
+    (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, namesJObj);
+    CHECK_JVM_EXCEPTION("org.esa.beam.framework.dataio.ProductSubsetDef#setNodeNames([Ljava/lang/String;)V");
+    (*jenv)->DeleteLocalRef(jenv, namesJObj);
+    return Py_BuildValue("");
+}
+
+PyObject* BeamPyProductSubsetDef_addNodeName(PyObject* self, PyObject* args)
+{
+    static jmethodID _method = NULL;
+    
+    jobject _thisJObj = NULL;
+    const char* name = NULL;
+    jstring nameJObj = NULL;
+    if (!BPy_InitApi()) {
+        return NULL;
+    }
+    if (!BPy_InitJMethod(&_method, BPy_ProductSubsetDef_Class, "org.esa.beam.framework.dataio.ProductSubsetDef", "addNodeName", "(Ljava/lang/String;)V", 0)) {
+        return NULL;
+    }
+    _thisJObj = JObject_AsJObjectRefT(self, BPy_ProductSubsetDef_Class);
+    if (_thisJObj == NULL) {
+        PyErr_SetString(PyExc_ValueError, "argument 'self' must be of type 'ProductSubsetDef' (Java object reference)");
+        return NULL;
+    }
+    if (!PyArg_ParseTuple(args, "s:addNodeName", &name)) {
+        return NULL;
+    }
+    nameJObj =(*jenv)->NewStringUTF(jenv, name);
+    (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, nameJObj);
+    CHECK_JVM_EXCEPTION("org.esa.beam.framework.dataio.ProductSubsetDef#addNodeName(Ljava/lang/String;)V");
+    (*jenv)->DeleteLocalRef(jenv, nameJObj);
+    return Py_BuildValue("");
+}
+
+PyObject* BeamPyProductSubsetDef_addNodeNames(PyObject* self, PyObject* args)
+{
+    static jmethodID _method = NULL;
+    
+    jobject _thisJObj = NULL;
+    PyObject* namesPyObj = NULL;
+    jarray namesJObj = NULL;
+    if (!BPy_InitApi()) {
+        return NULL;
+    }
+    if (!BPy_InitJMethod(&_method, BPy_ProductSubsetDef_Class, "org.esa.beam.framework.dataio.ProductSubsetDef", "addNodeNames", "([Ljava/lang/String;)V", 0)) {
+        return NULL;
+    }
+    _thisJObj = JObject_AsJObjectRefT(self, BPy_ProductSubsetDef_Class);
+    if (_thisJObj == NULL) {
+        PyErr_SetString(PyExc_ValueError, "argument 'self' must be of type 'ProductSubsetDef' (Java object reference)");
+        return NULL;
+    }
+    if (!PyArg_ParseTuple(args, "O:addNodeNames", &namesPyObj)) {
+        return NULL;
+    }
+    {
+        jboolean ok = 1;
+        namesJObj = BPy_ToJStringArray(namesPyObj, &ok);
+        if (!ok) {
+            return NULL;
+        }
+    }
+    (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, namesJObj);
+    CHECK_JVM_EXCEPTION("org.esa.beam.framework.dataio.ProductSubsetDef#addNodeNames([Ljava/lang/String;)V");
+    (*jenv)->DeleteLocalRef(jenv, namesJObj);
+    return Py_BuildValue("");
+}
+
+PyObject* BeamPyProductSubsetDef_removeNodeName(PyObject* self, PyObject* args)
+{
+    static jmethodID _method = NULL;
+    
+    jobject _thisJObj = NULL;
+    const char* name = NULL;
+    jstring nameJObj = NULL;
+    jboolean _result = (jboolean) 0;
+    if (!BPy_InitApi()) {
+        return NULL;
+    }
+    if (!BPy_InitJMethod(&_method, BPy_ProductSubsetDef_Class, "org.esa.beam.framework.dataio.ProductSubsetDef", "removeNodeName", "(Ljava/lang/String;)Z", 0)) {
+        return NULL;
+    }
+    _thisJObj = JObject_AsJObjectRefT(self, BPy_ProductSubsetDef_Class);
+    if (_thisJObj == NULL) {
+        PyErr_SetString(PyExc_ValueError, "argument 'self' must be of type 'ProductSubsetDef' (Java object reference)");
+        return NULL;
+    }
+    if (!PyArg_ParseTuple(args, "s:removeNodeName", &name)) {
+        return NULL;
+    }
+    nameJObj =(*jenv)->NewStringUTF(jenv, name);
+    _result = (*jenv)->CallBooleanMethod(jenv, _thisJObj, _method, nameJObj);
+    CHECK_JVM_EXCEPTION("org.esa.beam.framework.dataio.ProductSubsetDef#removeNodeName(Ljava/lang/String;)Z");
+    (*jenv)->DeleteLocalRef(jenv, nameJObj);
+    return PyBool_FromLong(_result);
+}
+
+PyObject* BeamPyProductSubsetDef_containsNodeName(PyObject* self, PyObject* args)
+{
+    static jmethodID _method = NULL;
+    
+    jobject _thisJObj = NULL;
+    const char* name = NULL;
+    jstring nameJObj = NULL;
+    jboolean _result = (jboolean) 0;
+    if (!BPy_InitApi()) {
+        return NULL;
+    }
+    if (!BPy_InitJMethod(&_method, BPy_ProductSubsetDef_Class, "org.esa.beam.framework.dataio.ProductSubsetDef", "containsNodeName", "(Ljava/lang/String;)Z", 0)) {
+        return NULL;
+    }
+    _thisJObj = JObject_AsJObjectRefT(self, BPy_ProductSubsetDef_Class);
+    if (_thisJObj == NULL) {
+        PyErr_SetString(PyExc_ValueError, "argument 'self' must be of type 'ProductSubsetDef' (Java object reference)");
+        return NULL;
+    }
+    if (!PyArg_ParseTuple(args, "s:containsNodeName", &name)) {
+        return NULL;
+    }
+    nameJObj =(*jenv)->NewStringUTF(jenv, name);
+    _result = (*jenv)->CallBooleanMethod(jenv, _thisJObj, _method, nameJObj);
+    CHECK_JVM_EXCEPTION("org.esa.beam.framework.dataio.ProductSubsetDef#containsNodeName(Ljava/lang/String;)Z");
+    (*jenv)->DeleteLocalRef(jenv, nameJObj);
+    return PyBool_FromLong(_result);
+}
+
+PyObject* BeamPyProductSubsetDef_isNodeAccepted(PyObject* self, PyObject* args)
+{
+    static jmethodID _method = NULL;
+    
+    jobject _thisJObj = NULL;
+    const char* name = NULL;
+    jstring nameJObj = NULL;
+    jboolean _result = (jboolean) 0;
+    if (!BPy_InitApi()) {
+        return NULL;
+    }
+    if (!BPy_InitJMethod(&_method, BPy_ProductSubsetDef_Class, "org.esa.beam.framework.dataio.ProductSubsetDef", "isNodeAccepted", "(Ljava/lang/String;)Z", 0)) {
+        return NULL;
+    }
+    _thisJObj = JObject_AsJObjectRefT(self, BPy_ProductSubsetDef_Class);
+    if (_thisJObj == NULL) {
+        PyErr_SetString(PyExc_ValueError, "argument 'self' must be of type 'ProductSubsetDef' (Java object reference)");
+        return NULL;
+    }
+    if (!PyArg_ParseTuple(args, "s:isNodeAccepted", &name)) {
+        return NULL;
+    }
+    nameJObj =(*jenv)->NewStringUTF(jenv, name);
+    _result = (*jenv)->CallBooleanMethod(jenv, _thisJObj, _method, nameJObj);
+    CHECK_JVM_EXCEPTION("org.esa.beam.framework.dataio.ProductSubsetDef#isNodeAccepted(Ljava/lang/String;)Z");
+    (*jenv)->DeleteLocalRef(jenv, nameJObj);
+    return PyBool_FromLong(_result);
+}
+
+PyObject* BeamPyProductSubsetDef_getRegion(PyObject* self, PyObject* args)
+{
+    static jmethodID _method = NULL;
+    
+    jobject _thisJObj = NULL;
+    PyObject* _resultPyObj = NULL;
+    jobject _resultJObj = NULL;
+    if (!BPy_InitApi()) {
+        return NULL;
+    }
+    if (!BPy_InitJMethod(&_method, BPy_ProductSubsetDef_Class, "org.esa.beam.framework.dataio.ProductSubsetDef", "getRegion", "()Ljava/awt/Rectangle;", 0)) {
+        return NULL;
+    }
+    _thisJObj = JObject_AsJObjectRefT(self, BPy_ProductSubsetDef_Class);
+    if (_thisJObj == NULL) {
+        PyErr_SetString(PyExc_ValueError, "argument 'self' must be of type 'ProductSubsetDef' (Java object reference)");
+        return NULL;
+    }
+    _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
+    CHECK_JVM_EXCEPTION("org.esa.beam.framework.dataio.ProductSubsetDef#getRegion()Ljava/awt/Rectangle;");
+    _resultPyObj = BPy_FromJObject(&Rectangle_Type, _resultJObj);
+    (*jenv)->DeleteLocalRef(jenv, _resultJObj);
+    return _resultPyObj;
+}
+
+PyObject* BeamPyProductSubsetDef_setRegion2(PyObject* self, PyObject* args)
+{
+    static jmethodID _method = NULL;
+    
+    jobject _thisJObj = NULL;
+    PyObject* regionPyObj = NULL;
+    jobject regionJObj = NULL;
+    if (!BPy_InitApi()) {
+        return NULL;
+    }
+    if (!BPy_InitJMethod(&_method, BPy_ProductSubsetDef_Class, "org.esa.beam.framework.dataio.ProductSubsetDef", "setRegion", "(Ljava/awt/Rectangle;)V", 0)) {
+        return NULL;
+    }
+    _thisJObj = JObject_AsJObjectRefT(self, BPy_ProductSubsetDef_Class);
+    if (_thisJObj == NULL) {
+        PyErr_SetString(PyExc_ValueError, "argument 'self' must be of type 'ProductSubsetDef' (Java object reference)");
+        return NULL;
+    }
+    if (!PyArg_ParseTuple(args, "O:setRegion", &regionPyObj)) {
+        return NULL;
+    }
+    {
+        jboolean ok = 1;
+        regionJObj = BPy_ToJObjectT(regionPyObj, BPy_Rectangle_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
+    }
+    (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, regionJObj);
+    CHECK_JVM_EXCEPTION("org.esa.beam.framework.dataio.ProductSubsetDef#setRegion(Ljava/awt/Rectangle;)V");
+    return Py_BuildValue("");
+}
+
+PyObject* BeamPyProductSubsetDef_setRegion1(PyObject* self, PyObject* args)
+{
+    static jmethodID _method = NULL;
+    
+    jobject _thisJObj = NULL;
+    jint x = (jint) 0;
+    jint y = (jint) 0;
+    jint w = (jint) 0;
+    jint h = (jint) 0;
+    if (!BPy_InitApi()) {
+        return NULL;
+    }
+    if (!BPy_InitJMethod(&_method, BPy_ProductSubsetDef_Class, "org.esa.beam.framework.dataio.ProductSubsetDef", "setRegion", "(IIII)V", 0)) {
+        return NULL;
+    }
+    _thisJObj = JObject_AsJObjectRefT(self, BPy_ProductSubsetDef_Class);
+    if (_thisJObj == NULL) {
+        PyErr_SetString(PyExc_ValueError, "argument 'self' must be of type 'ProductSubsetDef' (Java object reference)");
+        return NULL;
+    }
+    if (!PyArg_ParseTuple(args, "iiii:setRegion", &x, &y, &w, &h)) {
+        return NULL;
+    }
+    (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, x, y, w, h);
+    CHECK_JVM_EXCEPTION("org.esa.beam.framework.dataio.ProductSubsetDef#setRegion(IIII)V");
+    return Py_BuildValue("");
+}
+
+PyObject* BeamPyProductSubsetDef_setSubSampling(PyObject* self, PyObject* args)
+{
+    static jmethodID _method = NULL;
+    
+    jobject _thisJObj = NULL;
+    jint subSamplingX = (jint) 0;
+    jint subSamplingY = (jint) 0;
+    if (!BPy_InitApi()) {
+        return NULL;
+    }
+    if (!BPy_InitJMethod(&_method, BPy_ProductSubsetDef_Class, "org.esa.beam.framework.dataio.ProductSubsetDef", "setSubSampling", "(II)V", 0)) {
+        return NULL;
+    }
+    _thisJObj = JObject_AsJObjectRefT(self, BPy_ProductSubsetDef_Class);
+    if (_thisJObj == NULL) {
+        PyErr_SetString(PyExc_ValueError, "argument 'self' must be of type 'ProductSubsetDef' (Java object reference)");
+        return NULL;
+    }
+    if (!PyArg_ParseTuple(args, "ii:setSubSampling", &subSamplingX, &subSamplingY)) {
+        return NULL;
+    }
+    (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, subSamplingX, subSamplingY);
+    CHECK_JVM_EXCEPTION("org.esa.beam.framework.dataio.ProductSubsetDef#setSubSampling(II)V");
+    return Py_BuildValue("");
+}
+
+PyObject* BeamPyProductSubsetDef_getSubSamplingX(PyObject* self, PyObject* args)
+{
+    static jmethodID _method = NULL;
+    
+    jobject _thisJObj = NULL;
+    jint _result = (jint) 0;
+    if (!BPy_InitApi()) {
+        return NULL;
+    }
+    if (!BPy_InitJMethod(&_method, BPy_ProductSubsetDef_Class, "org.esa.beam.framework.dataio.ProductSubsetDef", "getSubSamplingX", "()I", 0)) {
+        return NULL;
+    }
+    _thisJObj = JObject_AsJObjectRefT(self, BPy_ProductSubsetDef_Class);
+    if (_thisJObj == NULL) {
+        PyErr_SetString(PyExc_ValueError, "argument 'self' must be of type 'ProductSubsetDef' (Java object reference)");
+        return NULL;
+    }
+    _result = (*jenv)->CallIntMethod(jenv, _thisJObj, _method);
+    CHECK_JVM_EXCEPTION("org.esa.beam.framework.dataio.ProductSubsetDef#getSubSamplingX()I");
+    return PyLong_FromLong(_result);
+}
+
+PyObject* BeamPyProductSubsetDef_getSubSamplingY(PyObject* self, PyObject* args)
+{
+    static jmethodID _method = NULL;
+    
+    jobject _thisJObj = NULL;
+    jint _result = (jint) 0;
+    if (!BPy_InitApi()) {
+        return NULL;
+    }
+    if (!BPy_InitJMethod(&_method, BPy_ProductSubsetDef_Class, "org.esa.beam.framework.dataio.ProductSubsetDef", "getSubSamplingY", "()I", 0)) {
+        return NULL;
+    }
+    _thisJObj = JObject_AsJObjectRefT(self, BPy_ProductSubsetDef_Class);
+    if (_thisJObj == NULL) {
+        PyErr_SetString(PyExc_ValueError, "argument 'self' must be of type 'ProductSubsetDef' (Java object reference)");
+        return NULL;
+    }
+    _result = (*jenv)->CallIntMethod(jenv, _thisJObj, _method);
+    CHECK_JVM_EXCEPTION("org.esa.beam.framework.dataio.ProductSubsetDef#getSubSamplingY()I");
+    return PyLong_FromLong(_result);
+}
+
+PyObject* BeamPyProductSubsetDef_getSceneRasterSize(PyObject* self, PyObject* args)
+{
+    static jmethodID _method = NULL;
+    
+    jobject _thisJObj = NULL;
+    jint maxWidth = (jint) 0;
+    jint maxHeight = (jint) 0;
+    PyObject* _resultPyObj = NULL;
+    jobject _resultJObj = NULL;
+    if (!BPy_InitApi()) {
+        return NULL;
+    }
+    if (!BPy_InitJMethod(&_method, BPy_ProductSubsetDef_Class, "org.esa.beam.framework.dataio.ProductSubsetDef", "getSceneRasterSize", "(II)Ljava/awt/Dimension;", 0)) {
+        return NULL;
+    }
+    _thisJObj = JObject_AsJObjectRefT(self, BPy_ProductSubsetDef_Class);
+    if (_thisJObj == NULL) {
+        PyErr_SetString(PyExc_ValueError, "argument 'self' must be of type 'ProductSubsetDef' (Java object reference)");
+        return NULL;
+    }
+    if (!PyArg_ParseTuple(args, "ii:getSceneRasterSize", &maxWidth, &maxHeight)) {
+        return NULL;
+    }
+    _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, maxWidth, maxHeight);
+    CHECK_JVM_EXCEPTION("org.esa.beam.framework.dataio.ProductSubsetDef#getSceneRasterSize(II)Ljava/awt/Dimension;");
+    _resultPyObj = BPy_FromJObject(&Dimension_Type, _resultJObj);
+    (*jenv)->DeleteLocalRef(jenv, _resultJObj);
+    return _resultPyObj;
+}
+
+PyObject* BeamPyProductSubsetDef_setIgnoreMetadata(PyObject* self, PyObject* args)
+{
+    static jmethodID _method = NULL;
+    
+    jobject _thisJObj = NULL;
+    jboolean ignoreMetadata = (jboolean) 0;
+    if (!BPy_InitApi()) {
+        return NULL;
+    }
+    if (!BPy_InitJMethod(&_method, BPy_ProductSubsetDef_Class, "org.esa.beam.framework.dataio.ProductSubsetDef", "setIgnoreMetadata", "(Z)V", 0)) {
+        return NULL;
+    }
+    _thisJObj = JObject_AsJObjectRefT(self, BPy_ProductSubsetDef_Class);
+    if (_thisJObj == NULL) {
+        PyErr_SetString(PyExc_ValueError, "argument 'self' must be of type 'ProductSubsetDef' (Java object reference)");
+        return NULL;
+    }
+    if (!PyArg_ParseTuple(args, "b:setIgnoreMetadata", &ignoreMetadata)) {
+        return NULL;
+    }
+    (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, ignoreMetadata);
+    CHECK_JVM_EXCEPTION("org.esa.beam.framework.dataio.ProductSubsetDef#setIgnoreMetadata(Z)V");
+    return Py_BuildValue("");
+}
+
+PyObject* BeamPyProductSubsetDef_isIgnoreMetadata(PyObject* self, PyObject* args)
+{
+    static jmethodID _method = NULL;
+    
+    jobject _thisJObj = NULL;
+    jboolean _result = (jboolean) 0;
+    if (!BPy_InitApi()) {
+        return NULL;
+    }
+    if (!BPy_InitJMethod(&_method, BPy_ProductSubsetDef_Class, "org.esa.beam.framework.dataio.ProductSubsetDef", "isIgnoreMetadata", "()Z", 0)) {
+        return NULL;
+    }
+    _thisJObj = JObject_AsJObjectRefT(self, BPy_ProductSubsetDef_Class);
+    if (_thisJObj == NULL) {
+        PyErr_SetString(PyExc_ValueError, "argument 'self' must be of type 'ProductSubsetDef' (Java object reference)");
+        return NULL;
+    }
+    _result = (*jenv)->CallBooleanMethod(jenv, _thisJObj, _method);
+    CHECK_JVM_EXCEPTION("org.esa.beam.framework.dataio.ProductSubsetDef#isIgnoreMetadata()Z");
+    return PyBool_FromLong(_result);
+}
+
+PyObject* BeamPyProductSubsetDef_isEntireProductSelected(PyObject* self, PyObject* args)
+{
+    static jmethodID _method = NULL;
+    
+    jobject _thisJObj = NULL;
+    jboolean _result = (jboolean) 0;
+    if (!BPy_InitApi()) {
+        return NULL;
+    }
+    if (!BPy_InitJMethod(&_method, BPy_ProductSubsetDef_Class, "org.esa.beam.framework.dataio.ProductSubsetDef", "isEntireProductSelected", "()Z", 0)) {
+        return NULL;
+    }
+    _thisJObj = JObject_AsJObjectRefT(self, BPy_ProductSubsetDef_Class);
+    if (_thisJObj == NULL) {
+        PyErr_SetString(PyExc_ValueError, "argument 'self' must be of type 'ProductSubsetDef' (Java object reference)");
+        return NULL;
+    }
+    _result = (*jenv)->CallBooleanMethod(jenv, _thisJObj, _method);
+    CHECK_JVM_EXCEPTION("org.esa.beam.framework.dataio.ProductSubsetDef#isEntireProductSelected()Z");
+    return PyBool_FromLong(_result);
 }
 
 PyObject* BeamPyProductWriter_getWriterPlugIn(PyObject* self, PyObject* args)

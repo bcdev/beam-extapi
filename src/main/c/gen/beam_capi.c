@@ -62,8 +62,8 @@ jclass classServiceRegistry;
 jclass classPixelPos;
 jclass classBitRaster;
 jclass classProductNode;
-jclass classProductIO;
 jclass classRectangle;
+jclass classProductIO;
 jclass classSampleCoding;
 jclass classObject;
 jclass classProductReader;
@@ -105,14 +105,15 @@ jclass classMapTransform;
 jclass classParser;
 jclass classProductData;
 jclass classOperatorSpi;
+jclass classJtsGeometryConverter;
 jclass classTerm;
 jclass classRasterDataNode;
 jclass classProduct_AutoGrouping;
 jclass classDimension;
 jclass classStx;
 jclass classImageOutputStream;
-jclass classSimpleFeatureType;
 jclass classAngularDirection;
+jclass classSimpleFeatureType;
 jclass classProductData_UTC;
 jclass classRenderedImage;
 jclass classIterator;
@@ -131,8 +132,8 @@ jclass classProductUtils;
 jclass classMap;
 jclass classSubsetOp;
 jclass classPointing;
-jclass classPointingFactory;
 jclass classPlacemarkDescriptor;
+jclass classPointingFactory;
 jclass classPoint2D;
 jclass classScaling;
 jclass classCollection;
@@ -338,16 +339,16 @@ int beam_initApi()
         return exitCode;
     }
 
-    classProductIO = beam_findJvmClass("org/esa/beam/framework/dataio/ProductIO");
-    if (classProductIO == NULL) { 
-        fprintf(stderr, "beam_capi: Java class not found: org/esa/beam/framework/dataio/ProductIO\n");
+    classRectangle = beam_findJvmClass("java/awt/Rectangle");
+    if (classRectangle == NULL) { 
+        fprintf(stderr, "beam_capi: Java class not found: java/awt/Rectangle\n");
         exitCode = 2011;
         return exitCode;
     }
 
-    classRectangle = beam_findJvmClass("java/awt/Rectangle");
-    if (classRectangle == NULL) { 
-        fprintf(stderr, "beam_capi: Java class not found: java/awt/Rectangle\n");
+    classProductIO = beam_findJvmClass("org/esa/beam/framework/dataio/ProductIO");
+    if (classProductIO == NULL) { 
+        fprintf(stderr, "beam_capi: Java class not found: org/esa/beam/framework/dataio/ProductIO\n");
         exitCode = 2012;
         return exitCode;
     }
@@ -639,51 +640,51 @@ int beam_initApi()
         return exitCode;
     }
 
+    classJtsGeometryConverter = beam_findJvmClass("org/esa/beam/util/converters/JtsGeometryConverter");
+    if (classJtsGeometryConverter == NULL) { 
+        fprintf(stderr, "beam_capi: Java class not found: org/esa/beam/util/converters/JtsGeometryConverter\n");
+        exitCode = 2054;
+        return exitCode;
+    }
+
     classTerm = beam_findJvmClass("com/bc/jexp/Term");
     if (classTerm == NULL) { 
         fprintf(stderr, "beam_capi: Java class not found: com/bc/jexp/Term\n");
-        exitCode = 2054;
+        exitCode = 2055;
         return exitCode;
     }
 
     classRasterDataNode = beam_findJvmClass("org/esa/beam/framework/datamodel/RasterDataNode");
     if (classRasterDataNode == NULL) { 
         fprintf(stderr, "beam_capi: Java class not found: org/esa/beam/framework/datamodel/RasterDataNode\n");
-        exitCode = 2055;
+        exitCode = 2056;
         return exitCode;
     }
 
     classProduct_AutoGrouping = beam_findJvmClass("org/esa/beam/framework/datamodel/Product$AutoGrouping");
     if (classProduct_AutoGrouping == NULL) { 
         fprintf(stderr, "beam_capi: Java class not found: org/esa/beam/framework/datamodel/Product$AutoGrouping\n");
-        exitCode = 2056;
+        exitCode = 2057;
         return exitCode;
     }
 
     classDimension = beam_findJvmClass("java/awt/Dimension");
     if (classDimension == NULL) { 
         fprintf(stderr, "beam_capi: Java class not found: java/awt/Dimension\n");
-        exitCode = 2057;
+        exitCode = 2058;
         return exitCode;
     }
 
     classStx = beam_findJvmClass("org/esa/beam/framework/datamodel/Stx");
     if (classStx == NULL) { 
         fprintf(stderr, "beam_capi: Java class not found: org/esa/beam/framework/datamodel/Stx\n");
-        exitCode = 2058;
+        exitCode = 2059;
         return exitCode;
     }
 
     classImageOutputStream = beam_findJvmClass("javax/imageio/stream/ImageOutputStream");
     if (classImageOutputStream == NULL) { 
         fprintf(stderr, "beam_capi: Java class not found: javax/imageio/stream/ImageOutputStream\n");
-        exitCode = 2059;
-        return exitCode;
-    }
-
-    classSimpleFeatureType = beam_findJvmClass("org/opengis/feature/simple/SimpleFeatureType");
-    if (classSimpleFeatureType == NULL) { 
-        fprintf(stderr, "beam_capi: Java class not found: org/opengis/feature/simple/SimpleFeatureType\n");
         exitCode = 2060;
         return exitCode;
     }
@@ -695,135 +696,135 @@ int beam_initApi()
         return exitCode;
     }
 
+    classSimpleFeatureType = beam_findJvmClass("org/opengis/feature/simple/SimpleFeatureType");
+    if (classSimpleFeatureType == NULL) { 
+        fprintf(stderr, "beam_capi: Java class not found: org/opengis/feature/simple/SimpleFeatureType\n");
+        exitCode = 2062;
+        return exitCode;
+    }
+
     classProductData_UTC = beam_findJvmClass("org/esa/beam/framework/datamodel/ProductData$UTC");
     if (classProductData_UTC == NULL) { 
         fprintf(stderr, "beam_capi: Java class not found: org/esa/beam/framework/datamodel/ProductData$UTC\n");
-        exitCode = 2062;
+        exitCode = 2063;
         return exitCode;
     }
 
     classRenderedImage = beam_findJvmClass("java/awt/image/RenderedImage");
     if (classRenderedImage == NULL) { 
         fprintf(stderr, "beam_capi: Java class not found: java/awt/image/RenderedImage\n");
-        exitCode = 2063;
+        exitCode = 2064;
         return exitCode;
     }
 
     classIterator = beam_findJvmClass("java/util/Iterator");
     if (classIterator == NULL) { 
         fprintf(stderr, "beam_capi: Java class not found: java/util/Iterator\n");
-        exitCode = 2064;
+        exitCode = 2065;
         return exitCode;
     }
 
     classFile = beam_findJvmClass("java/io/File");
     if (classFile == NULL) { 
         fprintf(stderr, "beam_capi: Java class not found: java/io/File\n");
-        exitCode = 2065;
+        exitCode = 2066;
         return exitCode;
     }
 
     classGeoPos = beam_findJvmClass("org/esa/beam/framework/datamodel/GeoPos");
     if (classGeoPos == NULL) { 
         fprintf(stderr, "beam_capi: Java class not found: org/esa/beam/framework/datamodel/GeoPos\n");
-        exitCode = 2066;
+        exitCode = 2067;
         return exitCode;
     }
 
     classProductNodeGroup = beam_findJvmClass("org/esa/beam/framework/datamodel/ProductNodeGroup");
     if (classProductNodeGroup == NULL) { 
         fprintf(stderr, "beam_capi: Java class not found: org/esa/beam/framework/datamodel/ProductNodeGroup\n");
-        exitCode = 2067;
+        exitCode = 2068;
         return exitCode;
     }
 
     classProductManager = beam_findJvmClass("org/esa/beam/framework/datamodel/ProductManager");
     if (classProductManager == NULL) { 
         fprintf(stderr, "beam_capi: Java class not found: org/esa/beam/framework/datamodel/ProductManager\n");
-        exitCode = 2068;
+        exitCode = 2069;
         return exitCode;
     }
 
     classMapProjection = beam_findJvmClass("org/esa/beam/framework/dataop/maptransf/MapProjection");
     if (classMapProjection == NULL) { 
         fprintf(stderr, "beam_capi: Java class not found: org/esa/beam/framework/dataop/maptransf/MapProjection\n");
-        exitCode = 2069;
+        exitCode = 2070;
         return exitCode;
     }
 
     classFlagCoding = beam_findJvmClass("org/esa/beam/framework/datamodel/FlagCoding");
     if (classFlagCoding == NULL) { 
         fprintf(stderr, "beam_capi: Java class not found: org/esa/beam/framework/datamodel/FlagCoding\n");
-        exitCode = 2070;
+        exitCode = 2071;
         return exitCode;
     }
 
     classOperator = beam_findJvmClass("org/esa/beam/framework/gpf/Operator");
     if (classOperator == NULL) { 
         fprintf(stderr, "beam_capi: Java class not found: org/esa/beam/framework/gpf/Operator\n");
-        exitCode = 2071;
+        exitCode = 2072;
         return exitCode;
     }
 
     classOperatorSpiRegistry = beam_findJvmClass("org/esa/beam/framework/gpf/OperatorSpiRegistry");
     if (classOperatorSpiRegistry == NULL) { 
         fprintf(stderr, "beam_capi: Java class not found: org/esa/beam/framework/gpf/OperatorSpiRegistry\n");
-        exitCode = 2072;
+        exitCode = 2073;
         return exitCode;
     }
 
     classBitmaskDef = beam_findJvmClass("org/esa/beam/framework/datamodel/BitmaskDef");
     if (classBitmaskDef == NULL) { 
         fprintf(stderr, "beam_capi: Java class not found: org/esa/beam/framework/datamodel/BitmaskDef\n");
-        exitCode = 2073;
+        exitCode = 2074;
         return exitCode;
     }
 
     classImageInfo_HistogramMatching = beam_findJvmClass("org/esa/beam/framework/datamodel/ImageInfo$HistogramMatching");
     if (classImageInfo_HistogramMatching == NULL) { 
         fprintf(stderr, "beam_capi: Java class not found: org/esa/beam/framework/datamodel/ImageInfo$HistogramMatching\n");
-        exitCode = 2074;
+        exitCode = 2075;
         return exitCode;
     }
 
     classDatum = beam_findJvmClass("org/esa/beam/framework/dataop/maptransf/Datum");
     if (classDatum == NULL) { 
         fprintf(stderr, "beam_capi: Java class not found: org/esa/beam/framework/dataop/maptransf/Datum\n");
-        exitCode = 2075;
+        exitCode = 2076;
         return exitCode;
     }
 
     classProductUtils = beam_findJvmClass("org/esa/beam/util/ProductUtils");
     if (classProductUtils == NULL) { 
         fprintf(stderr, "beam_capi: Java class not found: org/esa/beam/util/ProductUtils\n");
-        exitCode = 2076;
+        exitCode = 2077;
         return exitCode;
     }
 
     classMap = beam_findJvmClass("java/util/Map");
     if (classMap == NULL) { 
         fprintf(stderr, "beam_capi: Java class not found: java/util/Map\n");
-        exitCode = 2077;
+        exitCode = 2078;
         return exitCode;
     }
 
     classSubsetOp = beam_findJvmClass("org/esa/beam/gpf/operators/standard/SubsetOp");
     if (classSubsetOp == NULL) { 
         fprintf(stderr, "beam_capi: Java class not found: org/esa/beam/gpf/operators/standard/SubsetOp\n");
-        exitCode = 2078;
+        exitCode = 2079;
         return exitCode;
     }
 
     classPointing = beam_findJvmClass("org/esa/beam/framework/datamodel/Pointing");
     if (classPointing == NULL) { 
         fprintf(stderr, "beam_capi: Java class not found: org/esa/beam/framework/datamodel/Pointing\n");
-        exitCode = 2079;
-        return exitCode;
-    }
-
-    classPointingFactory = beam_findJvmClass("org/esa/beam/framework/datamodel/PointingFactory");
-    if (classPointingFactory == NULL) { 
-        fprintf(stderr, "beam_capi: Java class not found: org/esa/beam/framework/datamodel/PointingFactory\n");
         exitCode = 2080;
         return exitCode;
     }
@@ -835,87 +836,94 @@ int beam_initApi()
         return exitCode;
     }
 
+    classPointingFactory = beam_findJvmClass("org/esa/beam/framework/datamodel/PointingFactory");
+    if (classPointingFactory == NULL) { 
+        fprintf(stderr, "beam_capi: Java class not found: org/esa/beam/framework/datamodel/PointingFactory\n");
+        exitCode = 2082;
+        return exitCode;
+    }
+
     classPoint2D = beam_findJvmClass("java/awt/geom/Point2D");
     if (classPoint2D == NULL) { 
         fprintf(stderr, "beam_capi: Java class not found: java/awt/geom/Point2D\n");
-        exitCode = 2082;
+        exitCode = 2083;
         return exitCode;
     }
 
     classScaling = beam_findJvmClass("org/esa/beam/framework/datamodel/Scaling");
     if (classScaling == NULL) { 
         fprintf(stderr, "beam_capi: Java class not found: org/esa/beam/framework/datamodel/Scaling\n");
-        exitCode = 2083;
+        exitCode = 2084;
         return exitCode;
     }
 
     classCollection = beam_findJvmClass("java/util/Collection");
     if (classCollection == NULL) { 
         fprintf(stderr, "beam_capi: Java class not found: java/util/Collection\n");
-        exitCode = 2084;
+        exitCode = 2085;
         return exitCode;
     }
 
     classGeoTIFFMetadata = beam_findJvmClass("org/esa/beam/util/geotiff/GeoTIFFMetadata");
     if (classGeoTIFFMetadata == NULL) { 
         fprintf(stderr, "beam_capi: Java class not found: org/esa/beam/util/geotiff/GeoTIFFMetadata\n");
-        exitCode = 2085;
+        exitCode = 2086;
         return exitCode;
     }
 
     classMapInfo = beam_findJvmClass("org/esa/beam/framework/dataop/maptransf/MapInfo");
     if (classMapInfo == NULL) { 
         fprintf(stderr, "beam_capi: Java class not found: org/esa/beam/framework/dataop/maptransf/MapInfo\n");
-        exitCode = 2086;
+        exitCode = 2087;
         return exitCode;
     }
 
     classBufferedImage = beam_findJvmClass("java/awt/image/BufferedImage");
     if (classBufferedImage == NULL) { 
         fprintf(stderr, "beam_capi: Java class not found: java/awt/image/BufferedImage\n");
-        exitCode = 2087;
+        exitCode = 2088;
         return exitCode;
     }
 
     classSimpleFeature = beam_findJvmClass("org/opengis/feature/simple/SimpleFeature");
     if (classSimpleFeature == NULL) { 
         fprintf(stderr, "beam_capi: Java class not found: org/opengis/feature/simple/SimpleFeature\n");
-        exitCode = 2088;
+        exitCode = 2089;
         return exitCode;
     }
 
     classProductSubsetDef = beam_findJvmClass("org/esa/beam/framework/dataio/ProductSubsetDef");
     if (classProductSubsetDef == NULL) { 
         fprintf(stderr, "beam_capi: Java class not found: org/esa/beam/framework/dataio/ProductSubsetDef\n");
-        exitCode = 2089;
+        exitCode = 2090;
         return exitCode;
     }
 
     classProductWriter = beam_findJvmClass("org/esa/beam/framework/dataio/ProductWriter");
     if (classProductWriter == NULL) { 
         fprintf(stderr, "beam_capi: Java class not found: org/esa/beam/framework/dataio/ProductWriter\n");
-        exitCode = 2090;
+        exitCode = 2091;
         return exitCode;
     }
 
     classProgressMonitor = beam_findJvmClass("com/bc/ceres/core/ProgressMonitor");
     if (classProgressMonitor == NULL) { 
         fprintf(stderr, "beam_capi: Java class not found: com/bc/ceres/core/ProgressMonitor\n");
-        exitCode = 2091;
+        exitCode = 2092;
         return exitCode;
     }
 
     classMetadataAttribute = beam_findJvmClass("org/esa/beam/framework/datamodel/MetadataAttribute");
     if (classMetadataAttribute == NULL) { 
         fprintf(stderr, "beam_capi: Java class not found: org/esa/beam/framework/datamodel/MetadataAttribute\n");
-        exitCode = 2092;
+        exitCode = 2093;
         return exitCode;
     }
 
     classGeneralPath = beam_findJvmClass("java/awt/geom/GeneralPath");
     if (classGeneralPath == NULL) { 
         fprintf(stderr, "beam_capi: Java class not found: java/awt/geom/GeneralPath\n");
-        exitCode = 2093;
+        exitCode = 2094;
         return exitCode;
     }
 
@@ -1458,6 +1466,554 @@ MathTransform GeoCoding_getImageToMapTransform(GeoCoding _this)
     }
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
+}
+
+JtsGeometryConverter JtsGeometryConverter_newJtsGeometryConverter()
+{
+    static jmethodID _method = NULL;
+    JtsGeometryConverter _result = (JtsGeometryConverter) 0;
+    if (_method == NULL) {
+        if (beam_initApi() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classJtsGeometryConverter, "<init>", "()V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
+    }
+    _result = (*jenv)->NewObject(jenv, classJtsGeometryConverter, _method);
+    return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
+}
+
+Class JtsGeometryConverter_getValueType(JtsGeometryConverter _this)
+{
+    static jmethodID _method = NULL;
+    Class _result = (Class) 0;
+    if (_method == NULL) {
+        if (beam_initApi() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classJtsGeometryConverter, "getValueType", "()Ljava/lang/Class;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
+    }
+    _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
+    return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
+}
+
+Geometry JtsGeometryConverter_parse(JtsGeometryConverter _this, const char* text)
+{
+    static jmethodID _method = NULL;
+    jstring textString = NULL;
+    Geometry _result = (Geometry) 0;
+    if (_method == NULL) {
+        if (beam_initApi() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classJtsGeometryConverter, "parse", "(Ljava/lang/String;)Lcom/vividsolutions/jts/geom/Geometry;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
+    }
+    textString = (*jenv)->NewStringUTF(jenv, text);
+    _result = (*jenv)->CallObjectMethod(jenv, _this, _method, textString);
+    (*jenv)->DeleteLocalRef(jenv, textString);
+    return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
+}
+
+char* JtsGeometryConverter_format(JtsGeometryConverter _this, Geometry value)
+{
+    static jmethodID _method = NULL;
+    char* _result = (char*) 0;
+    jstring _resultString = NULL;
+    if (_method == NULL) {
+        if (beam_initApi() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classJtsGeometryConverter, "format", "(Lcom/vividsolutions/jts/geom/Geometry;)Ljava/lang/String;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
+    }
+    _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method, value);
+    _result = beam_newCString(_resultString);
+    (*jenv)->DeleteLocalRef(jenv, _resultString);
+    return _result;
+}
+
+void JtsGeometryConverter_registerConverter()
+{
+    static jmethodID _method = NULL;
+    if (_method == NULL) {
+        if (beam_initApi() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classJtsGeometryConverter, "registerConverter", "()V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
+    }
+    (*jenv)->CallStaticVoidMethod(jenv, classJtsGeometryConverter, _method);
+}
+
+ProductSubsetDef ProductSubsetDef_newProductSubsetDef1()
+{
+    static jmethodID _method = NULL;
+    ProductSubsetDef _result = (ProductSubsetDef) 0;
+    if (_method == NULL) {
+        if (beam_initApi() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductSubsetDef, "<init>", "()V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
+    }
+    _result = (*jenv)->NewObject(jenv, classProductSubsetDef, _method);
+    return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
+}
+
+ProductSubsetDef ProductSubsetDef_newProductSubsetDef2(const char* subsetName)
+{
+    static jmethodID _method = NULL;
+    jstring subsetNameString = NULL;
+    ProductSubsetDef _result = (ProductSubsetDef) 0;
+    if (_method == NULL) {
+        if (beam_initApi() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductSubsetDef, "<init>", "(Ljava/lang/String;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
+    }
+    subsetNameString = (*jenv)->NewStringUTF(jenv, subsetName);
+    _result = (*jenv)->NewObject(jenv, classProductSubsetDef, _method, subsetNameString);
+    (*jenv)->DeleteLocalRef(jenv, subsetNameString);
+    return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
+}
+
+char* ProductSubsetDef_getSubsetName(ProductSubsetDef _this)
+{
+    static jmethodID _method = NULL;
+    char* _result = (char*) 0;
+    jstring _resultString = NULL;
+    if (_method == NULL) {
+        if (beam_initApi() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductSubsetDef, "getSubsetName", "()Ljava/lang/String;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
+    }
+    _resultString = (*jenv)->CallObjectMethod(jenv, _this, _method);
+    _result = beam_newCString(_resultString);
+    (*jenv)->DeleteLocalRef(jenv, _resultString);
+    return _result;
+}
+
+void ProductSubsetDef_setSubsetName(ProductSubsetDef _this, const char* subsetName)
+{
+    static jmethodID _method = NULL;
+    jstring subsetNameString = NULL;
+    if (_method == NULL) {
+        if (beam_initApi() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductSubsetDef, "setSubsetName", "(Ljava/lang/String;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
+    }
+    subsetNameString = (*jenv)->NewStringUTF(jenv, subsetName);
+    (*jenv)->CallVoidMethod(jenv, _this, _method, subsetNameString);
+    (*jenv)->DeleteLocalRef(jenv, subsetNameString);
+}
+
+void ProductSubsetDef_setTreatVirtualBandsAsRealBands(ProductSubsetDef _this, boolean flag)
+{
+    static jmethodID _method = NULL;
+    if (_method == NULL) {
+        if (beam_initApi() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductSubsetDef, "setTreatVirtualBandsAsRealBands", "(Z)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
+    }
+    (*jenv)->CallVoidMethod(jenv, _this, _method, flag);
+}
+
+boolean ProductSubsetDef_getTreatVirtualBandsAsRealBands(ProductSubsetDef _this)
+{
+    static jmethodID _method = NULL;
+    boolean _result = (boolean) 0;
+    if (_method == NULL) {
+        if (beam_initApi() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductSubsetDef, "getTreatVirtualBandsAsRealBands", "()Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
+    }
+    _result = (*jenv)->CallBooleanMethod(jenv, _this, _method);
+    return _result;
+}
+
+char** ProductSubsetDef_getNodeNames(ProductSubsetDef _this, int* _resultArrayLength)
+{
+    static jmethodID _method = NULL;
+    char** _result = (char**) 0;
+    jarray _resultArray = NULL;
+    if (_method == NULL) {
+        if (beam_initApi() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductSubsetDef, "getNodeNames", "()[Ljava/lang/String;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
+    }
+    _resultArray = (*jenv)->CallObjectMethod(jenv, _this, _method);
+    _result = beam_newCStringArray(_resultArray, _resultArrayLength);
+    (*jenv)->DeleteLocalRef(jenv, _resultArray);
+    return _result;
+}
+
+void ProductSubsetDef_setNodeNames(ProductSubsetDef _this, const char** namesElems, int namesLength)
+{
+    static jmethodID _method = NULL;
+    jobjectArray namesArray = NULL;
+    if (_method == NULL) {
+        if (beam_initApi() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductSubsetDef, "setNodeNames", "([Ljava/lang/String;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
+    }
+    namesArray = beam_newJStringArray(namesElems, namesLength);
+    (*jenv)->CallVoidMethod(jenv, _this, _method, namesArray);
+    (*jenv)->DeleteLocalRef(jenv, namesArray);
+}
+
+void ProductSubsetDef_addNodeName(ProductSubsetDef _this, const char* name)
+{
+    static jmethodID _method = NULL;
+    jstring nameString = NULL;
+    if (_method == NULL) {
+        if (beam_initApi() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductSubsetDef, "addNodeName", "(Ljava/lang/String;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
+    }
+    nameString = (*jenv)->NewStringUTF(jenv, name);
+    (*jenv)->CallVoidMethod(jenv, _this, _method, nameString);
+    (*jenv)->DeleteLocalRef(jenv, nameString);
+}
+
+void ProductSubsetDef_addNodeNames(ProductSubsetDef _this, const char** namesElems, int namesLength)
+{
+    static jmethodID _method = NULL;
+    jobjectArray namesArray = NULL;
+    if (_method == NULL) {
+        if (beam_initApi() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductSubsetDef, "addNodeNames", "([Ljava/lang/String;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
+    }
+    namesArray = beam_newJStringArray(namesElems, namesLength);
+    (*jenv)->CallVoidMethod(jenv, _this, _method, namesArray);
+    (*jenv)->DeleteLocalRef(jenv, namesArray);
+}
+
+boolean ProductSubsetDef_removeNodeName(ProductSubsetDef _this, const char* name)
+{
+    static jmethodID _method = NULL;
+    jstring nameString = NULL;
+    boolean _result = (boolean) 0;
+    if (_method == NULL) {
+        if (beam_initApi() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductSubsetDef, "removeNodeName", "(Ljava/lang/String;)Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
+    }
+    nameString = (*jenv)->NewStringUTF(jenv, name);
+    _result = (*jenv)->CallBooleanMethod(jenv, _this, _method, nameString);
+    (*jenv)->DeleteLocalRef(jenv, nameString);
+    return _result;
+}
+
+boolean ProductSubsetDef_containsNodeName(ProductSubsetDef _this, const char* name)
+{
+    static jmethodID _method = NULL;
+    jstring nameString = NULL;
+    boolean _result = (boolean) 0;
+    if (_method == NULL) {
+        if (beam_initApi() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductSubsetDef, "containsNodeName", "(Ljava/lang/String;)Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
+    }
+    nameString = (*jenv)->NewStringUTF(jenv, name);
+    _result = (*jenv)->CallBooleanMethod(jenv, _this, _method, nameString);
+    (*jenv)->DeleteLocalRef(jenv, nameString);
+    return _result;
+}
+
+boolean ProductSubsetDef_isNodeAccepted(ProductSubsetDef _this, const char* name)
+{
+    static jmethodID _method = NULL;
+    jstring nameString = NULL;
+    boolean _result = (boolean) 0;
+    if (_method == NULL) {
+        if (beam_initApi() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductSubsetDef, "isNodeAccepted", "(Ljava/lang/String;)Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
+    }
+    nameString = (*jenv)->NewStringUTF(jenv, name);
+    _result = (*jenv)->CallBooleanMethod(jenv, _this, _method, nameString);
+    (*jenv)->DeleteLocalRef(jenv, nameString);
+    return _result;
+}
+
+Rectangle ProductSubsetDef_getRegion(ProductSubsetDef _this)
+{
+    static jmethodID _method = NULL;
+    Rectangle _result = (Rectangle) 0;
+    if (_method == NULL) {
+        if (beam_initApi() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductSubsetDef, "getRegion", "()Ljava/awt/Rectangle;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
+    }
+    _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
+    return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
+}
+
+void ProductSubsetDef_setRegion2(ProductSubsetDef _this, Rectangle region)
+{
+    static jmethodID _method = NULL;
+    if (_method == NULL) {
+        if (beam_initApi() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductSubsetDef, "setRegion", "(Ljava/awt/Rectangle;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
+    }
+    (*jenv)->CallVoidMethod(jenv, _this, _method, region);
+}
+
+void ProductSubsetDef_setRegion1(ProductSubsetDef _this, int x, int y, int w, int h)
+{
+    static jmethodID _method = NULL;
+    if (_method == NULL) {
+        if (beam_initApi() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductSubsetDef, "setRegion", "(IIII)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
+    }
+    (*jenv)->CallVoidMethod(jenv, _this, _method, x, y, w, h);
+}
+
+void ProductSubsetDef_setSubSampling(ProductSubsetDef _this, int subSamplingX, int subSamplingY)
+{
+    static jmethodID _method = NULL;
+    if (_method == NULL) {
+        if (beam_initApi() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductSubsetDef, "setSubSampling", "(II)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
+    }
+    (*jenv)->CallVoidMethod(jenv, _this, _method, subSamplingX, subSamplingY);
+}
+
+int ProductSubsetDef_getSubSamplingX(ProductSubsetDef _this)
+{
+    static jmethodID _method = NULL;
+    int _result = (int) 0;
+    if (_method == NULL) {
+        if (beam_initApi() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductSubsetDef, "getSubSamplingX", "()I");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
+    }
+    _result = (*jenv)->CallIntMethod(jenv, _this, _method);
+    return _result;
+}
+
+int ProductSubsetDef_getSubSamplingY(ProductSubsetDef _this)
+{
+    static jmethodID _method = NULL;
+    int _result = (int) 0;
+    if (_method == NULL) {
+        if (beam_initApi() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductSubsetDef, "getSubSamplingY", "()I");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
+    }
+    _result = (*jenv)->CallIntMethod(jenv, _this, _method);
+    return _result;
+}
+
+Dimension ProductSubsetDef_getSceneRasterSize(ProductSubsetDef _this, int maxWidth, int maxHeight)
+{
+    static jmethodID _method = NULL;
+    Dimension _result = (Dimension) 0;
+    if (_method == NULL) {
+        if (beam_initApi() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductSubsetDef, "getSceneRasterSize", "(II)Ljava/awt/Dimension;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
+    }
+    _result = (*jenv)->CallObjectMethod(jenv, _this, _method, maxWidth, maxHeight);
+    return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
+}
+
+void ProductSubsetDef_setIgnoreMetadata(ProductSubsetDef _this, boolean ignoreMetadata)
+{
+    static jmethodID _method = NULL;
+    if (_method == NULL) {
+        if (beam_initApi() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductSubsetDef, "setIgnoreMetadata", "(Z)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
+    }
+    (*jenv)->CallVoidMethod(jenv, _this, _method, ignoreMetadata);
+}
+
+boolean ProductSubsetDef_isIgnoreMetadata(ProductSubsetDef _this)
+{
+    static jmethodID _method = NULL;
+    boolean _result = (boolean) 0;
+    if (_method == NULL) {
+        if (beam_initApi() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductSubsetDef, "isIgnoreMetadata", "()Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
+    }
+    _result = (*jenv)->CallBooleanMethod(jenv, _this, _method);
+    return _result;
+}
+
+boolean ProductSubsetDef_isEntireProductSelected(ProductSubsetDef _this)
+{
+    static jmethodID _method = NULL;
+    boolean _result = (boolean) 0;
+    if (_method == NULL) {
+        if (beam_initApi() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProductSubsetDef, "isEntireProductSelected", "()Z");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
+    }
+    _result = (*jenv)->CallBooleanMethod(jenv, _this, _method);
+    return _result;
 }
 
 ProductWriterPlugIn ProductWriter_getWriterPlugIn(ProductWriter _this)
