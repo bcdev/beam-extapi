@@ -201,7 +201,7 @@ public final class ApiInfo {
                 if (rejectReason == null) {
                     apiMethods.add(apiMethod);
                 } else {
-                    System.out.printf("Rejected: constructor %s#%s() - reason: %s\n", classDoc.qualifiedTypeName(), constructorDoc.name(), rejectReason);
+                    System.out.printf("Rejected constructor %s#%s() - reason: %s\n", classDoc.qualifiedTypeName(), constructorDoc.name(), rejectReason);
                 }
             }
 
@@ -219,17 +219,19 @@ public final class ApiInfo {
                     if (rejectReason == null) {
                         if (classDoc0 == classDoc || !apiMethods.contains(apiMethod)) {
                             apiMethods.add(apiMethod);
+                            System.out.printf("Added method %s#%s()\n", classDoc.qualifiedTypeName(), methodDoc.name());
                         }
                     } else {
-                        System.out.printf("Rejected: method %s#%s() - reason: %s\n", classDoc.qualifiedTypeName(), methodDoc.name(), rejectReason);
+                        System.out.printf("Rejected method %s#%s() - reason: %s\n", classDoc.qualifiedTypeName(), methodDoc.name(), rejectReason);
                     }
                 }
                 classDoc0 = classDoc0.superclass();
             } while (classDoc0 != null && !isObjectClass(classDoc0));
 
             apiClasses.put(apiClass, new ApiMembers(apiConstants, apiMethods));
+            System.out.printf("Added class %s\n", classDoc.qualifiedTypeName());
         } else {
-            System.out.printf("Rejected: class %s - reason: %s\n", classDoc.qualifiedTypeName(), classRejectReason);
+            System.out.printf("Rejected class %s - reason: %s\n", classDoc.qualifiedTypeName(), classRejectReason);
         }
     }
 
