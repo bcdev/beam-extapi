@@ -2,7 +2,6 @@
         deprecatedMethods="true">
 
     <sourcePaths>
-        <path>${jdkSourceDir}/src.zip</path>
         <path>${beamSourceDir}/beam-core/src/main/java</path>
         <path>${beamSourceDir}/beam-gpf/src/main/java</path>
     </sourcePaths>
@@ -13,6 +12,7 @@
         <package>org.esa.beam.framework.gpf</package>
         <package>org.esa.beam.gpf.operators.standard</package>
         <package>org.esa.beam.util</package>
+        <package>org.esa.beam.util.converters</package>
     </packages>
 
     <!--
@@ -41,6 +41,9 @@
     <class name="java.util.Set">
 
     </class>
+
+    <!-- We can use a JtsGeometryConverter to convert WKT string to geometry objects as used by the SubsetOp (thanks for this idea MarcoZ!) -->
+    <class name="org.esa.beam.util.converters.JtsGeometryConverter"/>
 
 
     <!--
@@ -436,6 +439,7 @@
         <method name="getExtension" sig="(Ljava/lang/Class;)LE;" ignore="true"/>
     </class>
     <class name="org.esa.beam.util.ProductUtils"/>
+    <class name="org.esa.beam.framework.dataio.ProductSubsetDef"/>
 
 
 
