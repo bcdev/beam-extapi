@@ -11,6 +11,7 @@
         <package>org.esa.beam.framework.datamodel</package>
         <package>org.esa.beam.framework.dataio</package>
         <package>org.esa.beam.framework.gpf</package>
+        <package>org.esa.beam.gpf.operators.standard</package>
         <package>org.esa.beam.util</package>
     </packages>
 
@@ -466,6 +467,26 @@
 
     <class name="org.esa.beam.framework.gpf.OperatorSpiRegistry">
 
+    </class>
+
+    <class name="org.esa.beam.gpf.operators.standard.SubsetOp">
+        <!-- Operator base class methods -->
+        <method name="getSpi" sig="()Lorg/esa/beam/framework/gpf/OperatorSpi;"  ignore="true"/>
+        <method name="setSpi" sig="(Lorg/esa/beam/framework/gpf/OperatorSpi;)V"  ignore="true"/>
+        <method name="getSourceProduct" sig="()Lorg/esa/beam/framework/datamodel/Product;"/>
+        <method name="getSourceProduct" sig="(Ljava/lang/String;)Lorg/esa/beam/framework/datamodel/Product;" renameTo="getSourceProductById"/>
+        <method name="setSourceProduct" sig="(Lorg/esa/beam/framework/datamodel/Product;)V"/>
+        <method name="setSourceProduct" sig="(Ljava/lang/String;Lorg/esa/beam/framework/datamodel/Product;)V" renameTo="setSourceProductById"/>
+        <method name="getSourceTile" sig="(Lorg/esa/beam/framework/datamodel/RasterDataNode;Ljava/awt/Rectangle;)Lorg/esa/beam/framework/gpf/Tile;"  ignore="true"/>
+        <method name="getSourceTile" sig="(Lorg/esa/beam/framework/datamodel/RasterDataNode;Ljava/awt/Rectangle;Ljavax/media/jai/BorderExtender;)Lorg/esa/beam/framework/gpf/Tile;"  ignore="true"/>
+        <method name="getLogger" sig="()Ljava/util/logging/Logger;"  ignore="true"/>
+        <method name="setLogger" sig="(Ljava/util/logging/Logger;)V"  ignore="true"/>
+        <method name="initialize" sig="()V"  ignore="true"/>
+        <method name="computeTile" sig="(Lorg/esa/beam/framework/datamodel/Band;Lorg/esa/beam/framework/gpf/Tile;Lcom/bc/ceres/core/ProgressMonitor;)V"  ignore="true"/>
+        <method name="computeTileStack" sig="(Ljava/util/Map;Ljava/awt/Rectangle;Lcom/bc/ceres/core/ProgressMonitor;)V"  ignore="true"/>
+        <method name="stopTileComputationObservation" sig="()V"  ignore="true"/>
+        <!-- SubsetOp-specific -->
+        <method name="computePixelRegion" sig="(Lorg/esa/beam/framework/datamodel/Product;Lcom/vividsolutions/jts/geom/Geometry;I)Ljava/awt/Rectangle;"  ignore="true"/>
     </class>
 
     <!--
