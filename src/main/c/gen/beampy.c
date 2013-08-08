@@ -286,8 +286,7 @@ PyObject* BeamPyProduct_setStartTime(PyObject* self, PyObject* args);
 PyObject* BeamPyProduct_getEndTime(PyObject* self, PyObject* args);
 PyObject* BeamPyProduct_setEndTime(PyObject* self, PyObject* args);
 PyObject* BeamPyProduct_getMetadataRoot(PyObject* self, PyObject* args);
-PyObject* BeamPyProduct_getGroups(PyObject* self, PyObject* args);
-PyObject* BeamPyProduct_getGroup(PyObject* self, PyObject* args);
+PyObject* BeamPyProduct_getBandGroup(PyObject* self, PyObject* args);
 PyObject* BeamPyProduct_getTiePointGridGroup(PyObject* self, PyObject* args);
 PyObject* BeamPyProduct_addTiePointGrid(PyObject* self, PyObject* args);
 PyObject* BeamPyProduct_removeTiePointGrid(PyObject* self, PyObject* args);
@@ -297,7 +296,6 @@ PyObject* BeamPyProduct_getTiePointGridNames(PyObject* self, PyObject* args);
 PyObject* BeamPyProduct_getTiePointGrids(PyObject* self, PyObject* args);
 PyObject* BeamPyProduct_getTiePointGrid(PyObject* self, PyObject* args);
 PyObject* BeamPyProduct_containsTiePointGrid(PyObject* self, PyObject* args);
-PyObject* BeamPyProduct_getBandGroup(PyObject* self, PyObject* args);
 PyObject* BeamPyProduct_addBand(PyObject* self, PyObject* args);
 PyObject* BeamPyProduct_addNewBand(PyObject* self, PyObject* args);
 PyObject* BeamPyProduct_addComputedBand(PyObject* self, PyObject* args);
@@ -318,8 +316,6 @@ PyObject* BeamPyProduct_getIndexCodingGroup(PyObject* self, PyObject* args);
 PyObject* BeamPyProduct_containsPixel(PyObject* self, PyObject* args);
 PyObject* BeamPyProduct_getGcpGroup(PyObject* self, PyObject* args);
 PyObject* BeamPyProduct_getPinGroup(PyObject* self, PyObject* args);
-PyObject* BeamPyProduct_getNumResolutionsMax(PyObject* self, PyObject* args);
-PyObject* BeamPyProduct_setNumResolutionsMax(PyObject* self, PyObject* args);
 PyObject* BeamPyProduct_isCompatibleProduct(PyObject* self, PyObject* args);
 PyObject* BeamPyProduct_parseExpression(PyObject* self, PyObject* args);
 PyObject* BeamPyProduct_acceptVisitor(PyObject* self, PyObject* args);
@@ -451,7 +447,6 @@ PyObject* BeamPyImageGeometry_calculateEastingNorthing(PyObject* self, PyObject*
 PyObject* BeamPyImageGeometry_calculateProductSize(PyObject* self, PyObject* args);
 PyObject* BeamPyImageGeometry_createTargetGeometry(PyObject* self, PyObject* args);
 PyObject* BeamPyImageGeometry_createCollocationTargetGeometry(PyObject* self, PyObject* args);
-PyObject* BeamPyImageGeometry_createValidRect(PyObject* self, PyObject* args);
 PyObject* BeamPyBand_newBand(PyObject* self, PyObject* args);
 PyObject* BeamPyBand_getFlagCoding(PyObject* self, PyObject* args);
 PyObject* BeamPyBand_isFlagBand(PyObject* self, PyObject* args);
@@ -885,6 +880,32 @@ PyObject* BeamPyMap_values(PyObject* self, PyObject* args);
 PyObject* BeamPyMap_entrySet(PyObject* self, PyObject* args);
 PyObject* BeamPyMap_equals(PyObject* self, PyObject* args);
 PyObject* BeamPyMap_hashCode(PyObject* self, PyObject* args);
+PyObject* BeamPySubsetOp_newSubsetOp(PyObject* self, PyObject* args);
+PyObject* BeamPySubsetOp_getTiePointGridNames(PyObject* self, PyObject* args);
+PyObject* BeamPySubsetOp_setTiePointGridNames(PyObject* self, PyObject* args);
+PyObject* BeamPySubsetOp_getBandNames(PyObject* self, PyObject* args);
+PyObject* BeamPySubsetOp_setBandNames(PyObject* self, PyObject* args);
+PyObject* BeamPySubsetOp_setCopyMetadata(PyObject* self, PyObject* args);
+PyObject* BeamPySubsetOp_getRegion(PyObject* self, PyObject* args);
+PyObject* BeamPySubsetOp_setRegion(PyObject* self, PyObject* args);
+PyObject* BeamPySubsetOp_setSubSamplingX(PyObject* self, PyObject* args);
+PyObject* BeamPySubsetOp_setSubSamplingY(PyObject* self, PyObject* args);
+PyObject* BeamPySubsetOp_getGeoRegion(PyObject* self, PyObject* args);
+PyObject* BeamPySubsetOp_setGeoRegion(PyObject* self, PyObject* args);
+PyObject* BeamPySubsetOp_update(PyObject* self, PyObject* args);
+PyObject* BeamPySubsetOp_dispose(PyObject* self, PyObject* args);
+PyObject* BeamPySubsetOp_getId(PyObject* self, PyObject* args);
+PyObject* BeamPySubsetOp_getSourceProducts(PyObject* self, PyObject* args);
+PyObject* BeamPySubsetOp_setSourceProducts(PyObject* self, PyObject* args);
+PyObject* BeamPySubsetOp_getSourceProduct(PyObject* self, PyObject* args);
+PyObject* BeamPySubsetOp_setSourceProduct(PyObject* self, PyObject* args);
+PyObject* BeamPySubsetOp_getSourceProductById(PyObject* self, PyObject* args);
+PyObject* BeamPySubsetOp_setSourceProductById(PyObject* self, PyObject* args);
+PyObject* BeamPySubsetOp_getSourceProductId(PyObject* self, PyObject* args);
+PyObject* BeamPySubsetOp_getTargetProduct(PyObject* self, PyObject* args);
+PyObject* BeamPySubsetOp_getTargetProperty(PyObject* self, PyObject* args);
+PyObject* BeamPySubsetOp_getParameter(PyObject* self, PyObject* args);
+PyObject* BeamPySubsetOp_setParameter(PyObject* self, PyObject* args);
 PyObject* BeamPyProductReader_getReaderPlugIn(PyObject* self, PyObject* args);
 PyObject* BeamPyProductReader_getInput(PyObject* self, PyObject* args);
 PyObject* BeamPyProductReader_getSubsetDef(PyObject* self, PyObject* args);
@@ -1036,7 +1057,6 @@ PyObject* BeamPyProductUtils_createMapBoundary(PyObject* self, PyObject* args);
 PyObject* BeamPyProductUtils_createGeoBoundary1(PyObject* self, PyObject* args);
 PyObject* BeamPyProductUtils_createGeoBoundary2(PyObject* self, PyObject* args);
 PyObject* BeamPyProductUtils_createGeoBoundary3(PyObject* self, PyObject* args);
-PyObject* BeamPyProductUtils_getClosestGeoPos(PyObject* self, PyObject* args);
 PyObject* BeamPyProductUtils_createGeoBoundary4(PyObject* self, PyObject* args);
 PyObject* BeamPyProductUtils_createGeoBoundaryPaths1(PyObject* self, PyObject* args);
 PyObject* BeamPyProductUtils_createGeoBoundaryPaths2(PyObject* self, PyObject* args);
@@ -1159,206 +1179,101 @@ jclass BPy_HashSet_Class;
 jclass BPy_ArrayList_Class;
 
 /* BEAM API classes */
-jclass BPy_Shape_Class;
-jclass BPy_MapTransform_Class;
 jclass BPy_ImageGeometry_Class;
-jclass BPy_Parser_Class;
 jclass BPy_GeoCoding_Class;
-jclass BPy_ProductData_Class;
-jclass BPy_OperatorSpi_Class;
 jclass BPy_AffineTransform_Class;
 jclass BPy_Mask_Class;
-jclass BPy_GPF_Class;
 jclass BPy_IndexCoding_Class;
-jclass BPy_Term_Class;
-jclass BPy_RasterDataNode_Class;
+jclass BPy_GPF_Class;
 jclass BPy_Class_Class;
 jclass BPy_ServiceRegistry_Class;
-jclass BPy_Product_AutoGrouping_Class;
 jclass BPy_PixelPos_Class;
 jclass BPy_BitRaster_Class;
-jclass BPy_ImageOutputStream_Class;
-jclass BPy_Stx_Class;
-jclass BPy_Rectangle_Class;
-jclass BPy_Dimension_Class;
-jclass BPy_ProductIO_Class;
 jclass BPy_ProductNode_Class;
-jclass BPy_AngularDirection_Class;
-jclass BPy_SimpleFeatureType_Class;
+jclass BPy_ProductIO_Class;
+jclass BPy_Rectangle_Class;
 jclass BPy_SampleCoding_Class;
 jclass BPy_Object_Class;
 jclass BPy_ProductReader_Class;
 jclass BPy_ProductReaderPlugIn_Class;
-jclass BPy_ProductData_UTC_Class;
 jclass BPy_Band_Class;
 jclass BPy_ColorPaletteDef_Point_Class;
-jclass BPy_RenderedImage_Class;
 jclass BPy_Placemark_Class;
 jclass BPy_IndexValidator_Class;
 jclass BPy_Area_Class;
 jclass BPy_ComponentColorModel_Class;
-jclass BPy_Iterator_Class;
 jclass BPy_MathTransform_Class;
 jclass BPy_CoordinateReferenceSystem_Class;
 jclass BPy_ProductWriterPlugIn_Class;
-jclass BPy_Rectangle2D_Class;
-jclass BPy_File_Class;
-jclass BPy_GeoPos_Class;
-jclass BPy_ProductNodeGroup_Class;
-jclass BPy_MapProjection_Class;
-jclass BPy_ProductManager_Class;
-jclass BPy_FlagCoding_Class;
 jclass BPy_IndexColorModel_Class;
-jclass BPy_OperatorSpiRegistry_Class;
-jclass BPy_Operator_Class;
-jclass BPy_ImageInfo_HistogramMatching_Class;
-jclass BPy_BitmaskDef_Class;
 jclass BPy_ProductNodeListener_Class;
-jclass BPy_Map_Class;
 jclass BPy_MetadataElement_Class;
-jclass BPy_ProductUtils_Class;
-jclass BPy_Datum_Class;
-jclass BPy_Pointing_Class;
 jclass BPy_Color_Class;
-jclass BPy_PlacemarkDescriptor_Class;
-jclass BPy_PointingFactory_Class;
 jclass BPy_TransectProfileData_Class;
 jclass BPy_PlacemarkGroup_Class;
 jclass BPy_Product_Class;
-jclass BPy_Point2D_Class;
 jclass BPy_ProductVisitor_Class;
-jclass BPy_Scaling_Class;
 jclass BPy_WritableNamespace_Class;
 jclass BPy_Set_Class;
 jclass BPy_MultiLevelImage_Class;
-jclass BPy_ROI_Class;
 jclass BPy_RenderingHints_Key_Class;
-jclass BPy_Collection_Class;
+jclass BPy_ROI_Class;
 jclass BPy_ProductManager_Listener_Class;
-jclass BPy_GeoTIFFMetadata_Class;
 jclass BPy_ColorPaletteDef_Class;
-jclass BPy_MapInfo_Class;
+jclass BPy_Geometry_Class;
 jclass BPy_ImageInfo_Class;
 jclass BPy_Histogram_Class;
-jclass BPy_BufferedImage_Class;
-jclass BPy_RGBChannelDef_Class;
 jclass BPy_TiePointGrid_Class;
+jclass BPy_RGBChannelDef_Class;
+jclass BPy_VectorDataNode_Class;
+jclass BPy_ImageInputStream_Class;
+jclass BPy_RenderingHints_Class;
+jclass BPy_Shape_Class;
+jclass BPy_MapTransform_Class;
+jclass BPy_Parser_Class;
+jclass BPy_ProductData_Class;
+jclass BPy_OperatorSpi_Class;
+jclass BPy_Term_Class;
+jclass BPy_RasterDataNode_Class;
+jclass BPy_Product_AutoGrouping_Class;
+jclass BPy_Dimension_Class;
+jclass BPy_Stx_Class;
+jclass BPy_ImageOutputStream_Class;
+jclass BPy_SimpleFeatureType_Class;
+jclass BPy_AngularDirection_Class;
+jclass BPy_ProductData_UTC_Class;
+jclass BPy_RenderedImage_Class;
+jclass BPy_Iterator_Class;
+jclass BPy_File_Class;
+jclass BPy_GeoPos_Class;
+jclass BPy_ProductNodeGroup_Class;
+jclass BPy_ProductManager_Class;
+jclass BPy_MapProjection_Class;
+jclass BPy_FlagCoding_Class;
+jclass BPy_Operator_Class;
+jclass BPy_OperatorSpiRegistry_Class;
+jclass BPy_BitmaskDef_Class;
+jclass BPy_ImageInfo_HistogramMatching_Class;
+jclass BPy_Datum_Class;
+jclass BPy_ProductUtils_Class;
+jclass BPy_Map_Class;
+jclass BPy_SubsetOp_Class;
+jclass BPy_Pointing_Class;
+jclass BPy_PointingFactory_Class;
+jclass BPy_PlacemarkDescriptor_Class;
+jclass BPy_Point2D_Class;
+jclass BPy_Scaling_Class;
+jclass BPy_Collection_Class;
+jclass BPy_GeoTIFFMetadata_Class;
+jclass BPy_MapInfo_Class;
+jclass BPy_BufferedImage_Class;
 jclass BPy_SimpleFeature_Class;
 jclass BPy_ProductSubsetDef_Class;
 jclass BPy_ProductWriter_Class;
-jclass BPy_MetadataAttribute_Class;
 jclass BPy_ProgressMonitor_Class;
-jclass BPy_VectorDataNode_Class;
+jclass BPy_MetadataAttribute_Class;
 jclass BPy_GeneralPath_Class;
-jclass BPy_ImageInputStream_Class;
-jclass BPy_RenderingHints_Class;
 
-
-static PyMethodDef Shape_methods[] = {
-    {NULL, NULL, 0, NULL} /*Sentinel*/
-};
-
-// Note: this is unused, experimental code
-
-/**
- * Implements the BeamPy_JObjectType class singleton.
- *
- * THIS TYPE IS NOT YET IN USE: we currently use
- * (<type_string>, <pointer>) tuples to represent Java JNI objects.
- */
-PyTypeObject Shape_Type = {
-    PyVarObject_HEAD_INIT(NULL, 0)
-    "beampy.Shape",        /* tp_name */
-    sizeof (JObject),             /* tp_basicsize */
-    0,                            /* tp_itemsize */
-    (destructor)JObject_dealloc,  /* tp_dealloc */
-    NULL,                         /* tp_print */
-    NULL,                         /* tp_getattr */
-    NULL,                         /* tp_setattr */
-    NULL,                         /* tp_reserved */
-    NULL,                         /* tp_repr */
-    NULL,                         /* tp_as_number */
-    NULL,                         /* tp_as_sequence */
-    NULL,                         /* tp_as_mapping */
-    NULL,                         /* tp_hash  */
-    NULL,                         /* tp_call */
-    NULL,                         /* tp_str */
-    NULL,                         /* tp_getattro */
-    NULL,                         /* tp_setattro */
-    NULL,                         /* tp_as_buffer */
-    Py_TPFLAGS_DEFAULT,           /* tp_flags */
-    "",                /* tp_doc */
-    NULL,                         /* tp_traverse */
-    NULL,                         /* tp_clear */
-    NULL,                         /* tp_richcompare */
-    0,                            /* tp_weaklistoffset */
-    NULL,                         /* tp_iter */
-    NULL,                         /* tp_iternext */
-    Shape_methods,         /* tp_methods */
-    NULL,                         /* tp_members */
-    NULL,                         /* tp_getset */
-    NULL,                         /* tp_base */
-    NULL,                         /* tp_dict */
-    NULL,                         /* tp_descr_get */
-    NULL,                         /* tp_descr_set */
-    0,                            /* tp_dictoffset */
-    (initproc) JObject_init,      /* tp_init */
-    NULL,                         /* tp_alloc */
-    NULL,                         /* tp_new */
-};
-
-static PyMethodDef MapTransform_methods[] = {
-    {NULL, NULL, 0, NULL} /*Sentinel*/
-};
-
-// Note: this is unused, experimental code
-
-/**
- * Implements the BeamPy_JObjectType class singleton.
- *
- * THIS TYPE IS NOT YET IN USE: we currently use
- * (<type_string>, <pointer>) tuples to represent Java JNI objects.
- */
-PyTypeObject MapTransform_Type = {
-    PyVarObject_HEAD_INIT(NULL, 0)
-    "beampy.MapTransform",        /* tp_name */
-    sizeof (JObject),             /* tp_basicsize */
-    0,                            /* tp_itemsize */
-    (destructor)JObject_dealloc,  /* tp_dealloc */
-    NULL,                         /* tp_print */
-    NULL,                         /* tp_getattr */
-    NULL,                         /* tp_setattr */
-    NULL,                         /* tp_reserved */
-    NULL,                         /* tp_repr */
-    NULL,                         /* tp_as_number */
-    NULL,                         /* tp_as_sequence */
-    NULL,                         /* tp_as_mapping */
-    NULL,                         /* tp_hash  */
-    NULL,                         /* tp_call */
-    NULL,                         /* tp_str */
-    NULL,                         /* tp_getattro */
-    NULL,                         /* tp_setattro */
-    NULL,                         /* tp_as_buffer */
-    Py_TPFLAGS_DEFAULT,           /* tp_flags */
-    "Provides a parameterized, mathematical algorithm for a map transformation.\n\n@deprecated since BEAM 4.7, use geotools {@link org.geotools.referencing.operation.projection.MapProjection} instead.",                /* tp_doc */
-    NULL,                         /* tp_traverse */
-    NULL,                         /* tp_clear */
-    NULL,                         /* tp_richcompare */
-    0,                            /* tp_weaklistoffset */
-    NULL,                         /* tp_iter */
-    NULL,                         /* tp_iternext */
-    MapTransform_methods,         /* tp_methods */
-    NULL,                         /* tp_members */
-    NULL,                         /* tp_getset */
-    NULL,                         /* tp_base */
-    NULL,                         /* tp_dict */
-    NULL,                         /* tp_descr_get */
-    NULL,                         /* tp_descr_set */
-    0,                            /* tp_dictoffset */
-    (initproc) JObject_init,      /* tp_init */
-    NULL,                         /* tp_alloc */
-    NULL,                         /* tp_new */
-};
 
 static PyMethodDef ImageGeometry_methods[] = {
     {"newImageGeometry", (PyCFunction) BeamPyImageGeometry_newImageGeometry, METH_VARARGS | METH_STATIC, ""},
@@ -1370,7 +1285,6 @@ static PyMethodDef ImageGeometry_methods[] = {
     {"calculateProductSize", (PyCFunction) BeamPyImageGeometry_calculateProductSize, METH_VARARGS | METH_STATIC, ""},
     {"createTargetGeometry", (PyCFunction) BeamPyImageGeometry_createTargetGeometry, METH_VARARGS | METH_STATIC, ""},
     {"createCollocationTargetGeometry", (PyCFunction) BeamPyImageGeometry_createCollocationTargetGeometry, METH_VARARGS | METH_STATIC, ""},
-    {"createValidRect", (PyCFunction) BeamPyImageGeometry_createValidRect, METH_VARARGS | METH_STATIC, ""},
     {NULL, NULL, 0, NULL} /*Sentinel*/
 };
 
@@ -1411,59 +1325,6 @@ PyTypeObject ImageGeometry_Type = {
     NULL,                         /* tp_iter */
     NULL,                         /* tp_iternext */
     ImageGeometry_methods,         /* tp_methods */
-    NULL,                         /* tp_members */
-    NULL,                         /* tp_getset */
-    NULL,                         /* tp_base */
-    NULL,                         /* tp_dict */
-    NULL,                         /* tp_descr_get */
-    NULL,                         /* tp_descr_set */
-    0,                            /* tp_dictoffset */
-    (initproc) JObject_init,      /* tp_init */
-    NULL,                         /* tp_alloc */
-    NULL,                         /* tp_new */
-};
-
-static PyMethodDef Parser_methods[] = {
-    {NULL, NULL, 0, NULL} /*Sentinel*/
-};
-
-// Note: this is unused, experimental code
-
-/**
- * Implements the BeamPy_JObjectType class singleton.
- *
- * THIS TYPE IS NOT YET IN USE: we currently use
- * (<type_string>, <pointer>) tuples to represent Java JNI objects.
- */
-PyTypeObject Parser_Type = {
-    PyVarObject_HEAD_INIT(NULL, 0)
-    "beampy.Parser",        /* tp_name */
-    sizeof (JObject),             /* tp_basicsize */
-    0,                            /* tp_itemsize */
-    (destructor)JObject_dealloc,  /* tp_dealloc */
-    NULL,                         /* tp_print */
-    NULL,                         /* tp_getattr */
-    NULL,                         /* tp_setattr */
-    NULL,                         /* tp_reserved */
-    NULL,                         /* tp_repr */
-    NULL,                         /* tp_as_number */
-    NULL,                         /* tp_as_sequence */
-    NULL,                         /* tp_as_mapping */
-    NULL,                         /* tp_hash  */
-    NULL,                         /* tp_call */
-    NULL,                         /* tp_str */
-    NULL,                         /* tp_getattro */
-    NULL,                         /* tp_setattro */
-    NULL,                         /* tp_as_buffer */
-    Py_TPFLAGS_DEFAULT,           /* tp_flags */
-    "Instances of the Parser interface are used to convert a code\nstring representing an arithmetic expression in a tree of terms\nwhich can then be executed by using one of the evaluation methods of\nthe {@link Term} class.\nAuthor:  Norman Fomferra (norman.fomferra@brockmann-consult.de)\nVersion:  $Revision$ $Date$",                /* tp_doc */
-    NULL,                         /* tp_traverse */
-    NULL,                         /* tp_clear */
-    NULL,                         /* tp_richcompare */
-    0,                            /* tp_weaklistoffset */
-    NULL,                         /* tp_iter */
-    NULL,                         /* tp_iternext */
-    Parser_methods,         /* tp_methods */
     NULL,                         /* tp_members */
     NULL,                         /* tp_getset */
     NULL,                         /* tp_base */
@@ -1528,178 +1389,6 @@ PyTypeObject GeoCoding_Type = {
     NULL,                         /* tp_iter */
     NULL,                         /* tp_iternext */
     GeoCoding_methods,         /* tp_methods */
-    NULL,                         /* tp_members */
-    NULL,                         /* tp_getset */
-    NULL,                         /* tp_base */
-    NULL,                         /* tp_dict */
-    NULL,                         /* tp_descr_get */
-    NULL,                         /* tp_descr_set */
-    0,                            /* tp_dictoffset */
-    (initproc) JObject_init,      /* tp_init */
-    NULL,                         /* tp_alloc */
-    NULL,                         /* tp_new */
-};
-
-static PyMethodDef ProductData_methods[] = {
-    {"createInstance1", (PyCFunction) BeamPyProductData_createInstance1, METH_VARARGS | METH_STATIC, "Factory method which creates a value instance of the given type and with exactly one element.\nReturns Parameter type: the value's type\nReturns a new value instance, null if the given type is not known"},
-    {"createInstance2", (PyCFunction) BeamPyProductData_createInstance2, METH_VARARGS | METH_STATIC, "Factory method which creates a value instance of the given type and with the specified number of elements.\nReturns Parameter type: the value's type\nReturns Parameter numElems: the number of elements, must be greater than zero if type is not {@link ProductData#TYPE_UTC}\nReturns a new value instance, null if the given type is not known\n@throws IllegalArgumentException if one of the arguments is invalid"},
-    {"createInstance3", (PyCFunction) BeamPyProductData_createInstance3, METH_VARARGS | METH_STATIC, "Factory method which creates a value instance of the given type and with the specified number of elements.\nReturns Parameter type: the value's type\nReturns Parameter data: if type is TYPE_ASCII the String, otherwise the primitive array type corresponding to type\nReturns a new value instance, null if the given type is not known\n@throws IllegalArgumentException if one of the arguments is invalid"},
-    {"createInstance5", (PyCFunction) BeamPyProductData_createInstance5, METH_VARARGS | METH_STATIC, ""},
-    {"createUnsignedInstance1", (PyCFunction) BeamPyProductData_createUnsignedInstance1, METH_VARARGS | METH_STATIC, ""},
-    {"createInstance10", (PyCFunction) BeamPyProductData_createInstance10, METH_VARARGS | METH_STATIC, ""},
-    {"createUnsignedInstance3", (PyCFunction) BeamPyProductData_createUnsignedInstance3, METH_VARARGS | METH_STATIC, ""},
-    {"createInstance8", (PyCFunction) BeamPyProductData_createInstance8, METH_VARARGS | METH_STATIC, ""},
-    {"createUnsignedInstance2", (PyCFunction) BeamPyProductData_createUnsignedInstance2, METH_VARARGS | METH_STATIC, ""},
-    {"createInstance9", (PyCFunction) BeamPyProductData_createInstance9, METH_VARARGS | METH_STATIC, ""},
-    {"createInstance4", (PyCFunction) BeamPyProductData_createInstance4, METH_VARARGS | METH_STATIC, ""},
-    {"createInstance7", (PyCFunction) BeamPyProductData_createInstance7, METH_VARARGS | METH_STATIC, ""},
-    {"createInstance6", (PyCFunction) BeamPyProductData_createInstance6, METH_VARARGS | METH_STATIC, ""},
-    {"getType1", (PyCFunction) BeamPyProductData_getType1, METH_VARARGS, "Returns this value's type ID."},
-    {"getElemSize2", (PyCFunction) BeamPyProductData_getElemSize2, METH_VARARGS | METH_STATIC, "Gets the element size of an element of the given type in bytes.\nReturns Parameter type: the element type\nReturns the size of a single element in bytes.\n@throws IllegalArgumentException if the type is not supported."},
-    {"getElemSize1", (PyCFunction) BeamPyProductData_getElemSize1, METH_VARARGS, "Gets the element size of an element of this product data in bytes.\nReturns the size of a single element in bytes"},
-    {"getTypeString2", (PyCFunction) BeamPyProductData_getTypeString2, METH_VARARGS | METH_STATIC, "Returns a textual representation of the given data type.\nReturns a data type string, null if the type is unknown"},
-    {"getType2", (PyCFunction) BeamPyProductData_getType2, METH_VARARGS | METH_STATIC, "Returns a integer representation of the given data type string.\nReturns a data type integer, null if the type is unknown"},
-    {"getTypeString1", (PyCFunction) BeamPyProductData_getTypeString1, METH_VARARGS, "Returns this value's data type String."},
-    {"isInt", (PyCFunction) BeamPyProductData_isInt, METH_VARARGS, "Tests whether this value has an integer.\nReturns true, if so"},
-    {"isIntType", (PyCFunction) BeamPyProductData_isIntType, METH_VARARGS | METH_STATIC, "Tests whether the given value type is a signed or unsigned integer type.\nReturns true, if so"},
-    {"isSigned", (PyCFunction) BeamPyProductData_isSigned, METH_VARARGS, "Tests whether the actual instance is an signed data type.\nReturns true, if so"},
-    {"isUnsigned", (PyCFunction) BeamPyProductData_isUnsigned, METH_VARARGS, "Tests whether the actual instance is an unsigned data type.\nReturns true, if so"},
-    {"isUIntType", (PyCFunction) BeamPyProductData_isUIntType, METH_VARARGS | METH_STATIC, "Tests whether the given value type is an unsigned integer type.\nReturns true, if so"},
-    {"isFloatingPointType", (PyCFunction) BeamPyProductData_isFloatingPointType, METH_VARARGS | METH_STATIC, "Tests whether the given value type is a floating point type.\nReturns true, if so"},
-    {"isScalar", (PyCFunction) BeamPyProductData_isScalar, METH_VARARGS, "Tests if this value is a scalar.\nReturns true, if so"},
-    {"getNumElems", (PyCFunction) BeamPyProductData_getNumElems, METH_VARARGS, "Returns the number of data elements this value has."},
-    {"getElemInt", (PyCFunction) BeamPyProductData_getElemInt, METH_VARARGS, "Returns the value as an int. The method assumes that this value is a scalar and therefore simply\nreturns getElemIntAt(0).\n@see #getElemIntAt(int index)"},
-    {"getElemUInt", (PyCFunction) BeamPyProductData_getElemUInt, METH_VARARGS, "Returns the value as an unsigned int given as a long. The method assumes that this\nvalue is a scalar and therefore simply returns getElemUIntAt(0).\n@see #getElemUIntAt(int index)"},
-    {"getElemFloat", (PyCFunction) BeamPyProductData_getElemFloat, METH_VARARGS, "Returns the value as an float. The method assumes that this value is a scalar and therefore\nsimply returns getElemFloatAt(0).\n@see #getElemFloatAt(int index)"},
-    {"getElemDouble", (PyCFunction) BeamPyProductData_getElemDouble, METH_VARARGS, "Returns the value as an double. The method assumes that this value is a scalar and therefore\nsimply returns getElemDoubleAt(0).\n@see #getElemDoubleAt(int index)"},
-    {"getElemString", (PyCFunction) BeamPyProductData_getElemString, METH_VARARGS, "Returns the value as a String. The text returned is the comma-separated list of elements contained\nin this value.\nReturns a text representing this fields value, never null"},
-    {"getElemBoolean", (PyCFunction) BeamPyProductData_getElemBoolean, METH_VARARGS, "Returns the value as an boolean. The method assumes that this value is a scalar and therefore\nsimply returns getElemBooleanAt(0).\n@see #getElemBooleanAt(int index)"},
-    {"getElemIntAt", (PyCFunction) BeamPyProductData_getElemIntAt, METH_VARARGS, "Gets the value element with the given index as an int.\nReturns Parameter index: the value index, must be &gt;=0 and &lt;getNumDataElems()\n@throws IndexOutOfBoundsException if the index is out of bounds"},
-    {"getElemUIntAt", (PyCFunction) BeamPyProductData_getElemUIntAt, METH_VARARGS, "Gets the value element with the given index as a long.\nReturns Parameter index: the value index, must be &gt;=0 and &lt;getNumDataElems()\n@throws IndexOutOfBoundsException if the index is out of bounds"},
-    {"getElemFloatAt", (PyCFunction) BeamPyProductData_getElemFloatAt, METH_VARARGS, "Gets the value element with the given index as a float.\nReturns Parameter index: the value index, must be &gt;=0 and &lt;getNumDataElems()\n@throws IndexOutOfBoundsException if the index is out of bounds"},
-    {"getElemDoubleAt", (PyCFunction) BeamPyProductData_getElemDoubleAt, METH_VARARGS, "Gets the value element with the given index as a double.\nReturns Parameter index: the value index, must be &gt;=0 and &lt;getNumDataElems()\n@throws IndexOutOfBoundsException if the index is out of bounds"},
-    {"getElemStringAt", (PyCFunction) BeamPyProductData_getElemStringAt, METH_VARARGS, "Gets the value element with the given index as a String.\nReturns Parameter index: the value index, must be &gt;=0 and &lt;getNumDataElems()\n@throws IndexOutOfBoundsException if the index is out of bounds"},
-    {"getElemBooleanAt", (PyCFunction) BeamPyProductData_getElemBooleanAt, METH_VARARGS, "Gets the value element with the given index as a boolean.\nReturns Parameter index: the value index, must be &gt;=0 and &lt;getNumDataElems()\n@throws IndexOutOfBoundsException if the index is out of bounds"},
-    {"setElemInt", (PyCFunction) BeamPyProductData_setElemInt, METH_VARARGS, "Sets the value as an int. The method assumes that this value is a scalar and therefore simply\ncalls setElemInt(0, value).\nReturns Parameter value: the value to be set\n@see #setElemIntAt(int index, int value)"},
-    {"setElemUInt", (PyCFunction) BeamPyProductData_setElemUInt, METH_VARARGS, "Sets the value as an unsigned int given as a long. The method assumes that this\nvalue is a scalar and therefore simply calls setElemUInt(0, value).\nReturns Parameter value: the value to be set\n@see #setElemUIntAt(int index, long value)"},
-    {"setElemFloat", (PyCFunction) BeamPyProductData_setElemFloat, METH_VARARGS, "Sets the value as a float. The method assumes that this value is a scalar and therefore simply\ncalls setElemFloatAt(0, value).\nReturns Parameter value: the value to be set\n@see #setElemFloatAt(int index, float value)"},
-    {"setElemDouble", (PyCFunction) BeamPyProductData_setElemDouble, METH_VARARGS, "Sets the value as a double. The method assumes that this value is a scalar and therefore simply\ncalls setElemDoubleAt(0).\nReturns Parameter value: the value to be set\n@see #setElemDoubleAt(int index, double value)"},
-    {"setElemString", (PyCFunction) BeamPyProductData_setElemString, METH_VARARGS, "Sets the value as a String. The method assumes that this value is a scalar and therefore simply\ncalls setElemStringAt(0).\nReturns Parameter value: the value to be set\n@see #setElemStringAt"},
-    {"setElemBoolean", (PyCFunction) BeamPyProductData_setElemBoolean, METH_VARARGS, "Sets the value as a boolean. The method assumes that this value is a scalar and therefore simply\ncalls setElemDoubleAt(0).\nReturns Parameter value: the value to be set\n@see #setElemBooleanAt(int index, boolean value)"},
-    {"setElemIntAt", (PyCFunction) BeamPyProductData_setElemIntAt, METH_VARARGS, "Sets the value at the specified index as an int.\nReturns Parameter index: the value index, must be &gt;=0 and &lt;getNumDataElems()\nReturns Parameter value: the value to be set\n@throws IndexOutOfBoundsException if the index is out of bounds"},
-    {"setElemUIntAt", (PyCFunction) BeamPyProductData_setElemUIntAt, METH_VARARGS, "Sets the value at the specified index as an unsigned int given as a long.\nReturns Parameter index: the value index, must be &gt;=0 and &lt;getNumDataElems()\nReturns Parameter value: the value to be set\n@throws IndexOutOfBoundsException if the index is out of bounds"},
-    {"setElemFloatAt", (PyCFunction) BeamPyProductData_setElemFloatAt, METH_VARARGS, "Sets the value at the specified index as a float.\nReturns Parameter index: the value index, must be &gt;=0 and &lt;getNumDataElems()\nReturns Parameter value: the value to be set\n@throws IndexOutOfBoundsException if the index is out of bounds"},
-    {"setElemDoubleAt", (PyCFunction) BeamPyProductData_setElemDoubleAt, METH_VARARGS, "Sets the value at the specified index as a double.\nReturns Parameter index: the value index, must be &gt;=0 and &lt;getNumDataElems()\nReturns Parameter value: the value to be set\n@throws IndexOutOfBoundsException if the index is out of bounds"},
-    {"setElemStringAt", (PyCFunction) BeamPyProductData_setElemStringAt, METH_VARARGS, "Sets the value at the specified index as a String.\n\nTHE METHOD IS CURRENTLY NOT IMPLEMENTED.\nReturns Parameter index: the value index, must be &gt;=0 and &lt;getNumDataElems()\nReturns Parameter value: the value to be set\n@throws IndexOutOfBoundsException if the index is out of bounds"},
-    {"setElemBooleanAt", (PyCFunction) BeamPyProductData_setElemBooleanAt, METH_VARARGS, "Sets the value at the specified index as a boolean.\nReturns Parameter index: the value index, must be &gt;=0 and &lt;getNumDataElems()\nReturns Parameter value: the value to be set\n@throws IndexOutOfBoundsException if the index is out of bounds"},
-    {"getElems", (PyCFunction) BeamPyProductData_getElems, METH_VARARGS, "Returns the internal value. The actual type of the returned object should only be one of <ol>\n<li>byte[] - for signed/unsigned 8-bit integer fields</li> <li>short[] - for\nsigned/unsigned 16-bit integer fields</li> <li>int[] - for signed/unsigned 32-bit integer\nfields</li> <li>float[] - for signed 32-bit floating point fields</li> <li>double[] -\nfor signed 64-bit floating point fields</li> </ol>\nReturns an array of one of the described types"},
-    {"setElems", (PyCFunction) BeamPyProductData_setElems, METH_VARARGS, "Sets the internal value. The actual type of the given data object should only be one of <ol>\n<li>byte[] - for signed/unsigned 8-bit integer fields</li> <li>short[] - for\nsigned/unsigned 16-bit integer fields</li> <li>int[] - for signed/unsigned 32-bit integer\nfields</li> <li>float[] - for signed 32-bit floating point fields</li> <li>double[] -\nfor signed 64-bit floating point fields</li> <li>String[] - for all field types</li> </ol>\nReturns Parameter data: an array of one of the described types"},
-    {"readFrom4", (PyCFunction) BeamPyProductData_readFrom4, METH_VARARGS, "Reads all elements of this ProductData instance from to the given input stream.\n\n The method subsequentially reads the elements at 0 to getNumElems()-1 of this\nProductData instance from the given input stream.<br> Reading starts at the current seek position\nwithin the input stream.\nReturns Parameter input: a seekable data input stream\n@throws IOException if an I/O error occurs"},
-    {"readFrom3", (PyCFunction) BeamPyProductData_readFrom3, METH_VARARGS, "Reads a single element of this ProductData instance from to the given output stream.\n\n The method reads the element at pos of this ProductData instance from the given\noutput stream.<br> Reading starts at the current seek position within the output stream.\nReturns Parameter pos: the destination position (zero-based)\nReturns Parameter input: a seekable data input stream\n@throws IOException if an I/O error occurs"},
-    {"readFrom1", (PyCFunction) BeamPyProductData_readFrom1, METH_VARARGS, "Reads elements of this ProductData instance from the given output stream.\n\n The method subsequentially reads the elements at startPos to startPos+numElems-1 of\nthis ProductData instance from the given input stream.<br> Reading starts at the current seek\nposition of the input stream.\nReturns Parameter startPos: the destination start position (zero-based)\nReturns Parameter numElems: the number of elements to read\nReturns Parameter input: a seekable data input stream\n@throws IOException if an I/O error occurs"},
-    {"readFrom2", (PyCFunction) BeamPyProductData_readFrom2, METH_VARARGS, "Reads elements into this ProductData instance from the given input stream.\n\n The method subsequentially reads the elements at startPos to startPos+numElems-1 of\nthis ProductData instance from the given input stream.<br> Reading starts at inputPos\nwithin the output stream. The method multiplies this position with the value returned by\ngetElemSize() in order to find the correct stream offset in bytes.\nReturns Parameter startPos: the destination start position (zero-based)\nReturns Parameter numElems: the number of elements to read\nReturns Parameter input: a seekable data input stream\nReturns Parameter inputPos: the (zero-based) position in the data output stream where reading starts\n@throws IOException if an I/O error occurs"},
-    {"writeTo4", (PyCFunction) BeamPyProductData_writeTo4, METH_VARARGS, "Writes all elements of this ProductData instance to to the given output stream.\n\n The method subsequentially writes the elements at 0 to getNumElems()-1 of this\nProductData instance to the given output stream.<br> Writing starts at the current seek position\nwithin the output stream.\nReturns Parameter output: a seekable data output stream\n@throws IOException if an I/O error occurs"},
-    {"writeTo3", (PyCFunction) BeamPyProductData_writeTo3, METH_VARARGS, "Writes a single element of this ProductData instance to to the given output stream.\n\n The method writes the element at pos of this ProductData instance to the given\noutput stream.<br> Writing starts at the current seek position within the output stream.\nReturns Parameter pos: the source position (zero-based)\nReturns Parameter output: a seekable data output stream\n@throws IOException if an I/O error occurs"},
-    {"writeTo1", (PyCFunction) BeamPyProductData_writeTo1, METH_VARARGS, "Writes elements of this ProductData instance to to the given output stream.\n\n The method subsequentially writes the elements at startPos to startPos+numElems-1\nof this ProductData instance to the given output stream.<br> Writing starts at the current seek\nposition within the output stream.\nReturns Parameter startPos: the source start position (zero-based)\nReturns Parameter numElems: the number of elements to be written\nReturns Parameter output: a seekable data output stream\n@throws IOException if an I/O error occurs"},
-    {"writeTo2", (PyCFunction) BeamPyProductData_writeTo2, METH_VARARGS, "Writes elements of this ProductData instance to to the given output stream.\n\n The method subsequentially writes the elements at startPos to startPos+numElems-1\nof this ProductData instance to the given output stream.<br> Writing starts at\noutputPos within the output stream. The method multiplies this position with the value returned by\ngetElemSize() in order to find the correct stream offset in bytes.\nReturns Parameter startPos: the source start position (zero-based)\nReturns Parameter numElems: the number of elements to be written\nReturns Parameter output: a seekable data output stream\nReturns Parameter outputPos: the position in the data output stream where writing starts\n@throws IOException if an I/O error occurs"},
-    {"toString", (PyCFunction) BeamPyProductData_toString, METH_VARARGS, "Returns a string representation of this value which can be used for debugging purposes."},
-    {"hashCode", (PyCFunction) BeamPyProductData_hashCode, METH_VARARGS, "Returns {@link Object#hashCode()}."},
-    {"equals", (PyCFunction) BeamPyProductData_equals, METH_VARARGS, "Returns {@link Object#equals(Object)}.\nUse {@link #equalElems} in order to perform an element-wise comparision."},
-    {"equalElems", (PyCFunction) BeamPyProductData_equalElems, METH_VARARGS, "Tests whether this ProductData is equal to another one.\nPerforms an element-wise comparision if the other object is a {@link ProductData} instance of the same data type.\nOtherwise the method behaves like {@link Object#equals(Object)}.\nReturns Parameter other: the other one"},
-    {"dispose", (PyCFunction) BeamPyProductData_dispose, METH_VARARGS, "Releases all of the resources used by this object instance and all of its owned children. Its primary use is to\nallow the garbage collector to perform a vanilla job.\n\nThis method should be called only if it is for sure that this object instance will never be used again. The\nresults of referencing an instance of this class after a call to dispose() are undefined."},
-    {NULL, NULL, 0, NULL} /*Sentinel*/
-};
-
-// Note: this is unused, experimental code
-
-/**
- * Implements the BeamPy_JObjectType class singleton.
- *
- * THIS TYPE IS NOT YET IN USE: we currently use
- * (<type_string>, <pointer>) tuples to represent Java JNI objects.
- */
-PyTypeObject ProductData_Type = {
-    PyVarObject_HEAD_INIT(NULL, 0)
-    "beampy.ProductData",        /* tp_name */
-    sizeof (JObject),             /* tp_basicsize */
-    0,                            /* tp_itemsize */
-    (destructor)JObject_dealloc,  /* tp_dealloc */
-    NULL,                         /* tp_print */
-    NULL,                         /* tp_getattr */
-    NULL,                         /* tp_setattr */
-    NULL,                         /* tp_reserved */
-    NULL,                         /* tp_repr */
-    NULL,                         /* tp_as_number */
-    NULL,                         /* tp_as_sequence */
-    NULL,                         /* tp_as_mapping */
-    NULL,                         /* tp_hash  */
-    NULL,                         /* tp_call */
-    NULL,                         /* tp_str */
-    NULL,                         /* tp_getattro */
-    NULL,                         /* tp_setattro */
-    NULL,                         /* tp_as_buffer */
-    Py_TPFLAGS_DEFAULT,           /* tp_flags */
-    "The abstract ProductData class represents a generic data buffer used to hold the actual data values\nstored in remote sensing data products.\n\n A single ProductData instance can have one or more elements of a primitive type. The primitive types\nare: <ld> <li> {@link ProductData.Byte signed 8-bit integer} </li> <li> {@link ProductData.UByte unsigned 16-bit\ninteger} </li> <li> {@link ProductData.Short signed 32-bit integer} </li> <li> {@link ProductData.UShort unsigned\n16-bit integer} </li> <li> {@link ProductData.Int signed 32-bit integer} </li> <li> {@link ProductData.UInt unsigned\n32-bit integer} </li> <li> {@link ProductData.Float 32-bit floating point} </li> <li> {@link ProductData.Double\n64-bit floating point} </li> <li> {@link ProductData.ASCII a character string (8-bit ASCII encoding)} </li> <li>\n{@link ProductData.UTC a MJD-2000 encoded data/time value} </li> </ld>\n\nThe number of elements is an inmutable property of a ProductData instance.\n\nIn order to access the data in a ProductData instance, multiple setters and getters are provided\nwhich use generic transfer data types in order to make the data transfer in and out of a\nProductData instance easy for programmers.<br> For scalar (one-element) values the prototypes are\n<pre>\nvoid setElemType(Type elem);\nType getElemType();\n</pre>\nFor vector (multiple-element) values the prototypes are\n<pre>\nvoid setElemTypeAt(int index, Type elem);\nType getElemTypeAt(int index);\n</pre>\nWhere the transfer data type Type is one of int, long,\nfloat, double and String.\nAuthor:  Norman Fomferra\nVersion:  $Revision$ $Date$",                /* tp_doc */
-    NULL,                         /* tp_traverse */
-    NULL,                         /* tp_clear */
-    NULL,                         /* tp_richcompare */
-    0,                            /* tp_weaklistoffset */
-    NULL,                         /* tp_iter */
-    NULL,                         /* tp_iternext */
-    ProductData_methods,         /* tp_methods */
-    NULL,                         /* tp_members */
-    NULL,                         /* tp_getset */
-    NULL,                         /* tp_base */
-    NULL,                         /* tp_dict */
-    NULL,                         /* tp_descr_get */
-    NULL,                         /* tp_descr_set */
-    0,                            /* tp_dictoffset */
-    (initproc) JObject_init,      /* tp_init */
-    NULL,                         /* tp_alloc */
-    NULL,                         /* tp_new */
-};
-
-static PyMethodDef OperatorSpi_methods[] = {
-    {NULL, NULL, 0, NULL} /*Sentinel*/
-};
-
-// Note: this is unused, experimental code
-
-/**
- * Implements the BeamPy_JObjectType class singleton.
- *
- * THIS TYPE IS NOT YET IN USE: we currently use
- * (<type_string>, <pointer>) tuples to represent Java JNI objects.
- */
-PyTypeObject OperatorSpi_Type = {
-    PyVarObject_HEAD_INIT(NULL, 0)
-    "beampy.OperatorSpi",        /* tp_name */
-    sizeof (JObject),             /* tp_basicsize */
-    0,                            /* tp_itemsize */
-    (destructor)JObject_dealloc,  /* tp_dealloc */
-    NULL,                         /* tp_print */
-    NULL,                         /* tp_getattr */
-    NULL,                         /* tp_setattr */
-    NULL,                         /* tp_reserved */
-    NULL,                         /* tp_repr */
-    NULL,                         /* tp_as_number */
-    NULL,                         /* tp_as_sequence */
-    NULL,                         /* tp_as_mapping */
-    NULL,                         /* tp_hash  */
-    NULL,                         /* tp_call */
-    NULL,                         /* tp_str */
-    NULL,                         /* tp_getattro */
-    NULL,                         /* tp_setattro */
-    NULL,                         /* tp_as_buffer */
-    Py_TPFLAGS_DEFAULT,           /* tp_flags */
-    "The OperatorSpi class is the service provider interface (SPI) for {@link Operator}s.\nTherefore this abstract class is intended to be derived by clients.\nThe SPI is both a descriptor for the operator type and a factory for new {@link Operator} instances.\nAn SPI is required for your operator if you want to make it accessible via an alias name in\nthe various {@link GPF}{@code .create} methods or within GPF Graph XML code.\nSPI are registered either programmatically using the\n{@link GPF#getOperatorSpiRegistry() OperatorSpiRegistry} or\nautomatically via standard Java services lookup mechanism. For the services approach, place a\nfile {@code META-INF/services/OperatorSpi}\nin the JAR file containing your operators and associated SPIs.\nFor each SPI to be automatically registered, place a text line in the file containing the SPI's\nfully qualified class name.\nAuthor:  Norman Fomferra\nAuthor:  Marco Peters\nSince version:  4.1",                /* tp_doc */
-    NULL,                         /* tp_traverse */
-    NULL,                         /* tp_clear */
-    NULL,                         /* tp_richcompare */
-    0,                            /* tp_weaklistoffset */
-    NULL,                         /* tp_iter */
-    NULL,                         /* tp_iternext */
-    OperatorSpi_methods,         /* tp_methods */
     NULL,                         /* tp_members */
     NULL,                         /* tp_getset */
     NULL,                         /* tp_base */
@@ -1806,123 +1495,6 @@ PyTypeObject Mask_Type = {
     NULL,                         /* tp_iter */
     NULL,                         /* tp_iternext */
     Mask_methods,         /* tp_methods */
-    NULL,                         /* tp_members */
-    NULL,                         /* tp_getset */
-    NULL,                         /* tp_base */
-    NULL,                         /* tp_dict */
-    NULL,                         /* tp_descr_get */
-    NULL,                         /* tp_descr_set */
-    0,                            /* tp_dictoffset */
-    (initproc) JObject_init,      /* tp_init */
-    NULL,                         /* tp_alloc */
-    NULL,                         /* tp_new */
-};
-
-static PyMethodDef Double_methods[] = {
-    {NULL, NULL, 0, NULL} /*Sentinel*/
-};
-
-// Note: this is unused, experimental code
-
-/**
- * Implements the BeamPy_JObjectType class singleton.
- *
- * THIS TYPE IS NOT YET IN USE: we currently use
- * (<type_string>, <pointer>) tuples to represent Java JNI objects.
- */
-PyTypeObject Double_Type = {
-    PyVarObject_HEAD_INIT(NULL, 0)
-    "beampy.Double",        /* tp_name */
-    sizeof (JObject),             /* tp_basicsize */
-    0,                            /* tp_itemsize */
-    (destructor)JObject_dealloc,  /* tp_dealloc */
-    NULL,                         /* tp_print */
-    NULL,                         /* tp_getattr */
-    NULL,                         /* tp_setattr */
-    NULL,                         /* tp_reserved */
-    NULL,                         /* tp_repr */
-    NULL,                         /* tp_as_number */
-    NULL,                         /* tp_as_sequence */
-    NULL,                         /* tp_as_mapping */
-    NULL,                         /* tp_hash  */
-    NULL,                         /* tp_call */
-    NULL,                         /* tp_str */
-    NULL,                         /* tp_getattro */
-    NULL,                         /* tp_setattro */
-    NULL,                         /* tp_as_buffer */
-    Py_TPFLAGS_DEFAULT,           /* tp_flags */
-    "",                /* tp_doc */
-    NULL,                         /* tp_traverse */
-    NULL,                         /* tp_clear */
-    NULL,                         /* tp_richcompare */
-    0,                            /* tp_weaklistoffset */
-    NULL,                         /* tp_iter */
-    NULL,                         /* tp_iternext */
-    Double_methods,         /* tp_methods */
-    NULL,                         /* tp_members */
-    NULL,                         /* tp_getset */
-    NULL,                         /* tp_base */
-    NULL,                         /* tp_dict */
-    NULL,                         /* tp_descr_get */
-    NULL,                         /* tp_descr_set */
-    0,                            /* tp_dictoffset */
-    (initproc) JObject_init,      /* tp_init */
-    NULL,                         /* tp_alloc */
-    NULL,                         /* tp_new */
-};
-
-static PyMethodDef GPF_methods[] = {
-    {"createProductWithoutSourceProducts", (PyCFunction) BeamPyGPF_createProductWithoutSourceProducts, METH_VARARGS | METH_STATIC, "Creates a product by using the operator specified by the given name.\nThe resulting product can be used as input product for a further call to {@code createProduct()}.\nBy concatenating multiple calls it is possible to set up a processing graph.\nReturns Parameter operatorName: the name of the operator to use.\nReturns Parameter parameters: the named parameters needed by the operator.\nReturns the product created by the operator.\n@throws OperatorException if the product could not be created."},
-    {"createProductFromSourceProduct", (PyCFunction) BeamPyGPF_createProductFromSourceProduct, METH_VARARGS | METH_STATIC, "Creates a product by using the operator specified by the given name.\nThe resulting product can be used as input product for a further call to {@code createProduct()}.\nBy concatenating multiple calls it is possible to set up a processing graph.\nReturns Parameter operatorName: the name of the operator to use.\nReturns Parameter parameters: the named parameters needed by the operator.\nReturns Parameter sourceProduct: a source product.\nReturns the product created by the operator.\n@throws OperatorException if the product could not be created."},
-    {"createProductFromSourceProducts", (PyCFunction) BeamPyGPF_createProductFromSourceProducts, METH_VARARGS | METH_STATIC, "Creates a product by using the operator specified by the given name.\nThe resulting product can be used as input product for a further call to {@code createProduct()}.\nBy concatenating multiple calls it is possible to set up a processing graph.\nReturns Parameter operatorName: the name of the operator to use.\nReturns Parameter parameters: the named parameters needed by the operator.\nReturns Parameter sourceProducts: the source products.\nReturns the product created by the operator.\n@throws OperatorException if the product could not be created."},
-    {"createProductFromNamedSourceProducts", (PyCFunction) BeamPyGPF_createProductFromNamedSourceProducts, METH_VARARGS | METH_STATIC, "Creates a product by using the operator specified by the given name.\nThe resulting product can be used as input product for a further call to {@code createProduct()}.\nBy concatenating multiple calls it is possible to set up a processing graph.\nReturns Parameter operatorName: the name of the operator to use.\nReturns Parameter parameters: the named parameters needed by the operator.\nReturns Parameter sourceProducts: the map of named source products.\nReturns the product created by the operator.\n@throws OperatorException if the product could not be created."},
-    {"createProductNS", (PyCFunction) BeamPyGPF_createProductNS, METH_VARARGS, "Creates a product by using the operator specified by the given name.\nThe resulting product can be used as input product for a further call to {@code createProduct()}.\nBy concatenating multiple calls it is possible to set up a processing graph.\nAll static {@code createProduct} methods delegate to this non-static (= NS) version.\nIt can be overriden by clients in order to alter product creation behaviour of the static\n{@code createProduct} methods of the current GPF instance.\nReturns Parameter operatorName: the name of the operator to use.\nReturns Parameter parameters: the named parameters needed by the operator.\nReturns Parameter sourceProducts: the map of named source products.\nReturns Parameter renderingHints: the rendering hints, may be {@code null}.\nReturns the product created by the operator.\n@throws OperatorException if the product could not be created."},
-    {"createOperator", (PyCFunction) BeamPyGPF_createOperator, METH_VARARGS, "Creates an operator instance by using the given operator (alias) name.\nReturns Parameter operatorName: the name of the operator to use.\nReturns Parameter parameters: the named parameters needed by the operator.\nReturns Parameter sourceProducts: the map of named source products.\nReturns Parameter renderingHints: the rendering hints, may be {@code null}.\nReturns the product created by the operator.\n@throws OperatorException if the product could not be created.\nSince version:  BEAM 4.9"},
-    {"getOperatorSpiRegistry", (PyCFunction) BeamPyGPF_getOperatorSpiRegistry, METH_VARARGS, "Gets the registry for operator SPIs.\nReturns the registry for operator SPIs."},
-    {"setOperatorSpiRegistry", (PyCFunction) BeamPyGPF_setOperatorSpiRegistry, METH_VARARGS, "Sets the registry for operator SPIs.\nReturns Parameter spiRegistry: the registry for operator SPIs."},
-    {"getDefaultInstance", (PyCFunction) BeamPyGPF_getDefaultInstance, METH_VARARGS | METH_STATIC, "Gets the default GPF instance.\nReturns the singelton instance."},
-    {"setDefaultInstance", (PyCFunction) BeamPyGPF_setDefaultInstance, METH_VARARGS | METH_STATIC, "Sets the default GPF instance.\nReturns Parameter defaultInstance: the GPF default instance."},
-    {"writeProduct", (PyCFunction) BeamPyGPF_writeProduct, METH_VARARGS | METH_STATIC, "Writes a product with the specified format to the given file.\nReturns Parameter product: the product\nReturns Parameter file: the product file\nReturns Parameter formatName: the name of a supported product format, e.g. \"HDF5\". If null, the default format\n\"BEAM-DIMAP\" will be used\nReturns Parameter incremental: switch the product writer in incremental mode or not.\nReturns Parameter pm: a monitor to inform the user about progress"},
-    {NULL, NULL, 0, NULL} /*Sentinel*/
-};
-
-// Note: this is unused, experimental code
-
-/**
- * Implements the BeamPy_JObjectType class singleton.
- *
- * THIS TYPE IS NOT YET IN USE: we currently use
- * (<type_string>, <pointer>) tuples to represent Java JNI objects.
- */
-PyTypeObject GPF_Type = {
-    PyVarObject_HEAD_INIT(NULL, 0)
-    "beampy.GPF",        /* tp_name */
-    sizeof (JObject),             /* tp_basicsize */
-    0,                            /* tp_itemsize */
-    (destructor)JObject_dealloc,  /* tp_dealloc */
-    NULL,                         /* tp_print */
-    NULL,                         /* tp_getattr */
-    NULL,                         /* tp_setattr */
-    NULL,                         /* tp_reserved */
-    NULL,                         /* tp_repr */
-    NULL,                         /* tp_as_number */
-    NULL,                         /* tp_as_sequence */
-    NULL,                         /* tp_as_mapping */
-    NULL,                         /* tp_hash  */
-    NULL,                         /* tp_call */
-    NULL,                         /* tp_str */
-    NULL,                         /* tp_getattro */
-    NULL,                         /* tp_setattro */
-    NULL,                         /* tp_as_buffer */
-    Py_TPFLAGS_DEFAULT,           /* tp_flags */
-    "The facade for the Graph Processing Framework.\nThe Graph Processing Framework makes extensive use of Java Advanced Imaging (JAI).\nTherefore, configuring the JAI {@link javax.media.jai.TileCache TileCache} and\n{@link javax.media.jai.TileScheduler TileScheduler} will also affect the overall performance of\nthe Graph Processing Framework.\nThis class may be overridden in order to alter product creation behaviour of the static\n{@code createProduct} methods of the GPF instance.\nThe current instance can be set by {@link #setDefaultInstance(GPF)}.\nAuthor:  Norman Fomferra\nSince version:  4.1",                /* tp_doc */
-    NULL,                         /* tp_traverse */
-    NULL,                         /* tp_clear */
-    NULL,                         /* tp_richcompare */
-    0,                            /* tp_weaklistoffset */
-    NULL,                         /* tp_iter */
-    NULL,                         /* tp_iternext */
-    GPF_methods,         /* tp_methods */
     NULL,                         /* tp_members */
     NULL,                         /* tp_getset */
     NULL,                         /* tp_base */
@@ -2046,7 +1618,18 @@ PyTypeObject IndexCoding_Type = {
     NULL,                         /* tp_new */
 };
 
-static PyMethodDef Term_methods[] = {
+static PyMethodDef GPF_methods[] = {
+    {"createProductWithoutSourceProducts", (PyCFunction) BeamPyGPF_createProductWithoutSourceProducts, METH_VARARGS | METH_STATIC, "Creates a product by using the operator specified by the given name.\nThe resulting product can be used as input product for a further call to {@code createProduct()}.\nBy concatenating multiple calls it is possible to set up a processing graph.\nReturns Parameter operatorName: the name of the operator to use.\nReturns Parameter parameters: the named parameters needed by the operator.\nReturns the product created by the operator.\n@throws OperatorException if the product could not be created."},
+    {"createProductFromSourceProduct", (PyCFunction) BeamPyGPF_createProductFromSourceProduct, METH_VARARGS | METH_STATIC, "Creates a product by using the operator specified by the given name.\nThe resulting product can be used as input product for a further call to {@code createProduct()}.\nBy concatenating multiple calls it is possible to set up a processing graph.\nReturns Parameter operatorName: the name of the operator to use.\nReturns Parameter parameters: the named parameters needed by the operator.\nReturns Parameter sourceProduct: a source product.\nReturns the product created by the operator.\n@throws OperatorException if the product could not be created."},
+    {"createProductFromSourceProducts", (PyCFunction) BeamPyGPF_createProductFromSourceProducts, METH_VARARGS | METH_STATIC, "Creates a product by using the operator specified by the given name.\nThe resulting product can be used as input product for a further call to {@code createProduct()}.\nBy concatenating multiple calls it is possible to set up a processing graph.\nReturns Parameter operatorName: the name of the operator to use.\nReturns Parameter parameters: the named parameters needed by the operator.\nReturns Parameter sourceProducts: the source products.\nReturns the product created by the operator.\n@throws OperatorException if the product could not be created."},
+    {"createProductFromNamedSourceProducts", (PyCFunction) BeamPyGPF_createProductFromNamedSourceProducts, METH_VARARGS | METH_STATIC, "Creates a product by using the operator specified by the given name.\nThe resulting product can be used as input product for a further call to {@code createProduct()}.\nBy concatenating multiple calls it is possible to set up a processing graph.\nReturns Parameter operatorName: the name of the operator to use.\nReturns Parameter parameters: the named parameters needed by the operator.\nReturns Parameter sourceProducts: the map of named source products.\nReturns the product created by the operator.\n@throws OperatorException if the product could not be created."},
+    {"createProductNS", (PyCFunction) BeamPyGPF_createProductNS, METH_VARARGS, "Creates a product by using the operator specified by the given name.\nThe resulting product can be used as input product for a further call to {@code createProduct()}.\nBy concatenating multiple calls it is possible to set up a processing graph.\nAll static {@code createProduct} methods delegate to this non-static (= NS) version.\nIt can be overriden by clients in order to alter product creation behaviour of the static\n{@code createProduct} methods of the current GPF instance.\nReturns Parameter operatorName: the name of the operator to use.\nReturns Parameter parameters: the named parameters needed by the operator.\nReturns Parameter sourceProducts: the map of named source products.\nReturns Parameter renderingHints: the rendering hints, may be {@code null}.\nReturns the product created by the operator.\n@throws OperatorException if the product could not be created."},
+    {"createOperator", (PyCFunction) BeamPyGPF_createOperator, METH_VARARGS, "Creates an operator instance by using the given operator (alias) name.\nReturns Parameter operatorName: the name of the operator to use.\nReturns Parameter parameters: the named parameters needed by the operator.\nReturns Parameter sourceProducts: the map of named source products.\nReturns Parameter renderingHints: the rendering hints, may be {@code null}.\nReturns the product created by the operator.\n@throws OperatorException if the product could not be created.\nSince version:  BEAM 4.9"},
+    {"getOperatorSpiRegistry", (PyCFunction) BeamPyGPF_getOperatorSpiRegistry, METH_VARARGS, "Gets the registry for operator SPIs.\nReturns the registry for operator SPIs."},
+    {"setOperatorSpiRegistry", (PyCFunction) BeamPyGPF_setOperatorSpiRegistry, METH_VARARGS, "Sets the registry for operator SPIs.\nReturns Parameter spiRegistry: the registry for operator SPIs."},
+    {"getDefaultInstance", (PyCFunction) BeamPyGPF_getDefaultInstance, METH_VARARGS | METH_STATIC, "Gets the default GPF instance.\nReturns the singelton instance."},
+    {"setDefaultInstance", (PyCFunction) BeamPyGPF_setDefaultInstance, METH_VARARGS | METH_STATIC, "Sets the default GPF instance.\nReturns Parameter defaultInstance: the GPF default instance."},
+    {"writeProduct", (PyCFunction) BeamPyGPF_writeProduct, METH_VARARGS | METH_STATIC, "Writes a product with the specified format to the given file.\nReturns Parameter product: the product\nReturns Parameter file: the product file\nReturns Parameter formatName: the name of a supported product format, e.g. \"HDF5\". If null, the default format\n\"BEAM-DIMAP\" will be used\nReturns Parameter incremental: switch the product writer in incremental mode or not.\nReturns Parameter pm: a monitor to inform the user about progress"},
     {NULL, NULL, 0, NULL} /*Sentinel*/
 };
 
@@ -2058,9 +1641,9 @@ static PyMethodDef Term_methods[] = {
  * THIS TYPE IS NOT YET IN USE: we currently use
  * (<type_string>, <pointer>) tuples to represent Java JNI objects.
  */
-PyTypeObject Term_Type = {
+PyTypeObject GPF_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    "beampy.Term",        /* tp_name */
+    "beampy.GPF",        /* tp_name */
     sizeof (JObject),             /* tp_basicsize */
     0,                            /* tp_itemsize */
     (destructor)JObject_dealloc,  /* tp_dealloc */
@@ -2079,67 +1662,14 @@ PyTypeObject Term_Type = {
     NULL,                         /* tp_setattro */
     NULL,                         /* tp_as_buffer */
     Py_TPFLAGS_DEFAULT,           /* tp_flags */
-    "The abstract Term class is an in-memory representation of an\nelement within an arbitrary expression tree. The class defines a number of\nconcrete Term implementations each representing either an\nan atomic leave (number constant, symbol reference) or a node\n(e.g. binary operator, function call) within an expression tree.\n\n Instances of this class are normally created using an expression parser\nwhich implements the {@link com.bc.jexp.Parser} interface.\nThe {@link com.bc.jexp.impl.ParserImpl} class provides a default\nimplementation of such a parser.\nAuthor:  Norman Fomferra (norman.fomferra@brockmann-consult.de)\nVersion:  $Revision$ $Date$",                /* tp_doc */
+    "The facade for the Graph Processing Framework.\nThe Graph Processing Framework makes extensive use of Java Advanced Imaging (JAI).\nTherefore, configuring the JAI {@link javax.media.jai.TileCache TileCache} and\n{@link javax.media.jai.TileScheduler TileScheduler} will also affect the overall performance of\nthe Graph Processing Framework.\nThis class may be overridden in order to alter product creation behaviour of the static\n{@code createProduct} methods of the GPF instance.\nThe current instance can be set by {@link #setDefaultInstance(GPF)}.\nAuthor:  Norman Fomferra\nSince version:  4.1",                /* tp_doc */
     NULL,                         /* tp_traverse */
     NULL,                         /* tp_clear */
     NULL,                         /* tp_richcompare */
     0,                            /* tp_weaklistoffset */
     NULL,                         /* tp_iter */
     NULL,                         /* tp_iternext */
-    Term_methods,         /* tp_methods */
-    NULL,                         /* tp_members */
-    NULL,                         /* tp_getset */
-    NULL,                         /* tp_base */
-    NULL,                         /* tp_dict */
-    NULL,                         /* tp_descr_get */
-    NULL,                         /* tp_descr_set */
-    0,                            /* tp_dictoffset */
-    (initproc) JObject_init,      /* tp_init */
-    NULL,                         /* tp_alloc */
-    NULL,                         /* tp_new */
-};
-
-static PyMethodDef RasterDataNode_methods[] = {
-    {NULL, NULL, 0, NULL} /*Sentinel*/
-};
-
-// Note: this is unused, experimental code
-
-/**
- * Implements the BeamPy_JObjectType class singleton.
- *
- * THIS TYPE IS NOT YET IN USE: we currently use
- * (<type_string>, <pointer>) tuples to represent Java JNI objects.
- */
-PyTypeObject RasterDataNode_Type = {
-    PyVarObject_HEAD_INIT(NULL, 0)
-    "beampy.RasterDataNode",        /* tp_name */
-    sizeof (JObject),             /* tp_basicsize */
-    0,                            /* tp_itemsize */
-    (destructor)JObject_dealloc,  /* tp_dealloc */
-    NULL,                         /* tp_print */
-    NULL,                         /* tp_getattr */
-    NULL,                         /* tp_setattr */
-    NULL,                         /* tp_reserved */
-    NULL,                         /* tp_repr */
-    NULL,                         /* tp_as_number */
-    NULL,                         /* tp_as_sequence */
-    NULL,                         /* tp_as_mapping */
-    NULL,                         /* tp_hash  */
-    NULL,                         /* tp_call */
-    NULL,                         /* tp_str */
-    NULL,                         /* tp_getattro */
-    NULL,                         /* tp_setattro */
-    NULL,                         /* tp_as_buffer */
-    Py_TPFLAGS_DEFAULT,           /* tp_flags */
-    "The RasterDataNode class ist the abstract base class for all objects in the product package that contain\nrasterized data. i.e. Band and TiePointGrid. It unifies the access to raster data in the\nproduct model. A raster is considered as a rectangular raw data array with a fixed width and height. A raster data\nnode can scale its raw raster data samples in order to return geophysically meaningful pixel values.\nAuthor:  Norman Fomferra\n@see #getRasterData()\n@see #getRasterWidth()\n@see #getRasterHeight()\n@see #isScalingApplied()\n@see #isLog10Scaled()\n@see #getScalingFactor()\n@see #getScalingOffset()",                /* tp_doc */
-    NULL,                         /* tp_traverse */
-    NULL,                         /* tp_clear */
-    NULL,                         /* tp_richcompare */
-    0,                            /* tp_weaklistoffset */
-    NULL,                         /* tp_iter */
-    NULL,                         /* tp_iternext */
-    RasterDataNode_methods,         /* tp_methods */
+    GPF_methods,         /* tp_methods */
     NULL,                         /* tp_members */
     NULL,                         /* tp_getset */
     NULL,                         /* tp_base */
@@ -2246,59 +1776,6 @@ PyTypeObject ServiceRegistry_Type = {
     NULL,                         /* tp_iter */
     NULL,                         /* tp_iternext */
     ServiceRegistry_methods,         /* tp_methods */
-    NULL,                         /* tp_members */
-    NULL,                         /* tp_getset */
-    NULL,                         /* tp_base */
-    NULL,                         /* tp_dict */
-    NULL,                         /* tp_descr_get */
-    NULL,                         /* tp_descr_set */
-    0,                            /* tp_dictoffset */
-    (initproc) JObject_init,      /* tp_init */
-    NULL,                         /* tp_alloc */
-    NULL,                         /* tp_new */
-};
-
-static PyMethodDef Product_AutoGrouping_methods[] = {
-    {NULL, NULL, 0, NULL} /*Sentinel*/
-};
-
-// Note: this is unused, experimental code
-
-/**
- * Implements the BeamPy_JObjectType class singleton.
- *
- * THIS TYPE IS NOT YET IN USE: we currently use
- * (<type_string>, <pointer>) tuples to represent Java JNI objects.
- */
-PyTypeObject Product_AutoGrouping_Type = {
-    PyVarObject_HEAD_INIT(NULL, 0)
-    "beampy.Product_AutoGrouping",        /* tp_name */
-    sizeof (JObject),             /* tp_basicsize */
-    0,                            /* tp_itemsize */
-    (destructor)JObject_dealloc,  /* tp_dealloc */
-    NULL,                         /* tp_print */
-    NULL,                         /* tp_getattr */
-    NULL,                         /* tp_setattr */
-    NULL,                         /* tp_reserved */
-    NULL,                         /* tp_repr */
-    NULL,                         /* tp_as_number */
-    NULL,                         /* tp_as_sequence */
-    NULL,                         /* tp_as_mapping */
-    NULL,                         /* tp_hash  */
-    NULL,                         /* tp_call */
-    NULL,                         /* tp_str */
-    NULL,                         /* tp_getattro */
-    NULL,                         /* tp_setattro */
-    NULL,                         /* tp_as_buffer */
-    Py_TPFLAGS_DEFAULT,           /* tp_flags */
-    "AutoGrouping can be used by an application to auto-group a long list of product nodes (e.g. bands)\nas a tree of product nodes.\nSince version:  BEAM 4.8",                /* tp_doc */
-    NULL,                         /* tp_traverse */
-    NULL,                         /* tp_clear */
-    NULL,                         /* tp_richcompare */
-    0,                            /* tp_weaklistoffset */
-    NULL,                         /* tp_iter */
-    NULL,                         /* tp_iternext */
-    Product_AutoGrouping_methods,         /* tp_methods */
     NULL,                         /* tp_members */
     NULL,                         /* tp_getset */
     NULL,                         /* tp_base */
@@ -2436,7 +1913,7 @@ PyTypeObject BitRaster_Type = {
     NULL,                         /* tp_new */
 };
 
-static PyMethodDef ImageOutputStream_methods[] = {
+static PyMethodDef ProductNode_methods[] = {
     {NULL, NULL, 0, NULL} /*Sentinel*/
 };
 
@@ -2448,9 +1925,9 @@ static PyMethodDef ImageOutputStream_methods[] = {
  * THIS TYPE IS NOT YET IN USE: we currently use
  * (<type_string>, <pointer>) tuples to represent Java JNI objects.
  */
-PyTypeObject ImageOutputStream_Type = {
+PyTypeObject ProductNode_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    "beampy.ImageOutputStream",        /* tp_name */
+    "beampy.ProductNode",        /* tp_name */
     sizeof (JObject),             /* tp_basicsize */
     0,                            /* tp_itemsize */
     (destructor)JObject_dealloc,  /* tp_dealloc */
@@ -2469,173 +1946,14 @@ PyTypeObject ImageOutputStream_Type = {
     NULL,                         /* tp_setattro */
     NULL,                         /* tp_as_buffer */
     Py_TPFLAGS_DEFAULT,           /* tp_flags */
-    "",                /* tp_doc */
+    "The ProductNode is the base class for all nodes within a remote sensing data product and even the data\nproduct itself.\nAuthor:  Norman Fomferra",                /* tp_doc */
     NULL,                         /* tp_traverse */
     NULL,                         /* tp_clear */
     NULL,                         /* tp_richcompare */
     0,                            /* tp_weaklistoffset */
     NULL,                         /* tp_iter */
     NULL,                         /* tp_iternext */
-    ImageOutputStream_methods,         /* tp_methods */
-    NULL,                         /* tp_members */
-    NULL,                         /* tp_getset */
-    NULL,                         /* tp_base */
-    NULL,                         /* tp_dict */
-    NULL,                         /* tp_descr_get */
-    NULL,                         /* tp_descr_set */
-    0,                            /* tp_dictoffset */
-    (initproc) JObject_init,      /* tp_init */
-    NULL,                         /* tp_alloc */
-    NULL,                         /* tp_new */
-};
-
-static PyMethodDef Stx_methods[] = {
-    {NULL, NULL, 0, NULL} /*Sentinel*/
-};
-
-// Note: this is unused, experimental code
-
-/**
- * Implements the BeamPy_JObjectType class singleton.
- *
- * THIS TYPE IS NOT YET IN USE: we currently use
- * (<type_string>, <pointer>) tuples to represent Java JNI objects.
- */
-PyTypeObject Stx_Type = {
-    PyVarObject_HEAD_INIT(NULL, 0)
-    "beampy.Stx",        /* tp_name */
-    sizeof (JObject),             /* tp_basicsize */
-    0,                            /* tp_itemsize */
-    (destructor)JObject_dealloc,  /* tp_dealloc */
-    NULL,                         /* tp_print */
-    NULL,                         /* tp_getattr */
-    NULL,                         /* tp_setattr */
-    NULL,                         /* tp_reserved */
-    NULL,                         /* tp_repr */
-    NULL,                         /* tp_as_number */
-    NULL,                         /* tp_as_sequence */
-    NULL,                         /* tp_as_mapping */
-    NULL,                         /* tp_hash  */
-    NULL,                         /* tp_call */
-    NULL,                         /* tp_str */
-    NULL,                         /* tp_getattro */
-    NULL,                         /* tp_setattro */
-    NULL,                         /* tp_as_buffer */
-    Py_TPFLAGS_DEFAULT,           /* tp_flags */
-    "Provides statistic information for a raster data node at a given image resolution level.\nInstances of the Stx class are created using the {@link StxFactory}.\n\nImportant note: This class has been revised in BEAM 4.10. All behaviour has been moved to {@link StxFactory}\nleaving behind this class as a pure data container. Statistics are now furthermore derived upon\ngeo-physically interpreted image data (before it operated on the raw, unscaled data). Thus, it is\nnot required to scale the returned statistical properties, e.g. we used to write\n{@code band.scale(stx.getMean())}. This is not required anymore.\nAuthor:  Norman Fomferra\nAuthor:  Marco Peters\nAuthor:  Ralf Quast\nSince version:  BEAM 4.2, full revision in 4.10",                /* tp_doc */
-    NULL,                         /* tp_traverse */
-    NULL,                         /* tp_clear */
-    NULL,                         /* tp_richcompare */
-    0,                            /* tp_weaklistoffset */
-    NULL,                         /* tp_iter */
-    NULL,                         /* tp_iternext */
-    Stx_methods,         /* tp_methods */
-    NULL,                         /* tp_members */
-    NULL,                         /* tp_getset */
-    NULL,                         /* tp_base */
-    NULL,                         /* tp_dict */
-    NULL,                         /* tp_descr_get */
-    NULL,                         /* tp_descr_set */
-    0,                            /* tp_dictoffset */
-    (initproc) JObject_init,      /* tp_init */
-    NULL,                         /* tp_alloc */
-    NULL,                         /* tp_new */
-};
-
-static PyMethodDef Rectangle_methods[] = {
-    {NULL, NULL, 0, NULL} /*Sentinel*/
-};
-
-// Note: this is unused, experimental code
-
-/**
- * Implements the BeamPy_JObjectType class singleton.
- *
- * THIS TYPE IS NOT YET IN USE: we currently use
- * (<type_string>, <pointer>) tuples to represent Java JNI objects.
- */
-PyTypeObject Rectangle_Type = {
-    PyVarObject_HEAD_INIT(NULL, 0)
-    "beampy.Rectangle",        /* tp_name */
-    sizeof (JObject),             /* tp_basicsize */
-    0,                            /* tp_itemsize */
-    (destructor)JObject_dealloc,  /* tp_dealloc */
-    NULL,                         /* tp_print */
-    NULL,                         /* tp_getattr */
-    NULL,                         /* tp_setattr */
-    NULL,                         /* tp_reserved */
-    NULL,                         /* tp_repr */
-    NULL,                         /* tp_as_number */
-    NULL,                         /* tp_as_sequence */
-    NULL,                         /* tp_as_mapping */
-    NULL,                         /* tp_hash  */
-    NULL,                         /* tp_call */
-    NULL,                         /* tp_str */
-    NULL,                         /* tp_getattro */
-    NULL,                         /* tp_setattro */
-    NULL,                         /* tp_as_buffer */
-    Py_TPFLAGS_DEFAULT,           /* tp_flags */
-    "",                /* tp_doc */
-    NULL,                         /* tp_traverse */
-    NULL,                         /* tp_clear */
-    NULL,                         /* tp_richcompare */
-    0,                            /* tp_weaklistoffset */
-    NULL,                         /* tp_iter */
-    NULL,                         /* tp_iternext */
-    Rectangle_methods,         /* tp_methods */
-    NULL,                         /* tp_members */
-    NULL,                         /* tp_getset */
-    NULL,                         /* tp_base */
-    NULL,                         /* tp_dict */
-    NULL,                         /* tp_descr_get */
-    NULL,                         /* tp_descr_set */
-    0,                            /* tp_dictoffset */
-    (initproc) JObject_init,      /* tp_init */
-    NULL,                         /* tp_alloc */
-    NULL,                         /* tp_new */
-};
-
-static PyMethodDef Dimension_methods[] = {
-    {NULL, NULL, 0, NULL} /*Sentinel*/
-};
-
-// Note: this is unused, experimental code
-
-/**
- * Implements the BeamPy_JObjectType class singleton.
- *
- * THIS TYPE IS NOT YET IN USE: we currently use
- * (<type_string>, <pointer>) tuples to represent Java JNI objects.
- */
-PyTypeObject Dimension_Type = {
-    PyVarObject_HEAD_INIT(NULL, 0)
-    "beampy.Dimension",        /* tp_name */
-    sizeof (JObject),             /* tp_basicsize */
-    0,                            /* tp_itemsize */
-    (destructor)JObject_dealloc,  /* tp_dealloc */
-    NULL,                         /* tp_print */
-    NULL,                         /* tp_getattr */
-    NULL,                         /* tp_setattr */
-    NULL,                         /* tp_reserved */
-    NULL,                         /* tp_repr */
-    NULL,                         /* tp_as_number */
-    NULL,                         /* tp_as_sequence */
-    NULL,                         /* tp_as_mapping */
-    NULL,                         /* tp_hash  */
-    NULL,                         /* tp_call */
-    NULL,                         /* tp_str */
-    NULL,                         /* tp_getattro */
-    NULL,                         /* tp_setattro */
-    NULL,                         /* tp_as_buffer */
-    Py_TPFLAGS_DEFAULT,           /* tp_flags */
-    "",                /* tp_doc */
-    NULL,                         /* tp_traverse */
-    NULL,                         /* tp_clear */
-    NULL,                         /* tp_richcompare */
-    0,                            /* tp_weaklistoffset */
-    NULL,                         /* tp_iter */
-    NULL,                         /* tp_iternext */
-    Dimension_methods,         /* tp_methods */
+    ProductNode_methods,         /* tp_methods */
     NULL,                         /* tp_members */
     NULL,                         /* tp_getset */
     NULL,                         /* tp_base */
@@ -2708,7 +2026,7 @@ PyTypeObject ProductIO_Type = {
     NULL,                         /* tp_new */
 };
 
-static PyMethodDef ProductNode_methods[] = {
+static PyMethodDef Rectangle_methods[] = {
     {NULL, NULL, 0, NULL} /*Sentinel*/
 };
 
@@ -2720,65 +2038,9 @@ static PyMethodDef ProductNode_methods[] = {
  * THIS TYPE IS NOT YET IN USE: we currently use
  * (<type_string>, <pointer>) tuples to represent Java JNI objects.
  */
-PyTypeObject ProductNode_Type = {
+PyTypeObject Rectangle_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    "beampy.ProductNode",        /* tp_name */
-    sizeof (JObject),             /* tp_basicsize */
-    0,                            /* tp_itemsize */
-    (destructor)JObject_dealloc,  /* tp_dealloc */
-    NULL,                         /* tp_print */
-    NULL,                         /* tp_getattr */
-    NULL,                         /* tp_setattr */
-    NULL,                         /* tp_reserved */
-    NULL,                         /* tp_repr */
-    NULL,                         /* tp_as_number */
-    NULL,                         /* tp_as_sequence */
-    NULL,                         /* tp_as_mapping */
-    NULL,                         /* tp_hash  */
-    NULL,                         /* tp_call */
-    NULL,                         /* tp_str */
-    NULL,                         /* tp_getattro */
-    NULL,                         /* tp_setattro */
-    NULL,                         /* tp_as_buffer */
-    Py_TPFLAGS_DEFAULT,           /* tp_flags */
-    "The ProductNode is the base class for all nodes within a remote sensing data product and even the data\nproduct itself.\nAuthor:  Norman Fomferra",                /* tp_doc */
-    NULL,                         /* tp_traverse */
-    NULL,                         /* tp_clear */
-    NULL,                         /* tp_richcompare */
-    0,                            /* tp_weaklistoffset */
-    NULL,                         /* tp_iter */
-    NULL,                         /* tp_iternext */
-    ProductNode_methods,         /* tp_methods */
-    NULL,                         /* tp_members */
-    NULL,                         /* tp_getset */
-    NULL,                         /* tp_base */
-    NULL,                         /* tp_dict */
-    NULL,                         /* tp_descr_get */
-    NULL,                         /* tp_descr_set */
-    0,                            /* tp_dictoffset */
-    (initproc) JObject_init,      /* tp_init */
-    NULL,                         /* tp_alloc */
-    NULL,                         /* tp_new */
-};
-
-static PyMethodDef AngularDirection_methods[] = {
-    {"newAngularDirection", (PyCFunction) BeamPyAngularDirection_newAngularDirection, METH_VARARGS | METH_STATIC, ""},
-    {"equals", (PyCFunction) BeamPyAngularDirection_equals, METH_VARARGS, ""},
-    {"toString", (PyCFunction) BeamPyAngularDirection_toString, METH_VARARGS, ""},
-    {NULL, NULL, 0, NULL} /*Sentinel*/
-};
-
-// Note: this is unused, experimental code
-
-/**
- * Implements the BeamPy_JObjectType class singleton.
- *
- * THIS TYPE IS NOT YET IN USE: we currently use
- * (<type_string>, <pointer>) tuples to represent Java JNI objects.
- */
-PyTypeObject AngularDirection_Type = {
-    PyVarObject_HEAD_INIT(NULL, 0)
-    "beampy.AngularDirection",        /* tp_name */
+    "beampy.Rectangle",        /* tp_name */
     sizeof (JObject),             /* tp_basicsize */
     0,                            /* tp_itemsize */
     (destructor)JObject_dealloc,  /* tp_dealloc */
@@ -2804,60 +2066,7 @@ PyTypeObject AngularDirection_Type = {
     0,                            /* tp_weaklistoffset */
     NULL,                         /* tp_iter */
     NULL,                         /* tp_iternext */
-    AngularDirection_methods,         /* tp_methods */
-    NULL,                         /* tp_members */
-    NULL,                         /* tp_getset */
-    NULL,                         /* tp_base */
-    NULL,                         /* tp_dict */
-    NULL,                         /* tp_descr_get */
-    NULL,                         /* tp_descr_set */
-    0,                            /* tp_dictoffset */
-    (initproc) JObject_init,      /* tp_init */
-    NULL,                         /* tp_alloc */
-    NULL,                         /* tp_new */
-};
-
-static PyMethodDef SimpleFeatureType_methods[] = {
-    {NULL, NULL, 0, NULL} /*Sentinel*/
-};
-
-// Note: this is unused, experimental code
-
-/**
- * Implements the BeamPy_JObjectType class singleton.
- *
- * THIS TYPE IS NOT YET IN USE: we currently use
- * (<type_string>, <pointer>) tuples to represent Java JNI objects.
- */
-PyTypeObject SimpleFeatureType_Type = {
-    PyVarObject_HEAD_INIT(NULL, 0)
-    "beampy.SimpleFeatureType",        /* tp_name */
-    sizeof (JObject),             /* tp_basicsize */
-    0,                            /* tp_itemsize */
-    (destructor)JObject_dealloc,  /* tp_dealloc */
-    NULL,                         /* tp_print */
-    NULL,                         /* tp_getattr */
-    NULL,                         /* tp_setattr */
-    NULL,                         /* tp_reserved */
-    NULL,                         /* tp_repr */
-    NULL,                         /* tp_as_number */
-    NULL,                         /* tp_as_sequence */
-    NULL,                         /* tp_as_mapping */
-    NULL,                         /* tp_hash  */
-    NULL,                         /* tp_call */
-    NULL,                         /* tp_str */
-    NULL,                         /* tp_getattro */
-    NULL,                         /* tp_setattro */
-    NULL,                         /* tp_as_buffer */
-    Py_TPFLAGS_DEFAULT,           /* tp_flags */
-    "",                /* tp_doc */
-    NULL,                         /* tp_traverse */
-    NULL,                         /* tp_clear */
-    NULL,                         /* tp_richcompare */
-    0,                            /* tp_weaklistoffset */
-    NULL,                         /* tp_iter */
-    NULL,                         /* tp_iternext */
-    SimpleFeatureType_methods,         /* tp_methods */
+    Rectangle_methods,         /* tp_methods */
     NULL,                         /* tp_members */
     NULL,                         /* tp_getset */
     NULL,                         /* tp_base */
@@ -3088,112 +2297,6 @@ PyTypeObject ProductReaderPlugIn_Type = {
     NULL,                         /* tp_new */
 };
 
-static PyMethodDef Integer_methods[] = {
-    {NULL, NULL, 0, NULL} /*Sentinel*/
-};
-
-// Note: this is unused, experimental code
-
-/**
- * Implements the BeamPy_JObjectType class singleton.
- *
- * THIS TYPE IS NOT YET IN USE: we currently use
- * (<type_string>, <pointer>) tuples to represent Java JNI objects.
- */
-PyTypeObject Integer_Type = {
-    PyVarObject_HEAD_INIT(NULL, 0)
-    "beampy.Integer",        /* tp_name */
-    sizeof (JObject),             /* tp_basicsize */
-    0,                            /* tp_itemsize */
-    (destructor)JObject_dealloc,  /* tp_dealloc */
-    NULL,                         /* tp_print */
-    NULL,                         /* tp_getattr */
-    NULL,                         /* tp_setattr */
-    NULL,                         /* tp_reserved */
-    NULL,                         /* tp_repr */
-    NULL,                         /* tp_as_number */
-    NULL,                         /* tp_as_sequence */
-    NULL,                         /* tp_as_mapping */
-    NULL,                         /* tp_hash  */
-    NULL,                         /* tp_call */
-    NULL,                         /* tp_str */
-    NULL,                         /* tp_getattro */
-    NULL,                         /* tp_setattro */
-    NULL,                         /* tp_as_buffer */
-    Py_TPFLAGS_DEFAULT,           /* tp_flags */
-    "",                /* tp_doc */
-    NULL,                         /* tp_traverse */
-    NULL,                         /* tp_clear */
-    NULL,                         /* tp_richcompare */
-    0,                            /* tp_weaklistoffset */
-    NULL,                         /* tp_iter */
-    NULL,                         /* tp_iternext */
-    Integer_methods,         /* tp_methods */
-    NULL,                         /* tp_members */
-    NULL,                         /* tp_getset */
-    NULL,                         /* tp_base */
-    NULL,                         /* tp_dict */
-    NULL,                         /* tp_descr_get */
-    NULL,                         /* tp_descr_set */
-    0,                            /* tp_dictoffset */
-    (initproc) JObject_init,      /* tp_init */
-    NULL,                         /* tp_alloc */
-    NULL,                         /* tp_new */
-};
-
-static PyMethodDef ProductData_UTC_methods[] = {
-    {NULL, NULL, 0, NULL} /*Sentinel*/
-};
-
-// Note: this is unused, experimental code
-
-/**
- * Implements the BeamPy_JObjectType class singleton.
- *
- * THIS TYPE IS NOT YET IN USE: we currently use
- * (<type_string>, <pointer>) tuples to represent Java JNI objects.
- */
-PyTypeObject ProductData_UTC_Type = {
-    PyVarObject_HEAD_INIT(NULL, 0)
-    "beampy.ProductData_UTC",        /* tp_name */
-    sizeof (JObject),             /* tp_basicsize */
-    0,                            /* tp_itemsize */
-    (destructor)JObject_dealloc,  /* tp_dealloc */
-    NULL,                         /* tp_print */
-    NULL,                         /* tp_getattr */
-    NULL,                         /* tp_setattr */
-    NULL,                         /* tp_reserved */
-    NULL,                         /* tp_repr */
-    NULL,                         /* tp_as_number */
-    NULL,                         /* tp_as_sequence */
-    NULL,                         /* tp_as_mapping */
-    NULL,                         /* tp_hash  */
-    NULL,                         /* tp_call */
-    NULL,                         /* tp_str */
-    NULL,                         /* tp_getattro */
-    NULL,                         /* tp_setattro */
-    NULL,                         /* tp_as_buffer */
-    Py_TPFLAGS_DEFAULT,           /* tp_flags */
-    "The ProductData.UTC class is a ProductData.UInt specialisation for UTC date/time\nvalues.\n\n Internally, data is stored in an int[3] array which represents a Modified Julian Day 2000\n({@link ProductData.UTC#getMJD() MJD}) as a {@link\nProductData.UTC#getDaysFraction() days}, a {@link\nProductData.UTC#getSecondsFraction() seconds} and a {@link\nProductData.UTC#getMicroSecondsFraction() micro-seconds} fraction.\n@see ProductData.UTC#getMJD()\n@see ProductData.UTC#getDaysFraction()\n@see ProductData.UTC#getSecondsFraction()\n@see ProductData.UTC#getMicroSecondsFraction()",                /* tp_doc */
-    NULL,                         /* tp_traverse */
-    NULL,                         /* tp_clear */
-    NULL,                         /* tp_richcompare */
-    0,                            /* tp_weaklistoffset */
-    NULL,                         /* tp_iter */
-    NULL,                         /* tp_iternext */
-    ProductData_UTC_methods,         /* tp_methods */
-    NULL,                         /* tp_members */
-    NULL,                         /* tp_getset */
-    NULL,                         /* tp_base */
-    NULL,                         /* tp_dict */
-    NULL,                         /* tp_descr_get */
-    NULL,                         /* tp_descr_set */
-    0,                            /* tp_dictoffset */
-    (initproc) JObject_init,      /* tp_init */
-    NULL,                         /* tp_alloc */
-    NULL,                         /* tp_new */
-};
-
 static PyMethodDef Band_methods[] = {
     {"newBand", (PyCFunction) BeamPyBand_newBand, METH_VARARGS | METH_STATIC, "Constructs a new Band.\nReturns Parameter name: the name of the new object\nReturns Parameter dataType: the raster data type, must be one of the multiple ProductData.TYPE_X\nconstants, with the exception of ProductData.TYPE_UINT32\nReturns Parameter width: the width of the raster in pixels\nReturns Parameter height: the height of the raster in pixels"},
     {"getFlagCoding", (PyCFunction) BeamPyBand_getFlagCoding, METH_VARARGS, "Gets the flag coding for this band.\nReturns a non-null value if this band is a flag dataset, null otherwise"},
@@ -3313,7 +2416,7 @@ static PyMethodDef Band_methods[] = {
     {"getNumDataElems", (PyCFunction) BeamPyBand_getNumDataElems, METH_VARARGS, "Gets the number of data elements in this data node."},
     {"setData", (PyCFunction) BeamPyBand_setData, METH_VARARGS, "Sets the data of this data node."},
     {"getData", (PyCFunction) BeamPyBand_getData, METH_VARARGS, "Gets the data of this data node."},
-    {"setDataElems", (PyCFunction) BeamPyBand_setDataElems, METH_VARARGS, "Sets the data elements of this data node.\n@deprecated since 5.0\n@see ProductData#setElems(Object)"},
+    {"setDataElems", (PyCFunction) BeamPyBand_setDataElems, METH_VARARGS, "Sets the data elements of this data node.\n@see ProductData#setElems(Object)"},
     {"getDataElems", (PyCFunction) BeamPyBand_getDataElems, METH_VARARGS, "Gets the data elements of this data node.\n@see ProductData#getElems()"},
     {"getDataElemSize", (PyCFunction) BeamPyBand_getDataElemSize, METH_VARARGS, "Gets the data element size in bytes.\n@see ProductData#getElemSize(int)"},
     {"setReadOnly", (PyCFunction) BeamPyBand_setReadOnly, METH_VARARGS, ""},
@@ -3430,59 +2533,6 @@ PyTypeObject ColorPaletteDef_Point_Type = {
     NULL,                         /* tp_iter */
     NULL,                         /* tp_iternext */
     ColorPaletteDef_Point_methods,         /* tp_methods */
-    NULL,                         /* tp_members */
-    NULL,                         /* tp_getset */
-    NULL,                         /* tp_base */
-    NULL,                         /* tp_dict */
-    NULL,                         /* tp_descr_get */
-    NULL,                         /* tp_descr_set */
-    0,                            /* tp_dictoffset */
-    (initproc) JObject_init,      /* tp_init */
-    NULL,                         /* tp_alloc */
-    NULL,                         /* tp_new */
-};
-
-static PyMethodDef RenderedImage_methods[] = {
-    {NULL, NULL, 0, NULL} /*Sentinel*/
-};
-
-// Note: this is unused, experimental code
-
-/**
- * Implements the BeamPy_JObjectType class singleton.
- *
- * THIS TYPE IS NOT YET IN USE: we currently use
- * (<type_string>, <pointer>) tuples to represent Java JNI objects.
- */
-PyTypeObject RenderedImage_Type = {
-    PyVarObject_HEAD_INIT(NULL, 0)
-    "beampy.RenderedImage",        /* tp_name */
-    sizeof (JObject),             /* tp_basicsize */
-    0,                            /* tp_itemsize */
-    (destructor)JObject_dealloc,  /* tp_dealloc */
-    NULL,                         /* tp_print */
-    NULL,                         /* tp_getattr */
-    NULL,                         /* tp_setattr */
-    NULL,                         /* tp_reserved */
-    NULL,                         /* tp_repr */
-    NULL,                         /* tp_as_number */
-    NULL,                         /* tp_as_sequence */
-    NULL,                         /* tp_as_mapping */
-    NULL,                         /* tp_hash  */
-    NULL,                         /* tp_call */
-    NULL,                         /* tp_str */
-    NULL,                         /* tp_getattro */
-    NULL,                         /* tp_setattro */
-    NULL,                         /* tp_as_buffer */
-    Py_TPFLAGS_DEFAULT,           /* tp_flags */
-    "",                /* tp_doc */
-    NULL,                         /* tp_traverse */
-    NULL,                         /* tp_clear */
-    NULL,                         /* tp_richcompare */
-    0,                            /* tp_weaklistoffset */
-    NULL,                         /* tp_iter */
-    NULL,                         /* tp_iternext */
-    RenderedImage_methods,         /* tp_methods */
     NULL,                         /* tp_members */
     NULL,                         /* tp_getset */
     NULL,                         /* tp_base */
@@ -3747,59 +2797,6 @@ PyTypeObject ComponentColorModel_Type = {
     NULL,                         /* tp_new */
 };
 
-static PyMethodDef Iterator_methods[] = {
-    {NULL, NULL, 0, NULL} /*Sentinel*/
-};
-
-// Note: this is unused, experimental code
-
-/**
- * Implements the BeamPy_JObjectType class singleton.
- *
- * THIS TYPE IS NOT YET IN USE: we currently use
- * (<type_string>, <pointer>) tuples to represent Java JNI objects.
- */
-PyTypeObject Iterator_Type = {
-    PyVarObject_HEAD_INIT(NULL, 0)
-    "beampy.Iterator",        /* tp_name */
-    sizeof (JObject),             /* tp_basicsize */
-    0,                            /* tp_itemsize */
-    (destructor)JObject_dealloc,  /* tp_dealloc */
-    NULL,                         /* tp_print */
-    NULL,                         /* tp_getattr */
-    NULL,                         /* tp_setattr */
-    NULL,                         /* tp_reserved */
-    NULL,                         /* tp_repr */
-    NULL,                         /* tp_as_number */
-    NULL,                         /* tp_as_sequence */
-    NULL,                         /* tp_as_mapping */
-    NULL,                         /* tp_hash  */
-    NULL,                         /* tp_call */
-    NULL,                         /* tp_str */
-    NULL,                         /* tp_getattro */
-    NULL,                         /* tp_setattro */
-    NULL,                         /* tp_as_buffer */
-    Py_TPFLAGS_DEFAULT,           /* tp_flags */
-    "",                /* tp_doc */
-    NULL,                         /* tp_traverse */
-    NULL,                         /* tp_clear */
-    NULL,                         /* tp_richcompare */
-    0,                            /* tp_weaklistoffset */
-    NULL,                         /* tp_iter */
-    NULL,                         /* tp_iternext */
-    Iterator_methods,         /* tp_methods */
-    NULL,                         /* tp_members */
-    NULL,                         /* tp_getset */
-    NULL,                         /* tp_base */
-    NULL,                         /* tp_dict */
-    NULL,                         /* tp_descr_get */
-    NULL,                         /* tp_descr_set */
-    0,                            /* tp_dictoffset */
-    (initproc) JObject_init,      /* tp_init */
-    NULL,                         /* tp_alloc */
-    NULL,                         /* tp_new */
-};
-
 static PyMethodDef MathTransform_methods[] = {
     {NULL, NULL, 0, NULL} /*Sentinel*/
 };
@@ -3959,7 +2956,7 @@ PyTypeObject ProductWriterPlugIn_Type = {
     NULL,                         /* tp_new */
 };
 
-static PyMethodDef Rectangle2D_methods[] = {
+static PyMethodDef IndexColorModel_methods[] = {
     {NULL, NULL, 0, NULL} /*Sentinel*/
 };
 
@@ -3971,9 +2968,9 @@ static PyMethodDef Rectangle2D_methods[] = {
  * THIS TYPE IS NOT YET IN USE: we currently use
  * (<type_string>, <pointer>) tuples to represent Java JNI objects.
  */
-PyTypeObject Rectangle2D_Type = {
+PyTypeObject IndexColorModel_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    "beampy.Rectangle2D",        /* tp_name */
+    "beampy.IndexColorModel",        /* tp_name */
     sizeof (JObject),             /* tp_basicsize */
     0,                            /* tp_itemsize */
     (destructor)JObject_dealloc,  /* tp_dealloc */
@@ -3999,7 +2996,2685 @@ PyTypeObject Rectangle2D_Type = {
     0,                            /* tp_weaklistoffset */
     NULL,                         /* tp_iter */
     NULL,                         /* tp_iternext */
-    Rectangle2D_methods,         /* tp_methods */
+    IndexColorModel_methods,         /* tp_methods */
+    NULL,                         /* tp_members */
+    NULL,                         /* tp_getset */
+    NULL,                         /* tp_base */
+    NULL,                         /* tp_dict */
+    NULL,                         /* tp_descr_get */
+    NULL,                         /* tp_descr_set */
+    0,                            /* tp_dictoffset */
+    (initproc) JObject_init,      /* tp_init */
+    NULL,                         /* tp_alloc */
+    NULL,                         /* tp_new */
+};
+
+static PyMethodDef ProductNodeListener_methods[] = {
+    {NULL, NULL, 0, NULL} /*Sentinel*/
+};
+
+// Note: this is unused, experimental code
+
+/**
+ * Implements the BeamPy_JObjectType class singleton.
+ *
+ * THIS TYPE IS NOT YET IN USE: we currently use
+ * (<type_string>, <pointer>) tuples to represent Java JNI objects.
+ */
+PyTypeObject ProductNodeListener_Type = {
+    PyVarObject_HEAD_INIT(NULL, 0)
+    "beampy.ProductNodeListener",        /* tp_name */
+    sizeof (JObject),             /* tp_basicsize */
+    0,                            /* tp_itemsize */
+    (destructor)JObject_dealloc,  /* tp_dealloc */
+    NULL,                         /* tp_print */
+    NULL,                         /* tp_getattr */
+    NULL,                         /* tp_setattr */
+    NULL,                         /* tp_reserved */
+    NULL,                         /* tp_repr */
+    NULL,                         /* tp_as_number */
+    NULL,                         /* tp_as_sequence */
+    NULL,                         /* tp_as_mapping */
+    NULL,                         /* tp_hash  */
+    NULL,                         /* tp_call */
+    NULL,                         /* tp_str */
+    NULL,                         /* tp_getattro */
+    NULL,                         /* tp_setattro */
+    NULL,                         /* tp_as_buffer */
+    Py_TPFLAGS_DEFAULT,           /* tp_flags */
+    "A listener which listens to internal data product changes.\nAuthor:  Norman Fomferra\nVersion:  $Revision$ $Date$",                /* tp_doc */
+    NULL,                         /* tp_traverse */
+    NULL,                         /* tp_clear */
+    NULL,                         /* tp_richcompare */
+    0,                            /* tp_weaklistoffset */
+    NULL,                         /* tp_iter */
+    NULL,                         /* tp_iternext */
+    ProductNodeListener_methods,         /* tp_methods */
+    NULL,                         /* tp_members */
+    NULL,                         /* tp_getset */
+    NULL,                         /* tp_base */
+    NULL,                         /* tp_dict */
+    NULL,                         /* tp_descr_get */
+    NULL,                         /* tp_descr_set */
+    0,                            /* tp_dictoffset */
+    (initproc) JObject_init,      /* tp_init */
+    NULL,                         /* tp_alloc */
+    NULL,                         /* tp_new */
+};
+
+static PyMethodDef MetadataElement_methods[] = {
+    {"newMetadataElement", (PyCFunction) BeamPyMetadataElement_newMetadataElement, METH_VARARGS | METH_STATIC, "Constructs a new metadata element.\nReturns Parameter name: the element name"},
+    {"getElementGroup", (PyCFunction) BeamPyMetadataElement_getElementGroup, METH_VARARGS, "Gets the group of child elements. The method returns null, if this element has no children.\nReturns the child element group, may be null."},
+    {"getParentElement", (PyCFunction) BeamPyMetadataElement_getParentElement, METH_VARARGS, ""},
+    {"addElement", (PyCFunction) BeamPyMetadataElement_addElement, METH_VARARGS, "Adds the given element to this element.\nReturns Parameter element: the element to added, ignored if null"},
+    {"addElementAt", (PyCFunction) BeamPyMetadataElement_addElementAt, METH_VARARGS, "Adds the given element to this element at index.\nReturns Parameter element: the element to added, ignored if null\nReturns Parameter index: where to put it"},
+    {"removeElement", (PyCFunction) BeamPyMetadataElement_removeElement, METH_VARARGS, "Removes the given element from this element.\nReturns Parameter element: the element to be removed, ignored if null\nReturns true, if so"},
+    {"getNumElements", (PyCFunction) BeamPyMetadataElement_getNumElements, METH_VARARGS, "Returns the number of elements contained in this element."},
+    {"getElementAt", (PyCFunction) BeamPyMetadataElement_getElementAt, METH_VARARGS, "Returns the element at the given index.\nReturns Parameter index: the element index\nReturns the element at the given index\n@throws IndexOutOfBoundsException if the index is out of bounds"},
+    {"getElementNames", (PyCFunction) BeamPyMetadataElement_getElementNames, METH_VARARGS, "Returns a string array containing the names of the groups contained in this element\nReturns a string array containing the names of the groups contained in this element. If this element has no\ngroups a zero-length-array is returned."},
+    {"getElements", (PyCFunction) BeamPyMetadataElement_getElements, METH_VARARGS, "Returns an array of elements contained in this element.\nReturns an array of elements contained in this product. If this element has no elements a zero-length-array is\nreturned."},
+    {"getElement", (PyCFunction) BeamPyMetadataElement_getElement, METH_VARARGS, "Returns the element with the given name.\nReturns Parameter name: the element name\nReturns the element with the given name or null if a element with the given name is not contained in\nthis element."},
+    {"containsElement", (PyCFunction) BeamPyMetadataElement_containsElement, METH_VARARGS, "Tests if a element with the given name is contained in this element.\nReturns Parameter name: the name, must not be null\nReturns true if a element with the given name is contained in this element, false\notherwise"},
+    {"getElementIndex", (PyCFunction) BeamPyMetadataElement_getElementIndex, METH_VARARGS, "Gets the index of the given element.\nReturns Parameter element: The element .\nReturns the element's index, or -1.\nSince version:  BEAM 4.7"},
+    {"addAttribute", (PyCFunction) BeamPyMetadataElement_addAttribute, METH_VARARGS, "Adds an attribute to this node.\nReturns Parameter attribute: the attribute to be added, null is ignored"},
+    {"removeAttribute", (PyCFunction) BeamPyMetadataElement_removeAttribute, METH_VARARGS, "Removes the given attribute from this annotation. If an attribute with the same name already exists, the method\ndoes nothing.\nReturns Parameter attribute: the attribute to be removed, null is ignored\nReturns true if it was removed"},
+    {"getNumAttributes", (PyCFunction) BeamPyMetadataElement_getNumAttributes, METH_VARARGS, "Returns the number of attributes attaached to this node.\nReturns the number of attributes"},
+    {"getAttributeAt", (PyCFunction) BeamPyMetadataElement_getAttributeAt, METH_VARARGS, "Returns the attribute at the given index.\nReturns Parameter index: the attribute index\nReturns the attribute, or null if this node does not contain attributes\n@throws IndexOutOfBoundsException"},
+    {"getAttributeNames", (PyCFunction) BeamPyMetadataElement_getAttributeNames, METH_VARARGS, "Returns the names of all attributes of this node.\nReturns the attribute name array, never null"},
+    {"getAttributes", (PyCFunction) BeamPyMetadataElement_getAttributes, METH_VARARGS, "Returns an array of attributes contained in this element.\nReturns an array of attributes contained in this product. If this element has no attributes a zero-length-array\nis returned."},
+    {"getAttribute", (PyCFunction) BeamPyMetadataElement_getAttribute, METH_VARARGS, "Returns the attribute with the given name.\nReturns Parameter name: the attribute name\nReturns the attribute with the given name or null if it could not be found"},
+    {"containsAttribute", (PyCFunction) BeamPyMetadataElement_containsAttribute, METH_VARARGS, "Checks whether this node has an element with the given name.\nReturns Parameter name: the attribute name\nReturns true if so"},
+    {"getAttributeIndex", (PyCFunction) BeamPyMetadataElement_getAttributeIndex, METH_VARARGS, "Gets the index of the given attribute.\nReturns Parameter attribute: The attribute.\nReturns the attribute's index, or -1.\nSince version:  BEAM 4.7"},
+    {"getAttributeDouble", (PyCFunction) BeamPyMetadataElement_getAttributeDouble, METH_VARARGS, "Returns the double value of the attribute with the given name. The given default value is returned if an\nattribute with the given name could not be found in this node.\nReturns Parameter name: the attribute name\nReturns Parameter defaultValue: the default value\nReturns the attribute value as double.\n@throws NumberFormatException if the attribute type is ASCII but cannot be converted to a number"},
+    {"getAttributeUTC", (PyCFunction) BeamPyMetadataElement_getAttributeUTC, METH_VARARGS, "Returns the UTC value of the attribute with the given name. The given default value is returned if an\nattribute with the given name could not be found in this node.\nReturns Parameter name: the attribute name\nReturns Parameter defaultValue: the default value\nReturns the attribute value as UTC."},
+    {"getAttributeInt", (PyCFunction) BeamPyMetadataElement_getAttributeInt, METH_VARARGS, "Returns the integer value of the attribute with the given name. The given default value is returned if an\nattribute with the given name could not be found in this node.\nReturns Parameter name: the attribute name\nReturns Parameter defaultValue: the default value\nReturns the attribute value as integer.\n@throws NumberFormatException if the attribute type is ASCII but cannot be converted to a number"},
+    {"setAttributeInt", (PyCFunction) BeamPyMetadataElement_setAttributeInt, METH_VARARGS, "Sets the attribute with the given name to the given integer value. A new attribute with\nProductData.TYPE_INT32 is added to this node if an attribute with the given name could not be found\nin this node.\nReturns Parameter name: the attribute name\nReturns Parameter value: the new value"},
+    {"setAttributeDouble", (PyCFunction) BeamPyMetadataElement_setAttributeDouble, METH_VARARGS, "Sets the attribute with the given name to the given double value. A new attribute with\nProductData.TYPE_FLOAT64 is added to this node if an attribute with the given name could not be found\nin this node.\nReturns Parameter name: the attribute name\nReturns Parameter value: the new value"},
+    {"setAttributeUTC", (PyCFunction) BeamPyMetadataElement_setAttributeUTC, METH_VARARGS, "Sets the attribute with the given name to the given utc value. A new attribute with\nProductData.UTC is added to this node if an attribute with the given name could not be found\nin this node.\nReturns Parameter name: the attribute name\nReturns Parameter value: the new value"},
+    {"getAttributeString", (PyCFunction) BeamPyMetadataElement_getAttributeString, METH_VARARGS, "Returns the string value of the attribute with the given name. The given default value is returned if an\nattribute with the given name could not be found in this node.\nReturns Parameter name: the attribute name\nReturns Parameter defaultValue: the default value\nReturns the attribute value as integer."},
+    {"setAttributeString", (PyCFunction) BeamPyMetadataElement_setAttributeString, METH_VARARGS, "Sets the attribute with the given name to the given string value. A new attribute with\nProductData.TYPE_ASCII is added to this node if an attribute with the given name could not be found\nin this node.\nReturns Parameter name: the attribute name\nReturns Parameter value: the new value"},
+    {"setModified", (PyCFunction) BeamPyMetadataElement_setModified, METH_VARARGS, ""},
+    {"acceptVisitor", (PyCFunction) BeamPyMetadataElement_acceptVisitor, METH_VARARGS, "Accepts the given visitor. This method implements the well known 'Visitor' design pattern of the gang-of-four.\nThe visitor pattern allows to define new operations on the product data model without the need to add more code\nto it. The new operation is implemented by the visitor.\n\nThe method first visits (calls acceptVisitor for) all elements contained in this element and then\nvisits all attributes. Finally the method calls visitor.visit(this).\nReturns Parameter visitor: the visitor"},
+    {"createDeepClone", (PyCFunction) BeamPyMetadataElement_createDeepClone, METH_VARARGS, ""},
+    {"dispose", (PyCFunction) BeamPyMetadataElement_dispose, METH_VARARGS, "Releases all of the resources used by this object instance and all of its owned children. Its primary use is to\nallow the garbage collector to perform a vanilla job.\n\nThis method should be called only if it is for sure that this object instance will never be used again. The\nresults of referencing an instance of this class after a call to dispose() are undefined.\n\nOverrides of this method should always call super.dispose(); after disposing this instance."},
+    {"getOwner", (PyCFunction) BeamPyMetadataElement_getOwner, METH_VARARGS, "Returns the owner node of this node."},
+    {"getName", (PyCFunction) BeamPyMetadataElement_getName, METH_VARARGS, "Returns this node's name."},
+    {"setName", (PyCFunction) BeamPyMetadataElement_setName, METH_VARARGS, "Sets this product's name.\nReturns Parameter name: The name."},
+    {"getDescription", (PyCFunction) BeamPyMetadataElement_getDescription, METH_VARARGS, "Returns a short textual description for this products node.\nReturns a description or null"},
+    {"setDescription", (PyCFunction) BeamPyMetadataElement_setDescription, METH_VARARGS, "Sets a short textual description for this products node.\nReturns Parameter description: a description, can be null"},
+    {"isModified", (PyCFunction) BeamPyMetadataElement_isModified, METH_VARARGS, "Returns whether or not this node is modified.\nReturns true if so"},
+    {"toString", (PyCFunction) BeamPyMetadataElement_toString, METH_VARARGS, ""},
+    {"isValidNodeName", (PyCFunction) BeamPyMetadataElement_isValidNodeName, METH_VARARGS | METH_STATIC, "Tests whether the given name is valid name for a node.\nA valid node name must not start with a dot. Also a valid node name must not contain\nany of the character  \\/:*?\"&lt;&gt;|\nReturns Parameter name: the name to test\nReturns true if the name is a valid node identifier, false otherwise"},
+    {"getProduct", (PyCFunction) BeamPyMetadataElement_getProduct, METH_VARARGS, "Returns the product to which this node belongs to.\nReturns the product, or null if this node was not owned by a product at the time this method was\ncalled"},
+    {"getProductReader", (PyCFunction) BeamPyMetadataElement_getProductReader, METH_VARARGS, "Returns the product reader for the product to which this node belongs to.\nReturns the product reader, or null if no such exists"},
+    {"getProductWriter", (PyCFunction) BeamPyMetadataElement_getProductWriter, METH_VARARGS, "Returns the product writer for the product to which this node belongs to.\nReturns the product writer, or null if no such exists"},
+    {"getDisplayName", (PyCFunction) BeamPyMetadataElement_getDisplayName, METH_VARARGS, "Returns this node's display name. The display name is the product reference string with the node name appended.\nExample: The string \"[2] node-name\" means node node-name of the\nproduct with the reference number 2.\nReturns this node's name with a product prefix <br>or this node's name only if this node's product prefix is\nnull\n@see #getProductRefString"},
+    {"getProductRefString", (PyCFunction) BeamPyMetadataElement_getProductRefString, METH_VARARGS, "Gets the product reference string. The product reference string is the product reference number enclosed in\nsquare brackets. Example: The string \"[2]\" stands for a product with the reference number\n2.\nReturns the product reference string. <br>or null if this node has no product <br>or\nnull if its product reference number was inactive"},
+    {"updateExpression", (PyCFunction) BeamPyMetadataElement_updateExpression, METH_VARARGS, "Asks a product node to replace all occurences of and references to the node name\ngiven by {@code oldExternalName} with {@code oldExternalName}. Such references most often occur\nin band arithmetic expressions.\nReturns Parameter oldExternalName: The old node name.\nReturns Parameter newExternalName: The new node name."},
+    {"removeFromFile", (PyCFunction) BeamPyMetadataElement_removeFromFile, METH_VARARGS, "Physically remove this node from the file associated with the given product writer. The default implementation\ndoes nothing.\nReturns Parameter productWriter: the product writer to be used to remove this node from the underlying file."},
+    {"getExtension", (PyCFunction) BeamPyMetadataElement_getExtension, METH_VARARGS, ""},
+    {NULL, NULL, 0, NULL} /*Sentinel*/
+};
+
+// Note: this is unused, experimental code
+
+/**
+ * Implements the BeamPy_JObjectType class singleton.
+ *
+ * THIS TYPE IS NOT YET IN USE: we currently use
+ * (<type_string>, <pointer>) tuples to represent Java JNI objects.
+ */
+PyTypeObject MetadataElement_Type = {
+    PyVarObject_HEAD_INIT(NULL, 0)
+    "beampy.MetadataElement",        /* tp_name */
+    sizeof (JObject),             /* tp_basicsize */
+    0,                            /* tp_itemsize */
+    (destructor)JObject_dealloc,  /* tp_dealloc */
+    NULL,                         /* tp_print */
+    NULL,                         /* tp_getattr */
+    NULL,                         /* tp_setattr */
+    NULL,                         /* tp_reserved */
+    NULL,                         /* tp_repr */
+    NULL,                         /* tp_as_number */
+    NULL,                         /* tp_as_sequence */
+    NULL,                         /* tp_as_mapping */
+    NULL,                         /* tp_hash  */
+    NULL,                         /* tp_call */
+    NULL,                         /* tp_str */
+    NULL,                         /* tp_getattro */
+    NULL,                         /* tp_setattro */
+    NULL,                         /* tp_as_buffer */
+    Py_TPFLAGS_DEFAULT,           /* tp_flags */
+    "A MetadataElement is a data node used to store metadata. Metadata elements can have any number of\nmetadata attributes of the type {@link MetadataAttribute} and any number of inner MetadataElements.\nAuthor:  Norman Fomferra\nAuthor:  Sabine Embacher\nVersion:  $Revision: 6651 $ $Date: 2009-10-27 12:59:39 +0100 (Di, 27 Okt 2009) $",                /* tp_doc */
+    NULL,                         /* tp_traverse */
+    NULL,                         /* tp_clear */
+    NULL,                         /* tp_richcompare */
+    0,                            /* tp_weaklistoffset */
+    NULL,                         /* tp_iter */
+    NULL,                         /* tp_iternext */
+    MetadataElement_methods,         /* tp_methods */
+    NULL,                         /* tp_members */
+    NULL,                         /* tp_getset */
+    NULL,                         /* tp_base */
+    NULL,                         /* tp_dict */
+    NULL,                         /* tp_descr_get */
+    NULL,                         /* tp_descr_set */
+    0,                            /* tp_dictoffset */
+    (initproc) JObject_init,      /* tp_init */
+    NULL,                         /* tp_alloc */
+    NULL,                         /* tp_new */
+};
+
+static PyMethodDef Color_methods[] = {
+    {NULL, NULL, 0, NULL} /*Sentinel*/
+};
+
+// Note: this is unused, experimental code
+
+/**
+ * Implements the BeamPy_JObjectType class singleton.
+ *
+ * THIS TYPE IS NOT YET IN USE: we currently use
+ * (<type_string>, <pointer>) tuples to represent Java JNI objects.
+ */
+PyTypeObject Color_Type = {
+    PyVarObject_HEAD_INIT(NULL, 0)
+    "beampy.Color",        /* tp_name */
+    sizeof (JObject),             /* tp_basicsize */
+    0,                            /* tp_itemsize */
+    (destructor)JObject_dealloc,  /* tp_dealloc */
+    NULL,                         /* tp_print */
+    NULL,                         /* tp_getattr */
+    NULL,                         /* tp_setattr */
+    NULL,                         /* tp_reserved */
+    NULL,                         /* tp_repr */
+    NULL,                         /* tp_as_number */
+    NULL,                         /* tp_as_sequence */
+    NULL,                         /* tp_as_mapping */
+    NULL,                         /* tp_hash  */
+    NULL,                         /* tp_call */
+    NULL,                         /* tp_str */
+    NULL,                         /* tp_getattro */
+    NULL,                         /* tp_setattro */
+    NULL,                         /* tp_as_buffer */
+    Py_TPFLAGS_DEFAULT,           /* tp_flags */
+    "",                /* tp_doc */
+    NULL,                         /* tp_traverse */
+    NULL,                         /* tp_clear */
+    NULL,                         /* tp_richcompare */
+    0,                            /* tp_weaklistoffset */
+    NULL,                         /* tp_iter */
+    NULL,                         /* tp_iternext */
+    Color_methods,         /* tp_methods */
+    NULL,                         /* tp_members */
+    NULL,                         /* tp_getset */
+    NULL,                         /* tp_base */
+    NULL,                         /* tp_dict */
+    NULL,                         /* tp_descr_get */
+    NULL,                         /* tp_descr_set */
+    0,                            /* tp_dictoffset */
+    (initproc) JObject_init,      /* tp_init */
+    NULL,                         /* tp_alloc */
+    NULL,                         /* tp_new */
+};
+
+static PyMethodDef TransectProfileData_methods[] = {
+    {NULL, NULL, 0, NULL} /*Sentinel*/
+};
+
+// Note: this is unused, experimental code
+
+/**
+ * Implements the BeamPy_JObjectType class singleton.
+ *
+ * THIS TYPE IS NOT YET IN USE: we currently use
+ * (<type_string>, <pointer>) tuples to represent Java JNI objects.
+ */
+PyTypeObject TransectProfileData_Type = {
+    PyVarObject_HEAD_INIT(NULL, 0)
+    "beampy.TransectProfileData",        /* tp_name */
+    sizeof (JObject),             /* tp_basicsize */
+    0,                            /* tp_itemsize */
+    (destructor)JObject_dealloc,  /* tp_dealloc */
+    NULL,                         /* tp_print */
+    NULL,                         /* tp_getattr */
+    NULL,                         /* tp_setattr */
+    NULL,                         /* tp_reserved */
+    NULL,                         /* tp_repr */
+    NULL,                         /* tp_as_number */
+    NULL,                         /* tp_as_sequence */
+    NULL,                         /* tp_as_mapping */
+    NULL,                         /* tp_hash  */
+    NULL,                         /* tp_call */
+    NULL,                         /* tp_str */
+    NULL,                         /* tp_getattro */
+    NULL,                         /* tp_setattro */
+    NULL,                         /* tp_as_buffer */
+    Py_TPFLAGS_DEFAULT,           /* tp_flags */
+    "A container for data which fully describes a transect profile. Use {@link TransectProfileDataBuilder} to create\ninstances.\nAuthor:  Thomas Storm\nAuthor:  Norman Fomferra",                /* tp_doc */
+    NULL,                         /* tp_traverse */
+    NULL,                         /* tp_clear */
+    NULL,                         /* tp_richcompare */
+    0,                            /* tp_weaklistoffset */
+    NULL,                         /* tp_iter */
+    NULL,                         /* tp_iternext */
+    TransectProfileData_methods,         /* tp_methods */
+    NULL,                         /* tp_members */
+    NULL,                         /* tp_getset */
+    NULL,                         /* tp_base */
+    NULL,                         /* tp_dict */
+    NULL,                         /* tp_descr_get */
+    NULL,                         /* tp_descr_set */
+    0,                            /* tp_dictoffset */
+    (initproc) JObject_init,      /* tp_init */
+    NULL,                         /* tp_alloc */
+    NULL,                         /* tp_new */
+};
+
+static PyMethodDef PlacemarkGroup_methods[] = {
+    {"getVectorDataNode", (PyCFunction) BeamPyPlacemarkGroup_getVectorDataNode, METH_VARARGS, ""},
+    {"getPlacemark", (PyCFunction) BeamPyPlacemarkGroup_getPlacemark, METH_VARARGS, ""},
+    {"add3", (PyCFunction) BeamPyPlacemarkGroup_add3, METH_VARARGS, ""},
+    {"add1", (PyCFunction) BeamPyPlacemarkGroup_add1, METH_VARARGS, ""},
+    {"remove1", (PyCFunction) BeamPyPlacemarkGroup_remove1, METH_VARARGS, ""},
+    {"dispose", (PyCFunction) BeamPyPlacemarkGroup_dispose, METH_VARARGS, ""},
+    {"isTakingOverNodeOwnership", (PyCFunction) BeamPyPlacemarkGroup_isTakingOverNodeOwnership, METH_VARARGS, "Returns {@code true}, if child nodes will have this group as owner after adding."},
+    {"getNodeCount", (PyCFunction) BeamPyPlacemarkGroup_getNodeCount, METH_VARARGS, "Returns the number of product nodes in this product group."},
+    {"get1", (PyCFunction) BeamPyPlacemarkGroup_get1, METH_VARARGS, "Returns Parameter index: The node index.\nReturns the product node at the given index."},
+    {"getNodeDisplayNames", (PyCFunction) BeamPyPlacemarkGroup_getNodeDisplayNames, METH_VARARGS, "Returns the display names of all products currently managed.\nReturns an array containing the display names, never null, but the array can have zero length\n@see ProductNode#getDisplayName()"},
+    {"getNodeNames", (PyCFunction) BeamPyPlacemarkGroup_getNodeNames, METH_VARARGS, "Returns the names of all products currently managed.\nReturns an array containing the names, never null, but the array can have zero length"},
+    {"toArray1", (PyCFunction) BeamPyPlacemarkGroup_toArray1, METH_VARARGS, "Returns an array of all products currently managed.\nReturns an array containing the products, never null, but the array can have zero length"},
+    {"toArray2", (PyCFunction) BeamPyPlacemarkGroup_toArray2, METH_VARARGS, "Returns Parameter array: the array into which the elements of the list are to be stored, if it is big enough; otherwise, a\nnew array of the same runtime type is allocated for this purpose.\nReturns an array containing the product nodes, never null, but the array can have zero length"},
+    {"indexOf1", (PyCFunction) BeamPyPlacemarkGroup_indexOf1, METH_VARARGS, ""},
+    {"indexOf2", (PyCFunction) BeamPyPlacemarkGroup_indexOf2, METH_VARARGS, ""},
+    {"getByDisplayName", (PyCFunction) BeamPyPlacemarkGroup_getByDisplayName, METH_VARARGS, "Returns Parameter displayName: the display name\nReturns the product node with the given display name."},
+    {"get2", (PyCFunction) BeamPyPlacemarkGroup_get2, METH_VARARGS, "Returns Parameter name: the name\nReturns the product node with the given name."},
+    {"contains1", (PyCFunction) BeamPyPlacemarkGroup_contains1, METH_VARARGS, "Tests whether a node with the given name is contained in this group.\nReturns Parameter name: the name\nReturns true, if so"},
+    {"contains2", (PyCFunction) BeamPyPlacemarkGroup_contains2, METH_VARARGS, "Tests whether the given product is contained in this list.\nReturns Parameter node: the node\nReturns true, if so"},
+    {"add4", (PyCFunction) BeamPyPlacemarkGroup_add4, METH_VARARGS, "Adds the given node to this group.\nReturns Parameter node: the node to be added, ignored if null\nReturns true, if the node has been added"},
+    {"add2", (PyCFunction) BeamPyPlacemarkGroup_add2, METH_VARARGS, "Adds the given node to this group.\nReturns Parameter index: the index.\nReturns Parameter node: the node to be added, ignored if null"},
+    {"remove2", (PyCFunction) BeamPyPlacemarkGroup_remove2, METH_VARARGS, "Removes the given node from this group.\nReturns Parameter node: the node to be removed\nReturns true, if the node was removed"},
+    {"removeAll", (PyCFunction) BeamPyPlacemarkGroup_removeAll, METH_VARARGS, "Removes all nodes from this group."},
+    {"clearRemovedList", (PyCFunction) BeamPyPlacemarkGroup_clearRemovedList, METH_VARARGS, ""},
+    {"getRemovedNodes", (PyCFunction) BeamPyPlacemarkGroup_getRemovedNodes, METH_VARARGS, "Gets all removed node nodes.\nReturns a collection of all removed node nodes."},
+    {"getRawStorageSize2", (PyCFunction) BeamPyPlacemarkGroup_getRawStorageSize2, METH_VARARGS, ""},
+    {"setModified", (PyCFunction) BeamPyPlacemarkGroup_setModified, METH_VARARGS, ""},
+    {"acceptVisitor", (PyCFunction) BeamPyPlacemarkGroup_acceptVisitor, METH_VARARGS, ""},
+    {"updateExpression", (PyCFunction) BeamPyPlacemarkGroup_updateExpression, METH_VARARGS, ""},
+    {"getOwner", (PyCFunction) BeamPyPlacemarkGroup_getOwner, METH_VARARGS, "Returns the owner node of this node."},
+    {"getName", (PyCFunction) BeamPyPlacemarkGroup_getName, METH_VARARGS, "Returns this node's name."},
+    {"setName", (PyCFunction) BeamPyPlacemarkGroup_setName, METH_VARARGS, "Sets this product's name.\nReturns Parameter name: The name."},
+    {"getDescription", (PyCFunction) BeamPyPlacemarkGroup_getDescription, METH_VARARGS, "Returns a short textual description for this products node.\nReturns a description or null"},
+    {"setDescription", (PyCFunction) BeamPyPlacemarkGroup_setDescription, METH_VARARGS, "Sets a short textual description for this products node.\nReturns Parameter description: a description, can be null"},
+    {"isModified", (PyCFunction) BeamPyPlacemarkGroup_isModified, METH_VARARGS, "Returns whether or not this node is modified.\nReturns true if so"},
+    {"toString", (PyCFunction) BeamPyPlacemarkGroup_toString, METH_VARARGS, ""},
+    {"isValidNodeName", (PyCFunction) BeamPyPlacemarkGroup_isValidNodeName, METH_VARARGS | METH_STATIC, "Tests whether the given name is valid name for a node.\nA valid node name must not start with a dot. Also a valid node name must not contain\nany of the character  \\/:*?\"&lt;&gt;|\nReturns Parameter name: the name to test\nReturns true if the name is a valid node identifier, false otherwise"},
+    {"getProduct", (PyCFunction) BeamPyPlacemarkGroup_getProduct, METH_VARARGS, "Returns the product to which this node belongs to.\nReturns the product, or null if this node was not owned by a product at the time this method was\ncalled"},
+    {"getProductReader", (PyCFunction) BeamPyPlacemarkGroup_getProductReader, METH_VARARGS, "Returns the product reader for the product to which this node belongs to.\nReturns the product reader, or null if no such exists"},
+    {"getProductWriter", (PyCFunction) BeamPyPlacemarkGroup_getProductWriter, METH_VARARGS, "Returns the product writer for the product to which this node belongs to.\nReturns the product writer, or null if no such exists"},
+    {"getDisplayName", (PyCFunction) BeamPyPlacemarkGroup_getDisplayName, METH_VARARGS, "Returns this node's display name. The display name is the product reference string with the node name appended.\nExample: The string \"[2] node-name\" means node node-name of the\nproduct with the reference number 2.\nReturns this node's name with a product prefix <br>or this node's name only if this node's product prefix is\nnull\n@see #getProductRefString"},
+    {"getProductRefString", (PyCFunction) BeamPyPlacemarkGroup_getProductRefString, METH_VARARGS, "Gets the product reference string. The product reference string is the product reference number enclosed in\nsquare brackets. Example: The string \"[2]\" stands for a product with the reference number\n2.\nReturns the product reference string. <br>or null if this node has no product <br>or\nnull if its product reference number was inactive"},
+    {"getRawStorageSize1", (PyCFunction) BeamPyPlacemarkGroup_getRawStorageSize1, METH_VARARGS, "Gets an estimated, raw storage size in bytes of this product node.\nReturns the size in bytes."},
+    {"fireProductNodeChanged1", (PyCFunction) BeamPyPlacemarkGroup_fireProductNodeChanged1, METH_VARARGS, ""},
+    {"fireProductNodeChanged2", (PyCFunction) BeamPyPlacemarkGroup_fireProductNodeChanged2, METH_VARARGS, ""},
+    {"removeFromFile", (PyCFunction) BeamPyPlacemarkGroup_removeFromFile, METH_VARARGS, "Physically remove this node from the file associated with the given product writer. The default implementation\ndoes nothing.\nReturns Parameter productWriter: the product writer to be used to remove this node from the underlying file."},
+    {"getExtension", (PyCFunction) BeamPyPlacemarkGroup_getExtension, METH_VARARGS, ""},
+    {NULL, NULL, 0, NULL} /*Sentinel*/
+};
+
+// Note: this is unused, experimental code
+
+/**
+ * Implements the BeamPy_JObjectType class singleton.
+ *
+ * THIS TYPE IS NOT YET IN USE: we currently use
+ * (<type_string>, <pointer>) tuples to represent Java JNI objects.
+ */
+PyTypeObject PlacemarkGroup_Type = {
+    PyVarObject_HEAD_INIT(NULL, 0)
+    "beampy.PlacemarkGroup",        /* tp_name */
+    sizeof (JObject),             /* tp_basicsize */
+    0,                            /* tp_itemsize */
+    (destructor)JObject_dealloc,  /* tp_dealloc */
+    NULL,                         /* tp_print */
+    NULL,                         /* tp_getattr */
+    NULL,                         /* tp_setattr */
+    NULL,                         /* tp_reserved */
+    NULL,                         /* tp_repr */
+    NULL,                         /* tp_as_number */
+    NULL,                         /* tp_as_sequence */
+    NULL,                         /* tp_as_mapping */
+    NULL,                         /* tp_hash  */
+    NULL,                         /* tp_call */
+    NULL,                         /* tp_str */
+    NULL,                         /* tp_getattro */
+    NULL,                         /* tp_setattro */
+    NULL,                         /* tp_as_buffer */
+    Py_TPFLAGS_DEFAULT,           /* tp_flags */
+    "",                /* tp_doc */
+    NULL,                         /* tp_traverse */
+    NULL,                         /* tp_clear */
+    NULL,                         /* tp_richcompare */
+    0,                            /* tp_weaklistoffset */
+    NULL,                         /* tp_iter */
+    NULL,                         /* tp_iternext */
+    PlacemarkGroup_methods,         /* tp_methods */
+    NULL,                         /* tp_members */
+    NULL,                         /* tp_getset */
+    NULL,                         /* tp_base */
+    NULL,                         /* tp_dict */
+    NULL,                         /* tp_descr_get */
+    NULL,                         /* tp_descr_set */
+    0,                            /* tp_dictoffset */
+    (initproc) JObject_init,      /* tp_init */
+    NULL,                         /* tp_alloc */
+    NULL,                         /* tp_new */
+};
+
+static PyMethodDef Product_methods[] = {
+    {"newProduct", (PyCFunction) BeamPyProduct_newProduct, METH_VARARGS | METH_STATIC, "Creates a new product without any reader (in-memory product)\nReturns Parameter name: the product name\nReturns Parameter type: the product type\nReturns Parameter sceneRasterWidth: the scene width in pixels for this data product\nReturns Parameter sceneRasterHeight: the scene height in pixels for this data product"},
+    {"getFileLocation", (PyCFunction) BeamPyProduct_getFileLocation, METH_VARARGS, "Retrieves the disk location of this product. The return value can be null when the product has no\ndisk location (pure virtual memory product)\nReturns the file location, may be null"},
+    {"setFileLocation", (PyCFunction) BeamPyProduct_setFileLocation, METH_VARARGS, "Sets the file location for this product.\nReturns Parameter fileLocation: the file location, may be null"},
+    {"getProductType", (PyCFunction) BeamPyProduct_getProductType, METH_VARARGS, "Gets the product type string.\nReturns the product type string"},
+    {"setProductType", (PyCFunction) BeamPyProduct_setProductType, METH_VARARGS, "Sets the product type of this product.\nReturns Parameter productType: the product type."},
+    {"setProductReader", (PyCFunction) BeamPyProduct_setProductReader, METH_VARARGS, "Sets the product reader which will be used to create this product in-memory represention from an external source\nand which will be used to (re-)load band rasters.\nReturns Parameter reader: the product reader.\n@throws IllegalArgumentException if the given reader is null."},
+    {"getProductReader", (PyCFunction) BeamPyProduct_getProductReader, METH_VARARGS, "Returns the reader which was used to create this product in-memory represention from an external source and which\nwill be used to (re-)load band rasters.\nReturns the product reader, can be null"},
+    {"setProductWriter", (PyCFunction) BeamPyProduct_setProductWriter, METH_VARARGS, "Sets the writer which will be used to write modifications of this product's in-memory represention to an external\ndestination.\nReturns Parameter writer: the product writer, can be null"},
+    {"getProductWriter", (PyCFunction) BeamPyProduct_getProductWriter, METH_VARARGS, "Returns the writer which will be used to write modifications of this product's in-memory represention to an\nexternal destination.\nReturns the product writer, can be null"},
+    {"writeHeader", (PyCFunction) BeamPyProduct_writeHeader, METH_VARARGS, "Writes the header of a data product.\nReturns Parameter output: an object representing a valid output for this writer, might be a ImageOutputStream\nor a File or other Object to use for future decoding.\n@throws IllegalArgumentException if output is null or it's type is none of the\nsupported output types.\n@throws IOException              if an I/O error occurs"},
+    {"closeProductReader", (PyCFunction) BeamPyProduct_closeProductReader, METH_VARARGS, "Closes and clears this product's reader (if any).\n@throws IOException if an I/O error occurs\n@see #closeIO"},
+    {"closeProductWriter", (PyCFunction) BeamPyProduct_closeProductWriter, METH_VARARGS, "Closes and clears this product's writer (if any).\n@throws IOException if an I/O error occurs\n@see #closeIO"},
+    {"closeIO", (PyCFunction) BeamPyProduct_closeIO, METH_VARARGS, "Closes the file I/O for this product. Calls in sequence {@link #closeProductReader}  and\n{@link #closeProductWriter}. The {@link #dispose} method is not called, but\nshould be called if the product instance is no longer in use.\n@throws IOException if an I/O error occurs\n@see #closeProductReader\n@see #closeProductWriter\n@see #dispose"},
+    {"dispose", (PyCFunction) BeamPyProduct_dispose, METH_VARARGS, "Releases all of the resources used by this object instance and all of its owned children. Its primary use is to\nallow the garbage collector to perform a vanilla job.\n\nThis method should be called only if it is for sure that this object instance will never be used again. The\nresults of referencing an instance of this class after a call to dispose() are undefined.\n\nOverrides of this method should always call super.dispose(); after disposing this instance.\n\nThis implementation also calls the closeIO in order to release all open I/O resources."},
+    {"getPointingFactory", (PyCFunction) BeamPyProduct_getPointingFactory, METH_VARARGS, "Gets the pointing factory associated with this data product.\nReturns the pointing factory or null, if none"},
+    {"setPointingFactory", (PyCFunction) BeamPyProduct_setPointingFactory, METH_VARARGS, "Sets the pointing factory for this data product.\nReturns Parameter pointingFactory: the pointing factory"},
+    {"setGeoCoding", (PyCFunction) BeamPyProduct_setGeoCoding, METH_VARARGS, "Geo-codes this data product.\nReturns Parameter geoCoding: the geo-coding, if null geo-coding is removed\n@throws IllegalArgumentException <br>- if the given GeoCoding is a TiePointGeoCoding\nand latGrid or lonGrid are not instances of tie point\ngrids in this product. <br>- if the given GeoCoding is a\nMapGeoCoding and its MapInfo is null\n<br>- if the given GeoCoding is a MapGeoCoding and the\nsceneWith or sceneHeight of its MapInfo\nis not equal to this products sceneRasterWidth or\nsceneRasterHeight"},
+    {"getGeoCoding", (PyCFunction) BeamPyProduct_getGeoCoding, METH_VARARGS, "Returns the geo-coding used for this data product.\nReturns the geo-coding, can be null if this product is not geo-coded."},
+    {"isUsingSingleGeoCoding", (PyCFunction) BeamPyProduct_isUsingSingleGeoCoding, METH_VARARGS, "Tests if all bands of this product are using a single, uniform geo-coding. Uniformity is tested by comparing\nthe band's geo-coding against the geo-coding of this product using the {@link Object#equals(Object)} method.\nIf this product does not have a geo-coding, the method returns false.\nReturns true, if so"},
+    {"transferGeoCodingTo", (PyCFunction) BeamPyProduct_transferGeoCodingTo, METH_VARARGS, "Transfers the geo-coding of this product instance to the {@link Product destProduct} with respect to\nthe given {@link ProductSubsetDef subsetDef}.\nReturns Parameter destProduct: the destination product\nReturns Parameter subsetDef: the definition of the subset, may be null\nReturns true, if the geo-coding could be transferred."},
+    {"getSceneRasterWidth", (PyCFunction) BeamPyProduct_getSceneRasterWidth, METH_VARARGS, "Returns the scene width in pixels for this data product.\nReturns the scene width in pixels for this data product."},
+    {"getSceneRasterHeight", (PyCFunction) BeamPyProduct_getSceneRasterHeight, METH_VARARGS, "Returns the scene height in pixels for this data product.\nReturns the scene height in pixels for this data product."},
+    {"getStartTime", (PyCFunction) BeamPyProduct_getStartTime, METH_VARARGS, "Gets the (sensing) start time associated with the first raster data line.\n\nFor Level-1/2 products this is\nthe data-take time associated with the first raster data line.\nFor Level-3 products, this could be the start time of first input product\ncontributing data.\nReturns the sensing start time, can be null e.g. for non-swath products"},
+    {"setStartTime", (PyCFunction) BeamPyProduct_setStartTime, METH_VARARGS, "Sets the (sensing) start time of this product.\n\nFor Level-1/2 products this is\nthe data-take time associated with the first raster data line.\nFor Level-3 products, this could be the start time of first input product\ncontributing data.\nReturns Parameter startTime: the sensing start time, can be null"},
+    {"getEndTime", (PyCFunction) BeamPyProduct_getEndTime, METH_VARARGS, "Gets the (sensing) stop time associated with the last raster data line.\n\nFor Level-1/2 products this is\nthe data-take time associated with the last raster data line.\nFor Level-3 products, this could be the end time of last input product\ncontributing data.\nReturns the stop time , can be null e.g. for non-swath products"},
+    {"setEndTime", (PyCFunction) BeamPyProduct_setEndTime, METH_VARARGS, "Sets the (sensing) stop time associated with the first raster data line.\n\nFor Level-1/2 products this is\nthe data-take time associated with the last raster data line.\nFor Level-3 products, this could be the end time of last input product\ncontributing data.\nReturns Parameter endTime: the sensing stop time, can be null"},
+    {"getMetadataRoot", (PyCFunction) BeamPyProduct_getMetadataRoot, METH_VARARGS, "Gets the root element of the associated metadata.\nReturns the metadata root element"},
+    {"getBandGroup", (PyCFunction) BeamPyProduct_getBandGroup, METH_VARARGS, "Gets the band group of this product.\nReturns the group of all bands.\nSince version:  BEAM 4.7"},
+    {"getTiePointGridGroup", (PyCFunction) BeamPyProduct_getTiePointGridGroup, METH_VARARGS, "Gets the tie-point grid group of this product.\nReturns the group of all tie-point grids.\nSince version:  BEAM 4.7"},
+    {"addTiePointGrid", (PyCFunction) BeamPyProduct_addTiePointGrid, METH_VARARGS, "Adds the given tie-point grid to this product.\nReturns Parameter tiePointGrid: the tie-point grid to added, ignored if null"},
+    {"removeTiePointGrid", (PyCFunction) BeamPyProduct_removeTiePointGrid, METH_VARARGS, "Removes the tie-point grid from this product.\nReturns Parameter tiePointGrid: the tie-point grid to be removed, ignored if null\nReturns true if node could be removed"},
+    {"getNumTiePointGrids", (PyCFunction) BeamPyProduct_getNumTiePointGrids, METH_VARARGS, "Returns the number of tie-point grids contained in this product\nReturns the number of tie-point grids"},
+    {"getTiePointGridAt", (PyCFunction) BeamPyProduct_getTiePointGridAt, METH_VARARGS, "Returns the tie-point grid at the given index.\nReturns Parameter index: the tie-point grid index\nReturns the tie-point grid at the given index\n@throws IndexOutOfBoundsException if the index is out of bounds"},
+    {"getTiePointGridNames", (PyCFunction) BeamPyProduct_getTiePointGridNames, METH_VARARGS, "Returns a string array containing the names of the tie-point grids contained in this product\nReturns a string array containing the names of the tie-point grids contained in this product. If this product has\nno tie-point grids a zero-length-array is returned."},
+    {"getTiePointGrids", (PyCFunction) BeamPyProduct_getTiePointGrids, METH_VARARGS, "Returns an array of tie-point grids contained in this product\nReturns an array of tie-point grids contained in this product. If this product has no  tie-point grids a\nzero-length-array is returned."},
+    {"getTiePointGrid", (PyCFunction) BeamPyProduct_getTiePointGrid, METH_VARARGS, "Returns the tie-point grid with the given name.\nReturns Parameter name: the tie-point grid name\nReturns the tie-point grid with the given name or null if a tie-point grid with the given name is\nnot contained in this product."},
+    {"containsTiePointGrid", (PyCFunction) BeamPyProduct_containsTiePointGrid, METH_VARARGS, "Tests if a tie-point grid with the given name is contained in this product.\nReturns Parameter name: the name, must not be null\nReturns true if a tie-point grid with the given name is contained in this product,\nfalse otherwise"},
+    {"addBand", (PyCFunction) BeamPyProduct_addBand, METH_VARARGS, "Adds the given band to this product.\nReturns Parameter band: the band to added, must not be null"},
+    {"addNewBand", (PyCFunction) BeamPyProduct_addNewBand, METH_VARARGS, "Creates a new band with the given name and data type and adds it to this product and returns it.\nReturns Parameter bandName: the new band's name\nReturns Parameter dataType: the raster data type, must be one of the multiple ProductData.TYPE_X\nconstants\nReturns the new band which has just been added"},
+    {"addComputedBand", (PyCFunction) BeamPyProduct_addComputedBand, METH_VARARGS, "Creates a new band with the given name and adds it to this product and returns it.\nThe new band's data type is {@code float} and it's samples are computed from the given band maths expression.\nReturns Parameter bandName: the new band's name\nReturns Parameter expression: the band maths expression\nReturns the new band which has just been added\nSince version:  BEAM 4.9"},
+    {"removeBand", (PyCFunction) BeamPyProduct_removeBand, METH_VARARGS, "Removes the given band from this product.\nReturns Parameter band: the band to be removed, ignored if null\nReturns {@code true} if removed succesfully, otherwise {@code false}"},
+    {"getNumBands", (PyCFunction) BeamPyProduct_getNumBands, METH_VARARGS, "Returns the number of bands contained in this product."},
+    {"getBandAt", (PyCFunction) BeamPyProduct_getBandAt, METH_VARARGS, "Returns the band at the given index.\nReturns Parameter index: the band index\nReturns the band at the given index\n@throws IndexOutOfBoundsException if the index is out of bounds"},
+    {"getBandNames", (PyCFunction) BeamPyProduct_getBandNames, METH_VARARGS, "Returns a string array containing the names of the bands contained in this product\nReturns a string array containing the names of the bands contained in this product. If this product has no bands\na zero-length-array is returned."},
+    {"getBands", (PyCFunction) BeamPyProduct_getBands, METH_VARARGS, "Returns an array of bands contained in this product\nReturns an array of bands contained in this product. If this product has no bands a zero-length-array is\nreturned."},
+    {"getBand", (PyCFunction) BeamPyProduct_getBand, METH_VARARGS, "Returns the band with the given name.\nReturns Parameter name: the band name\nReturns the band with the given name or null if a band with the given name is not contained in this\nproduct.\n@throws IllegalArgumentException if the given name is null or empty."},
+    {"getBandIndex", (PyCFunction) BeamPyProduct_getBandIndex, METH_VARARGS, "Returns the index for the band with the given name.\nReturns Parameter name: the band name\nReturns the band index or -1 if a band with the given name is not contained in this product.\n@throws IllegalArgumentException if the given name is null or empty."},
+    {"containsBand", (PyCFunction) BeamPyProduct_containsBand, METH_VARARGS, "Tests if a band with the given name is contained in this product.\nReturns Parameter name: the name, must not be null\nReturns true if a band with the given name is contained in this product, false\notherwise\n@throws IllegalArgumentException if the given name is null or empty."},
+    {"containsRasterDataNode", (PyCFunction) BeamPyProduct_containsRasterDataNode, METH_VARARGS, "Tests if a raster data node with the given name is contained in this product. Raster data nodes can be bands or\ntie-point grids.\nReturns Parameter name: the name, must not be null\nReturns true if a raster data node with the given name is contained in this product,\nfalse otherwise"},
+    {"getRasterDataNode", (PyCFunction) BeamPyProduct_getRasterDataNode, METH_VARARGS, "Gets the raster data node with the given name. The method first searches for bands with the given name, then for\ntie-point grids. If neither bands nor tie-point grids exist with the given name, null is returned.\nReturns Parameter name: the name, must not be null\nReturns the raster data node with the given name or null if a raster data node with the given name\nis not contained in this product."},
+    {"getMaskGroup", (PyCFunction) BeamPyProduct_getMaskGroup, METH_VARARGS, ""},
+    {"getVectorDataGroup", (PyCFunction) BeamPyProduct_getVectorDataGroup, METH_VARARGS, ""},
+    {"getFlagCodingGroup", (PyCFunction) BeamPyProduct_getFlagCodingGroup, METH_VARARGS, ""},
+    {"getIndexCodingGroup", (PyCFunction) BeamPyProduct_getIndexCodingGroup, METH_VARARGS, ""},
+    {"containsPixel", (PyCFunction) BeamPyProduct_containsPixel, METH_VARARGS, "Tests if the given pixel position is within the product pixel bounds.\nReturns Parameter x: the x coordinate of the pixel position\nReturns Parameter y: the y coordinate of the pixel position\nReturns true, if so\n@see #containsPixel(PixelPos)"},
+    {"getGcpGroup", (PyCFunction) BeamPyProduct_getGcpGroup, METH_VARARGS, "Gets the group of ground-control points (GCPs).\nNote that this method will create the group, if none exists already.\nReturns the GCP group."},
+    {"getPinGroup", (PyCFunction) BeamPyProduct_getPinGroup, METH_VARARGS, "Gets the group of pins.\nNote that this method will create the group, if none exists already.\nReturns the pin group."},
+    {"isCompatibleProduct", (PyCFunction) BeamPyProduct_isCompatibleProduct, METH_VARARGS, "Checks whether or not the given product is compatible with this product.\nReturns Parameter product: the product to compare with\nReturns Parameter eps: the maximum lat/lon error in degree\nReturns false if the scene dimensions or geocoding are different, true otherwise."},
+    {"parseExpression", (PyCFunction) BeamPyProduct_parseExpression, METH_VARARGS, "Parses a mathematical expression given as a text string.\nReturns Parameter expression: a expression given as a text string, e.g. \"radiance_4 / (1.0 + radiance_11)\".\nReturns a term parsed from the given expression string\n@throws ParseException if the expression could not successfully be parsed"},
+    {"acceptVisitor", (PyCFunction) BeamPyProduct_acceptVisitor, METH_VARARGS, "Accepts the given visitor. This method implements the well known 'Visitor' design pattern of the gang-of-four.\nThe visitor pattern allows to define new operations on the product data model without the need to add more code\nto it. The new operation is implemented by the visitor.\n\nThe method subsequentially visits (calls acceptVisitor for) all bands, tie-point grids and flag\ncodings. Finally it visits product metadata root element and calls visitor.visit(this).\nReturns Parameter visitor: the visitor, must not be null"},
+    {"addProductNodeListener", (PyCFunction) BeamPyProduct_addProductNodeListener, METH_VARARGS, "Adds a ProductNodeListener to this product. The ProductNodeListener is informed each\ntime a node in this product changes.\nReturns Parameter listener: the listener to be added\nReturns boolean if listener was added or not"},
+    {"removeProductNodeListener", (PyCFunction) BeamPyProduct_removeProductNodeListener, METH_VARARGS, "Removes a ProductNodeListener from this product.\nReturns Parameter listener: the listener to be removed."},
+    {"getProductNodeListeners", (PyCFunction) BeamPyProduct_getProductNodeListeners, METH_VARARGS, ""},
+    {"getRefNo", (PyCFunction) BeamPyProduct_getRefNo, METH_VARARGS, "Returns the reference number of this product."},
+    {"setRefNo", (PyCFunction) BeamPyProduct_setRefNo, METH_VARARGS, "Sets the reference number.\nReturns Parameter refNo: the reference number to set must be in the range 1 .. Integer.MAX_VALUE\n@throws IllegalArgumentException if the refNo is out of range\n@throws IllegalStateException"},
+    {"resetRefNo", (PyCFunction) BeamPyProduct_resetRefNo, METH_VARARGS, ""},
+    {"getProductManager", (PyCFunction) BeamPyProduct_getProductManager, METH_VARARGS, "Returns the product manager for this product.\nReturns this product's manager, can be null"},
+    {"createBandArithmeticParser", (PyCFunction) BeamPyProduct_createBandArithmeticParser, METH_VARARGS, "Creates a parser for band arithmetic expressions.\nThe parser created will use a namespace comprising all tie-point grids, bands and flags of this product.\nReturns a parser for band arithmetic expressions for this product, never null"},
+    {"createBandArithmeticDefaultNamespace", (PyCFunction) BeamPyProduct_createBandArithmeticDefaultNamespace, METH_VARARGS, "Creates a namespace to be used by parsers for band arithmetic expressions.\nThe namespace created comprises all tie-point grids, bands and flags of this product.\nReturns a namespace, never null"},
+    {"createSubset", (PyCFunction) BeamPyProduct_createSubset, METH_VARARGS, "Creates a subset of this product. The returned product represents a true spatial and spectral subset of this\nproduct, but it has not loaded any bands into memory. If name or desc are null or empty, the name and the\ndescription from this product was used.\nReturns Parameter subsetDef: the product subset definition\nReturns Parameter name: the name for the new product\nReturns Parameter desc: the description for the new product\nReturns the product subset, or null if the product/subset combination is not valid\n@throws IOException if an I/O error occurs"},
+    {"createFlippedProduct", (PyCFunction) BeamPyProduct_createFlippedProduct, METH_VARARGS, "Creates flipped raster-data version of this product.\nReturns Parameter flipType: the flip type, see {@link ProductFlipper}\nReturns Parameter name: the name for the new product\nReturns Parameter desc: the description for the new product\nReturns the product subset, or null if the product/subset combination is not valid\n@throws IOException if an I/O error occurs"},
+    {"setModified", (PyCFunction) BeamPyProduct_setModified, METH_VARARGS, ""},
+    {"getQuicklookBandName", (PyCFunction) BeamPyProduct_getQuicklookBandName, METH_VARARGS, "Gets the name of the band suitable for quicklook generation.\nReturns the name of the quicklook band, or null if none has been defined"},
+    {"setQuicklookBandName", (PyCFunction) BeamPyProduct_setQuicklookBandName, METH_VARARGS, "Sets the name of the band suitable for quicklook generation.\nReturns Parameter quicklookBandName: the name of the quicklook band, or null"},
+    {"createPixelInfoString", (PyCFunction) BeamPyProduct_createPixelInfoString, METH_VARARGS, "Creates a string containing all available information at the given pixel position. The string returned is a line\nseparated text with each line containing a key/value pair.\nReturns Parameter pixelX: the pixel X co-ordinate\nReturns Parameter pixelY: the pixel Y co-ordinate\nReturns the info string at the given position"},
+    {"getRemovedChildNodes", (PyCFunction) BeamPyProduct_getRemovedChildNodes, METH_VARARGS, "Returns all removed child nodes. Array may be empty."},
+    {"canBeOrthorectified", (PyCFunction) BeamPyProduct_canBeOrthorectified, METH_VARARGS, "Checks whether or not this product can be ortorectified.\nReturns true if {@link Band#canBeOrthorectified()} returns true for all bands, false otherwise"},
+    {"getPreferredTileSize", (PyCFunction) BeamPyProduct_getPreferredTileSize, METH_VARARGS, "Gets the preferred tile size which may be used for a the {@link java.awt.image.RenderedImage rendered image}\ncreated for a {@link RasterDataNode} of this product.\nReturns the preferred tile size, may be null</null> if not specified\n@see RasterDataNode#getSourceImage()\n@see RasterDataNode# setSourceImage (java.awt.image.RenderedImage)"},
+    {"setPreferredTileSize", (PyCFunction) BeamPyProduct_setPreferredTileSize, METH_VARARGS, "Sets the preferred tile size which may be used for a the {@link java.awt.image.RenderedImage rendered image}\ncreated for a {@link RasterDataNode} of this product.\nReturns Parameter tileWidth: the preferred tile width\nReturns Parameter tileHeight: the preferred tile height\n@see #setPreferredTileSize(java.awt.Dimension)"},
+    {"getAllFlagNames", (PyCFunction) BeamPyProduct_getAllFlagNames, METH_VARARGS, "Returns the names of all flags of all flag datasets contained this product.\n\nA flag name contains the dataset (a band of this product) and the actual flag name as defined in the\nflag-coding associated with the dataset. The general format for the flag name strings returned is therefore\n\"dataset.flag_name\".\n\nThe method is used to find out which flags a product has in order to use them in bit-mask expressions.\nReturns the array of all flag names. If this product does not support flags, an empty array is returned, but\nnever null.\n@see #parseExpression(String)"},
+    {"getAutoGrouping", (PyCFunction) BeamPyProduct_getAutoGrouping, METH_VARARGS, "Gets the auto-grouping applicable to product nodes contained in this product.\nReturns the auto-grouping or {@code null}.\nSince version:  BEAM 4.8"},
+    {"setAutoGrouping", (PyCFunction) BeamPyProduct_setAutoGrouping, METH_VARARGS, "Sets the auto-grouping applicable to product nodes contained in this product.\nA given {@code pattern} parameter is a textual representation of the auto-grouping.\nThe syntax for the pattern is:\n<pre>\npattern    :=  &lt;groupPath&gt; {':' &lt;groupPath&gt;} | \"\" (empty string)\ngroupPath  :=  &lt;groupName&gt; {'/' &lt;groupName&gt;}\ngroupName  :=  any non-empty string without characters ':' and '/'\n</pre>\nAn example for {@code pattern} applicable to Envisat AATSR data is\n<pre>\nnadir/reflec:nadir/btemp:fward/reflec:fward/btemp:nadir:fward\n</pre>\nReturns Parameter pattern: The auto-grouping pattern.\nSince version:  BEAM 4.8"},
+    {"addComputedMask", (PyCFunction) BeamPyProduct_addComputedMask, METH_VARARGS, "Creates a new mask using a band arithmetic expression\nand adds it to this product and returns it.\nReturns Parameter maskName: the new mask's name\nReturns Parameter expression: the band arithmetic expression\nReturns Parameter description: the mask's description\nReturns Parameter color: the display color\nReturns Parameter transparency: the display transparency\nReturns the new mask which has just been added\nSince version:  BEAM 4.10"},
+    {"addBitmaskDef", (PyCFunction) BeamPyProduct_addBitmaskDef, METH_VARARGS, "Adds the given bitmask definition to this product.\nReturns Parameter bitmaskDef: the bitmask definition to added, ignored if null\n@deprecated since BEAM 4.7, use {@link #getMaskGroup()} instead"},
+    {"getBitmaskDefNames", (PyCFunction) BeamPyProduct_getBitmaskDefNames, METH_VARARGS, "Returns a string array containing the names of the bitmask definitions contained in this product.\nReturns a string array containing the names of the bitmask definitions contained in this product. If this product\nhas no bitmask definitions a zero-length-array is returned.\n@deprecated since BEAM 4.7, use {@link #getMaskGroup()} instead"},
+    {"getBitmaskDef", (PyCFunction) BeamPyProduct_getBitmaskDef, METH_VARARGS, "Returns the bitmask definition with the given name.\nReturns Parameter name: the bitmask definition name\nReturns the bitmask definition with the given name or null if a bitmask definition with the given\nname is not contained in this product.\n@deprecated since BEAM 4.7, use {@link #getMaskGroup()} instead"},
+    {"getValidMask", (PyCFunction) BeamPyProduct_getValidMask, METH_VARARGS, "Gets a valid-mask for the given ID.\nReturns Parameter id: the ID\nReturns a cached valid mask for the given ID or null\n@see #createValidMask(String, com.bc.ceres.core.ProgressMonitor)\n@deprecated since BEAM 4.7, use {@link #getMaskGroup()} instead"},
+    {"setValidMask", (PyCFunction) BeamPyProduct_setValidMask, METH_VARARGS, "Sets a valid-mask for the given ID.\nReturns Parameter id: the ID\nReturns Parameter validMask: the pixel mask\n@see #createValidMask(String, com.bc.ceres.core.ProgressMonitor)\n@deprecated since BEAM 4.7, use {@link #getMaskGroup()} instead"},
+    {"createValidMask2", (PyCFunction) BeamPyProduct_createValidMask2, METH_VARARGS, "Creates a bit-packed valid-mask for all pixels of the scene covered by this product.\nThe given expression is considered to be boolean, if it evaluates to true\nthe related bit in the mask is set.\nReturns Parameter expression: the boolean expression, e.g. \"l2_flags.LAND && reflec_10 >= 0.0\"\nReturns Parameter pm: a progress monitor\nReturns a bit-packed mask for all pixels of the scene, never null\n@throws IOException if an I/O error occurs\n@see #parseExpression(String)\n@deprecated since BEAM 4.7, use {@link #getMaskGroup()} instead"},
+    {"createValidMask1", (PyCFunction) BeamPyProduct_createValidMask1, METH_VARARGS, "Creates a bit-packed mask for all pixels of the scene covered by this product.\nThe given term is considered to be boolean, if it evaluates to true\nthe related bit in the mask is set.\nReturns Parameter term: the boolean term, e.g. \"l2_flags.LAND && reflec_10 >= 0.0\"\nReturns Parameter pm: a progress monitor\nReturns a bit-packed mask for all pixels of the scene, never null\n@throws IOException if an I/O error occurs\n@see #createValidMask(String, com.bc.ceres.core.ProgressMonitor)\n@deprecated since BEAM 4.7, use {@link #getMaskGroup()} instead"},
+    {"readBitmask2", (PyCFunction) BeamPyProduct_readBitmask2, METH_VARARGS, "Creates a bit-mask by evaluating the given bit-mask term.\n The method first creates an evaluation context for the given bit-mask term and the specified region and then\nevaluates the term for each pixel in the subset (line-by-line, X varies fastest). The result of each evaluation -\nthe resulting bitmask - is stored in the given boolean array buffer bitmask in the same order as\npixels appear in the given region. The buffer must at least have a length equal to width * height\nelements.\n\n If flag providing datasets are referenced in the given bit-mask expression which are currently not completely\nloaded, the method reloads the spatial subset from the data source in order to create the evaluation context.\n\n The {@link #parseExpression(String)} method can be used to create a bit-mask\nterm from a textual bit-mask expression.\n\nReturns Parameter offsetX: the X-offset of the spatial subset in pixel co-ordinates\nReturns Parameter offsetY: the Y-offset of the spatial subset in pixel co-ordinates\nReturns Parameter width: the width of the spatial subset in pixel co-ordinates\nReturns Parameter height: the height of the spatial subset in pixel co-ordinates\nReturns Parameter bitmaskTerm: a bit-mask term, as returned by the {@link #parseExpression(String)} method\nReturns Parameter bitmask: a buffer used to hold the results of the bit-mask evaluations for each pixel in the given\nspatial subset\nReturns Parameter pm: a monitor to inform the user about progress\n@throws IOException if an I/O error occurs, when referenced flag datasets are reloaded\n@see #parseExpression(String)\n@deprecated since BEAM 4.7, use {@link #getMaskGroup()} instead"},
+    {"readBitmask1", (PyCFunction) BeamPyProduct_readBitmask1, METH_VARARGS, "Creates a bit-mask by evaluating the given bit-mask term.\n\n The method first creates an evaluation context for the given bit-mask term and the specified region and then\nevaluates the term for each pixel in the subset (line-by-line, X varies fastest). The result of each evaluation -\nthe resulting bitmask - is stored in the given boolean array buffer bitmask in the same order as\npixels appear in the given region. The buffer must at least have a length equal to width * height\nelements.\n\n If flag providing datasets are referenced in the given bit-mask expression which are currently not completely\nloaded, the method reloads the spatial subset from the data source in order to create the evaluation context.\n\n The {@link #parseExpression(String)} method can be used to create a bit-mask\nterm from a textual bit-mask expression.\nReturns Parameter offsetX: the X-offset of the spatial subset in pixel co-ordinates\nReturns Parameter offsetY: the Y-offset of the spatial subset in pixel co-ordinates\nReturns Parameter width: the width of the spatial subset in pixel co-ordinates\nReturns Parameter height: the height of the spatial subset in pixel co-ordinates\nReturns Parameter bitmaskTerm: a bit-mask term, as returned by the {@link #parseExpression(String)}\nmethod\nReturns Parameter bitmask: a byte buffer used to hold the results of the bit-mask evaluations for each pixel in the given\nspatial subset\nReturns Parameter trueValue: the byte value to be set if the bitmask-term evauates to true\nReturns Parameter falseValue: the byte value to be set if the bitmask-term evauates to false\n@throws IOException if an I/O error occurs, when referenced flag datasets are reloaded\n@see #parseExpression(String)\n@deprecated since BEAM 4.7, use {@link #getMaskGroup()} instead"},
+    {"getOwner", (PyCFunction) BeamPyProduct_getOwner, METH_VARARGS, "Returns the owner node of this node."},
+    {"getName", (PyCFunction) BeamPyProduct_getName, METH_VARARGS, "Returns this node's name."},
+    {"setName", (PyCFunction) BeamPyProduct_setName, METH_VARARGS, "Sets this product's name.\nReturns Parameter name: The name."},
+    {"getDescription", (PyCFunction) BeamPyProduct_getDescription, METH_VARARGS, "Returns a short textual description for this products node.\nReturns a description or null"},
+    {"setDescription", (PyCFunction) BeamPyProduct_setDescription, METH_VARARGS, "Sets a short textual description for this products node.\nReturns Parameter description: a description, can be null"},
+    {"isModified", (PyCFunction) BeamPyProduct_isModified, METH_VARARGS, "Returns whether or not this node is modified.\nReturns true if so"},
+    {"toString", (PyCFunction) BeamPyProduct_toString, METH_VARARGS, ""},
+    {"isValidNodeName", (PyCFunction) BeamPyProduct_isValidNodeName, METH_VARARGS | METH_STATIC, "Tests whether the given name is valid name for a node.\nA valid node name must not start with a dot. Also a valid node name must not contain\nany of the character  \\/:*?\"&lt;&gt;|\nReturns Parameter name: the name to test\nReturns true if the name is a valid node identifier, false otherwise"},
+    {"getProduct", (PyCFunction) BeamPyProduct_getProduct, METH_VARARGS, "Returns the product to which this node belongs to.\nReturns the product, or null if this node was not owned by a product at the time this method was\ncalled"},
+    {"getDisplayName", (PyCFunction) BeamPyProduct_getDisplayName, METH_VARARGS, "Returns this node's display name. The display name is the product reference string with the node name appended.\nExample: The string \"[2] node-name\" means node node-name of the\nproduct with the reference number 2.\nReturns this node's name with a product prefix <br>or this node's name only if this node's product prefix is\nnull\n@see #getProductRefString"},
+    {"getProductRefString", (PyCFunction) BeamPyProduct_getProductRefString, METH_VARARGS, "Gets the product reference string. The product reference string is the product reference number enclosed in\nsquare brackets. Example: The string \"[2]\" stands for a product with the reference number\n2.\nReturns the product reference string. <br>or null if this node has no product <br>or\nnull if its product reference number was inactive"},
+    {"updateExpression", (PyCFunction) BeamPyProduct_updateExpression, METH_VARARGS, "Asks a product node to replace all occurences of and references to the node name\ngiven by {@code oldExternalName} with {@code oldExternalName}. Such references most often occur\nin band arithmetic expressions.\nReturns Parameter oldExternalName: The old node name.\nReturns Parameter newExternalName: The new node name."},
+    {"removeFromFile", (PyCFunction) BeamPyProduct_removeFromFile, METH_VARARGS, "Physically remove this node from the file associated with the given product writer. The default implementation\ndoes nothing.\nReturns Parameter productWriter: the product writer to be used to remove this node from the underlying file."},
+    {"getExtension", (PyCFunction) BeamPyProduct_getExtension, METH_VARARGS, ""},
+    {NULL, NULL, 0, NULL} /*Sentinel*/
+};
+
+// Note: this is unused, experimental code
+
+/**
+ * Implements the BeamPy_JObjectType class singleton.
+ *
+ * THIS TYPE IS NOT YET IN USE: we currently use
+ * (<type_string>, <pointer>) tuples to represent Java JNI objects.
+ */
+PyTypeObject Product_Type = {
+    PyVarObject_HEAD_INIT(NULL, 0)
+    "beampy.Product",        /* tp_name */
+    sizeof (JObject),             /* tp_basicsize */
+    0,                            /* tp_itemsize */
+    (destructor)JObject_dealloc,  /* tp_dealloc */
+    NULL,                         /* tp_print */
+    NULL,                         /* tp_getattr */
+    NULL,                         /* tp_setattr */
+    NULL,                         /* tp_reserved */
+    NULL,                         /* tp_repr */
+    NULL,                         /* tp_as_number */
+    NULL,                         /* tp_as_sequence */
+    NULL,                         /* tp_as_mapping */
+    NULL,                         /* tp_hash  */
+    NULL,                         /* tp_call */
+    NULL,                         /* tp_str */
+    NULL,                         /* tp_getattro */
+    NULL,                         /* tp_setattro */
+    NULL,                         /* tp_as_buffer */
+    Py_TPFLAGS_DEFAULT,           /* tp_flags */
+    "Product instances are an in-memory representation of a remote sensing data product. The product is more\nan abstract hull containing references to the data of the product or readers to retrieve the data on demant. The\nproduct itself does not hold the remote sensing data. Data products can contain multiple geophysical parameters\nstored as bands and can also have multiple metadata attributes. Also, a Product can contain any number\nof TiePointGrids holding the tie point data.\n\nEvery product can also have a product reader and writer assigned to it. The reader represents the data source from\nwhich a product was created, whereas the writer represents the data sink. Both, the source and the sink must not\nnecessarily store data in the same format. Furthermore, it is not mandatory for a product to have both of them.\nAuthor:  Norman Fomferra\nVersion:  $Revision: 8401 $ $Date: 2010-02-12 17:17:06 +0100 (Fr, 12 Feb 2010) $",                /* tp_doc */
+    NULL,                         /* tp_traverse */
+    NULL,                         /* tp_clear */
+    NULL,                         /* tp_richcompare */
+    0,                            /* tp_weaklistoffset */
+    NULL,                         /* tp_iter */
+    NULL,                         /* tp_iternext */
+    Product_methods,         /* tp_methods */
+    NULL,                         /* tp_members */
+    NULL,                         /* tp_getset */
+    NULL,                         /* tp_base */
+    NULL,                         /* tp_dict */
+    NULL,                         /* tp_descr_get */
+    NULL,                         /* tp_descr_set */
+    0,                            /* tp_dictoffset */
+    (initproc) JObject_init,      /* tp_init */
+    NULL,                         /* tp_alloc */
+    NULL,                         /* tp_new */
+};
+
+static PyMethodDef ProductVisitor_methods[] = {
+    {NULL, NULL, 0, NULL} /*Sentinel*/
+};
+
+// Note: this is unused, experimental code
+
+/**
+ * Implements the BeamPy_JObjectType class singleton.
+ *
+ * THIS TYPE IS NOT YET IN USE: we currently use
+ * (<type_string>, <pointer>) tuples to represent Java JNI objects.
+ */
+PyTypeObject ProductVisitor_Type = {
+    PyVarObject_HEAD_INIT(NULL, 0)
+    "beampy.ProductVisitor",        /* tp_name */
+    sizeof (JObject),             /* tp_basicsize */
+    0,                            /* tp_itemsize */
+    (destructor)JObject_dealloc,  /* tp_dealloc */
+    NULL,                         /* tp_print */
+    NULL,                         /* tp_getattr */
+    NULL,                         /* tp_setattr */
+    NULL,                         /* tp_reserved */
+    NULL,                         /* tp_repr */
+    NULL,                         /* tp_as_number */
+    NULL,                         /* tp_as_sequence */
+    NULL,                         /* tp_as_mapping */
+    NULL,                         /* tp_hash  */
+    NULL,                         /* tp_call */
+    NULL,                         /* tp_str */
+    NULL,                         /* tp_getattro */
+    NULL,                         /* tp_setattro */
+    NULL,                         /* tp_as_buffer */
+    Py_TPFLAGS_DEFAULT,           /* tp_flags */
+    "A visitor for a product and all other product nodes. This interface is part of the visitor pattern used to\nvisit all nodes of a data product. Implementations of this interface can be passed to the acceptVisitor\nmethod of an Product (or any other ProductNode).\nAuthor:  Norman Fomferra\nVersion:  $Revision$ $Date$\n@see Product#acceptVisitor(ProductVisitor)\n@see ProductNode#acceptVisitor(ProductVisitor)",                /* tp_doc */
+    NULL,                         /* tp_traverse */
+    NULL,                         /* tp_clear */
+    NULL,                         /* tp_richcompare */
+    0,                            /* tp_weaklistoffset */
+    NULL,                         /* tp_iter */
+    NULL,                         /* tp_iternext */
+    ProductVisitor_methods,         /* tp_methods */
+    NULL,                         /* tp_members */
+    NULL,                         /* tp_getset */
+    NULL,                         /* tp_base */
+    NULL,                         /* tp_dict */
+    NULL,                         /* tp_descr_get */
+    NULL,                         /* tp_descr_set */
+    0,                            /* tp_dictoffset */
+    (initproc) JObject_init,      /* tp_init */
+    NULL,                         /* tp_alloc */
+    NULL,                         /* tp_new */
+};
+
+static PyMethodDef WritableNamespace_methods[] = {
+    {NULL, NULL, 0, NULL} /*Sentinel*/
+};
+
+// Note: this is unused, experimental code
+
+/**
+ * Implements the BeamPy_JObjectType class singleton.
+ *
+ * THIS TYPE IS NOT YET IN USE: we currently use
+ * (<type_string>, <pointer>) tuples to represent Java JNI objects.
+ */
+PyTypeObject WritableNamespace_Type = {
+    PyVarObject_HEAD_INIT(NULL, 0)
+    "beampy.WritableNamespace",        /* tp_name */
+    sizeof (JObject),             /* tp_basicsize */
+    0,                            /* tp_itemsize */
+    (destructor)JObject_dealloc,  /* tp_dealloc */
+    NULL,                         /* tp_print */
+    NULL,                         /* tp_getattr */
+    NULL,                         /* tp_setattr */
+    NULL,                         /* tp_reserved */
+    NULL,                         /* tp_repr */
+    NULL,                         /* tp_as_number */
+    NULL,                         /* tp_as_sequence */
+    NULL,                         /* tp_as_mapping */
+    NULL,                         /* tp_hash  */
+    NULL,                         /* tp_call */
+    NULL,                         /* tp_str */
+    NULL,                         /* tp_getattro */
+    NULL,                         /* tp_setattro */
+    NULL,                         /* tp_as_buffer */
+    Py_TPFLAGS_DEFAULT,           /* tp_flags */
+    "",                /* tp_doc */
+    NULL,                         /* tp_traverse */
+    NULL,                         /* tp_clear */
+    NULL,                         /* tp_richcompare */
+    0,                            /* tp_weaklistoffset */
+    NULL,                         /* tp_iter */
+    NULL,                         /* tp_iternext */
+    WritableNamespace_methods,         /* tp_methods */
+    NULL,                         /* tp_members */
+    NULL,                         /* tp_getset */
+    NULL,                         /* tp_base */
+    NULL,                         /* tp_dict */
+    NULL,                         /* tp_descr_get */
+    NULL,                         /* tp_descr_set */
+    0,                            /* tp_dictoffset */
+    (initproc) JObject_init,      /* tp_init */
+    NULL,                         /* tp_alloc */
+    NULL,                         /* tp_new */
+};
+
+static PyMethodDef Set_methods[] = {
+    {NULL, NULL, 0, NULL} /*Sentinel*/
+};
+
+// Note: this is unused, experimental code
+
+/**
+ * Implements the BeamPy_JObjectType class singleton.
+ *
+ * THIS TYPE IS NOT YET IN USE: we currently use
+ * (<type_string>, <pointer>) tuples to represent Java JNI objects.
+ */
+PyTypeObject Set_Type = {
+    PyVarObject_HEAD_INIT(NULL, 0)
+    "beampy.Set",        /* tp_name */
+    sizeof (JObject),             /* tp_basicsize */
+    0,                            /* tp_itemsize */
+    (destructor)JObject_dealloc,  /* tp_dealloc */
+    NULL,                         /* tp_print */
+    NULL,                         /* tp_getattr */
+    NULL,                         /* tp_setattr */
+    NULL,                         /* tp_reserved */
+    NULL,                         /* tp_repr */
+    NULL,                         /* tp_as_number */
+    NULL,                         /* tp_as_sequence */
+    NULL,                         /* tp_as_mapping */
+    NULL,                         /* tp_hash  */
+    NULL,                         /* tp_call */
+    NULL,                         /* tp_str */
+    NULL,                         /* tp_getattro */
+    NULL,                         /* tp_setattro */
+    NULL,                         /* tp_as_buffer */
+    Py_TPFLAGS_DEFAULT,           /* tp_flags */
+    "",                /* tp_doc */
+    NULL,                         /* tp_traverse */
+    NULL,                         /* tp_clear */
+    NULL,                         /* tp_richcompare */
+    0,                            /* tp_weaklistoffset */
+    NULL,                         /* tp_iter */
+    NULL,                         /* tp_iternext */
+    Set_methods,         /* tp_methods */
+    NULL,                         /* tp_members */
+    NULL,                         /* tp_getset */
+    NULL,                         /* tp_base */
+    NULL,                         /* tp_dict */
+    NULL,                         /* tp_descr_get */
+    NULL,                         /* tp_descr_set */
+    0,                            /* tp_dictoffset */
+    (initproc) JObject_init,      /* tp_init */
+    NULL,                         /* tp_alloc */
+    NULL,                         /* tp_new */
+};
+
+static PyMethodDef MultiLevelImage_methods[] = {
+    {NULL, NULL, 0, NULL} /*Sentinel*/
+};
+
+// Note: this is unused, experimental code
+
+/**
+ * Implements the BeamPy_JObjectType class singleton.
+ *
+ * THIS TYPE IS NOT YET IN USE: we currently use
+ * (<type_string>, <pointer>) tuples to represent Java JNI objects.
+ */
+PyTypeObject MultiLevelImage_Type = {
+    PyVarObject_HEAD_INIT(NULL, 0)
+    "beampy.MultiLevelImage",        /* tp_name */
+    sizeof (JObject),             /* tp_basicsize */
+    0,                            /* tp_itemsize */
+    (destructor)JObject_dealloc,  /* tp_dealloc */
+    NULL,                         /* tp_print */
+    NULL,                         /* tp_getattr */
+    NULL,                         /* tp_setattr */
+    NULL,                         /* tp_reserved */
+    NULL,                         /* tp_repr */
+    NULL,                         /* tp_as_number */
+    NULL,                         /* tp_as_sequence */
+    NULL,                         /* tp_as_mapping */
+    NULL,                         /* tp_hash  */
+    NULL,                         /* tp_call */
+    NULL,                         /* tp_str */
+    NULL,                         /* tp_getattro */
+    NULL,                         /* tp_setattro */
+    NULL,                         /* tp_as_buffer */
+    Py_TPFLAGS_DEFAULT,           /* tp_flags */
+    "",                /* tp_doc */
+    NULL,                         /* tp_traverse */
+    NULL,                         /* tp_clear */
+    NULL,                         /* tp_richcompare */
+    0,                            /* tp_weaklistoffset */
+    NULL,                         /* tp_iter */
+    NULL,                         /* tp_iternext */
+    MultiLevelImage_methods,         /* tp_methods */
+    NULL,                         /* tp_members */
+    NULL,                         /* tp_getset */
+    NULL,                         /* tp_base */
+    NULL,                         /* tp_dict */
+    NULL,                         /* tp_descr_get */
+    NULL,                         /* tp_descr_set */
+    0,                            /* tp_dictoffset */
+    (initproc) JObject_init,      /* tp_init */
+    NULL,                         /* tp_alloc */
+    NULL,                         /* tp_new */
+};
+
+static PyMethodDef RenderingHints_Key_methods[] = {
+    {NULL, NULL, 0, NULL} /*Sentinel*/
+};
+
+// Note: this is unused, experimental code
+
+/**
+ * Implements the BeamPy_JObjectType class singleton.
+ *
+ * THIS TYPE IS NOT YET IN USE: we currently use
+ * (<type_string>, <pointer>) tuples to represent Java JNI objects.
+ */
+PyTypeObject RenderingHints_Key_Type = {
+    PyVarObject_HEAD_INIT(NULL, 0)
+    "beampy.RenderingHints_Key",        /* tp_name */
+    sizeof (JObject),             /* tp_basicsize */
+    0,                            /* tp_itemsize */
+    (destructor)JObject_dealloc,  /* tp_dealloc */
+    NULL,                         /* tp_print */
+    NULL,                         /* tp_getattr */
+    NULL,                         /* tp_setattr */
+    NULL,                         /* tp_reserved */
+    NULL,                         /* tp_repr */
+    NULL,                         /* tp_as_number */
+    NULL,                         /* tp_as_sequence */
+    NULL,                         /* tp_as_mapping */
+    NULL,                         /* tp_hash  */
+    NULL,                         /* tp_call */
+    NULL,                         /* tp_str */
+    NULL,                         /* tp_getattro */
+    NULL,                         /* tp_setattro */
+    NULL,                         /* tp_as_buffer */
+    Py_TPFLAGS_DEFAULT,           /* tp_flags */
+    "",                /* tp_doc */
+    NULL,                         /* tp_traverse */
+    NULL,                         /* tp_clear */
+    NULL,                         /* tp_richcompare */
+    0,                            /* tp_weaklistoffset */
+    NULL,                         /* tp_iter */
+    NULL,                         /* tp_iternext */
+    RenderingHints_Key_methods,         /* tp_methods */
+    NULL,                         /* tp_members */
+    NULL,                         /* tp_getset */
+    NULL,                         /* tp_base */
+    NULL,                         /* tp_dict */
+    NULL,                         /* tp_descr_get */
+    NULL,                         /* tp_descr_set */
+    0,                            /* tp_dictoffset */
+    (initproc) JObject_init,      /* tp_init */
+    NULL,                         /* tp_alloc */
+    NULL,                         /* tp_new */
+};
+
+static PyMethodDef ROI_methods[] = {
+    {NULL, NULL, 0, NULL} /*Sentinel*/
+};
+
+// Note: this is unused, experimental code
+
+/**
+ * Implements the BeamPy_JObjectType class singleton.
+ *
+ * THIS TYPE IS NOT YET IN USE: we currently use
+ * (<type_string>, <pointer>) tuples to represent Java JNI objects.
+ */
+PyTypeObject ROI_Type = {
+    PyVarObject_HEAD_INIT(NULL, 0)
+    "beampy.ROI",        /* tp_name */
+    sizeof (JObject),             /* tp_basicsize */
+    0,                            /* tp_itemsize */
+    (destructor)JObject_dealloc,  /* tp_dealloc */
+    NULL,                         /* tp_print */
+    NULL,                         /* tp_getattr */
+    NULL,                         /* tp_setattr */
+    NULL,                         /* tp_reserved */
+    NULL,                         /* tp_repr */
+    NULL,                         /* tp_as_number */
+    NULL,                         /* tp_as_sequence */
+    NULL,                         /* tp_as_mapping */
+    NULL,                         /* tp_hash  */
+    NULL,                         /* tp_call */
+    NULL,                         /* tp_str */
+    NULL,                         /* tp_getattro */
+    NULL,                         /* tp_setattro */
+    NULL,                         /* tp_as_buffer */
+    Py_TPFLAGS_DEFAULT,           /* tp_flags */
+    "",                /* tp_doc */
+    NULL,                         /* tp_traverse */
+    NULL,                         /* tp_clear */
+    NULL,                         /* tp_richcompare */
+    0,                            /* tp_weaklistoffset */
+    NULL,                         /* tp_iter */
+    NULL,                         /* tp_iternext */
+    ROI_methods,         /* tp_methods */
+    NULL,                         /* tp_members */
+    NULL,                         /* tp_getset */
+    NULL,                         /* tp_base */
+    NULL,                         /* tp_dict */
+    NULL,                         /* tp_descr_get */
+    NULL,                         /* tp_descr_set */
+    0,                            /* tp_dictoffset */
+    (initproc) JObject_init,      /* tp_init */
+    NULL,                         /* tp_alloc */
+    NULL,                         /* tp_new */
+};
+
+static PyMethodDef ProductManager_Listener_methods[] = {
+    {NULL, NULL, 0, NULL} /*Sentinel*/
+};
+
+// Note: this is unused, experimental code
+
+/**
+ * Implements the BeamPy_JObjectType class singleton.
+ *
+ * THIS TYPE IS NOT YET IN USE: we currently use
+ * (<type_string>, <pointer>) tuples to represent Java JNI objects.
+ */
+PyTypeObject ProductManager_Listener_Type = {
+    PyVarObject_HEAD_INIT(NULL, 0)
+    "beampy.ProductManager_Listener",        /* tp_name */
+    sizeof (JObject),             /* tp_basicsize */
+    0,                            /* tp_itemsize */
+    (destructor)JObject_dealloc,  /* tp_dealloc */
+    NULL,                         /* tp_print */
+    NULL,                         /* tp_getattr */
+    NULL,                         /* tp_setattr */
+    NULL,                         /* tp_reserved */
+    NULL,                         /* tp_repr */
+    NULL,                         /* tp_as_number */
+    NULL,                         /* tp_as_sequence */
+    NULL,                         /* tp_as_mapping */
+    NULL,                         /* tp_hash  */
+    NULL,                         /* tp_call */
+    NULL,                         /* tp_str */
+    NULL,                         /* tp_getattro */
+    NULL,                         /* tp_setattro */
+    NULL,                         /* tp_as_buffer */
+    Py_TPFLAGS_DEFAULT,           /* tp_flags */
+    "A listener for the product manager.",                /* tp_doc */
+    NULL,                         /* tp_traverse */
+    NULL,                         /* tp_clear */
+    NULL,                         /* tp_richcompare */
+    0,                            /* tp_weaklistoffset */
+    NULL,                         /* tp_iter */
+    NULL,                         /* tp_iternext */
+    ProductManager_Listener_methods,         /* tp_methods */
+    NULL,                         /* tp_members */
+    NULL,                         /* tp_getset */
+    NULL,                         /* tp_base */
+    NULL,                         /* tp_dict */
+    NULL,                         /* tp_descr_get */
+    NULL,                         /* tp_descr_set */
+    0,                            /* tp_dictoffset */
+    (initproc) JObject_init,      /* tp_init */
+    NULL,                         /* tp_alloc */
+    NULL,                         /* tp_new */
+};
+
+static PyMethodDef ColorPaletteDef_methods[] = {
+    {"newColorPaletteDefFromRange", (PyCFunction) BeamPyColorPaletteDef_newColorPaletteDefFromRange, METH_VARARGS | METH_STATIC, ""},
+    {"newColorPaletteDefFromPoints", (PyCFunction) BeamPyColorPaletteDef_newColorPaletteDefFromPoints, METH_VARARGS | METH_STATIC, ""},
+    {"isDiscrete", (PyCFunction) BeamPyColorPaletteDef_isDiscrete, METH_VARARGS, ""},
+    {"setDiscrete", (PyCFunction) BeamPyColorPaletteDef_setDiscrete, METH_VARARGS, ""},
+    {"getNumColors", (PyCFunction) BeamPyColorPaletteDef_getNumColors, METH_VARARGS, ""},
+    {"setNumColors", (PyCFunction) BeamPyColorPaletteDef_setNumColors, METH_VARARGS, ""},
+    {"getNumPoints", (PyCFunction) BeamPyColorPaletteDef_getNumPoints, METH_VARARGS, ""},
+    {"setNumPoints", (PyCFunction) BeamPyColorPaletteDef_setNumPoints, METH_VARARGS, ""},
+    {"isAutoDistribute", (PyCFunction) BeamPyColorPaletteDef_isAutoDistribute, METH_VARARGS, ""},
+    {"setAutoDistribute", (PyCFunction) BeamPyColorPaletteDef_setAutoDistribute, METH_VARARGS, ""},
+    {"getPointAt", (PyCFunction) BeamPyColorPaletteDef_getPointAt, METH_VARARGS, ""},
+    {"getFirstPoint", (PyCFunction) BeamPyColorPaletteDef_getFirstPoint, METH_VARARGS, ""},
+    {"getLastPoint", (PyCFunction) BeamPyColorPaletteDef_getLastPoint, METH_VARARGS, ""},
+    {"getMinDisplaySample", (PyCFunction) BeamPyColorPaletteDef_getMinDisplaySample, METH_VARARGS, ""},
+    {"getMaxDisplaySample", (PyCFunction) BeamPyColorPaletteDef_getMaxDisplaySample, METH_VARARGS, ""},
+    {"insertPointAfter", (PyCFunction) BeamPyColorPaletteDef_insertPointAfter, METH_VARARGS, ""},
+    {"createPointAfter", (PyCFunction) BeamPyColorPaletteDef_createPointAfter, METH_VARARGS, "creates a new point between the point at the given index\nReturns Parameter index: the index\nReturns Parameter scaling: the scaling\nReturns true, if a point has been inserted"},
+    {"getCenterColor", (PyCFunction) BeamPyColorPaletteDef_getCenterColor, METH_VARARGS | METH_STATIC, "Creates the center color between the given two colors.\nReturns Parameter c1: 1st color\nReturns Parameter c2: 2nd color\nReturns the center color"},
+    {"removePointAt", (PyCFunction) BeamPyColorPaletteDef_removePointAt, METH_VARARGS, ""},
+    {"addPoint", (PyCFunction) BeamPyColorPaletteDef_addPoint, METH_VARARGS, ""},
+    {"getPoints", (PyCFunction) BeamPyColorPaletteDef_getPoints, METH_VARARGS, ""},
+    {"setPoints", (PyCFunction) BeamPyColorPaletteDef_setPoints, METH_VARARGS, ""},
+    {"getIterator", (PyCFunction) BeamPyColorPaletteDef_getIterator, METH_VARARGS, ""},
+    {"clone", (PyCFunction) BeamPyColorPaletteDef_clone, METH_VARARGS, ""},
+    {"createDeepCopy", (PyCFunction) BeamPyColorPaletteDef_createDeepCopy, METH_VARARGS, ""},
+    {"loadColorPaletteDef", (PyCFunction) BeamPyColorPaletteDef_loadColorPaletteDef, METH_VARARGS | METH_STATIC, "Loads a color palette definition from the given file\nReturns Parameter file: the file\nReturns the color palette definition, never null\n@throws IOException if an I/O error occurs"},
+    {"storeColorPaletteDef", (PyCFunction) BeamPyColorPaletteDef_storeColorPaletteDef, METH_VARARGS | METH_STATIC, "Stores this color palette definition in the given file\nReturns Parameter colorPaletteDef: thje color palette definition\nReturns Parameter file: the file\n@throws IOException if an I/O error occurs"},
+    {"dispose", (PyCFunction) BeamPyColorPaletteDef_dispose, METH_VARARGS, "Releases all of the resources used by this color palette definition and all of its owned children. Its primary\nuse is to allow the garbage collector to perform a vanilla job.\n\nThis method should be called only if it is for sure that this object instance will never be used again. The\nresults of referencing an instance of this class after a call to dispose() are undefined.\n\nOverrides of this method should always call super.dispose(); after disposing this instance."},
+    {"getColors", (PyCFunction) BeamPyColorPaletteDef_getColors, METH_VARARGS, ""},
+    {"createColorPalette", (PyCFunction) BeamPyColorPaletteDef_createColorPalette, METH_VARARGS, ""},
+    {"computeColor", (PyCFunction) BeamPyColorPaletteDef_computeColor, METH_VARARGS, ""},
+    {NULL, NULL, 0, NULL} /*Sentinel*/
+};
+
+// Note: this is unused, experimental code
+
+/**
+ * Implements the BeamPy_JObjectType class singleton.
+ *
+ * THIS TYPE IS NOT YET IN USE: we currently use
+ * (<type_string>, <pointer>) tuples to represent Java JNI objects.
+ */
+PyTypeObject ColorPaletteDef_Type = {
+    PyVarObject_HEAD_INIT(NULL, 0)
+    "beampy.ColorPaletteDef",        /* tp_name */
+    sizeof (JObject),             /* tp_basicsize */
+    0,                            /* tp_itemsize */
+    (destructor)JObject_dealloc,  /* tp_dealloc */
+    NULL,                         /* tp_print */
+    NULL,                         /* tp_getattr */
+    NULL,                         /* tp_setattr */
+    NULL,                         /* tp_reserved */
+    NULL,                         /* tp_repr */
+    NULL,                         /* tp_as_number */
+    NULL,                         /* tp_as_sequence */
+    NULL,                         /* tp_as_mapping */
+    NULL,                         /* tp_hash  */
+    NULL,                         /* tp_call */
+    NULL,                         /* tp_str */
+    NULL,                         /* tp_getattro */
+    NULL,                         /* tp_setattro */
+    NULL,                         /* tp_as_buffer */
+    Py_TPFLAGS_DEFAULT,           /* tp_flags */
+    "The ColorPaletteDef class represents a curve that is used to transform the sample values of a\ngeo-physical band into color palette indexes.\n\n This special implemnentation of a gradation curve also provides separate color values for each of the tie points\ncontained in the curve. This allows a better image interpretation because certain colors correspond to certain sample\nvalues even if the curve points are used to create color gradient palettes.",                /* tp_doc */
+    NULL,                         /* tp_traverse */
+    NULL,                         /* tp_clear */
+    NULL,                         /* tp_richcompare */
+    0,                            /* tp_weaklistoffset */
+    NULL,                         /* tp_iter */
+    NULL,                         /* tp_iternext */
+    ColorPaletteDef_methods,         /* tp_methods */
+    NULL,                         /* tp_members */
+    NULL,                         /* tp_getset */
+    NULL,                         /* tp_base */
+    NULL,                         /* tp_dict */
+    NULL,                         /* tp_descr_get */
+    NULL,                         /* tp_descr_set */
+    0,                            /* tp_dictoffset */
+    (initproc) JObject_init,      /* tp_init */
+    NULL,                         /* tp_alloc */
+    NULL,                         /* tp_new */
+};
+
+static PyMethodDef Geometry_methods[] = {
+    {NULL, NULL, 0, NULL} /*Sentinel*/
+};
+
+// Note: this is unused, experimental code
+
+/**
+ * Implements the BeamPy_JObjectType class singleton.
+ *
+ * THIS TYPE IS NOT YET IN USE: we currently use
+ * (<type_string>, <pointer>) tuples to represent Java JNI objects.
+ */
+PyTypeObject Geometry_Type = {
+    PyVarObject_HEAD_INIT(NULL, 0)
+    "beampy.Geometry",        /* tp_name */
+    sizeof (JObject),             /* tp_basicsize */
+    0,                            /* tp_itemsize */
+    (destructor)JObject_dealloc,  /* tp_dealloc */
+    NULL,                         /* tp_print */
+    NULL,                         /* tp_getattr */
+    NULL,                         /* tp_setattr */
+    NULL,                         /* tp_reserved */
+    NULL,                         /* tp_repr */
+    NULL,                         /* tp_as_number */
+    NULL,                         /* tp_as_sequence */
+    NULL,                         /* tp_as_mapping */
+    NULL,                         /* tp_hash  */
+    NULL,                         /* tp_call */
+    NULL,                         /* tp_str */
+    NULL,                         /* tp_getattro */
+    NULL,                         /* tp_setattro */
+    NULL,                         /* tp_as_buffer */
+    Py_TPFLAGS_DEFAULT,           /* tp_flags */
+    "",                /* tp_doc */
+    NULL,                         /* tp_traverse */
+    NULL,                         /* tp_clear */
+    NULL,                         /* tp_richcompare */
+    0,                            /* tp_weaklistoffset */
+    NULL,                         /* tp_iter */
+    NULL,                         /* tp_iternext */
+    Geometry_methods,         /* tp_methods */
+    NULL,                         /* tp_members */
+    NULL,                         /* tp_getset */
+    NULL,                         /* tp_base */
+    NULL,                         /* tp_dict */
+    NULL,                         /* tp_descr_get */
+    NULL,                         /* tp_descr_set */
+    0,                            /* tp_dictoffset */
+    (initproc) JObject_init,      /* tp_init */
+    NULL,                         /* tp_alloc */
+    NULL,                         /* tp_new */
+};
+
+static PyMethodDef ImageInfo_methods[] = {
+    {"newImageInfoPalette", (PyCFunction) BeamPyImageInfo_newImageInfoPalette, METH_VARARGS | METH_STATIC, "Constructs a new image information instance.\nReturns Parameter colorPaletteDef: the color palette definition"},
+    {"newImageInfoRGB", (PyCFunction) BeamPyImageInfo_newImageInfoRGB, METH_VARARGS | METH_STATIC, "Constructs a new RGB image information instance.\nReturns Parameter rgbChannelDef: the RGB channel definition"},
+    {"getColorPaletteDef", (PyCFunction) BeamPyImageInfo_getColorPaletteDef, METH_VARARGS, "Gets the color palette definition as used for images created from single bands.\nReturns the color palette definition. Can be {@code null}.\nIn this case {@link #getRgbChannelDef()} is non-null."},
+    {"getRgbChannelDef", (PyCFunction) BeamPyImageInfo_getRgbChannelDef, METH_VARARGS, "Gets the RGB(A) channel definition as used for images created from 3 tp 4 bands.\nReturns the RGB(A) channel definition.\nCan be {@code null}. In this case {@link #getColorPaletteDef()} is non-null."},
+    {"getNoDataColor", (PyCFunction) BeamPyImageInfo_getNoDataColor, METH_VARARGS, ""},
+    {"setNoDataColor", (PyCFunction) BeamPyImageInfo_setNoDataColor, METH_VARARGS, ""},
+    {"setHistogramMatching", (PyCFunction) BeamPyImageInfo_setHistogramMatching, METH_VARARGS, ""},
+    {"isLogScaled", (PyCFunction) BeamPyImageInfo_isLogScaled, METH_VARARGS, ""},
+    {"setLogScaled", (PyCFunction) BeamPyImageInfo_setLogScaled, METH_VARARGS, ""},
+    {"getColors", (PyCFunction) BeamPyImageInfo_getColors, METH_VARARGS, ""},
+    {"getColorComponentCount", (PyCFunction) BeamPyImageInfo_getColorComponentCount, METH_VARARGS, "Gets the number of color components the image shall have using an instance of this {@code ImageInfo}.\nReturns {@code 3} for RGB images, {@code 4} for RGB images with an alpha channel (transparency)"},
+    {"createIndexColorModel", (PyCFunction) BeamPyImageInfo_createIndexColorModel, METH_VARARGS, ""},
+    {"createComponentColorModel", (PyCFunction) BeamPyImageInfo_createComponentColorModel, METH_VARARGS, ""},
+    {"clone", (PyCFunction) BeamPyImageInfo_clone, METH_VARARGS, "Creates and returns a copy of this object.\nReturns a copy of this object"},
+    {"createDeepCopy", (PyCFunction) BeamPyImageInfo_createDeepCopy, METH_VARARGS, "Creates and returns a \"deep\" copy of this object. The method simply returns the value of\n{@link #clone()}.\nReturns a copy of this object"},
+    {"dispose", (PyCFunction) BeamPyImageInfo_dispose, METH_VARARGS, "Releases all of the resources used by this object instance and all of its owned children. Its primary use is to\nallow the garbage collector to perform a vanilla job.\n\nThis method should be called only if it is for sure that this object instance will never be used again. The\nresults of referencing an instance of this class after a call to dispose() are undefined.\n\nOverrides of this method should always call super.dispose(); after disposing this instance."},
+    {"setColors", (PyCFunction) BeamPyImageInfo_setColors, METH_VARARGS, "Sets the colours of the colour palette of this image info.\nReturns Parameter colors: the new colours"},
+    {"setColorPaletteDef", (PyCFunction) BeamPyImageInfo_setColorPaletteDef, METH_VARARGS, "Transfers the colour palette into this image info.\nReturns Parameter colorPaletteDef: another colour palette\nReturns Parameter minSample: the minium allowed sample value in the new colour palette\nReturns Parameter maxSample: the maximum allowed sample value in the new colour palette\nReturns Parameter autoDistribute: if true, points are distributed between minSample/maxSample."},
+    {"getHistogramMatching", (PyCFunction) BeamPyImageInfo_getHistogramMatching, METH_VARARGS | METH_STATIC, "Converts a string to a histogram matching.\nReturns Parameter mode: the histogram matching string\nReturns the histogram matching. {@link ImageInfo.HistogramMatching#None} if {@code maode} is not \"Equalize\" or \"Normalize\"."},
+    {NULL, NULL, 0, NULL} /*Sentinel*/
+};
+
+// Note: this is unused, experimental code
+
+/**
+ * Implements the BeamPy_JObjectType class singleton.
+ *
+ * THIS TYPE IS NOT YET IN USE: we currently use
+ * (<type_string>, <pointer>) tuples to represent Java JNI objects.
+ */
+PyTypeObject ImageInfo_Type = {
+    PyVarObject_HEAD_INIT(NULL, 0)
+    "beampy.ImageInfo",        /* tp_name */
+    sizeof (JObject),             /* tp_basicsize */
+    0,                            /* tp_itemsize */
+    (destructor)JObject_dealloc,  /* tp_dealloc */
+    NULL,                         /* tp_print */
+    NULL,                         /* tp_getattr */
+    NULL,                         /* tp_setattr */
+    NULL,                         /* tp_reserved */
+    NULL,                         /* tp_repr */
+    NULL,                         /* tp_as_number */
+    NULL,                         /* tp_as_sequence */
+    NULL,                         /* tp_as_mapping */
+    NULL,                         /* tp_hash  */
+    NULL,                         /* tp_call */
+    NULL,                         /* tp_str */
+    NULL,                         /* tp_getattro */
+    NULL,                         /* tp_setattro */
+    NULL,                         /* tp_as_buffer */
+    Py_TPFLAGS_DEFAULT,           /* tp_flags */
+    "This class contains information about how a product's raster data node is displayed as an image.\nAuthor:  Norman Fomferra\nVersion:  $Revision$ $Date$",                /* tp_doc */
+    NULL,                         /* tp_traverse */
+    NULL,                         /* tp_clear */
+    NULL,                         /* tp_richcompare */
+    0,                            /* tp_weaklistoffset */
+    NULL,                         /* tp_iter */
+    NULL,                         /* tp_iternext */
+    ImageInfo_methods,         /* tp_methods */
+    NULL,                         /* tp_members */
+    NULL,                         /* tp_getset */
+    NULL,                         /* tp_base */
+    NULL,                         /* tp_dict */
+    NULL,                         /* tp_descr_get */
+    NULL,                         /* tp_descr_set */
+    0,                            /* tp_dictoffset */
+    (initproc) JObject_init,      /* tp_init */
+    NULL,                         /* tp_alloc */
+    NULL,                         /* tp_new */
+};
+
+static PyMethodDef String_methods[] = {
+    {NULL, NULL, 0, NULL} /*Sentinel*/
+};
+
+// Note: this is unused, experimental code
+
+/**
+ * Implements the BeamPy_JObjectType class singleton.
+ *
+ * THIS TYPE IS NOT YET IN USE: we currently use
+ * (<type_string>, <pointer>) tuples to represent Java JNI objects.
+ */
+PyTypeObject String_Type = {
+    PyVarObject_HEAD_INIT(NULL, 0)
+    "beampy.String",        /* tp_name */
+    sizeof (JObject),             /* tp_basicsize */
+    0,                            /* tp_itemsize */
+    (destructor)JObject_dealloc,  /* tp_dealloc */
+    NULL,                         /* tp_print */
+    NULL,                         /* tp_getattr */
+    NULL,                         /* tp_setattr */
+    NULL,                         /* tp_reserved */
+    NULL,                         /* tp_repr */
+    NULL,                         /* tp_as_number */
+    NULL,                         /* tp_as_sequence */
+    NULL,                         /* tp_as_mapping */
+    NULL,                         /* tp_hash  */
+    NULL,                         /* tp_call */
+    NULL,                         /* tp_str */
+    NULL,                         /* tp_getattro */
+    NULL,                         /* tp_setattro */
+    NULL,                         /* tp_as_buffer */
+    Py_TPFLAGS_DEFAULT,           /* tp_flags */
+    "",                /* tp_doc */
+    NULL,                         /* tp_traverse */
+    NULL,                         /* tp_clear */
+    NULL,                         /* tp_richcompare */
+    0,                            /* tp_weaklistoffset */
+    NULL,                         /* tp_iter */
+    NULL,                         /* tp_iternext */
+    String_methods,         /* tp_methods */
+    NULL,                         /* tp_members */
+    NULL,                         /* tp_getset */
+    NULL,                         /* tp_base */
+    NULL,                         /* tp_dict */
+    NULL,                         /* tp_descr_get */
+    NULL,                         /* tp_descr_set */
+    0,                            /* tp_dictoffset */
+    (initproc) JObject_init,      /* tp_init */
+    NULL,                         /* tp_alloc */
+    NULL,                         /* tp_new */
+};
+
+static PyMethodDef Histogram_methods[] = {
+    {NULL, NULL, 0, NULL} /*Sentinel*/
+};
+
+// Note: this is unused, experimental code
+
+/**
+ * Implements the BeamPy_JObjectType class singleton.
+ *
+ * THIS TYPE IS NOT YET IN USE: we currently use
+ * (<type_string>, <pointer>) tuples to represent Java JNI objects.
+ */
+PyTypeObject Histogram_Type = {
+    PyVarObject_HEAD_INIT(NULL, 0)
+    "beampy.Histogram",        /* tp_name */
+    sizeof (JObject),             /* tp_basicsize */
+    0,                            /* tp_itemsize */
+    (destructor)JObject_dealloc,  /* tp_dealloc */
+    NULL,                         /* tp_print */
+    NULL,                         /* tp_getattr */
+    NULL,                         /* tp_setattr */
+    NULL,                         /* tp_reserved */
+    NULL,                         /* tp_repr */
+    NULL,                         /* tp_as_number */
+    NULL,                         /* tp_as_sequence */
+    NULL,                         /* tp_as_mapping */
+    NULL,                         /* tp_hash  */
+    NULL,                         /* tp_call */
+    NULL,                         /* tp_str */
+    NULL,                         /* tp_getattro */
+    NULL,                         /* tp_setattro */
+    NULL,                         /* tp_as_buffer */
+    Py_TPFLAGS_DEFAULT,           /* tp_flags */
+    "Instances of the Histogram class store histogram data.\nAuthor:  Norman Fomferra",                /* tp_doc */
+    NULL,                         /* tp_traverse */
+    NULL,                         /* tp_clear */
+    NULL,                         /* tp_richcompare */
+    0,                            /* tp_weaklistoffset */
+    NULL,                         /* tp_iter */
+    NULL,                         /* tp_iternext */
+    Histogram_methods,         /* tp_methods */
+    NULL,                         /* tp_members */
+    NULL,                         /* tp_getset */
+    NULL,                         /* tp_base */
+    NULL,                         /* tp_dict */
+    NULL,                         /* tp_descr_get */
+    NULL,                         /* tp_descr_set */
+    0,                            /* tp_dictoffset */
+    (initproc) JObject_init,      /* tp_init */
+    NULL,                         /* tp_alloc */
+    NULL,                         /* tp_new */
+};
+
+static PyMethodDef TiePointGrid_methods[] = {
+    {"newTiePointGrid1", (PyCFunction) BeamPyTiePointGrid_newTiePointGrid1, METH_VARARGS | METH_STATIC, "Constructs a new TiePointGrid with the given tie point grid properties.\nReturns Parameter name: the name of the new object\nReturns Parameter gridWidth: the width of the tie-point grid in pixels\nReturns Parameter gridHeight: the height of the tie-point grid in pixels\nReturns Parameter offsetX: the X co-ordinate of the first (upper-left) tie-point in pixels\nReturns Parameter offsetY: the Y co-ordinate of the first (upper-left) tie-point in pixels\nReturns Parameter subSamplingX: the sub-sampling in X-direction given in the pixel co-ordinates of the data product to which\nthis tie-pint grid belongs to. Must not be less than one.\nReturns Parameter subSamplingY: the sub-sampling in X-direction given in the pixel co-ordinates of the data product to which\nthis tie-pint grid belongs to. Must not be less than one.\nReturns Parameter tiePoints: the tie-point data values, must be an array of the size gridWidth * gridHeight"},
+    {"newTiePointGrid2", (PyCFunction) BeamPyTiePointGrid_newTiePointGrid2, METH_VARARGS | METH_STATIC, "Constructs a new TiePointGrid with the given tie point grid properties.\nReturns Parameter name: the name of the new object\nReturns Parameter gridWidth: the width of the tie-point grid in pixels\nReturns Parameter gridHeight: the height of the tie-point grid in pixels\nReturns Parameter offsetX: the X co-ordinate of the first (upper-left) tie-point in pixels\nReturns Parameter offsetY: the Y co-ordinate of the first (upper-left) tie-point in pixels\nReturns Parameter subSamplingX: the sub-sampling in X-direction given in the pixel co-ordinates of the data product to which\nthis tie-pint grid belongs to. Must not be less than one.\nReturns Parameter subSamplingY: the sub-sampling in X-direction given in the pixel co-ordinates of the data product to which\nthis tie-pint grid belongs to. Must not be less than one.\nReturns Parameter tiePoints: the tie-point data values, must be an array of the size gridWidth * gridHeight\nReturns Parameter discontinuity: the discontinuity mode, can be either {@link #DISCONT_NONE} or {@link #DISCONT_AT_180}\n{@link #DISCONT_AT_360}"},
+    {"newTiePointGrid3", (PyCFunction) BeamPyTiePointGrid_newTiePointGrid3, METH_VARARGS | METH_STATIC, "Constructs a new TiePointGrid with the given tie point grid properties.\nReturns Parameter name: the name of the new object\nReturns Parameter gridWidth: the width of the tie-point grid in pixels\nReturns Parameter gridHeight: the height of the tie-point grid in pixels\nReturns Parameter offsetX: the X co-ordinate of the first (upper-left) tie-point in pixels\nReturns Parameter offsetY: the Y co-ordinate of the first (upper-left) tie-point in pixels\nReturns Parameter subSamplingX: the sub-sampling in X-direction given in the pixel co-ordinates of the data product to which\nthis tie-pint grid belongs to. Must not be less than one.\nReturns Parameter subSamplingY: the sub-sampling in X-direction given in the pixel co-ordinates of the data product to which\nthis tie-pint grid belongs to. Must not be less than one.\nReturns Parameter tiePoints: the tie-point data values, must be an array of the size gridWidth * gridHeight\nReturns Parameter containsAngles: if true, the {@link #getDiscontinuity() angular discontinuity} is derived from the provided tie-point data values"},
+    {"getDiscontinuity2", (PyCFunction) BeamPyTiePointGrid_getDiscontinuity2, METH_VARARGS | METH_STATIC, "Determines the angular discontinuity of the given tie point values.\nReturns the angular discontinuity, will always be either {@link #DISCONT_AT_180} or\n{@link #DISCONT_AT_360}"},
+    {"getDiscontinuity1", (PyCFunction) BeamPyTiePointGrid_getDiscontinuity1, METH_VARARGS, "Gets the angular discontinuity.\nReturns the angular discontinuity, will always be either {@link #DISCONT_NONE} or {@link #DISCONT_AT_180} or\n{@link #DISCONT_AT_360}"},
+    {"setDiscontinuity", (PyCFunction) BeamPyTiePointGrid_setDiscontinuity, METH_VARARGS, "Sets the angular discontinuity.\nReturns Parameter discontinuity: angular discontinuity, can be either {@link #DISCONT_NONE} or {@link #DISCONT_AT_180} or\n{@link #DISCONT_AT_360}"},
+    {"isFloatingPointType", (PyCFunction) BeamPyTiePointGrid_isFloatingPointType, METH_VARARGS, "Returns true\nReturns true"},
+    {"getGeophysicalDataType", (PyCFunction) BeamPyTiePointGrid_getGeophysicalDataType, METH_VARARGS, "Returns the geophysical data type of this RasterDataNode. The value retuned is always one of the\nProductData.TYPE_XXX constants.\nReturns the geophysical data type\n@see ProductData"},
+    {"getSceneRasterData", (PyCFunction) BeamPyTiePointGrid_getSceneRasterData, METH_VARARGS, "Gets a raster data holding this tie-point's interpolated pixel data for an entire product scene. \n\nIn opposite to the getRasterData method, this method returns raster data that has at least\ngetBandOutputRasterWidth()*getBandOutputRasterHeight() elements of the given data type to store\nthe scene's pixels.\nReturns raster data covering the pixels for a complete scene\n@see #getRasterData\n@see #getRasterWidth\n@see #getRasterHeight\n@see #getSceneRasterWidth\n@see #getSceneRasterHeight"},
+    {"getSceneRasterWidth", (PyCFunction) BeamPyTiePointGrid_getSceneRasterWidth, METH_VARARGS, "Returns the width in pixels of the scene represented by this tie-point grid. The value returned is\n(getRasterWidth() - 1) * getSubSamplingX() + 1\nReturns the scene width in pixels"},
+    {"getSceneRasterHeight", (PyCFunction) BeamPyTiePointGrid_getSceneRasterHeight, METH_VARARGS, "Returns the height in pixels of the scene represented by this tie-point grid. The value returned is\n(getRasterHeight() - 1) * getSubSamplingY() + 1\nReturns the scene height in pixels"},
+    {"getOffsetX", (PyCFunction) BeamPyTiePointGrid_getOffsetX, METH_VARARGS, "Retrieves the x co-ordinate of the first (upper-left) tie-point in pixels."},
+    {"getOffsetY", (PyCFunction) BeamPyTiePointGrid_getOffsetY, METH_VARARGS, "Retrieves the y co-ordinate of the first (upper-left) tie-point in pixels."},
+    {"getSubSamplingX", (PyCFunction) BeamPyTiePointGrid_getSubSamplingX, METH_VARARGS, "Returns the sub-sampling in X-direction given in the pixel co-ordinates of the data product to which this\ntie-pint grid belongs to.\nReturns the sub-sampling in X-direction, never less than one."},
+    {"getSubSamplingY", (PyCFunction) BeamPyTiePointGrid_getSubSamplingY, METH_VARARGS, "Returns the sub-sampling in Y-direction given in the pixel co-ordinates of the data product to which this\ntie-pint grid belongs to.\nReturns the sub-sampling in Y-direction, never less than one."},
+    {"getTiePoints", (PyCFunction) BeamPyTiePointGrid_getTiePoints, METH_VARARGS, "Gets the data array holding this band's pixel samples.\nReturns the data array for this band, or null if no data has been loaded\n@see ProductData#getElems"},
+    {"getPixelInt", (PyCFunction) BeamPyTiePointGrid_getPixelInt, METH_VARARGS, "Gets the interpolated sample for the pixel located at (x,y) as an integer value. \n\nIf the pixel co-odinates given by (x,y) are not covered by this tie-point grid, the method extrapolates.\nReturns Parameter x: The X co-ordinate of the pixel location\nReturns Parameter y: The Y co-ordinate of the pixel location\n@throws ArrayIndexOutOfBoundsException if the co-ordinates are not in bounds"},
+    {"dispose", (PyCFunction) BeamPyTiePointGrid_dispose, METH_VARARGS, ""},
+    {"getPixelFloat2", (PyCFunction) BeamPyTiePointGrid_getPixelFloat2, METH_VARARGS, "Computes the interpolated sample for the pixel located at (x,y). \n\nIf the pixel co-odinates given by (x,y) are not covered by this tie-point grid, the method extrapolates.\nReturns Parameter x: The X co-ordinate of the pixel location, given in the pixel co-ordinates of the data product to which\nthis tie-pint grid belongs to.\nReturns Parameter y: The Y co-ordinate of the pixel location, given in the pixel co-ordinates of the data product to which\nthis tie-pint grid belongs to.\n@throws ArrayIndexOutOfBoundsException if the co-ordinates are not in bounds"},
+    {"getPixelFloat1", (PyCFunction) BeamPyTiePointGrid_getPixelFloat1, METH_VARARGS, "Computes the interpolated sample for the pixel located at (x,y) given as floating point co-ordinates. \n\nIf the pixel co-odinates given by (x,y) are not covered by this tie-point grid, the method extrapolates.\nReturns Parameter x: The X co-ordinate of the pixel location, given in the pixel co-ordinates of the data product to which\nthis tie-pint grid belongs to.\nReturns Parameter y: The Y co-ordinate of the pixel location, given in the pixel co-ordinates of the data product to which\nthis tie-pint grid belongs to.\n@throws ArrayIndexOutOfBoundsException if the co-ordinates are not in bounds"},
+    {"getPixelDouble", (PyCFunction) BeamPyTiePointGrid_getPixelDouble, METH_VARARGS, "Gets the interpolated sample for the pixel located at (x,y) as a double value. \n\nIf the pixel co-ordinates given by (x,y) are not covered by this tie-point grid, the method extrapolates.\nReturns Parameter x: The X co-ordinate of the pixel location, given in the pixel co-ordinates of the data product to which\nthis tie-pint grid belongs to.\nReturns Parameter y: The Y co-ordinate of the pixel location, given in the pixel co-ordinates of the data product to which\nthis tie-pint grid belongs to.\n@throws ArrayIndexOutOfBoundsException if the co-ordinates are not in bounds"},
+    {"setPixelInt", (PyCFunction) BeamPyTiePointGrid_setPixelInt, METH_VARARGS, "This method is not implemented because pixels are read-only in tie-point grids."},
+    {"setPixelFloat", (PyCFunction) BeamPyTiePointGrid_setPixelFloat, METH_VARARGS, "This method is not implemented because pixels are read-only in tie-point grids."},
+    {"setPixelDouble", (PyCFunction) BeamPyTiePointGrid_setPixelDouble, METH_VARARGS, "This method is not implemented because pixels are read-only in tie-point grids."},
+    {"getPixels6", (PyCFunction) BeamPyTiePointGrid_getPixels6, METH_VARARGS, "Retrieves an array of tie point data interpolated to the product with and height as integer array. If the given\narray is null a new one was created and returned.\nReturns Parameter x: the x coordinate of the array to be read\nReturns Parameter y: the y coordinate of the array to be read\nReturns Parameter w: the width of the array to be read\nReturns Parameter h: the height of the array to be read\nReturns Parameter pixels: the integer array to be filled with data\nReturns Parameter pm: a monitor to inform the user about progress\n@throws IllegalArgumentException if the length of the given array is less than w*h."},
+    {"getPixels4", (PyCFunction) BeamPyTiePointGrid_getPixels4, METH_VARARGS, "Retrieves an array of tie point data interpolated to the product width and height as float array. If the given\narray is null a new one is created and returned.\nReturns Parameter x: the x coordinate of the array to be read\nReturns Parameter y: the y coordinate of the array to be read\nReturns Parameter w: the width of the array to be read\nReturns Parameter h: the height of the array to be read\nReturns Parameter pixels: the float array to be filled with data\nReturns Parameter pm: a monitor to inform the user about progress\n@throws IllegalArgumentException if the length of the given array is less than w*h."},
+    {"getPixels2", (PyCFunction) BeamPyTiePointGrid_getPixels2, METH_VARARGS, "Retrieves an array of tie point data interpolated to the product with and height as double array. If the given\narray is null a new one was created and returned.\nReturns Parameter x: the x coordinate of the array to be read\nReturns Parameter y: the y coordinate of the array to be read\nReturns Parameter w: the width of the array to be read\nReturns Parameter h: the height of the array to be read\nReturns Parameter pixels: the double array to be filled with data\n@throws IllegalArgumentException if the length of the given array is less than w*h."},
+    {"setPixels3", (PyCFunction) BeamPyTiePointGrid_setPixels3, METH_VARARGS, "This method is not implemented because pixels are read-only in tie-point grids."},
+    {"setPixels2", (PyCFunction) BeamPyTiePointGrid_setPixels2, METH_VARARGS, "This method is not implemented because pixels are read-only in tie-point grids."},
+    {"setPixels1", (PyCFunction) BeamPyTiePointGrid_setPixels1, METH_VARARGS, "This method is not implemented because pixels are read-only in tie-point grids."},
+    {"readPixels6", (PyCFunction) BeamPyTiePointGrid_readPixels6, METH_VARARGS, "Retrieves an array of tie point data interpolated to the product with and height as float array. If the given\narray is null a new one was created and returned.\nReturns Parameter x: the x coordinate of the array to be read\nReturns Parameter y: the y coordinate of the array to be read\nReturns Parameter w: the width of the array to be read\nReturns Parameter h: the height of the array to be read\nReturns Parameter pixels: the integer array to be filled with data\n@throws IllegalArgumentException if the length of the given array is less than w*h."},
+    {"readPixels4", (PyCFunction) BeamPyTiePointGrid_readPixels4, METH_VARARGS, "Retrieves an array of tie point data interpolated to the product with and height as float array. If the given\narray is null a new one was created and returned. *\nReturns Parameter x: the x coordinate of the array to be read\nReturns Parameter y: the y coordinate of the array to be read\nReturns Parameter w: the width of the array to be read\nReturns Parameter h: the height of the array to be read\nReturns Parameter pixels: the float array to be filled with data\nReturns Parameter pm: a monitor to inform the user about progress\n@throws IllegalArgumentException if the length of the given array is less than w*h."},
+    {"readPixels2", (PyCFunction) BeamPyTiePointGrid_readPixels2, METH_VARARGS, "Retrieves an array of tie point data interpolated to the product with and height as double array. If the given\narray is null a new one was created and returned.\nReturns Parameter x: the x coordinate of the array to be read\nReturns Parameter y: the y coordinate of the array to be read\nReturns Parameter w: the width of the array to be read\nReturns Parameter h: the height of the array to be read\nReturns Parameter pixels: the double array to be filled with data\nReturns Parameter pm: a monitor to inform the user about progress\n@throws IllegalArgumentException if the length of the given array is less than w*h."},
+    {"writePixels6", (PyCFunction) BeamPyTiePointGrid_writePixels6, METH_VARARGS, "This method is not implemented because pixels are read-only in tie-point grids."},
+    {"writePixels4", (PyCFunction) BeamPyTiePointGrid_writePixels4, METH_VARARGS, "This method is not implemented because pixels are read-only in tie-point grids."},
+    {"writePixels2", (PyCFunction) BeamPyTiePointGrid_writePixels2, METH_VARARGS, "This method is not implemented because pixels are read-only in tie-point grids."},
+    {"readRasterData2", (PyCFunction) BeamPyTiePointGrid_readRasterData2, METH_VARARGS, "Reads raster data from this dataset into the user-supplied raster data buffer. \n\nThis method always directly (re-)reads this band's data from its associated data source into the given data\nbuffer.\nReturns Parameter offsetX: the X-offset in the raster co-ordinates where reading starts\nReturns Parameter offsetY: the Y-offset in the raster co-ordinates where reading starts\nReturns Parameter width: the width of the raster data buffer\nReturns Parameter height: the height of the raster data buffer\nReturns Parameter rasterData: a raster data buffer receiving the pixels to be read\nReturns Parameter pm: a monitor to inform the user about progress\n@throws java.io.IOException      if an I/O error occurs\n@throws IllegalArgumentException if the raster is null\n@throws IllegalStateException    if this product raster was not added to a product so far, or if the product to\nwhich this product raster belongs to, has no associated product reader\n@see ProductReader#readBandRasterData(Band, int, int, int, int, ProductData, com.bc.ceres.core.ProgressMonitor)"},
+    {"readRasterDataFully2", (PyCFunction) BeamPyTiePointGrid_readRasterDataFully2, METH_VARARGS, "{@inheritDoc}"},
+    {"writeRasterData2", (PyCFunction) BeamPyTiePointGrid_writeRasterData2, METH_VARARGS, "{@inheritDoc}"},
+    {"writeRasterDataFully2", (PyCFunction) BeamPyTiePointGrid_writeRasterDataFully2, METH_VARARGS, "{@inheritDoc}"},
+    {"acceptVisitor", (PyCFunction) BeamPyTiePointGrid_acceptVisitor, METH_VARARGS, "Accepts the given visitor. This method implements the well known 'Visitor' design pattern of the gang-of-four.\nThe visitor pattern allows to define new operations on the product data model without the need to add more code\nto it. The new operation is implemented by the visitor. \n\nThe method simply calls visitor.visit(this).\nReturns Parameter visitor: the visitor"},
+    {"cloneTiePointGrid", (PyCFunction) BeamPyTiePointGrid_cloneTiePointGrid, METH_VARARGS, ""},
+    {"createZenithFromElevationAngleTiePointGrid", (PyCFunction) BeamPyTiePointGrid_createZenithFromElevationAngleTiePointGrid, METH_VARARGS | METH_STATIC, ""},
+    {"createSubset", (PyCFunction) BeamPyTiePointGrid_createSubset, METH_VARARGS | METH_STATIC, ""},
+    {"getRasterWidth", (PyCFunction) BeamPyTiePointGrid_getRasterWidth, METH_VARARGS, "Returns the width of the raster used by this product raster.\nReturns the width of the raster"},
+    {"getRasterHeight", (PyCFunction) BeamPyTiePointGrid_getRasterHeight, METH_VARARGS, "Returns the height of the raster used by this product raster.\nReturns the height of the raster"},
+    {"setModified", (PyCFunction) BeamPyTiePointGrid_setModified, METH_VARARGS, ""},
+    {"getGeoCoding", (PyCFunction) BeamPyTiePointGrid_getGeoCoding, METH_VARARGS, "Returns the geo-coding of this {@link RasterDataNode}.\nReturns the geo-coding"},
+    {"setGeoCoding", (PyCFunction) BeamPyTiePointGrid_setGeoCoding, METH_VARARGS, "Sets the geo-coding for this {@link RasterDataNode}.\nAlso sets the geo-coding of the parent {@link Product} if it has no geo-coding yet.\nOn property change, the method calls {@link #fireProductNodeChanged(String)} with the property\nname {@link #PROPERTY_NAME_GEOCODING}.\nReturns Parameter geoCoding: the new geo-coding\n@see Product#setGeoCoding(GeoCoding)"},
+    {"getPointing", (PyCFunction) BeamPyTiePointGrid_getPointing, METH_VARARGS, "Gets a {@link Pointing} if one is available for this raster.\nThe methods calls {@link #createPointing()} if a pointing has not been set so far or if its {@link GeoCoding} changed\nsince the last creation of this raster's {@link Pointing} instance.\nReturns the pointing object, or null if a pointing is not available"},
+    {"canBeOrthorectified", (PyCFunction) BeamPyTiePointGrid_canBeOrthorectified, METH_VARARGS, "Tests if this raster data node can be orthorectified.\nReturns true, if so"},
+    {"getScalingFactor", (PyCFunction) BeamPyTiePointGrid_getScalingFactor, METH_VARARGS, "Gets the scaling factor which is applied to raw {@link ProductData}. The default value is\n1.0 (no factor).\nReturns the scaling factor\n@see #isScalingApplied()"},
+    {"setScalingFactor", (PyCFunction) BeamPyTiePointGrid_setScalingFactor, METH_VARARGS, "Sets the scaling factor which is applied to raw {@link ProductData}.\nReturns Parameter scalingFactor: the scaling factor\n@see #isScalingApplied()"},
+    {"getScalingOffset", (PyCFunction) BeamPyTiePointGrid_getScalingOffset, METH_VARARGS, "Gets the scaling offset which is applied to raw {@link ProductData}. The default value is\n0.0 (no offset).\nReturns the scaling offset\n@see #isScalingApplied()"},
+    {"setScalingOffset", (PyCFunction) BeamPyTiePointGrid_setScalingOffset, METH_VARARGS, "Sets the scaling offset which is applied to raw {@link ProductData}.\nReturns Parameter scalingOffset: the scaling offset\n@see #isScalingApplied()"},
+    {"isLog10Scaled", (PyCFunction) BeamPyTiePointGrid_isLog10Scaled, METH_VARARGS, "Gets whether or not the {@link ProductData} of this band has a negative binominal distribution and\nthus the common logarithm (base 10) of the values is stored in the raw data. The default value is\nfalse.\nReturns whether or not the data is logging-10 scaled\n@see #isScalingApplied()"},
+    {"setLog10Scaled", (PyCFunction) BeamPyTiePointGrid_setLog10Scaled, METH_VARARGS, "Sets whether or not the {@link ProductData} of this band has a negative binominal distribution and\nthus the common logarithm (base 10) of the values is stored in the raw data.\nReturns Parameter log10Scaled: whether or not the data is logging-10 scaled\n@see #isScalingApplied()"},
+    {"isScalingApplied", (PyCFunction) BeamPyTiePointGrid_isScalingApplied, METH_VARARGS, "Tests whether scaling of raw raster data values is applied before they are returned as geophysically meaningful\npixel values. The methods which return geophysical pixel values are all {@link #getPixels(int, int, int, int, int[])},\n{@link #setPixels(int, int, int, int, int[])}, {@link #readPixels(int, int, int, int, int[])} and\n{@link #writePixels(int, int, int, int, int[])} methods as well as the getPixel&lt;Type&gt; and\nsetPixel&lt;Type&gt; methods such as  {@link #getPixelFloat(int, int)} * and\n{@link #setPixelFloat(int, int, float)}.\nReturns true if a conversion is applyied to raw data samples before the are retuned.\n@see #getScalingOffset\n@see #getScalingFactor\n@see #isLog10Scaled"},
+    {"isValidMaskProperty", (PyCFunction) BeamPyTiePointGrid_isValidMaskProperty, METH_VARARGS | METH_STATIC, "Tests if the given name is the name of a property which is relevant for the computation of the valid mask.\nReturns Parameter propertyName: the  name to test\nReturns {@code true}, if so.\nSince version:  BEAM 4.2"},
+    {"isNoDataValueSet", (PyCFunction) BeamPyTiePointGrid_isNoDataValueSet, METH_VARARGS, "Tests whether or not a no-data value has been specified. The no-data value is not-specified unless either\n{@link #setNoDataValue(double)} or {@link #setGeophysicalNoDataValue(double)} is called.\nReturns true, if so\n@see #isNoDataValueUsed()\n@see #setNoDataValue(double)"},
+    {"clearNoDataValue", (PyCFunction) BeamPyTiePointGrid_clearNoDataValue, METH_VARARGS, "Clears the no-data value, so that {@link #isNoDataValueSet()} will return false."},
+    {"isNoDataValueUsed", (PyCFunction) BeamPyTiePointGrid_isNoDataValueUsed, METH_VARARGS, "Tests whether or not the no-data value is used.\nThe no-data value is used to determine valid pixels. For more information\non valid pixels, please refer to the documentation of the {@link #isPixelValid(int, int, javax.media.jai.ROI)}\nmethod.\nReturns true, if so\n@see #setNoDataValueUsed(boolean)\n@see #isNoDataValueSet()"},
+    {"setNoDataValueUsed", (PyCFunction) BeamPyTiePointGrid_setNoDataValueUsed, METH_VARARGS, "Sets whether or not the no-data value is used.\nIf the no-data value is enabled and the no-data value has not been set so far,\na default no-data value it is set with a value of to zero.\nThe no-data value is used to determine valid pixels. For more information\non valid pixels, please refer to the documentation of the {@link #isPixelValid(int, int, javax.media.jai.ROI)}\nmethod.\nOn property change, the method calls {@link #fireProductNodeChanged(String)} with the property\nname {@link #PROPERTY_NAME_NO_DATA_VALUE_USED}.\nReturns Parameter noDataValueUsed: true, if so\n@see #isNoDataValueUsed()"},
+    {"getNoDataValue", (PyCFunction) BeamPyTiePointGrid_getNoDataValue, METH_VARARGS, "Gets the no-data value as a primitive double.\nNote that the value returned is NOT necessarily the same as the value returned by\n{@link #getGeophysicalNoDataValue()} because no scaling is applied.\nThe no-data value is used to determine valid pixels. For more information\non valid pixels, please refer to the documentation of the {@link #isPixelValid(int, int, javax.media.jai.ROI)}\nmethod.\nThe method returns 0.0, if no no-data value has been specified so far.\nReturns the no-data value. It is returned as a double in order to cover all other numeric types.\n@see #setNoDataValue(double)\n@see #isNoDataValueSet()"},
+    {"setNoDataValue", (PyCFunction) BeamPyTiePointGrid_setNoDataValue, METH_VARARGS, "Sets the no-data value as a primitive double.\nNote that the given value is related to the \"raw\", un-scaled raster data.\nIn order to set the geophysical, scaled no-data value use the method\n{@link #setGeophysicalNoDataValue(double)}.\nThe no-data value is used to determine valid pixels. For more information\non valid pixels, please refer to the documentation of the {@link #isPixelValid(int, int, javax.media.jai.ROI)}\nmethod.\nOn property change, the method calls {@link #fireProductNodeChanged(String)} with the property\nname {@link #PROPERTY_NAME_NO_DATA_VALUE}.\nReturns Parameter noDataValue: the no-data value. It is passed as a double in order to cover all other numeric types.\n@see #getNoDataValue()\n@see #isNoDataValueSet()"},
+    {"getGeophysicalNoDataValue", (PyCFunction) BeamPyTiePointGrid_getGeophysicalNoDataValue, METH_VARARGS, "Gets the geophysical no-data value which is simply the scaled \"raw\" no-data value\nreturned by {@link #getNoDataValue()}.\nThe no-data value is used to determine valid pixels. For more information\non valid pixels, please refer to the documentation of the {@link #isPixelValid(int, int, javax.media.jai.ROI)}\nmethod.\nReturns the geophysical no-data value\n@see #setGeophysicalNoDataValue(double)"},
+    {"setGeophysicalNoDataValue", (PyCFunction) BeamPyTiePointGrid_setGeophysicalNoDataValue, METH_VARARGS, "Sets the geophysical no-data value which is simply the scaled \"raw\" no-data value\nreturned by {@link #getNoDataValue()}.\nThe no-data value is used to determine valid pixels. For more information\non valid pixels, please refer to the documentation of the {@link #isPixelValid(int, int, javax.media.jai.ROI)}\nmethod.\nOn property change, the method calls {@link #fireProductNodeChanged(String)} with the property\nname {@link #PROPERTY_NAME_NO_DATA_VALUE}.\nReturns Parameter noDataValue: the new geophysical no-data value\n@see #setGeophysicalNoDataValue(double)\n@see #isNoDataValueSet()"},
+    {"getValidPixelExpression", (PyCFunction) BeamPyTiePointGrid_getValidPixelExpression, METH_VARARGS, "Gets the expression that is used to determine whether a pixel is valid or not.\nFor more information\non valid pixels, please refer to the documentation of the {@link #isPixelValid(int, int, javax.media.jai.ROI)}\nmethod.\nReturns the valid mask expression."},
+    {"setValidPixelExpression", (PyCFunction) BeamPyTiePointGrid_setValidPixelExpression, METH_VARARGS, "Sets the expression that is used to determine whether a pixel is valid or not.\nThe valid-pixel expression is used to determine valid pixels. For more information\non valid pixels, please refer to the documentation of the {@link #isPixelValid(int, int, javax.media.jai.ROI)}\nmethod.\nOn property change, the method calls {@link #fireProductNodeChanged(String)} with the property\nname {@link #PROPERTY_NAME_VALID_PIXEL_EXPRESSION}.\nReturns Parameter validPixelExpression: the valid mask expression, can be null"},
+    {"isValidMaskUsed", (PyCFunction) BeamPyTiePointGrid_isValidMaskUsed, METH_VARARGS, "Tests whether or not this raster data node uses a data-mask in order to determine valid pixels. The method returns\ntrue if either {@link #isValidPixelExpressionSet()} or {@link #isNoDataValueUsed()} returns true.\nThe data-mask is used to determine valid pixels. For more information\non valid pixels, please refer to the documentation of the {@link #isPixelValid(int, int, javax.media.jai.ROI)}\nmethod.\nReturns true, if so"},
+    {"resetValidMask", (PyCFunction) BeamPyTiePointGrid_resetValidMask, METH_VARARGS, "Resets the valid mask of this raster.\nThe mask will be lazily regenerated when requested the next time."},
+    {"getValidMaskExpression", (PyCFunction) BeamPyTiePointGrid_getValidMaskExpression, METH_VARARGS, "Gets the expression used for the computation of the mask which identifies valid pixel values.\nIt recognizes the value of the {@link #getNoDataValue() noDataValue} and the\n{@link #getValidPixelExpression() validPixelExpression} properties, if any.\nThe method returns {@code null},  if none of these properties are set.\nReturns the expression used for the computation of the mask which identifies valid pixel values,\nor {@code null}.\n@see #getValidPixelExpression()\n@see #getNoDataValue()\nSince version:  BEAM 4.2"},
+    {"updateExpression", (PyCFunction) BeamPyTiePointGrid_updateExpression, METH_VARARGS, "{@inheritDoc}"},
+    {"hasRasterData", (PyCFunction) BeamPyTiePointGrid_hasRasterData, METH_VARARGS, "Returns true if the raster data of this RasterDataNode is loaded or elsewhere available, otherwise\nfalse.\nReturns true, if so.\n@deprecated since BEAM 4.11. No replacement."},
+    {"getRasterData", (PyCFunction) BeamPyTiePointGrid_getRasterData, METH_VARARGS, "Gets the raster data for this dataset. If the data hasn't been loaded so far the method returns\nnull.\nReturns the raster data for this band, or null if data has not been loaded\n@deprecated Since BEAM 4.11. Use {@link #getSourceImage()} or the various {@link #readPixels readPixels()}\nmethod variants to retrieve or read raster data."},
+    {"setRasterData", (PyCFunction) BeamPyTiePointGrid_setRasterData, METH_VARARGS, "Sets the raster data of this dataset.\n\n Note that this method does not copy data at all. If the supplied raster data is compatible with this product\nraster, then simply its reference is stored. Modifications in the supplied raster data will also affect this\ndataset's data!\nReturns Parameter rasterData: the raster data for this dataset\n@see #getRasterData()\n@deprecated Since BEAM 4.11. Use {@link #setSourceImage setSourceImage()} or the various {@link #writePixels readPixels()}\nmethod variants to set or write raster data."},
+    {"loadRasterData1", (PyCFunction) BeamPyTiePointGrid_loadRasterData1, METH_VARARGS, "@throws java.io.IOException if an I/O error occurs\n@see #loadRasterData(com.bc.ceres.core.ProgressMonitor)\n@deprecated since BEAM 4.11. No replacement."},
+    {"loadRasterData2", (PyCFunction) BeamPyTiePointGrid_loadRasterData2, METH_VARARGS, "Loads the raster data for this RasterDataNode. After this method has been called successfully,\nhasRasterData() should always return true and getRasterData() should\nalways return a valid ProductData instance with at least getRasterWidth()*getRasterHeight()\nelements (samples).\n\nThe default implementation of this method does nothing.\nReturns Parameter pm: a monitor to inform the user about progress\n@throws IOException if an I/O error occurs\n@see #unloadRasterData()\n@deprecated since BEAM 4.11. No replacement."},
+    {"unloadRasterData", (PyCFunction) BeamPyTiePointGrid_unloadRasterData, METH_VARARGS, "Un-loads the raster data for this RasterDataNode.\n\nIt is up to the implementation whether after this method has been called successfully, the\nhasRasterData() method returns false or true.\n\nThe default implementation of this method does nothing.\n@see #loadRasterData()\n@deprecated since BEAM 4.11. No replacement."},
+    {"isPixelValid2", (PyCFunction) BeamPyTiePointGrid_isPixelValid2, METH_VARARGS, "Checks whether or not the pixel located at (x,y) is valid.\nA pixel is assumed to be valid either if  {@link #getValidMaskImage() validMaskImage} is null or\nor if the bit corresponding to (x,y) is set within the returned mask image.\n\nNote: Implementation changed by Norman (2011-08-09) in order to increase performance since\na synchronised block was used due to problem with the JAI ROI class that has been used in\nthe former implementation.\nReturns Parameter x: the X co-ordinate of the pixel location\nReturns Parameter y: the Y co-ordinate of the pixel location\nReturns true if the pixel is valid\n@throws ArrayIndexOutOfBoundsException if the co-ordinates are not in bounds\n@see #isPixelValid(int, int, javax.media.jai.ROI)\n@see #setNoDataValueUsed(boolean)\n@see #setNoDataValue(double)\n@see #setValidPixelExpression(String)"},
+    {"getSampleInt", (PyCFunction) BeamPyTiePointGrid_getSampleInt, METH_VARARGS, "Gets a geo-physical sample value at the given pixel coordinate as {@code int} value.\n\nNote: This method does not belong to the public API.\nIt has been added by Norman (2011-08-09) in order to perform performance tests.\nReturns Parameter x: pixel X coordinate\nReturns Parameter y: pixel Y coordinate\nReturns the geo-physical sample value."},
+    {"getSampleFloat", (PyCFunction) BeamPyTiePointGrid_getSampleFloat, METH_VARARGS, "Gets a geo-physical sample value at the given pixel coordinate as {@code float} value.\n\nNote: This method does not belong to the public API.\nIt has been added by Norman (2011-08-09) in order to perform performance tests.\nReturns Parameter x: pixel X coordinate\nReturns Parameter y: pixel Y coordinate\nReturns the geo-physical sample value."},
+    {"isPixelValid1", (PyCFunction) BeamPyTiePointGrid_isPixelValid1, METH_VARARGS, "Checks whether or not the pixel located at (x,y) is valid.\nA pixel is assumed to be valid either if  {@link #getValidMaskImage() validMaskImage} is null or\nor if the bit corresponding to (x,y) is set within the returned mask image.\nReturns Parameter pixelIndex: the linear pixel index in the range 0 to width * height - 1\nReturns true if the pixel is valid\n@throws ArrayIndexOutOfBoundsException if the co-ordinates are not in bounds\n@see #isPixelValid(int, int, javax.media.jai.ROI)\n@see #setNoDataValueUsed(boolean)\n@see #setNoDataValue(double)\n@see #setValidPixelExpression(String)\nSince version:  4.1"},
+    {"isPixelValid3", (PyCFunction) BeamPyTiePointGrid_isPixelValid3, METH_VARARGS, "Checks whether or not the pixel located at (x,y) is valid.\nThe method first test whether a pixel is valid by using the {@link #isPixelValid(int, int)} method,\nand secondly, if the pixel is within the ROI (if any).\nReturns Parameter x: the X co-ordinate of the pixel location\nReturns Parameter y: the Y co-ordinate of the pixel location\nReturns Parameter roi: the ROI, if null the method returns {@link #isPixelValid(int, int)}\nReturns true if the pixel is valid\n@throws ArrayIndexOutOfBoundsException if the co-ordinates are not in bounds\n@see #isPixelValid(int, int)\n@see #setNoDataValueUsed(boolean)\n@see #setNoDataValue(double)\n@see #setValidPixelExpression(String)"},
+    {"getPixels5", (PyCFunction) BeamPyTiePointGrid_getPixels5, METH_VARARGS, "@see #getPixels(int, int, int, int, int[], ProgressMonitor)\n@deprecated since BEAM 4.11. Use {@link #getSourceImage()} instead."},
+    {"getPixels3", (PyCFunction) BeamPyTiePointGrid_getPixels3, METH_VARARGS, "@see #getPixels(int, int, int, int, float[], ProgressMonitor)\n@deprecated since BEAM 4.11. Use {@link #getSourceImage()} instead."},
+    {"getPixels1", (PyCFunction) BeamPyTiePointGrid_getPixels1, METH_VARARGS, "@see #getPixels(int, int, int, int, double[], ProgressMonitor)\n@deprecated since BEAM 4.11. Use {@link #getSourceImage()} instead."},
+    {"readPixels5", (PyCFunction) BeamPyTiePointGrid_readPixels5, METH_VARARGS, "@see #readPixels(int, int, int, int, int[], ProgressMonitor)"},
+    {"readPixels3", (PyCFunction) BeamPyTiePointGrid_readPixels3, METH_VARARGS, "@see #readPixels(int, int, int, int, float[], ProgressMonitor)\n@deprecated since BEAM 4.11. Use {@link #getSourceImage()} instead."},
+    {"readPixels1", (PyCFunction) BeamPyTiePointGrid_readPixels1, METH_VARARGS, "@see #readPixels(int, int, int, int, double[], ProgressMonitor)\n@deprecated since BEAM 4.11. Use {@link #getSourceImage()} instead."},
+    {"writePixels5", (PyCFunction) BeamPyTiePointGrid_writePixels5, METH_VARARGS, "@see #writePixels(int, int, int, int, int[], ProgressMonitor)"},
+    {"writePixels3", (PyCFunction) BeamPyTiePointGrid_writePixels3, METH_VARARGS, "@see #writePixels(int, int, int, int, float[], ProgressMonitor)"},
+    {"writePixels1", (PyCFunction) BeamPyTiePointGrid_writePixels1, METH_VARARGS, "@see #writePixels(int, int, int, int, double[], ProgressMonitor)"},
+    {"readValidMask", (PyCFunction) BeamPyTiePointGrid_readValidMask, METH_VARARGS, ""},
+    {"readRasterDataFully1", (PyCFunction) BeamPyTiePointGrid_readRasterDataFully1, METH_VARARGS, "@throws java.io.IOException if an I/O error occurs\n@see #readRasterDataFully(ProgressMonitor)\n@deprecated since BEAM 4.11. Use {@link #getSourceImage()} instead."},
+    {"readRasterData1", (PyCFunction) BeamPyTiePointGrid_readRasterData1, METH_VARARGS, "Reads raster data from the node's associated data source into the given data\nbuffer.\nReturns Parameter offsetX: the X-offset in the raster co-ordinates where reading starts\nReturns Parameter offsetY: the Y-offset in the raster co-ordinates where reading starts\nReturns Parameter width: the width of the raster data buffer\nReturns Parameter height: the height of the raster data buffer\nReturns Parameter rasterData: a raster data buffer receiving the pixels to be read\n@throws java.io.IOException      if an I/O error occurs\n@throws IllegalArgumentException if the raster is null\n@throws IllegalStateException    if this product raster was not added to a product so far, or if the product to\nwhich this product raster belongs to, has no associated product reader\n@see ProductReader#readBandRasterData(Band, int, int, int, int, ProductData, com.bc.ceres.core.ProgressMonitor)\n@deprecated since BEAM 4.11. Use {@link #getSourceImage()} instead."},
+    {"writeRasterDataFully1", (PyCFunction) BeamPyTiePointGrid_writeRasterDataFully1, METH_VARARGS, ""},
+    {"writeRasterData1", (PyCFunction) BeamPyTiePointGrid_writeRasterData1, METH_VARARGS, "@deprecated since BEAM 4.11. Use {@link #setSourceImage setSourceImage()} or the various {@link #writePixels\nreadPixels()} method variants to set or write raster data."},
+    {"createCompatibleRasterData1", (PyCFunction) BeamPyTiePointGrid_createCompatibleRasterData1, METH_VARARGS, "Creates raster data that is compatible to this dataset's data type. The data buffer returned contains exactly\ngetRasterWidth()*getRasterHeight() elements of a compatible data type.\nReturns raster data compatible with this product raster\n@see #createCompatibleSceneRasterData"},
+    {"createCompatibleSceneRasterData", (PyCFunction) BeamPyTiePointGrid_createCompatibleSceneRasterData, METH_VARARGS, "Creates raster data that is compatible to this dataset's data type. The data buffer returned contains exactly\ngetBandOutputRasterWidth()*getBandOutputRasterHeight() elements of a compatible data type.\nReturns raster data compatible with this product raster\n@see #createCompatibleRasterData"},
+    {"createCompatibleRasterData2", (PyCFunction) BeamPyTiePointGrid_createCompatibleRasterData2, METH_VARARGS, "Creates raster data that is compatible to this dataset's data type. The data buffer returned contains exactly\nwidth*height elements of a compatible data type.\nReturns Parameter width: the width of the raster data to be created\nReturns Parameter height: the height of the raster data to be created\nReturns raster data compatible with this product raster\n@see #createCompatibleRasterData\n@see #createCompatibleSceneRasterData"},
+    {"isCompatibleRasterData", (PyCFunction) BeamPyTiePointGrid_isCompatibleRasterData, METH_VARARGS, "Tests whether the given parameters specify a compatible raster or not.\nReturns Parameter rasterData: the raster data\nReturns Parameter w: the raster width\nReturns Parameter h: the raster height\nReturns {@code true} if so\n@deprecated since BEAM 4.11. No replacement."},
+    {"checkCompatibleRasterData", (PyCFunction) BeamPyTiePointGrid_checkCompatibleRasterData, METH_VARARGS, "Throws an IllegalArgumentException if the given parameters dont specify a compatible raster.\nReturns Parameter rasterData: the raster data\nReturns Parameter w: the raster width\nReturns Parameter h: the raster height\n@deprecated since BEAM 4.11. No replacement."},
+    {"hasIntPixels", (PyCFunction) BeamPyTiePointGrid_hasIntPixels, METH_VARARGS, "Determines whether this raster data node contains integer samples.\nReturns true if this raster data node contains integer samples."},
+    {"createTransectProfileData", (PyCFunction) BeamPyTiePointGrid_createTransectProfileData, METH_VARARGS, "Creates a transect profile for the given shape (-outline).\nReturns Parameter shape: the shape\nReturns the profile data\n@throws IOException if an I/O error occurs"},
+    {"getImageInfo1", (PyCFunction) BeamPyTiePointGrid_getImageInfo1, METH_VARARGS, "Gets the image information for image display.\nReturns the image info or null"},
+    {"setImageInfo", (PyCFunction) BeamPyTiePointGrid_setImageInfo, METH_VARARGS, "Sets the image information for image display.\nReturns Parameter imageInfo: the image info, can be null"},
+    {"fireImageInfoChanged", (PyCFunction) BeamPyTiePointGrid_fireImageInfoChanged, METH_VARARGS, "Notifies listeners that the image (display) information has changed.\nSince version:  BEAM 4.7"},
+    {"getImageInfo2", (PyCFunction) BeamPyTiePointGrid_getImageInfo2, METH_VARARGS, "Returns the image information for this raster data node.\n\nThe method simply returns the value of ensureValidImageInfo(null, ProgressMonitor.NULL).\nReturns Parameter pm: A progress monitor.\nReturns a valid image information instance.\n@see #getImageInfo(double[], ProgressMonitor)\nSince version:  BEAM 4.2"},
+    {"getImageInfo3", (PyCFunction) BeamPyTiePointGrid_getImageInfo3, METH_VARARGS, "Gets the image creation information.\n\nIf no image information has been assigned before, the {@link #createDefaultImageInfo(double[], com.bc.ceres.core.ProgressMonitor)} method is\ncalled with the given parameters passed to this method.\nReturns Parameter histoSkipAreas: Only used, if new image info is created (see {@link #createDefaultImageInfo(double[], com.bc.ceres.core.ProgressMonitor)}\nmethod).\nReturns Parameter pm: A progress monitor.\nReturns the image creation information.\nSince version:  BEAM 4.2"},
+    {"createDefaultImageInfo1", (PyCFunction) BeamPyTiePointGrid_createDefaultImageInfo1, METH_VARARGS, "Creates a default image information instance.\n\nAn IllegalStateException is thrown in the case that this raster data node has no raster data.\nReturns Parameter histoSkipAreas: the left (at index 0) and right (at index 1) normalized areas of the raster data\nhistogram to be excluded when determining the value range for a linear constrast\nstretching. Can be null, in this case {0.01, 0.04} resp. 5% of\nthe entire area is skipped.\nReturns Parameter pm: a monitor to inform the user about progress\nReturns a valid image information instance, never null."},
+    {"createDefaultImageInfo2", (PyCFunction) BeamPyTiePointGrid_createDefaultImageInfo2, METH_VARARGS, "Creates an instance of a default image information.\n\nAn IllegalStateException is thrown in the case that this raster data node has no raster data.\nReturns Parameter histoSkipAreas: the left (at index 0) and right (at index 1) normalized areas of the raster data\nhistogram to be excluded when determining the value range for a linear constrast\nstretching. Can be null, in this case {0.01, 0.04} resp. 5% of\nthe entire area is skipped.\nReturns Parameter histogram: the histogram to create the image information.\nReturns a valid image information instance, never null."},
+    {"getOverlayMaskGroup", (PyCFunction) BeamPyTiePointGrid_getOverlayMaskGroup, METH_VARARGS, "Returns the overlay mask group."},
+    {"createColorIndexedImage", (PyCFunction) BeamPyTiePointGrid_createColorIndexedImage, METH_VARARGS, "Creates an image for this raster data node. The method simply returns ProductUtils.createColorIndexedImage(this,\nnull).\nReturns Parameter pm: a monitor to inform the user about progress\nReturns a greyscale/palette-based image for this raster data node\n@throws IOException if the raster data is not loaded so far and reload causes an I/O error\n@see #setImageInfo(ImageInfo)"},
+    {"createRgbImage", (PyCFunction) BeamPyTiePointGrid_createRgbImage, METH_VARARGS, "Creates an RGB image for this raster data node.\nReturns Parameter pm: a monitor to inform the user about progress\nReturns a greyscale/palette-based image for this raster data node\n@throws IOException if the raster data is not loaded so far and reload causes an I/O error\n@see #setImageInfo(ImageInfo)"},
+    {"quantizeRasterData1", (PyCFunction) BeamPyTiePointGrid_quantizeRasterData1, METH_VARARGS, ""},
+    {"quantizeRasterData2", (PyCFunction) BeamPyTiePointGrid_quantizeRasterData2, METH_VARARGS, ""},
+    {"createPixelValidator", (PyCFunction) BeamPyTiePointGrid_createPixelValidator, METH_VARARGS, "Creates a validator which can be used to validate indexes of pixels in a flat raster data buffer.\nReturns Parameter lineOffset: the absolute line offset, zero based\nReturns Parameter roi: an optional ROI\nReturns a new validator instance, never null\n@throws IOException if an I/O error occurs"},
+    {"scale", (PyCFunction) BeamPyTiePointGrid_scale, METH_VARARGS, "Applies the scaling v * scalingFactor + scalingOffset the the given input value. If the\nlog10Scaled property is true, the result is taken to the power of 10 after the actual\nscaling.\nReturns Parameter v: the input value\nReturns the scaled value"},
+    {"scaleInverse", (PyCFunction) BeamPyTiePointGrid_scaleInverse, METH_VARARGS, "Applies the inverse scaling (v - scalingOffset) / scalingFactor the the given input value. If the\nlog10Scaled property is true, the common logarithm is applied to the input before the actual\nscaling.\nReturns Parameter v: the input value\nReturns the scaled value"},
+    {"getPixelString", (PyCFunction) BeamPyTiePointGrid_getPixelString, METH_VARARGS, "Returns the pixel located at (x,y) as a string value.\nReturns Parameter x: the X co-ordinate of the pixel location\nReturns Parameter y: the Y co-ordinate of the pixel location\nReturns the pixel value at (x,y) as string or an error message text"},
+    {"isSourceImageSet", (PyCFunction) BeamPyTiePointGrid_isSourceImageSet, METH_VARARGS, "Returns whether the source image is set on this {@code RasterDataNode}.\nReturns whether the source image is set.\n@see #getSourceImage()\n@see #setSourceImage(java.awt.image.RenderedImage)\n@see #setSourceImage(com.bc.ceres.glevel.MultiLevelImage)\n@see #createSourceImage()\nSince version:  BEAM 4.5"},
+    {"getSourceImage", (PyCFunction) BeamPyTiePointGrid_getSourceImage, METH_VARARGS, "Gets the source image associated with this {@code RasterDataNode}.\nReturns the source image. Never {@code null}. In the case that {@link #isSourceImageSet()} returns {@code false},\nthe method {@link #createSourceImage()} will be called in order to set and return a valid source image.\n@see #createSourceImage()\n@see #isSourceImageSet()\nSince version:  BEAM 4.2"},
+    {"setSourceImage2", (PyCFunction) BeamPyTiePointGrid_setSourceImage2, METH_VARARGS, "Sets the source image associated with this {@code RasterDataNode}.\nReturns Parameter sourceImage: The source image.\nCan be {@code null}. If so, {@link #isSourceImageSet()} will return {@code false}.\nSince version:  BEAM 4.2"},
+    {"setSourceImage1", (PyCFunction) BeamPyTiePointGrid_setSourceImage1, METH_VARARGS, "Sets the source image associated with this {@code RasterDataNode}.\nReturns Parameter sourceImage: The source image.\nCan be {@code null}. If so, {@link #isSourceImageSet()} will return {@code false}.\nSince version:  BEAM 4.6"},
+    {"isGeophysicalImageSet", (PyCFunction) BeamPyTiePointGrid_isGeophysicalImageSet, METH_VARARGS, "Returns whether the geophysical image is set on this {@code RasterDataNode}.\n\nThis method belongs to preliminary API and may be removed or changed in the future.\nReturns whether the geophysical image is set.\nSince version:  BEAM 4.6"},
+    {"getGeophysicalImage", (PyCFunction) BeamPyTiePointGrid_getGeophysicalImage, METH_VARARGS, "Returns the geophysical source image.\nSince version:  BEAM 4.5"},
+    {"isValidMaskImageSet", (PyCFunction) BeamPyTiePointGrid_isValidMaskImageSet, METH_VARARGS, "Returns wether the valid mask image is set on this {@code RasterDataNode}.\nReturns wether the source image is set.\nSince version:  BEAM 4.5"},
+    {"getValidMaskImage", (PyCFunction) BeamPyTiePointGrid_getValidMaskImage, METH_VARARGS, "Gets the valid-mask image associated with this {@code RasterDataNode}.\nReturns the rendered image.\nSince version:  BEAM 4.2"},
+    {"isStxSet", (PyCFunction) BeamPyTiePointGrid_isStxSet, METH_VARARGS, ""},
+    {"getStx1", (PyCFunction) BeamPyTiePointGrid_getStx1, METH_VARARGS, "Gets the statistics. If statistcs are not yet available,\nthe method will compute (possibly inaccurate) statistics and return those.\n\nIf accurate statistics are required, the {@link #getStx(boolean, com.bc.ceres.core.ProgressMonitor)}\nshall be used instead.\n\nThis method belongs to preliminary API and may be removed or changed in the future.\nReturns the statistics.\n@see #getStx(boolean, com.bc.ceres.core.ProgressMonitor)\n@see #setStx(Stx)\nSince version:  BEAM 4.2, revised in BEAM 4.5"},
+    {"getStx2", (PyCFunction) BeamPyTiePointGrid_getStx2, METH_VARARGS, "Gets the statistics.\nIf the statistics have not been set before they are computed using the given progress monitor {@code pm} and then set.\nThis method belongs to preliminary API and may be removed or changed in the future.\nReturns Parameter accurate: If true, accurate statistics are computed.\nReturns Parameter pm: A progress monitor which is used to compute the new statistics, if required.\nReturns the statistics.\nSince version:  since BEAM 4.5"},
+    {"setStx", (PyCFunction) BeamPyTiePointGrid_setStx, METH_VARARGS, "Sets the statistics. It is the responsibility of the caller to ensure that the given statistics\nare really related to this {@code RasterDataNode}'s raster data.\nThe method fires a property change event for the property {@link #PROPERTY_NAME_STX}.\nThis method belongs to preliminary API and may be removed or changed in the future.\nReturns Parameter stx: The statistics.\nSince version:  BEAM 4.2, revised in BEAM 4.5"},
+    {"getValidShape", (PyCFunction) BeamPyTiePointGrid_getValidShape, METH_VARARGS, "Gets the shape of the area where this raster data contains valid samples.\nThe method returns null, if the entire raster contains valid samples.\nReturns the shape of the area where the raster data has samples, can be {@code null}.\nSince version:  BEAM 4.7"},
+    {"getRoiMaskGroup", (PyCFunction) BeamPyTiePointGrid_getRoiMaskGroup, METH_VARARGS, "Returns the roi mask group.\n@deprecated since BEAM 4.10 (no replacement)"},
+    {"getDataType", (PyCFunction) BeamPyTiePointGrid_getDataType, METH_VARARGS, "Gets the data type of this data node.\nReturns the data type which is always one of the multiple ProductData.TYPE_X constants"},
+    {"getNumDataElems", (PyCFunction) BeamPyTiePointGrid_getNumDataElems, METH_VARARGS, "Gets the number of data elements in this data node."},
+    {"setData", (PyCFunction) BeamPyTiePointGrid_setData, METH_VARARGS, "Sets the data of this data node."},
+    {"getData", (PyCFunction) BeamPyTiePointGrid_getData, METH_VARARGS, "Gets the data of this data node."},
+    {"setDataElems", (PyCFunction) BeamPyTiePointGrid_setDataElems, METH_VARARGS, "Sets the data elements of this data node.\n@see ProductData#setElems(Object)"},
+    {"getDataElems", (PyCFunction) BeamPyTiePointGrid_getDataElems, METH_VARARGS, "Gets the data elements of this data node.\n@see ProductData#getElems()"},
+    {"getDataElemSize", (PyCFunction) BeamPyTiePointGrid_getDataElemSize, METH_VARARGS, "Gets the data element size in bytes.\n@see ProductData#getElemSize(int)"},
+    {"setReadOnly", (PyCFunction) BeamPyTiePointGrid_setReadOnly, METH_VARARGS, ""},
+    {"isReadOnly", (PyCFunction) BeamPyTiePointGrid_isReadOnly, METH_VARARGS, ""},
+    {"setUnit", (PyCFunction) BeamPyTiePointGrid_setUnit, METH_VARARGS, ""},
+    {"getUnit", (PyCFunction) BeamPyTiePointGrid_getUnit, METH_VARARGS, ""},
+    {"isSynthetic", (PyCFunction) BeamPyTiePointGrid_isSynthetic, METH_VARARGS, "@deprecated since BEAM 4.10 (not used, no replacement)"},
+    {"setSynthetic", (PyCFunction) BeamPyTiePointGrid_setSynthetic, METH_VARARGS, "@deprecated since BEAM 4.10 (not used, no replacement)"},
+    {"fireProductNodeDataChanged", (PyCFunction) BeamPyTiePointGrid_fireProductNodeDataChanged, METH_VARARGS, "Fires a node data changed event. This method is called after the data of this data node changed."},
+    {"getRawStorageSize2", (PyCFunction) BeamPyTiePointGrid_getRawStorageSize2, METH_VARARGS, "Gets the estimated size in bytes of this product node.\nReturns Parameter subsetDef: if not null the subset may limit the size returned\nReturns the size in bytes."},
+    {"createCompatibleProductData", (PyCFunction) BeamPyTiePointGrid_createCompatibleProductData, METH_VARARGS, "Creates product data that is compatible to this dataset's data type. The data buffer returned contains exactly\nnumElems elements of a compatible data type.\nReturns Parameter numElems: the number of elements, must not be less than one\nReturns product data compatible with this data node"},
+    {"getOwner", (PyCFunction) BeamPyTiePointGrid_getOwner, METH_VARARGS, "Returns the owner node of this node."},
+    {"getName", (PyCFunction) BeamPyTiePointGrid_getName, METH_VARARGS, "Returns this node's name."},
+    {"setName", (PyCFunction) BeamPyTiePointGrid_setName, METH_VARARGS, "Sets this product's name.\nReturns Parameter name: The name."},
+    {"getDescription", (PyCFunction) BeamPyTiePointGrid_getDescription, METH_VARARGS, "Returns a short textual description for this products node.\nReturns a description or null"},
+    {"setDescription", (PyCFunction) BeamPyTiePointGrid_setDescription, METH_VARARGS, "Sets a short textual description for this products node.\nReturns Parameter description: a description, can be null"},
+    {"isModified", (PyCFunction) BeamPyTiePointGrid_isModified, METH_VARARGS, "Returns whether or not this node is modified.\nReturns true if so"},
+    {"toString", (PyCFunction) BeamPyTiePointGrid_toString, METH_VARARGS, ""},
+    {"isValidNodeName", (PyCFunction) BeamPyTiePointGrid_isValidNodeName, METH_VARARGS | METH_STATIC, "Tests whether the given name is valid name for a node.\nA valid node name must not start with a dot. Also a valid node name must not contain\nany of the character  \\/:*?\"&lt;&gt;|\nReturns Parameter name: the name to test\nReturns true if the name is a valid node identifier, false otherwise"},
+    {"getProduct", (PyCFunction) BeamPyTiePointGrid_getProduct, METH_VARARGS, "Returns the product to which this node belongs to.\nReturns the product, or null if this node was not owned by a product at the time this method was\ncalled"},
+    {"getProductReader", (PyCFunction) BeamPyTiePointGrid_getProductReader, METH_VARARGS, "Returns the product reader for the product to which this node belongs to.\nReturns the product reader, or null if no such exists"},
+    {"getProductWriter", (PyCFunction) BeamPyTiePointGrid_getProductWriter, METH_VARARGS, "Returns the product writer for the product to which this node belongs to.\nReturns the product writer, or null if no such exists"},
+    {"getDisplayName", (PyCFunction) BeamPyTiePointGrid_getDisplayName, METH_VARARGS, "Returns this node's display name. The display name is the product reference string with the node name appended.\nExample: The string \"[2] node-name\" means node node-name of the\nproduct with the reference number 2.\nReturns this node's name with a product prefix <br>or this node's name only if this node's product prefix is\nnull\n@see #getProductRefString"},
+    {"getProductRefString", (PyCFunction) BeamPyTiePointGrid_getProductRefString, METH_VARARGS, "Gets the product reference string. The product reference string is the product reference number enclosed in\nsquare brackets. Example: The string \"[2]\" stands for a product with the reference number\n2.\nReturns the product reference string. <br>or null if this node has no product <br>or\nnull if its product reference number was inactive"},
+    {"getRawStorageSize1", (PyCFunction) BeamPyTiePointGrid_getRawStorageSize1, METH_VARARGS, "Gets an estimated, raw storage size in bytes of this product node.\nReturns the size in bytes."},
+    {"fireProductNodeChanged1", (PyCFunction) BeamPyTiePointGrid_fireProductNodeChanged1, METH_VARARGS, ""},
+    {"fireProductNodeChanged2", (PyCFunction) BeamPyTiePointGrid_fireProductNodeChanged2, METH_VARARGS, ""},
+    {"removeFromFile", (PyCFunction) BeamPyTiePointGrid_removeFromFile, METH_VARARGS, "Physically remove this node from the file associated with the given product writer. The default implementation\ndoes nothing.\nReturns Parameter productWriter: the product writer to be used to remove this node from the underlying file."},
+    {"getExtension", (PyCFunction) BeamPyTiePointGrid_getExtension, METH_VARARGS, ""},
+    {NULL, NULL, 0, NULL} /*Sentinel*/
+};
+
+// Note: this is unused, experimental code
+
+/**
+ * Implements the BeamPy_JObjectType class singleton.
+ *
+ * THIS TYPE IS NOT YET IN USE: we currently use
+ * (<type_string>, <pointer>) tuples to represent Java JNI objects.
+ */
+PyTypeObject TiePointGrid_Type = {
+    PyVarObject_HEAD_INIT(NULL, 0)
+    "beampy.TiePointGrid",        /* tp_name */
+    sizeof (JObject),             /* tp_basicsize */
+    0,                            /* tp_itemsize */
+    (destructor)JObject_dealloc,  /* tp_dealloc */
+    NULL,                         /* tp_print */
+    NULL,                         /* tp_getattr */
+    NULL,                         /* tp_setattr */
+    NULL,                         /* tp_reserved */
+    NULL,                         /* tp_repr */
+    NULL,                         /* tp_as_number */
+    NULL,                         /* tp_as_sequence */
+    NULL,                         /* tp_as_mapping */
+    NULL,                         /* tp_hash  */
+    NULL,                         /* tp_call */
+    NULL,                         /* tp_str */
+    NULL,                         /* tp_getattro */
+    NULL,                         /* tp_setattro */
+    NULL,                         /* tp_as_buffer */
+    Py_TPFLAGS_DEFAULT,           /* tp_flags */
+    "A tie-point grid contains the data for geophysical parameter in remote sensing data products. Tie-point grid are\ntwo-dimensional images which hold their pixel values (samples) in a float array. \n\nUsually, tie-point grids are a sub-sampling of a data product's scene resolution.\nAuthor:  Norman Fomferra\nVersion:  $Revision$ $Date$",                /* tp_doc */
+    NULL,                         /* tp_traverse */
+    NULL,                         /* tp_clear */
+    NULL,                         /* tp_richcompare */
+    0,                            /* tp_weaklistoffset */
+    NULL,                         /* tp_iter */
+    NULL,                         /* tp_iternext */
+    TiePointGrid_methods,         /* tp_methods */
+    NULL,                         /* tp_members */
+    NULL,                         /* tp_getset */
+    NULL,                         /* tp_base */
+    NULL,                         /* tp_dict */
+    NULL,                         /* tp_descr_get */
+    NULL,                         /* tp_descr_set */
+    0,                            /* tp_dictoffset */
+    (initproc) JObject_init,      /* tp_init */
+    NULL,                         /* tp_alloc */
+    NULL,                         /* tp_new */
+};
+
+static PyMethodDef RGBChannelDef_methods[] = {
+    {"newRGBChannelDef", (PyCFunction) BeamPyRGBChannelDef_newRGBChannelDef, METH_VARARGS | METH_STATIC, ""},
+    {"getSourceName", (PyCFunction) BeamPyRGBChannelDef_getSourceName, METH_VARARGS, ""},
+    {"setSourceName", (PyCFunction) BeamPyRGBChannelDef_setSourceName, METH_VARARGS, ""},
+    {"getSourceNames", (PyCFunction) BeamPyRGBChannelDef_getSourceNames, METH_VARARGS, ""},
+    {"setSourceNames", (PyCFunction) BeamPyRGBChannelDef_setSourceNames, METH_VARARGS, ""},
+    {"isAlphaUsed", (PyCFunction) BeamPyRGBChannelDef_isAlphaUsed, METH_VARARGS, ""},
+    {"isGammaUsed", (PyCFunction) BeamPyRGBChannelDef_isGammaUsed, METH_VARARGS, ""},
+    {"getGamma", (PyCFunction) BeamPyRGBChannelDef_getGamma, METH_VARARGS, ""},
+    {"setGamma", (PyCFunction) BeamPyRGBChannelDef_setGamma, METH_VARARGS, ""},
+    {"getMinDisplaySample", (PyCFunction) BeamPyRGBChannelDef_getMinDisplaySample, METH_VARARGS, ""},
+    {"setMinDisplaySample", (PyCFunction) BeamPyRGBChannelDef_setMinDisplaySample, METH_VARARGS, ""},
+    {"getMaxDisplaySample", (PyCFunction) BeamPyRGBChannelDef_getMaxDisplaySample, METH_VARARGS, ""},
+    {"setMaxDisplaySample", (PyCFunction) BeamPyRGBChannelDef_setMaxDisplaySample, METH_VARARGS, ""},
+    {"clone", (PyCFunction) BeamPyRGBChannelDef_clone, METH_VARARGS, ""},
+    {NULL, NULL, 0, NULL} /*Sentinel*/
+};
+
+// Note: this is unused, experimental code
+
+/**
+ * Implements the BeamPy_JObjectType class singleton.
+ *
+ * THIS TYPE IS NOT YET IN USE: we currently use
+ * (<type_string>, <pointer>) tuples to represent Java JNI objects.
+ */
+PyTypeObject RGBChannelDef_Type = {
+    PyVarObject_HEAD_INIT(NULL, 0)
+    "beampy.RGBChannelDef",        /* tp_name */
+    sizeof (JObject),             /* tp_basicsize */
+    0,                            /* tp_itemsize */
+    (destructor)JObject_dealloc,  /* tp_dealloc */
+    NULL,                         /* tp_print */
+    NULL,                         /* tp_getattr */
+    NULL,                         /* tp_setattr */
+    NULL,                         /* tp_reserved */
+    NULL,                         /* tp_repr */
+    NULL,                         /* tp_as_number */
+    NULL,                         /* tp_as_sequence */
+    NULL,                         /* tp_as_mapping */
+    NULL,                         /* tp_hash  */
+    NULL,                         /* tp_call */
+    NULL,                         /* tp_str */
+    NULL,                         /* tp_getattro */
+    NULL,                         /* tp_setattro */
+    NULL,                         /* tp_as_buffer */
+    Py_TPFLAGS_DEFAULT,           /* tp_flags */
+    "",                /* tp_doc */
+    NULL,                         /* tp_traverse */
+    NULL,                         /* tp_clear */
+    NULL,                         /* tp_richcompare */
+    0,                            /* tp_weaklistoffset */
+    NULL,                         /* tp_iter */
+    NULL,                         /* tp_iternext */
+    RGBChannelDef_methods,         /* tp_methods */
+    NULL,                         /* tp_members */
+    NULL,                         /* tp_getset */
+    NULL,                         /* tp_base */
+    NULL,                         /* tp_dict */
+    NULL,                         /* tp_descr_get */
+    NULL,                         /* tp_descr_set */
+    0,                            /* tp_dictoffset */
+    (initproc) JObject_init,      /* tp_init */
+    NULL,                         /* tp_alloc */
+    NULL,                         /* tp_new */
+};
+
+static PyMethodDef VectorDataNode_methods[] = {
+    {NULL, NULL, 0, NULL} /*Sentinel*/
+};
+
+// Note: this is unused, experimental code
+
+/**
+ * Implements the BeamPy_JObjectType class singleton.
+ *
+ * THIS TYPE IS NOT YET IN USE: we currently use
+ * (<type_string>, <pointer>) tuples to represent Java JNI objects.
+ */
+PyTypeObject VectorDataNode_Type = {
+    PyVarObject_HEAD_INIT(NULL, 0)
+    "beampy.VectorDataNode",        /* tp_name */
+    sizeof (JObject),             /* tp_basicsize */
+    0,                            /* tp_itemsize */
+    (destructor)JObject_dealloc,  /* tp_dealloc */
+    NULL,                         /* tp_print */
+    NULL,                         /* tp_getattr */
+    NULL,                         /* tp_setattr */
+    NULL,                         /* tp_reserved */
+    NULL,                         /* tp_repr */
+    NULL,                         /* tp_as_number */
+    NULL,                         /* tp_as_sequence */
+    NULL,                         /* tp_as_mapping */
+    NULL,                         /* tp_hash  */
+    NULL,                         /* tp_call */
+    NULL,                         /* tp_str */
+    NULL,                         /* tp_getattro */
+    NULL,                         /* tp_setattro */
+    NULL,                         /* tp_as_buffer */
+    Py_TPFLAGS_DEFAULT,           /* tp_flags */
+    "A container which allows to store vector data in the BEAM product model.\n\nThis is a preliminary API under construction for BEAM 4.7. Not intended for public use.\nAuthor:  Norman Fomferra\nVersion:  $Revision$ $Date$\n@see Product#getVectorDataGroup()\nSince version:  BEAM 4.7",                /* tp_doc */
+    NULL,                         /* tp_traverse */
+    NULL,                         /* tp_clear */
+    NULL,                         /* tp_richcompare */
+    0,                            /* tp_weaklistoffset */
+    NULL,                         /* tp_iter */
+    NULL,                         /* tp_iternext */
+    VectorDataNode_methods,         /* tp_methods */
+    NULL,                         /* tp_members */
+    NULL,                         /* tp_getset */
+    NULL,                         /* tp_base */
+    NULL,                         /* tp_dict */
+    NULL,                         /* tp_descr_get */
+    NULL,                         /* tp_descr_set */
+    0,                            /* tp_dictoffset */
+    (initproc) JObject_init,      /* tp_init */
+    NULL,                         /* tp_alloc */
+    NULL,                         /* tp_new */
+};
+
+static PyMethodDef ImageInputStream_methods[] = {
+    {NULL, NULL, 0, NULL} /*Sentinel*/
+};
+
+// Note: this is unused, experimental code
+
+/**
+ * Implements the BeamPy_JObjectType class singleton.
+ *
+ * THIS TYPE IS NOT YET IN USE: we currently use
+ * (<type_string>, <pointer>) tuples to represent Java JNI objects.
+ */
+PyTypeObject ImageInputStream_Type = {
+    PyVarObject_HEAD_INIT(NULL, 0)
+    "beampy.ImageInputStream",        /* tp_name */
+    sizeof (JObject),             /* tp_basicsize */
+    0,                            /* tp_itemsize */
+    (destructor)JObject_dealloc,  /* tp_dealloc */
+    NULL,                         /* tp_print */
+    NULL,                         /* tp_getattr */
+    NULL,                         /* tp_setattr */
+    NULL,                         /* tp_reserved */
+    NULL,                         /* tp_repr */
+    NULL,                         /* tp_as_number */
+    NULL,                         /* tp_as_sequence */
+    NULL,                         /* tp_as_mapping */
+    NULL,                         /* tp_hash  */
+    NULL,                         /* tp_call */
+    NULL,                         /* tp_str */
+    NULL,                         /* tp_getattro */
+    NULL,                         /* tp_setattro */
+    NULL,                         /* tp_as_buffer */
+    Py_TPFLAGS_DEFAULT,           /* tp_flags */
+    "",                /* tp_doc */
+    NULL,                         /* tp_traverse */
+    NULL,                         /* tp_clear */
+    NULL,                         /* tp_richcompare */
+    0,                            /* tp_weaklistoffset */
+    NULL,                         /* tp_iter */
+    NULL,                         /* tp_iternext */
+    ImageInputStream_methods,         /* tp_methods */
+    NULL,                         /* tp_members */
+    NULL,                         /* tp_getset */
+    NULL,                         /* tp_base */
+    NULL,                         /* tp_dict */
+    NULL,                         /* tp_descr_get */
+    NULL,                         /* tp_descr_set */
+    0,                            /* tp_dictoffset */
+    (initproc) JObject_init,      /* tp_init */
+    NULL,                         /* tp_alloc */
+    NULL,                         /* tp_new */
+};
+
+static PyMethodDef RenderingHints_methods[] = {
+    {NULL, NULL, 0, NULL} /*Sentinel*/
+};
+
+// Note: this is unused, experimental code
+
+/**
+ * Implements the BeamPy_JObjectType class singleton.
+ *
+ * THIS TYPE IS NOT YET IN USE: we currently use
+ * (<type_string>, <pointer>) tuples to represent Java JNI objects.
+ */
+PyTypeObject RenderingHints_Type = {
+    PyVarObject_HEAD_INIT(NULL, 0)
+    "beampy.RenderingHints",        /* tp_name */
+    sizeof (JObject),             /* tp_basicsize */
+    0,                            /* tp_itemsize */
+    (destructor)JObject_dealloc,  /* tp_dealloc */
+    NULL,                         /* tp_print */
+    NULL,                         /* tp_getattr */
+    NULL,                         /* tp_setattr */
+    NULL,                         /* tp_reserved */
+    NULL,                         /* tp_repr */
+    NULL,                         /* tp_as_number */
+    NULL,                         /* tp_as_sequence */
+    NULL,                         /* tp_as_mapping */
+    NULL,                         /* tp_hash  */
+    NULL,                         /* tp_call */
+    NULL,                         /* tp_str */
+    NULL,                         /* tp_getattro */
+    NULL,                         /* tp_setattro */
+    NULL,                         /* tp_as_buffer */
+    Py_TPFLAGS_DEFAULT,           /* tp_flags */
+    "",                /* tp_doc */
+    NULL,                         /* tp_traverse */
+    NULL,                         /* tp_clear */
+    NULL,                         /* tp_richcompare */
+    0,                            /* tp_weaklistoffset */
+    NULL,                         /* tp_iter */
+    NULL,                         /* tp_iternext */
+    RenderingHints_methods,         /* tp_methods */
+    NULL,                         /* tp_members */
+    NULL,                         /* tp_getset */
+    NULL,                         /* tp_base */
+    NULL,                         /* tp_dict */
+    NULL,                         /* tp_descr_get */
+    NULL,                         /* tp_descr_set */
+    0,                            /* tp_dictoffset */
+    (initproc) JObject_init,      /* tp_init */
+    NULL,                         /* tp_alloc */
+    NULL,                         /* tp_new */
+};
+
+static PyMethodDef Shape_methods[] = {
+    {NULL, NULL, 0, NULL} /*Sentinel*/
+};
+
+// Note: this is unused, experimental code
+
+/**
+ * Implements the BeamPy_JObjectType class singleton.
+ *
+ * THIS TYPE IS NOT YET IN USE: we currently use
+ * (<type_string>, <pointer>) tuples to represent Java JNI objects.
+ */
+PyTypeObject Shape_Type = {
+    PyVarObject_HEAD_INIT(NULL, 0)
+    "beampy.Shape",        /* tp_name */
+    sizeof (JObject),             /* tp_basicsize */
+    0,                            /* tp_itemsize */
+    (destructor)JObject_dealloc,  /* tp_dealloc */
+    NULL,                         /* tp_print */
+    NULL,                         /* tp_getattr */
+    NULL,                         /* tp_setattr */
+    NULL,                         /* tp_reserved */
+    NULL,                         /* tp_repr */
+    NULL,                         /* tp_as_number */
+    NULL,                         /* tp_as_sequence */
+    NULL,                         /* tp_as_mapping */
+    NULL,                         /* tp_hash  */
+    NULL,                         /* tp_call */
+    NULL,                         /* tp_str */
+    NULL,                         /* tp_getattro */
+    NULL,                         /* tp_setattro */
+    NULL,                         /* tp_as_buffer */
+    Py_TPFLAGS_DEFAULT,           /* tp_flags */
+    "",                /* tp_doc */
+    NULL,                         /* tp_traverse */
+    NULL,                         /* tp_clear */
+    NULL,                         /* tp_richcompare */
+    0,                            /* tp_weaklistoffset */
+    NULL,                         /* tp_iter */
+    NULL,                         /* tp_iternext */
+    Shape_methods,         /* tp_methods */
+    NULL,                         /* tp_members */
+    NULL,                         /* tp_getset */
+    NULL,                         /* tp_base */
+    NULL,                         /* tp_dict */
+    NULL,                         /* tp_descr_get */
+    NULL,                         /* tp_descr_set */
+    0,                            /* tp_dictoffset */
+    (initproc) JObject_init,      /* tp_init */
+    NULL,                         /* tp_alloc */
+    NULL,                         /* tp_new */
+};
+
+static PyMethodDef MapTransform_methods[] = {
+    {NULL, NULL, 0, NULL} /*Sentinel*/
+};
+
+// Note: this is unused, experimental code
+
+/**
+ * Implements the BeamPy_JObjectType class singleton.
+ *
+ * THIS TYPE IS NOT YET IN USE: we currently use
+ * (<type_string>, <pointer>) tuples to represent Java JNI objects.
+ */
+PyTypeObject MapTransform_Type = {
+    PyVarObject_HEAD_INIT(NULL, 0)
+    "beampy.MapTransform",        /* tp_name */
+    sizeof (JObject),             /* tp_basicsize */
+    0,                            /* tp_itemsize */
+    (destructor)JObject_dealloc,  /* tp_dealloc */
+    NULL,                         /* tp_print */
+    NULL,                         /* tp_getattr */
+    NULL,                         /* tp_setattr */
+    NULL,                         /* tp_reserved */
+    NULL,                         /* tp_repr */
+    NULL,                         /* tp_as_number */
+    NULL,                         /* tp_as_sequence */
+    NULL,                         /* tp_as_mapping */
+    NULL,                         /* tp_hash  */
+    NULL,                         /* tp_call */
+    NULL,                         /* tp_str */
+    NULL,                         /* tp_getattro */
+    NULL,                         /* tp_setattro */
+    NULL,                         /* tp_as_buffer */
+    Py_TPFLAGS_DEFAULT,           /* tp_flags */
+    "Provides a parameterized, mathematical algorithm for a map transformation.\n\n@deprecated since BEAM 4.7, use geotools {@link org.geotools.referencing.operation.projection.MapProjection} instead.",                /* tp_doc */
+    NULL,                         /* tp_traverse */
+    NULL,                         /* tp_clear */
+    NULL,                         /* tp_richcompare */
+    0,                            /* tp_weaklistoffset */
+    NULL,                         /* tp_iter */
+    NULL,                         /* tp_iternext */
+    MapTransform_methods,         /* tp_methods */
+    NULL,                         /* tp_members */
+    NULL,                         /* tp_getset */
+    NULL,                         /* tp_base */
+    NULL,                         /* tp_dict */
+    NULL,                         /* tp_descr_get */
+    NULL,                         /* tp_descr_set */
+    0,                            /* tp_dictoffset */
+    (initproc) JObject_init,      /* tp_init */
+    NULL,                         /* tp_alloc */
+    NULL,                         /* tp_new */
+};
+
+static PyMethodDef Parser_methods[] = {
+    {NULL, NULL, 0, NULL} /*Sentinel*/
+};
+
+// Note: this is unused, experimental code
+
+/**
+ * Implements the BeamPy_JObjectType class singleton.
+ *
+ * THIS TYPE IS NOT YET IN USE: we currently use
+ * (<type_string>, <pointer>) tuples to represent Java JNI objects.
+ */
+PyTypeObject Parser_Type = {
+    PyVarObject_HEAD_INIT(NULL, 0)
+    "beampy.Parser",        /* tp_name */
+    sizeof (JObject),             /* tp_basicsize */
+    0,                            /* tp_itemsize */
+    (destructor)JObject_dealloc,  /* tp_dealloc */
+    NULL,                         /* tp_print */
+    NULL,                         /* tp_getattr */
+    NULL,                         /* tp_setattr */
+    NULL,                         /* tp_reserved */
+    NULL,                         /* tp_repr */
+    NULL,                         /* tp_as_number */
+    NULL,                         /* tp_as_sequence */
+    NULL,                         /* tp_as_mapping */
+    NULL,                         /* tp_hash  */
+    NULL,                         /* tp_call */
+    NULL,                         /* tp_str */
+    NULL,                         /* tp_getattro */
+    NULL,                         /* tp_setattro */
+    NULL,                         /* tp_as_buffer */
+    Py_TPFLAGS_DEFAULT,           /* tp_flags */
+    "Instances of the Parser interface are used to convert a code\nstring representing an arithmetic expression in a tree of terms\nwhich can then be executed by using one of the evaluation methods of\nthe {@link Term} class.\nAuthor:  Norman Fomferra (norman.fomferra@brockmann-consult.de)\nVersion:  $Revision$ $Date$",                /* tp_doc */
+    NULL,                         /* tp_traverse */
+    NULL,                         /* tp_clear */
+    NULL,                         /* tp_richcompare */
+    0,                            /* tp_weaklistoffset */
+    NULL,                         /* tp_iter */
+    NULL,                         /* tp_iternext */
+    Parser_methods,         /* tp_methods */
+    NULL,                         /* tp_members */
+    NULL,                         /* tp_getset */
+    NULL,                         /* tp_base */
+    NULL,                         /* tp_dict */
+    NULL,                         /* tp_descr_get */
+    NULL,                         /* tp_descr_set */
+    0,                            /* tp_dictoffset */
+    (initproc) JObject_init,      /* tp_init */
+    NULL,                         /* tp_alloc */
+    NULL,                         /* tp_new */
+};
+
+static PyMethodDef ProductData_methods[] = {
+    {"createInstance1", (PyCFunction) BeamPyProductData_createInstance1, METH_VARARGS | METH_STATIC, "Factory method which creates a value instance of the given type and with exactly one element.\nReturns Parameter type: the value's type\nReturns a new value instance, null if the given type is not known"},
+    {"createInstance2", (PyCFunction) BeamPyProductData_createInstance2, METH_VARARGS | METH_STATIC, "Factory method which creates a value instance of the given type and with the specified number of elements.\nReturns Parameter type: the value's type\nReturns Parameter numElems: the number of elements, must be greater than zero if type is not {@link ProductData#TYPE_UTC}\nReturns a new value instance, null if the given type is not known\n@throws IllegalArgumentException if one of the arguments is invalid"},
+    {"createInstance3", (PyCFunction) BeamPyProductData_createInstance3, METH_VARARGS | METH_STATIC, "Factory method which creates a value instance of the given type and with the specified number of elements.\nReturns Parameter type: the value's type\nReturns Parameter data: if type is TYPE_ASCII the String, otherwise the primitive array type corresponding to type\nReturns a new value instance, null if the given type is not known\n@throws IllegalArgumentException if one of the arguments is invalid"},
+    {"createInstance5", (PyCFunction) BeamPyProductData_createInstance5, METH_VARARGS | METH_STATIC, ""},
+    {"createUnsignedInstance1", (PyCFunction) BeamPyProductData_createUnsignedInstance1, METH_VARARGS | METH_STATIC, ""},
+    {"createInstance10", (PyCFunction) BeamPyProductData_createInstance10, METH_VARARGS | METH_STATIC, ""},
+    {"createUnsignedInstance3", (PyCFunction) BeamPyProductData_createUnsignedInstance3, METH_VARARGS | METH_STATIC, ""},
+    {"createInstance8", (PyCFunction) BeamPyProductData_createInstance8, METH_VARARGS | METH_STATIC, ""},
+    {"createUnsignedInstance2", (PyCFunction) BeamPyProductData_createUnsignedInstance2, METH_VARARGS | METH_STATIC, ""},
+    {"createInstance9", (PyCFunction) BeamPyProductData_createInstance9, METH_VARARGS | METH_STATIC, ""},
+    {"createInstance4", (PyCFunction) BeamPyProductData_createInstance4, METH_VARARGS | METH_STATIC, ""},
+    {"createInstance7", (PyCFunction) BeamPyProductData_createInstance7, METH_VARARGS | METH_STATIC, ""},
+    {"createInstance6", (PyCFunction) BeamPyProductData_createInstance6, METH_VARARGS | METH_STATIC, ""},
+    {"getType1", (PyCFunction) BeamPyProductData_getType1, METH_VARARGS, "Returns this value's type ID."},
+    {"getElemSize2", (PyCFunction) BeamPyProductData_getElemSize2, METH_VARARGS | METH_STATIC, "Gets the element size of an element of the given type in bytes.\nReturns Parameter type: the element type\nReturns the size of a single element in bytes.\n@throws IllegalArgumentException if the type is not supported."},
+    {"getElemSize1", (PyCFunction) BeamPyProductData_getElemSize1, METH_VARARGS, "Gets the element size of an element of this product data in bytes.\nReturns the size of a single element in bytes"},
+    {"getTypeString2", (PyCFunction) BeamPyProductData_getTypeString2, METH_VARARGS | METH_STATIC, "Returns a textual representation of the given data type.\nReturns a data type string, null if the type is unknown"},
+    {"getType2", (PyCFunction) BeamPyProductData_getType2, METH_VARARGS | METH_STATIC, "Returns a integer representation of the given data type string.\nReturns a data type integer, null if the type is unknown"},
+    {"getTypeString1", (PyCFunction) BeamPyProductData_getTypeString1, METH_VARARGS, "Returns this value's data type String."},
+    {"isInt", (PyCFunction) BeamPyProductData_isInt, METH_VARARGS, "Tests whether this value has an integer.\nReturns true, if so"},
+    {"isIntType", (PyCFunction) BeamPyProductData_isIntType, METH_VARARGS | METH_STATIC, "Tests whether the given value type is a signed or unsigned integer type.\nReturns true, if so"},
+    {"isSigned", (PyCFunction) BeamPyProductData_isSigned, METH_VARARGS, "Tests whether the actual instance is an signed data type.\nReturns true, if so"},
+    {"isUnsigned", (PyCFunction) BeamPyProductData_isUnsigned, METH_VARARGS, "Tests whether the actual instance is an unsigned data type.\nReturns true, if so"},
+    {"isUIntType", (PyCFunction) BeamPyProductData_isUIntType, METH_VARARGS | METH_STATIC, "Tests whether the given value type is an unsigned integer type.\nReturns true, if so"},
+    {"isFloatingPointType", (PyCFunction) BeamPyProductData_isFloatingPointType, METH_VARARGS | METH_STATIC, "Tests whether the given value type is a floating point type.\nReturns true, if so"},
+    {"isScalar", (PyCFunction) BeamPyProductData_isScalar, METH_VARARGS, "Tests if this value is a scalar.\nReturns true, if so"},
+    {"getNumElems", (PyCFunction) BeamPyProductData_getNumElems, METH_VARARGS, "Returns the number of data elements this value has."},
+    {"getElemInt", (PyCFunction) BeamPyProductData_getElemInt, METH_VARARGS, "Returns the value as an int. The method assumes that this value is a scalar and therefore simply\nreturns getElemIntAt(0).\n@see #getElemIntAt(int index)"},
+    {"getElemUInt", (PyCFunction) BeamPyProductData_getElemUInt, METH_VARARGS, "Returns the value as an unsigned int given as a long. The method assumes that this\nvalue is a scalar and therefore simply returns getElemUIntAt(0).\n@see #getElemUIntAt(int index)"},
+    {"getElemFloat", (PyCFunction) BeamPyProductData_getElemFloat, METH_VARARGS, "Returns the value as an float. The method assumes that this value is a scalar and therefore\nsimply returns getElemFloatAt(0).\n@see #getElemFloatAt(int index)"},
+    {"getElemDouble", (PyCFunction) BeamPyProductData_getElemDouble, METH_VARARGS, "Returns the value as an double. The method assumes that this value is a scalar and therefore\nsimply returns getElemDoubleAt(0).\n@see #getElemDoubleAt(int index)"},
+    {"getElemString", (PyCFunction) BeamPyProductData_getElemString, METH_VARARGS, "Returns the value as a String. The text returned is the comma-separated list of elements contained\nin this value.\nReturns a text representing this fields value, never null"},
+    {"getElemBoolean", (PyCFunction) BeamPyProductData_getElemBoolean, METH_VARARGS, "Returns the value as an boolean. The method assumes that this value is a scalar and therefore\nsimply returns getElemBooleanAt(0).\n@see #getElemBooleanAt(int index)"},
+    {"getElemIntAt", (PyCFunction) BeamPyProductData_getElemIntAt, METH_VARARGS, "Gets the value element with the given index as an int.\nReturns Parameter index: the value index, must be &gt;=0 and &lt;getNumDataElems()\n@throws IndexOutOfBoundsException if the index is out of bounds"},
+    {"getElemUIntAt", (PyCFunction) BeamPyProductData_getElemUIntAt, METH_VARARGS, "Gets the value element with the given index as a long.\nReturns Parameter index: the value index, must be &gt;=0 and &lt;getNumDataElems()\n@throws IndexOutOfBoundsException if the index is out of bounds"},
+    {"getElemFloatAt", (PyCFunction) BeamPyProductData_getElemFloatAt, METH_VARARGS, "Gets the value element with the given index as a float.\nReturns Parameter index: the value index, must be &gt;=0 and &lt;getNumDataElems()\n@throws IndexOutOfBoundsException if the index is out of bounds"},
+    {"getElemDoubleAt", (PyCFunction) BeamPyProductData_getElemDoubleAt, METH_VARARGS, "Gets the value element with the given index as a double.\nReturns Parameter index: the value index, must be &gt;=0 and &lt;getNumDataElems()\n@throws IndexOutOfBoundsException if the index is out of bounds"},
+    {"getElemStringAt", (PyCFunction) BeamPyProductData_getElemStringAt, METH_VARARGS, "Gets the value element with the given index as a String.\nReturns Parameter index: the value index, must be &gt;=0 and &lt;getNumDataElems()\n@throws IndexOutOfBoundsException if the index is out of bounds"},
+    {"getElemBooleanAt", (PyCFunction) BeamPyProductData_getElemBooleanAt, METH_VARARGS, "Gets the value element with the given index as a boolean.\nReturns Parameter index: the value index, must be &gt;=0 and &lt;getNumDataElems()\n@throws IndexOutOfBoundsException if the index is out of bounds"},
+    {"setElemInt", (PyCFunction) BeamPyProductData_setElemInt, METH_VARARGS, "Sets the value as an int. The method assumes that this value is a scalar and therefore simply\ncalls setElemInt(0, value).\nReturns Parameter value: the value to be set\n@see #setElemIntAt(int index, int value)"},
+    {"setElemUInt", (PyCFunction) BeamPyProductData_setElemUInt, METH_VARARGS, "Sets the value as an unsigned int given as a long. The method assumes that this\nvalue is a scalar and therefore simply calls setElemUInt(0, value).\nReturns Parameter value: the value to be set\n@see #setElemUIntAt(int index, long value)"},
+    {"setElemFloat", (PyCFunction) BeamPyProductData_setElemFloat, METH_VARARGS, "Sets the value as a float. The method assumes that this value is a scalar and therefore simply\ncalls setElemFloatAt(0, value).\nReturns Parameter value: the value to be set\n@see #setElemFloatAt(int index, float value)"},
+    {"setElemDouble", (PyCFunction) BeamPyProductData_setElemDouble, METH_VARARGS, "Sets the value as a double. The method assumes that this value is a scalar and therefore simply\ncalls setElemDoubleAt(0).\nReturns Parameter value: the value to be set\n@see #setElemDoubleAt(int index, double value)"},
+    {"setElemString", (PyCFunction) BeamPyProductData_setElemString, METH_VARARGS, "Sets the value as a String. The method assumes that this value is a scalar and therefore simply\ncalls setElemStringAt(0).\nReturns Parameter value: the value to be set\n@see #setElemStringAt"},
+    {"setElemBoolean", (PyCFunction) BeamPyProductData_setElemBoolean, METH_VARARGS, "Sets the value as a boolean. The method assumes that this value is a scalar and therefore simply\ncalls setElemDoubleAt(0).\nReturns Parameter value: the value to be set\n@see #setElemBooleanAt(int index, boolean value)"},
+    {"setElemIntAt", (PyCFunction) BeamPyProductData_setElemIntAt, METH_VARARGS, "Sets the value at the specified index as an int.\nReturns Parameter index: the value index, must be &gt;=0 and &lt;getNumDataElems()\nReturns Parameter value: the value to be set\n@throws IndexOutOfBoundsException if the index is out of bounds"},
+    {"setElemUIntAt", (PyCFunction) BeamPyProductData_setElemUIntAt, METH_VARARGS, "Sets the value at the specified index as an unsigned int given as a long.\nReturns Parameter index: the value index, must be &gt;=0 and &lt;getNumDataElems()\nReturns Parameter value: the value to be set\n@throws IndexOutOfBoundsException if the index is out of bounds"},
+    {"setElemFloatAt", (PyCFunction) BeamPyProductData_setElemFloatAt, METH_VARARGS, "Sets the value at the specified index as a float.\nReturns Parameter index: the value index, must be &gt;=0 and &lt;getNumDataElems()\nReturns Parameter value: the value to be set\n@throws IndexOutOfBoundsException if the index is out of bounds"},
+    {"setElemDoubleAt", (PyCFunction) BeamPyProductData_setElemDoubleAt, METH_VARARGS, "Sets the value at the specified index as a double.\nReturns Parameter index: the value index, must be &gt;=0 and &lt;getNumDataElems()\nReturns Parameter value: the value to be set\n@throws IndexOutOfBoundsException if the index is out of bounds"},
+    {"setElemStringAt", (PyCFunction) BeamPyProductData_setElemStringAt, METH_VARARGS, "Sets the value at the specified index as a String.\n\nTHE METHOD IS CURRENTLY NOT IMPLEMENTED.\nReturns Parameter index: the value index, must be &gt;=0 and &lt;getNumDataElems()\nReturns Parameter value: the value to be set\n@throws IndexOutOfBoundsException if the index is out of bounds"},
+    {"setElemBooleanAt", (PyCFunction) BeamPyProductData_setElemBooleanAt, METH_VARARGS, "Sets the value at the specified index as a boolean.\nReturns Parameter index: the value index, must be &gt;=0 and &lt;getNumDataElems()\nReturns Parameter value: the value to be set\n@throws IndexOutOfBoundsException if the index is out of bounds"},
+    {"getElems", (PyCFunction) BeamPyProductData_getElems, METH_VARARGS, "Returns the internal value. The actual type of the returned object should only be one of <ol>\n<li>byte[] - for signed/unsigned 8-bit integer fields</li> <li>short[] - for\nsigned/unsigned 16-bit integer fields</li> <li>int[] - for signed/unsigned 32-bit integer\nfields</li> <li>float[] - for signed 32-bit floating point fields</li> <li>double[] -\nfor signed 64-bit floating point fields</li> </ol>\nReturns an array of one of the described types"},
+    {"setElems", (PyCFunction) BeamPyProductData_setElems, METH_VARARGS, "Sets the internal value. The actual type of the given data object should only be one of <ol>\n<li>byte[] - for signed/unsigned 8-bit integer fields</li> <li>short[] - for\nsigned/unsigned 16-bit integer fields</li> <li>int[] - for signed/unsigned 32-bit integer\nfields</li> <li>float[] - for signed 32-bit floating point fields</li> <li>double[] -\nfor signed 64-bit floating point fields</li> <li>String[] - for all field types</li> </ol>\nReturns Parameter data: an array of one of the described types"},
+    {"readFrom4", (PyCFunction) BeamPyProductData_readFrom4, METH_VARARGS, "Reads all elements of this ProductData instance from to the given input stream.\n\n The method subsequentially reads the elements at 0 to getNumElems()-1 of this\nProductData instance from the given input stream.<br> Reading starts at the current seek position\nwithin the input stream.\nReturns Parameter input: a seekable data input stream\n@throws IOException if an I/O error occurs"},
+    {"readFrom3", (PyCFunction) BeamPyProductData_readFrom3, METH_VARARGS, "Reads a single element of this ProductData instance from to the given output stream.\n\n The method reads the element at pos of this ProductData instance from the given\noutput stream.<br> Reading starts at the current seek position within the output stream.\nReturns Parameter pos: the destination position (zero-based)\nReturns Parameter input: a seekable data input stream\n@throws IOException if an I/O error occurs"},
+    {"readFrom1", (PyCFunction) BeamPyProductData_readFrom1, METH_VARARGS, "Reads elements of this ProductData instance from the given output stream.\n\n The method subsequentially reads the elements at startPos to startPos+numElems-1 of\nthis ProductData instance from the given input stream.<br> Reading starts at the current seek\nposition of the input stream.\nReturns Parameter startPos: the destination start position (zero-based)\nReturns Parameter numElems: the number of elements to read\nReturns Parameter input: a seekable data input stream\n@throws IOException if an I/O error occurs"},
+    {"readFrom2", (PyCFunction) BeamPyProductData_readFrom2, METH_VARARGS, "Reads elements into this ProductData instance from the given input stream.\n\n The method subsequentially reads the elements at startPos to startPos+numElems-1 of\nthis ProductData instance from the given input stream.<br> Reading starts at inputPos\nwithin the output stream. The method multiplies this position with the value returned by\ngetElemSize() in order to find the correct stream offset in bytes.\nReturns Parameter startPos: the destination start position (zero-based)\nReturns Parameter numElems: the number of elements to read\nReturns Parameter input: a seekable data input stream\nReturns Parameter inputPos: the (zero-based) position in the data output stream where reading starts\n@throws IOException if an I/O error occurs"},
+    {"writeTo4", (PyCFunction) BeamPyProductData_writeTo4, METH_VARARGS, "Writes all elements of this ProductData instance to to the given output stream.\n\n The method subsequentially writes the elements at 0 to getNumElems()-1 of this\nProductData instance to the given output stream.<br> Writing starts at the current seek position\nwithin the output stream.\nReturns Parameter output: a seekable data output stream\n@throws IOException if an I/O error occurs"},
+    {"writeTo3", (PyCFunction) BeamPyProductData_writeTo3, METH_VARARGS, "Writes a single element of this ProductData instance to to the given output stream.\n\n The method writes the element at pos of this ProductData instance to the given\noutput stream.<br> Writing starts at the current seek position within the output stream.\nReturns Parameter pos: the source position (zero-based)\nReturns Parameter output: a seekable data output stream\n@throws IOException if an I/O error occurs"},
+    {"writeTo1", (PyCFunction) BeamPyProductData_writeTo1, METH_VARARGS, "Writes elements of this ProductData instance to to the given output stream.\n\n The method subsequentially writes the elements at startPos to startPos+numElems-1\nof this ProductData instance to the given output stream.<br> Writing starts at the current seek\nposition within the output stream.\nReturns Parameter startPos: the source start position (zero-based)\nReturns Parameter numElems: the number of elements to be written\nReturns Parameter output: a seekable data output stream\n@throws IOException if an I/O error occurs"},
+    {"writeTo2", (PyCFunction) BeamPyProductData_writeTo2, METH_VARARGS, "Writes elements of this ProductData instance to to the given output stream.\n\n The method subsequentially writes the elements at startPos to startPos+numElems-1\nof this ProductData instance to the given output stream.<br> Writing starts at\noutputPos within the output stream. The method multiplies this position with the value returned by\ngetElemSize() in order to find the correct stream offset in bytes.\nReturns Parameter startPos: the source start position (zero-based)\nReturns Parameter numElems: the number of elements to be written\nReturns Parameter output: a seekable data output stream\nReturns Parameter outputPos: the position in the data output stream where writing starts\n@throws IOException if an I/O error occurs"},
+    {"toString", (PyCFunction) BeamPyProductData_toString, METH_VARARGS, "Returns a string representation of this value which can be used for debugging purposes."},
+    {"hashCode", (PyCFunction) BeamPyProductData_hashCode, METH_VARARGS, "Returns {@link Object#hashCode()}."},
+    {"equals", (PyCFunction) BeamPyProductData_equals, METH_VARARGS, "Returns {@link Object#equals(Object)}.\nUse {@link #equalElems} in order to perform an element-wise comparision."},
+    {"equalElems", (PyCFunction) BeamPyProductData_equalElems, METH_VARARGS, "Tests whether this ProductData is equal to another one.\nPerforms an element-wise comparision if the other object is a {@link ProductData} instance of the same data type.\nOtherwise the method behaves like {@link Object#equals(Object)}.\nReturns Parameter other: the other one"},
+    {"dispose", (PyCFunction) BeamPyProductData_dispose, METH_VARARGS, "Releases all of the resources used by this object instance and all of its owned children. Its primary use is to\nallow the garbage collector to perform a vanilla job.\n\nThis method should be called only if it is for sure that this object instance will never be used again. The\nresults of referencing an instance of this class after a call to dispose() are undefined."},
+    {NULL, NULL, 0, NULL} /*Sentinel*/
+};
+
+// Note: this is unused, experimental code
+
+/**
+ * Implements the BeamPy_JObjectType class singleton.
+ *
+ * THIS TYPE IS NOT YET IN USE: we currently use
+ * (<type_string>, <pointer>) tuples to represent Java JNI objects.
+ */
+PyTypeObject ProductData_Type = {
+    PyVarObject_HEAD_INIT(NULL, 0)
+    "beampy.ProductData",        /* tp_name */
+    sizeof (JObject),             /* tp_basicsize */
+    0,                            /* tp_itemsize */
+    (destructor)JObject_dealloc,  /* tp_dealloc */
+    NULL,                         /* tp_print */
+    NULL,                         /* tp_getattr */
+    NULL,                         /* tp_setattr */
+    NULL,                         /* tp_reserved */
+    NULL,                         /* tp_repr */
+    NULL,                         /* tp_as_number */
+    NULL,                         /* tp_as_sequence */
+    NULL,                         /* tp_as_mapping */
+    NULL,                         /* tp_hash  */
+    NULL,                         /* tp_call */
+    NULL,                         /* tp_str */
+    NULL,                         /* tp_getattro */
+    NULL,                         /* tp_setattro */
+    NULL,                         /* tp_as_buffer */
+    Py_TPFLAGS_DEFAULT,           /* tp_flags */
+    "The abstract ProductData class represents a generic data buffer used to hold the actual data values\nstored in remote sensing data products.\n\n A single ProductData instance can have one or more elements of a primitive type. The primitive types\nare: <ld> <li> {@link ProductData.Byte signed 8-bit integer} </li> <li> {@link ProductData.UByte unsigned 16-bit\ninteger} </li> <li> {@link ProductData.Short signed 32-bit integer} </li> <li> {@link ProductData.UShort unsigned\n16-bit integer} </li> <li> {@link ProductData.Int signed 32-bit integer} </li> <li> {@link ProductData.UInt unsigned\n32-bit integer} </li> <li> {@link ProductData.Float 32-bit floating point} </li> <li> {@link ProductData.Double\n64-bit floating point} </li> <li> {@link ProductData.ASCII a character string (8-bit ASCII encoding)} </li> <li>\n{@link ProductData.UTC a MJD-2000 encoded data/time value} </li> </ld>\n\nThe number of elements is an inmutable property of a ProductData instance.\n\nIn order to access the data in a ProductData instance, multiple setters and getters are provided\nwhich use generic transfer data types in order to make the data transfer in and out of a\nProductData instance easy for programmers.<br> For scalar (one-element) values the prototypes are\n<pre>\nvoid setElemType(Type elem);\nType getElemType();\n</pre>\nFor vector (multiple-element) values the prototypes are\n<pre>\nvoid setElemTypeAt(int index, Type elem);\nType getElemTypeAt(int index);\n</pre>\nWhere the transfer data type Type is one of int, long,\nfloat, double and String.\nAuthor:  Norman Fomferra\nVersion:  $Revision$ $Date$",                /* tp_doc */
+    NULL,                         /* tp_traverse */
+    NULL,                         /* tp_clear */
+    NULL,                         /* tp_richcompare */
+    0,                            /* tp_weaklistoffset */
+    NULL,                         /* tp_iter */
+    NULL,                         /* tp_iternext */
+    ProductData_methods,         /* tp_methods */
+    NULL,                         /* tp_members */
+    NULL,                         /* tp_getset */
+    NULL,                         /* tp_base */
+    NULL,                         /* tp_dict */
+    NULL,                         /* tp_descr_get */
+    NULL,                         /* tp_descr_set */
+    0,                            /* tp_dictoffset */
+    (initproc) JObject_init,      /* tp_init */
+    NULL,                         /* tp_alloc */
+    NULL,                         /* tp_new */
+};
+
+static PyMethodDef OperatorSpi_methods[] = {
+    {NULL, NULL, 0, NULL} /*Sentinel*/
+};
+
+// Note: this is unused, experimental code
+
+/**
+ * Implements the BeamPy_JObjectType class singleton.
+ *
+ * THIS TYPE IS NOT YET IN USE: we currently use
+ * (<type_string>, <pointer>) tuples to represent Java JNI objects.
+ */
+PyTypeObject OperatorSpi_Type = {
+    PyVarObject_HEAD_INIT(NULL, 0)
+    "beampy.OperatorSpi",        /* tp_name */
+    sizeof (JObject),             /* tp_basicsize */
+    0,                            /* tp_itemsize */
+    (destructor)JObject_dealloc,  /* tp_dealloc */
+    NULL,                         /* tp_print */
+    NULL,                         /* tp_getattr */
+    NULL,                         /* tp_setattr */
+    NULL,                         /* tp_reserved */
+    NULL,                         /* tp_repr */
+    NULL,                         /* tp_as_number */
+    NULL,                         /* tp_as_sequence */
+    NULL,                         /* tp_as_mapping */
+    NULL,                         /* tp_hash  */
+    NULL,                         /* tp_call */
+    NULL,                         /* tp_str */
+    NULL,                         /* tp_getattro */
+    NULL,                         /* tp_setattro */
+    NULL,                         /* tp_as_buffer */
+    Py_TPFLAGS_DEFAULT,           /* tp_flags */
+    "The OperatorSpi class is the service provider interface (SPI) for {@link Operator}s.\nTherefore this abstract class is intended to be derived by clients.\nThe SPI is both a descriptor for the operator type and a factory for new {@link Operator} instances.\nAn SPI is required for your operator if you want to make it accessible via an alias name in\nthe various {@link GPF}{@code .create} methods or within GPF Graph XML code.\nSPI are registered either programmatically using the\n{@link GPF#getOperatorSpiRegistry() OperatorSpiRegistry} or\nautomatically via standard Java services lookup mechanism. For the services approach, place a\nfile {@code META-INF/services/OperatorSpi}\nin the JAR file containing your operators and associated SPIs.\nFor each SPI to be automatically registered, place a text line in the file containing the SPI's\nfully qualified class name.\nAuthor:  Norman Fomferra\nAuthor:  Marco Peters\nSince version:  4.1",                /* tp_doc */
+    NULL,                         /* tp_traverse */
+    NULL,                         /* tp_clear */
+    NULL,                         /* tp_richcompare */
+    0,                            /* tp_weaklistoffset */
+    NULL,                         /* tp_iter */
+    NULL,                         /* tp_iternext */
+    OperatorSpi_methods,         /* tp_methods */
+    NULL,                         /* tp_members */
+    NULL,                         /* tp_getset */
+    NULL,                         /* tp_base */
+    NULL,                         /* tp_dict */
+    NULL,                         /* tp_descr_get */
+    NULL,                         /* tp_descr_set */
+    0,                            /* tp_dictoffset */
+    (initproc) JObject_init,      /* tp_init */
+    NULL,                         /* tp_alloc */
+    NULL,                         /* tp_new */
+};
+
+static PyMethodDef Double_methods[] = {
+    {NULL, NULL, 0, NULL} /*Sentinel*/
+};
+
+// Note: this is unused, experimental code
+
+/**
+ * Implements the BeamPy_JObjectType class singleton.
+ *
+ * THIS TYPE IS NOT YET IN USE: we currently use
+ * (<type_string>, <pointer>) tuples to represent Java JNI objects.
+ */
+PyTypeObject Double_Type = {
+    PyVarObject_HEAD_INIT(NULL, 0)
+    "beampy.Double",        /* tp_name */
+    sizeof (JObject),             /* tp_basicsize */
+    0,                            /* tp_itemsize */
+    (destructor)JObject_dealloc,  /* tp_dealloc */
+    NULL,                         /* tp_print */
+    NULL,                         /* tp_getattr */
+    NULL,                         /* tp_setattr */
+    NULL,                         /* tp_reserved */
+    NULL,                         /* tp_repr */
+    NULL,                         /* tp_as_number */
+    NULL,                         /* tp_as_sequence */
+    NULL,                         /* tp_as_mapping */
+    NULL,                         /* tp_hash  */
+    NULL,                         /* tp_call */
+    NULL,                         /* tp_str */
+    NULL,                         /* tp_getattro */
+    NULL,                         /* tp_setattro */
+    NULL,                         /* tp_as_buffer */
+    Py_TPFLAGS_DEFAULT,           /* tp_flags */
+    "",                /* tp_doc */
+    NULL,                         /* tp_traverse */
+    NULL,                         /* tp_clear */
+    NULL,                         /* tp_richcompare */
+    0,                            /* tp_weaklistoffset */
+    NULL,                         /* tp_iter */
+    NULL,                         /* tp_iternext */
+    Double_methods,         /* tp_methods */
+    NULL,                         /* tp_members */
+    NULL,                         /* tp_getset */
+    NULL,                         /* tp_base */
+    NULL,                         /* tp_dict */
+    NULL,                         /* tp_descr_get */
+    NULL,                         /* tp_descr_set */
+    0,                            /* tp_dictoffset */
+    (initproc) JObject_init,      /* tp_init */
+    NULL,                         /* tp_alloc */
+    NULL,                         /* tp_new */
+};
+
+static PyMethodDef Term_methods[] = {
+    {NULL, NULL, 0, NULL} /*Sentinel*/
+};
+
+// Note: this is unused, experimental code
+
+/**
+ * Implements the BeamPy_JObjectType class singleton.
+ *
+ * THIS TYPE IS NOT YET IN USE: we currently use
+ * (<type_string>, <pointer>) tuples to represent Java JNI objects.
+ */
+PyTypeObject Term_Type = {
+    PyVarObject_HEAD_INIT(NULL, 0)
+    "beampy.Term",        /* tp_name */
+    sizeof (JObject),             /* tp_basicsize */
+    0,                            /* tp_itemsize */
+    (destructor)JObject_dealloc,  /* tp_dealloc */
+    NULL,                         /* tp_print */
+    NULL,                         /* tp_getattr */
+    NULL,                         /* tp_setattr */
+    NULL,                         /* tp_reserved */
+    NULL,                         /* tp_repr */
+    NULL,                         /* tp_as_number */
+    NULL,                         /* tp_as_sequence */
+    NULL,                         /* tp_as_mapping */
+    NULL,                         /* tp_hash  */
+    NULL,                         /* tp_call */
+    NULL,                         /* tp_str */
+    NULL,                         /* tp_getattro */
+    NULL,                         /* tp_setattro */
+    NULL,                         /* tp_as_buffer */
+    Py_TPFLAGS_DEFAULT,           /* tp_flags */
+    "The abstract Term class is an in-memory representation of an\nelement within an arbitrary expression tree. The class defines a number of\nconcrete Term implementations each representing either an\nan atomic leave (number constant, symbol reference) or a node\n(e.g. binary operator, function call) within an expression tree.\n\n Instances of this class are normally created using an expression parser\nwhich implements the {@link com.bc.jexp.Parser} interface.\nThe {@link com.bc.jexp.impl.ParserImpl} class provides a default\nimplementation of such a parser.\nAuthor:  Norman Fomferra (norman.fomferra@brockmann-consult.de)\nVersion:  $Revision$ $Date$",                /* tp_doc */
+    NULL,                         /* tp_traverse */
+    NULL,                         /* tp_clear */
+    NULL,                         /* tp_richcompare */
+    0,                            /* tp_weaklistoffset */
+    NULL,                         /* tp_iter */
+    NULL,                         /* tp_iternext */
+    Term_methods,         /* tp_methods */
+    NULL,                         /* tp_members */
+    NULL,                         /* tp_getset */
+    NULL,                         /* tp_base */
+    NULL,                         /* tp_dict */
+    NULL,                         /* tp_descr_get */
+    NULL,                         /* tp_descr_set */
+    0,                            /* tp_dictoffset */
+    (initproc) JObject_init,      /* tp_init */
+    NULL,                         /* tp_alloc */
+    NULL,                         /* tp_new */
+};
+
+static PyMethodDef RasterDataNode_methods[] = {
+    {NULL, NULL, 0, NULL} /*Sentinel*/
+};
+
+// Note: this is unused, experimental code
+
+/**
+ * Implements the BeamPy_JObjectType class singleton.
+ *
+ * THIS TYPE IS NOT YET IN USE: we currently use
+ * (<type_string>, <pointer>) tuples to represent Java JNI objects.
+ */
+PyTypeObject RasterDataNode_Type = {
+    PyVarObject_HEAD_INIT(NULL, 0)
+    "beampy.RasterDataNode",        /* tp_name */
+    sizeof (JObject),             /* tp_basicsize */
+    0,                            /* tp_itemsize */
+    (destructor)JObject_dealloc,  /* tp_dealloc */
+    NULL,                         /* tp_print */
+    NULL,                         /* tp_getattr */
+    NULL,                         /* tp_setattr */
+    NULL,                         /* tp_reserved */
+    NULL,                         /* tp_repr */
+    NULL,                         /* tp_as_number */
+    NULL,                         /* tp_as_sequence */
+    NULL,                         /* tp_as_mapping */
+    NULL,                         /* tp_hash  */
+    NULL,                         /* tp_call */
+    NULL,                         /* tp_str */
+    NULL,                         /* tp_getattro */
+    NULL,                         /* tp_setattro */
+    NULL,                         /* tp_as_buffer */
+    Py_TPFLAGS_DEFAULT,           /* tp_flags */
+    "The RasterDataNode class ist the abstract base class for all objects in the product package that contain\nrasterized data. i.e. Band and TiePointGrid. It unifies the access to raster data in the\nproduct model. A raster is considered as a rectangular raw data array with a fixed width and height. A raster data\nnode can scale its raw raster data samples in order to return geophysically meaningful pixel values.\nAuthor:  Norman Fomferra\n@see #getRasterData()\n@see #getRasterWidth()\n@see #getRasterHeight()\n@see #isScalingApplied()\n@see #isLog10Scaled()\n@see #getScalingFactor()\n@see #getScalingOffset()",                /* tp_doc */
+    NULL,                         /* tp_traverse */
+    NULL,                         /* tp_clear */
+    NULL,                         /* tp_richcompare */
+    0,                            /* tp_weaklistoffset */
+    NULL,                         /* tp_iter */
+    NULL,                         /* tp_iternext */
+    RasterDataNode_methods,         /* tp_methods */
+    NULL,                         /* tp_members */
+    NULL,                         /* tp_getset */
+    NULL,                         /* tp_base */
+    NULL,                         /* tp_dict */
+    NULL,                         /* tp_descr_get */
+    NULL,                         /* tp_descr_set */
+    0,                            /* tp_dictoffset */
+    (initproc) JObject_init,      /* tp_init */
+    NULL,                         /* tp_alloc */
+    NULL,                         /* tp_new */
+};
+
+static PyMethodDef Product_AutoGrouping_methods[] = {
+    {NULL, NULL, 0, NULL} /*Sentinel*/
+};
+
+// Note: this is unused, experimental code
+
+/**
+ * Implements the BeamPy_JObjectType class singleton.
+ *
+ * THIS TYPE IS NOT YET IN USE: we currently use
+ * (<type_string>, <pointer>) tuples to represent Java JNI objects.
+ */
+PyTypeObject Product_AutoGrouping_Type = {
+    PyVarObject_HEAD_INIT(NULL, 0)
+    "beampy.Product_AutoGrouping",        /* tp_name */
+    sizeof (JObject),             /* tp_basicsize */
+    0,                            /* tp_itemsize */
+    (destructor)JObject_dealloc,  /* tp_dealloc */
+    NULL,                         /* tp_print */
+    NULL,                         /* tp_getattr */
+    NULL,                         /* tp_setattr */
+    NULL,                         /* tp_reserved */
+    NULL,                         /* tp_repr */
+    NULL,                         /* tp_as_number */
+    NULL,                         /* tp_as_sequence */
+    NULL,                         /* tp_as_mapping */
+    NULL,                         /* tp_hash  */
+    NULL,                         /* tp_call */
+    NULL,                         /* tp_str */
+    NULL,                         /* tp_getattro */
+    NULL,                         /* tp_setattro */
+    NULL,                         /* tp_as_buffer */
+    Py_TPFLAGS_DEFAULT,           /* tp_flags */
+    "AutoGrouping can be used by an application to auto-group a long list of product nodes (e.g. bands)\nas a tree of product nodes.\nSince version:  BEAM 4.8",                /* tp_doc */
+    NULL,                         /* tp_traverse */
+    NULL,                         /* tp_clear */
+    NULL,                         /* tp_richcompare */
+    0,                            /* tp_weaklistoffset */
+    NULL,                         /* tp_iter */
+    NULL,                         /* tp_iternext */
+    Product_AutoGrouping_methods,         /* tp_methods */
+    NULL,                         /* tp_members */
+    NULL,                         /* tp_getset */
+    NULL,                         /* tp_base */
+    NULL,                         /* tp_dict */
+    NULL,                         /* tp_descr_get */
+    NULL,                         /* tp_descr_set */
+    0,                            /* tp_dictoffset */
+    (initproc) JObject_init,      /* tp_init */
+    NULL,                         /* tp_alloc */
+    NULL,                         /* tp_new */
+};
+
+static PyMethodDef Dimension_methods[] = {
+    {NULL, NULL, 0, NULL} /*Sentinel*/
+};
+
+// Note: this is unused, experimental code
+
+/**
+ * Implements the BeamPy_JObjectType class singleton.
+ *
+ * THIS TYPE IS NOT YET IN USE: we currently use
+ * (<type_string>, <pointer>) tuples to represent Java JNI objects.
+ */
+PyTypeObject Dimension_Type = {
+    PyVarObject_HEAD_INIT(NULL, 0)
+    "beampy.Dimension",        /* tp_name */
+    sizeof (JObject),             /* tp_basicsize */
+    0,                            /* tp_itemsize */
+    (destructor)JObject_dealloc,  /* tp_dealloc */
+    NULL,                         /* tp_print */
+    NULL,                         /* tp_getattr */
+    NULL,                         /* tp_setattr */
+    NULL,                         /* tp_reserved */
+    NULL,                         /* tp_repr */
+    NULL,                         /* tp_as_number */
+    NULL,                         /* tp_as_sequence */
+    NULL,                         /* tp_as_mapping */
+    NULL,                         /* tp_hash  */
+    NULL,                         /* tp_call */
+    NULL,                         /* tp_str */
+    NULL,                         /* tp_getattro */
+    NULL,                         /* tp_setattro */
+    NULL,                         /* tp_as_buffer */
+    Py_TPFLAGS_DEFAULT,           /* tp_flags */
+    "",                /* tp_doc */
+    NULL,                         /* tp_traverse */
+    NULL,                         /* tp_clear */
+    NULL,                         /* tp_richcompare */
+    0,                            /* tp_weaklistoffset */
+    NULL,                         /* tp_iter */
+    NULL,                         /* tp_iternext */
+    Dimension_methods,         /* tp_methods */
+    NULL,                         /* tp_members */
+    NULL,                         /* tp_getset */
+    NULL,                         /* tp_base */
+    NULL,                         /* tp_dict */
+    NULL,                         /* tp_descr_get */
+    NULL,                         /* tp_descr_set */
+    0,                            /* tp_dictoffset */
+    (initproc) JObject_init,      /* tp_init */
+    NULL,                         /* tp_alloc */
+    NULL,                         /* tp_new */
+};
+
+static PyMethodDef Stx_methods[] = {
+    {NULL, NULL, 0, NULL} /*Sentinel*/
+};
+
+// Note: this is unused, experimental code
+
+/**
+ * Implements the BeamPy_JObjectType class singleton.
+ *
+ * THIS TYPE IS NOT YET IN USE: we currently use
+ * (<type_string>, <pointer>) tuples to represent Java JNI objects.
+ */
+PyTypeObject Stx_Type = {
+    PyVarObject_HEAD_INIT(NULL, 0)
+    "beampy.Stx",        /* tp_name */
+    sizeof (JObject),             /* tp_basicsize */
+    0,                            /* tp_itemsize */
+    (destructor)JObject_dealloc,  /* tp_dealloc */
+    NULL,                         /* tp_print */
+    NULL,                         /* tp_getattr */
+    NULL,                         /* tp_setattr */
+    NULL,                         /* tp_reserved */
+    NULL,                         /* tp_repr */
+    NULL,                         /* tp_as_number */
+    NULL,                         /* tp_as_sequence */
+    NULL,                         /* tp_as_mapping */
+    NULL,                         /* tp_hash  */
+    NULL,                         /* tp_call */
+    NULL,                         /* tp_str */
+    NULL,                         /* tp_getattro */
+    NULL,                         /* tp_setattro */
+    NULL,                         /* tp_as_buffer */
+    Py_TPFLAGS_DEFAULT,           /* tp_flags */
+    "Provides statistic information for a raster data node at a given image resolution level.\nInstances of the Stx class are created using the {@link StxFactory}.\n\nImportant note: This class has been revised in BEAM 4.10. All behaviour has been moved to {@link StxFactory}\nleaving behind this class as a pure data container. Statistics are now furthermore derived upon\ngeo-physically interpreted image data (before it operated on the raw, unscaled data). Thus, it is\nnot required to scale the returned statistical properties, e.g. we used to write\n{@code band.scale(stx.getMean())}. This is not required anymore.\nAuthor:  Norman Fomferra\nAuthor:  Marco Peters\nAuthor:  Ralf Quast\nSince version:  BEAM 4.2, full revision in 4.10",                /* tp_doc */
+    NULL,                         /* tp_traverse */
+    NULL,                         /* tp_clear */
+    NULL,                         /* tp_richcompare */
+    0,                            /* tp_weaklistoffset */
+    NULL,                         /* tp_iter */
+    NULL,                         /* tp_iternext */
+    Stx_methods,         /* tp_methods */
+    NULL,                         /* tp_members */
+    NULL,                         /* tp_getset */
+    NULL,                         /* tp_base */
+    NULL,                         /* tp_dict */
+    NULL,                         /* tp_descr_get */
+    NULL,                         /* tp_descr_set */
+    0,                            /* tp_dictoffset */
+    (initproc) JObject_init,      /* tp_init */
+    NULL,                         /* tp_alloc */
+    NULL,                         /* tp_new */
+};
+
+static PyMethodDef ImageOutputStream_methods[] = {
+    {NULL, NULL, 0, NULL} /*Sentinel*/
+};
+
+// Note: this is unused, experimental code
+
+/**
+ * Implements the BeamPy_JObjectType class singleton.
+ *
+ * THIS TYPE IS NOT YET IN USE: we currently use
+ * (<type_string>, <pointer>) tuples to represent Java JNI objects.
+ */
+PyTypeObject ImageOutputStream_Type = {
+    PyVarObject_HEAD_INIT(NULL, 0)
+    "beampy.ImageOutputStream",        /* tp_name */
+    sizeof (JObject),             /* tp_basicsize */
+    0,                            /* tp_itemsize */
+    (destructor)JObject_dealloc,  /* tp_dealloc */
+    NULL,                         /* tp_print */
+    NULL,                         /* tp_getattr */
+    NULL,                         /* tp_setattr */
+    NULL,                         /* tp_reserved */
+    NULL,                         /* tp_repr */
+    NULL,                         /* tp_as_number */
+    NULL,                         /* tp_as_sequence */
+    NULL,                         /* tp_as_mapping */
+    NULL,                         /* tp_hash  */
+    NULL,                         /* tp_call */
+    NULL,                         /* tp_str */
+    NULL,                         /* tp_getattro */
+    NULL,                         /* tp_setattro */
+    NULL,                         /* tp_as_buffer */
+    Py_TPFLAGS_DEFAULT,           /* tp_flags */
+    "",                /* tp_doc */
+    NULL,                         /* tp_traverse */
+    NULL,                         /* tp_clear */
+    NULL,                         /* tp_richcompare */
+    0,                            /* tp_weaklistoffset */
+    NULL,                         /* tp_iter */
+    NULL,                         /* tp_iternext */
+    ImageOutputStream_methods,         /* tp_methods */
+    NULL,                         /* tp_members */
+    NULL,                         /* tp_getset */
+    NULL,                         /* tp_base */
+    NULL,                         /* tp_dict */
+    NULL,                         /* tp_descr_get */
+    NULL,                         /* tp_descr_set */
+    0,                            /* tp_dictoffset */
+    (initproc) JObject_init,      /* tp_init */
+    NULL,                         /* tp_alloc */
+    NULL,                         /* tp_new */
+};
+
+static PyMethodDef SimpleFeatureType_methods[] = {
+    {NULL, NULL, 0, NULL} /*Sentinel*/
+};
+
+// Note: this is unused, experimental code
+
+/**
+ * Implements the BeamPy_JObjectType class singleton.
+ *
+ * THIS TYPE IS NOT YET IN USE: we currently use
+ * (<type_string>, <pointer>) tuples to represent Java JNI objects.
+ */
+PyTypeObject SimpleFeatureType_Type = {
+    PyVarObject_HEAD_INIT(NULL, 0)
+    "beampy.SimpleFeatureType",        /* tp_name */
+    sizeof (JObject),             /* tp_basicsize */
+    0,                            /* tp_itemsize */
+    (destructor)JObject_dealloc,  /* tp_dealloc */
+    NULL,                         /* tp_print */
+    NULL,                         /* tp_getattr */
+    NULL,                         /* tp_setattr */
+    NULL,                         /* tp_reserved */
+    NULL,                         /* tp_repr */
+    NULL,                         /* tp_as_number */
+    NULL,                         /* tp_as_sequence */
+    NULL,                         /* tp_as_mapping */
+    NULL,                         /* tp_hash  */
+    NULL,                         /* tp_call */
+    NULL,                         /* tp_str */
+    NULL,                         /* tp_getattro */
+    NULL,                         /* tp_setattro */
+    NULL,                         /* tp_as_buffer */
+    Py_TPFLAGS_DEFAULT,           /* tp_flags */
+    "",                /* tp_doc */
+    NULL,                         /* tp_traverse */
+    NULL,                         /* tp_clear */
+    NULL,                         /* tp_richcompare */
+    0,                            /* tp_weaklistoffset */
+    NULL,                         /* tp_iter */
+    NULL,                         /* tp_iternext */
+    SimpleFeatureType_methods,         /* tp_methods */
+    NULL,                         /* tp_members */
+    NULL,                         /* tp_getset */
+    NULL,                         /* tp_base */
+    NULL,                         /* tp_dict */
+    NULL,                         /* tp_descr_get */
+    NULL,                         /* tp_descr_set */
+    0,                            /* tp_dictoffset */
+    (initproc) JObject_init,      /* tp_init */
+    NULL,                         /* tp_alloc */
+    NULL,                         /* tp_new */
+};
+
+static PyMethodDef AngularDirection_methods[] = {
+    {"newAngularDirection", (PyCFunction) BeamPyAngularDirection_newAngularDirection, METH_VARARGS | METH_STATIC, ""},
+    {"equals", (PyCFunction) BeamPyAngularDirection_equals, METH_VARARGS, ""},
+    {"toString", (PyCFunction) BeamPyAngularDirection_toString, METH_VARARGS, ""},
+    {NULL, NULL, 0, NULL} /*Sentinel*/
+};
+
+// Note: this is unused, experimental code
+
+/**
+ * Implements the BeamPy_JObjectType class singleton.
+ *
+ * THIS TYPE IS NOT YET IN USE: we currently use
+ * (<type_string>, <pointer>) tuples to represent Java JNI objects.
+ */
+PyTypeObject AngularDirection_Type = {
+    PyVarObject_HEAD_INIT(NULL, 0)
+    "beampy.AngularDirection",        /* tp_name */
+    sizeof (JObject),             /* tp_basicsize */
+    0,                            /* tp_itemsize */
+    (destructor)JObject_dealloc,  /* tp_dealloc */
+    NULL,                         /* tp_print */
+    NULL,                         /* tp_getattr */
+    NULL,                         /* tp_setattr */
+    NULL,                         /* tp_reserved */
+    NULL,                         /* tp_repr */
+    NULL,                         /* tp_as_number */
+    NULL,                         /* tp_as_sequence */
+    NULL,                         /* tp_as_mapping */
+    NULL,                         /* tp_hash  */
+    NULL,                         /* tp_call */
+    NULL,                         /* tp_str */
+    NULL,                         /* tp_getattro */
+    NULL,                         /* tp_setattro */
+    NULL,                         /* tp_as_buffer */
+    Py_TPFLAGS_DEFAULT,           /* tp_flags */
+    "",                /* tp_doc */
+    NULL,                         /* tp_traverse */
+    NULL,                         /* tp_clear */
+    NULL,                         /* tp_richcompare */
+    0,                            /* tp_weaklistoffset */
+    NULL,                         /* tp_iter */
+    NULL,                         /* tp_iternext */
+    AngularDirection_methods,         /* tp_methods */
+    NULL,                         /* tp_members */
+    NULL,                         /* tp_getset */
+    NULL,                         /* tp_base */
+    NULL,                         /* tp_dict */
+    NULL,                         /* tp_descr_get */
+    NULL,                         /* tp_descr_set */
+    0,                            /* tp_dictoffset */
+    (initproc) JObject_init,      /* tp_init */
+    NULL,                         /* tp_alloc */
+    NULL,                         /* tp_new */
+};
+
+static PyMethodDef ProductData_UTC_methods[] = {
+    {NULL, NULL, 0, NULL} /*Sentinel*/
+};
+
+// Note: this is unused, experimental code
+
+/**
+ * Implements the BeamPy_JObjectType class singleton.
+ *
+ * THIS TYPE IS NOT YET IN USE: we currently use
+ * (<type_string>, <pointer>) tuples to represent Java JNI objects.
+ */
+PyTypeObject ProductData_UTC_Type = {
+    PyVarObject_HEAD_INIT(NULL, 0)
+    "beampy.ProductData_UTC",        /* tp_name */
+    sizeof (JObject),             /* tp_basicsize */
+    0,                            /* tp_itemsize */
+    (destructor)JObject_dealloc,  /* tp_dealloc */
+    NULL,                         /* tp_print */
+    NULL,                         /* tp_getattr */
+    NULL,                         /* tp_setattr */
+    NULL,                         /* tp_reserved */
+    NULL,                         /* tp_repr */
+    NULL,                         /* tp_as_number */
+    NULL,                         /* tp_as_sequence */
+    NULL,                         /* tp_as_mapping */
+    NULL,                         /* tp_hash  */
+    NULL,                         /* tp_call */
+    NULL,                         /* tp_str */
+    NULL,                         /* tp_getattro */
+    NULL,                         /* tp_setattro */
+    NULL,                         /* tp_as_buffer */
+    Py_TPFLAGS_DEFAULT,           /* tp_flags */
+    "The ProductData.UTC class is a ProductData.UInt specialisation for UTC date/time\nvalues.\n\n Internally, data is stored in an int[3] array which represents a Modified Julian Day 2000\n({@link ProductData.UTC#getMJD() MJD}) as a {@link\nProductData.UTC#getDaysFraction() days}, a {@link\nProductData.UTC#getSecondsFraction() seconds} and a {@link\nProductData.UTC#getMicroSecondsFraction() micro-seconds} fraction.\n@see ProductData.UTC#getMJD()\n@see ProductData.UTC#getDaysFraction()\n@see ProductData.UTC#getSecondsFraction()\n@see ProductData.UTC#getMicroSecondsFraction()",                /* tp_doc */
+    NULL,                         /* tp_traverse */
+    NULL,                         /* tp_clear */
+    NULL,                         /* tp_richcompare */
+    0,                            /* tp_weaklistoffset */
+    NULL,                         /* tp_iter */
+    NULL,                         /* tp_iternext */
+    ProductData_UTC_methods,         /* tp_methods */
+    NULL,                         /* tp_members */
+    NULL,                         /* tp_getset */
+    NULL,                         /* tp_base */
+    NULL,                         /* tp_dict */
+    NULL,                         /* tp_descr_get */
+    NULL,                         /* tp_descr_set */
+    0,                            /* tp_dictoffset */
+    (initproc) JObject_init,      /* tp_init */
+    NULL,                         /* tp_alloc */
+    NULL,                         /* tp_new */
+};
+
+static PyMethodDef Integer_methods[] = {
+    {NULL, NULL, 0, NULL} /*Sentinel*/
+};
+
+// Note: this is unused, experimental code
+
+/**
+ * Implements the BeamPy_JObjectType class singleton.
+ *
+ * THIS TYPE IS NOT YET IN USE: we currently use
+ * (<type_string>, <pointer>) tuples to represent Java JNI objects.
+ */
+PyTypeObject Integer_Type = {
+    PyVarObject_HEAD_INIT(NULL, 0)
+    "beampy.Integer",        /* tp_name */
+    sizeof (JObject),             /* tp_basicsize */
+    0,                            /* tp_itemsize */
+    (destructor)JObject_dealloc,  /* tp_dealloc */
+    NULL,                         /* tp_print */
+    NULL,                         /* tp_getattr */
+    NULL,                         /* tp_setattr */
+    NULL,                         /* tp_reserved */
+    NULL,                         /* tp_repr */
+    NULL,                         /* tp_as_number */
+    NULL,                         /* tp_as_sequence */
+    NULL,                         /* tp_as_mapping */
+    NULL,                         /* tp_hash  */
+    NULL,                         /* tp_call */
+    NULL,                         /* tp_str */
+    NULL,                         /* tp_getattro */
+    NULL,                         /* tp_setattro */
+    NULL,                         /* tp_as_buffer */
+    Py_TPFLAGS_DEFAULT,           /* tp_flags */
+    "",                /* tp_doc */
+    NULL,                         /* tp_traverse */
+    NULL,                         /* tp_clear */
+    NULL,                         /* tp_richcompare */
+    0,                            /* tp_weaklistoffset */
+    NULL,                         /* tp_iter */
+    NULL,                         /* tp_iternext */
+    Integer_methods,         /* tp_methods */
+    NULL,                         /* tp_members */
+    NULL,                         /* tp_getset */
+    NULL,                         /* tp_base */
+    NULL,                         /* tp_dict */
+    NULL,                         /* tp_descr_get */
+    NULL,                         /* tp_descr_set */
+    0,                            /* tp_dictoffset */
+    (initproc) JObject_init,      /* tp_init */
+    NULL,                         /* tp_alloc */
+    NULL,                         /* tp_new */
+};
+
+static PyMethodDef RenderedImage_methods[] = {
+    {NULL, NULL, 0, NULL} /*Sentinel*/
+};
+
+// Note: this is unused, experimental code
+
+/**
+ * Implements the BeamPy_JObjectType class singleton.
+ *
+ * THIS TYPE IS NOT YET IN USE: we currently use
+ * (<type_string>, <pointer>) tuples to represent Java JNI objects.
+ */
+PyTypeObject RenderedImage_Type = {
+    PyVarObject_HEAD_INIT(NULL, 0)
+    "beampy.RenderedImage",        /* tp_name */
+    sizeof (JObject),             /* tp_basicsize */
+    0,                            /* tp_itemsize */
+    (destructor)JObject_dealloc,  /* tp_dealloc */
+    NULL,                         /* tp_print */
+    NULL,                         /* tp_getattr */
+    NULL,                         /* tp_setattr */
+    NULL,                         /* tp_reserved */
+    NULL,                         /* tp_repr */
+    NULL,                         /* tp_as_number */
+    NULL,                         /* tp_as_sequence */
+    NULL,                         /* tp_as_mapping */
+    NULL,                         /* tp_hash  */
+    NULL,                         /* tp_call */
+    NULL,                         /* tp_str */
+    NULL,                         /* tp_getattro */
+    NULL,                         /* tp_setattro */
+    NULL,                         /* tp_as_buffer */
+    Py_TPFLAGS_DEFAULT,           /* tp_flags */
+    "",                /* tp_doc */
+    NULL,                         /* tp_traverse */
+    NULL,                         /* tp_clear */
+    NULL,                         /* tp_richcompare */
+    0,                            /* tp_weaklistoffset */
+    NULL,                         /* tp_iter */
+    NULL,                         /* tp_iternext */
+    RenderedImage_methods,         /* tp_methods */
+    NULL,                         /* tp_members */
+    NULL,                         /* tp_getset */
+    NULL,                         /* tp_base */
+    NULL,                         /* tp_dict */
+    NULL,                         /* tp_descr_get */
+    NULL,                         /* tp_descr_set */
+    0,                            /* tp_dictoffset */
+    (initproc) JObject_init,      /* tp_init */
+    NULL,                         /* tp_alloc */
+    NULL,                         /* tp_new */
+};
+
+static PyMethodDef Iterator_methods[] = {
+    {NULL, NULL, 0, NULL} /*Sentinel*/
+};
+
+// Note: this is unused, experimental code
+
+/**
+ * Implements the BeamPy_JObjectType class singleton.
+ *
+ * THIS TYPE IS NOT YET IN USE: we currently use
+ * (<type_string>, <pointer>) tuples to represent Java JNI objects.
+ */
+PyTypeObject Iterator_Type = {
+    PyVarObject_HEAD_INIT(NULL, 0)
+    "beampy.Iterator",        /* tp_name */
+    sizeof (JObject),             /* tp_basicsize */
+    0,                            /* tp_itemsize */
+    (destructor)JObject_dealloc,  /* tp_dealloc */
+    NULL,                         /* tp_print */
+    NULL,                         /* tp_getattr */
+    NULL,                         /* tp_setattr */
+    NULL,                         /* tp_reserved */
+    NULL,                         /* tp_repr */
+    NULL,                         /* tp_as_number */
+    NULL,                         /* tp_as_sequence */
+    NULL,                         /* tp_as_mapping */
+    NULL,                         /* tp_hash  */
+    NULL,                         /* tp_call */
+    NULL,                         /* tp_str */
+    NULL,                         /* tp_getattro */
+    NULL,                         /* tp_setattro */
+    NULL,                         /* tp_as_buffer */
+    Py_TPFLAGS_DEFAULT,           /* tp_flags */
+    "",                /* tp_doc */
+    NULL,                         /* tp_traverse */
+    NULL,                         /* tp_clear */
+    NULL,                         /* tp_richcompare */
+    0,                            /* tp_weaklistoffset */
+    NULL,                         /* tp_iter */
+    NULL,                         /* tp_iternext */
+    Iterator_methods,         /* tp_methods */
     NULL,                         /* tp_members */
     NULL,                         /* tp_getset */
     NULL,                         /* tp_base */
@@ -4222,59 +5897,6 @@ PyTypeObject ProductNodeGroup_Type = {
     NULL,                         /* tp_new */
 };
 
-static PyMethodDef MapProjection_methods[] = {
-    {NULL, NULL, 0, NULL} /*Sentinel*/
-};
-
-// Note: this is unused, experimental code
-
-/**
- * Implements the BeamPy_JObjectType class singleton.
- *
- * THIS TYPE IS NOT YET IN USE: we currently use
- * (<type_string>, <pointer>) tuples to represent Java JNI objects.
- */
-PyTypeObject MapProjection_Type = {
-    PyVarObject_HEAD_INIT(NULL, 0)
-    "beampy.MapProjection",        /* tp_name */
-    sizeof (JObject),             /* tp_basicsize */
-    0,                            /* tp_itemsize */
-    (destructor)JObject_dealloc,  /* tp_dealloc */
-    NULL,                         /* tp_print */
-    NULL,                         /* tp_getattr */
-    NULL,                         /* tp_setattr */
-    NULL,                         /* tp_reserved */
-    NULL,                         /* tp_repr */
-    NULL,                         /* tp_as_number */
-    NULL,                         /* tp_as_sequence */
-    NULL,                         /* tp_as_mapping */
-    NULL,                         /* tp_hash  */
-    NULL,                         /* tp_call */
-    NULL,                         /* tp_str */
-    NULL,                         /* tp_getattro */
-    NULL,                         /* tp_setattro */
-    NULL,                         /* tp_as_buffer */
-    Py_TPFLAGS_DEFAULT,           /* tp_flags */
-    "A map projection is a mathematical model for the transformation of locations from a three-dimensional earth surface\nto a two-dimensional map representation.\n\n@deprecated since BEAM 4.7, use geotools {@link org.geotools.referencing.operation.projection.MapProjection} instead.",                /* tp_doc */
-    NULL,                         /* tp_traverse */
-    NULL,                         /* tp_clear */
-    NULL,                         /* tp_richcompare */
-    0,                            /* tp_weaklistoffset */
-    NULL,                         /* tp_iter */
-    NULL,                         /* tp_iternext */
-    MapProjection_methods,         /* tp_methods */
-    NULL,                         /* tp_members */
-    NULL,                         /* tp_getset */
-    NULL,                         /* tp_base */
-    NULL,                         /* tp_dict */
-    NULL,                         /* tp_descr_get */
-    NULL,                         /* tp_descr_set */
-    0,                            /* tp_dictoffset */
-    (initproc) JObject_init,      /* tp_init */
-    NULL,                         /* tp_alloc */
-    NULL,                         /* tp_new */
-};
-
 static PyMethodDef ProductManager_methods[] = {
     {"newProductManager", (PyCFunction) BeamPyProductManager_newProductManager, METH_VARARGS | METH_STATIC, "Constructs an product manager with an empty list of products."},
     {"getProductCount", (PyCFunction) BeamPyProductManager_getProductCount, METH_VARARGS, "Returns the number of products in this product manager."},
@@ -4333,6 +5955,59 @@ PyTypeObject ProductManager_Type = {
     NULL,                         /* tp_iter */
     NULL,                         /* tp_iternext */
     ProductManager_methods,         /* tp_methods */
+    NULL,                         /* tp_members */
+    NULL,                         /* tp_getset */
+    NULL,                         /* tp_base */
+    NULL,                         /* tp_dict */
+    NULL,                         /* tp_descr_get */
+    NULL,                         /* tp_descr_set */
+    0,                            /* tp_dictoffset */
+    (initproc) JObject_init,      /* tp_init */
+    NULL,                         /* tp_alloc */
+    NULL,                         /* tp_new */
+};
+
+static PyMethodDef MapProjection_methods[] = {
+    {NULL, NULL, 0, NULL} /*Sentinel*/
+};
+
+// Note: this is unused, experimental code
+
+/**
+ * Implements the BeamPy_JObjectType class singleton.
+ *
+ * THIS TYPE IS NOT YET IN USE: we currently use
+ * (<type_string>, <pointer>) tuples to represent Java JNI objects.
+ */
+PyTypeObject MapProjection_Type = {
+    PyVarObject_HEAD_INIT(NULL, 0)
+    "beampy.MapProjection",        /* tp_name */
+    sizeof (JObject),             /* tp_basicsize */
+    0,                            /* tp_itemsize */
+    (destructor)JObject_dealloc,  /* tp_dealloc */
+    NULL,                         /* tp_print */
+    NULL,                         /* tp_getattr */
+    NULL,                         /* tp_setattr */
+    NULL,                         /* tp_reserved */
+    NULL,                         /* tp_repr */
+    NULL,                         /* tp_as_number */
+    NULL,                         /* tp_as_sequence */
+    NULL,                         /* tp_as_mapping */
+    NULL,                         /* tp_hash  */
+    NULL,                         /* tp_call */
+    NULL,                         /* tp_str */
+    NULL,                         /* tp_getattro */
+    NULL,                         /* tp_setattro */
+    NULL,                         /* tp_as_buffer */
+    Py_TPFLAGS_DEFAULT,           /* tp_flags */
+    "A map projection is a mathematical model for the transformation of locations from a three-dimensional earth surface\nto a two-dimensional map representation.\n\n@deprecated since BEAM 4.7, use geotools {@link org.geotools.referencing.operation.projection.MapProjection} instead.",                /* tp_doc */
+    NULL,                         /* tp_traverse */
+    NULL,                         /* tp_clear */
+    NULL,                         /* tp_richcompare */
+    0,                            /* tp_weaklistoffset */
+    NULL,                         /* tp_iter */
+    NULL,                         /* tp_iternext */
+    MapProjection_methods,         /* tp_methods */
     NULL,                         /* tp_members */
     NULL,                         /* tp_getset */
     NULL,                         /* tp_base */
@@ -4456,7 +6131,7 @@ PyTypeObject FlagCoding_Type = {
     NULL,                         /* tp_new */
 };
 
-static PyMethodDef IndexColorModel_methods[] = {
+static PyMethodDef Operator_methods[] = {
     {NULL, NULL, 0, NULL} /*Sentinel*/
 };
 
@@ -4468,9 +6143,9 @@ static PyMethodDef IndexColorModel_methods[] = {
  * THIS TYPE IS NOT YET IN USE: we currently use
  * (<type_string>, <pointer>) tuples to represent Java JNI objects.
  */
-PyTypeObject IndexColorModel_Type = {
+PyTypeObject Operator_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    "beampy.IndexColorModel",        /* tp_name */
+    "beampy.Operator",        /* tp_name */
     sizeof (JObject),             /* tp_basicsize */
     0,                            /* tp_itemsize */
     (destructor)JObject_dealloc,  /* tp_dealloc */
@@ -4489,14 +6164,14 @@ PyTypeObject IndexColorModel_Type = {
     NULL,                         /* tp_setattro */
     NULL,                         /* tp_as_buffer */
     Py_TPFLAGS_DEFAULT,           /* tp_flags */
-    "",                /* tp_doc */
+    "The abstract base class for all operators intended to be extended by clients.\nThe following methods are intended to be implemented or overridden:\n<ld>\n<li>{@link #initialize()}: must be implemented in order to initialise the operator and create the target\nproduct.</li>\n<li>{@link #computeTile(Band, Tile, com.bc.ceres.core.ProgressMonitor) computeTile()}: implemented to compute the tile\nfor a single band.</li>\n<li>{@link #computeTileStack(java.util.Map, java.awt.Rectangle, com.bc.ceres.core.ProgressMonitor)}: implemented to compute the tiles\nfor multiple bands.</li>\n<li>{@link #dispose()}: can be overridden in order to free all resources previously allocated by the operator.</li>\n</ld>\n\nGenerally, only one {@code computeTile} method needs to be implemented. It depends on the type of algorithm which\nof both operations is most advantageous to implement:\n<ol>\n<li>If bands can be computed independently of each other, then it is\nbeneficial to implement the {@code computeTile()} method. This is the case for sub-sampling, map-projections,\nband arithmetic, band filtering and statistic analyses.</li>\n<li>{@code computeTileStack()} should be overridden in cases where the bands of a product cannot be computed independently, e.g.\nbecause they are a simultaneous output. This is often the case for algorithms based on neural network, cluster analyses,\nmodel inversion methods or spectral unmixing.</li>\n</ol>\n\nThe framework execute either the {@code computeTile()} or the {@code computeTileStack()} method\nbased on the current use case or request.\nIf tiles for single bands are requested, e.g. for image display, it will always prefer an implementation of\nthe {@code computeTile()} method and call it.\nIf all tiles are requested at once, e.g. writing a product to disk, it will attempt to use the {@code computeTileStack()}\nmethod. If the framework cannot use its preferred operation, it will use the one implemented by the operator.\n\ntodo - Explain the role of operator annotations (nf - 15.10.2007)\ntodo - Explain the role of the SPI (nf - 15.10.2007)\nAuthor:  Norman Fomferra\nAuthor:  Marco Peters\nAuthor:  Marco Zühlke\n@see OperatorSpi\n@see annotations.OperatorMetadata\n@see annotations.Parameter\n@see annotations.TargetProduct\n@see annotations.TargetProperty\n@see annotations.SourceProduct\n@see annotations.SourceProducts\nSince version:  4.1",                /* tp_doc */
     NULL,                         /* tp_traverse */
     NULL,                         /* tp_clear */
     NULL,                         /* tp_richcompare */
     0,                            /* tp_weaklistoffset */
     NULL,                         /* tp_iter */
     NULL,                         /* tp_iternext */
-    IndexColorModel_methods,         /* tp_methods */
+    Operator_methods,         /* tp_methods */
     NULL,                         /* tp_members */
     NULL,                         /* tp_getset */
     NULL,                         /* tp_base */
@@ -4568,7 +6243,7 @@ PyTypeObject OperatorSpiRegistry_Type = {
     NULL,                         /* tp_new */
 };
 
-static PyMethodDef Operator_methods[] = {
+static PyMethodDef BitmaskDef_methods[] = {
     {NULL, NULL, 0, NULL} /*Sentinel*/
 };
 
@@ -4580,9 +6255,9 @@ static PyMethodDef Operator_methods[] = {
  * THIS TYPE IS NOT YET IN USE: we currently use
  * (<type_string>, <pointer>) tuples to represent Java JNI objects.
  */
-PyTypeObject Operator_Type = {
+PyTypeObject BitmaskDef_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    "beampy.Operator",        /* tp_name */
+    "beampy.BitmaskDef",        /* tp_name */
     sizeof (JObject),             /* tp_basicsize */
     0,                            /* tp_itemsize */
     (destructor)JObject_dealloc,  /* tp_dealloc */
@@ -4601,14 +6276,14 @@ PyTypeObject Operator_Type = {
     NULL,                         /* tp_setattro */
     NULL,                         /* tp_as_buffer */
     Py_TPFLAGS_DEFAULT,           /* tp_flags */
-    "The abstract base class for all operators intended to be extended by clients.\nThe following methods are intended to be implemented or overridden:\n<ld>\n<li>{@link #initialize()}: must be implemented in order to initialise the operator and create the target\nproduct.</li>\n<li>{@link #computeTile(Band, Tile, com.bc.ceres.core.ProgressMonitor) computeTile()}: implemented to compute the tile\nfor a single band.</li>\n<li>{@link #computeTileStack(java.util.Map, java.awt.Rectangle, com.bc.ceres.core.ProgressMonitor)}: implemented to compute the tiles\nfor multiple bands.</li>\n<li>{@link #dispose()}: can be overridden in order to free all resources previously allocated by the operator.</li>\n</ld>\n\nGenerally, only one {@code computeTile} method needs to be implemented. It depends on the type of algorithm which\nof both operations is most advantageous to implement:\n<ol>\n<li>If bands can be computed independently of each other, then it is\nbeneficial to implement the {@code computeTile()} method. This is the case for sub-sampling, map-projections,\nband arithmetic, band filtering and statistic analyses.</li>\n<li>{@code computeTileStack()} should be overridden in cases where the bands of a product cannot be computed independently, e.g.\nbecause they are a simultaneous output. This is often the case for algorithms based on neural network, cluster analyses,\nmodel inversion methods or spectral unmixing.</li>\n</ol>\n\nThe framework execute either the {@code computeTile()} or the {@code computeTileStack()} method\nbased on the current use case or request.\nIf tiles for single bands are requested, e.g. for image display, it will always prefer an implementation of\nthe {@code computeTile()} method and call it.\nIf all tiles are requested at once, e.g. writing a product to disk, it will attempt to use the {@code computeTileStack()}\nmethod. If the framework cannot use its preferred operation, it will use the one implemented by the operator.\n\ntodo - Explain the role of operator annotations (nf - 15.10.2007)\ntodo - Explain the role of the SPI (nf - 15.10.2007)\nAuthor:  Norman Fomferra\nAuthor:  Marco Peters\nAuthor:  Marco Zühlke\n@see OperatorSpi\n@see annotations.OperatorMetadata\n@see annotations.Parameter\n@see annotations.TargetProduct\n@see annotations.TargetProperty\n@see annotations.SourceProduct\n@see annotations.SourceProducts\nSince version:  4.1",                /* tp_doc */
+    "Represents a bitmask definition comprising the bitmask properties name, description, flag expression color and\ntransparancy.\nAuthor:  Norman Fomferra\nVersion:  $Revision$ $Date$\n@deprecated since BEAM 4.7, use {@code Mask} with {@code Mask.BandMathType} instead.",                /* tp_doc */
     NULL,                         /* tp_traverse */
     NULL,                         /* tp_clear */
     NULL,                         /* tp_richcompare */
     0,                            /* tp_weaklistoffset */
     NULL,                         /* tp_iter */
     NULL,                         /* tp_iternext */
-    Operator_methods,         /* tp_methods */
+    BitmaskDef_methods,         /* tp_methods */
     NULL,                         /* tp_members */
     NULL,                         /* tp_getset */
     NULL,                         /* tp_base */
@@ -4674,7 +6349,7 @@ PyTypeObject ImageInfo_HistogramMatching_Type = {
     NULL,                         /* tp_new */
 };
 
-static PyMethodDef BitmaskDef_methods[] = {
+static PyMethodDef Datum_methods[] = {
     {NULL, NULL, 0, NULL} /*Sentinel*/
 };
 
@@ -4686,9 +6361,9 @@ static PyMethodDef BitmaskDef_methods[] = {
  * THIS TYPE IS NOT YET IN USE: we currently use
  * (<type_string>, <pointer>) tuples to represent Java JNI objects.
  */
-PyTypeObject BitmaskDef_Type = {
+PyTypeObject Datum_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    "beampy.BitmaskDef",        /* tp_name */
+    "beampy.Datum",        /* tp_name */
     sizeof (JObject),             /* tp_basicsize */
     0,                            /* tp_itemsize */
     (destructor)JObject_dealloc,  /* tp_dealloc */
@@ -4707,237 +6382,14 @@ PyTypeObject BitmaskDef_Type = {
     NULL,                         /* tp_setattro */
     NULL,                         /* tp_as_buffer */
     Py_TPFLAGS_DEFAULT,           /* tp_flags */
-    "Represents a bitmask definition comprising the bitmask properties name, description, flag expression color and\ntransparancy.\nAuthor:  Norman Fomferra\nVersion:  $Revision$ $Date$\n@deprecated since BEAM 4.7, use {@code Mask} with {@code Mask.BandMathType} instead.",                /* tp_doc */
+    "Represents a geodetic datum. Geodetic datums define the size and shape of the earth and the origin and orientation of\nthe coordinate systems used to map the earth.\n\n@deprecated since BEAM 4.7, use {@link org.opengis.referencing.datum.GeodeticDatum} instead.",                /* tp_doc */
     NULL,                         /* tp_traverse */
     NULL,                         /* tp_clear */
     NULL,                         /* tp_richcompare */
     0,                            /* tp_weaklistoffset */
     NULL,                         /* tp_iter */
     NULL,                         /* tp_iternext */
-    BitmaskDef_methods,         /* tp_methods */
-    NULL,                         /* tp_members */
-    NULL,                         /* tp_getset */
-    NULL,                         /* tp_base */
-    NULL,                         /* tp_dict */
-    NULL,                         /* tp_descr_get */
-    NULL,                         /* tp_descr_set */
-    0,                            /* tp_dictoffset */
-    (initproc) JObject_init,      /* tp_init */
-    NULL,                         /* tp_alloc */
-    NULL,                         /* tp_new */
-};
-
-static PyMethodDef ProductNodeListener_methods[] = {
-    {NULL, NULL, 0, NULL} /*Sentinel*/
-};
-
-// Note: this is unused, experimental code
-
-/**
- * Implements the BeamPy_JObjectType class singleton.
- *
- * THIS TYPE IS NOT YET IN USE: we currently use
- * (<type_string>, <pointer>) tuples to represent Java JNI objects.
- */
-PyTypeObject ProductNodeListener_Type = {
-    PyVarObject_HEAD_INIT(NULL, 0)
-    "beampy.ProductNodeListener",        /* tp_name */
-    sizeof (JObject),             /* tp_basicsize */
-    0,                            /* tp_itemsize */
-    (destructor)JObject_dealloc,  /* tp_dealloc */
-    NULL,                         /* tp_print */
-    NULL,                         /* tp_getattr */
-    NULL,                         /* tp_setattr */
-    NULL,                         /* tp_reserved */
-    NULL,                         /* tp_repr */
-    NULL,                         /* tp_as_number */
-    NULL,                         /* tp_as_sequence */
-    NULL,                         /* tp_as_mapping */
-    NULL,                         /* tp_hash  */
-    NULL,                         /* tp_call */
-    NULL,                         /* tp_str */
-    NULL,                         /* tp_getattro */
-    NULL,                         /* tp_setattro */
-    NULL,                         /* tp_as_buffer */
-    Py_TPFLAGS_DEFAULT,           /* tp_flags */
-    "A listener which listens to internal data product changes.\nAuthor:  Norman Fomferra\nVersion:  $Revision$ $Date$",                /* tp_doc */
-    NULL,                         /* tp_traverse */
-    NULL,                         /* tp_clear */
-    NULL,                         /* tp_richcompare */
-    0,                            /* tp_weaklistoffset */
-    NULL,                         /* tp_iter */
-    NULL,                         /* tp_iternext */
-    ProductNodeListener_methods,         /* tp_methods */
-    NULL,                         /* tp_members */
-    NULL,                         /* tp_getset */
-    NULL,                         /* tp_base */
-    NULL,                         /* tp_dict */
-    NULL,                         /* tp_descr_get */
-    NULL,                         /* tp_descr_set */
-    0,                            /* tp_dictoffset */
-    (initproc) JObject_init,      /* tp_init */
-    NULL,                         /* tp_alloc */
-    NULL,                         /* tp_new */
-};
-
-static PyMethodDef Map_methods[] = {
-    {"size", (PyCFunction) BeamPyMap_size, METH_VARARGS, ""},
-    {"isEmpty", (PyCFunction) BeamPyMap_isEmpty, METH_VARARGS, ""},
-    {"containsKey", (PyCFunction) BeamPyMap_containsKey, METH_VARARGS, ""},
-    {"containsValue", (PyCFunction) BeamPyMap_containsValue, METH_VARARGS, ""},
-    {"get", (PyCFunction) BeamPyMap_get, METH_VARARGS, ""},
-    {"put", (PyCFunction) BeamPyMap_put, METH_VARARGS, ""},
-    {"remove", (PyCFunction) BeamPyMap_remove, METH_VARARGS, ""},
-    {"putAll", (PyCFunction) BeamPyMap_putAll, METH_VARARGS, ""},
-    {"clear", (PyCFunction) BeamPyMap_clear, METH_VARARGS, ""},
-    {"keySet", (PyCFunction) BeamPyMap_keySet, METH_VARARGS, ""},
-    {"values", (PyCFunction) BeamPyMap_values, METH_VARARGS, ""},
-    {"entrySet", (PyCFunction) BeamPyMap_entrySet, METH_VARARGS, ""},
-    {"equals", (PyCFunction) BeamPyMap_equals, METH_VARARGS, ""},
-    {"hashCode", (PyCFunction) BeamPyMap_hashCode, METH_VARARGS, ""},
-    {NULL, NULL, 0, NULL} /*Sentinel*/
-};
-
-// Note: this is unused, experimental code
-
-/**
- * Implements the BeamPy_JObjectType class singleton.
- *
- * THIS TYPE IS NOT YET IN USE: we currently use
- * (<type_string>, <pointer>) tuples to represent Java JNI objects.
- */
-PyTypeObject Map_Type = {
-    PyVarObject_HEAD_INIT(NULL, 0)
-    "beampy.Map",        /* tp_name */
-    sizeof (JObject),             /* tp_basicsize */
-    0,                            /* tp_itemsize */
-    (destructor)JObject_dealloc,  /* tp_dealloc */
-    NULL,                         /* tp_print */
-    NULL,                         /* tp_getattr */
-    NULL,                         /* tp_setattr */
-    NULL,                         /* tp_reserved */
-    NULL,                         /* tp_repr */
-    NULL,                         /* tp_as_number */
-    NULL,                         /* tp_as_sequence */
-    NULL,                         /* tp_as_mapping */
-    NULL,                         /* tp_hash  */
-    NULL,                         /* tp_call */
-    NULL,                         /* tp_str */
-    NULL,                         /* tp_getattro */
-    NULL,                         /* tp_setattro */
-    NULL,                         /* tp_as_buffer */
-    Py_TPFLAGS_DEFAULT,           /* tp_flags */
-    "",                /* tp_doc */
-    NULL,                         /* tp_traverse */
-    NULL,                         /* tp_clear */
-    NULL,                         /* tp_richcompare */
-    0,                            /* tp_weaklistoffset */
-    NULL,                         /* tp_iter */
-    NULL,                         /* tp_iternext */
-    Map_methods,         /* tp_methods */
-    NULL,                         /* tp_members */
-    NULL,                         /* tp_getset */
-    NULL,                         /* tp_base */
-    NULL,                         /* tp_dict */
-    NULL,                         /* tp_descr_get */
-    NULL,                         /* tp_descr_set */
-    0,                            /* tp_dictoffset */
-    (initproc) JObject_init,      /* tp_init */
-    NULL,                         /* tp_alloc */
-    NULL,                         /* tp_new */
-};
-
-static PyMethodDef MetadataElement_methods[] = {
-    {"newMetadataElement", (PyCFunction) BeamPyMetadataElement_newMetadataElement, METH_VARARGS | METH_STATIC, "Constructs a new metadata element.\nReturns Parameter name: the element name"},
-    {"getElementGroup", (PyCFunction) BeamPyMetadataElement_getElementGroup, METH_VARARGS, "Gets the group of child elements. The method returns null, if this element has no children.\nReturns the child element group, may be null."},
-    {"getParentElement", (PyCFunction) BeamPyMetadataElement_getParentElement, METH_VARARGS, ""},
-    {"addElement", (PyCFunction) BeamPyMetadataElement_addElement, METH_VARARGS, "Adds the given element to this element.\nReturns Parameter element: the element to added, ignored if null"},
-    {"addElementAt", (PyCFunction) BeamPyMetadataElement_addElementAt, METH_VARARGS, "Adds the given element to this element at index.\nReturns Parameter element: the element to added, ignored if null\nReturns Parameter index: where to put it"},
-    {"removeElement", (PyCFunction) BeamPyMetadataElement_removeElement, METH_VARARGS, "Removes the given element from this element.\nReturns Parameter element: the element to be removed, ignored if null\nReturns true, if so"},
-    {"getNumElements", (PyCFunction) BeamPyMetadataElement_getNumElements, METH_VARARGS, "Returns the number of elements contained in this element."},
-    {"getElementAt", (PyCFunction) BeamPyMetadataElement_getElementAt, METH_VARARGS, "Returns the element at the given index.\nReturns Parameter index: the element index\nReturns the element at the given index\n@throws IndexOutOfBoundsException if the index is out of bounds"},
-    {"getElementNames", (PyCFunction) BeamPyMetadataElement_getElementNames, METH_VARARGS, "Returns a string array containing the names of the groups contained in this element\nReturns a string array containing the names of the groups contained in this element. If this element has no\ngroups a zero-length-array is returned."},
-    {"getElements", (PyCFunction) BeamPyMetadataElement_getElements, METH_VARARGS, "Returns an array of elements contained in this element.\nReturns an array of elements contained in this product. If this element has no elements a zero-length-array is\nreturned."},
-    {"getElement", (PyCFunction) BeamPyMetadataElement_getElement, METH_VARARGS, "Returns the element with the given name.\nReturns Parameter name: the element name\nReturns the element with the given name or null if a element with the given name is not contained in\nthis element."},
-    {"containsElement", (PyCFunction) BeamPyMetadataElement_containsElement, METH_VARARGS, "Tests if a element with the given name is contained in this element.\nReturns Parameter name: the name, must not be null\nReturns true if a element with the given name is contained in this element, false\notherwise"},
-    {"getElementIndex", (PyCFunction) BeamPyMetadataElement_getElementIndex, METH_VARARGS, "Gets the index of the given element.\nReturns Parameter element: The element .\nReturns the element's index, or -1.\nSince version:  BEAM 4.7"},
-    {"addAttribute", (PyCFunction) BeamPyMetadataElement_addAttribute, METH_VARARGS, "Adds an attribute to this node.\nReturns Parameter attribute: the attribute to be added, null is ignored"},
-    {"removeAttribute", (PyCFunction) BeamPyMetadataElement_removeAttribute, METH_VARARGS, "Removes the given attribute from this annotation. If an attribute with the same name already exists, the method\ndoes nothing.\nReturns Parameter attribute: the attribute to be removed, null is ignored\nReturns true if it was removed"},
-    {"getNumAttributes", (PyCFunction) BeamPyMetadataElement_getNumAttributes, METH_VARARGS, "Returns the number of attributes attaached to this node.\nReturns the number of attributes"},
-    {"getAttributeAt", (PyCFunction) BeamPyMetadataElement_getAttributeAt, METH_VARARGS, "Returns the attribute at the given index.\nReturns Parameter index: the attribute index\nReturns the attribute, or null if this node does not contain attributes\n@throws IndexOutOfBoundsException"},
-    {"getAttributeNames", (PyCFunction) BeamPyMetadataElement_getAttributeNames, METH_VARARGS, "Returns the names of all attributes of this node.\nReturns the attribute name array, never null"},
-    {"getAttributes", (PyCFunction) BeamPyMetadataElement_getAttributes, METH_VARARGS, "Returns an array of attributes contained in this element.\nReturns an array of attributes contained in this product. If this element has no attributes a zero-length-array\nis returned."},
-    {"getAttribute", (PyCFunction) BeamPyMetadataElement_getAttribute, METH_VARARGS, "Returns the attribute with the given name.\nReturns Parameter name: the attribute name\nReturns the attribute with the given name or null if it could not be found"},
-    {"containsAttribute", (PyCFunction) BeamPyMetadataElement_containsAttribute, METH_VARARGS, "Checks whether this node has an element with the given name.\nReturns Parameter name: the attribute name\nReturns true if so"},
-    {"getAttributeIndex", (PyCFunction) BeamPyMetadataElement_getAttributeIndex, METH_VARARGS, "Gets the index of the given attribute.\nReturns Parameter attribute: The attribute.\nReturns the attribute's index, or -1.\nSince version:  BEAM 4.7"},
-    {"getAttributeDouble", (PyCFunction) BeamPyMetadataElement_getAttributeDouble, METH_VARARGS, "Returns the double value of the attribute with the given name. The given default value is returned if an\nattribute with the given name could not be found in this node.\nReturns Parameter name: the attribute name\nReturns Parameter defaultValue: the default value\nReturns the attribute value as double.\n@throws NumberFormatException if the attribute type is ASCII but cannot be converted to a number"},
-    {"getAttributeUTC", (PyCFunction) BeamPyMetadataElement_getAttributeUTC, METH_VARARGS, "Returns the UTC value of the attribute with the given name. The given default value is returned if an\nattribute with the given name could not be found in this node.\nReturns Parameter name: the attribute name\nReturns Parameter defaultValue: the default value\nReturns the attribute value as UTC."},
-    {"getAttributeInt", (PyCFunction) BeamPyMetadataElement_getAttributeInt, METH_VARARGS, "Returns the integer value of the attribute with the given name. The given default value is returned if an\nattribute with the given name could not be found in this node.\nReturns Parameter name: the attribute name\nReturns Parameter defaultValue: the default value\nReturns the attribute value as integer.\n@throws NumberFormatException if the attribute type is ASCII but cannot be converted to a number"},
-    {"setAttributeInt", (PyCFunction) BeamPyMetadataElement_setAttributeInt, METH_VARARGS, "Sets the attribute with the given name to the given integer value. A new attribute with\nProductData.TYPE_INT32 is added to this node if an attribute with the given name could not be found\nin this node.\nReturns Parameter name: the attribute name\nReturns Parameter value: the new value"},
-    {"setAttributeDouble", (PyCFunction) BeamPyMetadataElement_setAttributeDouble, METH_VARARGS, "Sets the attribute with the given name to the given double value. A new attribute with\nProductData.TYPE_FLOAT64 is added to this node if an attribute with the given name could not be found\nin this node.\nReturns Parameter name: the attribute name\nReturns Parameter value: the new value"},
-    {"setAttributeUTC", (PyCFunction) BeamPyMetadataElement_setAttributeUTC, METH_VARARGS, "Sets the attribute with the given name to the given utc value. A new attribute with\nProductData.UTC is added to this node if an attribute with the given name could not be found\nin this node.\nReturns Parameter name: the attribute name\nReturns Parameter value: the new value"},
-    {"getAttributeString", (PyCFunction) BeamPyMetadataElement_getAttributeString, METH_VARARGS, "Returns the string value of the attribute with the given name. The given default value is returned if an\nattribute with the given name could not be found in this node.\nReturns Parameter name: the attribute name\nReturns Parameter defaultValue: the default value\nReturns the attribute value as integer."},
-    {"setAttributeString", (PyCFunction) BeamPyMetadataElement_setAttributeString, METH_VARARGS, "Sets the attribute with the given name to the given string value. A new attribute with\nProductData.TYPE_ASCII is added to this node if an attribute with the given name could not be found\nin this node.\nReturns Parameter name: the attribute name\nReturns Parameter value: the new value"},
-    {"setModified", (PyCFunction) BeamPyMetadataElement_setModified, METH_VARARGS, ""},
-    {"acceptVisitor", (PyCFunction) BeamPyMetadataElement_acceptVisitor, METH_VARARGS, "Accepts the given visitor. This method implements the well known 'Visitor' design pattern of the gang-of-four.\nThe visitor pattern allows to define new operations on the product data model without the need to add more code\nto it. The new operation is implemented by the visitor.\n\nThe method first visits (calls acceptVisitor for) all elements contained in this element and then\nvisits all attributes. Finally the method calls visitor.visit(this).\nReturns Parameter visitor: the visitor"},
-    {"createDeepClone", (PyCFunction) BeamPyMetadataElement_createDeepClone, METH_VARARGS, ""},
-    {"dispose", (PyCFunction) BeamPyMetadataElement_dispose, METH_VARARGS, "Releases all of the resources used by this object instance and all of its owned children. Its primary use is to\nallow the garbage collector to perform a vanilla job.\n\nThis method should be called only if it is for sure that this object instance will never be used again. The\nresults of referencing an instance of this class after a call to dispose() are undefined.\n\nOverrides of this method should always call super.dispose(); after disposing this instance."},
-    {"getOwner", (PyCFunction) BeamPyMetadataElement_getOwner, METH_VARARGS, "Returns the owner node of this node."},
-    {"getName", (PyCFunction) BeamPyMetadataElement_getName, METH_VARARGS, "Returns this node's name."},
-    {"setName", (PyCFunction) BeamPyMetadataElement_setName, METH_VARARGS, "Sets this product's name.\nReturns Parameter name: The name."},
-    {"getDescription", (PyCFunction) BeamPyMetadataElement_getDescription, METH_VARARGS, "Returns a short textual description for this products node.\nReturns a description or null"},
-    {"setDescription", (PyCFunction) BeamPyMetadataElement_setDescription, METH_VARARGS, "Sets a short textual description for this products node.\nReturns Parameter description: a description, can be null"},
-    {"isModified", (PyCFunction) BeamPyMetadataElement_isModified, METH_VARARGS, "Returns whether or not this node is modified.\nReturns true if so"},
-    {"toString", (PyCFunction) BeamPyMetadataElement_toString, METH_VARARGS, ""},
-    {"isValidNodeName", (PyCFunction) BeamPyMetadataElement_isValidNodeName, METH_VARARGS | METH_STATIC, "Tests whether the given name is valid name for a node.\nA valid node name must not start with a dot. Also a valid node name must not contain\nany of the character  \\/:*?\"&lt;&gt;|\nReturns Parameter name: the name to test\nReturns true if the name is a valid node identifier, false otherwise"},
-    {"getProduct", (PyCFunction) BeamPyMetadataElement_getProduct, METH_VARARGS, "Returns the product to which this node belongs to.\nReturns the product, or null if this node was not owned by a product at the time this method was\ncalled"},
-    {"getProductReader", (PyCFunction) BeamPyMetadataElement_getProductReader, METH_VARARGS, "Returns the product reader for the product to which this node belongs to.\nReturns the product reader, or null if no such exists"},
-    {"getProductWriter", (PyCFunction) BeamPyMetadataElement_getProductWriter, METH_VARARGS, "Returns the product writer for the product to which this node belongs to.\nReturns the product writer, or null if no such exists"},
-    {"getDisplayName", (PyCFunction) BeamPyMetadataElement_getDisplayName, METH_VARARGS, "Returns this node's display name. The display name is the product reference string with the node name appended.\nExample: The string \"[2] node-name\" means node node-name of the\nproduct with the reference number 2.\nReturns this node's name with a product prefix <br>or this node's name only if this node's product prefix is\nnull\n@see #getProductRefString"},
-    {"getProductRefString", (PyCFunction) BeamPyMetadataElement_getProductRefString, METH_VARARGS, "Gets the product reference string. The product reference string is the product reference number enclosed in\nsquare brackets. Example: The string \"[2]\" stands for a product with the reference number\n2.\nReturns the product reference string. <br>or null if this node has no product <br>or\nnull if its product reference number was inactive"},
-    {"updateExpression", (PyCFunction) BeamPyMetadataElement_updateExpression, METH_VARARGS, "Asks a product node to replace all occurences of and references to the node name\ngiven by {@code oldExternalName} with {@code oldExternalName}. Such references most often occur\nin band arithmetic expressions.\nReturns Parameter oldExternalName: The old node name.\nReturns Parameter newExternalName: The new node name."},
-    {"removeFromFile", (PyCFunction) BeamPyMetadataElement_removeFromFile, METH_VARARGS, "Physically remove this node from the file associated with the given product writer. The default implementation\ndoes nothing.\nReturns Parameter productWriter: the product writer to be used to remove this node from the underlying file."},
-    {"getExtension", (PyCFunction) BeamPyMetadataElement_getExtension, METH_VARARGS, ""},
-    {NULL, NULL, 0, NULL} /*Sentinel*/
-};
-
-// Note: this is unused, experimental code
-
-/**
- * Implements the BeamPy_JObjectType class singleton.
- *
- * THIS TYPE IS NOT YET IN USE: we currently use
- * (<type_string>, <pointer>) tuples to represent Java JNI objects.
- */
-PyTypeObject MetadataElement_Type = {
-    PyVarObject_HEAD_INIT(NULL, 0)
-    "beampy.MetadataElement",        /* tp_name */
-    sizeof (JObject),             /* tp_basicsize */
-    0,                            /* tp_itemsize */
-    (destructor)JObject_dealloc,  /* tp_dealloc */
-    NULL,                         /* tp_print */
-    NULL,                         /* tp_getattr */
-    NULL,                         /* tp_setattr */
-    NULL,                         /* tp_reserved */
-    NULL,                         /* tp_repr */
-    NULL,                         /* tp_as_number */
-    NULL,                         /* tp_as_sequence */
-    NULL,                         /* tp_as_mapping */
-    NULL,                         /* tp_hash  */
-    NULL,                         /* tp_call */
-    NULL,                         /* tp_str */
-    NULL,                         /* tp_getattro */
-    NULL,                         /* tp_setattro */
-    NULL,                         /* tp_as_buffer */
-    Py_TPFLAGS_DEFAULT,           /* tp_flags */
-    "A MetadataElement is a data node used to store metadata. Metadata elements can have any number of\nmetadata attributes of the type {@link MetadataAttribute} and any number of inner MetadataElements.\nAuthor:  Norman Fomferra\nAuthor:  Sabine Embacher\nVersion:  $Revision: 6651 $ $Date: 2009-10-27 12:59:39 +0100 (Di, 27 Okt 2009) $",                /* tp_doc */
-    NULL,                         /* tp_traverse */
-    NULL,                         /* tp_clear */
-    NULL,                         /* tp_richcompare */
-    0,                            /* tp_weaklistoffset */
-    NULL,                         /* tp_iter */
-    NULL,                         /* tp_iternext */
-    MetadataElement_methods,         /* tp_methods */
+    Datum_methods,         /* tp_methods */
     NULL,                         /* tp_members */
     NULL,                         /* tp_getset */
     NULL,                         /* tp_base */
@@ -4965,7 +6417,6 @@ static PyMethodDef ProductUtils_methods[] = {
     {"createGeoBoundary1", (PyCFunction) BeamPyProductUtils_createGeoBoundary1, METH_VARARGS | METH_STATIC, "Creates the geographical boundary of the given product and returns it as a list of geographical coordinates.\nReturns Parameter product: the input product, must not be null\nReturns Parameter step: the step given in pixels\nReturns an array of geographical coordinates\n@throws IllegalArgumentException if product is null or if the product's {@link GeoCoding} is null"},
     {"createGeoBoundary2", (PyCFunction) BeamPyProductUtils_createGeoBoundary2, METH_VARARGS | METH_STATIC, "Creates the geographical boundary of the given region within the given product and returns it as a list of\ngeographical coordinates.\n This method delegates to {@link #createGeoBoundary(Product, java.awt.Rectangle, int, boolean) createGeoBoundary(Product, Rectangle, int, boolean)}\nand the additional boolean parameter usePixelCenter is true.\nReturns Parameter product: the input product, must not be null\nReturns Parameter region: the region rectangle in product pixel coordinates, can be null for entire product\nReturns Parameter step: the step given in pixels\nReturns an array of geographical coordinates\n@throws IllegalArgumentException if product is null or if the product's {@link GeoCoding} is null\n@see #createPixelBoundary(RasterDataNode, java.awt.Rectangle, int)"},
     {"createGeoBoundary3", (PyCFunction) BeamPyProductUtils_createGeoBoundary3, METH_VARARGS | METH_STATIC, "Creates the geographical boundary of the given region within the given product and returns it as a list of\ngeographical coordinates.\nReturns Parameter product: the input product, must not be null\nReturns Parameter region: the region rectangle in product pixel coordinates, can be null for entire product\nReturns Parameter step: the step given in pixels\nReturns Parameter usePixelCenter: true if the pixel center should be used to create the boundary\nReturns an array of geographical coordinates\n@throws IllegalArgumentException if product is null or if the product's {@link GeoCoding} is null\n@see #createPixelBoundary(Product, java.awt.Rectangle, int, boolean)"},
-    {"getClosestGeoPos", (PyCFunction) BeamPyProductUtils_getClosestGeoPos, METH_VARARGS | METH_STATIC, "Searches for a valid GeoPos by considering the vicinity of a {@link PixelPos}. It does not check\nthe original pixel position, but uses it for determining which pixel positions to examine.\nReturns Parameter gc: the GeoCoding, must not be null\nReturns Parameter origPos: the original pixel position, must not be null\nReturns Parameter region: the rectangle which determines the valid pixel positions, must not be null\nReturns Parameter step: determines the step size between pixels which is used in the search process. Small step\nsizes will increase the accuracy, but need more computational time\nReturns a {@link GeoPos}. This will be valid if the search was successful. If not, a {@link GeoPos} with\nNaN-values for latitude and longitude will be returned."},
     {"createGeoBoundary4", (PyCFunction) BeamPyProductUtils_createGeoBoundary4, METH_VARARGS | METH_STATIC, "Creates the geographical boundary of the given region within the given raster and returns it as a list of\ngeographical coordinates.\nReturns Parameter raster: the input raster, must not be null\nReturns Parameter region: the region rectangle in raster pixel coordinates, can be null for entire raster\nReturns Parameter step: the step given in pixels\nReturns an array of geographical coordinates\n@throws IllegalArgumentException if raster is null or if the raster has no {@link GeoCoding} is null\n@see #createPixelBoundary(RasterDataNode, java.awt.Rectangle, int)"},
     {"createGeoBoundaryPaths1", (PyCFunction) BeamPyProductUtils_createGeoBoundaryPaths1, METH_VARARGS | METH_STATIC, "Converts the geographic boundary entire product into one, two or three shape objects. If the product does not\nintersect the 180 degree meridian, a single general path is returned. Otherwise two or three shapes are created\nand returned in the order from west to east.\n\nThe geographic boundary of the given product are returned as shapes comprising (longitude,latitude) pairs.\nReturns Parameter product: the input product\nReturns an array of shape objects\n@throws IllegalArgumentException if product is null or if the product's {@link GeoCoding} is null\n@see #createGeoBoundary(Product, int)"},
     {"createGeoBoundaryPaths2", (PyCFunction) BeamPyProductUtils_createGeoBoundaryPaths2, METH_VARARGS | METH_STATIC, "Converts the geographic boundary of the region within the given product into one, two or three shape objects. If\nthe product does not intersect the 180 degree meridian, a single general path is returned. Otherwise two or three\nshapes are created and returned in the order from west to east.\n\nThis method delegates to {@link #createGeoBoundaryPaths(Product, java.awt.Rectangle, int, boolean) createGeoBoundaryPaths(Product, Rectangle, int, boolean)}\nand the additional parameter usePixelCenter is true.\n\nThe geographic boundary of the given product are returned as shapes comprising (longitude,latitude) pairs.\nReturns Parameter product: the input product\nReturns Parameter region: the region rectangle in product pixel coordinates, can be null for entire product\nReturns Parameter step: the step given in pixels\nReturns an array of shape objects\n@throws IllegalArgumentException if product is null or if the product's {@link GeoCoding} is null\n@see #createGeoBoundary(Product, java.awt.Rectangle, int)"},
@@ -5075,7 +6526,21 @@ PyTypeObject ProductUtils_Type = {
     NULL,                         /* tp_new */
 };
 
-static PyMethodDef Datum_methods[] = {
+static PyMethodDef Map_methods[] = {
+    {"size", (PyCFunction) BeamPyMap_size, METH_VARARGS, ""},
+    {"isEmpty", (PyCFunction) BeamPyMap_isEmpty, METH_VARARGS, ""},
+    {"containsKey", (PyCFunction) BeamPyMap_containsKey, METH_VARARGS, ""},
+    {"containsValue", (PyCFunction) BeamPyMap_containsValue, METH_VARARGS, ""},
+    {"get", (PyCFunction) BeamPyMap_get, METH_VARARGS, ""},
+    {"put", (PyCFunction) BeamPyMap_put, METH_VARARGS, ""},
+    {"remove", (PyCFunction) BeamPyMap_remove, METH_VARARGS, ""},
+    {"putAll", (PyCFunction) BeamPyMap_putAll, METH_VARARGS, ""},
+    {"clear", (PyCFunction) BeamPyMap_clear, METH_VARARGS, ""},
+    {"keySet", (PyCFunction) BeamPyMap_keySet, METH_VARARGS, ""},
+    {"values", (PyCFunction) BeamPyMap_values, METH_VARARGS, ""},
+    {"entrySet", (PyCFunction) BeamPyMap_entrySet, METH_VARARGS, ""},
+    {"equals", (PyCFunction) BeamPyMap_equals, METH_VARARGS, ""},
+    {"hashCode", (PyCFunction) BeamPyMap_hashCode, METH_VARARGS, ""},
     {NULL, NULL, 0, NULL} /*Sentinel*/
 };
 
@@ -5087,9 +6552,9 @@ static PyMethodDef Datum_methods[] = {
  * THIS TYPE IS NOT YET IN USE: we currently use
  * (<type_string>, <pointer>) tuples to represent Java JNI objects.
  */
-PyTypeObject Datum_Type = {
+PyTypeObject Map_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    "beampy.Datum",        /* tp_name */
+    "beampy.Map",        /* tp_name */
     sizeof (JObject),             /* tp_basicsize */
     0,                            /* tp_itemsize */
     (destructor)JObject_dealloc,  /* tp_dealloc */
@@ -5108,14 +6573,93 @@ PyTypeObject Datum_Type = {
     NULL,                         /* tp_setattro */
     NULL,                         /* tp_as_buffer */
     Py_TPFLAGS_DEFAULT,           /* tp_flags */
-    "Represents a geodetic datum. Geodetic datums define the size and shape of the earth and the origin and orientation of\nthe coordinate systems used to map the earth.\n\n@deprecated since BEAM 4.7, use {@link org.opengis.referencing.datum.GeodeticDatum} instead.",                /* tp_doc */
+    "",                /* tp_doc */
     NULL,                         /* tp_traverse */
     NULL,                         /* tp_clear */
     NULL,                         /* tp_richcompare */
     0,                            /* tp_weaklistoffset */
     NULL,                         /* tp_iter */
     NULL,                         /* tp_iternext */
-    Datum_methods,         /* tp_methods */
+    Map_methods,         /* tp_methods */
+    NULL,                         /* tp_members */
+    NULL,                         /* tp_getset */
+    NULL,                         /* tp_base */
+    NULL,                         /* tp_dict */
+    NULL,                         /* tp_descr_get */
+    NULL,                         /* tp_descr_set */
+    0,                            /* tp_dictoffset */
+    (initproc) JObject_init,      /* tp_init */
+    NULL,                         /* tp_alloc */
+    NULL,                         /* tp_new */
+};
+
+static PyMethodDef SubsetOp_methods[] = {
+    {"newSubsetOp", (PyCFunction) BeamPySubsetOp_newSubsetOp, METH_VARARGS | METH_STATIC, ""},
+    {"getTiePointGridNames", (PyCFunction) BeamPySubsetOp_getTiePointGridNames, METH_VARARGS, ""},
+    {"setTiePointGridNames", (PyCFunction) BeamPySubsetOp_setTiePointGridNames, METH_VARARGS, ""},
+    {"getBandNames", (PyCFunction) BeamPySubsetOp_getBandNames, METH_VARARGS, ""},
+    {"setBandNames", (PyCFunction) BeamPySubsetOp_setBandNames, METH_VARARGS, ""},
+    {"setCopyMetadata", (PyCFunction) BeamPySubsetOp_setCopyMetadata, METH_VARARGS, ""},
+    {"getRegion", (PyCFunction) BeamPySubsetOp_getRegion, METH_VARARGS, ""},
+    {"setRegion", (PyCFunction) BeamPySubsetOp_setRegion, METH_VARARGS, ""},
+    {"setSubSamplingX", (PyCFunction) BeamPySubsetOp_setSubSamplingX, METH_VARARGS, ""},
+    {"setSubSamplingY", (PyCFunction) BeamPySubsetOp_setSubSamplingY, METH_VARARGS, ""},
+    {"getGeoRegion", (PyCFunction) BeamPySubsetOp_getGeoRegion, METH_VARARGS, ""},
+    {"setGeoRegion", (PyCFunction) BeamPySubsetOp_setGeoRegion, METH_VARARGS, ""},
+    {"update", (PyCFunction) BeamPySubsetOp_update, METH_VARARGS, "Updates this operator forcing it to recreate the target product.\nWarning: Experimental API added by nf (25.02.2010)<br/>\nSince version:  BEAM 4.8"},
+    {"dispose", (PyCFunction) BeamPySubsetOp_dispose, METH_VARARGS, "Releases the resources the operator has acquired during its lifetime.\nThe default implementation does nothing.\n\nOverrides should make sure to call {@code super.dispose()} as well."},
+    {"getId", (PyCFunction) BeamPySubsetOp_getId, METH_VARARGS, "Returns the operator's runtime identifier assigned by the framework."},
+    {"getSourceProducts", (PyCFunction) BeamPySubsetOp_getSourceProducts, METH_VARARGS, "Gets the source products in the order they have been declared.\nReturns the array source products."},
+    {"setSourceProducts", (PyCFunction) BeamPySubsetOp_setSourceProducts, METH_VARARGS, "Sets the source products.\nReturns Parameter products: The source products.\nSince version:  BEAM 4.2"},
+    {"getSourceProduct", (PyCFunction) BeamPySubsetOp_getSourceProduct, METH_VARARGS, "Gets a single source product. This method is a shortcut for\n{@code getSourceProduct(\"sourceProduct\")}.\nReturns the source product, or {@code null} if not set.\nSince version:  BEAM 4.2"},
+    {"setSourceProduct", (PyCFunction) BeamPySubsetOp_setSourceProduct, METH_VARARGS, "Sets a single source product. This method is a shortcut for\n{@code setSourceProduct(\"sourceProduct\", sourceProduct)}.\nReturns Parameter sourceProduct: the source product to be set\nSince version:  BEAM 4.2"},
+    {"getSourceProductById", (PyCFunction) BeamPySubsetOp_getSourceProductById, METH_VARARGS, "Gets the source product using the specified name.\nReturns Parameter id: the identifier\nReturns the source product, or {@code null} if not found\n@see #getSourceProductId(Product)"},
+    {"setSourceProductById", (PyCFunction) BeamPySubsetOp_setSourceProductById, METH_VARARGS, "Sets a source product.\nOne product instance can be registered with different identifiers, e.g. \"source\", \"source1\" and \"input\"\nin consecutive calls.\nReturns Parameter id: a source product identifier\nReturns Parameter product: the source product to be set\nSince version:  BEAM 4.2"},
+    {"getSourceProductId", (PyCFunction) BeamPySubsetOp_getSourceProductId, METH_VARARGS, "Gets the identifier for the given source product.\nReturns Parameter product: The source product.\nReturns the identifier, or {@code null} if no such exists.\n@see #getSourceProduct(String)"},
+    {"getTargetProduct", (PyCFunction) BeamPySubsetOp_getTargetProduct, METH_VARARGS, "Gets the target product for the operator.\n\nIf the target product is not set, calling this method results in a\ncall to {@link #initialize()}.\nReturns the target product.\n@throws OperatorException May be caused by {@link #initialize()}, if the operator is not initialised,\nor if the target product is not set."},
+    {"getTargetProperty", (PyCFunction) BeamPySubsetOp_getTargetProperty, METH_VARARGS, "Gets a target property of the operator.\n\nIf the requested target property is not set, calling this method results in a\ncall to {@link #initialize()}.\nReturns Parameter name: the name of the property requested.\nReturns the target property requested.\n@throws OperatorException May be caused by {@link #initialize()}, if the operator is not initialised,\nor if the target product is not been set."},
+    {"getParameter", (PyCFunction) BeamPySubsetOp_getParameter, METH_VARARGS, "Gets the value for the parameter with the given name.\nReturns Parameter name: The parameter name.\nReturns the parameter value, which may be {@code null}.\nSince version:  BEAM 4.7"},
+    {"setParameter", (PyCFunction) BeamPySubsetOp_setParameter, METH_VARARGS, "Sets the value for the parameter with the given name.\nReturns Parameter name: The parameter name.\nReturns Parameter value: The parameter value, which may be {@code null}.\nSince version:  BEAM 4.7"},
+    {NULL, NULL, 0, NULL} /*Sentinel*/
+};
+
+// Note: this is unused, experimental code
+
+/**
+ * Implements the BeamPy_JObjectType class singleton.
+ *
+ * THIS TYPE IS NOT YET IN USE: we currently use
+ * (<type_string>, <pointer>) tuples to represent Java JNI objects.
+ */
+PyTypeObject SubsetOp_Type = {
+    PyVarObject_HEAD_INIT(NULL, 0)
+    "beampy.SubsetOp",        /* tp_name */
+    sizeof (JObject),             /* tp_basicsize */
+    0,                            /* tp_itemsize */
+    (destructor)JObject_dealloc,  /* tp_dealloc */
+    NULL,                         /* tp_print */
+    NULL,                         /* tp_getattr */
+    NULL,                         /* tp_setattr */
+    NULL,                         /* tp_reserved */
+    NULL,                         /* tp_repr */
+    NULL,                         /* tp_as_number */
+    NULL,                         /* tp_as_sequence */
+    NULL,                         /* tp_as_mapping */
+    NULL,                         /* tp_hash  */
+    NULL,                         /* tp_call */
+    NULL,                         /* tp_str */
+    NULL,                         /* tp_getattro */
+    NULL,                         /* tp_setattro */
+    NULL,                         /* tp_as_buffer */
+    Py_TPFLAGS_DEFAULT,           /* tp_flags */
+    "This operator is used to create either spatial and/or spectral subsets of a data product.\nSpatial subset may be given by pixel positions (parameter region)\nor a geographical polygon (parameter geoRegion). Subsets of band and tie-point grid\nare given by name lists (parameters bandNames and  tiePointGridNames).\nAuthor:  Marco Zuehlke\nAuthor:  Norman Fomferra\nAuthor:  Marco Peters\nSince version:  BEAM 4.9",                /* tp_doc */
+    NULL,                         /* tp_traverse */
+    NULL,                         /* tp_clear */
+    NULL,                         /* tp_richcompare */
+    0,                            /* tp_weaklistoffset */
+    NULL,                         /* tp_iter */
+    NULL,                         /* tp_iternext */
+    SubsetOp_methods,         /* tp_methods */
     NULL,                         /* tp_members */
     NULL,                         /* tp_getset */
     NULL,                         /* tp_base */
@@ -5181,7 +6725,7 @@ PyTypeObject Pointing_Type = {
     NULL,                         /* tp_new */
 };
 
-static PyMethodDef Color_methods[] = {
+static PyMethodDef PointingFactory_methods[] = {
     {NULL, NULL, 0, NULL} /*Sentinel*/
 };
 
@@ -5193,9 +6737,9 @@ static PyMethodDef Color_methods[] = {
  * THIS TYPE IS NOT YET IN USE: we currently use
  * (<type_string>, <pointer>) tuples to represent Java JNI objects.
  */
-PyTypeObject Color_Type = {
+PyTypeObject PointingFactory_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    "beampy.Color",        /* tp_name */
+    "beampy.PointingFactory",        /* tp_name */
     sizeof (JObject),             /* tp_basicsize */
     0,                            /* tp_itemsize */
     (destructor)JObject_dealloc,  /* tp_dealloc */
@@ -5214,14 +6758,14 @@ PyTypeObject Color_Type = {
     NULL,                         /* tp_setattro */
     NULL,                         /* tp_as_buffer */
     Py_TPFLAGS_DEFAULT,           /* tp_flags */
-    "",                /* tp_doc */
+    "A factory which creates instances of a {@link Pointing} for a given raster data node.\nA PointingFactory is usually assigned to data {@link Product} by its {@link ProductReader ProductReader}",                /* tp_doc */
     NULL,                         /* tp_traverse */
     NULL,                         /* tp_clear */
     NULL,                         /* tp_richcompare */
     0,                            /* tp_weaklistoffset */
     NULL,                         /* tp_iter */
     NULL,                         /* tp_iternext */
-    Color_methods,         /* tp_methods */
+    PointingFactory_methods,         /* tp_methods */
     NULL,                         /* tp_members */
     NULL,                         /* tp_getset */
     NULL,                         /* tp_base */
@@ -5287,375 +6831,6 @@ PyTypeObject PlacemarkDescriptor_Type = {
     NULL,                         /* tp_new */
 };
 
-static PyMethodDef PointingFactory_methods[] = {
-    {NULL, NULL, 0, NULL} /*Sentinel*/
-};
-
-// Note: this is unused, experimental code
-
-/**
- * Implements the BeamPy_JObjectType class singleton.
- *
- * THIS TYPE IS NOT YET IN USE: we currently use
- * (<type_string>, <pointer>) tuples to represent Java JNI objects.
- */
-PyTypeObject PointingFactory_Type = {
-    PyVarObject_HEAD_INIT(NULL, 0)
-    "beampy.PointingFactory",        /* tp_name */
-    sizeof (JObject),             /* tp_basicsize */
-    0,                            /* tp_itemsize */
-    (destructor)JObject_dealloc,  /* tp_dealloc */
-    NULL,                         /* tp_print */
-    NULL,                         /* tp_getattr */
-    NULL,                         /* tp_setattr */
-    NULL,                         /* tp_reserved */
-    NULL,                         /* tp_repr */
-    NULL,                         /* tp_as_number */
-    NULL,                         /* tp_as_sequence */
-    NULL,                         /* tp_as_mapping */
-    NULL,                         /* tp_hash  */
-    NULL,                         /* tp_call */
-    NULL,                         /* tp_str */
-    NULL,                         /* tp_getattro */
-    NULL,                         /* tp_setattro */
-    NULL,                         /* tp_as_buffer */
-    Py_TPFLAGS_DEFAULT,           /* tp_flags */
-    "A factory which creates instances of a {@link Pointing} for a given raster data node.\nA PointingFactory is usually assigned to data {@link Product} by its {@link ProductReader ProductReader}",                /* tp_doc */
-    NULL,                         /* tp_traverse */
-    NULL,                         /* tp_clear */
-    NULL,                         /* tp_richcompare */
-    0,                            /* tp_weaklistoffset */
-    NULL,                         /* tp_iter */
-    NULL,                         /* tp_iternext */
-    PointingFactory_methods,         /* tp_methods */
-    NULL,                         /* tp_members */
-    NULL,                         /* tp_getset */
-    NULL,                         /* tp_base */
-    NULL,                         /* tp_dict */
-    NULL,                         /* tp_descr_get */
-    NULL,                         /* tp_descr_set */
-    0,                            /* tp_dictoffset */
-    (initproc) JObject_init,      /* tp_init */
-    NULL,                         /* tp_alloc */
-    NULL,                         /* tp_new */
-};
-
-static PyMethodDef TransectProfileData_methods[] = {
-    {NULL, NULL, 0, NULL} /*Sentinel*/
-};
-
-// Note: this is unused, experimental code
-
-/**
- * Implements the BeamPy_JObjectType class singleton.
- *
- * THIS TYPE IS NOT YET IN USE: we currently use
- * (<type_string>, <pointer>) tuples to represent Java JNI objects.
- */
-PyTypeObject TransectProfileData_Type = {
-    PyVarObject_HEAD_INIT(NULL, 0)
-    "beampy.TransectProfileData",        /* tp_name */
-    sizeof (JObject),             /* tp_basicsize */
-    0,                            /* tp_itemsize */
-    (destructor)JObject_dealloc,  /* tp_dealloc */
-    NULL,                         /* tp_print */
-    NULL,                         /* tp_getattr */
-    NULL,                         /* tp_setattr */
-    NULL,                         /* tp_reserved */
-    NULL,                         /* tp_repr */
-    NULL,                         /* tp_as_number */
-    NULL,                         /* tp_as_sequence */
-    NULL,                         /* tp_as_mapping */
-    NULL,                         /* tp_hash  */
-    NULL,                         /* tp_call */
-    NULL,                         /* tp_str */
-    NULL,                         /* tp_getattro */
-    NULL,                         /* tp_setattro */
-    NULL,                         /* tp_as_buffer */
-    Py_TPFLAGS_DEFAULT,           /* tp_flags */
-    "A container for data which fully describes a transect profile. Use {@link TransectProfileDataBuilder} to create\ninstances.\nAuthor:  Thomas Storm\nAuthor:  Norman Fomferra",                /* tp_doc */
-    NULL,                         /* tp_traverse */
-    NULL,                         /* tp_clear */
-    NULL,                         /* tp_richcompare */
-    0,                            /* tp_weaklistoffset */
-    NULL,                         /* tp_iter */
-    NULL,                         /* tp_iternext */
-    TransectProfileData_methods,         /* tp_methods */
-    NULL,                         /* tp_members */
-    NULL,                         /* tp_getset */
-    NULL,                         /* tp_base */
-    NULL,                         /* tp_dict */
-    NULL,                         /* tp_descr_get */
-    NULL,                         /* tp_descr_set */
-    0,                            /* tp_dictoffset */
-    (initproc) JObject_init,      /* tp_init */
-    NULL,                         /* tp_alloc */
-    NULL,                         /* tp_new */
-};
-
-static PyMethodDef PlacemarkGroup_methods[] = {
-    {"getVectorDataNode", (PyCFunction) BeamPyPlacemarkGroup_getVectorDataNode, METH_VARARGS, ""},
-    {"getPlacemark", (PyCFunction) BeamPyPlacemarkGroup_getPlacemark, METH_VARARGS, ""},
-    {"add3", (PyCFunction) BeamPyPlacemarkGroup_add3, METH_VARARGS, ""},
-    {"add1", (PyCFunction) BeamPyPlacemarkGroup_add1, METH_VARARGS, ""},
-    {"remove1", (PyCFunction) BeamPyPlacemarkGroup_remove1, METH_VARARGS, ""},
-    {"dispose", (PyCFunction) BeamPyPlacemarkGroup_dispose, METH_VARARGS, ""},
-    {"isTakingOverNodeOwnership", (PyCFunction) BeamPyPlacemarkGroup_isTakingOverNodeOwnership, METH_VARARGS, "Returns {@code true}, if child nodes will have this group as owner after adding."},
-    {"getNodeCount", (PyCFunction) BeamPyPlacemarkGroup_getNodeCount, METH_VARARGS, "Returns the number of product nodes in this product group."},
-    {"get1", (PyCFunction) BeamPyPlacemarkGroup_get1, METH_VARARGS, "Returns Parameter index: The node index.\nReturns the product node at the given index."},
-    {"getNodeDisplayNames", (PyCFunction) BeamPyPlacemarkGroup_getNodeDisplayNames, METH_VARARGS, "Returns the display names of all products currently managed.\nReturns an array containing the display names, never null, but the array can have zero length\n@see ProductNode#getDisplayName()"},
-    {"getNodeNames", (PyCFunction) BeamPyPlacemarkGroup_getNodeNames, METH_VARARGS, "Returns the names of all products currently managed.\nReturns an array containing the names, never null, but the array can have zero length"},
-    {"toArray1", (PyCFunction) BeamPyPlacemarkGroup_toArray1, METH_VARARGS, "Returns an array of all products currently managed.\nReturns an array containing the products, never null, but the array can have zero length"},
-    {"toArray2", (PyCFunction) BeamPyPlacemarkGroup_toArray2, METH_VARARGS, "Returns Parameter array: the array into which the elements of the list are to be stored, if it is big enough; otherwise, a\nnew array of the same runtime type is allocated for this purpose.\nReturns an array containing the product nodes, never null, but the array can have zero length"},
-    {"indexOf1", (PyCFunction) BeamPyPlacemarkGroup_indexOf1, METH_VARARGS, ""},
-    {"indexOf2", (PyCFunction) BeamPyPlacemarkGroup_indexOf2, METH_VARARGS, ""},
-    {"getByDisplayName", (PyCFunction) BeamPyPlacemarkGroup_getByDisplayName, METH_VARARGS, "Returns Parameter displayName: the display name\nReturns the product node with the given display name."},
-    {"get2", (PyCFunction) BeamPyPlacemarkGroup_get2, METH_VARARGS, "Returns Parameter name: the name\nReturns the product node with the given name."},
-    {"contains1", (PyCFunction) BeamPyPlacemarkGroup_contains1, METH_VARARGS, "Tests whether a node with the given name is contained in this group.\nReturns Parameter name: the name\nReturns true, if so"},
-    {"contains2", (PyCFunction) BeamPyPlacemarkGroup_contains2, METH_VARARGS, "Tests whether the given product is contained in this list.\nReturns Parameter node: the node\nReturns true, if so"},
-    {"add4", (PyCFunction) BeamPyPlacemarkGroup_add4, METH_VARARGS, "Adds the given node to this group.\nReturns Parameter node: the node to be added, ignored if null\nReturns true, if the node has been added"},
-    {"add2", (PyCFunction) BeamPyPlacemarkGroup_add2, METH_VARARGS, "Adds the given node to this group.\nReturns Parameter index: the index.\nReturns Parameter node: the node to be added, ignored if null"},
-    {"remove2", (PyCFunction) BeamPyPlacemarkGroup_remove2, METH_VARARGS, "Removes the given node from this group.\nReturns Parameter node: the node to be removed\nReturns true, if the node was removed"},
-    {"removeAll", (PyCFunction) BeamPyPlacemarkGroup_removeAll, METH_VARARGS, "Removes all nodes from this group."},
-    {"clearRemovedList", (PyCFunction) BeamPyPlacemarkGroup_clearRemovedList, METH_VARARGS, ""},
-    {"getRemovedNodes", (PyCFunction) BeamPyPlacemarkGroup_getRemovedNodes, METH_VARARGS, "Gets all removed node nodes.\nReturns a collection of all removed node nodes."},
-    {"getRawStorageSize2", (PyCFunction) BeamPyPlacemarkGroup_getRawStorageSize2, METH_VARARGS, ""},
-    {"setModified", (PyCFunction) BeamPyPlacemarkGroup_setModified, METH_VARARGS, ""},
-    {"acceptVisitor", (PyCFunction) BeamPyPlacemarkGroup_acceptVisitor, METH_VARARGS, ""},
-    {"updateExpression", (PyCFunction) BeamPyPlacemarkGroup_updateExpression, METH_VARARGS, ""},
-    {"getOwner", (PyCFunction) BeamPyPlacemarkGroup_getOwner, METH_VARARGS, "Returns the owner node of this node."},
-    {"getName", (PyCFunction) BeamPyPlacemarkGroup_getName, METH_VARARGS, "Returns this node's name."},
-    {"setName", (PyCFunction) BeamPyPlacemarkGroup_setName, METH_VARARGS, "Sets this product's name.\nReturns Parameter name: The name."},
-    {"getDescription", (PyCFunction) BeamPyPlacemarkGroup_getDescription, METH_VARARGS, "Returns a short textual description for this products node.\nReturns a description or null"},
-    {"setDescription", (PyCFunction) BeamPyPlacemarkGroup_setDescription, METH_VARARGS, "Sets a short textual description for this products node.\nReturns Parameter description: a description, can be null"},
-    {"isModified", (PyCFunction) BeamPyPlacemarkGroup_isModified, METH_VARARGS, "Returns whether or not this node is modified.\nReturns true if so"},
-    {"toString", (PyCFunction) BeamPyPlacemarkGroup_toString, METH_VARARGS, ""},
-    {"isValidNodeName", (PyCFunction) BeamPyPlacemarkGroup_isValidNodeName, METH_VARARGS | METH_STATIC, "Tests whether the given name is valid name for a node.\nA valid node name must not start with a dot. Also a valid node name must not contain\nany of the character  \\/:*?\"&lt;&gt;|\nReturns Parameter name: the name to test\nReturns true if the name is a valid node identifier, false otherwise"},
-    {"getProduct", (PyCFunction) BeamPyPlacemarkGroup_getProduct, METH_VARARGS, "Returns the product to which this node belongs to.\nReturns the product, or null if this node was not owned by a product at the time this method was\ncalled"},
-    {"getProductReader", (PyCFunction) BeamPyPlacemarkGroup_getProductReader, METH_VARARGS, "Returns the product reader for the product to which this node belongs to.\nReturns the product reader, or null if no such exists"},
-    {"getProductWriter", (PyCFunction) BeamPyPlacemarkGroup_getProductWriter, METH_VARARGS, "Returns the product writer for the product to which this node belongs to.\nReturns the product writer, or null if no such exists"},
-    {"getDisplayName", (PyCFunction) BeamPyPlacemarkGroup_getDisplayName, METH_VARARGS, "Returns this node's display name. The display name is the product reference string with the node name appended.\nExample: The string \"[2] node-name\" means node node-name of the\nproduct with the reference number 2.\nReturns this node's name with a product prefix <br>or this node's name only if this node's product prefix is\nnull\n@see #getProductRefString"},
-    {"getProductRefString", (PyCFunction) BeamPyPlacemarkGroup_getProductRefString, METH_VARARGS, "Gets the product reference string. The product reference string is the product reference number enclosed in\nsquare brackets. Example: The string \"[2]\" stands for a product with the reference number\n2.\nReturns the product reference string. <br>or null if this node has no product <br>or\nnull if its product reference number was inactive"},
-    {"getRawStorageSize1", (PyCFunction) BeamPyPlacemarkGroup_getRawStorageSize1, METH_VARARGS, "Gets an estimated, raw storage size in bytes of this product node.\nReturns the size in bytes."},
-    {"fireProductNodeChanged1", (PyCFunction) BeamPyPlacemarkGroup_fireProductNodeChanged1, METH_VARARGS, ""},
-    {"fireProductNodeChanged2", (PyCFunction) BeamPyPlacemarkGroup_fireProductNodeChanged2, METH_VARARGS, ""},
-    {"removeFromFile", (PyCFunction) BeamPyPlacemarkGroup_removeFromFile, METH_VARARGS, "Physically remove this node from the file associated with the given product writer. The default implementation\ndoes nothing.\nReturns Parameter productWriter: the product writer to be used to remove this node from the underlying file."},
-    {"getExtension", (PyCFunction) BeamPyPlacemarkGroup_getExtension, METH_VARARGS, ""},
-    {NULL, NULL, 0, NULL} /*Sentinel*/
-};
-
-// Note: this is unused, experimental code
-
-/**
- * Implements the BeamPy_JObjectType class singleton.
- *
- * THIS TYPE IS NOT YET IN USE: we currently use
- * (<type_string>, <pointer>) tuples to represent Java JNI objects.
- */
-PyTypeObject PlacemarkGroup_Type = {
-    PyVarObject_HEAD_INIT(NULL, 0)
-    "beampy.PlacemarkGroup",        /* tp_name */
-    sizeof (JObject),             /* tp_basicsize */
-    0,                            /* tp_itemsize */
-    (destructor)JObject_dealloc,  /* tp_dealloc */
-    NULL,                         /* tp_print */
-    NULL,                         /* tp_getattr */
-    NULL,                         /* tp_setattr */
-    NULL,                         /* tp_reserved */
-    NULL,                         /* tp_repr */
-    NULL,                         /* tp_as_number */
-    NULL,                         /* tp_as_sequence */
-    NULL,                         /* tp_as_mapping */
-    NULL,                         /* tp_hash  */
-    NULL,                         /* tp_call */
-    NULL,                         /* tp_str */
-    NULL,                         /* tp_getattro */
-    NULL,                         /* tp_setattro */
-    NULL,                         /* tp_as_buffer */
-    Py_TPFLAGS_DEFAULT,           /* tp_flags */
-    "",                /* tp_doc */
-    NULL,                         /* tp_traverse */
-    NULL,                         /* tp_clear */
-    NULL,                         /* tp_richcompare */
-    0,                            /* tp_weaklistoffset */
-    NULL,                         /* tp_iter */
-    NULL,                         /* tp_iternext */
-    PlacemarkGroup_methods,         /* tp_methods */
-    NULL,                         /* tp_members */
-    NULL,                         /* tp_getset */
-    NULL,                         /* tp_base */
-    NULL,                         /* tp_dict */
-    NULL,                         /* tp_descr_get */
-    NULL,                         /* tp_descr_set */
-    0,                            /* tp_dictoffset */
-    (initproc) JObject_init,      /* tp_init */
-    NULL,                         /* tp_alloc */
-    NULL,                         /* tp_new */
-};
-
-static PyMethodDef Product_methods[] = {
-    {"newProduct", (PyCFunction) BeamPyProduct_newProduct, METH_VARARGS | METH_STATIC, "Creates a new product without any reader (in-memory product)\nReturns Parameter name: the product name\nReturns Parameter type: the product type\nReturns Parameter sceneRasterWidth: the scene width in pixels for this data product\nReturns Parameter sceneRasterHeight: the scene height in pixels for this data product"},
-    {"getFileLocation", (PyCFunction) BeamPyProduct_getFileLocation, METH_VARARGS, "Retrieves the disk location of this product. The return value can be null when the product has no\ndisk location (pure virtual memory product)\nReturns the file location, may be null"},
-    {"setFileLocation", (PyCFunction) BeamPyProduct_setFileLocation, METH_VARARGS, "Sets the file location for this product.\nReturns Parameter fileLocation: the file location, may be null"},
-    {"getProductType", (PyCFunction) BeamPyProduct_getProductType, METH_VARARGS, "Gets the product type string.\nReturns the product type string"},
-    {"setProductType", (PyCFunction) BeamPyProduct_setProductType, METH_VARARGS, "Sets the product type of this product.\nReturns Parameter productType: the product type."},
-    {"setProductReader", (PyCFunction) BeamPyProduct_setProductReader, METH_VARARGS, "Sets the product reader which will be used to create this product in-memory represention from an external source\nand which will be used to (re-)load band rasters.\nReturns Parameter reader: the product reader.\n@throws IllegalArgumentException if the given reader is null."},
-    {"getProductReader", (PyCFunction) BeamPyProduct_getProductReader, METH_VARARGS, "Returns the reader which was used to create this product in-memory represention from an external source and which\nwill be used to (re-)load band rasters.\nReturns the product reader, can be null"},
-    {"setProductWriter", (PyCFunction) BeamPyProduct_setProductWriter, METH_VARARGS, "Sets the writer which will be used to write modifications of this product's in-memory represention to an external\ndestination.\nReturns Parameter writer: the product writer, can be null"},
-    {"getProductWriter", (PyCFunction) BeamPyProduct_getProductWriter, METH_VARARGS, "Returns the writer which will be used to write modifications of this product's in-memory represention to an\nexternal destination.\nReturns the product writer, can be null"},
-    {"writeHeader", (PyCFunction) BeamPyProduct_writeHeader, METH_VARARGS, "Writes the header of a data product.\nReturns Parameter output: an object representing a valid output for this writer, might be a ImageOutputStream\nor a File or other Object to use for future decoding.\n@throws IllegalArgumentException if output is null or it's type is none of the\nsupported output types.\n@throws IOException              if an I/O error occurs"},
-    {"closeProductReader", (PyCFunction) BeamPyProduct_closeProductReader, METH_VARARGS, "Closes and clears this product's reader (if any).\n@throws IOException if an I/O error occurs\n@see #closeIO"},
-    {"closeProductWriter", (PyCFunction) BeamPyProduct_closeProductWriter, METH_VARARGS, "Closes and clears this product's writer (if any).\n@throws IOException if an I/O error occurs\n@see #closeIO"},
-    {"closeIO", (PyCFunction) BeamPyProduct_closeIO, METH_VARARGS, "Closes the file I/O for this product. Calls in sequence {@link #closeProductReader}  and\n{@link #closeProductWriter}. The {@link #dispose} method is not called, but\nshould be called if the product instance is no longer in use.\n@throws IOException if an I/O error occurs\n@see #closeProductReader\n@see #closeProductWriter\n@see #dispose"},
-    {"dispose", (PyCFunction) BeamPyProduct_dispose, METH_VARARGS, "Releases all of the resources used by this object instance and all of its owned children. Its primary use is to\nallow the garbage collector to perform a vanilla job.\n\nThis method should be called only if it is for sure that this object instance will never be used again. The\nresults of referencing an instance of this class after a call to dispose() are undefined.\n\nOverrides of this method should always call super.dispose(); after disposing this instance.\n\nThis implementation also calls the closeIO in order to release all open I/O resources."},
-    {"getPointingFactory", (PyCFunction) BeamPyProduct_getPointingFactory, METH_VARARGS, "Gets the pointing factory associated with this data product.\nReturns the pointing factory or null, if none"},
-    {"setPointingFactory", (PyCFunction) BeamPyProduct_setPointingFactory, METH_VARARGS, "Sets the pointing factory for this data product.\nReturns Parameter pointingFactory: the pointing factory"},
-    {"setGeoCoding", (PyCFunction) BeamPyProduct_setGeoCoding, METH_VARARGS, "Geo-codes this data product.\nReturns Parameter geoCoding: the geo-coding, if null geo-coding is removed\n@throws IllegalArgumentException <br>- if the given GeoCoding is a TiePointGeoCoding\nand latGrid or lonGrid are not instances of tie point\ngrids in this product. <br>- if the given GeoCoding is a\nMapGeoCoding and its MapInfo is null\n<br>- if the given GeoCoding is a MapGeoCoding and the\nsceneWith or sceneHeight of its MapInfo\nis not equal to this products sceneRasterWidth or\nsceneRasterHeight"},
-    {"getGeoCoding", (PyCFunction) BeamPyProduct_getGeoCoding, METH_VARARGS, "Returns the geo-coding used for this data product.\nReturns the geo-coding, can be null if this product is not geo-coded."},
-    {"isUsingSingleGeoCoding", (PyCFunction) BeamPyProduct_isUsingSingleGeoCoding, METH_VARARGS, "Tests if all bands of this product are using a single, uniform geo-coding. Uniformity is tested by comparing\nthe band's geo-coding against the geo-coding of this product using the {@link Object#equals(Object)} method.\nIf this product does not have a geo-coding, the method returns false.\nReturns true, if so"},
-    {"transferGeoCodingTo", (PyCFunction) BeamPyProduct_transferGeoCodingTo, METH_VARARGS, "Transfers the geo-coding of this product instance to the {@link Product destProduct} with respect to\nthe given {@link ProductSubsetDef subsetDef}.\nReturns Parameter destProduct: the destination product\nReturns Parameter subsetDef: the definition of the subset, may be null\nReturns true, if the geo-coding could be transferred."},
-    {"getSceneRasterWidth", (PyCFunction) BeamPyProduct_getSceneRasterWidth, METH_VARARGS, "Returns the scene width in pixels for this data product.\nReturns the scene width in pixels for this data product."},
-    {"getSceneRasterHeight", (PyCFunction) BeamPyProduct_getSceneRasterHeight, METH_VARARGS, "Returns the scene height in pixels for this data product.\nReturns the scene height in pixels for this data product."},
-    {"getStartTime", (PyCFunction) BeamPyProduct_getStartTime, METH_VARARGS, "Gets the (sensing) start time associated with the first raster data line.\n\nFor Level-1/2 products this is\nthe data-take time associated with the first raster data line.\nFor Level-3 products, this could be the start time of first input product\ncontributing data.\nReturns the sensing start time, can be null e.g. for non-swath products"},
-    {"setStartTime", (PyCFunction) BeamPyProduct_setStartTime, METH_VARARGS, "Sets the (sensing) start time of this product.\n\nFor Level-1/2 products this is\nthe data-take time associated with the first raster data line.\nFor Level-3 products, this could be the start time of first input product\ncontributing data.\nReturns Parameter startTime: the sensing start time, can be null"},
-    {"getEndTime", (PyCFunction) BeamPyProduct_getEndTime, METH_VARARGS, "Gets the (sensing) stop time associated with the last raster data line.\n\nFor Level-1/2 products this is\nthe data-take time associated with the last raster data line.\nFor Level-3 products, this could be the end time of last input product\ncontributing data.\nReturns the stop time , can be null e.g. for non-swath products"},
-    {"setEndTime", (PyCFunction) BeamPyProduct_setEndTime, METH_VARARGS, "Sets the (sensing) stop time associated with the first raster data line.\n\nFor Level-1/2 products this is\nthe data-take time associated with the last raster data line.\nFor Level-3 products, this could be the end time of last input product\ncontributing data.\nReturns Parameter endTime: the sensing stop time, can be null"},
-    {"getMetadataRoot", (PyCFunction) BeamPyProduct_getMetadataRoot, METH_VARARGS, "Gets the root element of the associated metadata.\nReturns the metadata root element"},
-    {"getGroups", (PyCFunction) BeamPyProduct_getGroups, METH_VARARGS, "Returns the group which contains all other product node groups.\nSince version:  BEAM 5.0"},
-    {"getGroup", (PyCFunction) BeamPyProduct_getGroup, METH_VARARGS, "Returns Parameter name: The group name.\nReturns the group with the given name, or {@code null} if no such group exists.\nSince version:  BEAM 5.0"},
-    {"getTiePointGridGroup", (PyCFunction) BeamPyProduct_getTiePointGridGroup, METH_VARARGS, "Gets the tie-point grid group of this product.\nReturns the group of all tie-point grids.\nSince version:  BEAM 4.7"},
-    {"addTiePointGrid", (PyCFunction) BeamPyProduct_addTiePointGrid, METH_VARARGS, "Adds the given tie-point grid to this product.\nReturns Parameter tiePointGrid: the tie-point grid to added, ignored if null"},
-    {"removeTiePointGrid", (PyCFunction) BeamPyProduct_removeTiePointGrid, METH_VARARGS, "Removes the tie-point grid from this product.\nReturns Parameter tiePointGrid: the tie-point grid to be removed, ignored if null\nReturns true if node could be removed"},
-    {"getNumTiePointGrids", (PyCFunction) BeamPyProduct_getNumTiePointGrids, METH_VARARGS, "Returns the number of tie-point grids contained in this product\nReturns the number of tie-point grids"},
-    {"getTiePointGridAt", (PyCFunction) BeamPyProduct_getTiePointGridAt, METH_VARARGS, "Returns the tie-point grid at the given index.\nReturns Parameter index: the tie-point grid index\nReturns the tie-point grid at the given index\n@throws IndexOutOfBoundsException if the index is out of bounds"},
-    {"getTiePointGridNames", (PyCFunction) BeamPyProduct_getTiePointGridNames, METH_VARARGS, "Returns a string array containing the names of the tie-point grids contained in this product\nReturns a string array containing the names of the tie-point grids contained in this product. If this product has\nno tie-point grids a zero-length-array is returned."},
-    {"getTiePointGrids", (PyCFunction) BeamPyProduct_getTiePointGrids, METH_VARARGS, "Returns an array of tie-point grids contained in this product\nReturns an array of tie-point grids contained in this product. If this product has no  tie-point grids a\nzero-length-array is returned."},
-    {"getTiePointGrid", (PyCFunction) BeamPyProduct_getTiePointGrid, METH_VARARGS, "Returns the tie-point grid with the given name.\nReturns Parameter name: the tie-point grid name\nReturns the tie-point grid with the given name or null if a tie-point grid with the given name is\nnot contained in this product."},
-    {"containsTiePointGrid", (PyCFunction) BeamPyProduct_containsTiePointGrid, METH_VARARGS, "Tests if a tie-point grid with the given name is contained in this product.\nReturns Parameter name: the name, must not be null\nReturns true if a tie-point grid with the given name is contained in this product,\nfalse otherwise"},
-    {"getBandGroup", (PyCFunction) BeamPyProduct_getBandGroup, METH_VARARGS, "Gets the band group of this product.\nReturns the group of all bands.\nSince version:  BEAM 4.7"},
-    {"addBand", (PyCFunction) BeamPyProduct_addBand, METH_VARARGS, "Adds the given band to this product.\nReturns Parameter band: the band to added, must not be null"},
-    {"addNewBand", (PyCFunction) BeamPyProduct_addNewBand, METH_VARARGS, "Creates a new band with the given name and data type and adds it to this product and returns it.\nReturns Parameter bandName: the new band's name\nReturns Parameter dataType: the raster data type, must be one of the multiple ProductData.TYPE_X\nconstants\nReturns the new band which has just been added"},
-    {"addComputedBand", (PyCFunction) BeamPyProduct_addComputedBand, METH_VARARGS, "Creates a new band with the given name and adds it to this product and returns it.\nThe new band's data type is {@code float} and it's samples are computed from the given band maths expression.\nReturns Parameter bandName: the new band's name\nReturns Parameter expression: the band maths expression\nReturns the new band which has just been added\nSince version:  BEAM 4.9"},
-    {"removeBand", (PyCFunction) BeamPyProduct_removeBand, METH_VARARGS, "Removes the given band from this product.\nReturns Parameter band: the band to be removed, ignored if null\nReturns {@code true} if removed succesfully, otherwise {@code false}"},
-    {"getNumBands", (PyCFunction) BeamPyProduct_getNumBands, METH_VARARGS, "Returns the number of bands contained in this product."},
-    {"getBandAt", (PyCFunction) BeamPyProduct_getBandAt, METH_VARARGS, "Returns the band at the given index.\nReturns Parameter index: the band index\nReturns the band at the given index\n@throws IndexOutOfBoundsException if the index is out of bounds"},
-    {"getBandNames", (PyCFunction) BeamPyProduct_getBandNames, METH_VARARGS, "Returns a string array containing the names of the bands contained in this product\nReturns a string array containing the names of the bands contained in this product. If this product has no bands\na zero-length-array is returned."},
-    {"getBands", (PyCFunction) BeamPyProduct_getBands, METH_VARARGS, "Returns an array of bands contained in this product\nReturns an array of bands contained in this product. If this product has no bands a zero-length-array is\nreturned."},
-    {"getBand", (PyCFunction) BeamPyProduct_getBand, METH_VARARGS, "Returns the band with the given name.\nReturns Parameter name: the band name\nReturns the band with the given name or null if a band with the given name is not contained in this\nproduct.\n@throws IllegalArgumentException if the given name is null or empty."},
-    {"getBandIndex", (PyCFunction) BeamPyProduct_getBandIndex, METH_VARARGS, "Returns the index for the band with the given name.\nReturns Parameter name: the band name\nReturns the band index or -1 if a band with the given name is not contained in this product.\n@throws IllegalArgumentException if the given name is null or empty."},
-    {"containsBand", (PyCFunction) BeamPyProduct_containsBand, METH_VARARGS, "Tests if a band with the given name is contained in this product.\nReturns Parameter name: the name, must not be null\nReturns true if a band with the given name is contained in this product, false\notherwise\n@throws IllegalArgumentException if the given name is null or empty."},
-    {"containsRasterDataNode", (PyCFunction) BeamPyProduct_containsRasterDataNode, METH_VARARGS, "Tests if a raster data node with the given name is contained in this product. Raster data nodes can be bands or\ntie-point grids.\nReturns Parameter name: the name, must not be null\nReturns true if a raster data node with the given name is contained in this product,\nfalse otherwise"},
-    {"getRasterDataNode", (PyCFunction) BeamPyProduct_getRasterDataNode, METH_VARARGS, "Gets the raster data node with the given name. The method first searches for bands with the given name, then for\ntie-point grids. If neither bands nor tie-point grids exist with the given name, null is returned.\nReturns Parameter name: the name, must not be null\nReturns the raster data node with the given name or null if a raster data node with the given name\nis not contained in this product."},
-    {"getMaskGroup", (PyCFunction) BeamPyProduct_getMaskGroup, METH_VARARGS, ""},
-    {"getVectorDataGroup", (PyCFunction) BeamPyProduct_getVectorDataGroup, METH_VARARGS, ""},
-    {"getFlagCodingGroup", (PyCFunction) BeamPyProduct_getFlagCodingGroup, METH_VARARGS, ""},
-    {"getIndexCodingGroup", (PyCFunction) BeamPyProduct_getIndexCodingGroup, METH_VARARGS, ""},
-    {"containsPixel", (PyCFunction) BeamPyProduct_containsPixel, METH_VARARGS, "Tests if the given pixel position is within the product pixel bounds.\nReturns Parameter x: the x coordinate of the pixel position\nReturns Parameter y: the y coordinate of the pixel position\nReturns true, if so\n@see #containsPixel(PixelPos)"},
-    {"getGcpGroup", (PyCFunction) BeamPyProduct_getGcpGroup, METH_VARARGS, "Gets the group of ground-control points (GCPs).\nNote that this method will create the group, if none exists already.\nReturns the GCP group."},
-    {"getPinGroup", (PyCFunction) BeamPyProduct_getPinGroup, METH_VARARGS, "Gets the group of pins.\nNote that this method will create the group, if none exists already.\nReturns the pin group."},
-    {"getNumResolutionsMax", (PyCFunction) BeamPyProduct_getNumResolutionsMax, METH_VARARGS, "Returns the maximum number of resolution levels common to all band images.\nIf less than or equal to zero, the  number of resolution levels is considered to be unknown.\nSince version:  BEAM 5.0"},
-    {"setNumResolutionsMax", (PyCFunction) BeamPyProduct_setNumResolutionsMax, METH_VARARGS, "Returns Parameter numResolutionsMax: The maximum number of resolution levels common to all band images.\nIf less than or equal to zero, the  number of resolution levels is considered to be unknown.\nSince version:  BEAM 5.0"},
-    {"isCompatibleProduct", (PyCFunction) BeamPyProduct_isCompatibleProduct, METH_VARARGS, "Checks whether or not the given product is compatible with this product.\nReturns Parameter product: the product to compare with\nReturns Parameter eps: the maximum lat/lon error in degree\nReturns false if the scene dimensions or geocoding are different, true otherwise."},
-    {"parseExpression", (PyCFunction) BeamPyProduct_parseExpression, METH_VARARGS, "Parses a mathematical expression given as a text string.\nReturns Parameter expression: a expression given as a text string, e.g. \"radiance_4 / (1.0 + radiance_11)\".\nReturns a term parsed from the given expression string\n@throws ParseException if the expression could not successfully be parsed"},
-    {"acceptVisitor", (PyCFunction) BeamPyProduct_acceptVisitor, METH_VARARGS, "Accepts the given visitor. This method implements the well known 'Visitor' design pattern of the gang-of-four.\nThe visitor pattern allows to define new operations on the product data model without the need to add more code\nto it. The new operation is implemented by the visitor.\n\nThe method subsequentially visits (calls acceptVisitor for) all bands, tie-point grids and flag\ncodings. Finally it visits product metadata root element and calls visitor.visit(this).\nReturns Parameter visitor: the visitor, must not be null"},
-    {"addProductNodeListener", (PyCFunction) BeamPyProduct_addProductNodeListener, METH_VARARGS, "Adds a ProductNodeListener to this product. The ProductNodeListener is informed each\ntime a node in this product changes.\nReturns Parameter listener: the listener to be added\nReturns boolean if listener was added or not"},
-    {"removeProductNodeListener", (PyCFunction) BeamPyProduct_removeProductNodeListener, METH_VARARGS, "Removes a ProductNodeListener from this product.\nReturns Parameter listener: the listener to be removed."},
-    {"getProductNodeListeners", (PyCFunction) BeamPyProduct_getProductNodeListeners, METH_VARARGS, ""},
-    {"getRefNo", (PyCFunction) BeamPyProduct_getRefNo, METH_VARARGS, "Returns the reference number of this product."},
-    {"setRefNo", (PyCFunction) BeamPyProduct_setRefNo, METH_VARARGS, "Sets the reference number.\nReturns Parameter refNo: the reference number to set must be in the range 1 .. Integer.MAX_VALUE\n@throws IllegalArgumentException if the refNo is out of range\n@throws IllegalStateException"},
-    {"resetRefNo", (PyCFunction) BeamPyProduct_resetRefNo, METH_VARARGS, ""},
-    {"getProductManager", (PyCFunction) BeamPyProduct_getProductManager, METH_VARARGS, "Returns the product manager for this product.\nReturns this product's manager, can be null"},
-    {"createBandArithmeticParser", (PyCFunction) BeamPyProduct_createBandArithmeticParser, METH_VARARGS, "Creates a parser for band arithmetic expressions.\nThe parser created will use a namespace comprising all tie-point grids, bands and flags of this product.\nReturns a parser for band arithmetic expressions for this product, never null"},
-    {"createBandArithmeticDefaultNamespace", (PyCFunction) BeamPyProduct_createBandArithmeticDefaultNamespace, METH_VARARGS, "Creates a namespace to be used by parsers for band arithmetic expressions.\nThe namespace created comprises all tie-point grids, bands and flags of this product.\nReturns a namespace, never null"},
-    {"createSubset", (PyCFunction) BeamPyProduct_createSubset, METH_VARARGS, "Creates a subset of this product. The returned product represents a true spatial and spectral subset of this\nproduct, but it has not loaded any bands into memory. If name or desc are null or empty, the name and the\ndescription from this product was used.\nReturns Parameter subsetDef: the product subset definition\nReturns Parameter name: the name for the new product\nReturns Parameter desc: the description for the new product\nReturns the product subset, or null if the product/subset combination is not valid\n@throws IOException if an I/O error occurs"},
-    {"createFlippedProduct", (PyCFunction) BeamPyProduct_createFlippedProduct, METH_VARARGS, "Creates flipped raster-data version of this product.\nReturns Parameter flipType: the flip type, see {@link ProductFlipper}\nReturns Parameter name: the name for the new product\nReturns Parameter desc: the description for the new product\nReturns the product subset, or null if the product/subset combination is not valid\n@throws IOException if an I/O error occurs"},
-    {"setModified", (PyCFunction) BeamPyProduct_setModified, METH_VARARGS, ""},
-    {"getQuicklookBandName", (PyCFunction) BeamPyProduct_getQuicklookBandName, METH_VARARGS, "Gets the name of the band suitable for quicklook generation.\nReturns the name of the quicklook band, or null if none has been defined"},
-    {"setQuicklookBandName", (PyCFunction) BeamPyProduct_setQuicklookBandName, METH_VARARGS, "Sets the name of the band suitable for quicklook generation.\nReturns Parameter quicklookBandName: the name of the quicklook band, or null"},
-    {"createPixelInfoString", (PyCFunction) BeamPyProduct_createPixelInfoString, METH_VARARGS, "Creates a string containing all available information at the given pixel position. The string returned is a line\nseparated text with each line containing a key/value pair.\nReturns Parameter pixelX: the pixel X co-ordinate\nReturns Parameter pixelY: the pixel Y co-ordinate\nReturns the info string at the given position"},
-    {"getRemovedChildNodes", (PyCFunction) BeamPyProduct_getRemovedChildNodes, METH_VARARGS, "Returns all removed child nodes. Array may be empty."},
-    {"canBeOrthorectified", (PyCFunction) BeamPyProduct_canBeOrthorectified, METH_VARARGS, "Checks whether or not this product can be ortorectified.\nReturns true if {@link Band#canBeOrthorectified()} returns true for all bands, false otherwise"},
-    {"getPreferredTileSize", (PyCFunction) BeamPyProduct_getPreferredTileSize, METH_VARARGS, "Gets the preferred tile size which may be used for a the {@link java.awt.image.RenderedImage rendered image}\ncreated for a {@link RasterDataNode} of this product.\nReturns the preferred tile size, may be null</null> if not specified\n@see RasterDataNode#getSourceImage()\n@see RasterDataNode# setSourceImage (java.awt.image.RenderedImage)"},
-    {"setPreferredTileSize", (PyCFunction) BeamPyProduct_setPreferredTileSize, METH_VARARGS, "Sets the preferred tile size which may be used for a the {@link java.awt.image.RenderedImage rendered image}\ncreated for a {@link RasterDataNode} of this product.\nReturns Parameter tileWidth: the preferred tile width\nReturns Parameter tileHeight: the preferred tile height\n@see #setPreferredTileSize(java.awt.Dimension)"},
-    {"getAllFlagNames", (PyCFunction) BeamPyProduct_getAllFlagNames, METH_VARARGS, "Returns the names of all flags of all flag datasets contained this product.\n\nA flag name contains the dataset (a band of this product) and the actual flag name as defined in the\nflag-coding associated with the dataset. The general format for the flag name strings returned is therefore\n\"dataset.flag_name\".\n\nThe method is used to find out which flags a product has in order to use them in bit-mask expressions.\nReturns the array of all flag names. If this product does not support flags, an empty array is returned, but\nnever null.\n@see #parseExpression(String)"},
-    {"getAutoGrouping", (PyCFunction) BeamPyProduct_getAutoGrouping, METH_VARARGS, "Gets the auto-grouping applicable to product nodes contained in this product.\nReturns the auto-grouping or {@code null}.\nSince version:  BEAM 4.8"},
-    {"setAutoGrouping", (PyCFunction) BeamPyProduct_setAutoGrouping, METH_VARARGS, "Sets the auto-grouping applicable to product nodes contained in this product.\nA given {@code pattern} parameter is a textual representation of the auto-grouping.\nThe syntax for the pattern is:\n<pre>\npattern    :=  &lt;groupPath&gt; {':' &lt;groupPath&gt;} | \"\" (empty string)\ngroupPath  :=  &lt;groupName&gt; {'/' &lt;groupName&gt;}\ngroupName  :=  any non-empty string without characters ':' and '/'\n</pre>\nAn example for {@code pattern} applicable to Envisat AATSR data is\n<pre>\nnadir/reflec:nadir/btemp:fward/reflec:fward/btemp:nadir:fward\n</pre>\nReturns Parameter pattern: The auto-grouping pattern.\nSince version:  BEAM 4.8"},
-    {"addComputedMask", (PyCFunction) BeamPyProduct_addComputedMask, METH_VARARGS, "Creates a new mask using a band arithmetic expression\nand adds it to this product and returns it.\nReturns Parameter maskName: the new mask's name\nReturns Parameter expression: the band arithmetic expression\nReturns Parameter description: the mask's description\nReturns Parameter color: the display color\nReturns Parameter transparency: the display transparency\nReturns the new mask which has just been added\nSince version:  BEAM 4.10"},
-    {"addBitmaskDef", (PyCFunction) BeamPyProduct_addBitmaskDef, METH_VARARGS, "Adds the given bitmask definition to this product.\nReturns Parameter bitmaskDef: the bitmask definition to added, ignored if null\n@deprecated since BEAM 4.7, use {@link #getMaskGroup()} instead"},
-    {"getBitmaskDefNames", (PyCFunction) BeamPyProduct_getBitmaskDefNames, METH_VARARGS, "Returns a string array containing the names of the bitmask definitions contained in this product.\nReturns a string array containing the names of the bitmask definitions contained in this product. If this product\nhas no bitmask definitions a zero-length-array is returned.\n@deprecated since BEAM 4.7, use {@link #getMaskGroup()} instead"},
-    {"getBitmaskDef", (PyCFunction) BeamPyProduct_getBitmaskDef, METH_VARARGS, "Returns the bitmask definition with the given name.\nReturns Parameter name: the bitmask definition name\nReturns the bitmask definition with the given name or null if a bitmask definition with the given\nname is not contained in this product.\n@deprecated since BEAM 4.7, use {@link #getMaskGroup()} instead"},
-    {"getValidMask", (PyCFunction) BeamPyProduct_getValidMask, METH_VARARGS, "Gets a valid-mask for the given ID.\nReturns Parameter id: the ID\nReturns a cached valid mask for the given ID or null\n@see #createValidMask(String, com.bc.ceres.core.ProgressMonitor)\n@deprecated since BEAM 4.7, use {@link #getMaskGroup()} instead"},
-    {"setValidMask", (PyCFunction) BeamPyProduct_setValidMask, METH_VARARGS, "Sets a valid-mask for the given ID.\nReturns Parameter id: the ID\nReturns Parameter validMask: the pixel mask\n@see #createValidMask(String, com.bc.ceres.core.ProgressMonitor)\n@deprecated since BEAM 4.7, use {@link #getMaskGroup()} instead"},
-    {"createValidMask2", (PyCFunction) BeamPyProduct_createValidMask2, METH_VARARGS, "Creates a bit-packed valid-mask for all pixels of the scene covered by this product.\nThe given expression is considered to be boolean, if it evaluates to true\nthe related bit in the mask is set.\nReturns Parameter expression: the boolean expression, e.g. \"l2_flags.LAND && reflec_10 >= 0.0\"\nReturns Parameter pm: a progress monitor\nReturns a bit-packed mask for all pixels of the scene, never null\n@throws IOException if an I/O error occurs\n@see #parseExpression(String)\n@deprecated since BEAM 4.7, use {@link #getMaskGroup()} instead"},
-    {"createValidMask1", (PyCFunction) BeamPyProduct_createValidMask1, METH_VARARGS, "Creates a bit-packed mask for all pixels of the scene covered by this product.\nThe given term is considered to be boolean, if it evaluates to true\nthe related bit in the mask is set.\nReturns Parameter term: the boolean term, e.g. \"l2_flags.LAND && reflec_10 >= 0.0\"\nReturns Parameter pm: a progress monitor\nReturns a bit-packed mask for all pixels of the scene, never null\n@throws IOException if an I/O error occurs\n@see #createValidMask(String, com.bc.ceres.core.ProgressMonitor)\n@deprecated since BEAM 4.7, use {@link Mask.BandMathsType.create()} and {@link #getMaskGroup()}) instead"},
-    {"readBitmask2", (PyCFunction) BeamPyProduct_readBitmask2, METH_VARARGS, "Creates a bit-mask by evaluating the given bit-mask term.\n The method first creates an evaluation context for the given bit-mask term and the specified region and then\nevaluates the term for each pixel in the subset (line-by-line, X varies fastest). The result of each evaluation -\nthe resulting bitmask - is stored in the given boolean array buffer bitmask in the same order as\npixels appear in the given region. The buffer must at least have a length equal to width * height\nelements.\n\n If flag providing datasets are referenced in the given bit-mask expression which are currently not completely\nloaded, the method reloads the spatial subset from the data source in order to create the evaluation context.\n\n The {@link #parseExpression(String)} method can be used to create a bit-mask\nterm from a textual bit-mask expression.\n\nReturns Parameter offsetX: the X-offset of the spatial subset in pixel co-ordinates\nReturns Parameter offsetY: the Y-offset of the spatial subset in pixel co-ordinates\nReturns Parameter width: the width of the spatial subset in pixel co-ordinates\nReturns Parameter height: the height of the spatial subset in pixel co-ordinates\nReturns Parameter bitmaskTerm: a bit-mask term, as returned by the {@link #parseExpression(String)} method\nReturns Parameter bitmask: a buffer used to hold the results of the bit-mask evaluations for each pixel in the given\nspatial subset\nReturns Parameter pm: a monitor to inform the user about progress\n@throws IOException if an I/O error occurs, when referenced flag datasets are reloaded\n@see #parseExpression(String)\n@deprecated since BEAM 4.7, add a new mask to product (see {@link Mask.BandMathsType.create()} and {@link #getMaskGroup()}) and use its source image instead"},
-    {"readBitmask1", (PyCFunction) BeamPyProduct_readBitmask1, METH_VARARGS, "Creates a bit-mask by evaluating the given bit-mask term.\n\n The method first creates an evaluation context for the given bit-mask term and the specified region and then\nevaluates the term for each pixel in the subset (line-by-line, X varies fastest). The result of each evaluation -\nthe resulting bitmask - is stored in the given boolean array buffer bitmask in the same order as\npixels appear in the given region. The buffer must at least have a length equal to width * height\nelements.\n\n If flag providing datasets are referenced in the given bit-mask expression which are currently not completely\nloaded, the method reloads the spatial subset from the data source in order to create the evaluation context.\n\n The {@link #parseExpression(String)} method can be used to create a bit-mask\nterm from a textual bit-mask expression.\nReturns Parameter offsetX: the X-offset of the spatial subset in pixel co-ordinates\nReturns Parameter offsetY: the Y-offset of the spatial subset in pixel co-ordinates\nReturns Parameter width: the width of the spatial subset in pixel co-ordinates\nReturns Parameter height: the height of the spatial subset in pixel co-ordinates\nReturns Parameter bitmaskTerm: a bit-mask term, as returned by the {@link #parseExpression(String)}\nmethod\nReturns Parameter bitmask: a byte buffer used to hold the results of the bit-mask evaluations for each pixel in the given\nspatial subset\nReturns Parameter trueValue: the byte value to be set if the bitmask-term evauates to true\nReturns Parameter falseValue: the byte value to be set if the bitmask-term evauates to false\n@throws IOException if an I/O error occurs, when referenced flag datasets are reloaded\n@see #parseExpression(String)\n@deprecated since BEAM 4.7, add a new mask to product (see {@link Mask.BandMathsType.create()} and {@link #getMaskGroup()}) and use its source image instead"},
-    {"getOwner", (PyCFunction) BeamPyProduct_getOwner, METH_VARARGS, "Returns the owner node of this node."},
-    {"getName", (PyCFunction) BeamPyProduct_getName, METH_VARARGS, "Returns this node's name."},
-    {"setName", (PyCFunction) BeamPyProduct_setName, METH_VARARGS, "Sets this product's name.\nReturns Parameter name: The name."},
-    {"getDescription", (PyCFunction) BeamPyProduct_getDescription, METH_VARARGS, "Returns a short textual description for this products node.\nReturns a description or null"},
-    {"setDescription", (PyCFunction) BeamPyProduct_setDescription, METH_VARARGS, "Sets a short textual description for this products node.\nReturns Parameter description: a description, can be null"},
-    {"isModified", (PyCFunction) BeamPyProduct_isModified, METH_VARARGS, "Returns whether or not this node is modified.\nReturns true if so"},
-    {"toString", (PyCFunction) BeamPyProduct_toString, METH_VARARGS, ""},
-    {"isValidNodeName", (PyCFunction) BeamPyProduct_isValidNodeName, METH_VARARGS | METH_STATIC, "Tests whether the given name is valid name for a node.\nA valid node name must not start with a dot. Also a valid node name must not contain\nany of the character  \\/:*?\"&lt;&gt;|\nReturns Parameter name: the name to test\nReturns true if the name is a valid node identifier, false otherwise"},
-    {"getProduct", (PyCFunction) BeamPyProduct_getProduct, METH_VARARGS, "Returns the product to which this node belongs to.\nReturns the product, or null if this node was not owned by a product at the time this method was\ncalled"},
-    {"getDisplayName", (PyCFunction) BeamPyProduct_getDisplayName, METH_VARARGS, "Returns this node's display name. The display name is the product reference string with the node name appended.\nExample: The string \"[2] node-name\" means node node-name of the\nproduct with the reference number 2.\nReturns this node's name with a product prefix <br>or this node's name only if this node's product prefix is\nnull\n@see #getProductRefString"},
-    {"getProductRefString", (PyCFunction) BeamPyProduct_getProductRefString, METH_VARARGS, "Gets the product reference string. The product reference string is the product reference number enclosed in\nsquare brackets. Example: The string \"[2]\" stands for a product with the reference number\n2.\nReturns the product reference string. <br>or null if this node has no product <br>or\nnull if its product reference number was inactive"},
-    {"updateExpression", (PyCFunction) BeamPyProduct_updateExpression, METH_VARARGS, "Asks a product node to replace all occurences of and references to the node name\ngiven by {@code oldExternalName} with {@code oldExternalName}. Such references most often occur\nin band arithmetic expressions.\nReturns Parameter oldExternalName: The old node name.\nReturns Parameter newExternalName: The new node name."},
-    {"removeFromFile", (PyCFunction) BeamPyProduct_removeFromFile, METH_VARARGS, "Physically remove this node from the file associated with the given product writer. The default implementation\ndoes nothing.\nReturns Parameter productWriter: the product writer to be used to remove this node from the underlying file."},
-    {"getExtension", (PyCFunction) BeamPyProduct_getExtension, METH_VARARGS, ""},
-    {NULL, NULL, 0, NULL} /*Sentinel*/
-};
-
-// Note: this is unused, experimental code
-
-/**
- * Implements the BeamPy_JObjectType class singleton.
- *
- * THIS TYPE IS NOT YET IN USE: we currently use
- * (<type_string>, <pointer>) tuples to represent Java JNI objects.
- */
-PyTypeObject Product_Type = {
-    PyVarObject_HEAD_INIT(NULL, 0)
-    "beampy.Product",        /* tp_name */
-    sizeof (JObject),             /* tp_basicsize */
-    0,                            /* tp_itemsize */
-    (destructor)JObject_dealloc,  /* tp_dealloc */
-    NULL,                         /* tp_print */
-    NULL,                         /* tp_getattr */
-    NULL,                         /* tp_setattr */
-    NULL,                         /* tp_reserved */
-    NULL,                         /* tp_repr */
-    NULL,                         /* tp_as_number */
-    NULL,                         /* tp_as_sequence */
-    NULL,                         /* tp_as_mapping */
-    NULL,                         /* tp_hash  */
-    NULL,                         /* tp_call */
-    NULL,                         /* tp_str */
-    NULL,                         /* tp_getattro */
-    NULL,                         /* tp_setattro */
-    NULL,                         /* tp_as_buffer */
-    Py_TPFLAGS_DEFAULT,           /* tp_flags */
-    "Product instances are an in-memory representation of a remote sensing data product. The product is more\nan abstract hull containing references to the data of the product or readers to retrieve the data on demant. The\nproduct itself does not hold the remote sensing data. Data products can contain multiple geophysical parameters\nstored as bands and can also have multiple metadata attributes. Also, a Product can contain any number\nof TiePointGrids holding the tie point data.\n\nEvery product can also have a product reader and writer assigned to it. The reader represents the data source from\nwhich a product was created, whereas the writer represents the data sink. Both, the source and the sink must not\nnecessarily store data in the same format. Furthermore, it is not mandatory for a product to have both of them.\nAuthor:  Norman Fomferra\nVersion:  $Revision: 8401 $ $Date: 2010-02-12 17:17:06 +0100 (Fr, 12 Feb 2010) $",                /* tp_doc */
-    NULL,                         /* tp_traverse */
-    NULL,                         /* tp_clear */
-    NULL,                         /* tp_richcompare */
-    0,                            /* tp_weaklistoffset */
-    NULL,                         /* tp_iter */
-    NULL,                         /* tp_iternext */
-    Product_methods,         /* tp_methods */
-    NULL,                         /* tp_members */
-    NULL,                         /* tp_getset */
-    NULL,                         /* tp_base */
-    NULL,                         /* tp_dict */
-    NULL,                         /* tp_descr_get */
-    NULL,                         /* tp_descr_set */
-    0,                            /* tp_dictoffset */
-    (initproc) JObject_init,      /* tp_init */
-    NULL,                         /* tp_alloc */
-    NULL,                         /* tp_new */
-};
-
 static PyMethodDef Point2D_methods[] = {
     {NULL, NULL, 0, NULL} /*Sentinel*/
 };
@@ -5697,59 +6872,6 @@ PyTypeObject Point2D_Type = {
     NULL,                         /* tp_iter */
     NULL,                         /* tp_iternext */
     Point2D_methods,         /* tp_methods */
-    NULL,                         /* tp_members */
-    NULL,                         /* tp_getset */
-    NULL,                         /* tp_base */
-    NULL,                         /* tp_dict */
-    NULL,                         /* tp_descr_get */
-    NULL,                         /* tp_descr_set */
-    0,                            /* tp_dictoffset */
-    (initproc) JObject_init,      /* tp_init */
-    NULL,                         /* tp_alloc */
-    NULL,                         /* tp_new */
-};
-
-static PyMethodDef ProductVisitor_methods[] = {
-    {NULL, NULL, 0, NULL} /*Sentinel*/
-};
-
-// Note: this is unused, experimental code
-
-/**
- * Implements the BeamPy_JObjectType class singleton.
- *
- * THIS TYPE IS NOT YET IN USE: we currently use
- * (<type_string>, <pointer>) tuples to represent Java JNI objects.
- */
-PyTypeObject ProductVisitor_Type = {
-    PyVarObject_HEAD_INIT(NULL, 0)
-    "beampy.ProductVisitor",        /* tp_name */
-    sizeof (JObject),             /* tp_basicsize */
-    0,                            /* tp_itemsize */
-    (destructor)JObject_dealloc,  /* tp_dealloc */
-    NULL,                         /* tp_print */
-    NULL,                         /* tp_getattr */
-    NULL,                         /* tp_setattr */
-    NULL,                         /* tp_reserved */
-    NULL,                         /* tp_repr */
-    NULL,                         /* tp_as_number */
-    NULL,                         /* tp_as_sequence */
-    NULL,                         /* tp_as_mapping */
-    NULL,                         /* tp_hash  */
-    NULL,                         /* tp_call */
-    NULL,                         /* tp_str */
-    NULL,                         /* tp_getattro */
-    NULL,                         /* tp_setattro */
-    NULL,                         /* tp_as_buffer */
-    Py_TPFLAGS_DEFAULT,           /* tp_flags */
-    "A visitor for a product and all other product nodes. This interface is part of the visitor pattern used to\nvisit all nodes of a data product. Implementations of this interface can be passed to the acceptVisitor\nmethod of an Product (or any other ProductNode).\nAuthor:  Norman Fomferra\nVersion:  $Revision$ $Date$\n@see Product#acceptVisitor(ProductVisitor)\n@see ProductNode#acceptVisitor(ProductVisitor)",                /* tp_doc */
-    NULL,                         /* tp_traverse */
-    NULL,                         /* tp_clear */
-    NULL,                         /* tp_richcompare */
-    0,                            /* tp_weaklistoffset */
-    NULL,                         /* tp_iter */
-    NULL,                         /* tp_iternext */
-    ProductVisitor_methods,         /* tp_methods */
     NULL,                         /* tp_members */
     NULL,                         /* tp_getset */
     NULL,                         /* tp_base */
@@ -5815,271 +6937,6 @@ PyTypeObject Scaling_Type = {
     NULL,                         /* tp_new */
 };
 
-static PyMethodDef WritableNamespace_methods[] = {
-    {NULL, NULL, 0, NULL} /*Sentinel*/
-};
-
-// Note: this is unused, experimental code
-
-/**
- * Implements the BeamPy_JObjectType class singleton.
- *
- * THIS TYPE IS NOT YET IN USE: we currently use
- * (<type_string>, <pointer>) tuples to represent Java JNI objects.
- */
-PyTypeObject WritableNamespace_Type = {
-    PyVarObject_HEAD_INIT(NULL, 0)
-    "beampy.WritableNamespace",        /* tp_name */
-    sizeof (JObject),             /* tp_basicsize */
-    0,                            /* tp_itemsize */
-    (destructor)JObject_dealloc,  /* tp_dealloc */
-    NULL,                         /* tp_print */
-    NULL,                         /* tp_getattr */
-    NULL,                         /* tp_setattr */
-    NULL,                         /* tp_reserved */
-    NULL,                         /* tp_repr */
-    NULL,                         /* tp_as_number */
-    NULL,                         /* tp_as_sequence */
-    NULL,                         /* tp_as_mapping */
-    NULL,                         /* tp_hash  */
-    NULL,                         /* tp_call */
-    NULL,                         /* tp_str */
-    NULL,                         /* tp_getattro */
-    NULL,                         /* tp_setattro */
-    NULL,                         /* tp_as_buffer */
-    Py_TPFLAGS_DEFAULT,           /* tp_flags */
-    "",                /* tp_doc */
-    NULL,                         /* tp_traverse */
-    NULL,                         /* tp_clear */
-    NULL,                         /* tp_richcompare */
-    0,                            /* tp_weaklistoffset */
-    NULL,                         /* tp_iter */
-    NULL,                         /* tp_iternext */
-    WritableNamespace_methods,         /* tp_methods */
-    NULL,                         /* tp_members */
-    NULL,                         /* tp_getset */
-    NULL,                         /* tp_base */
-    NULL,                         /* tp_dict */
-    NULL,                         /* tp_descr_get */
-    NULL,                         /* tp_descr_set */
-    0,                            /* tp_dictoffset */
-    (initproc) JObject_init,      /* tp_init */
-    NULL,                         /* tp_alloc */
-    NULL,                         /* tp_new */
-};
-
-static PyMethodDef Set_methods[] = {
-    {NULL, NULL, 0, NULL} /*Sentinel*/
-};
-
-// Note: this is unused, experimental code
-
-/**
- * Implements the BeamPy_JObjectType class singleton.
- *
- * THIS TYPE IS NOT YET IN USE: we currently use
- * (<type_string>, <pointer>) tuples to represent Java JNI objects.
- */
-PyTypeObject Set_Type = {
-    PyVarObject_HEAD_INIT(NULL, 0)
-    "beampy.Set",        /* tp_name */
-    sizeof (JObject),             /* tp_basicsize */
-    0,                            /* tp_itemsize */
-    (destructor)JObject_dealloc,  /* tp_dealloc */
-    NULL,                         /* tp_print */
-    NULL,                         /* tp_getattr */
-    NULL,                         /* tp_setattr */
-    NULL,                         /* tp_reserved */
-    NULL,                         /* tp_repr */
-    NULL,                         /* tp_as_number */
-    NULL,                         /* tp_as_sequence */
-    NULL,                         /* tp_as_mapping */
-    NULL,                         /* tp_hash  */
-    NULL,                         /* tp_call */
-    NULL,                         /* tp_str */
-    NULL,                         /* tp_getattro */
-    NULL,                         /* tp_setattro */
-    NULL,                         /* tp_as_buffer */
-    Py_TPFLAGS_DEFAULT,           /* tp_flags */
-    "",                /* tp_doc */
-    NULL,                         /* tp_traverse */
-    NULL,                         /* tp_clear */
-    NULL,                         /* tp_richcompare */
-    0,                            /* tp_weaklistoffset */
-    NULL,                         /* tp_iter */
-    NULL,                         /* tp_iternext */
-    Set_methods,         /* tp_methods */
-    NULL,                         /* tp_members */
-    NULL,                         /* tp_getset */
-    NULL,                         /* tp_base */
-    NULL,                         /* tp_dict */
-    NULL,                         /* tp_descr_get */
-    NULL,                         /* tp_descr_set */
-    0,                            /* tp_dictoffset */
-    (initproc) JObject_init,      /* tp_init */
-    NULL,                         /* tp_alloc */
-    NULL,                         /* tp_new */
-};
-
-static PyMethodDef MultiLevelImage_methods[] = {
-    {NULL, NULL, 0, NULL} /*Sentinel*/
-};
-
-// Note: this is unused, experimental code
-
-/**
- * Implements the BeamPy_JObjectType class singleton.
- *
- * THIS TYPE IS NOT YET IN USE: we currently use
- * (<type_string>, <pointer>) tuples to represent Java JNI objects.
- */
-PyTypeObject MultiLevelImage_Type = {
-    PyVarObject_HEAD_INIT(NULL, 0)
-    "beampy.MultiLevelImage",        /* tp_name */
-    sizeof (JObject),             /* tp_basicsize */
-    0,                            /* tp_itemsize */
-    (destructor)JObject_dealloc,  /* tp_dealloc */
-    NULL,                         /* tp_print */
-    NULL,                         /* tp_getattr */
-    NULL,                         /* tp_setattr */
-    NULL,                         /* tp_reserved */
-    NULL,                         /* tp_repr */
-    NULL,                         /* tp_as_number */
-    NULL,                         /* tp_as_sequence */
-    NULL,                         /* tp_as_mapping */
-    NULL,                         /* tp_hash  */
-    NULL,                         /* tp_call */
-    NULL,                         /* tp_str */
-    NULL,                         /* tp_getattro */
-    NULL,                         /* tp_setattro */
-    NULL,                         /* tp_as_buffer */
-    Py_TPFLAGS_DEFAULT,           /* tp_flags */
-    "",                /* tp_doc */
-    NULL,                         /* tp_traverse */
-    NULL,                         /* tp_clear */
-    NULL,                         /* tp_richcompare */
-    0,                            /* tp_weaklistoffset */
-    NULL,                         /* tp_iter */
-    NULL,                         /* tp_iternext */
-    MultiLevelImage_methods,         /* tp_methods */
-    NULL,                         /* tp_members */
-    NULL,                         /* tp_getset */
-    NULL,                         /* tp_base */
-    NULL,                         /* tp_dict */
-    NULL,                         /* tp_descr_get */
-    NULL,                         /* tp_descr_set */
-    0,                            /* tp_dictoffset */
-    (initproc) JObject_init,      /* tp_init */
-    NULL,                         /* tp_alloc */
-    NULL,                         /* tp_new */
-};
-
-static PyMethodDef ROI_methods[] = {
-    {NULL, NULL, 0, NULL} /*Sentinel*/
-};
-
-// Note: this is unused, experimental code
-
-/**
- * Implements the BeamPy_JObjectType class singleton.
- *
- * THIS TYPE IS NOT YET IN USE: we currently use
- * (<type_string>, <pointer>) tuples to represent Java JNI objects.
- */
-PyTypeObject ROI_Type = {
-    PyVarObject_HEAD_INIT(NULL, 0)
-    "beampy.ROI",        /* tp_name */
-    sizeof (JObject),             /* tp_basicsize */
-    0,                            /* tp_itemsize */
-    (destructor)JObject_dealloc,  /* tp_dealloc */
-    NULL,                         /* tp_print */
-    NULL,                         /* tp_getattr */
-    NULL,                         /* tp_setattr */
-    NULL,                         /* tp_reserved */
-    NULL,                         /* tp_repr */
-    NULL,                         /* tp_as_number */
-    NULL,                         /* tp_as_sequence */
-    NULL,                         /* tp_as_mapping */
-    NULL,                         /* tp_hash  */
-    NULL,                         /* tp_call */
-    NULL,                         /* tp_str */
-    NULL,                         /* tp_getattro */
-    NULL,                         /* tp_setattro */
-    NULL,                         /* tp_as_buffer */
-    Py_TPFLAGS_DEFAULT,           /* tp_flags */
-    "",                /* tp_doc */
-    NULL,                         /* tp_traverse */
-    NULL,                         /* tp_clear */
-    NULL,                         /* tp_richcompare */
-    0,                            /* tp_weaklistoffset */
-    NULL,                         /* tp_iter */
-    NULL,                         /* tp_iternext */
-    ROI_methods,         /* tp_methods */
-    NULL,                         /* tp_members */
-    NULL,                         /* tp_getset */
-    NULL,                         /* tp_base */
-    NULL,                         /* tp_dict */
-    NULL,                         /* tp_descr_get */
-    NULL,                         /* tp_descr_set */
-    0,                            /* tp_dictoffset */
-    (initproc) JObject_init,      /* tp_init */
-    NULL,                         /* tp_alloc */
-    NULL,                         /* tp_new */
-};
-
-static PyMethodDef RenderingHints_Key_methods[] = {
-    {NULL, NULL, 0, NULL} /*Sentinel*/
-};
-
-// Note: this is unused, experimental code
-
-/**
- * Implements the BeamPy_JObjectType class singleton.
- *
- * THIS TYPE IS NOT YET IN USE: we currently use
- * (<type_string>, <pointer>) tuples to represent Java JNI objects.
- */
-PyTypeObject RenderingHints_Key_Type = {
-    PyVarObject_HEAD_INIT(NULL, 0)
-    "beampy.RenderingHints_Key",        /* tp_name */
-    sizeof (JObject),             /* tp_basicsize */
-    0,                            /* tp_itemsize */
-    (destructor)JObject_dealloc,  /* tp_dealloc */
-    NULL,                         /* tp_print */
-    NULL,                         /* tp_getattr */
-    NULL,                         /* tp_setattr */
-    NULL,                         /* tp_reserved */
-    NULL,                         /* tp_repr */
-    NULL,                         /* tp_as_number */
-    NULL,                         /* tp_as_sequence */
-    NULL,                         /* tp_as_mapping */
-    NULL,                         /* tp_hash  */
-    NULL,                         /* tp_call */
-    NULL,                         /* tp_str */
-    NULL,                         /* tp_getattro */
-    NULL,                         /* tp_setattro */
-    NULL,                         /* tp_as_buffer */
-    Py_TPFLAGS_DEFAULT,           /* tp_flags */
-    "",                /* tp_doc */
-    NULL,                         /* tp_traverse */
-    NULL,                         /* tp_clear */
-    NULL,                         /* tp_richcompare */
-    0,                            /* tp_weaklistoffset */
-    NULL,                         /* tp_iter */
-    NULL,                         /* tp_iternext */
-    RenderingHints_Key_methods,         /* tp_methods */
-    NULL,                         /* tp_members */
-    NULL,                         /* tp_getset */
-    NULL,                         /* tp_base */
-    NULL,                         /* tp_dict */
-    NULL,                         /* tp_descr_get */
-    NULL,                         /* tp_descr_set */
-    0,                            /* tp_dictoffset */
-    (initproc) JObject_init,      /* tp_init */
-    NULL,                         /* tp_alloc */
-    NULL,                         /* tp_new */
-};
-
 static PyMethodDef Collection_methods[] = {
     {NULL, NULL, 0, NULL} /*Sentinel*/
 };
@@ -6121,59 +6978,6 @@ PyTypeObject Collection_Type = {
     NULL,                         /* tp_iter */
     NULL,                         /* tp_iternext */
     Collection_methods,         /* tp_methods */
-    NULL,                         /* tp_members */
-    NULL,                         /* tp_getset */
-    NULL,                         /* tp_base */
-    NULL,                         /* tp_dict */
-    NULL,                         /* tp_descr_get */
-    NULL,                         /* tp_descr_set */
-    0,                            /* tp_dictoffset */
-    (initproc) JObject_init,      /* tp_init */
-    NULL,                         /* tp_alloc */
-    NULL,                         /* tp_new */
-};
-
-static PyMethodDef ProductManager_Listener_methods[] = {
-    {NULL, NULL, 0, NULL} /*Sentinel*/
-};
-
-// Note: this is unused, experimental code
-
-/**
- * Implements the BeamPy_JObjectType class singleton.
- *
- * THIS TYPE IS NOT YET IN USE: we currently use
- * (<type_string>, <pointer>) tuples to represent Java JNI objects.
- */
-PyTypeObject ProductManager_Listener_Type = {
-    PyVarObject_HEAD_INIT(NULL, 0)
-    "beampy.ProductManager_Listener",        /* tp_name */
-    sizeof (JObject),             /* tp_basicsize */
-    0,                            /* tp_itemsize */
-    (destructor)JObject_dealloc,  /* tp_dealloc */
-    NULL,                         /* tp_print */
-    NULL,                         /* tp_getattr */
-    NULL,                         /* tp_setattr */
-    NULL,                         /* tp_reserved */
-    NULL,                         /* tp_repr */
-    NULL,                         /* tp_as_number */
-    NULL,                         /* tp_as_sequence */
-    NULL,                         /* tp_as_mapping */
-    NULL,                         /* tp_hash  */
-    NULL,                         /* tp_call */
-    NULL,                         /* tp_str */
-    NULL,                         /* tp_getattro */
-    NULL,                         /* tp_setattro */
-    NULL,                         /* tp_as_buffer */
-    Py_TPFLAGS_DEFAULT,           /* tp_flags */
-    "A listener for the product manager.",                /* tp_doc */
-    NULL,                         /* tp_traverse */
-    NULL,                         /* tp_clear */
-    NULL,                         /* tp_richcompare */
-    0,                            /* tp_weaklistoffset */
-    NULL,                         /* tp_iter */
-    NULL,                         /* tp_iternext */
-    ProductManager_Listener_methods,         /* tp_methods */
     NULL,                         /* tp_members */
     NULL,                         /* tp_getset */
     NULL,                         /* tp_base */
@@ -6239,90 +7043,6 @@ PyTypeObject GeoTIFFMetadata_Type = {
     NULL,                         /* tp_new */
 };
 
-static PyMethodDef ColorPaletteDef_methods[] = {
-    {"newColorPaletteDefFromRange", (PyCFunction) BeamPyColorPaletteDef_newColorPaletteDefFromRange, METH_VARARGS | METH_STATIC, ""},
-    {"newColorPaletteDefFromPoints", (PyCFunction) BeamPyColorPaletteDef_newColorPaletteDefFromPoints, METH_VARARGS | METH_STATIC, ""},
-    {"isDiscrete", (PyCFunction) BeamPyColorPaletteDef_isDiscrete, METH_VARARGS, ""},
-    {"setDiscrete", (PyCFunction) BeamPyColorPaletteDef_setDiscrete, METH_VARARGS, ""},
-    {"getNumColors", (PyCFunction) BeamPyColorPaletteDef_getNumColors, METH_VARARGS, ""},
-    {"setNumColors", (PyCFunction) BeamPyColorPaletteDef_setNumColors, METH_VARARGS, ""},
-    {"getNumPoints", (PyCFunction) BeamPyColorPaletteDef_getNumPoints, METH_VARARGS, ""},
-    {"setNumPoints", (PyCFunction) BeamPyColorPaletteDef_setNumPoints, METH_VARARGS, ""},
-    {"isAutoDistribute", (PyCFunction) BeamPyColorPaletteDef_isAutoDistribute, METH_VARARGS, ""},
-    {"setAutoDistribute", (PyCFunction) BeamPyColorPaletteDef_setAutoDistribute, METH_VARARGS, ""},
-    {"getPointAt", (PyCFunction) BeamPyColorPaletteDef_getPointAt, METH_VARARGS, ""},
-    {"getFirstPoint", (PyCFunction) BeamPyColorPaletteDef_getFirstPoint, METH_VARARGS, ""},
-    {"getLastPoint", (PyCFunction) BeamPyColorPaletteDef_getLastPoint, METH_VARARGS, ""},
-    {"getMinDisplaySample", (PyCFunction) BeamPyColorPaletteDef_getMinDisplaySample, METH_VARARGS, ""},
-    {"getMaxDisplaySample", (PyCFunction) BeamPyColorPaletteDef_getMaxDisplaySample, METH_VARARGS, ""},
-    {"insertPointAfter", (PyCFunction) BeamPyColorPaletteDef_insertPointAfter, METH_VARARGS, ""},
-    {"createPointAfter", (PyCFunction) BeamPyColorPaletteDef_createPointAfter, METH_VARARGS, "creates a new point between the point at the given index\nReturns Parameter index: the index\nReturns Parameter scaling: the scaling\nReturns true, if a point has been inserted"},
-    {"getCenterColor", (PyCFunction) BeamPyColorPaletteDef_getCenterColor, METH_VARARGS | METH_STATIC, "Creates the center color between the given two colors.\nReturns Parameter c1: 1st color\nReturns Parameter c2: 2nd color\nReturns the center color"},
-    {"removePointAt", (PyCFunction) BeamPyColorPaletteDef_removePointAt, METH_VARARGS, ""},
-    {"addPoint", (PyCFunction) BeamPyColorPaletteDef_addPoint, METH_VARARGS, ""},
-    {"getPoints", (PyCFunction) BeamPyColorPaletteDef_getPoints, METH_VARARGS, ""},
-    {"setPoints", (PyCFunction) BeamPyColorPaletteDef_setPoints, METH_VARARGS, ""},
-    {"getIterator", (PyCFunction) BeamPyColorPaletteDef_getIterator, METH_VARARGS, ""},
-    {"clone", (PyCFunction) BeamPyColorPaletteDef_clone, METH_VARARGS, ""},
-    {"createDeepCopy", (PyCFunction) BeamPyColorPaletteDef_createDeepCopy, METH_VARARGS, ""},
-    {"loadColorPaletteDef", (PyCFunction) BeamPyColorPaletteDef_loadColorPaletteDef, METH_VARARGS | METH_STATIC, "Loads a color palette definition from the given file\nReturns Parameter file: the file\nReturns the color palette definition, never null\n@throws IOException if an I/O error occurs"},
-    {"storeColorPaletteDef", (PyCFunction) BeamPyColorPaletteDef_storeColorPaletteDef, METH_VARARGS | METH_STATIC, "Stores this color palette definition in the given file\nReturns Parameter colorPaletteDef: thje color palette definition\nReturns Parameter file: the file\n@throws IOException if an I/O error occurs"},
-    {"dispose", (PyCFunction) BeamPyColorPaletteDef_dispose, METH_VARARGS, "Releases all of the resources used by this color palette definition and all of its owned children. Its primary\nuse is to allow the garbage collector to perform a vanilla job.\n\nThis method should be called only if it is for sure that this object instance will never be used again. The\nresults of referencing an instance of this class after a call to dispose() are undefined.\n\nOverrides of this method should always call super.dispose(); after disposing this instance."},
-    {"getColors", (PyCFunction) BeamPyColorPaletteDef_getColors, METH_VARARGS, ""},
-    {"createColorPalette", (PyCFunction) BeamPyColorPaletteDef_createColorPalette, METH_VARARGS, ""},
-    {"computeColor", (PyCFunction) BeamPyColorPaletteDef_computeColor, METH_VARARGS, ""},
-    {NULL, NULL, 0, NULL} /*Sentinel*/
-};
-
-// Note: this is unused, experimental code
-
-/**
- * Implements the BeamPy_JObjectType class singleton.
- *
- * THIS TYPE IS NOT YET IN USE: we currently use
- * (<type_string>, <pointer>) tuples to represent Java JNI objects.
- */
-PyTypeObject ColorPaletteDef_Type = {
-    PyVarObject_HEAD_INIT(NULL, 0)
-    "beampy.ColorPaletteDef",        /* tp_name */
-    sizeof (JObject),             /* tp_basicsize */
-    0,                            /* tp_itemsize */
-    (destructor)JObject_dealloc,  /* tp_dealloc */
-    NULL,                         /* tp_print */
-    NULL,                         /* tp_getattr */
-    NULL,                         /* tp_setattr */
-    NULL,                         /* tp_reserved */
-    NULL,                         /* tp_repr */
-    NULL,                         /* tp_as_number */
-    NULL,                         /* tp_as_sequence */
-    NULL,                         /* tp_as_mapping */
-    NULL,                         /* tp_hash  */
-    NULL,                         /* tp_call */
-    NULL,                         /* tp_str */
-    NULL,                         /* tp_getattro */
-    NULL,                         /* tp_setattro */
-    NULL,                         /* tp_as_buffer */
-    Py_TPFLAGS_DEFAULT,           /* tp_flags */
-    "The ColorPaletteDef class represents a curve that is used to transform the sample values of a\ngeo-physical band into color palette indexes.\n\n This special implemnentation of a gradation curve also provides separate color values for each of the tie points\ncontained in the curve. This allows a better image interpretation because certain colors correspond to certain sample\nvalues even if the curve points are used to create color gradient palettes.",                /* tp_doc */
-    NULL,                         /* tp_traverse */
-    NULL,                         /* tp_clear */
-    NULL,                         /* tp_richcompare */
-    0,                            /* tp_weaklistoffset */
-    NULL,                         /* tp_iter */
-    NULL,                         /* tp_iternext */
-    ColorPaletteDef_methods,         /* tp_methods */
-    NULL,                         /* tp_members */
-    NULL,                         /* tp_getset */
-    NULL,                         /* tp_base */
-    NULL,                         /* tp_dict */
-    NULL,                         /* tp_descr_get */
-    NULL,                         /* tp_descr_set */
-    0,                            /* tp_dictoffset */
-    (initproc) JObject_init,      /* tp_init */
-    NULL,                         /* tp_alloc */
-    NULL,                         /* tp_new */
-};
-
 static PyMethodDef MapInfo_methods[] = {
     {NULL, NULL, 0, NULL} /*Sentinel*/
 };
@@ -6376,184 +7096,6 @@ PyTypeObject MapInfo_Type = {
     NULL,                         /* tp_new */
 };
 
-static PyMethodDef ImageInfo_methods[] = {
-    {"newImageInfoPalette", (PyCFunction) BeamPyImageInfo_newImageInfoPalette, METH_VARARGS | METH_STATIC, "Constructs a new image information instance.\nReturns Parameter colorPaletteDef: the color palette definition"},
-    {"newImageInfoRGB", (PyCFunction) BeamPyImageInfo_newImageInfoRGB, METH_VARARGS | METH_STATIC, "Constructs a new RGB image information instance.\nReturns Parameter rgbChannelDef: the RGB channel definition"},
-    {"getColorPaletteDef", (PyCFunction) BeamPyImageInfo_getColorPaletteDef, METH_VARARGS, "Gets the color palette definition as used for images created from single bands.\nReturns the color palette definition. Can be {@code null}.\nIn this case {@link #getRgbChannelDef()} is non-null."},
-    {"getRgbChannelDef", (PyCFunction) BeamPyImageInfo_getRgbChannelDef, METH_VARARGS, "Gets the RGB(A) channel definition as used for images created from 3 tp 4 bands.\nReturns the RGB(A) channel definition.\nCan be {@code null}. In this case {@link #getColorPaletteDef()} is non-null."},
-    {"getNoDataColor", (PyCFunction) BeamPyImageInfo_getNoDataColor, METH_VARARGS, ""},
-    {"setNoDataColor", (PyCFunction) BeamPyImageInfo_setNoDataColor, METH_VARARGS, ""},
-    {"setHistogramMatching", (PyCFunction) BeamPyImageInfo_setHistogramMatching, METH_VARARGS, ""},
-    {"isLogScaled", (PyCFunction) BeamPyImageInfo_isLogScaled, METH_VARARGS, ""},
-    {"setLogScaled", (PyCFunction) BeamPyImageInfo_setLogScaled, METH_VARARGS, ""},
-    {"getColors", (PyCFunction) BeamPyImageInfo_getColors, METH_VARARGS, ""},
-    {"getColorComponentCount", (PyCFunction) BeamPyImageInfo_getColorComponentCount, METH_VARARGS, "Gets the number of color components the image shall have using an instance of this {@code ImageInfo}.\nReturns {@code 3} for RGB images, {@code 4} for RGB images with an alpha channel (transparency)"},
-    {"createIndexColorModel", (PyCFunction) BeamPyImageInfo_createIndexColorModel, METH_VARARGS, ""},
-    {"createComponentColorModel", (PyCFunction) BeamPyImageInfo_createComponentColorModel, METH_VARARGS, ""},
-    {"clone", (PyCFunction) BeamPyImageInfo_clone, METH_VARARGS, "Creates and returns a copy of this object.\nReturns a copy of this object"},
-    {"createDeepCopy", (PyCFunction) BeamPyImageInfo_createDeepCopy, METH_VARARGS, "Creates and returns a \"deep\" copy of this object. The method simply returns the value of\n{@link #clone()}.\nReturns a copy of this object"},
-    {"dispose", (PyCFunction) BeamPyImageInfo_dispose, METH_VARARGS, "Releases all of the resources used by this object instance and all of its owned children. Its primary use is to\nallow the garbage collector to perform a vanilla job.\n\nThis method should be called only if it is for sure that this object instance will never be used again. The\nresults of referencing an instance of this class after a call to dispose() are undefined.\n\nOverrides of this method should always call super.dispose(); after disposing this instance."},
-    {"setColors", (PyCFunction) BeamPyImageInfo_setColors, METH_VARARGS, "Sets the colours of the colour palette of this image info.\nReturns Parameter colors: the new colours"},
-    {"setColorPaletteDef", (PyCFunction) BeamPyImageInfo_setColorPaletteDef, METH_VARARGS, "Transfers the colour palette into this image info.\nReturns Parameter colorPaletteDef: another colour palette\nReturns Parameter minSample: the minium allowed sample value in the new colour palette\nReturns Parameter maxSample: the maximum allowed sample value in the new colour palette\nReturns Parameter autoDistribute: if true, points are distributed between minSample/maxSample."},
-    {"getHistogramMatching", (PyCFunction) BeamPyImageInfo_getHistogramMatching, METH_VARARGS | METH_STATIC, "Converts a string to a histogram matching.\nReturns Parameter mode: the histogram matching string\nReturns the histogram matching. {@link ImageInfo.HistogramMatching#None} if {@code maode} is not \"Equalize\" or \"Normalize\"."},
-    {NULL, NULL, 0, NULL} /*Sentinel*/
-};
-
-// Note: this is unused, experimental code
-
-/**
- * Implements the BeamPy_JObjectType class singleton.
- *
- * THIS TYPE IS NOT YET IN USE: we currently use
- * (<type_string>, <pointer>) tuples to represent Java JNI objects.
- */
-PyTypeObject ImageInfo_Type = {
-    PyVarObject_HEAD_INIT(NULL, 0)
-    "beampy.ImageInfo",        /* tp_name */
-    sizeof (JObject),             /* tp_basicsize */
-    0,                            /* tp_itemsize */
-    (destructor)JObject_dealloc,  /* tp_dealloc */
-    NULL,                         /* tp_print */
-    NULL,                         /* tp_getattr */
-    NULL,                         /* tp_setattr */
-    NULL,                         /* tp_reserved */
-    NULL,                         /* tp_repr */
-    NULL,                         /* tp_as_number */
-    NULL,                         /* tp_as_sequence */
-    NULL,                         /* tp_as_mapping */
-    NULL,                         /* tp_hash  */
-    NULL,                         /* tp_call */
-    NULL,                         /* tp_str */
-    NULL,                         /* tp_getattro */
-    NULL,                         /* tp_setattro */
-    NULL,                         /* tp_as_buffer */
-    Py_TPFLAGS_DEFAULT,           /* tp_flags */
-    "This class contains information about how a product's raster data node is displayed as an image.\nAuthor:  Norman Fomferra\nVersion:  $Revision$ $Date$",                /* tp_doc */
-    NULL,                         /* tp_traverse */
-    NULL,                         /* tp_clear */
-    NULL,                         /* tp_richcompare */
-    0,                            /* tp_weaklistoffset */
-    NULL,                         /* tp_iter */
-    NULL,                         /* tp_iternext */
-    ImageInfo_methods,         /* tp_methods */
-    NULL,                         /* tp_members */
-    NULL,                         /* tp_getset */
-    NULL,                         /* tp_base */
-    NULL,                         /* tp_dict */
-    NULL,                         /* tp_descr_get */
-    NULL,                         /* tp_descr_set */
-    0,                            /* tp_dictoffset */
-    (initproc) JObject_init,      /* tp_init */
-    NULL,                         /* tp_alloc */
-    NULL,                         /* tp_new */
-};
-
-static PyMethodDef Histogram_methods[] = {
-    {NULL, NULL, 0, NULL} /*Sentinel*/
-};
-
-// Note: this is unused, experimental code
-
-/**
- * Implements the BeamPy_JObjectType class singleton.
- *
- * THIS TYPE IS NOT YET IN USE: we currently use
- * (<type_string>, <pointer>) tuples to represent Java JNI objects.
- */
-PyTypeObject Histogram_Type = {
-    PyVarObject_HEAD_INIT(NULL, 0)
-    "beampy.Histogram",        /* tp_name */
-    sizeof (JObject),             /* tp_basicsize */
-    0,                            /* tp_itemsize */
-    (destructor)JObject_dealloc,  /* tp_dealloc */
-    NULL,                         /* tp_print */
-    NULL,                         /* tp_getattr */
-    NULL,                         /* tp_setattr */
-    NULL,                         /* tp_reserved */
-    NULL,                         /* tp_repr */
-    NULL,                         /* tp_as_number */
-    NULL,                         /* tp_as_sequence */
-    NULL,                         /* tp_as_mapping */
-    NULL,                         /* tp_hash  */
-    NULL,                         /* tp_call */
-    NULL,                         /* tp_str */
-    NULL,                         /* tp_getattro */
-    NULL,                         /* tp_setattro */
-    NULL,                         /* tp_as_buffer */
-    Py_TPFLAGS_DEFAULT,           /* tp_flags */
-    "Instances of the Histogram class store histogram data.\nAuthor:  Norman Fomferra",                /* tp_doc */
-    NULL,                         /* tp_traverse */
-    NULL,                         /* tp_clear */
-    NULL,                         /* tp_richcompare */
-    0,                            /* tp_weaklistoffset */
-    NULL,                         /* tp_iter */
-    NULL,                         /* tp_iternext */
-    Histogram_methods,         /* tp_methods */
-    NULL,                         /* tp_members */
-    NULL,                         /* tp_getset */
-    NULL,                         /* tp_base */
-    NULL,                         /* tp_dict */
-    NULL,                         /* tp_descr_get */
-    NULL,                         /* tp_descr_set */
-    0,                            /* tp_dictoffset */
-    (initproc) JObject_init,      /* tp_init */
-    NULL,                         /* tp_alloc */
-    NULL,                         /* tp_new */
-};
-
-static PyMethodDef String_methods[] = {
-    {NULL, NULL, 0, NULL} /*Sentinel*/
-};
-
-// Note: this is unused, experimental code
-
-/**
- * Implements the BeamPy_JObjectType class singleton.
- *
- * THIS TYPE IS NOT YET IN USE: we currently use
- * (<type_string>, <pointer>) tuples to represent Java JNI objects.
- */
-PyTypeObject String_Type = {
-    PyVarObject_HEAD_INIT(NULL, 0)
-    "beampy.String",        /* tp_name */
-    sizeof (JObject),             /* tp_basicsize */
-    0,                            /* tp_itemsize */
-    (destructor)JObject_dealloc,  /* tp_dealloc */
-    NULL,                         /* tp_print */
-    NULL,                         /* tp_getattr */
-    NULL,                         /* tp_setattr */
-    NULL,                         /* tp_reserved */
-    NULL,                         /* tp_repr */
-    NULL,                         /* tp_as_number */
-    NULL,                         /* tp_as_sequence */
-    NULL,                         /* tp_as_mapping */
-    NULL,                         /* tp_hash  */
-    NULL,                         /* tp_call */
-    NULL,                         /* tp_str */
-    NULL,                         /* tp_getattro */
-    NULL,                         /* tp_setattro */
-    NULL,                         /* tp_as_buffer */
-    Py_TPFLAGS_DEFAULT,           /* tp_flags */
-    "",                /* tp_doc */
-    NULL,                         /* tp_traverse */
-    NULL,                         /* tp_clear */
-    NULL,                         /* tp_richcompare */
-    0,                            /* tp_weaklistoffset */
-    NULL,                         /* tp_iter */
-    NULL,                         /* tp_iternext */
-    String_methods,         /* tp_methods */
-    NULL,                         /* tp_members */
-    NULL,                         /* tp_getset */
-    NULL,                         /* tp_base */
-    NULL,                         /* tp_dict */
-    NULL,                         /* tp_descr_get */
-    NULL,                         /* tp_descr_set */
-    0,                            /* tp_dictoffset */
-    (initproc) JObject_init,      /* tp_init */
-    NULL,                         /* tp_alloc */
-    NULL,                         /* tp_new */
-};
-
 static PyMethodDef BufferedImage_methods[] = {
     {NULL, NULL, 0, NULL} /*Sentinel*/
 };
@@ -6595,295 +7137,6 @@ PyTypeObject BufferedImage_Type = {
     NULL,                         /* tp_iter */
     NULL,                         /* tp_iternext */
     BufferedImage_methods,         /* tp_methods */
-    NULL,                         /* tp_members */
-    NULL,                         /* tp_getset */
-    NULL,                         /* tp_base */
-    NULL,                         /* tp_dict */
-    NULL,                         /* tp_descr_get */
-    NULL,                         /* tp_descr_set */
-    0,                            /* tp_dictoffset */
-    (initproc) JObject_init,      /* tp_init */
-    NULL,                         /* tp_alloc */
-    NULL,                         /* tp_new */
-};
-
-static PyMethodDef RGBChannelDef_methods[] = {
-    {"newRGBChannelDef", (PyCFunction) BeamPyRGBChannelDef_newRGBChannelDef, METH_VARARGS | METH_STATIC, ""},
-    {"getSourceName", (PyCFunction) BeamPyRGBChannelDef_getSourceName, METH_VARARGS, ""},
-    {"setSourceName", (PyCFunction) BeamPyRGBChannelDef_setSourceName, METH_VARARGS, ""},
-    {"getSourceNames", (PyCFunction) BeamPyRGBChannelDef_getSourceNames, METH_VARARGS, ""},
-    {"setSourceNames", (PyCFunction) BeamPyRGBChannelDef_setSourceNames, METH_VARARGS, ""},
-    {"isAlphaUsed", (PyCFunction) BeamPyRGBChannelDef_isAlphaUsed, METH_VARARGS, ""},
-    {"isGammaUsed", (PyCFunction) BeamPyRGBChannelDef_isGammaUsed, METH_VARARGS, ""},
-    {"getGamma", (PyCFunction) BeamPyRGBChannelDef_getGamma, METH_VARARGS, ""},
-    {"setGamma", (PyCFunction) BeamPyRGBChannelDef_setGamma, METH_VARARGS, ""},
-    {"getMinDisplaySample", (PyCFunction) BeamPyRGBChannelDef_getMinDisplaySample, METH_VARARGS, ""},
-    {"setMinDisplaySample", (PyCFunction) BeamPyRGBChannelDef_setMinDisplaySample, METH_VARARGS, ""},
-    {"getMaxDisplaySample", (PyCFunction) BeamPyRGBChannelDef_getMaxDisplaySample, METH_VARARGS, ""},
-    {"setMaxDisplaySample", (PyCFunction) BeamPyRGBChannelDef_setMaxDisplaySample, METH_VARARGS, ""},
-    {"clone", (PyCFunction) BeamPyRGBChannelDef_clone, METH_VARARGS, ""},
-    {NULL, NULL, 0, NULL} /*Sentinel*/
-};
-
-// Note: this is unused, experimental code
-
-/**
- * Implements the BeamPy_JObjectType class singleton.
- *
- * THIS TYPE IS NOT YET IN USE: we currently use
- * (<type_string>, <pointer>) tuples to represent Java JNI objects.
- */
-PyTypeObject RGBChannelDef_Type = {
-    PyVarObject_HEAD_INIT(NULL, 0)
-    "beampy.RGBChannelDef",        /* tp_name */
-    sizeof (JObject),             /* tp_basicsize */
-    0,                            /* tp_itemsize */
-    (destructor)JObject_dealloc,  /* tp_dealloc */
-    NULL,                         /* tp_print */
-    NULL,                         /* tp_getattr */
-    NULL,                         /* tp_setattr */
-    NULL,                         /* tp_reserved */
-    NULL,                         /* tp_repr */
-    NULL,                         /* tp_as_number */
-    NULL,                         /* tp_as_sequence */
-    NULL,                         /* tp_as_mapping */
-    NULL,                         /* tp_hash  */
-    NULL,                         /* tp_call */
-    NULL,                         /* tp_str */
-    NULL,                         /* tp_getattro */
-    NULL,                         /* tp_setattro */
-    NULL,                         /* tp_as_buffer */
-    Py_TPFLAGS_DEFAULT,           /* tp_flags */
-    "",                /* tp_doc */
-    NULL,                         /* tp_traverse */
-    NULL,                         /* tp_clear */
-    NULL,                         /* tp_richcompare */
-    0,                            /* tp_weaklistoffset */
-    NULL,                         /* tp_iter */
-    NULL,                         /* tp_iternext */
-    RGBChannelDef_methods,         /* tp_methods */
-    NULL,                         /* tp_members */
-    NULL,                         /* tp_getset */
-    NULL,                         /* tp_base */
-    NULL,                         /* tp_dict */
-    NULL,                         /* tp_descr_get */
-    NULL,                         /* tp_descr_set */
-    0,                            /* tp_dictoffset */
-    (initproc) JObject_init,      /* tp_init */
-    NULL,                         /* tp_alloc */
-    NULL,                         /* tp_new */
-};
-
-static PyMethodDef TiePointGrid_methods[] = {
-    {"newTiePointGrid1", (PyCFunction) BeamPyTiePointGrid_newTiePointGrid1, METH_VARARGS | METH_STATIC, "Constructs a new TiePointGrid with the given tie point grid properties.\nReturns Parameter name: the name of the new object\nReturns Parameter gridWidth: the width of the tie-point grid in pixels\nReturns Parameter gridHeight: the height of the tie-point grid in pixels\nReturns Parameter offsetX: the X co-ordinate of the first (upper-left) tie-point in pixels\nReturns Parameter offsetY: the Y co-ordinate of the first (upper-left) tie-point in pixels\nReturns Parameter subSamplingX: the sub-sampling in X-direction given in the pixel co-ordinates of the data product to which\nthis tie-pint grid belongs to. Must not be less than one.\nReturns Parameter subSamplingY: the sub-sampling in X-direction given in the pixel co-ordinates of the data product to which\nthis tie-pint grid belongs to. Must not be less than one.\nReturns Parameter tiePoints: the tie-point data values, must be an array of the size gridWidth * gridHeight"},
-    {"newTiePointGrid2", (PyCFunction) BeamPyTiePointGrid_newTiePointGrid2, METH_VARARGS | METH_STATIC, "Constructs a new TiePointGrid with the given tie point grid properties.\nReturns Parameter name: the name of the new object\nReturns Parameter gridWidth: the width of the tie-point grid in pixels\nReturns Parameter gridHeight: the height of the tie-point grid in pixels\nReturns Parameter offsetX: the X co-ordinate of the first (upper-left) tie-point in pixels\nReturns Parameter offsetY: the Y co-ordinate of the first (upper-left) tie-point in pixels\nReturns Parameter subSamplingX: the sub-sampling in X-direction given in the pixel co-ordinates of the data product to which\nthis tie-pint grid belongs to. Must not be less than one.\nReturns Parameter subSamplingY: the sub-sampling in X-direction given in the pixel co-ordinates of the data product to which\nthis tie-pint grid belongs to. Must not be less than one.\nReturns Parameter tiePoints: the tie-point data values, must be an array of the size gridWidth * gridHeight\nReturns Parameter discontinuity: the discontinuity mode, can be either {@link #DISCONT_NONE} or {@link #DISCONT_AT_180}\n{@link #DISCONT_AT_360}"},
-    {"newTiePointGrid3", (PyCFunction) BeamPyTiePointGrid_newTiePointGrid3, METH_VARARGS | METH_STATIC, "Constructs a new TiePointGrid with the given tie point grid properties.\nReturns Parameter name: the name of the new object\nReturns Parameter gridWidth: the width of the tie-point grid in pixels\nReturns Parameter gridHeight: the height of the tie-point grid in pixels\nReturns Parameter offsetX: the X co-ordinate of the first (upper-left) tie-point in pixels\nReturns Parameter offsetY: the Y co-ordinate of the first (upper-left) tie-point in pixels\nReturns Parameter subSamplingX: the sub-sampling in X-direction given in the pixel co-ordinates of the data product to which\nthis tie-pint grid belongs to. Must not be less than one.\nReturns Parameter subSamplingY: the sub-sampling in X-direction given in the pixel co-ordinates of the data product to which\nthis tie-pint grid belongs to. Must not be less than one.\nReturns Parameter tiePoints: the tie-point data values, must be an array of the size gridWidth * gridHeight\nReturns Parameter containsAngles: if true, the {@link #getDiscontinuity() angular discontinuity} is derived from the provided tie-point data values"},
-    {"getDiscontinuity2", (PyCFunction) BeamPyTiePointGrid_getDiscontinuity2, METH_VARARGS | METH_STATIC, "Determines the angular discontinuity of the given tie point values.\nReturns the angular discontinuity, will always be either {@link #DISCONT_AT_180} or\n{@link #DISCONT_AT_360}"},
-    {"getDiscontinuity1", (PyCFunction) BeamPyTiePointGrid_getDiscontinuity1, METH_VARARGS, "Gets the angular discontinuity.\nReturns the angular discontinuity, will always be either {@link #DISCONT_NONE} or {@link #DISCONT_AT_180} or\n{@link #DISCONT_AT_360}"},
-    {"setDiscontinuity", (PyCFunction) BeamPyTiePointGrid_setDiscontinuity, METH_VARARGS, "Sets the angular discontinuity.\nReturns Parameter discontinuity: angular discontinuity, can be either {@link #DISCONT_NONE} or {@link #DISCONT_AT_180} or\n{@link #DISCONT_AT_360}"},
-    {"isFloatingPointType", (PyCFunction) BeamPyTiePointGrid_isFloatingPointType, METH_VARARGS, "Returns true\nReturns true"},
-    {"getGeophysicalDataType", (PyCFunction) BeamPyTiePointGrid_getGeophysicalDataType, METH_VARARGS, "Returns the geophysical data type of this RasterDataNode. The value retuned is always one of the\nProductData.TYPE_XXX constants.\nReturns the geophysical data type\n@see ProductData"},
-    {"getSceneRasterData", (PyCFunction) BeamPyTiePointGrid_getSceneRasterData, METH_VARARGS, "Gets a raster data holding this tie-point's interpolated pixel data for an entire product scene. \n\nIn opposite to the getRasterData method, this method returns raster data that has at least\ngetBandOutputRasterWidth()*getBandOutputRasterHeight() elements of the given data type to store\nthe scene's pixels.\nReturns raster data covering the pixels for a complete scene\n@see #getRasterData\n@see #getRasterWidth\n@see #getRasterHeight\n@see #getSceneRasterWidth\n@see #getSceneRasterHeight"},
-    {"getSceneRasterWidth", (PyCFunction) BeamPyTiePointGrid_getSceneRasterWidth, METH_VARARGS, "Returns the width in pixels of the scene represented by this tie-point grid. The value returned is\n(getRasterWidth() - 1) * getSubSamplingX() + 1\nReturns the scene width in pixels"},
-    {"getSceneRasterHeight", (PyCFunction) BeamPyTiePointGrid_getSceneRasterHeight, METH_VARARGS, "Returns the height in pixels of the scene represented by this tie-point grid. The value returned is\n(getRasterHeight() - 1) * getSubSamplingY() + 1\nReturns the scene height in pixels"},
-    {"getOffsetX", (PyCFunction) BeamPyTiePointGrid_getOffsetX, METH_VARARGS, "Retrieves the x co-ordinate of the first (upper-left) tie-point in pixels."},
-    {"getOffsetY", (PyCFunction) BeamPyTiePointGrid_getOffsetY, METH_VARARGS, "Retrieves the y co-ordinate of the first (upper-left) tie-point in pixels."},
-    {"getSubSamplingX", (PyCFunction) BeamPyTiePointGrid_getSubSamplingX, METH_VARARGS, "Returns the sub-sampling in X-direction given in the pixel co-ordinates of the data product to which this\ntie-pint grid belongs to.\nReturns the sub-sampling in X-direction, never less than one."},
-    {"getSubSamplingY", (PyCFunction) BeamPyTiePointGrid_getSubSamplingY, METH_VARARGS, "Returns the sub-sampling in Y-direction given in the pixel co-ordinates of the data product to which this\ntie-pint grid belongs to.\nReturns the sub-sampling in Y-direction, never less than one."},
-    {"getTiePoints", (PyCFunction) BeamPyTiePointGrid_getTiePoints, METH_VARARGS, "Gets the data array holding this band's pixel samples.\nReturns the data array for this band, or null if no data has been loaded\n@see ProductData#getElems"},
-    {"getPixelInt", (PyCFunction) BeamPyTiePointGrid_getPixelInt, METH_VARARGS, "Gets the interpolated sample for the pixel located at (x,y) as an integer value. \n\nIf the pixel co-odinates given by (x,y) are not covered by this tie-point grid, the method extrapolates.\nReturns Parameter x: The X co-ordinate of the pixel location\nReturns Parameter y: The Y co-ordinate of the pixel location\n@throws ArrayIndexOutOfBoundsException if the co-ordinates are not in bounds"},
-    {"dispose", (PyCFunction) BeamPyTiePointGrid_dispose, METH_VARARGS, ""},
-    {"getPixelFloat2", (PyCFunction) BeamPyTiePointGrid_getPixelFloat2, METH_VARARGS, "Computes the interpolated sample for the pixel located at (x,y). \n\nIf the pixel co-odinates given by (x,y) are not covered by this tie-point grid, the method extrapolates.\nReturns Parameter x: The X co-ordinate of the pixel location, given in the pixel co-ordinates of the data product to which\nthis tie-pint grid belongs to.\nReturns Parameter y: The Y co-ordinate of the pixel location, given in the pixel co-ordinates of the data product to which\nthis tie-pint grid belongs to.\n@throws ArrayIndexOutOfBoundsException if the co-ordinates are not in bounds"},
-    {"getPixelFloat1", (PyCFunction) BeamPyTiePointGrid_getPixelFloat1, METH_VARARGS, "Computes the interpolated sample for the pixel located at (x,y) given as floating point co-ordinates. \n\nIf the pixel co-odinates given by (x,y) are not covered by this tie-point grid, the method extrapolates.\nReturns Parameter x: The X co-ordinate of the pixel location, given in the pixel co-ordinates of the data product to which\nthis tie-pint grid belongs to.\nReturns Parameter y: The Y co-ordinate of the pixel location, given in the pixel co-ordinates of the data product to which\nthis tie-pint grid belongs to.\n@throws ArrayIndexOutOfBoundsException if the co-ordinates are not in bounds"},
-    {"getPixelDouble", (PyCFunction) BeamPyTiePointGrid_getPixelDouble, METH_VARARGS, "Gets the interpolated sample for the pixel located at (x,y) as a double value. \n\nIf the pixel co-ordinates given by (x,y) are not covered by this tie-point grid, the method extrapolates.\nReturns Parameter x: The X co-ordinate of the pixel location, given in the pixel co-ordinates of the data product to which\nthis tie-pint grid belongs to.\nReturns Parameter y: The Y co-ordinate of the pixel location, given in the pixel co-ordinates of the data product to which\nthis tie-pint grid belongs to.\n@throws ArrayIndexOutOfBoundsException if the co-ordinates are not in bounds"},
-    {"setPixelInt", (PyCFunction) BeamPyTiePointGrid_setPixelInt, METH_VARARGS, "This method is not implemented because pixels are read-only in tie-point grids."},
-    {"setPixelFloat", (PyCFunction) BeamPyTiePointGrid_setPixelFloat, METH_VARARGS, "This method is not implemented because pixels are read-only in tie-point grids."},
-    {"setPixelDouble", (PyCFunction) BeamPyTiePointGrid_setPixelDouble, METH_VARARGS, "This method is not implemented because pixels are read-only in tie-point grids."},
-    {"getPixels6", (PyCFunction) BeamPyTiePointGrid_getPixels6, METH_VARARGS, "Retrieves an array of tie point data interpolated to the product with and height as integer array. If the given\narray is null a new one was created and returned.\nReturns Parameter x: the x coordinate of the array to be read\nReturns Parameter y: the y coordinate of the array to be read\nReturns Parameter w: the width of the array to be read\nReturns Parameter h: the height of the array to be read\nReturns Parameter pixels: the integer array to be filled with data\nReturns Parameter pm: a monitor to inform the user about progress\n@throws IllegalArgumentException if the length of the given array is less than w*h."},
-    {"getPixels4", (PyCFunction) BeamPyTiePointGrid_getPixels4, METH_VARARGS, "Retrieves an array of tie point data interpolated to the product width and height as float array. If the given\narray is null a new one is created and returned.\nReturns Parameter x: the x coordinate of the array to be read\nReturns Parameter y: the y coordinate of the array to be read\nReturns Parameter w: the width of the array to be read\nReturns Parameter h: the height of the array to be read\nReturns Parameter pixels: the float array to be filled with data\nReturns Parameter pm: a monitor to inform the user about progress\n@throws IllegalArgumentException if the length of the given array is less than w*h."},
-    {"getPixels2", (PyCFunction) BeamPyTiePointGrid_getPixels2, METH_VARARGS, "Retrieves an array of tie point data interpolated to the product with and height as double array. If the given\narray is null a new one was created and returned.\nReturns Parameter x: the x coordinate of the array to be read\nReturns Parameter y: the y coordinate of the array to be read\nReturns Parameter w: the width of the array to be read\nReturns Parameter h: the height of the array to be read\nReturns Parameter pixels: the double array to be filled with data\n@throws IllegalArgumentException if the length of the given array is less than w*h."},
-    {"setPixels3", (PyCFunction) BeamPyTiePointGrid_setPixels3, METH_VARARGS, "This method is not implemented because pixels are read-only in tie-point grids."},
-    {"setPixels2", (PyCFunction) BeamPyTiePointGrid_setPixels2, METH_VARARGS, "This method is not implemented because pixels are read-only in tie-point grids."},
-    {"setPixels1", (PyCFunction) BeamPyTiePointGrid_setPixels1, METH_VARARGS, "This method is not implemented because pixels are read-only in tie-point grids."},
-    {"readPixels6", (PyCFunction) BeamPyTiePointGrid_readPixels6, METH_VARARGS, "Retrieves an array of tie point data interpolated to the product with and height as float array. If the given\narray is null a new one was created and returned.\nReturns Parameter x: the x coordinate of the array to be read\nReturns Parameter y: the y coordinate of the array to be read\nReturns Parameter w: the width of the array to be read\nReturns Parameter h: the height of the array to be read\nReturns Parameter pixels: the integer array to be filled with data\n@throws IllegalArgumentException if the length of the given array is less than w*h."},
-    {"readPixels4", (PyCFunction) BeamPyTiePointGrid_readPixels4, METH_VARARGS, "Retrieves an array of tie point data interpolated to the product with and height as float array. If the given\narray is null a new one was created and returned. *\nReturns Parameter x: the x coordinate of the array to be read\nReturns Parameter y: the y coordinate of the array to be read\nReturns Parameter w: the width of the array to be read\nReturns Parameter h: the height of the array to be read\nReturns Parameter pixels: the float array to be filled with data\nReturns Parameter pm: a monitor to inform the user about progress\n@throws IllegalArgumentException if the length of the given array is less than w*h."},
-    {"readPixels2", (PyCFunction) BeamPyTiePointGrid_readPixels2, METH_VARARGS, "Retrieves an array of tie point data interpolated to the product with and height as double array. If the given\narray is null a new one was created and returned.\nReturns Parameter x: the x coordinate of the array to be read\nReturns Parameter y: the y coordinate of the array to be read\nReturns Parameter w: the width of the array to be read\nReturns Parameter h: the height of the array to be read\nReturns Parameter pixels: the double array to be filled with data\nReturns Parameter pm: a monitor to inform the user about progress\n@throws IllegalArgumentException if the length of the given array is less than w*h."},
-    {"writePixels6", (PyCFunction) BeamPyTiePointGrid_writePixels6, METH_VARARGS, "This method is not implemented because pixels are read-only in tie-point grids."},
-    {"writePixels4", (PyCFunction) BeamPyTiePointGrid_writePixels4, METH_VARARGS, "This method is not implemented because pixels are read-only in tie-point grids."},
-    {"writePixels2", (PyCFunction) BeamPyTiePointGrid_writePixels2, METH_VARARGS, "This method is not implemented because pixels are read-only in tie-point grids."},
-    {"readRasterData2", (PyCFunction) BeamPyTiePointGrid_readRasterData2, METH_VARARGS, "Reads raster data from this dataset into the user-supplied raster data buffer. \n\nThis method always directly (re-)reads this band's data from its associated data source into the given data\nbuffer.\nReturns Parameter offsetX: the X-offset in the raster co-ordinates where reading starts\nReturns Parameter offsetY: the Y-offset in the raster co-ordinates where reading starts\nReturns Parameter width: the width of the raster data buffer\nReturns Parameter height: the height of the raster data buffer\nReturns Parameter rasterData: a raster data buffer receiving the pixels to be read\nReturns Parameter pm: a monitor to inform the user about progress\n@throws java.io.IOException      if an I/O error occurs\n@throws IllegalArgumentException if the raster is null\n@throws IllegalStateException    if this product raster was not added to a product so far, or if the product to\nwhich this product raster belongs to, has no associated product reader\n@see ProductReader#readBandRasterData(Band, int, int, int, int, ProductData, com.bc.ceres.core.ProgressMonitor)"},
-    {"readRasterDataFully2", (PyCFunction) BeamPyTiePointGrid_readRasterDataFully2, METH_VARARGS, "{@inheritDoc}"},
-    {"writeRasterData2", (PyCFunction) BeamPyTiePointGrid_writeRasterData2, METH_VARARGS, "{@inheritDoc}"},
-    {"writeRasterDataFully2", (PyCFunction) BeamPyTiePointGrid_writeRasterDataFully2, METH_VARARGS, "{@inheritDoc}"},
-    {"acceptVisitor", (PyCFunction) BeamPyTiePointGrid_acceptVisitor, METH_VARARGS, "Accepts the given visitor. This method implements the well known 'Visitor' design pattern of the gang-of-four.\nThe visitor pattern allows to define new operations on the product data model without the need to add more code\nto it. The new operation is implemented by the visitor. \n\nThe method simply calls visitor.visit(this).\nReturns Parameter visitor: the visitor"},
-    {"cloneTiePointGrid", (PyCFunction) BeamPyTiePointGrid_cloneTiePointGrid, METH_VARARGS, ""},
-    {"createZenithFromElevationAngleTiePointGrid", (PyCFunction) BeamPyTiePointGrid_createZenithFromElevationAngleTiePointGrid, METH_VARARGS | METH_STATIC, ""},
-    {"createSubset", (PyCFunction) BeamPyTiePointGrid_createSubset, METH_VARARGS | METH_STATIC, ""},
-    {"getRasterWidth", (PyCFunction) BeamPyTiePointGrid_getRasterWidth, METH_VARARGS, "Returns the width of the raster used by this product raster.\nReturns the width of the raster"},
-    {"getRasterHeight", (PyCFunction) BeamPyTiePointGrid_getRasterHeight, METH_VARARGS, "Returns the height of the raster used by this product raster.\nReturns the height of the raster"},
-    {"setModified", (PyCFunction) BeamPyTiePointGrid_setModified, METH_VARARGS, ""},
-    {"getGeoCoding", (PyCFunction) BeamPyTiePointGrid_getGeoCoding, METH_VARARGS, "Returns the geo-coding of this {@link RasterDataNode}.\nReturns the geo-coding"},
-    {"setGeoCoding", (PyCFunction) BeamPyTiePointGrid_setGeoCoding, METH_VARARGS, "Sets the geo-coding for this {@link RasterDataNode}.\nAlso sets the geo-coding of the parent {@link Product} if it has no geo-coding yet.\nOn property change, the method calls {@link #fireProductNodeChanged(String)} with the property\nname {@link #PROPERTY_NAME_GEOCODING}.\nReturns Parameter geoCoding: the new geo-coding\n@see Product#setGeoCoding(GeoCoding)"},
-    {"getPointing", (PyCFunction) BeamPyTiePointGrid_getPointing, METH_VARARGS, "Gets a {@link Pointing} if one is available for this raster.\nThe methods calls {@link #createPointing()} if a pointing has not been set so far or if its {@link GeoCoding} changed\nsince the last creation of this raster's {@link Pointing} instance.\nReturns the pointing object, or null if a pointing is not available"},
-    {"canBeOrthorectified", (PyCFunction) BeamPyTiePointGrid_canBeOrthorectified, METH_VARARGS, "Tests if this raster data node can be orthorectified.\nReturns true, if so"},
-    {"getScalingFactor", (PyCFunction) BeamPyTiePointGrid_getScalingFactor, METH_VARARGS, "Gets the scaling factor which is applied to raw {@link ProductData}. The default value is\n1.0 (no factor).\nReturns the scaling factor\n@see #isScalingApplied()"},
-    {"setScalingFactor", (PyCFunction) BeamPyTiePointGrid_setScalingFactor, METH_VARARGS, "Sets the scaling factor which is applied to raw {@link ProductData}.\nReturns Parameter scalingFactor: the scaling factor\n@see #isScalingApplied()"},
-    {"getScalingOffset", (PyCFunction) BeamPyTiePointGrid_getScalingOffset, METH_VARARGS, "Gets the scaling offset which is applied to raw {@link ProductData}. The default value is\n0.0 (no offset).\nReturns the scaling offset\n@see #isScalingApplied()"},
-    {"setScalingOffset", (PyCFunction) BeamPyTiePointGrid_setScalingOffset, METH_VARARGS, "Sets the scaling offset which is applied to raw {@link ProductData}.\nReturns Parameter scalingOffset: the scaling offset\n@see #isScalingApplied()"},
-    {"isLog10Scaled", (PyCFunction) BeamPyTiePointGrid_isLog10Scaled, METH_VARARGS, "Gets whether or not the {@link ProductData} of this band has a negative binominal distribution and\nthus the common logarithm (base 10) of the values is stored in the raw data. The default value is\nfalse.\nReturns whether or not the data is logging-10 scaled\n@see #isScalingApplied()"},
-    {"setLog10Scaled", (PyCFunction) BeamPyTiePointGrid_setLog10Scaled, METH_VARARGS, "Sets whether or not the {@link ProductData} of this band has a negative binominal distribution and\nthus the common logarithm (base 10) of the values is stored in the raw data.\nReturns Parameter log10Scaled: whether or not the data is logging-10 scaled\n@see #isScalingApplied()"},
-    {"isScalingApplied", (PyCFunction) BeamPyTiePointGrid_isScalingApplied, METH_VARARGS, "Tests whether scaling of raw raster data values is applied before they are returned as geophysically meaningful\npixel values. The methods which return geophysical pixel values are all {@link #getPixels(int, int, int, int, int[])},\n{@link #setPixels(int, int, int, int, int[])}, {@link #readPixels(int, int, int, int, int[])} and\n{@link #writePixels(int, int, int, int, int[])} methods as well as the getPixel&lt;Type&gt; and\nsetPixel&lt;Type&gt; methods such as  {@link #getPixelFloat(int, int)} * and\n{@link #setPixelFloat(int, int, float)}.\nReturns true if a conversion is applyied to raw data samples before the are retuned.\n@see #getScalingOffset\n@see #getScalingFactor\n@see #isLog10Scaled"},
-    {"isValidMaskProperty", (PyCFunction) BeamPyTiePointGrid_isValidMaskProperty, METH_VARARGS | METH_STATIC, "Tests if the given name is the name of a property which is relevant for the computation of the valid mask.\nReturns Parameter propertyName: the  name to test\nReturns {@code true}, if so.\nSince version:  BEAM 4.2"},
-    {"isNoDataValueSet", (PyCFunction) BeamPyTiePointGrid_isNoDataValueSet, METH_VARARGS, "Tests whether or not a no-data value has been specified. The no-data value is not-specified unless either\n{@link #setNoDataValue(double)} or {@link #setGeophysicalNoDataValue(double)} is called.\nReturns true, if so\n@see #isNoDataValueUsed()\n@see #setNoDataValue(double)"},
-    {"clearNoDataValue", (PyCFunction) BeamPyTiePointGrid_clearNoDataValue, METH_VARARGS, "Clears the no-data value, so that {@link #isNoDataValueSet()} will return false."},
-    {"isNoDataValueUsed", (PyCFunction) BeamPyTiePointGrid_isNoDataValueUsed, METH_VARARGS, "Tests whether or not the no-data value is used.\nThe no-data value is used to determine valid pixels. For more information\non valid pixels, please refer to the documentation of the {@link #isPixelValid(int, int, javax.media.jai.ROI)}\nmethod.\nReturns true, if so\n@see #setNoDataValueUsed(boolean)\n@see #isNoDataValueSet()"},
-    {"setNoDataValueUsed", (PyCFunction) BeamPyTiePointGrid_setNoDataValueUsed, METH_VARARGS, "Sets whether or not the no-data value is used.\nIf the no-data value is enabled and the no-data value has not been set so far,\na default no-data value it is set with a value of to zero.\nThe no-data value is used to determine valid pixels. For more information\non valid pixels, please refer to the documentation of the {@link #isPixelValid(int, int, javax.media.jai.ROI)}\nmethod.\nOn property change, the method calls {@link #fireProductNodeChanged(String)} with the property\nname {@link #PROPERTY_NAME_NO_DATA_VALUE_USED}.\nReturns Parameter noDataValueUsed: true, if so\n@see #isNoDataValueUsed()"},
-    {"getNoDataValue", (PyCFunction) BeamPyTiePointGrid_getNoDataValue, METH_VARARGS, "Gets the no-data value as a primitive double.\nNote that the value returned is NOT necessarily the same as the value returned by\n{@link #getGeophysicalNoDataValue()} because no scaling is applied.\nThe no-data value is used to determine valid pixels. For more information\non valid pixels, please refer to the documentation of the {@link #isPixelValid(int, int, javax.media.jai.ROI)}\nmethod.\nThe method returns 0.0, if no no-data value has been specified so far.\nReturns the no-data value. It is returned as a double in order to cover all other numeric types.\n@see #setNoDataValue(double)\n@see #isNoDataValueSet()"},
-    {"setNoDataValue", (PyCFunction) BeamPyTiePointGrid_setNoDataValue, METH_VARARGS, "Sets the no-data value as a primitive double.\nNote that the given value is related to the \"raw\", un-scaled raster data.\nIn order to set the geophysical, scaled no-data value use the method\n{@link #setGeophysicalNoDataValue(double)}.\nThe no-data value is used to determine valid pixels. For more information\non valid pixels, please refer to the documentation of the {@link #isPixelValid(int, int, javax.media.jai.ROI)}\nmethod.\nOn property change, the method calls {@link #fireProductNodeChanged(String)} with the property\nname {@link #PROPERTY_NAME_NO_DATA_VALUE}.\nReturns Parameter noDataValue: the no-data value. It is passed as a double in order to cover all other numeric types.\n@see #getNoDataValue()\n@see #isNoDataValueSet()"},
-    {"getGeophysicalNoDataValue", (PyCFunction) BeamPyTiePointGrid_getGeophysicalNoDataValue, METH_VARARGS, "Gets the geophysical no-data value which is simply the scaled \"raw\" no-data value\nreturned by {@link #getNoDataValue()}.\nThe no-data value is used to determine valid pixels. For more information\non valid pixels, please refer to the documentation of the {@link #isPixelValid(int, int, javax.media.jai.ROI)}\nmethod.\nReturns the geophysical no-data value\n@see #setGeophysicalNoDataValue(double)"},
-    {"setGeophysicalNoDataValue", (PyCFunction) BeamPyTiePointGrid_setGeophysicalNoDataValue, METH_VARARGS, "Sets the geophysical no-data value which is simply the scaled \"raw\" no-data value\nreturned by {@link #getNoDataValue()}.\nThe no-data value is used to determine valid pixels. For more information\non valid pixels, please refer to the documentation of the {@link #isPixelValid(int, int, javax.media.jai.ROI)}\nmethod.\nOn property change, the method calls {@link #fireProductNodeChanged(String)} with the property\nname {@link #PROPERTY_NAME_NO_DATA_VALUE}.\nReturns Parameter noDataValue: the new geophysical no-data value\n@see #setGeophysicalNoDataValue(double)\n@see #isNoDataValueSet()"},
-    {"getValidPixelExpression", (PyCFunction) BeamPyTiePointGrid_getValidPixelExpression, METH_VARARGS, "Gets the expression that is used to determine whether a pixel is valid or not.\nFor more information\non valid pixels, please refer to the documentation of the {@link #isPixelValid(int, int, javax.media.jai.ROI)}\nmethod.\nReturns the valid mask expression."},
-    {"setValidPixelExpression", (PyCFunction) BeamPyTiePointGrid_setValidPixelExpression, METH_VARARGS, "Sets the expression that is used to determine whether a pixel is valid or not.\nThe valid-pixel expression is used to determine valid pixels. For more information\non valid pixels, please refer to the documentation of the {@link #isPixelValid(int, int, javax.media.jai.ROI)}\nmethod.\nOn property change, the method calls {@link #fireProductNodeChanged(String)} with the property\nname {@link #PROPERTY_NAME_VALID_PIXEL_EXPRESSION}.\nReturns Parameter validPixelExpression: the valid mask expression, can be null"},
-    {"isValidMaskUsed", (PyCFunction) BeamPyTiePointGrid_isValidMaskUsed, METH_VARARGS, "Tests whether or not this raster data node uses a data-mask in order to determine valid pixels. The method returns\ntrue if either {@link #isValidPixelExpressionSet()} or {@link #isNoDataValueUsed()} returns true.\nThe data-mask is used to determine valid pixels. For more information\non valid pixels, please refer to the documentation of the {@link #isPixelValid(int, int, javax.media.jai.ROI)}\nmethod.\nReturns true, if so"},
-    {"resetValidMask", (PyCFunction) BeamPyTiePointGrid_resetValidMask, METH_VARARGS, "Resets the valid mask of this raster.\nThe mask will be lazily regenerated when requested the next time."},
-    {"getValidMaskExpression", (PyCFunction) BeamPyTiePointGrid_getValidMaskExpression, METH_VARARGS, "Gets the expression used for the computation of the mask which identifies valid pixel values.\nIt recognizes the value of the {@link #getNoDataValue() noDataValue} and the\n{@link #getValidPixelExpression() validPixelExpression} properties, if any.\nThe method returns {@code null},  if none of these properties are set.\nReturns the expression used for the computation of the mask which identifies valid pixel values,\nor {@code null}.\n@see #getValidPixelExpression()\n@see #getNoDataValue()\nSince version:  BEAM 4.2"},
-    {"updateExpression", (PyCFunction) BeamPyTiePointGrid_updateExpression, METH_VARARGS, "{@inheritDoc}"},
-    {"hasRasterData", (PyCFunction) BeamPyTiePointGrid_hasRasterData, METH_VARARGS, "Returns true if the raster data of this RasterDataNode is loaded or elsewhere available, otherwise\nfalse.\nReturns true, if so.\n@deprecated since BEAM 4.11. No replacement."},
-    {"getRasterData", (PyCFunction) BeamPyTiePointGrid_getRasterData, METH_VARARGS, "Gets the raster data for this dataset. If the data hasn't been loaded so far the method returns\nnull.\nReturns the raster data for this band, or null if data has not been loaded\n@deprecated Since BEAM 4.11. Use {@link #getSourceImage()} or the various {@link #readPixels readPixels()}\nmethod variants to retrieve or read raster data."},
-    {"setRasterData", (PyCFunction) BeamPyTiePointGrid_setRasterData, METH_VARARGS, "Sets the raster data of this dataset.\n\n Note that this method does not copy data at all. If the supplied raster data is compatible with this product\nraster, then simply its reference is stored. Modifications in the supplied raster data will also affect this\ndataset's data!\nReturns Parameter rasterData: the raster data for this dataset\n@see #getRasterData()\n@deprecated Since BEAM 4.11. Use {@link #setSourceImage setSourceImage()} or the various {@link #writePixels readPixels()}\nmethod variants to set or write raster data."},
-    {"loadRasterData1", (PyCFunction) BeamPyTiePointGrid_loadRasterData1, METH_VARARGS, "@throws java.io.IOException if an I/O error occurs\n@see #loadRasterData(com.bc.ceres.core.ProgressMonitor)\n@deprecated since BEAM 4.11. No replacement."},
-    {"loadRasterData2", (PyCFunction) BeamPyTiePointGrid_loadRasterData2, METH_VARARGS, "Loads the raster data for this RasterDataNode. After this method has been called successfully,\nhasRasterData() should always return true and getRasterData() should\nalways return a valid ProductData instance with at least getRasterWidth()*getRasterHeight()\nelements (samples).\n\nThe default implementation of this method does nothing.\nReturns Parameter pm: a monitor to inform the user about progress\n@throws IOException if an I/O error occurs\n@see #unloadRasterData()\n@deprecated since BEAM 4.11. No replacement."},
-    {"unloadRasterData", (PyCFunction) BeamPyTiePointGrid_unloadRasterData, METH_VARARGS, "Un-loads the raster data for this RasterDataNode.\n\nIt is up to the implementation whether after this method has been called successfully, the\nhasRasterData() method returns false or true.\n\nThe default implementation of this method does nothing.\n@see #loadRasterData()\n@deprecated since BEAM 4.11. No replacement."},
-    {"isPixelValid2", (PyCFunction) BeamPyTiePointGrid_isPixelValid2, METH_VARARGS, "Checks whether or not the pixel located at (x,y) is valid.\nA pixel is assumed to be valid either if  {@link #getValidMaskImage() validMaskImage} is null or\nor if the bit corresponding to (x,y) is set within the returned mask image.\n\nNote: Implementation changed by Norman (2011-08-09) in order to increase performance since\na synchronised block was used due to problem with the JAI ROI class that has been used in\nthe former implementation.\nReturns Parameter x: the X co-ordinate of the pixel location\nReturns Parameter y: the Y co-ordinate of the pixel location\nReturns true if the pixel is valid\n@throws ArrayIndexOutOfBoundsException if the co-ordinates are not in bounds\n@see #isPixelValid(int, int, javax.media.jai.ROI)\n@see #setNoDataValueUsed(boolean)\n@see #setNoDataValue(double)\n@see #setValidPixelExpression(String)"},
-    {"getSampleInt", (PyCFunction) BeamPyTiePointGrid_getSampleInt, METH_VARARGS, "Gets a geo-physical sample value at the given pixel coordinate as {@code int} value.\n\nNote: This method does not belong to the public API.\nIt has been added by Norman (2011-08-09) in order to perform performance tests.\nReturns Parameter x: pixel X coordinate\nReturns Parameter y: pixel Y coordinate\nReturns the geo-physical sample value."},
-    {"getSampleFloat", (PyCFunction) BeamPyTiePointGrid_getSampleFloat, METH_VARARGS, "Gets a geo-physical sample value at the given pixel coordinate as {@code float} value.\n\nNote: This method does not belong to the public API.\nIt has been added by Norman (2011-08-09) in order to perform performance tests.\nReturns Parameter x: pixel X coordinate\nReturns Parameter y: pixel Y coordinate\nReturns the geo-physical sample value."},
-    {"isPixelValid1", (PyCFunction) BeamPyTiePointGrid_isPixelValid1, METH_VARARGS, "Checks whether or not the pixel located at (x,y) is valid.\nA pixel is assumed to be valid either if  {@link #getValidMaskImage() validMaskImage} is null or\nor if the bit corresponding to (x,y) is set within the returned mask image.\nReturns Parameter pixelIndex: the linear pixel index in the range 0 to width * height - 1\nReturns true if the pixel is valid\n@throws ArrayIndexOutOfBoundsException if the co-ordinates are not in bounds\n@see #isPixelValid(int, int, javax.media.jai.ROI)\n@see #setNoDataValueUsed(boolean)\n@see #setNoDataValue(double)\n@see #setValidPixelExpression(String)\nSince version:  4.1"},
-    {"isPixelValid3", (PyCFunction) BeamPyTiePointGrid_isPixelValid3, METH_VARARGS, "Checks whether or not the pixel located at (x,y) is valid.\nThe method first test whether a pixel is valid by using the {@link #isPixelValid(int, int)} method,\nand secondly, if the pixel is within the ROI (if any).\nReturns Parameter x: the X co-ordinate of the pixel location\nReturns Parameter y: the Y co-ordinate of the pixel location\nReturns Parameter roi: the ROI, if null the method returns {@link #isPixelValid(int, int)}\nReturns true if the pixel is valid\n@throws ArrayIndexOutOfBoundsException if the co-ordinates are not in bounds\n@see #isPixelValid(int, int)\n@see #setNoDataValueUsed(boolean)\n@see #setNoDataValue(double)\n@see #setValidPixelExpression(String)"},
-    {"getPixels5", (PyCFunction) BeamPyTiePointGrid_getPixels5, METH_VARARGS, "@see #getPixels(int, int, int, int, int[], ProgressMonitor)\n@deprecated since BEAM 4.11. Use {@link #getSourceImage()} instead."},
-    {"getPixels3", (PyCFunction) BeamPyTiePointGrid_getPixels3, METH_VARARGS, "@see #getPixels(int, int, int, int, float[], ProgressMonitor)\n@deprecated since BEAM 4.11. Use {@link #getSourceImage()} instead."},
-    {"getPixels1", (PyCFunction) BeamPyTiePointGrid_getPixels1, METH_VARARGS, "@see #getPixels(int, int, int, int, double[], ProgressMonitor)\n@deprecated since BEAM 4.11. Use {@link #getSourceImage()} instead."},
-    {"readPixels5", (PyCFunction) BeamPyTiePointGrid_readPixels5, METH_VARARGS, "@see #readPixels(int, int, int, int, int[], ProgressMonitor)"},
-    {"readPixels3", (PyCFunction) BeamPyTiePointGrid_readPixels3, METH_VARARGS, "@see #readPixels(int, int, int, int, float[], ProgressMonitor)\n@deprecated since BEAM 4.11. Use {@link #getSourceImage()} instead."},
-    {"readPixels1", (PyCFunction) BeamPyTiePointGrid_readPixels1, METH_VARARGS, "@see #readPixels(int, int, int, int, double[], ProgressMonitor)\n@deprecated since BEAM 4.11. Use {@link #getSourceImage()} instead."},
-    {"writePixels5", (PyCFunction) BeamPyTiePointGrid_writePixels5, METH_VARARGS, "@see #writePixels(int, int, int, int, int[], ProgressMonitor)"},
-    {"writePixels3", (PyCFunction) BeamPyTiePointGrid_writePixels3, METH_VARARGS, "@see #writePixels(int, int, int, int, float[], ProgressMonitor)"},
-    {"writePixels1", (PyCFunction) BeamPyTiePointGrid_writePixels1, METH_VARARGS, "@see #writePixels(int, int, int, int, double[], ProgressMonitor)"},
-    {"readValidMask", (PyCFunction) BeamPyTiePointGrid_readValidMask, METH_VARARGS, ""},
-    {"readRasterDataFully1", (PyCFunction) BeamPyTiePointGrid_readRasterDataFully1, METH_VARARGS, "@throws java.io.IOException if an I/O error occurs\n@see #readRasterDataFully(ProgressMonitor)\n@deprecated since BEAM 4.11. Use {@link #getSourceImage()} instead."},
-    {"readRasterData1", (PyCFunction) BeamPyTiePointGrid_readRasterData1, METH_VARARGS, "Reads raster data from the node's associated data source into the given data\nbuffer.\nReturns Parameter offsetX: the X-offset in the raster co-ordinates where reading starts\nReturns Parameter offsetY: the Y-offset in the raster co-ordinates where reading starts\nReturns Parameter width: the width of the raster data buffer\nReturns Parameter height: the height of the raster data buffer\nReturns Parameter rasterData: a raster data buffer receiving the pixels to be read\n@throws java.io.IOException      if an I/O error occurs\n@throws IllegalArgumentException if the raster is null\n@throws IllegalStateException    if this product raster was not added to a product so far, or if the product to\nwhich this product raster belongs to, has no associated product reader\n@see ProductReader#readBandRasterData(Band, int, int, int, int, ProductData, com.bc.ceres.core.ProgressMonitor)\n@deprecated since BEAM 4.11. Use {@link #getSourceImage()} instead."},
-    {"writeRasterDataFully1", (PyCFunction) BeamPyTiePointGrid_writeRasterDataFully1, METH_VARARGS, ""},
-    {"writeRasterData1", (PyCFunction) BeamPyTiePointGrid_writeRasterData1, METH_VARARGS, "@deprecated since BEAM 4.11. Use {@link #setSourceImage setSourceImage()} or the various {@link #writePixels\nreadPixels()} method variants to set or write raster data."},
-    {"createCompatibleRasterData1", (PyCFunction) BeamPyTiePointGrid_createCompatibleRasterData1, METH_VARARGS, "Creates raster data that is compatible to this dataset's data type. The data buffer returned contains exactly\ngetRasterWidth()*getRasterHeight() elements of a compatible data type.\nReturns raster data compatible with this product raster\n@see #createCompatibleSceneRasterData"},
-    {"createCompatibleSceneRasterData", (PyCFunction) BeamPyTiePointGrid_createCompatibleSceneRasterData, METH_VARARGS, "Creates raster data that is compatible to this dataset's data type. The data buffer returned contains exactly\ngetBandOutputRasterWidth()*getBandOutputRasterHeight() elements of a compatible data type.\nReturns raster data compatible with this product raster\n@see #createCompatibleRasterData"},
-    {"createCompatibleRasterData2", (PyCFunction) BeamPyTiePointGrid_createCompatibleRasterData2, METH_VARARGS, "Creates raster data that is compatible to this dataset's data type. The data buffer returned contains exactly\nwidth*height elements of a compatible data type.\nReturns Parameter width: the width of the raster data to be created\nReturns Parameter height: the height of the raster data to be created\nReturns raster data compatible with this product raster\n@see #createCompatibleRasterData\n@see #createCompatibleSceneRasterData"},
-    {"isCompatibleRasterData", (PyCFunction) BeamPyTiePointGrid_isCompatibleRasterData, METH_VARARGS, "Tests whether the given parameters specify a compatible raster or not.\nReturns Parameter rasterData: the raster data\nReturns Parameter w: the raster width\nReturns Parameter h: the raster height\nReturns {@code true} if so\n@deprecated since BEAM 4.11. No replacement."},
-    {"checkCompatibleRasterData", (PyCFunction) BeamPyTiePointGrid_checkCompatibleRasterData, METH_VARARGS, "Throws an IllegalArgumentException if the given parameters dont specify a compatible raster.\nReturns Parameter rasterData: the raster data\nReturns Parameter w: the raster width\nReturns Parameter h: the raster height\n@deprecated since BEAM 4.11. No replacement."},
-    {"hasIntPixels", (PyCFunction) BeamPyTiePointGrid_hasIntPixels, METH_VARARGS, "Determines whether this raster data node contains integer samples.\nReturns true if this raster data node contains integer samples."},
-    {"createTransectProfileData", (PyCFunction) BeamPyTiePointGrid_createTransectProfileData, METH_VARARGS, "Creates a transect profile for the given shape (-outline).\nReturns Parameter shape: the shape\nReturns the profile data\n@throws IOException if an I/O error occurs"},
-    {"getImageInfo1", (PyCFunction) BeamPyTiePointGrid_getImageInfo1, METH_VARARGS, "Gets the image information for image display.\nReturns the image info or null"},
-    {"setImageInfo", (PyCFunction) BeamPyTiePointGrid_setImageInfo, METH_VARARGS, "Sets the image information for image display.\nReturns Parameter imageInfo: the image info, can be null"},
-    {"fireImageInfoChanged", (PyCFunction) BeamPyTiePointGrid_fireImageInfoChanged, METH_VARARGS, "Notifies listeners that the image (display) information has changed.\nSince version:  BEAM 4.7"},
-    {"getImageInfo2", (PyCFunction) BeamPyTiePointGrid_getImageInfo2, METH_VARARGS, "Returns the image information for this raster data node.\n\nThe method simply returns the value of ensureValidImageInfo(null, ProgressMonitor.NULL).\nReturns Parameter pm: A progress monitor.\nReturns a valid image information instance.\n@see #getImageInfo(double[], ProgressMonitor)\nSince version:  BEAM 4.2"},
-    {"getImageInfo3", (PyCFunction) BeamPyTiePointGrid_getImageInfo3, METH_VARARGS, "Gets the image creation information.\n\nIf no image information has been assigned before, the {@link #createDefaultImageInfo(double[], com.bc.ceres.core.ProgressMonitor)} method is\ncalled with the given parameters passed to this method.\nReturns Parameter histoSkipAreas: Only used, if new image info is created (see {@link #createDefaultImageInfo(double[], com.bc.ceres.core.ProgressMonitor)}\nmethod).\nReturns Parameter pm: A progress monitor.\nReturns the image creation information.\nSince version:  BEAM 4.2"},
-    {"createDefaultImageInfo1", (PyCFunction) BeamPyTiePointGrid_createDefaultImageInfo1, METH_VARARGS, "Creates a default image information instance.\n\nAn IllegalStateException is thrown in the case that this raster data node has no raster data.\nReturns Parameter histoSkipAreas: the left (at index 0) and right (at index 1) normalized areas of the raster data\nhistogram to be excluded when determining the value range for a linear constrast\nstretching. Can be null, in this case {0.01, 0.04} resp. 5% of\nthe entire area is skipped.\nReturns Parameter pm: a monitor to inform the user about progress\nReturns a valid image information instance, never null."},
-    {"createDefaultImageInfo2", (PyCFunction) BeamPyTiePointGrid_createDefaultImageInfo2, METH_VARARGS, "Creates an instance of a default image information.\n\nAn IllegalStateException is thrown in the case that this raster data node has no raster data.\nReturns Parameter histoSkipAreas: the left (at index 0) and right (at index 1) normalized areas of the raster data\nhistogram to be excluded when determining the value range for a linear constrast\nstretching. Can be null, in this case {0.01, 0.04} resp. 5% of\nthe entire area is skipped.\nReturns Parameter histogram: the histogram to create the image information.\nReturns a valid image information instance, never null."},
-    {"getOverlayMaskGroup", (PyCFunction) BeamPyTiePointGrid_getOverlayMaskGroup, METH_VARARGS, "Returns the overlay mask group."},
-    {"createColorIndexedImage", (PyCFunction) BeamPyTiePointGrid_createColorIndexedImage, METH_VARARGS, "Creates an image for this raster data node. The method simply returns ProductUtils.createColorIndexedImage(this,\nnull).\nReturns Parameter pm: a monitor to inform the user about progress\nReturns a greyscale/palette-based image for this raster data node\n@throws IOException if the raster data is not loaded so far and reload causes an I/O error\n@see #setImageInfo(ImageInfo)"},
-    {"createRgbImage", (PyCFunction) BeamPyTiePointGrid_createRgbImage, METH_VARARGS, "Creates an RGB image for this raster data node.\nReturns Parameter pm: a monitor to inform the user about progress\nReturns a greyscale/palette-based image for this raster data node\n@throws IOException if the raster data is not loaded so far and reload causes an I/O error\n@see #setImageInfo(ImageInfo)"},
-    {"quantizeRasterData1", (PyCFunction) BeamPyTiePointGrid_quantizeRasterData1, METH_VARARGS, ""},
-    {"quantizeRasterData2", (PyCFunction) BeamPyTiePointGrid_quantizeRasterData2, METH_VARARGS, ""},
-    {"createPixelValidator", (PyCFunction) BeamPyTiePointGrid_createPixelValidator, METH_VARARGS, "Creates a validator which can be used to validate indexes of pixels in a flat raster data buffer.\nReturns Parameter lineOffset: the absolute line offset, zero based\nReturns Parameter roi: an optional ROI\nReturns a new validator instance, never null\n@throws IOException if an I/O error occurs"},
-    {"scale", (PyCFunction) BeamPyTiePointGrid_scale, METH_VARARGS, "Applies the scaling v * scalingFactor + scalingOffset the the given input value. If the\nlog10Scaled property is true, the result is taken to the power of 10 after the actual\nscaling.\nReturns Parameter v: the input value\nReturns the scaled value"},
-    {"scaleInverse", (PyCFunction) BeamPyTiePointGrid_scaleInverse, METH_VARARGS, "Applies the inverse scaling (v - scalingOffset) / scalingFactor the the given input value. If the\nlog10Scaled property is true, the common logarithm is applied to the input before the actual\nscaling.\nReturns Parameter v: the input value\nReturns the scaled value"},
-    {"getPixelString", (PyCFunction) BeamPyTiePointGrid_getPixelString, METH_VARARGS, "Returns the pixel located at (x,y) as a string value.\nReturns Parameter x: the X co-ordinate of the pixel location\nReturns Parameter y: the Y co-ordinate of the pixel location\nReturns the pixel value at (x,y) as string or an error message text"},
-    {"isSourceImageSet", (PyCFunction) BeamPyTiePointGrid_isSourceImageSet, METH_VARARGS, "Returns whether the source image is set on this {@code RasterDataNode}.\nReturns whether the source image is set.\n@see #getSourceImage()\n@see #setSourceImage(java.awt.image.RenderedImage)\n@see #setSourceImage(com.bc.ceres.glevel.MultiLevelImage)\n@see #createSourceImage()\nSince version:  BEAM 4.5"},
-    {"getSourceImage", (PyCFunction) BeamPyTiePointGrid_getSourceImage, METH_VARARGS, "Gets the source image associated with this {@code RasterDataNode}.\nReturns the source image. Never {@code null}. In the case that {@link #isSourceImageSet()} returns {@code false},\nthe method {@link #createSourceImage()} will be called in order to set and return a valid source image.\n@see #createSourceImage()\n@see #isSourceImageSet()\nSince version:  BEAM 4.2"},
-    {"setSourceImage2", (PyCFunction) BeamPyTiePointGrid_setSourceImage2, METH_VARARGS, "Sets the source image associated with this {@code RasterDataNode}.\nReturns Parameter sourceImage: The source image.\nCan be {@code null}. If so, {@link #isSourceImageSet()} will return {@code false}.\nSince version:  BEAM 4.2"},
-    {"setSourceImage1", (PyCFunction) BeamPyTiePointGrid_setSourceImage1, METH_VARARGS, "Sets the source image associated with this {@code RasterDataNode}.\nReturns Parameter sourceImage: The source image.\nCan be {@code null}. If so, {@link #isSourceImageSet()} will return {@code false}.\nSince version:  BEAM 4.6"},
-    {"isGeophysicalImageSet", (PyCFunction) BeamPyTiePointGrid_isGeophysicalImageSet, METH_VARARGS, "Returns whether the geophysical image is set on this {@code RasterDataNode}.\n\nThis method belongs to preliminary API and may be removed or changed in the future.\nReturns whether the geophysical image is set.\nSince version:  BEAM 4.6"},
-    {"getGeophysicalImage", (PyCFunction) BeamPyTiePointGrid_getGeophysicalImage, METH_VARARGS, "Returns the geophysical source image.\nSince version:  BEAM 4.5"},
-    {"isValidMaskImageSet", (PyCFunction) BeamPyTiePointGrid_isValidMaskImageSet, METH_VARARGS, "Returns wether the valid mask image is set on this {@code RasterDataNode}.\nReturns wether the source image is set.\nSince version:  BEAM 4.5"},
-    {"getValidMaskImage", (PyCFunction) BeamPyTiePointGrid_getValidMaskImage, METH_VARARGS, "Gets the valid-mask image associated with this {@code RasterDataNode}.\nReturns the rendered image.\nSince version:  BEAM 4.2"},
-    {"isStxSet", (PyCFunction) BeamPyTiePointGrid_isStxSet, METH_VARARGS, ""},
-    {"getStx1", (PyCFunction) BeamPyTiePointGrid_getStx1, METH_VARARGS, "Gets the statistics. If statistcs are not yet available,\nthe method will compute (possibly inaccurate) statistics and return those.\n\nIf accurate statistics are required, the {@link #getStx(boolean, com.bc.ceres.core.ProgressMonitor)}\nshall be used instead.\n\nThis method belongs to preliminary API and may be removed or changed in the future.\nReturns the statistics.\n@see #getStx(boolean, com.bc.ceres.core.ProgressMonitor)\n@see #setStx(Stx)\nSince version:  BEAM 4.2, revised in BEAM 4.5"},
-    {"getStx2", (PyCFunction) BeamPyTiePointGrid_getStx2, METH_VARARGS, "Gets the statistics.\nIf the statistics have not been set before they are computed using the given progress monitor {@code pm} and then set.\nThis method belongs to preliminary API and may be removed or changed in the future.\nReturns Parameter accurate: If true, accurate statistics are computed.\nReturns Parameter pm: A progress monitor which is used to compute the new statistics, if required.\nReturns the statistics.\nSince version:  since BEAM 4.5"},
-    {"setStx", (PyCFunction) BeamPyTiePointGrid_setStx, METH_VARARGS, "Sets the statistics. It is the responsibility of the caller to ensure that the given statistics\nare really related to this {@code RasterDataNode}'s raster data.\nThe method fires a property change event for the property {@link #PROPERTY_NAME_STX}.\nThis method belongs to preliminary API and may be removed or changed in the future.\nReturns Parameter stx: The statistics.\nSince version:  BEAM 4.2, revised in BEAM 4.5"},
-    {"getValidShape", (PyCFunction) BeamPyTiePointGrid_getValidShape, METH_VARARGS, "Gets the shape of the area where this raster data contains valid samples.\nThe method returns null, if the entire raster contains valid samples.\nReturns the shape of the area where the raster data has samples, can be {@code null}.\nSince version:  BEAM 4.7"},
-    {"getRoiMaskGroup", (PyCFunction) BeamPyTiePointGrid_getRoiMaskGroup, METH_VARARGS, "Returns the roi mask group.\n@deprecated since BEAM 4.10 (no replacement)"},
-    {"getDataType", (PyCFunction) BeamPyTiePointGrid_getDataType, METH_VARARGS, "Gets the data type of this data node.\nReturns the data type which is always one of the multiple ProductData.TYPE_X constants"},
-    {"getNumDataElems", (PyCFunction) BeamPyTiePointGrid_getNumDataElems, METH_VARARGS, "Gets the number of data elements in this data node."},
-    {"setData", (PyCFunction) BeamPyTiePointGrid_setData, METH_VARARGS, "Sets the data of this data node."},
-    {"getData", (PyCFunction) BeamPyTiePointGrid_getData, METH_VARARGS, "Gets the data of this data node."},
-    {"setDataElems", (PyCFunction) BeamPyTiePointGrid_setDataElems, METH_VARARGS, "Sets the data elements of this data node.\n@deprecated since 5.0\n@see ProductData#setElems(Object)"},
-    {"getDataElems", (PyCFunction) BeamPyTiePointGrid_getDataElems, METH_VARARGS, "Gets the data elements of this data node.\n@see ProductData#getElems()"},
-    {"getDataElemSize", (PyCFunction) BeamPyTiePointGrid_getDataElemSize, METH_VARARGS, "Gets the data element size in bytes.\n@see ProductData#getElemSize(int)"},
-    {"setReadOnly", (PyCFunction) BeamPyTiePointGrid_setReadOnly, METH_VARARGS, ""},
-    {"isReadOnly", (PyCFunction) BeamPyTiePointGrid_isReadOnly, METH_VARARGS, ""},
-    {"setUnit", (PyCFunction) BeamPyTiePointGrid_setUnit, METH_VARARGS, ""},
-    {"getUnit", (PyCFunction) BeamPyTiePointGrid_getUnit, METH_VARARGS, ""},
-    {"isSynthetic", (PyCFunction) BeamPyTiePointGrid_isSynthetic, METH_VARARGS, "@deprecated since BEAM 4.10 (not used, no replacement)"},
-    {"setSynthetic", (PyCFunction) BeamPyTiePointGrid_setSynthetic, METH_VARARGS, "@deprecated since BEAM 4.10 (not used, no replacement)"},
-    {"fireProductNodeDataChanged", (PyCFunction) BeamPyTiePointGrid_fireProductNodeDataChanged, METH_VARARGS, "Fires a node data changed event. This method is called after the data of this data node changed."},
-    {"getRawStorageSize2", (PyCFunction) BeamPyTiePointGrid_getRawStorageSize2, METH_VARARGS, "Gets the estimated size in bytes of this product node.\nReturns Parameter subsetDef: if not null the subset may limit the size returned\nReturns the size in bytes."},
-    {"createCompatibleProductData", (PyCFunction) BeamPyTiePointGrid_createCompatibleProductData, METH_VARARGS, "Creates product data that is compatible to this dataset's data type. The data buffer returned contains exactly\nnumElems elements of a compatible data type.\nReturns Parameter numElems: the number of elements, must not be less than one\nReturns product data compatible with this data node"},
-    {"getOwner", (PyCFunction) BeamPyTiePointGrid_getOwner, METH_VARARGS, "Returns the owner node of this node."},
-    {"getName", (PyCFunction) BeamPyTiePointGrid_getName, METH_VARARGS, "Returns this node's name."},
-    {"setName", (PyCFunction) BeamPyTiePointGrid_setName, METH_VARARGS, "Sets this product's name.\nReturns Parameter name: The name."},
-    {"getDescription", (PyCFunction) BeamPyTiePointGrid_getDescription, METH_VARARGS, "Returns a short textual description for this products node.\nReturns a description or null"},
-    {"setDescription", (PyCFunction) BeamPyTiePointGrid_setDescription, METH_VARARGS, "Sets a short textual description for this products node.\nReturns Parameter description: a description, can be null"},
-    {"isModified", (PyCFunction) BeamPyTiePointGrid_isModified, METH_VARARGS, "Returns whether or not this node is modified.\nReturns true if so"},
-    {"toString", (PyCFunction) BeamPyTiePointGrid_toString, METH_VARARGS, ""},
-    {"isValidNodeName", (PyCFunction) BeamPyTiePointGrid_isValidNodeName, METH_VARARGS | METH_STATIC, "Tests whether the given name is valid name for a node.\nA valid node name must not start with a dot. Also a valid node name must not contain\nany of the character  \\/:*?\"&lt;&gt;|\nReturns Parameter name: the name to test\nReturns true if the name is a valid node identifier, false otherwise"},
-    {"getProduct", (PyCFunction) BeamPyTiePointGrid_getProduct, METH_VARARGS, "Returns the product to which this node belongs to.\nReturns the product, or null if this node was not owned by a product at the time this method was\ncalled"},
-    {"getProductReader", (PyCFunction) BeamPyTiePointGrid_getProductReader, METH_VARARGS, "Returns the product reader for the product to which this node belongs to.\nReturns the product reader, or null if no such exists"},
-    {"getProductWriter", (PyCFunction) BeamPyTiePointGrid_getProductWriter, METH_VARARGS, "Returns the product writer for the product to which this node belongs to.\nReturns the product writer, or null if no such exists"},
-    {"getDisplayName", (PyCFunction) BeamPyTiePointGrid_getDisplayName, METH_VARARGS, "Returns this node's display name. The display name is the product reference string with the node name appended.\nExample: The string \"[2] node-name\" means node node-name of the\nproduct with the reference number 2.\nReturns this node's name with a product prefix <br>or this node's name only if this node's product prefix is\nnull\n@see #getProductRefString"},
-    {"getProductRefString", (PyCFunction) BeamPyTiePointGrid_getProductRefString, METH_VARARGS, "Gets the product reference string. The product reference string is the product reference number enclosed in\nsquare brackets. Example: The string \"[2]\" stands for a product with the reference number\n2.\nReturns the product reference string. <br>or null if this node has no product <br>or\nnull if its product reference number was inactive"},
-    {"getRawStorageSize1", (PyCFunction) BeamPyTiePointGrid_getRawStorageSize1, METH_VARARGS, "Gets an estimated, raw storage size in bytes of this product node.\nReturns the size in bytes."},
-    {"fireProductNodeChanged1", (PyCFunction) BeamPyTiePointGrid_fireProductNodeChanged1, METH_VARARGS, ""},
-    {"fireProductNodeChanged2", (PyCFunction) BeamPyTiePointGrid_fireProductNodeChanged2, METH_VARARGS, ""},
-    {"removeFromFile", (PyCFunction) BeamPyTiePointGrid_removeFromFile, METH_VARARGS, "Physically remove this node from the file associated with the given product writer. The default implementation\ndoes nothing.\nReturns Parameter productWriter: the product writer to be used to remove this node from the underlying file."},
-    {"getExtension", (PyCFunction) BeamPyTiePointGrid_getExtension, METH_VARARGS, ""},
-    {NULL, NULL, 0, NULL} /*Sentinel*/
-};
-
-// Note: this is unused, experimental code
-
-/**
- * Implements the BeamPy_JObjectType class singleton.
- *
- * THIS TYPE IS NOT YET IN USE: we currently use
- * (<type_string>, <pointer>) tuples to represent Java JNI objects.
- */
-PyTypeObject TiePointGrid_Type = {
-    PyVarObject_HEAD_INIT(NULL, 0)
-    "beampy.TiePointGrid",        /* tp_name */
-    sizeof (JObject),             /* tp_basicsize */
-    0,                            /* tp_itemsize */
-    (destructor)JObject_dealloc,  /* tp_dealloc */
-    NULL,                         /* tp_print */
-    NULL,                         /* tp_getattr */
-    NULL,                         /* tp_setattr */
-    NULL,                         /* tp_reserved */
-    NULL,                         /* tp_repr */
-    NULL,                         /* tp_as_number */
-    NULL,                         /* tp_as_sequence */
-    NULL,                         /* tp_as_mapping */
-    NULL,                         /* tp_hash  */
-    NULL,                         /* tp_call */
-    NULL,                         /* tp_str */
-    NULL,                         /* tp_getattro */
-    NULL,                         /* tp_setattro */
-    NULL,                         /* tp_as_buffer */
-    Py_TPFLAGS_DEFAULT,           /* tp_flags */
-    "A tie-point grid contains the data for geophysical parameter in remote sensing data products. Tie-point grid are\ntwo-dimensional images which hold their pixel values (samples) in a float array. \n\nUsually, tie-point grids are a sub-sampling of a data product's scene resolution.\nAuthor:  Norman Fomferra\nVersion:  $Revision$ $Date$",                /* tp_doc */
-    NULL,                         /* tp_traverse */
-    NULL,                         /* tp_clear */
-    NULL,                         /* tp_richcompare */
-    0,                            /* tp_weaklistoffset */
-    NULL,                         /* tp_iter */
-    NULL,                         /* tp_iternext */
-    TiePointGrid_methods,         /* tp_methods */
     NULL,                         /* tp_members */
     NULL,                         /* tp_getset */
     NULL,                         /* tp_base */
@@ -7066,6 +7319,59 @@ PyTypeObject ProductWriter_Type = {
     NULL,                         /* tp_new */
 };
 
+static PyMethodDef ProgressMonitor_methods[] = {
+    {NULL, NULL, 0, NULL} /*Sentinel*/
+};
+
+// Note: this is unused, experimental code
+
+/**
+ * Implements the BeamPy_JObjectType class singleton.
+ *
+ * THIS TYPE IS NOT YET IN USE: we currently use
+ * (<type_string>, <pointer>) tuples to represent Java JNI objects.
+ */
+PyTypeObject ProgressMonitor_Type = {
+    PyVarObject_HEAD_INIT(NULL, 0)
+    "beampy.ProgressMonitor",        /* tp_name */
+    sizeof (JObject),             /* tp_basicsize */
+    0,                            /* tp_itemsize */
+    (destructor)JObject_dealloc,  /* tp_dealloc */
+    NULL,                         /* tp_print */
+    NULL,                         /* tp_getattr */
+    NULL,                         /* tp_setattr */
+    NULL,                         /* tp_reserved */
+    NULL,                         /* tp_repr */
+    NULL,                         /* tp_as_number */
+    NULL,                         /* tp_as_sequence */
+    NULL,                         /* tp_as_mapping */
+    NULL,                         /* tp_hash  */
+    NULL,                         /* tp_call */
+    NULL,                         /* tp_str */
+    NULL,                         /* tp_getattro */
+    NULL,                         /* tp_setattro */
+    NULL,                         /* tp_as_buffer */
+    Py_TPFLAGS_DEFAULT,           /* tp_flags */
+    "",                /* tp_doc */
+    NULL,                         /* tp_traverse */
+    NULL,                         /* tp_clear */
+    NULL,                         /* tp_richcompare */
+    0,                            /* tp_weaklistoffset */
+    NULL,                         /* tp_iter */
+    NULL,                         /* tp_iternext */
+    ProgressMonitor_methods,         /* tp_methods */
+    NULL,                         /* tp_members */
+    NULL,                         /* tp_getset */
+    NULL,                         /* tp_base */
+    NULL,                         /* tp_dict */
+    NULL,                         /* tp_descr_get */
+    NULL,                         /* tp_descr_set */
+    0,                            /* tp_dictoffset */
+    (initproc) JObject_init,      /* tp_init */
+    NULL,                         /* tp_alloc */
+    NULL,                         /* tp_new */
+};
+
 static PyMethodDef MetadataAttribute_methods[] = {
     {"newMetadataAttribute", (PyCFunction) BeamPyMetadataAttribute_newMetadataAttribute, METH_VARARGS | METH_STATIC, ""},
     {"getParentElement", (PyCFunction) BeamPyMetadataAttribute_getParentElement, METH_VARARGS, ""},
@@ -7077,7 +7383,7 @@ static PyMethodDef MetadataAttribute_methods[] = {
     {"getNumDataElems", (PyCFunction) BeamPyMetadataAttribute_getNumDataElems, METH_VARARGS, "Gets the number of data elements in this data node."},
     {"setData", (PyCFunction) BeamPyMetadataAttribute_setData, METH_VARARGS, "Sets the data of this data node."},
     {"getData", (PyCFunction) BeamPyMetadataAttribute_getData, METH_VARARGS, "Gets the data of this data node."},
-    {"setDataElems", (PyCFunction) BeamPyMetadataAttribute_setDataElems, METH_VARARGS, "Sets the data elements of this data node.\n@deprecated since 5.0\n@see ProductData#setElems(Object)"},
+    {"setDataElems", (PyCFunction) BeamPyMetadataAttribute_setDataElems, METH_VARARGS, "Sets the data elements of this data node.\n@see ProductData#setElems(Object)"},
     {"getDataElems", (PyCFunction) BeamPyMetadataAttribute_getDataElems, METH_VARARGS, "Gets the data elements of this data node.\n@see ProductData#getElems()"},
     {"getDataElemSize", (PyCFunction) BeamPyMetadataAttribute_getDataElemSize, METH_VARARGS, "Gets the data element size in bytes.\n@see ProductData#getElemSize(int)"},
     {"setReadOnly", (PyCFunction) BeamPyMetadataAttribute_setReadOnly, METH_VARARGS, ""},
@@ -7158,112 +7464,6 @@ PyTypeObject MetadataAttribute_Type = {
     NULL,                         /* tp_new */
 };
 
-static PyMethodDef ProgressMonitor_methods[] = {
-    {NULL, NULL, 0, NULL} /*Sentinel*/
-};
-
-// Note: this is unused, experimental code
-
-/**
- * Implements the BeamPy_JObjectType class singleton.
- *
- * THIS TYPE IS NOT YET IN USE: we currently use
- * (<type_string>, <pointer>) tuples to represent Java JNI objects.
- */
-PyTypeObject ProgressMonitor_Type = {
-    PyVarObject_HEAD_INIT(NULL, 0)
-    "beampy.ProgressMonitor",        /* tp_name */
-    sizeof (JObject),             /* tp_basicsize */
-    0,                            /* tp_itemsize */
-    (destructor)JObject_dealloc,  /* tp_dealloc */
-    NULL,                         /* tp_print */
-    NULL,                         /* tp_getattr */
-    NULL,                         /* tp_setattr */
-    NULL,                         /* tp_reserved */
-    NULL,                         /* tp_repr */
-    NULL,                         /* tp_as_number */
-    NULL,                         /* tp_as_sequence */
-    NULL,                         /* tp_as_mapping */
-    NULL,                         /* tp_hash  */
-    NULL,                         /* tp_call */
-    NULL,                         /* tp_str */
-    NULL,                         /* tp_getattro */
-    NULL,                         /* tp_setattro */
-    NULL,                         /* tp_as_buffer */
-    Py_TPFLAGS_DEFAULT,           /* tp_flags */
-    "",                /* tp_doc */
-    NULL,                         /* tp_traverse */
-    NULL,                         /* tp_clear */
-    NULL,                         /* tp_richcompare */
-    0,                            /* tp_weaklistoffset */
-    NULL,                         /* tp_iter */
-    NULL,                         /* tp_iternext */
-    ProgressMonitor_methods,         /* tp_methods */
-    NULL,                         /* tp_members */
-    NULL,                         /* tp_getset */
-    NULL,                         /* tp_base */
-    NULL,                         /* tp_dict */
-    NULL,                         /* tp_descr_get */
-    NULL,                         /* tp_descr_set */
-    0,                            /* tp_dictoffset */
-    (initproc) JObject_init,      /* tp_init */
-    NULL,                         /* tp_alloc */
-    NULL,                         /* tp_new */
-};
-
-static PyMethodDef VectorDataNode_methods[] = {
-    {NULL, NULL, 0, NULL} /*Sentinel*/
-};
-
-// Note: this is unused, experimental code
-
-/**
- * Implements the BeamPy_JObjectType class singleton.
- *
- * THIS TYPE IS NOT YET IN USE: we currently use
- * (<type_string>, <pointer>) tuples to represent Java JNI objects.
- */
-PyTypeObject VectorDataNode_Type = {
-    PyVarObject_HEAD_INIT(NULL, 0)
-    "beampy.VectorDataNode",        /* tp_name */
-    sizeof (JObject),             /* tp_basicsize */
-    0,                            /* tp_itemsize */
-    (destructor)JObject_dealloc,  /* tp_dealloc */
-    NULL,                         /* tp_print */
-    NULL,                         /* tp_getattr */
-    NULL,                         /* tp_setattr */
-    NULL,                         /* tp_reserved */
-    NULL,                         /* tp_repr */
-    NULL,                         /* tp_as_number */
-    NULL,                         /* tp_as_sequence */
-    NULL,                         /* tp_as_mapping */
-    NULL,                         /* tp_hash  */
-    NULL,                         /* tp_call */
-    NULL,                         /* tp_str */
-    NULL,                         /* tp_getattro */
-    NULL,                         /* tp_setattro */
-    NULL,                         /* tp_as_buffer */
-    Py_TPFLAGS_DEFAULT,           /* tp_flags */
-    "A container which allows to store vector data in the BEAM product model.\n\nThis is a preliminary API under construction for BEAM 4.7. Not intended for public use.\nAuthor:  Norman Fomferra\nVersion:  $Revision$ $Date$\n@see Product#getVectorDataGroup()\nSince version:  BEAM 4.7",                /* tp_doc */
-    NULL,                         /* tp_traverse */
-    NULL,                         /* tp_clear */
-    NULL,                         /* tp_richcompare */
-    0,                            /* tp_weaklistoffset */
-    NULL,                         /* tp_iter */
-    NULL,                         /* tp_iternext */
-    VectorDataNode_methods,         /* tp_methods */
-    NULL,                         /* tp_members */
-    NULL,                         /* tp_getset */
-    NULL,                         /* tp_base */
-    NULL,                         /* tp_dict */
-    NULL,                         /* tp_descr_get */
-    NULL,                         /* tp_descr_set */
-    0,                            /* tp_dictoffset */
-    (initproc) JObject_init,      /* tp_init */
-    NULL,                         /* tp_alloc */
-    NULL,                         /* tp_new */
-};
-
 static PyMethodDef GeneralPath_methods[] = {
     {NULL, NULL, 0, NULL} /*Sentinel*/
 };
@@ -7317,131 +7517,9 @@ PyTypeObject GeneralPath_Type = {
     NULL,                         /* tp_new */
 };
 
-static PyMethodDef ImageInputStream_methods[] = {
-    {NULL, NULL, 0, NULL} /*Sentinel*/
-};
-
-// Note: this is unused, experimental code
-
-/**
- * Implements the BeamPy_JObjectType class singleton.
- *
- * THIS TYPE IS NOT YET IN USE: we currently use
- * (<type_string>, <pointer>) tuples to represent Java JNI objects.
- */
-PyTypeObject ImageInputStream_Type = {
-    PyVarObject_HEAD_INIT(NULL, 0)
-    "beampy.ImageInputStream",        /* tp_name */
-    sizeof (JObject),             /* tp_basicsize */
-    0,                            /* tp_itemsize */
-    (destructor)JObject_dealloc,  /* tp_dealloc */
-    NULL,                         /* tp_print */
-    NULL,                         /* tp_getattr */
-    NULL,                         /* tp_setattr */
-    NULL,                         /* tp_reserved */
-    NULL,                         /* tp_repr */
-    NULL,                         /* tp_as_number */
-    NULL,                         /* tp_as_sequence */
-    NULL,                         /* tp_as_mapping */
-    NULL,                         /* tp_hash  */
-    NULL,                         /* tp_call */
-    NULL,                         /* tp_str */
-    NULL,                         /* tp_getattro */
-    NULL,                         /* tp_setattro */
-    NULL,                         /* tp_as_buffer */
-    Py_TPFLAGS_DEFAULT,           /* tp_flags */
-    "",                /* tp_doc */
-    NULL,                         /* tp_traverse */
-    NULL,                         /* tp_clear */
-    NULL,                         /* tp_richcompare */
-    0,                            /* tp_weaklistoffset */
-    NULL,                         /* tp_iter */
-    NULL,                         /* tp_iternext */
-    ImageInputStream_methods,         /* tp_methods */
-    NULL,                         /* tp_members */
-    NULL,                         /* tp_getset */
-    NULL,                         /* tp_base */
-    NULL,                         /* tp_dict */
-    NULL,                         /* tp_descr_get */
-    NULL,                         /* tp_descr_set */
-    0,                            /* tp_dictoffset */
-    (initproc) JObject_init,      /* tp_init */
-    NULL,                         /* tp_alloc */
-    NULL,                         /* tp_new */
-};
-
-static PyMethodDef RenderingHints_methods[] = {
-    {NULL, NULL, 0, NULL} /*Sentinel*/
-};
-
-// Note: this is unused, experimental code
-
-/**
- * Implements the BeamPy_JObjectType class singleton.
- *
- * THIS TYPE IS NOT YET IN USE: we currently use
- * (<type_string>, <pointer>) tuples to represent Java JNI objects.
- */
-PyTypeObject RenderingHints_Type = {
-    PyVarObject_HEAD_INIT(NULL, 0)
-    "beampy.RenderingHints",        /* tp_name */
-    sizeof (JObject),             /* tp_basicsize */
-    0,                            /* tp_itemsize */
-    (destructor)JObject_dealloc,  /* tp_dealloc */
-    NULL,                         /* tp_print */
-    NULL,                         /* tp_getattr */
-    NULL,                         /* tp_setattr */
-    NULL,                         /* tp_reserved */
-    NULL,                         /* tp_repr */
-    NULL,                         /* tp_as_number */
-    NULL,                         /* tp_as_sequence */
-    NULL,                         /* tp_as_mapping */
-    NULL,                         /* tp_hash  */
-    NULL,                         /* tp_call */
-    NULL,                         /* tp_str */
-    NULL,                         /* tp_getattro */
-    NULL,                         /* tp_setattro */
-    NULL,                         /* tp_as_buffer */
-    Py_TPFLAGS_DEFAULT,           /* tp_flags */
-    "",                /* tp_doc */
-    NULL,                         /* tp_traverse */
-    NULL,                         /* tp_clear */
-    NULL,                         /* tp_richcompare */
-    0,                            /* tp_weaklistoffset */
-    NULL,                         /* tp_iter */
-    NULL,                         /* tp_iternext */
-    RenderingHints_methods,         /* tp_methods */
-    NULL,                         /* tp_members */
-    NULL,                         /* tp_getset */
-    NULL,                         /* tp_base */
-    NULL,                         /* tp_dict */
-    NULL,                         /* tp_descr_get */
-    NULL,                         /* tp_descr_set */
-    0,                            /* tp_dictoffset */
-    (initproc) JObject_init,      /* tp_init */
-    NULL,                         /* tp_alloc */
-    NULL,                         /* tp_new */
-};
-
 
 int BPy_RegisterJObjectSubtypes(PyObject* module)
 {
-    // Register Shape:
-    Shape_Type.tp_base = &JObject_Type;
-    if (PyType_Ready(&Shape_Type) < 0) {
-        return 0;
-    }
-    Py_INCREF(&Shape_Type);
-    PyModule_AddObject(module, "Shape", (PyObject*) &Shape_Type);
-
-    // Register MapTransform:
-    MapTransform_Type.tp_base = &JObject_Type;
-    if (PyType_Ready(&MapTransform_Type) < 0) {
-        return 0;
-    }
-    Py_INCREF(&MapTransform_Type);
-    PyModule_AddObject(module, "MapTransform", (PyObject*) &MapTransform_Type);
-
     // Register ImageGeometry:
     ImageGeometry_Type.tp_base = &JObject_Type;
     if (PyType_Ready(&ImageGeometry_Type) < 0) {
@@ -7450,14 +7528,6 @@ int BPy_RegisterJObjectSubtypes(PyObject* module)
     Py_INCREF(&ImageGeometry_Type);
     PyModule_AddObject(module, "ImageGeometry", (PyObject*) &ImageGeometry_Type);
 
-    // Register Parser:
-    Parser_Type.tp_base = &JObject_Type;
-    if (PyType_Ready(&Parser_Type) < 0) {
-        return 0;
-    }
-    Py_INCREF(&Parser_Type);
-    PyModule_AddObject(module, "Parser", (PyObject*) &Parser_Type);
-
     // Register GeoCoding:
     GeoCoding_Type.tp_base = &JObject_Type;
     if (PyType_Ready(&GeoCoding_Type) < 0) {
@@ -7465,44 +7535,6 @@ int BPy_RegisterJObjectSubtypes(PyObject* module)
     }
     Py_INCREF(&GeoCoding_Type);
     PyModule_AddObject(module, "GeoCoding", (PyObject*) &GeoCoding_Type);
-
-    // Register ProductData:
-    ProductData_Type.tp_base = &JObject_Type;
-    if (PyType_Ready(&ProductData_Type) < 0) {
-        return 0;
-    }
-    Py_INCREF(&ProductData_Type);
-    PyModule_AddObject(module, "ProductData", (PyObject*) &ProductData_Type);
-    // Constants of class ProductData_Type:
-    PyDict_SetItemString(ProductData_Type.tp_dict, "TYPE_UNDEFINED", PyLong_FromLong(0));
-    PyDict_SetItemString(ProductData_Type.tp_dict, "TYPE_INT8", PyLong_FromLong(10));
-    PyDict_SetItemString(ProductData_Type.tp_dict, "TYPE_INT16", PyLong_FromLong(11));
-    PyDict_SetItemString(ProductData_Type.tp_dict, "TYPE_INT32", PyLong_FromLong(12));
-    PyDict_SetItemString(ProductData_Type.tp_dict, "TYPE_UINT8", PyLong_FromLong(20));
-    PyDict_SetItemString(ProductData_Type.tp_dict, "TYPE_UINT16", PyLong_FromLong(21));
-    PyDict_SetItemString(ProductData_Type.tp_dict, "TYPE_UINT32", PyLong_FromLong(22));
-    PyDict_SetItemString(ProductData_Type.tp_dict, "TYPE_FLOAT32", PyLong_FromLong(30));
-    PyDict_SetItemString(ProductData_Type.tp_dict, "TYPE_FLOAT64", PyLong_FromLong(31));
-    PyDict_SetItemString(ProductData_Type.tp_dict, "TYPE_ASCII", PyLong_FromLong(41));
-    PyDict_SetItemString(ProductData_Type.tp_dict, "TYPE_UTC", PyLong_FromLong(51));
-    PyDict_SetItemString(ProductData_Type.tp_dict, "TYPESTRING_INT8", PyUnicode_FromString("int8"));
-    PyDict_SetItemString(ProductData_Type.tp_dict, "TYPESTRING_INT16", PyUnicode_FromString("int16"));
-    PyDict_SetItemString(ProductData_Type.tp_dict, "TYPESTRING_INT32", PyUnicode_FromString("int32"));
-    PyDict_SetItemString(ProductData_Type.tp_dict, "TYPESTRING_UINT8", PyUnicode_FromString("uint8"));
-    PyDict_SetItemString(ProductData_Type.tp_dict, "TYPESTRING_UINT16", PyUnicode_FromString("uint16"));
-    PyDict_SetItemString(ProductData_Type.tp_dict, "TYPESTRING_UINT32", PyUnicode_FromString("uint32"));
-    PyDict_SetItemString(ProductData_Type.tp_dict, "TYPESTRING_FLOAT32", PyUnicode_FromString("float32"));
-    PyDict_SetItemString(ProductData_Type.tp_dict, "TYPESTRING_FLOAT64", PyUnicode_FromString("float64"));
-    PyDict_SetItemString(ProductData_Type.tp_dict, "TYPESTRING_ASCII", PyUnicode_FromString("ascii"));
-    PyDict_SetItemString(ProductData_Type.tp_dict, "TYPESTRING_UTC", PyUnicode_FromString("utc"));
-
-    // Register OperatorSpi:
-    OperatorSpi_Type.tp_base = &JObject_Type;
-    if (PyType_Ready(&OperatorSpi_Type) < 0) {
-        return 0;
-    }
-    Py_INCREF(&OperatorSpi_Type);
-    PyModule_AddObject(module, "OperatorSpi", (PyObject*) &OperatorSpi_Type);
 
     // Register AffineTransform:
     AffineTransform_Type.tp_base = &JObject_Type;
@@ -7520,13 +7552,16 @@ int BPy_RegisterJObjectSubtypes(PyObject* module)
     Py_INCREF(&Mask_Type);
     PyModule_AddObject(module, "Mask", (PyObject*) &Mask_Type);
 
-    // Register Double:
-    Double_Type.tp_base = &JObject_Type;
-    if (PyType_Ready(&Double_Type) < 0) {
+    // Register IndexCoding:
+    IndexCoding_Type.tp_base = &JObject_Type;
+    if (PyType_Ready(&IndexCoding_Type) < 0) {
         return 0;
     }
-    Py_INCREF(&Double_Type);
-    PyModule_AddObject(module, "Double", (PyObject*) &Double_Type);
+    Py_INCREF(&IndexCoding_Type);
+    PyModule_AddObject(module, "IndexCoding", (PyObject*) &IndexCoding_Type);
+    // Constants of class IndexCoding_Type:
+    PyDict_SetItemString(IndexCoding_Type.tp_dict, "PROPERTY_NAME_NAME", PyUnicode_FromString("name"));
+    PyDict_SetItemString(IndexCoding_Type.tp_dict, "PROPERTY_NAME_DESCRIPTION", PyUnicode_FromString("description"));
 
     // Register GPF:
     GPF_Type.tp_base = &JObject_Type;
@@ -7545,33 +7580,6 @@ int BPy_RegisterJObjectSubtypes(PyObject* module)
     PyDict_SetItemString(GPF_Type.tp_dict, "NO_PARAMS", Py_BuildValue(""));
     PyDict_SetItemString(GPF_Type.tp_dict, "NO_SOURCES", Py_BuildValue(""));
 
-    // Register IndexCoding:
-    IndexCoding_Type.tp_base = &JObject_Type;
-    if (PyType_Ready(&IndexCoding_Type) < 0) {
-        return 0;
-    }
-    Py_INCREF(&IndexCoding_Type);
-    PyModule_AddObject(module, "IndexCoding", (PyObject*) &IndexCoding_Type);
-    // Constants of class IndexCoding_Type:
-    PyDict_SetItemString(IndexCoding_Type.tp_dict, "PROPERTY_NAME_NAME", PyUnicode_FromString("name"));
-    PyDict_SetItemString(IndexCoding_Type.tp_dict, "PROPERTY_NAME_DESCRIPTION", PyUnicode_FromString("description"));
-
-    // Register Term:
-    Term_Type.tp_base = &JObject_Type;
-    if (PyType_Ready(&Term_Type) < 0) {
-        return 0;
-    }
-    Py_INCREF(&Term_Type);
-    PyModule_AddObject(module, "Term", (PyObject*) &Term_Type);
-
-    // Register RasterDataNode:
-    RasterDataNode_Type.tp_base = &JObject_Type;
-    if (PyType_Ready(&RasterDataNode_Type) < 0) {
-        return 0;
-    }
-    Py_INCREF(&RasterDataNode_Type);
-    PyModule_AddObject(module, "RasterDataNode", (PyObject*) &RasterDataNode_Type);
-
     // Register Class:
     Class_Type.tp_base = &JObject_Type;
     if (PyType_Ready(&Class_Type) < 0) {
@@ -7587,14 +7595,6 @@ int BPy_RegisterJObjectSubtypes(PyObject* module)
     }
     Py_INCREF(&ServiceRegistry_Type);
     PyModule_AddObject(module, "ServiceRegistry", (PyObject*) &ServiceRegistry_Type);
-
-    // Register Product_AutoGrouping:
-    Product_AutoGrouping_Type.tp_base = &JObject_Type;
-    if (PyType_Ready(&Product_AutoGrouping_Type) < 0) {
-        return 0;
-    }
-    Py_INCREF(&Product_AutoGrouping_Type);
-    PyModule_AddObject(module, "Product_AutoGrouping", (PyObject*) &Product_AutoGrouping_Type);
 
     // Register PixelPos:
     PixelPos_Type.tp_base = &JObject_Type;
@@ -7612,37 +7612,13 @@ int BPy_RegisterJObjectSubtypes(PyObject* module)
     Py_INCREF(&BitRaster_Type);
     PyModule_AddObject(module, "BitRaster", (PyObject*) &BitRaster_Type);
 
-    // Register ImageOutputStream:
-    ImageOutputStream_Type.tp_base = &JObject_Type;
-    if (PyType_Ready(&ImageOutputStream_Type) < 0) {
+    // Register ProductNode:
+    ProductNode_Type.tp_base = &JObject_Type;
+    if (PyType_Ready(&ProductNode_Type) < 0) {
         return 0;
     }
-    Py_INCREF(&ImageOutputStream_Type);
-    PyModule_AddObject(module, "ImageOutputStream", (PyObject*) &ImageOutputStream_Type);
-
-    // Register Stx:
-    Stx_Type.tp_base = &JObject_Type;
-    if (PyType_Ready(&Stx_Type) < 0) {
-        return 0;
-    }
-    Py_INCREF(&Stx_Type);
-    PyModule_AddObject(module, "Stx", (PyObject*) &Stx_Type);
-
-    // Register Rectangle:
-    Rectangle_Type.tp_base = &JObject_Type;
-    if (PyType_Ready(&Rectangle_Type) < 0) {
-        return 0;
-    }
-    Py_INCREF(&Rectangle_Type);
-    PyModule_AddObject(module, "Rectangle", (PyObject*) &Rectangle_Type);
-
-    // Register Dimension:
-    Dimension_Type.tp_base = &JObject_Type;
-    if (PyType_Ready(&Dimension_Type) < 0) {
-        return 0;
-    }
-    Py_INCREF(&Dimension_Type);
-    PyModule_AddObject(module, "Dimension", (PyObject*) &Dimension_Type);
+    Py_INCREF(&ProductNode_Type);
+    PyModule_AddObject(module, "ProductNode", (PyObject*) &ProductNode_Type);
 
     // Register ProductIO:
     ProductIO_Type.tp_base = &JObject_Type;
@@ -7654,29 +7630,13 @@ int BPy_RegisterJObjectSubtypes(PyObject* module)
     // Constants of class ProductIO_Type:
     PyDict_SetItemString(ProductIO_Type.tp_dict, "DEFAULT_FORMAT_NAME", PyUnicode_FromString("BEAM-DIMAP"));
 
-    // Register ProductNode:
-    ProductNode_Type.tp_base = &JObject_Type;
-    if (PyType_Ready(&ProductNode_Type) < 0) {
+    // Register Rectangle:
+    Rectangle_Type.tp_base = &JObject_Type;
+    if (PyType_Ready(&Rectangle_Type) < 0) {
         return 0;
     }
-    Py_INCREF(&ProductNode_Type);
-    PyModule_AddObject(module, "ProductNode", (PyObject*) &ProductNode_Type);
-
-    // Register AngularDirection:
-    AngularDirection_Type.tp_base = &JObject_Type;
-    if (PyType_Ready(&AngularDirection_Type) < 0) {
-        return 0;
-    }
-    Py_INCREF(&AngularDirection_Type);
-    PyModule_AddObject(module, "AngularDirection", (PyObject*) &AngularDirection_Type);
-
-    // Register SimpleFeatureType:
-    SimpleFeatureType_Type.tp_base = &JObject_Type;
-    if (PyType_Ready(&SimpleFeatureType_Type) < 0) {
-        return 0;
-    }
-    Py_INCREF(&SimpleFeatureType_Type);
-    PyModule_AddObject(module, "SimpleFeatureType", (PyObject*) &SimpleFeatureType_Type);
+    Py_INCREF(&Rectangle_Type);
+    PyModule_AddObject(module, "Rectangle", (PyObject*) &Rectangle_Type);
 
     // Register SampleCoding:
     SampleCoding_Type.tp_base = &JObject_Type;
@@ -7709,22 +7669,6 @@ int BPy_RegisterJObjectSubtypes(PyObject* module)
     }
     Py_INCREF(&ProductReaderPlugIn_Type);
     PyModule_AddObject(module, "ProductReaderPlugIn", (PyObject*) &ProductReaderPlugIn_Type);
-
-    // Register Integer:
-    Integer_Type.tp_base = &JObject_Type;
-    if (PyType_Ready(&Integer_Type) < 0) {
-        return 0;
-    }
-    Py_INCREF(&Integer_Type);
-    PyModule_AddObject(module, "Integer", (PyObject*) &Integer_Type);
-
-    // Register ProductData_UTC:
-    ProductData_UTC_Type.tp_base = &JObject_Type;
-    if (PyType_Ready(&ProductData_UTC_Type) < 0) {
-        return 0;
-    }
-    Py_INCREF(&ProductData_UTC_Type);
-    PyModule_AddObject(module, "ProductData_UTC", (PyObject*) &ProductData_UTC_Type);
 
     // Register Band:
     Band_Type.tp_base = &JObject_Type;
@@ -7770,14 +7714,6 @@ int BPy_RegisterJObjectSubtypes(PyObject* module)
     Py_INCREF(&ColorPaletteDef_Point_Type);
     PyModule_AddObject(module, "ColorPaletteDef_Point", (PyObject*) &ColorPaletteDef_Point_Type);
 
-    // Register RenderedImage:
-    RenderedImage_Type.tp_base = &JObject_Type;
-    if (PyType_Ready(&RenderedImage_Type) < 0) {
-        return 0;
-    }
-    Py_INCREF(&RenderedImage_Type);
-    PyModule_AddObject(module, "RenderedImage", (PyObject*) &RenderedImage_Type);
-
     // Register Placemark:
     Placemark_Type.tp_base = &JObject_Type;
     if (PyType_Ready(&Placemark_Type) < 0) {
@@ -7820,14 +7756,6 @@ int BPy_RegisterJObjectSubtypes(PyObject* module)
     Py_INCREF(&ComponentColorModel_Type);
     PyModule_AddObject(module, "ComponentColorModel", (PyObject*) &ComponentColorModel_Type);
 
-    // Register Iterator:
-    Iterator_Type.tp_base = &JObject_Type;
-    if (PyType_Ready(&Iterator_Type) < 0) {
-        return 0;
-    }
-    Py_INCREF(&Iterator_Type);
-    PyModule_AddObject(module, "Iterator", (PyObject*) &Iterator_Type);
-
     // Register MathTransform:
     MathTransform_Type.tp_base = &JObject_Type;
     if (PyType_Ready(&MathTransform_Type) < 0) {
@@ -7852,68 +7780,6 @@ int BPy_RegisterJObjectSubtypes(PyObject* module)
     Py_INCREF(&ProductWriterPlugIn_Type);
     PyModule_AddObject(module, "ProductWriterPlugIn", (PyObject*) &ProductWriterPlugIn_Type);
 
-    // Register Rectangle2D:
-    Rectangle2D_Type.tp_base = &JObject_Type;
-    if (PyType_Ready(&Rectangle2D_Type) < 0) {
-        return 0;
-    }
-    Py_INCREF(&Rectangle2D_Type);
-    PyModule_AddObject(module, "Rectangle2D", (PyObject*) &Rectangle2D_Type);
-
-    // Register File:
-    File_Type.tp_base = &JObject_Type;
-    if (PyType_Ready(&File_Type) < 0) {
-        return 0;
-    }
-    Py_INCREF(&File_Type);
-    PyModule_AddObject(module, "File", (PyObject*) &File_Type);
-
-    // Register GeoPos:
-    GeoPos_Type.tp_base = &JObject_Type;
-    if (PyType_Ready(&GeoPos_Type) < 0) {
-        return 0;
-    }
-    Py_INCREF(&GeoPos_Type);
-    PyModule_AddObject(module, "GeoPos", (PyObject*) &GeoPos_Type);
-
-    // Register ProductNodeGroup:
-    ProductNodeGroup_Type.tp_base = &JObject_Type;
-    if (PyType_Ready(&ProductNodeGroup_Type) < 0) {
-        return 0;
-    }
-    Py_INCREF(&ProductNodeGroup_Type);
-    PyModule_AddObject(module, "ProductNodeGroup", (PyObject*) &ProductNodeGroup_Type);
-    // Constants of class ProductNodeGroup_Type:
-    PyDict_SetItemString(ProductNodeGroup_Type.tp_dict, "PROPERTY_NAME_NAME", PyUnicode_FromString("name"));
-    PyDict_SetItemString(ProductNodeGroup_Type.tp_dict, "PROPERTY_NAME_DESCRIPTION", PyUnicode_FromString("description"));
-
-    // Register MapProjection:
-    MapProjection_Type.tp_base = &JObject_Type;
-    if (PyType_Ready(&MapProjection_Type) < 0) {
-        return 0;
-    }
-    Py_INCREF(&MapProjection_Type);
-    PyModule_AddObject(module, "MapProjection", (PyObject*) &MapProjection_Type);
-
-    // Register ProductManager:
-    ProductManager_Type.tp_base = &JObject_Type;
-    if (PyType_Ready(&ProductManager_Type) < 0) {
-        return 0;
-    }
-    Py_INCREF(&ProductManager_Type);
-    PyModule_AddObject(module, "ProductManager", (PyObject*) &ProductManager_Type);
-
-    // Register FlagCoding:
-    FlagCoding_Type.tp_base = &JObject_Type;
-    if (PyType_Ready(&FlagCoding_Type) < 0) {
-        return 0;
-    }
-    Py_INCREF(&FlagCoding_Type);
-    PyModule_AddObject(module, "FlagCoding", (PyObject*) &FlagCoding_Type);
-    // Constants of class FlagCoding_Type:
-    PyDict_SetItemString(FlagCoding_Type.tp_dict, "PROPERTY_NAME_NAME", PyUnicode_FromString("name"));
-    PyDict_SetItemString(FlagCoding_Type.tp_dict, "PROPERTY_NAME_DESCRIPTION", PyUnicode_FromString("description"));
-
     // Register IndexColorModel:
     IndexColorModel_Type.tp_base = &JObject_Type;
     if (PyType_Ready(&IndexColorModel_Type) < 0) {
@@ -7922,38 +7788,6 @@ int BPy_RegisterJObjectSubtypes(PyObject* module)
     Py_INCREF(&IndexColorModel_Type);
     PyModule_AddObject(module, "IndexColorModel", (PyObject*) &IndexColorModel_Type);
 
-    // Register OperatorSpiRegistry:
-    OperatorSpiRegistry_Type.tp_base = &JObject_Type;
-    if (PyType_Ready(&OperatorSpiRegistry_Type) < 0) {
-        return 0;
-    }
-    Py_INCREF(&OperatorSpiRegistry_Type);
-    PyModule_AddObject(module, "OperatorSpiRegistry", (PyObject*) &OperatorSpiRegistry_Type);
-
-    // Register Operator:
-    Operator_Type.tp_base = &JObject_Type;
-    if (PyType_Ready(&Operator_Type) < 0) {
-        return 0;
-    }
-    Py_INCREF(&Operator_Type);
-    PyModule_AddObject(module, "Operator", (PyObject*) &Operator_Type);
-
-    // Register ImageInfo_HistogramMatching:
-    ImageInfo_HistogramMatching_Type.tp_base = &JObject_Type;
-    if (PyType_Ready(&ImageInfo_HistogramMatching_Type) < 0) {
-        return 0;
-    }
-    Py_INCREF(&ImageInfo_HistogramMatching_Type);
-    PyModule_AddObject(module, "ImageInfo_HistogramMatching", (PyObject*) &ImageInfo_HistogramMatching_Type);
-
-    // Register BitmaskDef:
-    BitmaskDef_Type.tp_base = &JObject_Type;
-    if (PyType_Ready(&BitmaskDef_Type) < 0) {
-        return 0;
-    }
-    Py_INCREF(&BitmaskDef_Type);
-    PyModule_AddObject(module, "BitmaskDef", (PyObject*) &BitmaskDef_Type);
-
     // Register ProductNodeListener:
     ProductNodeListener_Type.tp_base = &JObject_Type;
     if (PyType_Ready(&ProductNodeListener_Type) < 0) {
@@ -7961,14 +7795,6 @@ int BPy_RegisterJObjectSubtypes(PyObject* module)
     }
     Py_INCREF(&ProductNodeListener_Type);
     PyModule_AddObject(module, "ProductNodeListener", (PyObject*) &ProductNodeListener_Type);
-
-    // Register Map:
-    Map_Type.tp_base = &JObject_Type;
-    if (PyType_Ready(&Map_Type) < 0) {
-        return 0;
-    }
-    Py_INCREF(&Map_Type);
-    PyModule_AddObject(module, "Map", (PyObject*) &Map_Type);
 
     // Register MetadataElement:
     MetadataElement_Type.tp_base = &JObject_Type;
@@ -7981,30 +7807,6 @@ int BPy_RegisterJObjectSubtypes(PyObject* module)
     PyDict_SetItemString(MetadataElement_Type.tp_dict, "PROPERTY_NAME_NAME", PyUnicode_FromString("name"));
     PyDict_SetItemString(MetadataElement_Type.tp_dict, "PROPERTY_NAME_DESCRIPTION", PyUnicode_FromString("description"));
 
-    // Register ProductUtils:
-    ProductUtils_Type.tp_base = &JObject_Type;
-    if (PyType_Ready(&ProductUtils_Type) < 0) {
-        return 0;
-    }
-    Py_INCREF(&ProductUtils_Type);
-    PyModule_AddObject(module, "ProductUtils", (PyObject*) &ProductUtils_Type);
-
-    // Register Datum:
-    Datum_Type.tp_base = &JObject_Type;
-    if (PyType_Ready(&Datum_Type) < 0) {
-        return 0;
-    }
-    Py_INCREF(&Datum_Type);
-    PyModule_AddObject(module, "Datum", (PyObject*) &Datum_Type);
-
-    // Register Pointing:
-    Pointing_Type.tp_base = &JObject_Type;
-    if (PyType_Ready(&Pointing_Type) < 0) {
-        return 0;
-    }
-    Py_INCREF(&Pointing_Type);
-    PyModule_AddObject(module, "Pointing", (PyObject*) &Pointing_Type);
-
     // Register Color:
     Color_Type.tp_base = &JObject_Type;
     if (PyType_Ready(&Color_Type) < 0) {
@@ -8012,22 +7814,6 @@ int BPy_RegisterJObjectSubtypes(PyObject* module)
     }
     Py_INCREF(&Color_Type);
     PyModule_AddObject(module, "Color", (PyObject*) &Color_Type);
-
-    // Register PlacemarkDescriptor:
-    PlacemarkDescriptor_Type.tp_base = &JObject_Type;
-    if (PyType_Ready(&PlacemarkDescriptor_Type) < 0) {
-        return 0;
-    }
-    Py_INCREF(&PlacemarkDescriptor_Type);
-    PyModule_AddObject(module, "PlacemarkDescriptor", (PyObject*) &PlacemarkDescriptor_Type);
-
-    // Register PointingFactory:
-    PointingFactory_Type.tp_base = &JObject_Type;
-    if (PyType_Ready(&PointingFactory_Type) < 0) {
-        return 0;
-    }
-    Py_INCREF(&PointingFactory_Type);
-    PyModule_AddObject(module, "PointingFactory", (PyObject*) &PointingFactory_Type);
 
     // Register TransectProfileData:
     TransectProfileData_Type.tp_base = &JObject_Type;
@@ -8066,14 +7852,6 @@ int BPy_RegisterJObjectSubtypes(PyObject* module)
     PyDict_SetItemString(Product_Type.tp_dict, "PROPERTY_NAME_NAME", PyUnicode_FromString("name"));
     PyDict_SetItemString(Product_Type.tp_dict, "PROPERTY_NAME_DESCRIPTION", PyUnicode_FromString("description"));
 
-    // Register Point2D:
-    Point2D_Type.tp_base = &JObject_Type;
-    if (PyType_Ready(&Point2D_Type) < 0) {
-        return 0;
-    }
-    Py_INCREF(&Point2D_Type);
-    PyModule_AddObject(module, "Point2D", (PyObject*) &Point2D_Type);
-
     // Register ProductVisitor:
     ProductVisitor_Type.tp_base = &JObject_Type;
     if (PyType_Ready(&ProductVisitor_Type) < 0) {
@@ -8081,14 +7859,6 @@ int BPy_RegisterJObjectSubtypes(PyObject* module)
     }
     Py_INCREF(&ProductVisitor_Type);
     PyModule_AddObject(module, "ProductVisitor", (PyObject*) &ProductVisitor_Type);
-
-    // Register Scaling:
-    Scaling_Type.tp_base = &JObject_Type;
-    if (PyType_Ready(&Scaling_Type) < 0) {
-        return 0;
-    }
-    Py_INCREF(&Scaling_Type);
-    PyModule_AddObject(module, "Scaling", (PyObject*) &Scaling_Type);
 
     // Register WritableNamespace:
     WritableNamespace_Type.tp_base = &JObject_Type;
@@ -8114,14 +7884,6 @@ int BPy_RegisterJObjectSubtypes(PyObject* module)
     Py_INCREF(&MultiLevelImage_Type);
     PyModule_AddObject(module, "MultiLevelImage", (PyObject*) &MultiLevelImage_Type);
 
-    // Register ROI:
-    ROI_Type.tp_base = &JObject_Type;
-    if (PyType_Ready(&ROI_Type) < 0) {
-        return 0;
-    }
-    Py_INCREF(&ROI_Type);
-    PyModule_AddObject(module, "ROI", (PyObject*) &ROI_Type);
-
     // Register RenderingHints_Key:
     RenderingHints_Key_Type.tp_base = &JObject_Type;
     if (PyType_Ready(&RenderingHints_Key_Type) < 0) {
@@ -8130,13 +7892,13 @@ int BPy_RegisterJObjectSubtypes(PyObject* module)
     Py_INCREF(&RenderingHints_Key_Type);
     PyModule_AddObject(module, "RenderingHints_Key", (PyObject*) &RenderingHints_Key_Type);
 
-    // Register Collection:
-    Collection_Type.tp_base = &JObject_Type;
-    if (PyType_Ready(&Collection_Type) < 0) {
+    // Register ROI:
+    ROI_Type.tp_base = &JObject_Type;
+    if (PyType_Ready(&ROI_Type) < 0) {
         return 0;
     }
-    Py_INCREF(&Collection_Type);
-    PyModule_AddObject(module, "Collection", (PyObject*) &Collection_Type);
+    Py_INCREF(&ROI_Type);
+    PyModule_AddObject(module, "ROI", (PyObject*) &ROI_Type);
 
     // Register ProductManager_Listener:
     ProductManager_Listener_Type.tp_base = &JObject_Type;
@@ -8146,14 +7908,6 @@ int BPy_RegisterJObjectSubtypes(PyObject* module)
     Py_INCREF(&ProductManager_Listener_Type);
     PyModule_AddObject(module, "ProductManager_Listener", (PyObject*) &ProductManager_Listener_Type);
 
-    // Register GeoTIFFMetadata:
-    GeoTIFFMetadata_Type.tp_base = &JObject_Type;
-    if (PyType_Ready(&GeoTIFFMetadata_Type) < 0) {
-        return 0;
-    }
-    Py_INCREF(&GeoTIFFMetadata_Type);
-    PyModule_AddObject(module, "GeoTIFFMetadata", (PyObject*) &GeoTIFFMetadata_Type);
-
     // Register ColorPaletteDef:
     ColorPaletteDef_Type.tp_base = &JObject_Type;
     if (PyType_Ready(&ColorPaletteDef_Type) < 0) {
@@ -8162,13 +7916,13 @@ int BPy_RegisterJObjectSubtypes(PyObject* module)
     Py_INCREF(&ColorPaletteDef_Type);
     PyModule_AddObject(module, "ColorPaletteDef", (PyObject*) &ColorPaletteDef_Type);
 
-    // Register MapInfo:
-    MapInfo_Type.tp_base = &JObject_Type;
-    if (PyType_Ready(&MapInfo_Type) < 0) {
+    // Register Geometry:
+    Geometry_Type.tp_base = &JObject_Type;
+    if (PyType_Ready(&Geometry_Type) < 0) {
         return 0;
     }
-    Py_INCREF(&MapInfo_Type);
-    PyModule_AddObject(module, "MapInfo", (PyObject*) &MapInfo_Type);
+    Py_INCREF(&Geometry_Type);
+    PyModule_AddObject(module, "Geometry", (PyObject*) &Geometry_Type);
 
     // Register ImageInfo:
     ImageInfo_Type.tp_base = &JObject_Type;
@@ -8183,14 +7937,6 @@ int BPy_RegisterJObjectSubtypes(PyObject* module)
     PyDict_SetItemString(ImageInfo_Type.tp_dict, "HISTOGRAM_MATCHING_EQUALIZE", PyUnicode_FromString("equalize"));
     PyDict_SetItemString(ImageInfo_Type.tp_dict, "HISTOGRAM_MATCHING_NORMALIZE", PyUnicode_FromString("normalize"));
 
-    // Register Histogram:
-    Histogram_Type.tp_base = &JObject_Type;
-    if (PyType_Ready(&Histogram_Type) < 0) {
-        return 0;
-    }
-    Py_INCREF(&Histogram_Type);
-    PyModule_AddObject(module, "Histogram", (PyObject*) &Histogram_Type);
-
     // Register String:
     String_Type.tp_base = &JObject_Type;
     if (PyType_Ready(&String_Type) < 0) {
@@ -8199,21 +7945,13 @@ int BPy_RegisterJObjectSubtypes(PyObject* module)
     Py_INCREF(&String_Type);
     PyModule_AddObject(module, "String", (PyObject*) &String_Type);
 
-    // Register BufferedImage:
-    BufferedImage_Type.tp_base = &JObject_Type;
-    if (PyType_Ready(&BufferedImage_Type) < 0) {
+    // Register Histogram:
+    Histogram_Type.tp_base = &JObject_Type;
+    if (PyType_Ready(&Histogram_Type) < 0) {
         return 0;
     }
-    Py_INCREF(&BufferedImage_Type);
-    PyModule_AddObject(module, "BufferedImage", (PyObject*) &BufferedImage_Type);
-
-    // Register RGBChannelDef:
-    RGBChannelDef_Type.tp_base = &JObject_Type;
-    if (PyType_Ready(&RGBChannelDef_Type) < 0) {
-        return 0;
-    }
-    Py_INCREF(&RGBChannelDef_Type);
-    PyModule_AddObject(module, "RGBChannelDef", (PyObject*) &RGBChannelDef_Type);
+    Py_INCREF(&Histogram_Type);
+    PyModule_AddObject(module, "Histogram", (PyObject*) &Histogram_Type);
 
     // Register TiePointGrid:
     TiePointGrid_Type.tp_base = &JObject_Type;
@@ -8243,6 +7981,394 @@ int BPy_RegisterJObjectSubtypes(PyObject* module)
     PyDict_SetItemString(TiePointGrid_Type.tp_dict, "PROPERTY_NAME_NAME", PyUnicode_FromString("name"));
     PyDict_SetItemString(TiePointGrid_Type.tp_dict, "PROPERTY_NAME_DESCRIPTION", PyUnicode_FromString("description"));
 
+    // Register RGBChannelDef:
+    RGBChannelDef_Type.tp_base = &JObject_Type;
+    if (PyType_Ready(&RGBChannelDef_Type) < 0) {
+        return 0;
+    }
+    Py_INCREF(&RGBChannelDef_Type);
+    PyModule_AddObject(module, "RGBChannelDef", (PyObject*) &RGBChannelDef_Type);
+
+    // Register VectorDataNode:
+    VectorDataNode_Type.tp_base = &JObject_Type;
+    if (PyType_Ready(&VectorDataNode_Type) < 0) {
+        return 0;
+    }
+    Py_INCREF(&VectorDataNode_Type);
+    PyModule_AddObject(module, "VectorDataNode", (PyObject*) &VectorDataNode_Type);
+
+    // Register ImageInputStream:
+    ImageInputStream_Type.tp_base = &JObject_Type;
+    if (PyType_Ready(&ImageInputStream_Type) < 0) {
+        return 0;
+    }
+    Py_INCREF(&ImageInputStream_Type);
+    PyModule_AddObject(module, "ImageInputStream", (PyObject*) &ImageInputStream_Type);
+
+    // Register RenderingHints:
+    RenderingHints_Type.tp_base = &JObject_Type;
+    if (PyType_Ready(&RenderingHints_Type) < 0) {
+        return 0;
+    }
+    Py_INCREF(&RenderingHints_Type);
+    PyModule_AddObject(module, "RenderingHints", (PyObject*) &RenderingHints_Type);
+
+    // Register Shape:
+    Shape_Type.tp_base = &JObject_Type;
+    if (PyType_Ready(&Shape_Type) < 0) {
+        return 0;
+    }
+    Py_INCREF(&Shape_Type);
+    PyModule_AddObject(module, "Shape", (PyObject*) &Shape_Type);
+
+    // Register MapTransform:
+    MapTransform_Type.tp_base = &JObject_Type;
+    if (PyType_Ready(&MapTransform_Type) < 0) {
+        return 0;
+    }
+    Py_INCREF(&MapTransform_Type);
+    PyModule_AddObject(module, "MapTransform", (PyObject*) &MapTransform_Type);
+
+    // Register Parser:
+    Parser_Type.tp_base = &JObject_Type;
+    if (PyType_Ready(&Parser_Type) < 0) {
+        return 0;
+    }
+    Py_INCREF(&Parser_Type);
+    PyModule_AddObject(module, "Parser", (PyObject*) &Parser_Type);
+
+    // Register ProductData:
+    ProductData_Type.tp_base = &JObject_Type;
+    if (PyType_Ready(&ProductData_Type) < 0) {
+        return 0;
+    }
+    Py_INCREF(&ProductData_Type);
+    PyModule_AddObject(module, "ProductData", (PyObject*) &ProductData_Type);
+    // Constants of class ProductData_Type:
+    PyDict_SetItemString(ProductData_Type.tp_dict, "TYPE_UNDEFINED", PyLong_FromLong(0));
+    PyDict_SetItemString(ProductData_Type.tp_dict, "TYPE_INT8", PyLong_FromLong(10));
+    PyDict_SetItemString(ProductData_Type.tp_dict, "TYPE_INT16", PyLong_FromLong(11));
+    PyDict_SetItemString(ProductData_Type.tp_dict, "TYPE_INT32", PyLong_FromLong(12));
+    PyDict_SetItemString(ProductData_Type.tp_dict, "TYPE_UINT8", PyLong_FromLong(20));
+    PyDict_SetItemString(ProductData_Type.tp_dict, "TYPE_UINT16", PyLong_FromLong(21));
+    PyDict_SetItemString(ProductData_Type.tp_dict, "TYPE_UINT32", PyLong_FromLong(22));
+    PyDict_SetItemString(ProductData_Type.tp_dict, "TYPE_FLOAT32", PyLong_FromLong(30));
+    PyDict_SetItemString(ProductData_Type.tp_dict, "TYPE_FLOAT64", PyLong_FromLong(31));
+    PyDict_SetItemString(ProductData_Type.tp_dict, "TYPE_ASCII", PyLong_FromLong(41));
+    PyDict_SetItemString(ProductData_Type.tp_dict, "TYPE_UTC", PyLong_FromLong(51));
+    PyDict_SetItemString(ProductData_Type.tp_dict, "TYPESTRING_INT8", PyUnicode_FromString("int8"));
+    PyDict_SetItemString(ProductData_Type.tp_dict, "TYPESTRING_INT16", PyUnicode_FromString("int16"));
+    PyDict_SetItemString(ProductData_Type.tp_dict, "TYPESTRING_INT32", PyUnicode_FromString("int32"));
+    PyDict_SetItemString(ProductData_Type.tp_dict, "TYPESTRING_UINT8", PyUnicode_FromString("uint8"));
+    PyDict_SetItemString(ProductData_Type.tp_dict, "TYPESTRING_UINT16", PyUnicode_FromString("uint16"));
+    PyDict_SetItemString(ProductData_Type.tp_dict, "TYPESTRING_UINT32", PyUnicode_FromString("uint32"));
+    PyDict_SetItemString(ProductData_Type.tp_dict, "TYPESTRING_FLOAT32", PyUnicode_FromString("float32"));
+    PyDict_SetItemString(ProductData_Type.tp_dict, "TYPESTRING_FLOAT64", PyUnicode_FromString("float64"));
+    PyDict_SetItemString(ProductData_Type.tp_dict, "TYPESTRING_ASCII", PyUnicode_FromString("ascii"));
+    PyDict_SetItemString(ProductData_Type.tp_dict, "TYPESTRING_UTC", PyUnicode_FromString("utc"));
+
+    // Register OperatorSpi:
+    OperatorSpi_Type.tp_base = &JObject_Type;
+    if (PyType_Ready(&OperatorSpi_Type) < 0) {
+        return 0;
+    }
+    Py_INCREF(&OperatorSpi_Type);
+    PyModule_AddObject(module, "OperatorSpi", (PyObject*) &OperatorSpi_Type);
+
+    // Register Double:
+    Double_Type.tp_base = &JObject_Type;
+    if (PyType_Ready(&Double_Type) < 0) {
+        return 0;
+    }
+    Py_INCREF(&Double_Type);
+    PyModule_AddObject(module, "Double", (PyObject*) &Double_Type);
+
+    // Register Term:
+    Term_Type.tp_base = &JObject_Type;
+    if (PyType_Ready(&Term_Type) < 0) {
+        return 0;
+    }
+    Py_INCREF(&Term_Type);
+    PyModule_AddObject(module, "Term", (PyObject*) &Term_Type);
+
+    // Register RasterDataNode:
+    RasterDataNode_Type.tp_base = &JObject_Type;
+    if (PyType_Ready(&RasterDataNode_Type) < 0) {
+        return 0;
+    }
+    Py_INCREF(&RasterDataNode_Type);
+    PyModule_AddObject(module, "RasterDataNode", (PyObject*) &RasterDataNode_Type);
+
+    // Register Product_AutoGrouping:
+    Product_AutoGrouping_Type.tp_base = &JObject_Type;
+    if (PyType_Ready(&Product_AutoGrouping_Type) < 0) {
+        return 0;
+    }
+    Py_INCREF(&Product_AutoGrouping_Type);
+    PyModule_AddObject(module, "Product_AutoGrouping", (PyObject*) &Product_AutoGrouping_Type);
+
+    // Register Dimension:
+    Dimension_Type.tp_base = &JObject_Type;
+    if (PyType_Ready(&Dimension_Type) < 0) {
+        return 0;
+    }
+    Py_INCREF(&Dimension_Type);
+    PyModule_AddObject(module, "Dimension", (PyObject*) &Dimension_Type);
+
+    // Register Stx:
+    Stx_Type.tp_base = &JObject_Type;
+    if (PyType_Ready(&Stx_Type) < 0) {
+        return 0;
+    }
+    Py_INCREF(&Stx_Type);
+    PyModule_AddObject(module, "Stx", (PyObject*) &Stx_Type);
+
+    // Register ImageOutputStream:
+    ImageOutputStream_Type.tp_base = &JObject_Type;
+    if (PyType_Ready(&ImageOutputStream_Type) < 0) {
+        return 0;
+    }
+    Py_INCREF(&ImageOutputStream_Type);
+    PyModule_AddObject(module, "ImageOutputStream", (PyObject*) &ImageOutputStream_Type);
+
+    // Register SimpleFeatureType:
+    SimpleFeatureType_Type.tp_base = &JObject_Type;
+    if (PyType_Ready(&SimpleFeatureType_Type) < 0) {
+        return 0;
+    }
+    Py_INCREF(&SimpleFeatureType_Type);
+    PyModule_AddObject(module, "SimpleFeatureType", (PyObject*) &SimpleFeatureType_Type);
+
+    // Register AngularDirection:
+    AngularDirection_Type.tp_base = &JObject_Type;
+    if (PyType_Ready(&AngularDirection_Type) < 0) {
+        return 0;
+    }
+    Py_INCREF(&AngularDirection_Type);
+    PyModule_AddObject(module, "AngularDirection", (PyObject*) &AngularDirection_Type);
+
+    // Register ProductData_UTC:
+    ProductData_UTC_Type.tp_base = &JObject_Type;
+    if (PyType_Ready(&ProductData_UTC_Type) < 0) {
+        return 0;
+    }
+    Py_INCREF(&ProductData_UTC_Type);
+    PyModule_AddObject(module, "ProductData_UTC", (PyObject*) &ProductData_UTC_Type);
+
+    // Register Integer:
+    Integer_Type.tp_base = &JObject_Type;
+    if (PyType_Ready(&Integer_Type) < 0) {
+        return 0;
+    }
+    Py_INCREF(&Integer_Type);
+    PyModule_AddObject(module, "Integer", (PyObject*) &Integer_Type);
+
+    // Register RenderedImage:
+    RenderedImage_Type.tp_base = &JObject_Type;
+    if (PyType_Ready(&RenderedImage_Type) < 0) {
+        return 0;
+    }
+    Py_INCREF(&RenderedImage_Type);
+    PyModule_AddObject(module, "RenderedImage", (PyObject*) &RenderedImage_Type);
+
+    // Register Iterator:
+    Iterator_Type.tp_base = &JObject_Type;
+    if (PyType_Ready(&Iterator_Type) < 0) {
+        return 0;
+    }
+    Py_INCREF(&Iterator_Type);
+    PyModule_AddObject(module, "Iterator", (PyObject*) &Iterator_Type);
+
+    // Register File:
+    File_Type.tp_base = &JObject_Type;
+    if (PyType_Ready(&File_Type) < 0) {
+        return 0;
+    }
+    Py_INCREF(&File_Type);
+    PyModule_AddObject(module, "File", (PyObject*) &File_Type);
+
+    // Register GeoPos:
+    GeoPos_Type.tp_base = &JObject_Type;
+    if (PyType_Ready(&GeoPos_Type) < 0) {
+        return 0;
+    }
+    Py_INCREF(&GeoPos_Type);
+    PyModule_AddObject(module, "GeoPos", (PyObject*) &GeoPos_Type);
+
+    // Register ProductNodeGroup:
+    ProductNodeGroup_Type.tp_base = &JObject_Type;
+    if (PyType_Ready(&ProductNodeGroup_Type) < 0) {
+        return 0;
+    }
+    Py_INCREF(&ProductNodeGroup_Type);
+    PyModule_AddObject(module, "ProductNodeGroup", (PyObject*) &ProductNodeGroup_Type);
+    // Constants of class ProductNodeGroup_Type:
+    PyDict_SetItemString(ProductNodeGroup_Type.tp_dict, "PROPERTY_NAME_NAME", PyUnicode_FromString("name"));
+    PyDict_SetItemString(ProductNodeGroup_Type.tp_dict, "PROPERTY_NAME_DESCRIPTION", PyUnicode_FromString("description"));
+
+    // Register ProductManager:
+    ProductManager_Type.tp_base = &JObject_Type;
+    if (PyType_Ready(&ProductManager_Type) < 0) {
+        return 0;
+    }
+    Py_INCREF(&ProductManager_Type);
+    PyModule_AddObject(module, "ProductManager", (PyObject*) &ProductManager_Type);
+
+    // Register MapProjection:
+    MapProjection_Type.tp_base = &JObject_Type;
+    if (PyType_Ready(&MapProjection_Type) < 0) {
+        return 0;
+    }
+    Py_INCREF(&MapProjection_Type);
+    PyModule_AddObject(module, "MapProjection", (PyObject*) &MapProjection_Type);
+
+    // Register FlagCoding:
+    FlagCoding_Type.tp_base = &JObject_Type;
+    if (PyType_Ready(&FlagCoding_Type) < 0) {
+        return 0;
+    }
+    Py_INCREF(&FlagCoding_Type);
+    PyModule_AddObject(module, "FlagCoding", (PyObject*) &FlagCoding_Type);
+    // Constants of class FlagCoding_Type:
+    PyDict_SetItemString(FlagCoding_Type.tp_dict, "PROPERTY_NAME_NAME", PyUnicode_FromString("name"));
+    PyDict_SetItemString(FlagCoding_Type.tp_dict, "PROPERTY_NAME_DESCRIPTION", PyUnicode_FromString("description"));
+
+    // Register Operator:
+    Operator_Type.tp_base = &JObject_Type;
+    if (PyType_Ready(&Operator_Type) < 0) {
+        return 0;
+    }
+    Py_INCREF(&Operator_Type);
+    PyModule_AddObject(module, "Operator", (PyObject*) &Operator_Type);
+
+    // Register OperatorSpiRegistry:
+    OperatorSpiRegistry_Type.tp_base = &JObject_Type;
+    if (PyType_Ready(&OperatorSpiRegistry_Type) < 0) {
+        return 0;
+    }
+    Py_INCREF(&OperatorSpiRegistry_Type);
+    PyModule_AddObject(module, "OperatorSpiRegistry", (PyObject*) &OperatorSpiRegistry_Type);
+
+    // Register BitmaskDef:
+    BitmaskDef_Type.tp_base = &JObject_Type;
+    if (PyType_Ready(&BitmaskDef_Type) < 0) {
+        return 0;
+    }
+    Py_INCREF(&BitmaskDef_Type);
+    PyModule_AddObject(module, "BitmaskDef", (PyObject*) &BitmaskDef_Type);
+
+    // Register ImageInfo_HistogramMatching:
+    ImageInfo_HistogramMatching_Type.tp_base = &JObject_Type;
+    if (PyType_Ready(&ImageInfo_HistogramMatching_Type) < 0) {
+        return 0;
+    }
+    Py_INCREF(&ImageInfo_HistogramMatching_Type);
+    PyModule_AddObject(module, "ImageInfo_HistogramMatching", (PyObject*) &ImageInfo_HistogramMatching_Type);
+
+    // Register Datum:
+    Datum_Type.tp_base = &JObject_Type;
+    if (PyType_Ready(&Datum_Type) < 0) {
+        return 0;
+    }
+    Py_INCREF(&Datum_Type);
+    PyModule_AddObject(module, "Datum", (PyObject*) &Datum_Type);
+
+    // Register ProductUtils:
+    ProductUtils_Type.tp_base = &JObject_Type;
+    if (PyType_Ready(&ProductUtils_Type) < 0) {
+        return 0;
+    }
+    Py_INCREF(&ProductUtils_Type);
+    PyModule_AddObject(module, "ProductUtils", (PyObject*) &ProductUtils_Type);
+
+    // Register Map:
+    Map_Type.tp_base = &JObject_Type;
+    if (PyType_Ready(&Map_Type) < 0) {
+        return 0;
+    }
+    Py_INCREF(&Map_Type);
+    PyModule_AddObject(module, "Map", (PyObject*) &Map_Type);
+
+    // Register SubsetOp:
+    SubsetOp_Type.tp_base = &JObject_Type;
+    if (PyType_Ready(&SubsetOp_Type) < 0) {
+        return 0;
+    }
+    Py_INCREF(&SubsetOp_Type);
+    PyModule_AddObject(module, "SubsetOp", (PyObject*) &SubsetOp_Type);
+
+    // Register Pointing:
+    Pointing_Type.tp_base = &JObject_Type;
+    if (PyType_Ready(&Pointing_Type) < 0) {
+        return 0;
+    }
+    Py_INCREF(&Pointing_Type);
+    PyModule_AddObject(module, "Pointing", (PyObject*) &Pointing_Type);
+
+    // Register PointingFactory:
+    PointingFactory_Type.tp_base = &JObject_Type;
+    if (PyType_Ready(&PointingFactory_Type) < 0) {
+        return 0;
+    }
+    Py_INCREF(&PointingFactory_Type);
+    PyModule_AddObject(module, "PointingFactory", (PyObject*) &PointingFactory_Type);
+
+    // Register PlacemarkDescriptor:
+    PlacemarkDescriptor_Type.tp_base = &JObject_Type;
+    if (PyType_Ready(&PlacemarkDescriptor_Type) < 0) {
+        return 0;
+    }
+    Py_INCREF(&PlacemarkDescriptor_Type);
+    PyModule_AddObject(module, "PlacemarkDescriptor", (PyObject*) &PlacemarkDescriptor_Type);
+
+    // Register Point2D:
+    Point2D_Type.tp_base = &JObject_Type;
+    if (PyType_Ready(&Point2D_Type) < 0) {
+        return 0;
+    }
+    Py_INCREF(&Point2D_Type);
+    PyModule_AddObject(module, "Point2D", (PyObject*) &Point2D_Type);
+
+    // Register Scaling:
+    Scaling_Type.tp_base = &JObject_Type;
+    if (PyType_Ready(&Scaling_Type) < 0) {
+        return 0;
+    }
+    Py_INCREF(&Scaling_Type);
+    PyModule_AddObject(module, "Scaling", (PyObject*) &Scaling_Type);
+
+    // Register Collection:
+    Collection_Type.tp_base = &JObject_Type;
+    if (PyType_Ready(&Collection_Type) < 0) {
+        return 0;
+    }
+    Py_INCREF(&Collection_Type);
+    PyModule_AddObject(module, "Collection", (PyObject*) &Collection_Type);
+
+    // Register GeoTIFFMetadata:
+    GeoTIFFMetadata_Type.tp_base = &JObject_Type;
+    if (PyType_Ready(&GeoTIFFMetadata_Type) < 0) {
+        return 0;
+    }
+    Py_INCREF(&GeoTIFFMetadata_Type);
+    PyModule_AddObject(module, "GeoTIFFMetadata", (PyObject*) &GeoTIFFMetadata_Type);
+
+    // Register MapInfo:
+    MapInfo_Type.tp_base = &JObject_Type;
+    if (PyType_Ready(&MapInfo_Type) < 0) {
+        return 0;
+    }
+    Py_INCREF(&MapInfo_Type);
+    PyModule_AddObject(module, "MapInfo", (PyObject*) &MapInfo_Type);
+
+    // Register BufferedImage:
+    BufferedImage_Type.tp_base = &JObject_Type;
+    if (PyType_Ready(&BufferedImage_Type) < 0) {
+        return 0;
+    }
+    Py_INCREF(&BufferedImage_Type);
+    PyModule_AddObject(module, "BufferedImage", (PyObject*) &BufferedImage_Type);
+
     // Register SimpleFeature:
     SimpleFeature_Type.tp_base = &JObject_Type;
     if (PyType_Ready(&SimpleFeature_Type) < 0) {
@@ -8267,6 +8393,14 @@ int BPy_RegisterJObjectSubtypes(PyObject* module)
     Py_INCREF(&ProductWriter_Type);
     PyModule_AddObject(module, "ProductWriter", (PyObject*) &ProductWriter_Type);
 
+    // Register ProgressMonitor:
+    ProgressMonitor_Type.tp_base = &JObject_Type;
+    if (PyType_Ready(&ProgressMonitor_Type) < 0) {
+        return 0;
+    }
+    Py_INCREF(&ProgressMonitor_Type);
+    PyModule_AddObject(module, "ProgressMonitor", (PyObject*) &ProgressMonitor_Type);
+
     // Register MetadataAttribute:
     MetadataAttribute_Type.tp_base = &JObject_Type;
     if (PyType_Ready(&MetadataAttribute_Type) < 0) {
@@ -8282,22 +8416,6 @@ int BPy_RegisterJObjectSubtypes(PyObject* module)
     PyDict_SetItemString(MetadataAttribute_Type.tp_dict, "PROPERTY_NAME_NAME", PyUnicode_FromString("name"));
     PyDict_SetItemString(MetadataAttribute_Type.tp_dict, "PROPERTY_NAME_DESCRIPTION", PyUnicode_FromString("description"));
 
-    // Register ProgressMonitor:
-    ProgressMonitor_Type.tp_base = &JObject_Type;
-    if (PyType_Ready(&ProgressMonitor_Type) < 0) {
-        return 0;
-    }
-    Py_INCREF(&ProgressMonitor_Type);
-    PyModule_AddObject(module, "ProgressMonitor", (PyObject*) &ProgressMonitor_Type);
-
-    // Register VectorDataNode:
-    VectorDataNode_Type.tp_base = &JObject_Type;
-    if (PyType_Ready(&VectorDataNode_Type) < 0) {
-        return 0;
-    }
-    Py_INCREF(&VectorDataNode_Type);
-    PyModule_AddObject(module, "VectorDataNode", (PyObject*) &VectorDataNode_Type);
-
     // Register GeneralPath:
     GeneralPath_Type.tp_base = &JObject_Type;
     if (PyType_Ready(&GeneralPath_Type) < 0) {
@@ -8305,22 +8423,6 @@ int BPy_RegisterJObjectSubtypes(PyObject* module)
     }
     Py_INCREF(&GeneralPath_Type);
     PyModule_AddObject(module, "GeneralPath", (PyObject*) &GeneralPath_Type);
-
-    // Register ImageInputStream:
-    ImageInputStream_Type.tp_base = &JObject_Type;
-    if (PyType_Ready(&ImageInputStream_Type) < 0) {
-        return 0;
-    }
-    Py_INCREF(&ImageInputStream_Type);
-    PyModule_AddObject(module, "ImageInputStream", (PyObject*) &ImageInputStream_Type);
-
-    // Register RenderingHints:
-    RenderingHints_Type.tp_base = &JObject_Type;
-    if (PyType_Ready(&RenderingHints_Type) < 0) {
-        return 0;
-    }
-    Py_INCREF(&RenderingHints_Type);
-    PyModule_AddObject(module, "RenderingHints", (PyObject*) &RenderingHints_Type);
 
     return 1;
 }
@@ -8455,99 +8557,100 @@ jboolean BPy_InitApi(void)
     if (!BPy_InitJClass(&BPy_HashSet_Class, "java/util/HashSet")) return 0;
     if (!BPy_InitJClass(&BPy_ArrayList_Class, "java/util/ArrayList")) return 0;
 
-    if (!BPy_InitJClass(&BPy_Shape_Class, "java/awt/Shape")) return 0;
-    if (!BPy_InitJClass(&BPy_MapTransform_Class, "org/esa/beam/framework/dataop/maptransf/MapTransform")) return 0;
     if (!BPy_InitJClass(&BPy_ImageGeometry_Class, "org/esa/beam/framework/datamodel/ImageGeometry")) return 0;
-    if (!BPy_InitJClass(&BPy_Parser_Class, "com/bc/jexp/Parser")) return 0;
     if (!BPy_InitJClass(&BPy_GeoCoding_Class, "org/esa/beam/framework/datamodel/GeoCoding")) return 0;
-    if (!BPy_InitJClass(&BPy_ProductData_Class, "org/esa/beam/framework/datamodel/ProductData")) return 0;
-    if (!BPy_InitJClass(&BPy_OperatorSpi_Class, "org/esa/beam/framework/gpf/OperatorSpi")) return 0;
     if (!BPy_InitJClass(&BPy_AffineTransform_Class, "java/awt/geom/AffineTransform")) return 0;
     if (!BPy_InitJClass(&BPy_Mask_Class, "org/esa/beam/framework/datamodel/Mask")) return 0;
-    if (!BPy_InitJClass(&BPy_GPF_Class, "org/esa/beam/framework/gpf/GPF")) return 0;
     if (!BPy_InitJClass(&BPy_IndexCoding_Class, "org/esa/beam/framework/datamodel/IndexCoding")) return 0;
-    if (!BPy_InitJClass(&BPy_Term_Class, "com/bc/jexp/Term")) return 0;
-    if (!BPy_InitJClass(&BPy_RasterDataNode_Class, "org/esa/beam/framework/datamodel/RasterDataNode")) return 0;
+    if (!BPy_InitJClass(&BPy_GPF_Class, "org/esa/beam/framework/gpf/GPF")) return 0;
     if (!BPy_InitJClass(&BPy_Class_Class, "java/lang/Class")) return 0;
     if (!BPy_InitJClass(&BPy_ServiceRegistry_Class, "com/bc/ceres/core/ServiceRegistry")) return 0;
-    if (!BPy_InitJClass(&BPy_Product_AutoGrouping_Class, "org/esa/beam/framework/datamodel/Product$AutoGrouping")) return 0;
     if (!BPy_InitJClass(&BPy_PixelPos_Class, "org/esa/beam/framework/datamodel/PixelPos")) return 0;
     if (!BPy_InitJClass(&BPy_BitRaster_Class, "org/esa/beam/util/BitRaster")) return 0;
-    if (!BPy_InitJClass(&BPy_ImageOutputStream_Class, "javax/imageio/stream/ImageOutputStream")) return 0;
-    if (!BPy_InitJClass(&BPy_Stx_Class, "org/esa/beam/framework/datamodel/Stx")) return 0;
-    if (!BPy_InitJClass(&BPy_Rectangle_Class, "java/awt/Rectangle")) return 0;
-    if (!BPy_InitJClass(&BPy_Dimension_Class, "java/awt/Dimension")) return 0;
-    if (!BPy_InitJClass(&BPy_ProductIO_Class, "org/esa/beam/framework/dataio/ProductIO")) return 0;
     if (!BPy_InitJClass(&BPy_ProductNode_Class, "org/esa/beam/framework/datamodel/ProductNode")) return 0;
-    if (!BPy_InitJClass(&BPy_AngularDirection_Class, "org/esa/beam/framework/datamodel/AngularDirection")) return 0;
-    if (!BPy_InitJClass(&BPy_SimpleFeatureType_Class, "org/opengis/feature/simple/SimpleFeatureType")) return 0;
+    if (!BPy_InitJClass(&BPy_ProductIO_Class, "org/esa/beam/framework/dataio/ProductIO")) return 0;
+    if (!BPy_InitJClass(&BPy_Rectangle_Class, "java/awt/Rectangle")) return 0;
     if (!BPy_InitJClass(&BPy_SampleCoding_Class, "org/esa/beam/framework/datamodel/SampleCoding")) return 0;
     if (!BPy_InitJClass(&BPy_Object_Class, "java/lang/Object")) return 0;
     if (!BPy_InitJClass(&BPy_ProductReader_Class, "org/esa/beam/framework/dataio/ProductReader")) return 0;
     if (!BPy_InitJClass(&BPy_ProductReaderPlugIn_Class, "org/esa/beam/framework/dataio/ProductReaderPlugIn")) return 0;
-    if (!BPy_InitJClass(&BPy_ProductData_UTC_Class, "org/esa/beam/framework/datamodel/ProductData$UTC")) return 0;
     if (!BPy_InitJClass(&BPy_Band_Class, "org/esa/beam/framework/datamodel/Band")) return 0;
     if (!BPy_InitJClass(&BPy_ColorPaletteDef_Point_Class, "org/esa/beam/framework/datamodel/ColorPaletteDef$Point")) return 0;
-    if (!BPy_InitJClass(&BPy_RenderedImage_Class, "java/awt/image/RenderedImage")) return 0;
     if (!BPy_InitJClass(&BPy_Placemark_Class, "org/esa/beam/framework/datamodel/Placemark")) return 0;
     if (!BPy_InitJClass(&BPy_IndexValidator_Class, "org/esa/beam/util/math/IndexValidator")) return 0;
     if (!BPy_InitJClass(&BPy_Area_Class, "java/awt/geom/Area")) return 0;
     if (!BPy_InitJClass(&BPy_ComponentColorModel_Class, "java/awt/image/ComponentColorModel")) return 0;
-    if (!BPy_InitJClass(&BPy_Iterator_Class, "java/util/Iterator")) return 0;
     if (!BPy_InitJClass(&BPy_MathTransform_Class, "org/opengis/referencing/operation/MathTransform")) return 0;
     if (!BPy_InitJClass(&BPy_CoordinateReferenceSystem_Class, "org/opengis/referencing/crs/CoordinateReferenceSystem")) return 0;
     if (!BPy_InitJClass(&BPy_ProductWriterPlugIn_Class, "org/esa/beam/framework/dataio/ProductWriterPlugIn")) return 0;
-    if (!BPy_InitJClass(&BPy_Rectangle2D_Class, "java/awt/geom/Rectangle2D")) return 0;
-    if (!BPy_InitJClass(&BPy_File_Class, "java/io/File")) return 0;
-    if (!BPy_InitJClass(&BPy_GeoPos_Class, "org/esa/beam/framework/datamodel/GeoPos")) return 0;
-    if (!BPy_InitJClass(&BPy_ProductNodeGroup_Class, "org/esa/beam/framework/datamodel/ProductNodeGroup")) return 0;
-    if (!BPy_InitJClass(&BPy_MapProjection_Class, "org/esa/beam/framework/dataop/maptransf/MapProjection")) return 0;
-    if (!BPy_InitJClass(&BPy_ProductManager_Class, "org/esa/beam/framework/datamodel/ProductManager")) return 0;
-    if (!BPy_InitJClass(&BPy_FlagCoding_Class, "org/esa/beam/framework/datamodel/FlagCoding")) return 0;
     if (!BPy_InitJClass(&BPy_IndexColorModel_Class, "java/awt/image/IndexColorModel")) return 0;
-    if (!BPy_InitJClass(&BPy_OperatorSpiRegistry_Class, "org/esa/beam/framework/gpf/OperatorSpiRegistry")) return 0;
-    if (!BPy_InitJClass(&BPy_Operator_Class, "org/esa/beam/framework/gpf/Operator")) return 0;
-    if (!BPy_InitJClass(&BPy_ImageInfo_HistogramMatching_Class, "org/esa/beam/framework/datamodel/ImageInfo$HistogramMatching")) return 0;
-    if (!BPy_InitJClass(&BPy_BitmaskDef_Class, "org/esa/beam/framework/datamodel/BitmaskDef")) return 0;
     if (!BPy_InitJClass(&BPy_ProductNodeListener_Class, "org/esa/beam/framework/datamodel/ProductNodeListener")) return 0;
-    if (!BPy_InitJClass(&BPy_Map_Class, "java/util/Map")) return 0;
     if (!BPy_InitJClass(&BPy_MetadataElement_Class, "org/esa/beam/framework/datamodel/MetadataElement")) return 0;
-    if (!BPy_InitJClass(&BPy_ProductUtils_Class, "org/esa/beam/util/ProductUtils")) return 0;
-    if (!BPy_InitJClass(&BPy_Datum_Class, "org/esa/beam/framework/dataop/maptransf/Datum")) return 0;
-    if (!BPy_InitJClass(&BPy_Pointing_Class, "org/esa/beam/framework/datamodel/Pointing")) return 0;
     if (!BPy_InitJClass(&BPy_Color_Class, "java/awt/Color")) return 0;
-    if (!BPy_InitJClass(&BPy_PlacemarkDescriptor_Class, "org/esa/beam/framework/datamodel/PlacemarkDescriptor")) return 0;
-    if (!BPy_InitJClass(&BPy_PointingFactory_Class, "org/esa/beam/framework/datamodel/PointingFactory")) return 0;
     if (!BPy_InitJClass(&BPy_TransectProfileData_Class, "org/esa/beam/framework/datamodel/TransectProfileData")) return 0;
     if (!BPy_InitJClass(&BPy_PlacemarkGroup_Class, "org/esa/beam/framework/datamodel/PlacemarkGroup")) return 0;
     if (!BPy_InitJClass(&BPy_Product_Class, "org/esa/beam/framework/datamodel/Product")) return 0;
-    if (!BPy_InitJClass(&BPy_Point2D_Class, "java/awt/geom/Point2D")) return 0;
     if (!BPy_InitJClass(&BPy_ProductVisitor_Class, "org/esa/beam/framework/datamodel/ProductVisitor")) return 0;
-    if (!BPy_InitJClass(&BPy_Scaling_Class, "org/esa/beam/framework/datamodel/Scaling")) return 0;
     if (!BPy_InitJClass(&BPy_WritableNamespace_Class, "com/bc/jexp/WritableNamespace")) return 0;
     if (!BPy_InitJClass(&BPy_Set_Class, "java/util/Set")) return 0;
     if (!BPy_InitJClass(&BPy_MultiLevelImage_Class, "com/bc/ceres/glevel/MultiLevelImage")) return 0;
-    if (!BPy_InitJClass(&BPy_ROI_Class, "javax/media/jai/ROI")) return 0;
     if (!BPy_InitJClass(&BPy_RenderingHints_Key_Class, "java/awt/RenderingHints$Key")) return 0;
-    if (!BPy_InitJClass(&BPy_Collection_Class, "java/util/Collection")) return 0;
+    if (!BPy_InitJClass(&BPy_ROI_Class, "javax/media/jai/ROI")) return 0;
     if (!BPy_InitJClass(&BPy_ProductManager_Listener_Class, "org/esa/beam/framework/datamodel/ProductManager$Listener")) return 0;
-    if (!BPy_InitJClass(&BPy_GeoTIFFMetadata_Class, "org/esa/beam/util/geotiff/GeoTIFFMetadata")) return 0;
     if (!BPy_InitJClass(&BPy_ColorPaletteDef_Class, "org/esa/beam/framework/datamodel/ColorPaletteDef")) return 0;
-    if (!BPy_InitJClass(&BPy_MapInfo_Class, "org/esa/beam/framework/dataop/maptransf/MapInfo")) return 0;
+    if (!BPy_InitJClass(&BPy_Geometry_Class, "com/vividsolutions/jts/geom/Geometry")) return 0;
     if (!BPy_InitJClass(&BPy_ImageInfo_Class, "org/esa/beam/framework/datamodel/ImageInfo")) return 0;
     if (!BPy_InitJClass(&BPy_Histogram_Class, "org/esa/beam/util/math/Histogram")) return 0;
-    if (!BPy_InitJClass(&BPy_BufferedImage_Class, "java/awt/image/BufferedImage")) return 0;
-    if (!BPy_InitJClass(&BPy_RGBChannelDef_Class, "org/esa/beam/framework/datamodel/RGBChannelDef")) return 0;
     if (!BPy_InitJClass(&BPy_TiePointGrid_Class, "org/esa/beam/framework/datamodel/TiePointGrid")) return 0;
+    if (!BPy_InitJClass(&BPy_RGBChannelDef_Class, "org/esa/beam/framework/datamodel/RGBChannelDef")) return 0;
+    if (!BPy_InitJClass(&BPy_VectorDataNode_Class, "org/esa/beam/framework/datamodel/VectorDataNode")) return 0;
+    if (!BPy_InitJClass(&BPy_ImageInputStream_Class, "javax/imageio/stream/ImageInputStream")) return 0;
+    if (!BPy_InitJClass(&BPy_RenderingHints_Class, "java/awt/RenderingHints")) return 0;
+    if (!BPy_InitJClass(&BPy_Shape_Class, "java/awt/Shape")) return 0;
+    if (!BPy_InitJClass(&BPy_MapTransform_Class, "org/esa/beam/framework/dataop/maptransf/MapTransform")) return 0;
+    if (!BPy_InitJClass(&BPy_Parser_Class, "com/bc/jexp/Parser")) return 0;
+    if (!BPy_InitJClass(&BPy_ProductData_Class, "org/esa/beam/framework/datamodel/ProductData")) return 0;
+    if (!BPy_InitJClass(&BPy_OperatorSpi_Class, "org/esa/beam/framework/gpf/OperatorSpi")) return 0;
+    if (!BPy_InitJClass(&BPy_Term_Class, "com/bc/jexp/Term")) return 0;
+    if (!BPy_InitJClass(&BPy_RasterDataNode_Class, "org/esa/beam/framework/datamodel/RasterDataNode")) return 0;
+    if (!BPy_InitJClass(&BPy_Product_AutoGrouping_Class, "org/esa/beam/framework/datamodel/Product$AutoGrouping")) return 0;
+    if (!BPy_InitJClass(&BPy_Dimension_Class, "java/awt/Dimension")) return 0;
+    if (!BPy_InitJClass(&BPy_Stx_Class, "org/esa/beam/framework/datamodel/Stx")) return 0;
+    if (!BPy_InitJClass(&BPy_ImageOutputStream_Class, "javax/imageio/stream/ImageOutputStream")) return 0;
+    if (!BPy_InitJClass(&BPy_SimpleFeatureType_Class, "org/opengis/feature/simple/SimpleFeatureType")) return 0;
+    if (!BPy_InitJClass(&BPy_AngularDirection_Class, "org/esa/beam/framework/datamodel/AngularDirection")) return 0;
+    if (!BPy_InitJClass(&BPy_ProductData_UTC_Class, "org/esa/beam/framework/datamodel/ProductData$UTC")) return 0;
+    if (!BPy_InitJClass(&BPy_RenderedImage_Class, "java/awt/image/RenderedImage")) return 0;
+    if (!BPy_InitJClass(&BPy_Iterator_Class, "java/util/Iterator")) return 0;
+    if (!BPy_InitJClass(&BPy_File_Class, "java/io/File")) return 0;
+    if (!BPy_InitJClass(&BPy_GeoPos_Class, "org/esa/beam/framework/datamodel/GeoPos")) return 0;
+    if (!BPy_InitJClass(&BPy_ProductNodeGroup_Class, "org/esa/beam/framework/datamodel/ProductNodeGroup")) return 0;
+    if (!BPy_InitJClass(&BPy_ProductManager_Class, "org/esa/beam/framework/datamodel/ProductManager")) return 0;
+    if (!BPy_InitJClass(&BPy_MapProjection_Class, "org/esa/beam/framework/dataop/maptransf/MapProjection")) return 0;
+    if (!BPy_InitJClass(&BPy_FlagCoding_Class, "org/esa/beam/framework/datamodel/FlagCoding")) return 0;
+    if (!BPy_InitJClass(&BPy_Operator_Class, "org/esa/beam/framework/gpf/Operator")) return 0;
+    if (!BPy_InitJClass(&BPy_OperatorSpiRegistry_Class, "org/esa/beam/framework/gpf/OperatorSpiRegistry")) return 0;
+    if (!BPy_InitJClass(&BPy_BitmaskDef_Class, "org/esa/beam/framework/datamodel/BitmaskDef")) return 0;
+    if (!BPy_InitJClass(&BPy_ImageInfo_HistogramMatching_Class, "org/esa/beam/framework/datamodel/ImageInfo$HistogramMatching")) return 0;
+    if (!BPy_InitJClass(&BPy_Datum_Class, "org/esa/beam/framework/dataop/maptransf/Datum")) return 0;
+    if (!BPy_InitJClass(&BPy_ProductUtils_Class, "org/esa/beam/util/ProductUtils")) return 0;
+    if (!BPy_InitJClass(&BPy_Map_Class, "java/util/Map")) return 0;
+    if (!BPy_InitJClass(&BPy_SubsetOp_Class, "org/esa/beam/gpf/operators/standard/SubsetOp")) return 0;
+    if (!BPy_InitJClass(&BPy_Pointing_Class, "org/esa/beam/framework/datamodel/Pointing")) return 0;
+    if (!BPy_InitJClass(&BPy_PointingFactory_Class, "org/esa/beam/framework/datamodel/PointingFactory")) return 0;
+    if (!BPy_InitJClass(&BPy_PlacemarkDescriptor_Class, "org/esa/beam/framework/datamodel/PlacemarkDescriptor")) return 0;
+    if (!BPy_InitJClass(&BPy_Point2D_Class, "java/awt/geom/Point2D")) return 0;
+    if (!BPy_InitJClass(&BPy_Scaling_Class, "org/esa/beam/framework/datamodel/Scaling")) return 0;
+    if (!BPy_InitJClass(&BPy_Collection_Class, "java/util/Collection")) return 0;
+    if (!BPy_InitJClass(&BPy_GeoTIFFMetadata_Class, "org/esa/beam/util/geotiff/GeoTIFFMetadata")) return 0;
+    if (!BPy_InitJClass(&BPy_MapInfo_Class, "org/esa/beam/framework/dataop/maptransf/MapInfo")) return 0;
+    if (!BPy_InitJClass(&BPy_BufferedImage_Class, "java/awt/image/BufferedImage")) return 0;
     if (!BPy_InitJClass(&BPy_SimpleFeature_Class, "org/opengis/feature/simple/SimpleFeature")) return 0;
     if (!BPy_InitJClass(&BPy_ProductSubsetDef_Class, "org/esa/beam/framework/dataio/ProductSubsetDef")) return 0;
     if (!BPy_InitJClass(&BPy_ProductWriter_Class, "org/esa/beam/framework/dataio/ProductWriter")) return 0;
-    if (!BPy_InitJClass(&BPy_MetadataAttribute_Class, "org/esa/beam/framework/datamodel/MetadataAttribute")) return 0;
     if (!BPy_InitJClass(&BPy_ProgressMonitor_Class, "com/bc/ceres/core/ProgressMonitor")) return 0;
-    if (!BPy_InitJClass(&BPy_VectorDataNode_Class, "org/esa/beam/framework/datamodel/VectorDataNode")) return 0;
+    if (!BPy_InitJClass(&BPy_MetadataAttribute_Class, "org/esa/beam/framework/datamodel/MetadataAttribute")) return 0;
     if (!BPy_InitJClass(&BPy_GeneralPath_Class, "java/awt/geom/GeneralPath")) return 0;
-    if (!BPy_InitJClass(&BPy_ImageInputStream_Class, "javax/imageio/stream/ImageInputStream")) return 0;
-    if (!BPy_InitJClass(&BPy_RenderingHints_Class, "java/awt/RenderingHints")) return 0;
 
     initialized = 1;
     return 1;
@@ -15240,7 +15343,7 @@ PyObject* BeamPyProduct_getMetadataRoot(PyObject* self, PyObject* args)
     return _resultPyObj;
 }
 
-PyObject* BeamPyProduct_getGroups(PyObject* self, PyObject* args)
+PyObject* BeamPyProduct_getBandGroup(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
     
@@ -15250,7 +15353,7 @@ PyObject* BeamPyProduct_getGroups(PyObject* self, PyObject* args)
     if (!BPy_InitApi()) {
         return NULL;
     }
-    if (!BPy_InitJMethod(&_method, BPy_Product_Class, "org.esa.beam.framework.datamodel.Product", "getGroups", "()Lorg/esa/beam/framework/datamodel/ProductNodeGroup;", 0)) {
+    if (!BPy_InitJMethod(&_method, BPy_Product_Class, "org.esa.beam.framework.datamodel.Product", "getBandGroup", "()Lorg/esa/beam/framework/datamodel/ProductNodeGroup;", 0)) {
         return NULL;
     }
     _thisJObj = JObject_AsJObjectRefT(self, BPy_Product_Class);
@@ -15259,40 +15362,8 @@ PyObject* BeamPyProduct_getGroups(PyObject* self, PyObject* args)
         return NULL;
     }
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.Product#getGroups()Lorg/esa/beam/framework/datamodel/ProductNodeGroup;");
+    CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.Product#getBandGroup()Lorg/esa/beam/framework/datamodel/ProductNodeGroup;");
     _resultPyObj = BPy_FromJObject(&ProductNodeGroup_Type, _resultJObj);
-    (*jenv)->DeleteLocalRef(jenv, _resultJObj);
-    return _resultPyObj;
-}
-
-PyObject* BeamPyProduct_getGroup(PyObject* self, PyObject* args)
-{
-    static jmethodID _method = NULL;
-    
-    jobject _thisJObj = NULL;
-    const char* name = NULL;
-    jstring nameJObj = NULL;
-    PyObject* _resultPyObj = NULL;
-    jobject _resultJObj = NULL;
-    if (!BPy_InitApi()) {
-        return NULL;
-    }
-    if (!BPy_InitJMethod(&_method, BPy_Product_Class, "org.esa.beam.framework.datamodel.Product", "getGroup", "(Ljava/lang/String;)Lorg/esa/beam/framework/datamodel/ProductNodeGroup;", 0)) {
-        return NULL;
-    }
-    _thisJObj = JObject_AsJObjectRefT(self, BPy_Product_Class);
-    if (_thisJObj == NULL) {
-        PyErr_SetString(PyExc_ValueError, "argument 'self' must be of type 'Product' (Java object reference)");
-        return NULL;
-    }
-    if (!PyArg_ParseTuple(args, "s:getGroup", &name)) {
-        return NULL;
-    }
-    nameJObj =(*jenv)->NewStringUTF(jenv, name);
-    _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, nameJObj);
-    CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.Product#getGroup(Ljava/lang/String;)Lorg/esa/beam/framework/datamodel/ProductNodeGroup;");
-    _resultPyObj = BPy_FromJObject(&ProductNodeGroup_Type, _resultJObj);
-    (*jenv)->DeleteLocalRef(jenv, nameJObj);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -15549,31 +15620,6 @@ PyObject* BeamPyProduct_containsTiePointGrid(PyObject* self, PyObject* args)
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.Product#containsTiePointGrid(Ljava/lang/String;)Z");
     (*jenv)->DeleteLocalRef(jenv, nameJObj);
     return PyBool_FromLong(_result);
-}
-
-PyObject* BeamPyProduct_getBandGroup(PyObject* self, PyObject* args)
-{
-    static jmethodID _method = NULL;
-    
-    jobject _thisJObj = NULL;
-    PyObject* _resultPyObj = NULL;
-    jobject _resultJObj = NULL;
-    if (!BPy_InitApi()) {
-        return NULL;
-    }
-    if (!BPy_InitJMethod(&_method, BPy_Product_Class, "org.esa.beam.framework.datamodel.Product", "getBandGroup", "()Lorg/esa/beam/framework/datamodel/ProductNodeGroup;", 0)) {
-        return NULL;
-    }
-    _thisJObj = JObject_AsJObjectRefT(self, BPy_Product_Class);
-    if (_thisJObj == NULL) {
-        PyErr_SetString(PyExc_ValueError, "argument 'self' must be of type 'Product' (Java object reference)");
-        return NULL;
-    }
-    _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.Product#getBandGroup()Lorg/esa/beam/framework/datamodel/ProductNodeGroup;");
-    _resultPyObj = BPy_FromJObject(&ProductNodeGroup_Type, _resultJObj);
-    (*jenv)->DeleteLocalRef(jenv, _resultJObj);
-    return _resultPyObj;
 }
 
 PyObject* BeamPyProduct_addBand(PyObject* self, PyObject* args)
@@ -16139,53 +16185,6 @@ PyObject* BeamPyProduct_getPinGroup(PyObject* self, PyObject* args)
     _resultPyObj = BPy_FromJObject(&PlacemarkGroup_Type, _resultJObj);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
-}
-
-PyObject* BeamPyProduct_getNumResolutionsMax(PyObject* self, PyObject* args)
-{
-    static jmethodID _method = NULL;
-    
-    jobject _thisJObj = NULL;
-    jint _result = (jint) 0;
-    if (!BPy_InitApi()) {
-        return NULL;
-    }
-    if (!BPy_InitJMethod(&_method, BPy_Product_Class, "org.esa.beam.framework.datamodel.Product", "getNumResolutionsMax", "()I", 0)) {
-        return NULL;
-    }
-    _thisJObj = JObject_AsJObjectRefT(self, BPy_Product_Class);
-    if (_thisJObj == NULL) {
-        PyErr_SetString(PyExc_ValueError, "argument 'self' must be of type 'Product' (Java object reference)");
-        return NULL;
-    }
-    _result = (*jenv)->CallIntMethod(jenv, _thisJObj, _method);
-    CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.Product#getNumResolutionsMax()I");
-    return PyLong_FromLong(_result);
-}
-
-PyObject* BeamPyProduct_setNumResolutionsMax(PyObject* self, PyObject* args)
-{
-    static jmethodID _method = NULL;
-    
-    jobject _thisJObj = NULL;
-    jint numResolutionsMax = (jint) 0;
-    if (!BPy_InitApi()) {
-        return NULL;
-    }
-    if (!BPy_InitJMethod(&_method, BPy_Product_Class, "org.esa.beam.framework.datamodel.Product", "setNumResolutionsMax", "(I)V", 0)) {
-        return NULL;
-    }
-    _thisJObj = JObject_AsJObjectRefT(self, BPy_Product_Class);
-    if (_thisJObj == NULL) {
-        PyErr_SetString(PyExc_ValueError, "argument 'self' must be of type 'Product' (Java object reference)");
-        return NULL;
-    }
-    if (!PyArg_ParseTuple(args, "i:setNumResolutionsMax", &numResolutionsMax)) {
-        return NULL;
-    }
-    (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, numResolutionsMax);
-    CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.Product#setNumResolutionsMax(I)V");
-    return Py_BuildValue("");
 }
 
 PyObject* BeamPyProduct_isCompatibleProduct(PyObject* self, PyObject* args)
@@ -20116,36 +20115,6 @@ PyObject* BeamPyImageGeometry_createCollocationTargetGeometry(PyObject* self, Py
     _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, BPy_ImageGeometry_Class, _method, targetProductJObj, collocationProductJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.ImageGeometry#createCollocationTargetGeometry(Lorg/esa/beam/framework/datamodel/Product;Lorg/esa/beam/framework/datamodel/Product;)Lorg/esa/beam/framework/datamodel/ImageGeometry;");
     _resultPyObj = BPy_FromJObject(&ImageGeometry_Type, _resultJObj);
-    (*jenv)->DeleteLocalRef(jenv, _resultJObj);
-    return _resultPyObj;
-}
-
-PyObject* BeamPyImageGeometry_createValidRect(PyObject* self, PyObject* args)
-{
-    static jmethodID _method = NULL;
-    PyObject* productPyObj = NULL;
-    jobject productJObj = NULL;
-    PyObject* _resultPyObj = NULL;
-    jobject _resultJObj = NULL;
-    if (!BPy_InitApi()) {
-        return NULL;
-    }
-    if (!BPy_InitJMethod(&_method, BPy_ImageGeometry_Class, "org.esa.beam.framework.datamodel.ImageGeometry", "createValidRect", "(Lorg/esa/beam/framework/datamodel/Product;)Ljava/awt/geom/Rectangle2D;", 1)) {
-        return NULL;
-    }
-    if (!PyArg_ParseTuple(args, "O:createValidRect", &productPyObj)) {
-        return NULL;
-    }
-    {
-        jboolean ok = 1;
-        productJObj = BPy_ToJObjectT(productPyObj, BPy_Product_Class, &ok);
-        if (!ok) {
-            return NULL;
-        }
-    }
-    _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, BPy_ImageGeometry_Class, _method, productJObj);
-    CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.ImageGeometry#createValidRect(Lorg/esa/beam/framework/datamodel/Product;)Ljava/awt/geom/Rectangle2D;");
-    _resultPyObj = BPy_FromJObject(&Rectangle2D_Type, _resultJObj);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -32935,6 +32904,749 @@ PyObject* BeamPyMap_hashCode(PyObject* self, PyObject* args)
     return PyLong_FromLong(_result);
 }
 
+PyObject* BeamPySubsetOp_newSubsetOp(PyObject* self, PyObject* args)
+{
+    static jmethodID _method = NULL;
+    PyObject* _resultPyObj = NULL;
+    jobject _resultJObj = NULL;
+    if (!BPy_InitApi()) {
+        return NULL;
+    }
+    if (!BPy_InitJMethod(&_method, BPy_SubsetOp_Class, "org.esa.beam.gpf.operators.standard.SubsetOp", "<init>", "()V", 0)) {
+        return NULL;
+    }
+    _resultJObj = (*jenv)->NewObject(jenv, BPy_SubsetOp_Class, _method);
+    CHECK_JVM_EXCEPTION("org.esa.beam.gpf.operators.standard.SubsetOp#<init>()V");
+    _resultPyObj = BPy_FromJObject(&SubsetOp_Type, _resultJObj);
+    (*jenv)->DeleteLocalRef(jenv, _resultJObj);
+    return _resultPyObj;
+}
+
+PyObject* BeamPySubsetOp_getTiePointGridNames(PyObject* self, PyObject* args)
+{
+    static jmethodID _method = NULL;
+    
+    jobject _thisJObj = NULL;
+    PyObject* _resultPyObj = NULL;
+    jobject _resultJObj = NULL;
+    if (!BPy_InitApi()) {
+        return NULL;
+    }
+    if (!BPy_InitJMethod(&_method, BPy_SubsetOp_Class, "org.esa.beam.gpf.operators.standard.SubsetOp", "getTiePointGridNames", "()[Ljava/lang/String;", 0)) {
+        return NULL;
+    }
+    _thisJObj = JObject_AsJObjectRefT(self, BPy_SubsetOp_Class);
+    if (_thisJObj == NULL) {
+        PyErr_SetString(PyExc_ValueError, "argument 'self' must be of type 'SubsetOp' (Java object reference)");
+        return NULL;
+    }
+    _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
+    CHECK_JVM_EXCEPTION("org.esa.beam.gpf.operators.standard.SubsetOp#getTiePointGridNames()[Ljava/lang/String;");
+    _resultPyObj = BPy_FromJStringArray((jarray) _resultJObj);
+    (*jenv)->DeleteLocalRef(jenv, _resultJObj);
+    return _resultPyObj;
+}
+
+PyObject* BeamPySubsetOp_setTiePointGridNames(PyObject* self, PyObject* args)
+{
+    static jmethodID _method = NULL;
+    
+    jobject _thisJObj = NULL;
+    PyObject* tiePointGridNamesPyObj = NULL;
+    jarray tiePointGridNamesJObj = NULL;
+    if (!BPy_InitApi()) {
+        return NULL;
+    }
+    if (!BPy_InitJMethod(&_method, BPy_SubsetOp_Class, "org.esa.beam.gpf.operators.standard.SubsetOp", "setTiePointGridNames", "([Ljava/lang/String;)V", 0)) {
+        return NULL;
+    }
+    _thisJObj = JObject_AsJObjectRefT(self, BPy_SubsetOp_Class);
+    if (_thisJObj == NULL) {
+        PyErr_SetString(PyExc_ValueError, "argument 'self' must be of type 'SubsetOp' (Java object reference)");
+        return NULL;
+    }
+    if (!PyArg_ParseTuple(args, "O:setTiePointGridNames", &tiePointGridNamesPyObj)) {
+        return NULL;
+    }
+    {
+        jboolean ok = 1;
+        tiePointGridNamesJObj = BPy_ToJStringArray(tiePointGridNamesPyObj, &ok);
+        if (!ok) {
+            return NULL;
+        }
+    }
+    (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, tiePointGridNamesJObj);
+    CHECK_JVM_EXCEPTION("org.esa.beam.gpf.operators.standard.SubsetOp#setTiePointGridNames([Ljava/lang/String;)V");
+    (*jenv)->DeleteLocalRef(jenv, tiePointGridNamesJObj);
+    return Py_BuildValue("");
+}
+
+PyObject* BeamPySubsetOp_getBandNames(PyObject* self, PyObject* args)
+{
+    static jmethodID _method = NULL;
+    
+    jobject _thisJObj = NULL;
+    PyObject* _resultPyObj = NULL;
+    jobject _resultJObj = NULL;
+    if (!BPy_InitApi()) {
+        return NULL;
+    }
+    if (!BPy_InitJMethod(&_method, BPy_SubsetOp_Class, "org.esa.beam.gpf.operators.standard.SubsetOp", "getBandNames", "()[Ljava/lang/String;", 0)) {
+        return NULL;
+    }
+    _thisJObj = JObject_AsJObjectRefT(self, BPy_SubsetOp_Class);
+    if (_thisJObj == NULL) {
+        PyErr_SetString(PyExc_ValueError, "argument 'self' must be of type 'SubsetOp' (Java object reference)");
+        return NULL;
+    }
+    _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
+    CHECK_JVM_EXCEPTION("org.esa.beam.gpf.operators.standard.SubsetOp#getBandNames()[Ljava/lang/String;");
+    _resultPyObj = BPy_FromJStringArray((jarray) _resultJObj);
+    (*jenv)->DeleteLocalRef(jenv, _resultJObj);
+    return _resultPyObj;
+}
+
+PyObject* BeamPySubsetOp_setBandNames(PyObject* self, PyObject* args)
+{
+    static jmethodID _method = NULL;
+    
+    jobject _thisJObj = NULL;
+    PyObject* bandNamesPyObj = NULL;
+    jarray bandNamesJObj = NULL;
+    if (!BPy_InitApi()) {
+        return NULL;
+    }
+    if (!BPy_InitJMethod(&_method, BPy_SubsetOp_Class, "org.esa.beam.gpf.operators.standard.SubsetOp", "setBandNames", "([Ljava/lang/String;)V", 0)) {
+        return NULL;
+    }
+    _thisJObj = JObject_AsJObjectRefT(self, BPy_SubsetOp_Class);
+    if (_thisJObj == NULL) {
+        PyErr_SetString(PyExc_ValueError, "argument 'self' must be of type 'SubsetOp' (Java object reference)");
+        return NULL;
+    }
+    if (!PyArg_ParseTuple(args, "O:setBandNames", &bandNamesPyObj)) {
+        return NULL;
+    }
+    {
+        jboolean ok = 1;
+        bandNamesJObj = BPy_ToJStringArray(bandNamesPyObj, &ok);
+        if (!ok) {
+            return NULL;
+        }
+    }
+    (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, bandNamesJObj);
+    CHECK_JVM_EXCEPTION("org.esa.beam.gpf.operators.standard.SubsetOp#setBandNames([Ljava/lang/String;)V");
+    (*jenv)->DeleteLocalRef(jenv, bandNamesJObj);
+    return Py_BuildValue("");
+}
+
+PyObject* BeamPySubsetOp_setCopyMetadata(PyObject* self, PyObject* args)
+{
+    static jmethodID _method = NULL;
+    
+    jobject _thisJObj = NULL;
+    jboolean copyMetadata = (jboolean) 0;
+    if (!BPy_InitApi()) {
+        return NULL;
+    }
+    if (!BPy_InitJMethod(&_method, BPy_SubsetOp_Class, "org.esa.beam.gpf.operators.standard.SubsetOp", "setCopyMetadata", "(Z)V", 0)) {
+        return NULL;
+    }
+    _thisJObj = JObject_AsJObjectRefT(self, BPy_SubsetOp_Class);
+    if (_thisJObj == NULL) {
+        PyErr_SetString(PyExc_ValueError, "argument 'self' must be of type 'SubsetOp' (Java object reference)");
+        return NULL;
+    }
+    if (!PyArg_ParseTuple(args, "b:setCopyMetadata", &copyMetadata)) {
+        return NULL;
+    }
+    (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, copyMetadata);
+    CHECK_JVM_EXCEPTION("org.esa.beam.gpf.operators.standard.SubsetOp#setCopyMetadata(Z)V");
+    return Py_BuildValue("");
+}
+
+PyObject* BeamPySubsetOp_getRegion(PyObject* self, PyObject* args)
+{
+    static jmethodID _method = NULL;
+    
+    jobject _thisJObj = NULL;
+    PyObject* _resultPyObj = NULL;
+    jobject _resultJObj = NULL;
+    if (!BPy_InitApi()) {
+        return NULL;
+    }
+    if (!BPy_InitJMethod(&_method, BPy_SubsetOp_Class, "org.esa.beam.gpf.operators.standard.SubsetOp", "getRegion", "()Ljava/awt/Rectangle;", 0)) {
+        return NULL;
+    }
+    _thisJObj = JObject_AsJObjectRefT(self, BPy_SubsetOp_Class);
+    if (_thisJObj == NULL) {
+        PyErr_SetString(PyExc_ValueError, "argument 'self' must be of type 'SubsetOp' (Java object reference)");
+        return NULL;
+    }
+    _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
+    CHECK_JVM_EXCEPTION("org.esa.beam.gpf.operators.standard.SubsetOp#getRegion()Ljava/awt/Rectangle;");
+    _resultPyObj = BPy_FromJObject(&Rectangle_Type, _resultJObj);
+    (*jenv)->DeleteLocalRef(jenv, _resultJObj);
+    return _resultPyObj;
+}
+
+PyObject* BeamPySubsetOp_setRegion(PyObject* self, PyObject* args)
+{
+    static jmethodID _method = NULL;
+    
+    jobject _thisJObj = NULL;
+    PyObject* regionPyObj = NULL;
+    jobject regionJObj = NULL;
+    if (!BPy_InitApi()) {
+        return NULL;
+    }
+    if (!BPy_InitJMethod(&_method, BPy_SubsetOp_Class, "org.esa.beam.gpf.operators.standard.SubsetOp", "setRegion", "(Ljava/awt/Rectangle;)V", 0)) {
+        return NULL;
+    }
+    _thisJObj = JObject_AsJObjectRefT(self, BPy_SubsetOp_Class);
+    if (_thisJObj == NULL) {
+        PyErr_SetString(PyExc_ValueError, "argument 'self' must be of type 'SubsetOp' (Java object reference)");
+        return NULL;
+    }
+    if (!PyArg_ParseTuple(args, "O:setRegion", &regionPyObj)) {
+        return NULL;
+    }
+    {
+        jboolean ok = 1;
+        regionJObj = BPy_ToJObjectT(regionPyObj, BPy_Rectangle_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
+    }
+    (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, regionJObj);
+    CHECK_JVM_EXCEPTION("org.esa.beam.gpf.operators.standard.SubsetOp#setRegion(Ljava/awt/Rectangle;)V");
+    return Py_BuildValue("");
+}
+
+PyObject* BeamPySubsetOp_setSubSamplingX(PyObject* self, PyObject* args)
+{
+    static jmethodID _method = NULL;
+    
+    jobject _thisJObj = NULL;
+    jint subSamplingX = (jint) 0;
+    if (!BPy_InitApi()) {
+        return NULL;
+    }
+    if (!BPy_InitJMethod(&_method, BPy_SubsetOp_Class, "org.esa.beam.gpf.operators.standard.SubsetOp", "setSubSamplingX", "(I)V", 0)) {
+        return NULL;
+    }
+    _thisJObj = JObject_AsJObjectRefT(self, BPy_SubsetOp_Class);
+    if (_thisJObj == NULL) {
+        PyErr_SetString(PyExc_ValueError, "argument 'self' must be of type 'SubsetOp' (Java object reference)");
+        return NULL;
+    }
+    if (!PyArg_ParseTuple(args, "i:setSubSamplingX", &subSamplingX)) {
+        return NULL;
+    }
+    (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, subSamplingX);
+    CHECK_JVM_EXCEPTION("org.esa.beam.gpf.operators.standard.SubsetOp#setSubSamplingX(I)V");
+    return Py_BuildValue("");
+}
+
+PyObject* BeamPySubsetOp_setSubSamplingY(PyObject* self, PyObject* args)
+{
+    static jmethodID _method = NULL;
+    
+    jobject _thisJObj = NULL;
+    jint subSamplingY = (jint) 0;
+    if (!BPy_InitApi()) {
+        return NULL;
+    }
+    if (!BPy_InitJMethod(&_method, BPy_SubsetOp_Class, "org.esa.beam.gpf.operators.standard.SubsetOp", "setSubSamplingY", "(I)V", 0)) {
+        return NULL;
+    }
+    _thisJObj = JObject_AsJObjectRefT(self, BPy_SubsetOp_Class);
+    if (_thisJObj == NULL) {
+        PyErr_SetString(PyExc_ValueError, "argument 'self' must be of type 'SubsetOp' (Java object reference)");
+        return NULL;
+    }
+    if (!PyArg_ParseTuple(args, "i:setSubSamplingY", &subSamplingY)) {
+        return NULL;
+    }
+    (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, subSamplingY);
+    CHECK_JVM_EXCEPTION("org.esa.beam.gpf.operators.standard.SubsetOp#setSubSamplingY(I)V");
+    return Py_BuildValue("");
+}
+
+PyObject* BeamPySubsetOp_getGeoRegion(PyObject* self, PyObject* args)
+{
+    static jmethodID _method = NULL;
+    
+    jobject _thisJObj = NULL;
+    PyObject* _resultPyObj = NULL;
+    jobject _resultJObj = NULL;
+    if (!BPy_InitApi()) {
+        return NULL;
+    }
+    if (!BPy_InitJMethod(&_method, BPy_SubsetOp_Class, "org.esa.beam.gpf.operators.standard.SubsetOp", "getGeoRegion", "()Lcom/vividsolutions/jts/geom/Geometry;", 0)) {
+        return NULL;
+    }
+    _thisJObj = JObject_AsJObjectRefT(self, BPy_SubsetOp_Class);
+    if (_thisJObj == NULL) {
+        PyErr_SetString(PyExc_ValueError, "argument 'self' must be of type 'SubsetOp' (Java object reference)");
+        return NULL;
+    }
+    _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
+    CHECK_JVM_EXCEPTION("org.esa.beam.gpf.operators.standard.SubsetOp#getGeoRegion()Lcom/vividsolutions/jts/geom/Geometry;");
+    _resultPyObj = BPy_FromJObject(&Geometry_Type, _resultJObj);
+    (*jenv)->DeleteLocalRef(jenv, _resultJObj);
+    return _resultPyObj;
+}
+
+PyObject* BeamPySubsetOp_setGeoRegion(PyObject* self, PyObject* args)
+{
+    static jmethodID _method = NULL;
+    
+    jobject _thisJObj = NULL;
+    PyObject* geoRegionPyObj = NULL;
+    jobject geoRegionJObj = NULL;
+    if (!BPy_InitApi()) {
+        return NULL;
+    }
+    if (!BPy_InitJMethod(&_method, BPy_SubsetOp_Class, "org.esa.beam.gpf.operators.standard.SubsetOp", "setGeoRegion", "(Lcom/vividsolutions/jts/geom/Geometry;)V", 0)) {
+        return NULL;
+    }
+    _thisJObj = JObject_AsJObjectRefT(self, BPy_SubsetOp_Class);
+    if (_thisJObj == NULL) {
+        PyErr_SetString(PyExc_ValueError, "argument 'self' must be of type 'SubsetOp' (Java object reference)");
+        return NULL;
+    }
+    if (!PyArg_ParseTuple(args, "O:setGeoRegion", &geoRegionPyObj)) {
+        return NULL;
+    }
+    {
+        jboolean ok = 1;
+        geoRegionJObj = BPy_ToJObjectT(geoRegionPyObj, BPy_Geometry_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
+    }
+    (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, geoRegionJObj);
+    CHECK_JVM_EXCEPTION("org.esa.beam.gpf.operators.standard.SubsetOp#setGeoRegion(Lcom/vividsolutions/jts/geom/Geometry;)V");
+    return Py_BuildValue("");
+}
+
+PyObject* BeamPySubsetOp_update(PyObject* self, PyObject* args)
+{
+    static jmethodID _method = NULL;
+    
+    jobject _thisJObj = NULL;
+    if (!BPy_InitApi()) {
+        return NULL;
+    }
+    if (!BPy_InitJMethod(&_method, BPy_SubsetOp_Class, "org.esa.beam.gpf.operators.standard.SubsetOp", "update", "()V", 0)) {
+        return NULL;
+    }
+    _thisJObj = JObject_AsJObjectRefT(self, BPy_SubsetOp_Class);
+    if (_thisJObj == NULL) {
+        PyErr_SetString(PyExc_ValueError, "argument 'self' must be of type 'SubsetOp' (Java object reference)");
+        return NULL;
+    }
+    (*jenv)->CallVoidMethod(jenv, _thisJObj, _method);
+    CHECK_JVM_EXCEPTION("org.esa.beam.gpf.operators.standard.SubsetOp#update()V");
+    return Py_BuildValue("");
+}
+
+PyObject* BeamPySubsetOp_dispose(PyObject* self, PyObject* args)
+{
+    static jmethodID _method = NULL;
+    
+    jobject _thisJObj = NULL;
+    if (!BPy_InitApi()) {
+        return NULL;
+    }
+    if (!BPy_InitJMethod(&_method, BPy_SubsetOp_Class, "org.esa.beam.gpf.operators.standard.SubsetOp", "dispose", "()V", 0)) {
+        return NULL;
+    }
+    _thisJObj = JObject_AsJObjectRefT(self, BPy_SubsetOp_Class);
+    if (_thisJObj == NULL) {
+        PyErr_SetString(PyExc_ValueError, "argument 'self' must be of type 'SubsetOp' (Java object reference)");
+        return NULL;
+    }
+    (*jenv)->CallVoidMethod(jenv, _thisJObj, _method);
+    CHECK_JVM_EXCEPTION("org.esa.beam.gpf.operators.standard.SubsetOp#dispose()V");
+    return Py_BuildValue("");
+}
+
+PyObject* BeamPySubsetOp_getId(PyObject* self, PyObject* args)
+{
+    static jmethodID _method = NULL;
+    
+    jobject _thisJObj = NULL;
+    PyObject* _resultPyObj = NULL;
+    jobject _resultJObj = NULL;
+    if (!BPy_InitApi()) {
+        return NULL;
+    }
+    if (!BPy_InitJMethod(&_method, BPy_SubsetOp_Class, "org.esa.beam.gpf.operators.standard.SubsetOp", "getId", "()Ljava/lang/String;", 0)) {
+        return NULL;
+    }
+    _thisJObj = JObject_AsJObjectRefT(self, BPy_SubsetOp_Class);
+    if (_thisJObj == NULL) {
+        PyErr_SetString(PyExc_ValueError, "argument 'self' must be of type 'SubsetOp' (Java object reference)");
+        return NULL;
+    }
+    _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
+    CHECK_JVM_EXCEPTION("org.esa.beam.gpf.operators.standard.SubsetOp#getId()Ljava/lang/String;");
+    _resultPyObj = BPy_FromJString((jstring) _resultJObj);
+    (*jenv)->DeleteLocalRef(jenv, _resultJObj);
+    return _resultPyObj;
+}
+
+PyObject* BeamPySubsetOp_getSourceProducts(PyObject* self, PyObject* args)
+{
+    static jmethodID _method = NULL;
+    
+    jobject _thisJObj = NULL;
+    PyObject* _resultPyObj = NULL;
+    jobject _resultJObj = NULL;
+    if (!BPy_InitApi()) {
+        return NULL;
+    }
+    if (!BPy_InitJMethod(&_method, BPy_SubsetOp_Class, "org.esa.beam.gpf.operators.standard.SubsetOp", "getSourceProducts", "()[Lorg/esa/beam/framework/datamodel/Product;", 0)) {
+        return NULL;
+    }
+    _thisJObj = JObject_AsJObjectRefT(self, BPy_SubsetOp_Class);
+    if (_thisJObj == NULL) {
+        PyErr_SetString(PyExc_ValueError, "argument 'self' must be of type 'SubsetOp' (Java object reference)");
+        return NULL;
+    }
+    _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
+    CHECK_JVM_EXCEPTION("org.esa.beam.gpf.operators.standard.SubsetOp#getSourceProducts()[Lorg/esa/beam/framework/datamodel/Product;");
+    _resultPyObj = BPy_FromJObjectArray((jarray) _resultJObj);
+    (*jenv)->DeleteLocalRef(jenv, _resultJObj);
+    return _resultPyObj;
+}
+
+PyObject* BeamPySubsetOp_setSourceProducts(PyObject* self, PyObject* args)
+{
+    static jmethodID _method = NULL;
+    
+    jobject _thisJObj = NULL;
+    PyObject* productsPyObj = NULL;
+    jarray productsJObj = NULL;
+    if (!BPy_InitApi()) {
+        return NULL;
+    }
+    if (!BPy_InitJMethod(&_method, BPy_SubsetOp_Class, "org.esa.beam.gpf.operators.standard.SubsetOp", "setSourceProducts", "([Lorg/esa/beam/framework/datamodel/Product;)V", 0)) {
+        return NULL;
+    }
+    _thisJObj = JObject_AsJObjectRefT(self, BPy_SubsetOp_Class);
+    if (_thisJObj == NULL) {
+        PyErr_SetString(PyExc_ValueError, "argument 'self' must be of type 'SubsetOp' (Java object reference)");
+        return NULL;
+    }
+    if (!PyArg_ParseTuple(args, "O:setSourceProducts", &productsPyObj)) {
+        return NULL;
+    }
+    {
+        jboolean ok = 1;
+        productsJObj = BPy_ToJObjectArrayT(productsPyObj, BPy_Product_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
+    }
+    (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, productsJObj);
+    CHECK_JVM_EXCEPTION("org.esa.beam.gpf.operators.standard.SubsetOp#setSourceProducts([Lorg/esa/beam/framework/datamodel/Product;)V");
+    (*jenv)->DeleteLocalRef(jenv, productsJObj);
+    return Py_BuildValue("");
+}
+
+PyObject* BeamPySubsetOp_getSourceProduct(PyObject* self, PyObject* args)
+{
+    static jmethodID _method = NULL;
+    
+    jobject _thisJObj = NULL;
+    PyObject* _resultPyObj = NULL;
+    jobject _resultJObj = NULL;
+    if (!BPy_InitApi()) {
+        return NULL;
+    }
+    if (!BPy_InitJMethod(&_method, BPy_SubsetOp_Class, "org.esa.beam.gpf.operators.standard.SubsetOp", "getSourceProduct", "()Lorg/esa/beam/framework/datamodel/Product;", 0)) {
+        return NULL;
+    }
+    _thisJObj = JObject_AsJObjectRefT(self, BPy_SubsetOp_Class);
+    if (_thisJObj == NULL) {
+        PyErr_SetString(PyExc_ValueError, "argument 'self' must be of type 'SubsetOp' (Java object reference)");
+        return NULL;
+    }
+    _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
+    CHECK_JVM_EXCEPTION("org.esa.beam.gpf.operators.standard.SubsetOp#getSourceProduct()Lorg/esa/beam/framework/datamodel/Product;");
+    _resultPyObj = BPy_FromJObject(&Product_Type, _resultJObj);
+    (*jenv)->DeleteLocalRef(jenv, _resultJObj);
+    return _resultPyObj;
+}
+
+PyObject* BeamPySubsetOp_setSourceProduct(PyObject* self, PyObject* args)
+{
+    static jmethodID _method = NULL;
+    
+    jobject _thisJObj = NULL;
+    PyObject* sourceProductPyObj = NULL;
+    jobject sourceProductJObj = NULL;
+    if (!BPy_InitApi()) {
+        return NULL;
+    }
+    if (!BPy_InitJMethod(&_method, BPy_SubsetOp_Class, "org.esa.beam.gpf.operators.standard.SubsetOp", "setSourceProduct", "(Lorg/esa/beam/framework/datamodel/Product;)V", 0)) {
+        return NULL;
+    }
+    _thisJObj = JObject_AsJObjectRefT(self, BPy_SubsetOp_Class);
+    if (_thisJObj == NULL) {
+        PyErr_SetString(PyExc_ValueError, "argument 'self' must be of type 'SubsetOp' (Java object reference)");
+        return NULL;
+    }
+    if (!PyArg_ParseTuple(args, "O:setSourceProduct", &sourceProductPyObj)) {
+        return NULL;
+    }
+    {
+        jboolean ok = 1;
+        sourceProductJObj = BPy_ToJObjectT(sourceProductPyObj, BPy_Product_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
+    }
+    (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, sourceProductJObj);
+    CHECK_JVM_EXCEPTION("org.esa.beam.gpf.operators.standard.SubsetOp#setSourceProduct(Lorg/esa/beam/framework/datamodel/Product;)V");
+    return Py_BuildValue("");
+}
+
+PyObject* BeamPySubsetOp_getSourceProductById(PyObject* self, PyObject* args)
+{
+    static jmethodID _method = NULL;
+    
+    jobject _thisJObj = NULL;
+    const char* id = NULL;
+    jstring idJObj = NULL;
+    PyObject* _resultPyObj = NULL;
+    jobject _resultJObj = NULL;
+    if (!BPy_InitApi()) {
+        return NULL;
+    }
+    if (!BPy_InitJMethod(&_method, BPy_SubsetOp_Class, "org.esa.beam.gpf.operators.standard.SubsetOp", "getSourceProduct", "(Ljava/lang/String;)Lorg/esa/beam/framework/datamodel/Product;", 0)) {
+        return NULL;
+    }
+    _thisJObj = JObject_AsJObjectRefT(self, BPy_SubsetOp_Class);
+    if (_thisJObj == NULL) {
+        PyErr_SetString(PyExc_ValueError, "argument 'self' must be of type 'SubsetOp' (Java object reference)");
+        return NULL;
+    }
+    if (!PyArg_ParseTuple(args, "s:getSourceProduct", &id)) {
+        return NULL;
+    }
+    idJObj =(*jenv)->NewStringUTF(jenv, id);
+    _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, idJObj);
+    CHECK_JVM_EXCEPTION("org.esa.beam.gpf.operators.standard.SubsetOp#getSourceProduct(Ljava/lang/String;)Lorg/esa/beam/framework/datamodel/Product;");
+    _resultPyObj = BPy_FromJObject(&Product_Type, _resultJObj);
+    (*jenv)->DeleteLocalRef(jenv, idJObj);
+    (*jenv)->DeleteLocalRef(jenv, _resultJObj);
+    return _resultPyObj;
+}
+
+PyObject* BeamPySubsetOp_setSourceProductById(PyObject* self, PyObject* args)
+{
+    static jmethodID _method = NULL;
+    
+    jobject _thisJObj = NULL;
+    const char* id = NULL;
+    jstring idJObj = NULL;
+    PyObject* productPyObj = NULL;
+    jobject productJObj = NULL;
+    if (!BPy_InitApi()) {
+        return NULL;
+    }
+    if (!BPy_InitJMethod(&_method, BPy_SubsetOp_Class, "org.esa.beam.gpf.operators.standard.SubsetOp", "setSourceProduct", "(Ljava/lang/String;Lorg/esa/beam/framework/datamodel/Product;)V", 0)) {
+        return NULL;
+    }
+    _thisJObj = JObject_AsJObjectRefT(self, BPy_SubsetOp_Class);
+    if (_thisJObj == NULL) {
+        PyErr_SetString(PyExc_ValueError, "argument 'self' must be of type 'SubsetOp' (Java object reference)");
+        return NULL;
+    }
+    if (!PyArg_ParseTuple(args, "sO:setSourceProduct", &id, &productPyObj)) {
+        return NULL;
+    }
+    idJObj =(*jenv)->NewStringUTF(jenv, id);
+    {
+        jboolean ok = 1;
+        productJObj = BPy_ToJObjectT(productPyObj, BPy_Product_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
+    }
+    (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, idJObj, productJObj);
+    CHECK_JVM_EXCEPTION("org.esa.beam.gpf.operators.standard.SubsetOp#setSourceProduct(Ljava/lang/String;Lorg/esa/beam/framework/datamodel/Product;)V");
+    (*jenv)->DeleteLocalRef(jenv, idJObj);
+    return Py_BuildValue("");
+}
+
+PyObject* BeamPySubsetOp_getSourceProductId(PyObject* self, PyObject* args)
+{
+    static jmethodID _method = NULL;
+    
+    jobject _thisJObj = NULL;
+    PyObject* productPyObj = NULL;
+    jobject productJObj = NULL;
+    PyObject* _resultPyObj = NULL;
+    jobject _resultJObj = NULL;
+    if (!BPy_InitApi()) {
+        return NULL;
+    }
+    if (!BPy_InitJMethod(&_method, BPy_SubsetOp_Class, "org.esa.beam.gpf.operators.standard.SubsetOp", "getSourceProductId", "(Lorg/esa/beam/framework/datamodel/Product;)Ljava/lang/String;", 0)) {
+        return NULL;
+    }
+    _thisJObj = JObject_AsJObjectRefT(self, BPy_SubsetOp_Class);
+    if (_thisJObj == NULL) {
+        PyErr_SetString(PyExc_ValueError, "argument 'self' must be of type 'SubsetOp' (Java object reference)");
+        return NULL;
+    }
+    if (!PyArg_ParseTuple(args, "O:getSourceProductId", &productPyObj)) {
+        return NULL;
+    }
+    {
+        jboolean ok = 1;
+        productJObj = BPy_ToJObjectT(productPyObj, BPy_Product_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
+    }
+    _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, productJObj);
+    CHECK_JVM_EXCEPTION("org.esa.beam.gpf.operators.standard.SubsetOp#getSourceProductId(Lorg/esa/beam/framework/datamodel/Product;)Ljava/lang/String;");
+    _resultPyObj = BPy_FromJString((jstring) _resultJObj);
+    (*jenv)->DeleteLocalRef(jenv, _resultJObj);
+    return _resultPyObj;
+}
+
+PyObject* BeamPySubsetOp_getTargetProduct(PyObject* self, PyObject* args)
+{
+    static jmethodID _method = NULL;
+    
+    jobject _thisJObj = NULL;
+    PyObject* _resultPyObj = NULL;
+    jobject _resultJObj = NULL;
+    if (!BPy_InitApi()) {
+        return NULL;
+    }
+    if (!BPy_InitJMethod(&_method, BPy_SubsetOp_Class, "org.esa.beam.gpf.operators.standard.SubsetOp", "getTargetProduct", "()Lorg/esa/beam/framework/datamodel/Product;", 0)) {
+        return NULL;
+    }
+    _thisJObj = JObject_AsJObjectRefT(self, BPy_SubsetOp_Class);
+    if (_thisJObj == NULL) {
+        PyErr_SetString(PyExc_ValueError, "argument 'self' must be of type 'SubsetOp' (Java object reference)");
+        return NULL;
+    }
+    _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
+    CHECK_JVM_EXCEPTION("org.esa.beam.gpf.operators.standard.SubsetOp#getTargetProduct()Lorg/esa/beam/framework/datamodel/Product;");
+    _resultPyObj = BPy_FromJObject(&Product_Type, _resultJObj);
+    (*jenv)->DeleteLocalRef(jenv, _resultJObj);
+    return _resultPyObj;
+}
+
+PyObject* BeamPySubsetOp_getTargetProperty(PyObject* self, PyObject* args)
+{
+    static jmethodID _method = NULL;
+    
+    jobject _thisJObj = NULL;
+    const char* name = NULL;
+    jstring nameJObj = NULL;
+    PyObject* _resultPyObj = NULL;
+    jobject _resultJObj = NULL;
+    if (!BPy_InitApi()) {
+        return NULL;
+    }
+    if (!BPy_InitJMethod(&_method, BPy_SubsetOp_Class, "org.esa.beam.gpf.operators.standard.SubsetOp", "getTargetProperty", "(Ljava/lang/String;)Ljava/lang/Object;", 0)) {
+        return NULL;
+    }
+    _thisJObj = JObject_AsJObjectRefT(self, BPy_SubsetOp_Class);
+    if (_thisJObj == NULL) {
+        PyErr_SetString(PyExc_ValueError, "argument 'self' must be of type 'SubsetOp' (Java object reference)");
+        return NULL;
+    }
+    if (!PyArg_ParseTuple(args, "s:getTargetProperty", &name)) {
+        return NULL;
+    }
+    nameJObj =(*jenv)->NewStringUTF(jenv, name);
+    _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, nameJObj);
+    CHECK_JVM_EXCEPTION("org.esa.beam.gpf.operators.standard.SubsetOp#getTargetProperty(Ljava/lang/String;)Ljava/lang/Object;");
+    _resultPyObj = BPy_FromJObject(&Object_Type, _resultJObj);
+    (*jenv)->DeleteLocalRef(jenv, nameJObj);
+    (*jenv)->DeleteLocalRef(jenv, _resultJObj);
+    return _resultPyObj;
+}
+
+PyObject* BeamPySubsetOp_getParameter(PyObject* self, PyObject* args)
+{
+    static jmethodID _method = NULL;
+    
+    jobject _thisJObj = NULL;
+    const char* name = NULL;
+    jstring nameJObj = NULL;
+    PyObject* _resultPyObj = NULL;
+    jobject _resultJObj = NULL;
+    if (!BPy_InitApi()) {
+        return NULL;
+    }
+    if (!BPy_InitJMethod(&_method, BPy_SubsetOp_Class, "org.esa.beam.gpf.operators.standard.SubsetOp", "getParameter", "(Ljava/lang/String;)Ljava/lang/Object;", 0)) {
+        return NULL;
+    }
+    _thisJObj = JObject_AsJObjectRefT(self, BPy_SubsetOp_Class);
+    if (_thisJObj == NULL) {
+        PyErr_SetString(PyExc_ValueError, "argument 'self' must be of type 'SubsetOp' (Java object reference)");
+        return NULL;
+    }
+    if (!PyArg_ParseTuple(args, "s:getParameter", &name)) {
+        return NULL;
+    }
+    nameJObj =(*jenv)->NewStringUTF(jenv, name);
+    _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, nameJObj);
+    CHECK_JVM_EXCEPTION("org.esa.beam.gpf.operators.standard.SubsetOp#getParameter(Ljava/lang/String;)Ljava/lang/Object;");
+    _resultPyObj = BPy_FromJObject(&Object_Type, _resultJObj);
+    (*jenv)->DeleteLocalRef(jenv, nameJObj);
+    (*jenv)->DeleteLocalRef(jenv, _resultJObj);
+    return _resultPyObj;
+}
+
+PyObject* BeamPySubsetOp_setParameter(PyObject* self, PyObject* args)
+{
+    static jmethodID _method = NULL;
+    
+    jobject _thisJObj = NULL;
+    const char* name = NULL;
+    jstring nameJObj = NULL;
+    PyObject* valuePyObj = NULL;
+    jobject valueJObj = NULL;
+    if (!BPy_InitApi()) {
+        return NULL;
+    }
+    if (!BPy_InitJMethod(&_method, BPy_SubsetOp_Class, "org.esa.beam.gpf.operators.standard.SubsetOp", "setParameter", "(Ljava/lang/String;Ljava/lang/Object;)V", 0)) {
+        return NULL;
+    }
+    _thisJObj = JObject_AsJObjectRefT(self, BPy_SubsetOp_Class);
+    if (_thisJObj == NULL) {
+        PyErr_SetString(PyExc_ValueError, "argument 'self' must be of type 'SubsetOp' (Java object reference)");
+        return NULL;
+    }
+    if (!PyArg_ParseTuple(args, "sO:setParameter", &name, &valuePyObj)) {
+        return NULL;
+    }
+    nameJObj =(*jenv)->NewStringUTF(jenv, name);
+    {
+        jboolean ok = 1;
+        valueJObj = BPy_ToJObjectT(valuePyObj, BPy_Object_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
+    }
+    (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, nameJObj, valueJObj);
+    CHECK_JVM_EXCEPTION("org.esa.beam.gpf.operators.standard.SubsetOp#setParameter(Ljava/lang/String;Ljava/lang/Object;)V");
+    (*jenv)->DeleteLocalRef(jenv, nameJObj);
+    return Py_BuildValue("");
+}
+
 PyObject* BeamPyProductReader_getReaderPlugIn(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
@@ -37233,55 +37945,6 @@ PyObject* BeamPyProductUtils_createGeoBoundary3(PyObject* self, PyObject* args)
     _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, BPy_ProductUtils_Class, _method, productJObj, regionJObj, step, usePixelCenter);
     CHECK_JVM_EXCEPTION("org.esa.beam.util.ProductUtils#createGeoBoundary(Lorg/esa/beam/framework/datamodel/Product;Ljava/awt/Rectangle;IZ)[Lorg/esa/beam/framework/datamodel/GeoPos;");
     _resultPyObj = BPy_FromJObjectArray((jarray) _resultJObj);
-    (*jenv)->DeleteLocalRef(jenv, _resultJObj);
-    return _resultPyObj;
-}
-
-PyObject* BeamPyProductUtils_getClosestGeoPos(PyObject* self, PyObject* args)
-{
-    static jmethodID _method = NULL;
-    PyObject* gcPyObj = NULL;
-    jobject gcJObj = NULL;
-    PyObject* origPosPyObj = NULL;
-    jobject origPosJObj = NULL;
-    PyObject* regionPyObj = NULL;
-    jobject regionJObj = NULL;
-    jint step = (jint) 0;
-    PyObject* _resultPyObj = NULL;
-    jobject _resultJObj = NULL;
-    if (!BPy_InitApi()) {
-        return NULL;
-    }
-    if (!BPy_InitJMethod(&_method, BPy_ProductUtils_Class, "org.esa.beam.util.ProductUtils", "getClosestGeoPos", "(Lorg/esa/beam/framework/datamodel/GeoCoding;Lorg/esa/beam/framework/datamodel/PixelPos;Ljava/awt/Rectangle;I)Lorg/esa/beam/framework/datamodel/GeoPos;", 1)) {
-        return NULL;
-    }
-    if (!PyArg_ParseTuple(args, "OOOi:getClosestGeoPos", &gcPyObj, &origPosPyObj, &regionPyObj, &step)) {
-        return NULL;
-    }
-    {
-        jboolean ok = 1;
-        gcJObj = BPy_ToJObjectT(gcPyObj, BPy_GeoCoding_Class, &ok);
-        if (!ok) {
-            return NULL;
-        }
-    }
-    {
-        jboolean ok = 1;
-        origPosJObj = BPy_ToJObjectT(origPosPyObj, BPy_PixelPos_Class, &ok);
-        if (!ok) {
-            return NULL;
-        }
-    }
-    {
-        jboolean ok = 1;
-        regionJObj = BPy_ToJObjectT(regionPyObj, BPy_Rectangle_Class, &ok);
-        if (!ok) {
-            return NULL;
-        }
-    }
-    _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, BPy_ProductUtils_Class, _method, gcJObj, origPosJObj, regionJObj, step);
-    CHECK_JVM_EXCEPTION("org.esa.beam.util.ProductUtils#getClosestGeoPos(Lorg/esa/beam/framework/datamodel/GeoCoding;Lorg/esa/beam/framework/datamodel/PixelPos;Ljava/awt/Rectangle;I)Lorg/esa/beam/framework/datamodel/GeoPos;");
-    _resultPyObj = BPy_FromJObject(&GeoPos_Type, _resultJObj);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }

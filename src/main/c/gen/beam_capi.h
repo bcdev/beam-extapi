@@ -35,6 +35,7 @@ typedef void* TiePointGrid;
 typedef void* AngularDirection;
 typedef void* FlagCoding;
 typedef void* Map;
+typedef void* SubsetOp;
 typedef void* ProductReader;
 typedef void* RGBChannelDef;
 typedef void* ProductData;
@@ -52,6 +53,7 @@ typedef void* MultiLevelImage;
 typedef void* Parser;
 typedef void* Term;
 typedef void* WritableNamespace;
+typedef void* Geometry;
 typedef void* Color;
 typedef void* Dimension;
 typedef void* Rectangle;
@@ -62,7 +64,6 @@ typedef void* AffineTransform;
 typedef void* Area;
 typedef void* GeneralPath;
 typedef void* Point2D;
-typedef void* Rectangle2D;
 typedef void* BufferedImage;
 typedef void* ComponentColorModel;
 typedef void* IndexColorModel;
@@ -431,8 +432,7 @@ void Product_setStartTime(Product _this, ProductData_UTC startTime);
 ProductData_UTC Product_getEndTime(Product _this);
 void Product_setEndTime(Product _this, ProductData_UTC endTime);
 MetadataElement Product_getMetadataRoot(Product _this);
-ProductNodeGroup Product_getGroups(Product _this);
-ProductNodeGroup Product_getGroup(Product _this, const char* name);
+ProductNodeGroup Product_getBandGroup(Product _this);
 ProductNodeGroup Product_getTiePointGridGroup(Product _this);
 void Product_addTiePointGrid(Product _this, TiePointGrid tiePointGrid);
 boolean Product_removeTiePointGrid(Product _this, TiePointGrid tiePointGrid);
@@ -442,7 +442,6 @@ char** Product_getTiePointGridNames(Product _this, int* _resultArrayLength);
 TiePointGrid* Product_getTiePointGrids(Product _this, int* _resultArrayLength);
 TiePointGrid Product_getTiePointGrid(Product _this, const char* name);
 boolean Product_containsTiePointGrid(Product _this, const char* name);
-ProductNodeGroup Product_getBandGroup(Product _this);
 void Product_addBand(Product _this, Band band);
 Band Product_addNewBand(Product _this, const char* bandName, int dataType);
 Band Product_addComputedBand(Product _this, const char* bandName, const char* expression);
@@ -463,8 +462,6 @@ ProductNodeGroup Product_getIndexCodingGroup(Product _this);
 boolean Product_containsPixel(Product _this, float x, float y);
 PlacemarkGroup Product_getGcpGroup(Product _this);
 PlacemarkGroup Product_getPinGroup(Product _this);
-int Product_getNumResolutionsMax(Product _this);
-void Product_setNumResolutionsMax(Product _this, int numResolutionsMax);
 boolean Product_isCompatibleProduct(Product _this, Product product, float eps);
 Term Product_parseExpression(Product _this, const char* expression);
 void Product_acceptVisitor(Product _this, ProductVisitor visitor);
@@ -617,7 +614,6 @@ Point2D ImageGeometry_calculateEastingNorthing(Product sourceProduct, Coordinate
 Rectangle ImageGeometry_calculateProductSize(Product sourceProduct, CoordinateReferenceSystem targetCrs, double pixelSizeX, double pixelSizeY);
 ImageGeometry ImageGeometry_createTargetGeometry(Product sourceProduct, CoordinateReferenceSystem targetCrs, Double pixelSizeX, Double pixelSizeY, Integer width, Integer height, Double orientation, Double easting, Double northing, Double referencePixelX, Double referencePixelY);
 ImageGeometry ImageGeometry_createCollocationTargetGeometry(Product targetProduct, Product collocationProduct);
-Rectangle2D ImageGeometry_createValidRect(Product product);
 
 /* Constants of Band */
 extern const char* Band_PROPERTY_NAME_SAMPLE_CODING;
@@ -1128,6 +1124,35 @@ Set Map_entrySet(Map _this);
 boolean Map_equals(Map _this, Object arg0);
 int Map_hashCode(Map _this);
 
+/* Functions for class SubsetOp */
+
+SubsetOp SubsetOp_newSubsetOp();
+char** SubsetOp_getTiePointGridNames(SubsetOp _this, int* _resultArrayLength);
+void SubsetOp_setTiePointGridNames(SubsetOp _this, const char** tiePointGridNamesElems, int tiePointGridNamesLength);
+char** SubsetOp_getBandNames(SubsetOp _this, int* _resultArrayLength);
+void SubsetOp_setBandNames(SubsetOp _this, const char** bandNamesElems, int bandNamesLength);
+void SubsetOp_setCopyMetadata(SubsetOp _this, boolean copyMetadata);
+Rectangle SubsetOp_getRegion(SubsetOp _this);
+void SubsetOp_setRegion(SubsetOp _this, Rectangle region);
+void SubsetOp_setSubSamplingX(SubsetOp _this, int subSamplingX);
+void SubsetOp_setSubSamplingY(SubsetOp _this, int subSamplingY);
+Geometry SubsetOp_getGeoRegion(SubsetOp _this);
+void SubsetOp_setGeoRegion(SubsetOp _this, Geometry geoRegion);
+void SubsetOp_update(SubsetOp _this);
+void SubsetOp_dispose(SubsetOp _this);
+char* SubsetOp_getId(SubsetOp _this);
+Product* SubsetOp_getSourceProducts(SubsetOp _this, int* _resultArrayLength);
+void SubsetOp_setSourceProducts(SubsetOp _this, const Product productsElems, int productsLength);
+Product SubsetOp_getSourceProduct(SubsetOp _this);
+void SubsetOp_setSourceProduct(SubsetOp _this, Product sourceProduct);
+Product SubsetOp_getSourceProductById(SubsetOp _this, const char* id);
+void SubsetOp_setSourceProductById(SubsetOp _this, const char* id, Product product);
+char* SubsetOp_getSourceProductId(SubsetOp _this, Product product);
+Product SubsetOp_getTargetProduct(SubsetOp _this);
+Object SubsetOp_getTargetProperty(SubsetOp _this, const char* name);
+Object SubsetOp_getParameter(SubsetOp _this, const char* name);
+void SubsetOp_setParameter(SubsetOp _this, const char* name, Object value);
+
 /* Functions for class ProductReader */
 
 ProductReaderPlugIn ProductReader_getReaderPlugIn(ProductReader _this);
@@ -1323,7 +1348,6 @@ Point2D* ProductUtils_createMapBoundary(Product product, Rectangle rect, int ste
 GeoPos* ProductUtils_createGeoBoundary1(Product product, int step, int* _resultArrayLength);
 GeoPos* ProductUtils_createGeoBoundary2(Product product, Rectangle region, int step, int* _resultArrayLength);
 GeoPos* ProductUtils_createGeoBoundary3(Product product, Rectangle region, int step, boolean usePixelCenter, int* _resultArrayLength);
-GeoPos ProductUtils_getClosestGeoPos(GeoCoding gc, PixelPos origPos, Rectangle region, int step);
 GeoPos* ProductUtils_createGeoBoundary4(RasterDataNode raster, Rectangle region, int step, int* _resultArrayLength);
 GeneralPath* ProductUtils_createGeoBoundaryPaths1(Product product, int* _resultArrayLength);
 GeneralPath* ProductUtils_createGeoBoundaryPaths2(Product product, Rectangle region, int step, int* _resultArrayLength);
