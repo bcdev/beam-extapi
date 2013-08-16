@@ -284,15 +284,24 @@
                 sig="(Lorg/esa/beam/framework/datamodel/PixelPos;Lorg/esa/beam/framework/datamodel/GeoPos;)Lorg/esa/beam/framework/datamodel/GeoPos;"
                 mods="ir"/>
     </class>
-    <class name="org.esa.beam.framework.datamodel.GeoPos">
+
+    <class name="org.esa.beam.framework.datamodel.PixelPos">
+        <method name="&lt;init&gt;" sig="(FF)V" renameTo="newPixelPos"/>
         <method name="&lt;init&gt;" sig="()V" ignore="true"/>
+        <method name="setLocation" sig="(DD)V" ignore="true"/>
+        <method name="setLocation" sig="(FF)V" renameTo="setLocation..."/>
+    </class>
+
+    <class name="org.esa.beam.framework.datamodel.GeoPos">
         <method name="&lt;init&gt;" sig="(FF)V" renameTo="newGeoPos"/>
+        <method name="&lt;init&gt;" sig="()V" ignore="true"/>
         <method name="&lt;init&gt;" sig="(Lorg/esa/beam/framework/datamodel/GeoPos;)V" ignore="true"/>
         <method name="getLatString" sig="()Ljava/lang/String;"/>
         <method name="getLatString" sig="(F)Ljava/lang/String;" ignore="true"/>
         <method name="getLonString" sig="()Ljava/lang/String;"/>
         <method name="getLonString" sig="(F)Ljava/lang/String;" ignore="true"/>
     </class>
+
     <class name="org.esa.beam.framework.datamodel.ImageGeometry"/>
     <class name="org.esa.beam.framework.datamodel.ImageInfo">
         <method name="&lt;init&gt;" sig="(Lorg/esa/beam/framework/datamodel/ColorPaletteDef;)V"
@@ -357,7 +366,6 @@
         <method name="getRawStorageSize" sig="(Lorg/esa/beam/framework/dataio/ProductSubsetDef;)J" ignore="true"/>
         <method name="getExtension" sig="(Ljava/lang/Class;)LE;" ignore="true"/>
     </class>
-    <class name="org.esa.beam.framework.datamodel.PixelPos"/>
     <class name="org.esa.beam.framework.datamodel.Placemark">
         <method name="fireProductNodeChanged" sig="(Ljava/lang/String;)V" ignore="true"/>
         <method name="fireProductNodeChanged" sig="(Ljava/lang/String;Ljava/lang/Object;Ljava/lang/Object;)V"
