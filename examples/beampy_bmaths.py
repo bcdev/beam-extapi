@@ -27,7 +27,7 @@ parameters = {
             'expression': 'radiance_1 - radiance_2'
         },
         {
-            'name': 'band_1',
+            'name': 'band_2',
             'expression': 'radiance_6 - radiance_7'
         }
     ]
