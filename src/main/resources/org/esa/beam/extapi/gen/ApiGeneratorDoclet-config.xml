@@ -288,8 +288,7 @@
     <class name="org.esa.beam.framework.datamodel.PixelPos">
         <method name="&lt;init&gt;" sig="(FF)V" renameTo="newPixelPos"/>
         <method name="&lt;init&gt;" sig="()V" ignore="true"/>
-        <method name="setLocation" sig="(DD)V" ignore="true"/>
-        <method name="setLocation" sig="(FF)V" renameTo="setLocation..."/>
+        <method name="setLocation" sig="(FF)V" renameTo="setLocation"/>
     </class>
 
     <class name="org.esa.beam.framework.datamodel.GeoPos">
