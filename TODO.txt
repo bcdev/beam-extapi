@@ -1,0 +1,7 @@
+Add BeamHelpers.py to API:
+- function to create product subset
+- function to create product reprojection
+
+Add BeamNumpy.py to API:
+- convert ProductData.TYPE_xxx to numpy data type value
+
