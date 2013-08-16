@@ -137,9 +137,10 @@ EXPORTS
 	PixelPos_setInvalid
 	PixelPos_getX
 	PixelPos_getY
-	PixelPos_setLocation...
+	PixelPos_setLocation1
+	PixelPos_setLocation2
 	PixelPos_toString
-	PixelPos_setLocation
+	PixelPos_setLocation3
 	PixelPos_distanceSq2
 	PixelPos_distance2
 	PixelPos_distanceSq1
@@ -273,8 +274,7 @@ EXPORTS
 	Product_getEndTime
 	Product_setEndTime
 	Product_getMetadataRoot
-	Product_getGroups
-	Product_getGroup
+	Product_getBandGroup
 	Product_getTiePointGridGroup
 	Product_addTiePointGrid
 	Product_removeTiePointGrid
@@ -284,7 +284,6 @@ EXPORTS
 	Product_getTiePointGrids
 	Product_getTiePointGrid
 	Product_containsTiePointGrid
-	Product_getBandGroup
 	Product_addBand
 	Product_addNewBand
 	Product_addComputedBand
@@ -305,8 +304,6 @@ EXPORTS
 	Product_containsPixel
 	Product_getGcpGroup
 	Product_getPinGroup
-	Product_getNumResolutionsMax
-	Product_setNumResolutionsMax
 	Product_isCompatibleProduct
 	Product_parseExpression
 	Product_acceptVisitor
@@ -438,7 +435,6 @@ EXPORTS
 	ImageGeometry_calculateProductSize
 	ImageGeometry_createTargetGeometry
 	ImageGeometry_createCollocationTargetGeometry
-	ImageGeometry_createValidRect
 	Band_newBand
 	Band_getFlagCoding
 	Band_isFlagBand
@@ -1049,7 +1045,6 @@ EXPORTS
 	ProductUtils_createGeoBoundary1
 	ProductUtils_createGeoBoundary2
 	ProductUtils_createGeoBoundary3
-	ProductUtils_getClosestGeoPos
 	ProductUtils_createGeoBoundary4
 	ProductUtils_createGeoBoundaryPaths1
 	ProductUtils_createGeoBoundaryPaths2
