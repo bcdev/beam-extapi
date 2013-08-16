@@ -118,6 +118,7 @@ jclass classProductData_UTC;
 jclass classRenderedImage;
 jclass classIterator;
 jclass classFile;
+jclass classRectangle2D;
 jclass classGeoPos;
 jclass classProductNodeGroup;
 jclass classProductManager;
@@ -731,199 +732,206 @@ int beam_initApi()
         return exitCode;
     }
 
+    classRectangle2D = beam_findJvmClass("java/awt/geom/Rectangle2D");
+    if (classRectangle2D == NULL) { 
+        fprintf(stderr, "beam_capi: Java class not found: java/awt/geom/Rectangle2D\n");
+        exitCode = 2067;
+        return exitCode;
+    }
+
     classGeoPos = beam_findJvmClass("org/esa/beam/framework/datamodel/GeoPos");
     if (classGeoPos == NULL) { 
         fprintf(stderr, "beam_capi: Java class not found: org/esa/beam/framework/datamodel/GeoPos\n");
-        exitCode = 2067;
+        exitCode = 2068;
         return exitCode;
     }
 
     classProductNodeGroup = beam_findJvmClass("org/esa/beam/framework/datamodel/ProductNodeGroup");
     if (classProductNodeGroup == NULL) { 
         fprintf(stderr, "beam_capi: Java class not found: org/esa/beam/framework/datamodel/ProductNodeGroup\n");
-        exitCode = 2068;
+        exitCode = 2069;
         return exitCode;
     }
 
     classProductManager = beam_findJvmClass("org/esa/beam/framework/datamodel/ProductManager");
     if (classProductManager == NULL) { 
         fprintf(stderr, "beam_capi: Java class not found: org/esa/beam/framework/datamodel/ProductManager\n");
-        exitCode = 2069;
+        exitCode = 2070;
         return exitCode;
     }
 
     classMapProjection = beam_findJvmClass("org/esa/beam/framework/dataop/maptransf/MapProjection");
     if (classMapProjection == NULL) { 
         fprintf(stderr, "beam_capi: Java class not found: org/esa/beam/framework/dataop/maptransf/MapProjection\n");
-        exitCode = 2070;
+        exitCode = 2071;
         return exitCode;
     }
 
     classFlagCoding = beam_findJvmClass("org/esa/beam/framework/datamodel/FlagCoding");
     if (classFlagCoding == NULL) { 
         fprintf(stderr, "beam_capi: Java class not found: org/esa/beam/framework/datamodel/FlagCoding\n");
-        exitCode = 2071;
+        exitCode = 2072;
         return exitCode;
     }
 
     classOperator = beam_findJvmClass("org/esa/beam/framework/gpf/Operator");
     if (classOperator == NULL) { 
         fprintf(stderr, "beam_capi: Java class not found: org/esa/beam/framework/gpf/Operator\n");
-        exitCode = 2072;
+        exitCode = 2073;
         return exitCode;
     }
 
     classOperatorSpiRegistry = beam_findJvmClass("org/esa/beam/framework/gpf/OperatorSpiRegistry");
     if (classOperatorSpiRegistry == NULL) { 
         fprintf(stderr, "beam_capi: Java class not found: org/esa/beam/framework/gpf/OperatorSpiRegistry\n");
-        exitCode = 2073;
+        exitCode = 2074;
         return exitCode;
     }
 
     classBitmaskDef = beam_findJvmClass("org/esa/beam/framework/datamodel/BitmaskDef");
     if (classBitmaskDef == NULL) { 
         fprintf(stderr, "beam_capi: Java class not found: org/esa/beam/framework/datamodel/BitmaskDef\n");
-        exitCode = 2074;
+        exitCode = 2075;
         return exitCode;
     }
 
     classImageInfo_HistogramMatching = beam_findJvmClass("org/esa/beam/framework/datamodel/ImageInfo$HistogramMatching");
     if (classImageInfo_HistogramMatching == NULL) { 
         fprintf(stderr, "beam_capi: Java class not found: org/esa/beam/framework/datamodel/ImageInfo$HistogramMatching\n");
-        exitCode = 2075;
+        exitCode = 2076;
         return exitCode;
     }
 
     classDatum = beam_findJvmClass("org/esa/beam/framework/dataop/maptransf/Datum");
     if (classDatum == NULL) { 
         fprintf(stderr, "beam_capi: Java class not found: org/esa/beam/framework/dataop/maptransf/Datum\n");
-        exitCode = 2076;
+        exitCode = 2077;
         return exitCode;
     }
 
     classProductUtils = beam_findJvmClass("org/esa/beam/util/ProductUtils");
     if (classProductUtils == NULL) { 
         fprintf(stderr, "beam_capi: Java class not found: org/esa/beam/util/ProductUtils\n");
-        exitCode = 2077;
+        exitCode = 2078;
         return exitCode;
     }
 
     classMap = beam_findJvmClass("java/util/Map");
     if (classMap == NULL) { 
         fprintf(stderr, "beam_capi: Java class not found: java/util/Map\n");
-        exitCode = 2078;
+        exitCode = 2079;
         return exitCode;
     }
 
     classSubsetOp = beam_findJvmClass("org/esa/beam/gpf/operators/standard/SubsetOp");
     if (classSubsetOp == NULL) { 
         fprintf(stderr, "beam_capi: Java class not found: org/esa/beam/gpf/operators/standard/SubsetOp\n");
-        exitCode = 2079;
+        exitCode = 2080;
         return exitCode;
     }
 
     classPointing = beam_findJvmClass("org/esa/beam/framework/datamodel/Pointing");
     if (classPointing == NULL) { 
         fprintf(stderr, "beam_capi: Java class not found: org/esa/beam/framework/datamodel/Pointing\n");
-        exitCode = 2080;
+        exitCode = 2081;
         return exitCode;
     }
 
     classPlacemarkDescriptor = beam_findJvmClass("org/esa/beam/framework/datamodel/PlacemarkDescriptor");
     if (classPlacemarkDescriptor == NULL) { 
         fprintf(stderr, "beam_capi: Java class not found: org/esa/beam/framework/datamodel/PlacemarkDescriptor\n");
-        exitCode = 2081;
+        exitCode = 2082;
         return exitCode;
     }
 
     classPointingFactory = beam_findJvmClass("org/esa/beam/framework/datamodel/PointingFactory");
     if (classPointingFactory == NULL) { 
         fprintf(stderr, "beam_capi: Java class not found: org/esa/beam/framework/datamodel/PointingFactory\n");
-        exitCode = 2082;
+        exitCode = 2083;
         return exitCode;
     }
 
     classPoint2D = beam_findJvmClass("java/awt/geom/Point2D");
     if (classPoint2D == NULL) { 
         fprintf(stderr, "beam_capi: Java class not found: java/awt/geom/Point2D\n");
-        exitCode = 2083;
+        exitCode = 2084;
         return exitCode;
     }
 
     classScaling = beam_findJvmClass("org/esa/beam/framework/datamodel/Scaling");
     if (classScaling == NULL) { 
         fprintf(stderr, "beam_capi: Java class not found: org/esa/beam/framework/datamodel/Scaling\n");
-        exitCode = 2084;
+        exitCode = 2085;
         return exitCode;
     }
 
     classCollection = beam_findJvmClass("java/util/Collection");
     if (classCollection == NULL) { 
         fprintf(stderr, "beam_capi: Java class not found: java/util/Collection\n");
-        exitCode = 2085;
+        exitCode = 2086;
         return exitCode;
     }
 
     classGeoTIFFMetadata = beam_findJvmClass("org/esa/beam/util/geotiff/GeoTIFFMetadata");
     if (classGeoTIFFMetadata == NULL) { 
         fprintf(stderr, "beam_capi: Java class not found: org/esa/beam/util/geotiff/GeoTIFFMetadata\n");
-        exitCode = 2086;
+        exitCode = 2087;
         return exitCode;
     }
 
     classMapInfo = beam_findJvmClass("org/esa/beam/framework/dataop/maptransf/MapInfo");
     if (classMapInfo == NULL) { 
         fprintf(stderr, "beam_capi: Java class not found: org/esa/beam/framework/dataop/maptransf/MapInfo\n");
-        exitCode = 2087;
+        exitCode = 2088;
         return exitCode;
     }
 
     classBufferedImage = beam_findJvmClass("java/awt/image/BufferedImage");
     if (classBufferedImage == NULL) { 
         fprintf(stderr, "beam_capi: Java class not found: java/awt/image/BufferedImage\n");
-        exitCode = 2088;
+        exitCode = 2089;
         return exitCode;
     }
 
     classSimpleFeature = beam_findJvmClass("org/opengis/feature/simple/SimpleFeature");
     if (classSimpleFeature == NULL) { 
         fprintf(stderr, "beam_capi: Java class not found: org/opengis/feature/simple/SimpleFeature\n");
-        exitCode = 2089;
+        exitCode = 2090;
         return exitCode;
     }
 
     classProductSubsetDef = beam_findJvmClass("org/esa/beam/framework/dataio/ProductSubsetDef");
     if (classProductSubsetDef == NULL) { 
         fprintf(stderr, "beam_capi: Java class not found: org/esa/beam/framework/dataio/ProductSubsetDef\n");
-        exitCode = 2090;
+        exitCode = 2091;
         return exitCode;
     }
 
     classProductWriter = beam_findJvmClass("org/esa/beam/framework/dataio/ProductWriter");
     if (classProductWriter == NULL) { 
         fprintf(stderr, "beam_capi: Java class not found: org/esa/beam/framework/dataio/ProductWriter\n");
-        exitCode = 2091;
+        exitCode = 2092;
         return exitCode;
     }
 
     classProgressMonitor = beam_findJvmClass("com/bc/ceres/core/ProgressMonitor");
     if (classProgressMonitor == NULL) { 
         fprintf(stderr, "beam_capi: Java class not found: com/bc/ceres/core/ProgressMonitor\n");
-        exitCode = 2092;
+        exitCode = 2093;
         return exitCode;
     }
 
     classMetadataAttribute = beam_findJvmClass("org/esa/beam/framework/datamodel/MetadataAttribute");
     if (classMetadataAttribute == NULL) { 
         fprintf(stderr, "beam_capi: Java class not found: org/esa/beam/framework/datamodel/MetadataAttribute\n");
-        exitCode = 2093;
+        exitCode = 2094;
         return exitCode;
     }
 
     classGeneralPath = beam_findJvmClass("java/awt/geom/GeneralPath");
     if (classGeneralPath == NULL) { 
         fprintf(stderr, "beam_capi: Java class not found: java/awt/geom/GeneralPath\n");
-        exitCode = 2094;
+        exitCode = 2095;
         return exitCode;
     }
 
@@ -3626,26 +3634,7 @@ Object IndexCoding_getExtension(IndexCoding _this, Class arg0)
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
-PixelPos PixelPos_newPixelPos1()
-{
-    static jmethodID _method = NULL;
-    PixelPos _result = (PixelPos) 0;
-    if (_method == NULL) {
-        if (beam_initApi() == 0) {
-            _method = (*jenv)->GetMethodID(jenv, classPixelPos, "<init>", "()V");
-            if (_method == NULL) {
-                /* Set global error */
-            }
-        }
-        if (_method == NULL) {
-            return _result;
-        }
-    }
-    _result = (*jenv)->NewObject(jenv, classPixelPos, _method);
-    return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
-}
-
-PixelPos PixelPos_newPixelPos2(float x, float y)
+PixelPos PixelPos_newPixelPos(float x, float y)
 {
     static jmethodID _method = NULL;
     PixelPos _result = (PixelPos) 0;
@@ -3738,24 +3727,7 @@ double PixelPos_getY(PixelPos _this)
     return _result;
 }
 
-void PixelPos_setLocation1(PixelPos _this, double arg0, double arg1)
-{
-    static jmethodID _method = NULL;
-    if (_method == NULL) {
-        if (beam_initApi() == 0) {
-            _method = (*jenv)->GetMethodID(jenv, classPixelPos, "setLocation", "(DD)V");
-            if (_method == NULL) {
-                /* Set global error */
-            }
-        }
-        if (_method == NULL) {
-            return;
-        }
-    }
-    (*jenv)->CallVoidMethod(jenv, _this, _method, arg0, arg1);
-}
-
-void PixelPos_setLocation2(PixelPos _this, float arg0, float arg1)
+void PixelPos_setLocation...(PixelPos _this, float arg0, float arg1)
 {
     static jmethodID _method = NULL;
     if (_method == NULL) {
@@ -3794,7 +3766,7 @@ char* PixelPos_toString(PixelPos _this)
     return _result;
 }
 
-void PixelPos_setLocation3(PixelPos _this, Point2D arg0)
+void PixelPos_setLocation(PixelPos _this, Point2D arg0)
 {
     static jmethodID _method = NULL;
     if (_method == NULL) {
@@ -6443,13 +6415,13 @@ MetadataElement Product_getMetadataRoot(Product _this)
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
-ProductNodeGroup Product_getBandGroup(Product _this)
+ProductNodeGroup Product_getGroups(Product _this)
 {
     static jmethodID _method = NULL;
     ProductNodeGroup _result = (ProductNodeGroup) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
-            _method = (*jenv)->GetMethodID(jenv, classProduct, "getBandGroup", "()Lorg/esa/beam/framework/datamodel/ProductNodeGroup;");
+            _method = (*jenv)->GetMethodID(jenv, classProduct, "getGroups", "()Lorg/esa/beam/framework/datamodel/ProductNodeGroup;");
             if (_method == NULL) {
                 /* Set global error */
             }
@@ -6459,6 +6431,28 @@ ProductNodeGroup Product_getBandGroup(Product _this)
         }
     }
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
+    return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
+}
+
+ProductNodeGroup Product_getGroup(Product _this, const char* name)
+{
+    static jmethodID _method = NULL;
+    jstring nameString = NULL;
+    ProductNodeGroup _result = (ProductNodeGroup) 0;
+    if (_method == NULL) {
+        if (beam_initApi() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProduct, "getGroup", "(Ljava/lang/String;)Lorg/esa/beam/framework/datamodel/ProductNodeGroup;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
+    }
+    nameString = (*jenv)->NewStringUTF(jenv, name);
+    _result = (*jenv)->CallObjectMethod(jenv, _this, _method, nameString);
+    (*jenv)->DeleteLocalRef(jenv, nameString);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
@@ -6641,6 +6635,25 @@ boolean Product_containsTiePointGrid(Product _this, const char* name)
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method, nameString);
     (*jenv)->DeleteLocalRef(jenv, nameString);
     return _result;
+}
+
+ProductNodeGroup Product_getBandGroup(Product _this)
+{
+    static jmethodID _method = NULL;
+    ProductNodeGroup _result = (ProductNodeGroup) 0;
+    if (_method == NULL) {
+        if (beam_initApi() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProduct, "getBandGroup", "()Lorg/esa/beam/framework/datamodel/ProductNodeGroup;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
+    }
+    _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
+    return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
 void Product_addBand(Product _this, Band band)
@@ -7049,6 +7062,42 @@ PlacemarkGroup Product_getPinGroup(Product _this)
     }
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
+}
+
+int Product_getNumResolutionsMax(Product _this)
+{
+    static jmethodID _method = NULL;
+    int _result = (int) 0;
+    if (_method == NULL) {
+        if (beam_initApi() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProduct, "getNumResolutionsMax", "()I");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
+    }
+    _result = (*jenv)->CallIntMethod(jenv, _this, _method);
+    return _result;
+}
+
+void Product_setNumResolutionsMax(Product _this, int numResolutionsMax)
+{
+    static jmethodID _method = NULL;
+    if (_method == NULL) {
+        if (beam_initApi() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProduct, "setNumResolutionsMax", "(I)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
+    }
+    (*jenv)->CallVoidMethod(jenv, _this, _method, numResolutionsMax);
 }
 
 boolean Product_isCompatibleProduct(Product _this, Product product, float eps)
@@ -9612,6 +9661,25 @@ ImageGeometry ImageGeometry_createCollocationTargetGeometry(Product targetProduc
         }
     }
     _result = (*jenv)->CallStaticObjectMethod(jenv, classImageGeometry, _method, targetProduct, collocationProduct);
+    return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
+}
+
+Rectangle2D ImageGeometry_createValidRect(Product product)
+{
+    static jmethodID _method = NULL;
+    Rectangle2D _result = (Rectangle2D) 0;
+    if (_method == NULL) {
+        if (beam_initApi() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classImageGeometry, "createValidRect", "(Lorg/esa/beam/framework/datamodel/Product;)Ljava/awt/geom/Rectangle2D;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
+    }
+    _result = (*jenv)->CallStaticObjectMethod(jenv, classImageGeometry, _method, product);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
@@ -21637,6 +21705,25 @@ GeoPos* ProductUtils_createGeoBoundary3(Product product, Rectangle region, int s
     _result = beam_newCObjectArray(_resultArray, _resultArrayLength);
     (*jenv)->DeleteLocalRef(jenv, _resultArray);
     return _result;
+}
+
+GeoPos ProductUtils_getClosestGeoPos(GeoCoding gc, PixelPos origPos, Rectangle region, int step)
+{
+    static jmethodID _method = NULL;
+    GeoPos _result = (GeoPos) 0;
+    if (_method == NULL) {
+        if (beam_initApi() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "getClosestGeoPos", "(Lorg/esa/beam/framework/datamodel/GeoCoding;Lorg/esa/beam/framework/datamodel/PixelPos;Ljava/awt/Rectangle;I)Lorg/esa/beam/framework/datamodel/GeoPos;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
+    }
+    _result = (*jenv)->CallStaticObjectMethod(jenv, classProductUtils, _method, gc, origPos, region, step);
+    return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
 GeoPos* ProductUtils_createGeoBoundary4(RasterDataNode raster, Rectangle region, int step, int* _resultArrayLength)
