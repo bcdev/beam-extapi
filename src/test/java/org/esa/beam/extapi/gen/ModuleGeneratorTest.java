@@ -25,25 +25,30 @@ import static org.junit.Assert.assertTrue;
  * @author Norman Fomferra
  */
 public abstract class ModuleGeneratorTest {
-    public static final Class<TestClass2> TEST_CLASS_2 = TestClass2.class;
+    public static final Class<?> TEST_CLASS_2 = TestClass2.class;
+    public static final Class<?> TEST_CLASS_2_GEOM = TestClass2.Geom.class;
     public static ApiInfo apiInfo;
     private ModuleGenerator moduleGenerator;
     private ApiClass testClass2;
+    private ApiClass testClass2Geom;
 
     @BeforeClass
     public static void beforeClass() throws Exception {
-        ApiGeneratorConfigMock config = new ApiGeneratorConfigMock(TEST_CLASS_2);
-        config.addModifiers("getPixelsWithResultParam", "([FI)[F", new ApiParameter.Modifier[]{
+        ApiGeneratorConfigMock config = new ApiGeneratorConfigMock(TEST_CLASS_2, TEST_CLASS_2_GEOM);
+        config.addModifiers(TEST_CLASS_2, "getPixelsWithResultParam", "([FI)[F", new ApiParameter.Modifier[]{
                 ApiParameter.Modifier.RETURN,
                 ApiParameter.Modifier.IN
         });
-        RootDoc rootDoc = DocMock.createRootDoc(TEST_CLASS_2);
+        RootDoc rootDoc = DocMock.createRootDoc(TEST_CLASS_2, TEST_CLASS_2_GEOM);
         apiInfo = ApiInfo.create(config, rootDoc);
     }
 
     @Before
     public void before() throws Exception {
         testClass2 = findApiClass(TEST_CLASS_2.getName());
+        assertNotNull(testClass2);
+        testClass2Geom = findApiClass(TEST_CLASS_2_GEOM.getName());
+        assertNotNull(testClass2Geom);
         moduleGenerator = createModuleGenerator();
     }
 
@@ -111,6 +116,11 @@ public abstract class ModuleGeneratorTest {
         testFunctionGenerator(testClass2, "TestClass2_getPixelsForRect.c", "getPixelsForRect", "(Ljava/awt/geom/Rectangle2D;)[F");
     }
 
+    @Test
+    public void testFunctionGenerators_TestClass2_Geom_getId() throws Exception {
+        testFunctionGenerator(testClass2Geom, "TestClass2_Geom_getId.c", "transform", "(Lorg/esa/beam/extapi/gen/test/TestClass2$Geom;)Lorg/esa/beam/extapi/gen/test/TestClass2$Geom;");
+    }
+
     private void testFunctionGenerator(ApiClass apiClass, String resourceName, String name, String sig) throws IOException {
         FunctionGenerator generator = findFunctionGenerator(apiClass, name, sig);
         assertNotNull(generator);
@@ -170,6 +180,7 @@ public abstract class ModuleGeneratorTest {
 
     public FunctionGenerator findFunctionGenerator(ApiClass apiClass, String name, String sig) {
         ApiMethod method = findApiMethod(apiClass, name, sig);
+        assertNotNull("method not found: " + apiClass.getJavaName()+ "#" + name + sig, method);
         List<FunctionGenerator> functionGenerators = moduleGenerator.getFunctionGenerators(apiClass);
         for (FunctionGenerator functionGenerator : functionGenerators) {
             if (functionGenerator.getApiMethod() == method) {
@@ -182,7 +193,9 @@ public abstract class ModuleGeneratorTest {
 
     public static ApiMethod findApiMethod(ApiClass apiClass, String name, String sig) {
         List<ApiMethod> apiMethods = apiInfo.getMethodsOf(apiClass);
+        assertFalse("no methods found: " + apiClass.getJavaName(), apiMethods.isEmpty());
         for (ApiMethod apiMethod : apiMethods) {
+            System.out.println("apiMethod = " + apiMethod);
             if (apiMethod.getJavaName().equals(name)
                     && apiMethod.getJavaSignature().equals(sig)) {
                 return apiMethod;

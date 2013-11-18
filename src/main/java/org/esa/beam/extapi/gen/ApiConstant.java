@@ -17,7 +17,7 @@ public class ApiConstant {
         this.enclosingClass = enclosingClass;
         this.fieldDoc = fieldDoc;
         javaName = fieldDoc.name();
-        javaSignature = ApiMethod.getJavaSignature(fieldDoc.type());
+        javaSignature = JavadocHelpers.getJavaSignature(fieldDoc.type());
     }
 
     public ApiClass getEnclosingClass() {

@@ -1,11 +1,11 @@
 package org.esa.beam.extapi.gen;
 
-import com.sun.javadoc.Doc;
-import com.sun.javadoc.ProgramElementDoc;
-import com.sun.javadoc.Type;
+import com.sun.javadoc.*;
 import org.apache.commons.lang.StringUtils;
 
 import java.util.ArrayList;
+
+import static org.esa.beam.extapi.gen.ApiInfo.unfoldType;
 
 /**
  * @author Norman Fomferra
@@ -16,7 +16,6 @@ public class JavadocHelpers {
         String name = getComponentCTypeName(type);
         return name + type.dimension().replace("[]", "*");
     }
-
 
     public static String getComponentCTypeName(Type type) {
         if (type.isPrimitive()) {
@@ -32,6 +31,83 @@ public class JavadocHelpers {
                 return type.typeName().replace('.', '_');
             }
         }
+    }
+
+    public static String getJavaName(Type type) {
+        final String tn = type.typeName();
+        final String qtn = type.qualifiedTypeName();
+        int pos = qtn.indexOf(tn);
+        if (pos > 0 && pos == qtn.length() - tn.length()) {
+            // Must be a nested class, reconstruct '$' that Javadoc has replaced by '.'
+            return qtn.substring(0, pos) + tn.replace('.', '$');
+        } else {
+            return qtn;
+        }
+    }
+
+    public static String getResourceName(Type type) {
+        final String tn = type.typeName();
+        final String qtn = type.qualifiedTypeName();
+        int pos = qtn.indexOf(tn);
+        if (pos > 0 && pos == qtn.length() - tn.length()) {
+            // Must be a nested class, reconstruct '$' that Javadoc has replaced by '.'
+            return qtn.substring(0, pos).replace('.', '/') + tn.replace('.', '$');
+        } else {
+            return type.qualifiedTypeName().replace('.', '/');
+        }
+    }
+
+    static String getJavaSignature(ExecutableMemberDoc memberDoc) {
+        StringBuilder sb = new StringBuilder();
+        sb.append('(');
+        for (Parameter parameter : memberDoc.parameters()) {
+            sb.append(getJavaSignature(parameter.type()));
+        }
+        sb.append(')');
+        if (memberDoc instanceof MethodDoc) {
+            sb.append(getJavaSignature(((MethodDoc) memberDoc).returnType()));
+        } else {
+            sb.append('V');
+        }
+        return sb.toString();
+    }
+
+    static String getJavaSignature(Type type) {
+        String comp;
+        if (type.isPrimitive()) {
+            if ("boolean".equals(type.typeName())) {
+                comp = "Z";
+            } else if ("byte".equals(type.typeName())) {
+                comp = "B";
+            } else if ("char".equals(type.typeName())) {
+                comp = "Constructor";
+            } else if ("short".equals(type.typeName())) {
+                comp = "S";
+            } else if ("int".equals(type.typeName())) {
+                comp = "I";
+            } else if ("long".equals(type.typeName())) {
+                comp = "J";
+            } else if ("float".equals(type.typeName())) {
+                comp = "F";
+            } else if ("double".equals(type.typeName())) {
+                comp = "D";
+            } else if ("void".equals(type.typeName())) {
+                comp = "V";
+            } else {
+                throw new IllegalStateException();
+            }
+        } else {
+            Type unfoldType = unfoldType(type);
+            comp = "L" + getResourceName(unfoldType) + ";";
+        }
+        if (!type.dimension().isEmpty()) {
+            return type.dimension().replace("]", "") + comp;
+        }
+        return comp;
+    }
+
+    public static boolean isObject(Type type) {
+        return !type.isPrimitive() && !isString(type);
     }
 
     public static boolean isVoid(Type type) {
@@ -166,7 +242,4 @@ public class JavadocHelpers {
         return type.dimension().equals("[]");
     }
 
-    public static boolean isObject(Type type) {
-        return !type.isPrimitive() && !isString(type);
-    }
 }

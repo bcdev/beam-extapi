@@ -41,7 +41,7 @@ public class ApiParameter {
     }
 
     public String getJavaSignature() {
-        return ApiMethod.getJavaSignature(parameter.type());
+        return JavadocHelpers.getJavaSignature(parameter.type());
     }
 
     public Modifier getModifier() {

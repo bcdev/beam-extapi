@@ -2,7 +2,6 @@ package org.esa.beam.extapi.gen;
 
 import com.sun.javadoc.ExecutableMemberDoc;
 import com.sun.javadoc.MethodDoc;
-import com.sun.javadoc.Parameter;
 import com.sun.javadoc.Type;
 
 import static org.esa.beam.extapi.gen.ApiInfo.unfoldType;
@@ -26,7 +25,7 @@ public final class ApiMethod implements Comparable<ApiMethod> {
         this.memberDoc = memberDoc;
         this.returnType = getReturnType(enclosingClass, memberDoc);
         this.javaName = memberDoc.isConstructor() ? "<init>" : memberDoc.name();
-        this.javaSignature = getJavaSignature(memberDoc);
+        this.javaSignature = JavadocHelpers.getJavaSignature(memberDoc);
     }
 
     private static Type getReturnType(ApiClass enclosingClass, ExecutableMemberDoc memberDoc) {
@@ -96,52 +95,4 @@ public final class ApiMethod implements Comparable<ApiMethod> {
         return getEnclosingClass() + "#" + getJavaName() + getJavaSignature();
     }
 
-    static String getJavaSignature(ExecutableMemberDoc memberDoc) {
-        StringBuilder sb = new StringBuilder();
-        sb.append('(');
-        for (Parameter parameter : memberDoc.parameters()) {
-            sb.append(getJavaSignature(parameter.type()));
-        }
-        sb.append(')');
-        if (memberDoc instanceof MethodDoc) {
-            sb.append(getJavaSignature(((MethodDoc) memberDoc).returnType()));
-        } else {
-            sb.append('V');
-        }
-        return sb.toString();
-    }
-
-    static String getJavaSignature(Type type) {
-        String comp;
-        if (type.isPrimitive()) {
-            if ("boolean".equals(type.typeName())) {
-                comp = "Z";
-            } else if ("byte".equals(type.typeName())) {
-                comp = "B";
-            } else if ("char".equals(type.typeName())) {
-                comp = "Constructor";
-            } else if ("short".equals(type.typeName())) {
-                comp = "S";
-            } else if ("int".equals(type.typeName())) {
-                comp = "I";
-            } else if ("long".equals(type.typeName())) {
-                comp = "J";
-            } else if ("float".equals(type.typeName())) {
-                comp = "F";
-            } else if ("double".equals(type.typeName())) {
-                comp = "D";
-            } else if ("void".equals(type.typeName())) {
-                comp = "V";
-            } else {
-                throw new IllegalStateException();
-            }
-        } else {
-            Type unfoldType = unfoldType(type);
-            comp = "L" + unfoldType.qualifiedTypeName().replace('.', '/') + ";";
-        }
-        if (!type.dimension().isEmpty()) {
-            return type.dimension().replace("]", "") + comp;
-        }
-        return comp;
-    }
 }

@@ -31,10 +31,13 @@ public class ApiGeneratorDocletTest {
 
 
         ApiGeneratorDoclet.run(handler, "src/test/java", "org.esa.beam.extapi.gen.test");
-        assertEquals(4, classNames.size());
-        assertTrue(classNames.contains(TestClass1.class.getName()));
-        assertTrue(classNames.contains(TestClass2.class.getName()));
-        assertTrue(classNames.contains(TestClass3.class.getName()));
-        assertTrue(classNames.contains(TestEnum1.class.getName()));
+        assertEquals(5, classNames.size());
+        assertTrue(classNames.contains("org.esa.beam.extapi.gen.test.TestClass1"));
+        assertTrue(classNames.contains("org.esa.beam.extapi.gen.test.TestClass2"));
+        assertTrue(classNames.contains("org.esa.beam.extapi.gen.test.TestClass3"));
+        assertTrue(classNames.contains("org.esa.beam.extapi.gen.test.TestEnum1"));
+        // In Javadoc, nested / inner classes use '.'  as namespace separators instead of the correct '$'
+        assertFalse(classNames.contains("org.esa.beam.extapi.gen.test.TestClass2$Geom"));
+        assertTrue(classNames.contains("org.esa.beam.extapi.gen.test.TestClass2.Geom"));
     }
 }

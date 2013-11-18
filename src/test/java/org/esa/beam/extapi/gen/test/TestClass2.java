@@ -69,4 +69,13 @@ public class TestClass2 extends TestClass1 {
     public long getDuration() {
         return 0;
     }
+
+    /*
+     * For testing inner classes.
+     */
+    public static class Geom {
+        public static Geom transform(Geom g) {
+            return null;
+        }
+    }
 }

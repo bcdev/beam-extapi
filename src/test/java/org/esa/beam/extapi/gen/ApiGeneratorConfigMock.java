@@ -6,14 +6,16 @@ import java.util.HashMap;
  * @author Norman Fomferra
  */
 public class ApiGeneratorConfigMock implements ApiGeneratorConfig {
-    private final Class<?> aClass;
+    private final HashMap<String, Class> classMap = new HashMap<String, Class>();
     private final HashMap<String, ApiParameter.Modifier[]> modifiersMap = new HashMap<String, ApiParameter.Modifier[]>();
 
-    public ApiGeneratorConfigMock(Class<?> aClass) {
-        this.aClass = aClass;
+    public ApiGeneratorConfigMock(Class<?>... classes) {
+        for (Class<?> aClass : classes) {
+            this.classMap.put(aClass.getName(), aClass);
+        }
     }
 
-    public void addModifiers(String methodName, String methodSignature, ApiParameter.Modifier[] modifiers) {
+    public void addModifiers(Class<?> aClass, String methodName, String methodSignature, ApiParameter.Modifier[] modifiers) {
         modifiersMap.put(aClass.getName() + methodName + methodSignature, modifiers);
     }
 
@@ -29,7 +31,7 @@ public class ApiGeneratorConfigMock implements ApiGeneratorConfig {
 
     @Override
     public boolean isApiClass(String className) {
-        return aClass.getName().equals(className);
+        return classMap.containsKey(className);
     }
 
     @Override

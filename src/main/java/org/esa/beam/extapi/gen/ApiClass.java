@@ -22,12 +22,8 @@ public final class ApiClass implements Comparable<ApiClass> {
         }
 
         this.type = type;
-
-        final String s1 = type.typeName();
-        final String s2 = type.qualifiedTypeName();
-        int pos = s2.indexOf(s1);
-        this.javaName = s2.substring(0, pos) + s1.replace('.', '$');
-        this.resourceName = s2.substring(0, pos).replace('.', '/') + s1.replace('.', '$');
+        this.javaName = JavadocHelpers.getJavaName(type);
+        this.resourceName = JavadocHelpers.getResourceName(type);
     }
 
     public Type getType() {

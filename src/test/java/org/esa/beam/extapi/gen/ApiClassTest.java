@@ -1,6 +1,7 @@
 package org.esa.beam.extapi.gen;
 
 import com.sun.javadoc.Type;
+import org.esa.beam.extapi.gen.test.TestClass2;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -34,4 +35,11 @@ public class ApiClassTest {
         Assert.assertEquals("java/awt/geom/Point2D$Double", apiClass.getResourceName());
     }
 
+    @Test
+    public void testAnotherNestedClass() {
+        Type type = DocMock.createType(TestClass2.Geom.class);
+        ApiClass apiClass = new ApiClass(type);
+        Assert.assertEquals("org.esa.beam.extapi.gen.test.TestClass2$Geom", apiClass.getJavaName());
+        Assert.assertEquals("org/esa/beam/extapi/gen/test/TestClass2$Geom", apiClass.getResourceName());
+    }
 }
