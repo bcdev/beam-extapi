@@ -117,7 +117,9 @@ jclass classSimpleFeatureType;
 jclass classProductData_UTC;
 jclass classRenderedImage;
 jclass classIterator;
+jclass classMask_ImageType;
 jclass classFile;
+jclass classRectangle2D;
 jclass classGeoPos;
 jclass classProductNodeGroup;
 jclass classProductManager;
@@ -724,206 +726,220 @@ int beam_initApi()
         return exitCode;
     }
 
+    classMask_ImageType = beam_findJvmClass("org/esa/beam/framework/datamodel/Mask$ImageType");
+    if (classMask_ImageType == NULL) { 
+        fprintf(stderr, "beam_capi: Java class not found: org/esa/beam/framework/datamodel/Mask$ImageType\n");
+        exitCode = 2066;
+        return exitCode;
+    }
+
     classFile = beam_findJvmClass("java/io/File");
     if (classFile == NULL) { 
         fprintf(stderr, "beam_capi: Java class not found: java/io/File\n");
-        exitCode = 2066;
+        exitCode = 2067;
+        return exitCode;
+    }
+
+    classRectangle2D = beam_findJvmClass("java/awt/geom/Rectangle2D");
+    if (classRectangle2D == NULL) { 
+        fprintf(stderr, "beam_capi: Java class not found: java/awt/geom/Rectangle2D\n");
+        exitCode = 2068;
         return exitCode;
     }
 
     classGeoPos = beam_findJvmClass("org/esa/beam/framework/datamodel/GeoPos");
     if (classGeoPos == NULL) { 
         fprintf(stderr, "beam_capi: Java class not found: org/esa/beam/framework/datamodel/GeoPos\n");
-        exitCode = 2067;
+        exitCode = 2069;
         return exitCode;
     }
 
     classProductNodeGroup = beam_findJvmClass("org/esa/beam/framework/datamodel/ProductNodeGroup");
     if (classProductNodeGroup == NULL) { 
         fprintf(stderr, "beam_capi: Java class not found: org/esa/beam/framework/datamodel/ProductNodeGroup\n");
-        exitCode = 2068;
+        exitCode = 2070;
         return exitCode;
     }
 
     classProductManager = beam_findJvmClass("org/esa/beam/framework/datamodel/ProductManager");
     if (classProductManager == NULL) { 
         fprintf(stderr, "beam_capi: Java class not found: org/esa/beam/framework/datamodel/ProductManager\n");
-        exitCode = 2069;
+        exitCode = 2071;
         return exitCode;
     }
 
     classMapProjection = beam_findJvmClass("org/esa/beam/framework/dataop/maptransf/MapProjection");
     if (classMapProjection == NULL) { 
         fprintf(stderr, "beam_capi: Java class not found: org/esa/beam/framework/dataop/maptransf/MapProjection\n");
-        exitCode = 2070;
+        exitCode = 2072;
         return exitCode;
     }
 
     classFlagCoding = beam_findJvmClass("org/esa/beam/framework/datamodel/FlagCoding");
     if (classFlagCoding == NULL) { 
         fprintf(stderr, "beam_capi: Java class not found: org/esa/beam/framework/datamodel/FlagCoding\n");
-        exitCode = 2071;
+        exitCode = 2073;
         return exitCode;
     }
 
     classOperator = beam_findJvmClass("org/esa/beam/framework/gpf/Operator");
     if (classOperator == NULL) { 
         fprintf(stderr, "beam_capi: Java class not found: org/esa/beam/framework/gpf/Operator\n");
-        exitCode = 2072;
+        exitCode = 2074;
         return exitCode;
     }
 
     classOperatorSpiRegistry = beam_findJvmClass("org/esa/beam/framework/gpf/OperatorSpiRegistry");
     if (classOperatorSpiRegistry == NULL) { 
         fprintf(stderr, "beam_capi: Java class not found: org/esa/beam/framework/gpf/OperatorSpiRegistry\n");
-        exitCode = 2073;
+        exitCode = 2075;
         return exitCode;
     }
 
     classBitmaskDef = beam_findJvmClass("org/esa/beam/framework/datamodel/BitmaskDef");
     if (classBitmaskDef == NULL) { 
         fprintf(stderr, "beam_capi: Java class not found: org/esa/beam/framework/datamodel/BitmaskDef\n");
-        exitCode = 2074;
+        exitCode = 2076;
         return exitCode;
     }
 
     classImageInfo_HistogramMatching = beam_findJvmClass("org/esa/beam/framework/datamodel/ImageInfo$HistogramMatching");
     if (classImageInfo_HistogramMatching == NULL) { 
         fprintf(stderr, "beam_capi: Java class not found: org/esa/beam/framework/datamodel/ImageInfo$HistogramMatching\n");
-        exitCode = 2075;
+        exitCode = 2077;
         return exitCode;
     }
 
     classDatum = beam_findJvmClass("org/esa/beam/framework/dataop/maptransf/Datum");
     if (classDatum == NULL) { 
         fprintf(stderr, "beam_capi: Java class not found: org/esa/beam/framework/dataop/maptransf/Datum\n");
-        exitCode = 2076;
+        exitCode = 2078;
         return exitCode;
     }
 
     classProductUtils = beam_findJvmClass("org/esa/beam/util/ProductUtils");
     if (classProductUtils == NULL) { 
         fprintf(stderr, "beam_capi: Java class not found: org/esa/beam/util/ProductUtils\n");
-        exitCode = 2077;
+        exitCode = 2079;
         return exitCode;
     }
 
     classMap = beam_findJvmClass("java/util/Map");
     if (classMap == NULL) { 
         fprintf(stderr, "beam_capi: Java class not found: java/util/Map\n");
-        exitCode = 2078;
+        exitCode = 2080;
         return exitCode;
     }
 
     classSubsetOp = beam_findJvmClass("org/esa/beam/gpf/operators/standard/SubsetOp");
     if (classSubsetOp == NULL) { 
         fprintf(stderr, "beam_capi: Java class not found: org/esa/beam/gpf/operators/standard/SubsetOp\n");
-        exitCode = 2079;
+        exitCode = 2081;
         return exitCode;
     }
 
     classPointing = beam_findJvmClass("org/esa/beam/framework/datamodel/Pointing");
     if (classPointing == NULL) { 
         fprintf(stderr, "beam_capi: Java class not found: org/esa/beam/framework/datamodel/Pointing\n");
-        exitCode = 2080;
+        exitCode = 2082;
         return exitCode;
     }
 
     classPlacemarkDescriptor = beam_findJvmClass("org/esa/beam/framework/datamodel/PlacemarkDescriptor");
     if (classPlacemarkDescriptor == NULL) { 
         fprintf(stderr, "beam_capi: Java class not found: org/esa/beam/framework/datamodel/PlacemarkDescriptor\n");
-        exitCode = 2081;
+        exitCode = 2083;
         return exitCode;
     }
 
     classPointingFactory = beam_findJvmClass("org/esa/beam/framework/datamodel/PointingFactory");
     if (classPointingFactory == NULL) { 
         fprintf(stderr, "beam_capi: Java class not found: org/esa/beam/framework/datamodel/PointingFactory\n");
-        exitCode = 2082;
+        exitCode = 2084;
         return exitCode;
     }
 
     classPoint2D = beam_findJvmClass("java/awt/geom/Point2D");
     if (classPoint2D == NULL) { 
         fprintf(stderr, "beam_capi: Java class not found: java/awt/geom/Point2D\n");
-        exitCode = 2083;
+        exitCode = 2085;
         return exitCode;
     }
 
     classScaling = beam_findJvmClass("org/esa/beam/framework/datamodel/Scaling");
     if (classScaling == NULL) { 
         fprintf(stderr, "beam_capi: Java class not found: org/esa/beam/framework/datamodel/Scaling\n");
-        exitCode = 2084;
+        exitCode = 2086;
         return exitCode;
     }
 
     classCollection = beam_findJvmClass("java/util/Collection");
     if (classCollection == NULL) { 
         fprintf(stderr, "beam_capi: Java class not found: java/util/Collection\n");
-        exitCode = 2085;
+        exitCode = 2087;
         return exitCode;
     }
 
     classGeoTIFFMetadata = beam_findJvmClass("org/esa/beam/util/geotiff/GeoTIFFMetadata");
     if (classGeoTIFFMetadata == NULL) { 
         fprintf(stderr, "beam_capi: Java class not found: org/esa/beam/util/geotiff/GeoTIFFMetadata\n");
-        exitCode = 2086;
+        exitCode = 2088;
         return exitCode;
     }
 
     classMapInfo = beam_findJvmClass("org/esa/beam/framework/dataop/maptransf/MapInfo");
     if (classMapInfo == NULL) { 
         fprintf(stderr, "beam_capi: Java class not found: org/esa/beam/framework/dataop/maptransf/MapInfo\n");
-        exitCode = 2087;
+        exitCode = 2089;
         return exitCode;
     }
 
     classBufferedImage = beam_findJvmClass("java/awt/image/BufferedImage");
     if (classBufferedImage == NULL) { 
         fprintf(stderr, "beam_capi: Java class not found: java/awt/image/BufferedImage\n");
-        exitCode = 2088;
+        exitCode = 2090;
         return exitCode;
     }
 
     classSimpleFeature = beam_findJvmClass("org/opengis/feature/simple/SimpleFeature");
     if (classSimpleFeature == NULL) { 
         fprintf(stderr, "beam_capi: Java class not found: org/opengis/feature/simple/SimpleFeature\n");
-        exitCode = 2089;
+        exitCode = 2091;
         return exitCode;
     }
 
     classProductSubsetDef = beam_findJvmClass("org/esa/beam/framework/dataio/ProductSubsetDef");
     if (classProductSubsetDef == NULL) { 
         fprintf(stderr, "beam_capi: Java class not found: org/esa/beam/framework/dataio/ProductSubsetDef\n");
-        exitCode = 2090;
+        exitCode = 2092;
         return exitCode;
     }
 
     classProductWriter = beam_findJvmClass("org/esa/beam/framework/dataio/ProductWriter");
     if (classProductWriter == NULL) { 
         fprintf(stderr, "beam_capi: Java class not found: org/esa/beam/framework/dataio/ProductWriter\n");
-        exitCode = 2091;
+        exitCode = 2093;
         return exitCode;
     }
 
     classProgressMonitor = beam_findJvmClass("com/bc/ceres/core/ProgressMonitor");
     if (classProgressMonitor == NULL) { 
         fprintf(stderr, "beam_capi: Java class not found: com/bc/ceres/core/ProgressMonitor\n");
-        exitCode = 2092;
+        exitCode = 2094;
         return exitCode;
     }
 
     classMetadataAttribute = beam_findJvmClass("org/esa/beam/framework/datamodel/MetadataAttribute");
     if (classMetadataAttribute == NULL) { 
         fprintf(stderr, "beam_capi: Java class not found: org/esa/beam/framework/datamodel/MetadataAttribute\n");
-        exitCode = 2093;
+        exitCode = 2095;
         return exitCode;
     }
 
     classGeneralPath = beam_findJvmClass("java/awt/geom/GeneralPath");
     if (classGeneralPath == NULL) { 
         fprintf(stderr, "beam_capi: Java class not found: java/awt/geom/GeneralPath\n");
-        exitCode = 2094;
+        exitCode = 2096;
         return exitCode;
     }
 
@@ -3092,14 +3108,14 @@ double IndexCoding_getAttributeDouble(IndexCoding _this, const char* name, doubl
     return _result;
 }
 
-ProductData_UTC IndexCoding_getAttributeUTC(IndexCoding _this, const char* name, ProductData_UTC defaultValue)
+ProductData_UTC IndexCoding_getAttributeUTC2(IndexCoding _this, const char* name, ProductData_UTC defaultValue)
 {
     static jmethodID _method = NULL;
     jstring nameString = NULL;
     ProductData_UTC _result = (ProductData_UTC) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
-            _method = (*jenv)->GetMethodID(jenv, classIndexCoding, "getAttributeUTC", "(Ljava/lang/String;Lorg/esa/beam/framework/datamodel/ProductData/UTC;)Lorg/esa/beam/framework/datamodel/ProductData/UTC;");
+            _method = (*jenv)->GetMethodID(jenv, classIndexCoding, "getAttributeUTC", "(Ljava/lang/String;Lorg/esa/beam/framework/datamodel/ProductData$UTC;)Lorg/esa/beam/framework/datamodel/ProductData$UTC;");
             if (_method == NULL) {
                 /* Set global error */
             }
@@ -3110,6 +3126,28 @@ ProductData_UTC IndexCoding_getAttributeUTC(IndexCoding _this, const char* name,
     }
     nameString = (*jenv)->NewStringUTF(jenv, name);
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, nameString, defaultValue);
+    (*jenv)->DeleteLocalRef(jenv, nameString);
+    return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
+}
+
+ProductData_UTC IndexCoding_getAttributeUTC1(IndexCoding _this, const char* name)
+{
+    static jmethodID _method = NULL;
+    jstring nameString = NULL;
+    ProductData_UTC _result = (ProductData_UTC) 0;
+    if (_method == NULL) {
+        if (beam_initApi() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classIndexCoding, "getAttributeUTC", "(Ljava/lang/String;)Lorg/esa/beam/framework/datamodel/ProductData$UTC;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
+    }
+    nameString = (*jenv)->NewStringUTF(jenv, name);
+    _result = (*jenv)->CallObjectMethod(jenv, _this, _method, nameString);
     (*jenv)->DeleteLocalRef(jenv, nameString);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -3182,7 +3220,7 @@ void IndexCoding_setAttributeUTC(IndexCoding _this, const char* name, ProductDat
     jstring nameString = NULL;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
-            _method = (*jenv)->GetMethodID(jenv, classIndexCoding, "setAttributeUTC", "(Ljava/lang/String;Lorg/esa/beam/framework/datamodel/ProductData/UTC;)V");
+            _method = (*jenv)->GetMethodID(jenv, classIndexCoding, "setAttributeUTC", "(Ljava/lang/String;Lorg/esa/beam/framework/datamodel/ProductData$UTC;)V");
             if (_method == NULL) {
                 /* Set global error */
             }
@@ -5374,14 +5412,14 @@ double MetadataElement_getAttributeDouble(MetadataElement _this, const char* nam
     return _result;
 }
 
-ProductData_UTC MetadataElement_getAttributeUTC(MetadataElement _this, const char* name, ProductData_UTC defaultValue)
+ProductData_UTC MetadataElement_getAttributeUTC2(MetadataElement _this, const char* name, ProductData_UTC defaultValue)
 {
     static jmethodID _method = NULL;
     jstring nameString = NULL;
     ProductData_UTC _result = (ProductData_UTC) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
-            _method = (*jenv)->GetMethodID(jenv, classMetadataElement, "getAttributeUTC", "(Ljava/lang/String;Lorg/esa/beam/framework/datamodel/ProductData/UTC;)Lorg/esa/beam/framework/datamodel/ProductData/UTC;");
+            _method = (*jenv)->GetMethodID(jenv, classMetadataElement, "getAttributeUTC", "(Ljava/lang/String;Lorg/esa/beam/framework/datamodel/ProductData$UTC;)Lorg/esa/beam/framework/datamodel/ProductData$UTC;");
             if (_method == NULL) {
                 /* Set global error */
             }
@@ -5392,6 +5430,28 @@ ProductData_UTC MetadataElement_getAttributeUTC(MetadataElement _this, const cha
     }
     nameString = (*jenv)->NewStringUTF(jenv, name);
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, nameString, defaultValue);
+    (*jenv)->DeleteLocalRef(jenv, nameString);
+    return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
+}
+
+ProductData_UTC MetadataElement_getAttributeUTC1(MetadataElement _this, const char* name)
+{
+    static jmethodID _method = NULL;
+    jstring nameString = NULL;
+    ProductData_UTC _result = (ProductData_UTC) 0;
+    if (_method == NULL) {
+        if (beam_initApi() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classMetadataElement, "getAttributeUTC", "(Ljava/lang/String;)Lorg/esa/beam/framework/datamodel/ProductData$UTC;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
+    }
+    nameString = (*jenv)->NewStringUTF(jenv, name);
+    _result = (*jenv)->CallObjectMethod(jenv, _this, _method, nameString);
     (*jenv)->DeleteLocalRef(jenv, nameString);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -5464,7 +5524,7 @@ void MetadataElement_setAttributeUTC(MetadataElement _this, const char* name, Pr
     jstring nameString = NULL;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
-            _method = (*jenv)->GetMethodID(jenv, classMetadataElement, "setAttributeUTC", "(Ljava/lang/String;Lorg/esa/beam/framework/datamodel/ProductData/UTC;)V");
+            _method = (*jenv)->GetMethodID(jenv, classMetadataElement, "setAttributeUTC", "(Ljava/lang/String;Lorg/esa/beam/framework/datamodel/ProductData$UTC;)V");
             if (_method == NULL) {
                 /* Set global error */
             }
@@ -6339,7 +6399,7 @@ ProductData_UTC Product_getStartTime(Product _this)
     ProductData_UTC _result = (ProductData_UTC) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
-            _method = (*jenv)->GetMethodID(jenv, classProduct, "getStartTime", "()Lorg/esa/beam/framework/datamodel/ProductData/UTC;");
+            _method = (*jenv)->GetMethodID(jenv, classProduct, "getStartTime", "()Lorg/esa/beam/framework/datamodel/ProductData$UTC;");
             if (_method == NULL) {
                 /* Set global error */
             }
@@ -6357,7 +6417,7 @@ void Product_setStartTime(Product _this, ProductData_UTC startTime)
     static jmethodID _method = NULL;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
-            _method = (*jenv)->GetMethodID(jenv, classProduct, "setStartTime", "(Lorg/esa/beam/framework/datamodel/ProductData/UTC;)V");
+            _method = (*jenv)->GetMethodID(jenv, classProduct, "setStartTime", "(Lorg/esa/beam/framework/datamodel/ProductData$UTC;)V");
             if (_method == NULL) {
                 /* Set global error */
             }
@@ -6375,7 +6435,7 @@ ProductData_UTC Product_getEndTime(Product _this)
     ProductData_UTC _result = (ProductData_UTC) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
-            _method = (*jenv)->GetMethodID(jenv, classProduct, "getEndTime", "()Lorg/esa/beam/framework/datamodel/ProductData/UTC;");
+            _method = (*jenv)->GetMethodID(jenv, classProduct, "getEndTime", "()Lorg/esa/beam/framework/datamodel/ProductData$UTC;");
             if (_method == NULL) {
                 /* Set global error */
             }
@@ -6393,7 +6453,7 @@ void Product_setEndTime(Product _this, ProductData_UTC endTime)
     static jmethodID _method = NULL;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
-            _method = (*jenv)->GetMethodID(jenv, classProduct, "setEndTime", "(Lorg/esa/beam/framework/datamodel/ProductData/UTC;)V");
+            _method = (*jenv)->GetMethodID(jenv, classProduct, "setEndTime", "(Lorg/esa/beam/framework/datamodel/ProductData$UTC;)V");
             if (_method == NULL) {
                 /* Set global error */
             }
@@ -6424,13 +6484,13 @@ MetadataElement Product_getMetadataRoot(Product _this)
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
-ProductNodeGroup Product_getBandGroup(Product _this)
+ProductNodeGroup Product_getGroups(Product _this)
 {
     static jmethodID _method = NULL;
     ProductNodeGroup _result = (ProductNodeGroup) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
-            _method = (*jenv)->GetMethodID(jenv, classProduct, "getBandGroup", "()Lorg/esa/beam/framework/datamodel/ProductNodeGroup;");
+            _method = (*jenv)->GetMethodID(jenv, classProduct, "getGroups", "()Lorg/esa/beam/framework/datamodel/ProductNodeGroup;");
             if (_method == NULL) {
                 /* Set global error */
             }
@@ -6440,6 +6500,28 @@ ProductNodeGroup Product_getBandGroup(Product _this)
         }
     }
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
+    return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
+}
+
+ProductNodeGroup Product_getGroup(Product _this, const char* name)
+{
+    static jmethodID _method = NULL;
+    jstring nameString = NULL;
+    ProductNodeGroup _result = (ProductNodeGroup) 0;
+    if (_method == NULL) {
+        if (beam_initApi() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProduct, "getGroup", "(Ljava/lang/String;)Lorg/esa/beam/framework/datamodel/ProductNodeGroup;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
+    }
+    nameString = (*jenv)->NewStringUTF(jenv, name);
+    _result = (*jenv)->CallObjectMethod(jenv, _this, _method, nameString);
+    (*jenv)->DeleteLocalRef(jenv, nameString);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
@@ -6622,6 +6704,25 @@ boolean Product_containsTiePointGrid(Product _this, const char* name)
     _result = (*jenv)->CallBooleanMethod(jenv, _this, _method, nameString);
     (*jenv)->DeleteLocalRef(jenv, nameString);
     return _result;
+}
+
+ProductNodeGroup Product_getBandGroup(Product _this)
+{
+    static jmethodID _method = NULL;
+    ProductNodeGroup _result = (ProductNodeGroup) 0;
+    if (_method == NULL) {
+        if (beam_initApi() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProduct, "getBandGroup", "()Lorg/esa/beam/framework/datamodel/ProductNodeGroup;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
+    }
+    _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
+    return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
 void Product_addBand(Product _this, Band band)
@@ -7030,6 +7131,42 @@ PlacemarkGroup Product_getPinGroup(Product _this)
     }
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
+}
+
+int Product_getNumResolutionsMax(Product _this)
+{
+    static jmethodID _method = NULL;
+    int _result = (int) 0;
+    if (_method == NULL) {
+        if (beam_initApi() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProduct, "getNumResolutionsMax", "()I");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
+    }
+    _result = (*jenv)->CallIntMethod(jenv, _this, _method);
+    return _result;
+}
+
+void Product_setNumResolutionsMax(Product _this, int numResolutionsMax)
+{
+    static jmethodID _method = NULL;
+    if (_method == NULL) {
+        if (beam_initApi() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProduct, "setNumResolutionsMax", "(I)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
+    }
+    (*jenv)->CallVoidMethod(jenv, _this, _method, numResolutionsMax);
 }
 
 boolean Product_isCompatibleProduct(Product _this, Product product, float eps)
@@ -7494,7 +7631,7 @@ Product_AutoGrouping Product_getAutoGrouping(Product _this)
     Product_AutoGrouping _result = (Product_AutoGrouping) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
-            _method = (*jenv)->GetMethodID(jenv, classProduct, "getAutoGrouping", "()Lorg/esa/beam/framework/datamodel/Product/AutoGrouping;");
+            _method = (*jenv)->GetMethodID(jenv, classProduct, "getAutoGrouping", "()Lorg/esa/beam/framework/datamodel/Product$AutoGrouping;");
             if (_method == NULL) {
                 /* Set global error */
             }
@@ -7507,7 +7644,24 @@ Product_AutoGrouping Product_getAutoGrouping(Product _this)
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
-void Product_setAutoGrouping(Product _this, const char* pattern)
+void Product_setAutoGrouping2(Product _this, Product_AutoGrouping autoGrouping)
+{
+    static jmethodID _method = NULL;
+    if (_method == NULL) {
+        if (beam_initApi() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProduct, "setAutoGrouping", "(Lorg/esa/beam/framework/datamodel/Product$AutoGrouping;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return;
+        }
+    }
+    (*jenv)->CallVoidMethod(jenv, _this, _method, autoGrouping);
+}
+
+void Product_setAutoGrouping1(Product _this, const char* pattern)
 {
     static jmethodID _method = NULL;
     jstring patternString = NULL;
@@ -7525,6 +7679,28 @@ void Product_setAutoGrouping(Product _this, const char* pattern)
     patternString = (*jenv)->NewStringUTF(jenv, pattern);
     (*jenv)->CallVoidMethod(jenv, _this, _method, patternString);
     (*jenv)->DeleteLocalRef(jenv, patternString);
+}
+
+Mask Product_addMask(Product _this, const char* maskName, Mask_ImageType imageType)
+{
+    static jmethodID _method = NULL;
+    jstring maskNameString = NULL;
+    Mask _result = (Mask) 0;
+    if (_method == NULL) {
+        if (beam_initApi() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classProduct, "addMask", "(Ljava/lang/String;Lorg/esa/beam/framework/datamodel/Mask$ImageType;)Lorg/esa/beam/framework/datamodel/Mask;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
+    }
+    maskNameString = (*jenv)->NewStringUTF(jenv, maskName);
+    _result = (*jenv)->CallObjectMethod(jenv, _this, _method, maskNameString, imageType);
+    (*jenv)->DeleteLocalRef(jenv, maskNameString);
+    return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
 Mask Product_addComputedMask(Product _this, const char* maskName, const char* expression, const char* description, Color color, double transparency)
@@ -8048,14 +8224,36 @@ ColorPaletteDef ColorPaletteDef_newColorPaletteDefFromRange(double minSample, do
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
-ColorPaletteDef ColorPaletteDef_newColorPaletteDefFromPoints(const ColorPaletteDef_Point pointsElems, int pointsLength, int numColors)
+ColorPaletteDef ColorPaletteDef_newColorPaletteDef1(const ColorPaletteDef_Point pointsElems, int pointsLength)
 {
     static jmethodID _method = NULL;
     jarray pointsArray = NULL;
     ColorPaletteDef _result = (ColorPaletteDef) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
-            _method = (*jenv)->GetMethodID(jenv, classColorPaletteDef, "<init>", "([Lorg/esa/beam/framework/datamodel/ColorPaletteDef/Point;I)V");
+            _method = (*jenv)->GetMethodID(jenv, classColorPaletteDef, "<init>", "([Lorg/esa/beam/framework/datamodel/ColorPaletteDef$Point;)V");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
+    }
+    pointsArray = beam_newJObjectArray(pointsElems, pointsLength, classColorPaletteDef_Point);
+    _result = (*jenv)->NewObject(jenv, classColorPaletteDef, _method, pointsArray);
+    (*jenv)->DeleteLocalRef(jenv, pointsArray);
+    return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
+}
+
+ColorPaletteDef ColorPaletteDef_newColorPaletteDef2(const ColorPaletteDef_Point pointsElems, int pointsLength, int numColors)
+{
+    static jmethodID _method = NULL;
+    jarray pointsArray = NULL;
+    ColorPaletteDef _result = (ColorPaletteDef) 0;
+    if (_method == NULL) {
+        if (beam_initApi() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classColorPaletteDef, "<init>", "([Lorg/esa/beam/framework/datamodel/ColorPaletteDef$Point;I)V");
             if (_method == NULL) {
                 /* Set global error */
             }
@@ -8220,7 +8418,7 @@ ColorPaletteDef_Point ColorPaletteDef_getPointAt(ColorPaletteDef _this, int inde
     ColorPaletteDef_Point _result = (ColorPaletteDef_Point) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
-            _method = (*jenv)->GetMethodID(jenv, classColorPaletteDef, "getPointAt", "(I)Lorg/esa/beam/framework/datamodel/ColorPaletteDef/Point;");
+            _method = (*jenv)->GetMethodID(jenv, classColorPaletteDef, "getPointAt", "(I)Lorg/esa/beam/framework/datamodel/ColorPaletteDef$Point;");
             if (_method == NULL) {
                 /* Set global error */
             }
@@ -8239,7 +8437,7 @@ ColorPaletteDef_Point ColorPaletteDef_getFirstPoint(ColorPaletteDef _this)
     ColorPaletteDef_Point _result = (ColorPaletteDef_Point) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
-            _method = (*jenv)->GetMethodID(jenv, classColorPaletteDef, "getFirstPoint", "()Lorg/esa/beam/framework/datamodel/ColorPaletteDef/Point;");
+            _method = (*jenv)->GetMethodID(jenv, classColorPaletteDef, "getFirstPoint", "()Lorg/esa/beam/framework/datamodel/ColorPaletteDef$Point;");
             if (_method == NULL) {
                 /* Set global error */
             }
@@ -8258,7 +8456,7 @@ ColorPaletteDef_Point ColorPaletteDef_getLastPoint(ColorPaletteDef _this)
     ColorPaletteDef_Point _result = (ColorPaletteDef_Point) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
-            _method = (*jenv)->GetMethodID(jenv, classColorPaletteDef, "getLastPoint", "()Lorg/esa/beam/framework/datamodel/ColorPaletteDef/Point;");
+            _method = (*jenv)->GetMethodID(jenv, classColorPaletteDef, "getLastPoint", "()Lorg/esa/beam/framework/datamodel/ColorPaletteDef$Point;");
             if (_method == NULL) {
                 /* Set global error */
             }
@@ -8314,7 +8512,7 @@ void ColorPaletteDef_insertPointAfter(ColorPaletteDef _this, int index, ColorPal
     static jmethodID _method = NULL;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
-            _method = (*jenv)->GetMethodID(jenv, classColorPaletteDef, "insertPointAfter", "(ILorg/esa/beam/framework/datamodel/ColorPaletteDef/Point;)V");
+            _method = (*jenv)->GetMethodID(jenv, classColorPaletteDef, "insertPointAfter", "(ILorg/esa/beam/framework/datamodel/ColorPaletteDef$Point;)V");
             if (_method == NULL) {
                 /* Set global error */
             }
@@ -8386,7 +8584,7 @@ void ColorPaletteDef_addPoint(ColorPaletteDef _this, ColorPaletteDef_Point point
     static jmethodID _method = NULL;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
-            _method = (*jenv)->GetMethodID(jenv, classColorPaletteDef, "addPoint", "(Lorg/esa/beam/framework/datamodel/ColorPaletteDef/Point;)V");
+            _method = (*jenv)->GetMethodID(jenv, classColorPaletteDef, "addPoint", "(Lorg/esa/beam/framework/datamodel/ColorPaletteDef$Point;)V");
             if (_method == NULL) {
                 /* Set global error */
             }
@@ -8405,7 +8603,7 @@ ColorPaletteDef_Point* ColorPaletteDef_getPoints(ColorPaletteDef _this, int* _re
     jarray _resultArray = NULL;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
-            _method = (*jenv)->GetMethodID(jenv, classColorPaletteDef, "getPoints", "()[Lorg/esa/beam/framework/datamodel/ColorPaletteDef/Point;");
+            _method = (*jenv)->GetMethodID(jenv, classColorPaletteDef, "getPoints", "()[Lorg/esa/beam/framework/datamodel/ColorPaletteDef$Point;");
             if (_method == NULL) {
                 /* Set global error */
             }
@@ -8426,7 +8624,7 @@ void ColorPaletteDef_setPoints(ColorPaletteDef _this, const ColorPaletteDef_Poin
     jarray pointsArray = NULL;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
-            _method = (*jenv)->GetMethodID(jenv, classColorPaletteDef, "setPoints", "([Lorg/esa/beam/framework/datamodel/ColorPaletteDef/Point;)V");
+            _method = (*jenv)->GetMethodID(jenv, classColorPaletteDef, "setPoints", "([Lorg/esa/beam/framework/datamodel/ColorPaletteDef$Point;)V");
             if (_method == NULL) {
                 /* Set global error */
             }
@@ -8725,12 +8923,31 @@ void ImageInfo_setNoDataColor(ImageInfo _this, Color noDataColor)
     (*jenv)->CallVoidMethod(jenv, _this, _method, noDataColor);
 }
 
+ImageInfo_HistogramMatching ImageInfo_getHistogramMatching1(ImageInfo _this)
+{
+    static jmethodID _method = NULL;
+    ImageInfo_HistogramMatching _result = (ImageInfo_HistogramMatching) 0;
+    if (_method == NULL) {
+        if (beam_initApi() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classImageInfo, "getHistogramMatching", "()Lorg/esa/beam/framework/datamodel/ImageInfo$HistogramMatching;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
+    }
+    _result = (*jenv)->CallObjectMethod(jenv, _this, _method);
+    return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
+}
+
 void ImageInfo_setHistogramMatching(ImageInfo _this, ImageInfo_HistogramMatching histogramMatching)
 {
     static jmethodID _method = NULL;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
-            _method = (*jenv)->GetMethodID(jenv, classImageInfo, "setHistogramMatching", "(Lorg/esa/beam/framework/datamodel/ImageInfo/HistogramMatching;)V");
+            _method = (*jenv)->GetMethodID(jenv, classImageInfo, "setHistogramMatching", "(Lorg/esa/beam/framework/datamodel/ImageInfo$HistogramMatching;)V");
             if (_method == NULL) {
                 /* Set global error */
             }
@@ -8949,14 +9166,14 @@ void ImageInfo_setColorPaletteDef(ImageInfo _this, ColorPaletteDef colorPaletteD
     (*jenv)->CallVoidMethod(jenv, _this, _method, colorPaletteDef, minSample, maxSample, autoDistribute);
 }
 
-ImageInfo_HistogramMatching ImageInfo_getHistogramMatching(const char* mode)
+ImageInfo_HistogramMatching ImageInfo_getHistogramMatching2(const char* mode)
 {
     static jmethodID _method = NULL;
     jstring modeString = NULL;
     ImageInfo_HistogramMatching _result = (ImageInfo_HistogramMatching) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
-            _method = (*jenv)->GetStaticMethodID(jenv, classImageInfo, "getHistogramMatching", "(Ljava/lang/String;)Lorg/esa/beam/framework/datamodel/ImageInfo/HistogramMatching;");
+            _method = (*jenv)->GetStaticMethodID(jenv, classImageInfo, "getHistogramMatching", "(Ljava/lang/String;)Lorg/esa/beam/framework/datamodel/ImageInfo$HistogramMatching;");
             if (_method == NULL) {
                 /* Set global error */
             }
@@ -9276,7 +9493,7 @@ boolean ProductManager_addListener(ProductManager _this, ProductManager_Listener
     boolean _result = (boolean) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
-            _method = (*jenv)->GetMethodID(jenv, classProductManager, "addListener", "(Lorg/esa/beam/framework/datamodel/ProductManager/Listener;)Z");
+            _method = (*jenv)->GetMethodID(jenv, classProductManager, "addListener", "(Lorg/esa/beam/framework/datamodel/ProductManager$Listener;)Z");
             if (_method == NULL) {
                 /* Set global error */
             }
@@ -9295,7 +9512,7 @@ boolean ProductManager_removeListener(ProductManager _this, ProductManager_Liste
     boolean _result = (boolean) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
-            _method = (*jenv)->GetMethodID(jenv, classProductManager, "removeListener", "(Lorg/esa/beam/framework/datamodel/ProductManager/Listener;)Z");
+            _method = (*jenv)->GetMethodID(jenv, classProductManager, "removeListener", "(Lorg/esa/beam/framework/datamodel/ProductManager$Listener;)Z");
             if (_method == NULL) {
                 /* Set global error */
             }
@@ -9593,6 +9810,25 @@ ImageGeometry ImageGeometry_createCollocationTargetGeometry(Product targetProduc
         }
     }
     _result = (*jenv)->CallStaticObjectMethod(jenv, classImageGeometry, _method, targetProduct, collocationProduct);
+    return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
+}
+
+Rectangle2D ImageGeometry_createValidRect(Product product)
+{
+    static jmethodID _method = NULL;
+    Rectangle2D _result = (Rectangle2D) 0;
+    if (_method == NULL) {
+        if (beam_initApi() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classImageGeometry, "createValidRect", "(Lorg/esa/beam/framework/datamodel/Product;)Ljava/awt/geom/Rectangle2D;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
+    }
+    _result = (*jenv)->CallStaticObjectMethod(jenv, classImageGeometry, _method, product);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
 
@@ -17364,14 +17600,14 @@ double FlagCoding_getAttributeDouble(FlagCoding _this, const char* name, double 
     return _result;
 }
 
-ProductData_UTC FlagCoding_getAttributeUTC(FlagCoding _this, const char* name, ProductData_UTC defaultValue)
+ProductData_UTC FlagCoding_getAttributeUTC2(FlagCoding _this, const char* name, ProductData_UTC defaultValue)
 {
     static jmethodID _method = NULL;
     jstring nameString = NULL;
     ProductData_UTC _result = (ProductData_UTC) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
-            _method = (*jenv)->GetMethodID(jenv, classFlagCoding, "getAttributeUTC", "(Ljava/lang/String;Lorg/esa/beam/framework/datamodel/ProductData/UTC;)Lorg/esa/beam/framework/datamodel/ProductData/UTC;");
+            _method = (*jenv)->GetMethodID(jenv, classFlagCoding, "getAttributeUTC", "(Ljava/lang/String;Lorg/esa/beam/framework/datamodel/ProductData$UTC;)Lorg/esa/beam/framework/datamodel/ProductData$UTC;");
             if (_method == NULL) {
                 /* Set global error */
             }
@@ -17382,6 +17618,28 @@ ProductData_UTC FlagCoding_getAttributeUTC(FlagCoding _this, const char* name, P
     }
     nameString = (*jenv)->NewStringUTF(jenv, name);
     _result = (*jenv)->CallObjectMethod(jenv, _this, _method, nameString, defaultValue);
+    (*jenv)->DeleteLocalRef(jenv, nameString);
+    return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
+}
+
+ProductData_UTC FlagCoding_getAttributeUTC1(FlagCoding _this, const char* name)
+{
+    static jmethodID _method = NULL;
+    jstring nameString = NULL;
+    ProductData_UTC _result = (ProductData_UTC) 0;
+    if (_method == NULL) {
+        if (beam_initApi() == 0) {
+            _method = (*jenv)->GetMethodID(jenv, classFlagCoding, "getAttributeUTC", "(Ljava/lang/String;)Lorg/esa/beam/framework/datamodel/ProductData$UTC;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
+    }
+    nameString = (*jenv)->NewStringUTF(jenv, name);
+    _result = (*jenv)->CallObjectMethod(jenv, _this, _method, nameString);
     (*jenv)->DeleteLocalRef(jenv, nameString);
     return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
 }
@@ -17454,7 +17712,7 @@ void FlagCoding_setAttributeUTC(FlagCoding _this, const char* name, ProductData_
     jstring nameString = NULL;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
-            _method = (*jenv)->GetMethodID(jenv, classFlagCoding, "setAttributeUTC", "(Ljava/lang/String;Lorg/esa/beam/framework/datamodel/ProductData/UTC;)V");
+            _method = (*jenv)->GetMethodID(jenv, classFlagCoding, "setAttributeUTC", "(Ljava/lang/String;Lorg/esa/beam/framework/datamodel/ProductData$UTC;)V");
             if (_method == NULL) {
                 /* Set global error */
             }
@@ -21620,6 +21878,25 @@ GeoPos* ProductUtils_createGeoBoundary3(Product product, Rectangle region, int s
     return _result;
 }
 
+GeoPos ProductUtils_getClosestGeoPos(GeoCoding gc, PixelPos origPos, Rectangle region, int step)
+{
+    static jmethodID _method = NULL;
+    GeoPos _result = (GeoPos) 0;
+    if (_method == NULL) {
+        if (beam_initApi() == 0) {
+            _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "getClosestGeoPos", "(Lorg/esa/beam/framework/datamodel/GeoCoding;Lorg/esa/beam/framework/datamodel/PixelPos;Ljava/awt/Rectangle;I)Lorg/esa/beam/framework/datamodel/GeoPos;");
+            if (_method == NULL) {
+                /* Set global error */
+            }
+        }
+        if (_method == NULL) {
+            return _result;
+        }
+    }
+    _result = (*jenv)->CallStaticObjectMethod(jenv, classProductUtils, _method, gc, origPos, region, step);
+    return _result != NULL ? (*jenv)->NewGlobalRef(jenv, _result) : NULL;
+}
+
 GeoPos* ProductUtils_createGeoBoundary4(RasterDataNode raster, Rectangle region, int step, int* _resultArrayLength)
 {
     static jmethodID _method = NULL;
@@ -22690,7 +22967,7 @@ ProductData_UTC ProductUtils_getScanLineTime(Product product, double y)
     ProductData_UTC _result = (ProductData_UTC) 0;
     if (_method == NULL) {
         if (beam_initApi() == 0) {
-            _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "getScanLineTime", "(Lorg/esa/beam/framework/datamodel/Product;D)Lorg/esa/beam/framework/datamodel/ProductData/UTC;");
+            _method = (*jenv)->GetStaticMethodID(jenv, classProductUtils, "getScanLineTime", "(Lorg/esa/beam/framework/datamodel/Product;D)Lorg/esa/beam/framework/datamodel/ProductData$UTC;");
             if (_method == NULL) {
                 /* Set global error */
             }

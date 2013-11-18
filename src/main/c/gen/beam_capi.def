@@ -106,7 +106,8 @@ EXPORTS
 	IndexCoding_containsAttribute
 	IndexCoding_getAttributeIndex
 	IndexCoding_getAttributeDouble
-	IndexCoding_getAttributeUTC
+	IndexCoding_getAttributeUTC2
+	IndexCoding_getAttributeUTC1
 	IndexCoding_getAttributeInt
 	IndexCoding_setAttributeInt
 	IndexCoding_setAttributeDouble
@@ -220,7 +221,8 @@ EXPORTS
 	MetadataElement_containsAttribute
 	MetadataElement_getAttributeIndex
 	MetadataElement_getAttributeDouble
-	MetadataElement_getAttributeUTC
+	MetadataElement_getAttributeUTC2
+	MetadataElement_getAttributeUTC1
 	MetadataElement_getAttributeInt
 	MetadataElement_setAttributeInt
 	MetadataElement_setAttributeDouble
@@ -274,7 +276,8 @@ EXPORTS
 	Product_getEndTime
 	Product_setEndTime
 	Product_getMetadataRoot
-	Product_getBandGroup
+	Product_getGroups
+	Product_getGroup
 	Product_getTiePointGridGroup
 	Product_addTiePointGrid
 	Product_removeTiePointGrid
@@ -284,6 +287,7 @@ EXPORTS
 	Product_getTiePointGrids
 	Product_getTiePointGrid
 	Product_containsTiePointGrid
+	Product_getBandGroup
 	Product_addBand
 	Product_addNewBand
 	Product_addComputedBand
@@ -304,6 +308,8 @@ EXPORTS
 	Product_containsPixel
 	Product_getGcpGroup
 	Product_getPinGroup
+	Product_getNumResolutionsMax
+	Product_setNumResolutionsMax
 	Product_isCompatibleProduct
 	Product_parseExpression
 	Product_acceptVisitor
@@ -328,7 +334,9 @@ EXPORTS
 	Product_setPreferredTileSize
 	Product_getAllFlagNames
 	Product_getAutoGrouping
-	Product_setAutoGrouping
+	Product_setAutoGrouping2
+	Product_setAutoGrouping1
+	Product_addMask
 	Product_addComputedMask
 	Product_addBitmaskDef
 	Product_getBitmaskDefNames
@@ -354,7 +362,8 @@ EXPORTS
 	Product_removeFromFile
 	Product_getExtension
 	ColorPaletteDef_newColorPaletteDefFromRange
-	ColorPaletteDef_newColorPaletteDefFromPoints
+	ColorPaletteDef_newColorPaletteDef1
+	ColorPaletteDef_newColorPaletteDef2
 	ColorPaletteDef_isDiscrete
 	ColorPaletteDef_setDiscrete
 	ColorPaletteDef_getNumColors
@@ -390,6 +399,7 @@ EXPORTS
 	ImageInfo_getRgbChannelDef
 	ImageInfo_getNoDataColor
 	ImageInfo_setNoDataColor
+	ImageInfo_getHistogramMatching1
 	ImageInfo_setHistogramMatching
 	ImageInfo_isLogScaled
 	ImageInfo_setLogScaled
@@ -402,7 +412,7 @@ EXPORTS
 	ImageInfo_dispose
 	ImageInfo_setColors
 	ImageInfo_setColorPaletteDef
-	ImageInfo_getHistogramMatching
+	ImageInfo_getHistogramMatching2
 	ProductManager_newProductManager
 	ProductManager_getProductCount
 	ProductManager_getProduct
@@ -435,6 +445,7 @@ EXPORTS
 	ImageGeometry_calculateProductSize
 	ImageGeometry_createTargetGeometry
 	ImageGeometry_createCollocationTargetGeometry
+	ImageGeometry_createValidRect
 	Band_newBand
 	Band_getFlagCoding
 	Band_isFlagBand
@@ -828,7 +839,8 @@ EXPORTS
 	FlagCoding_containsAttribute
 	FlagCoding_getAttributeIndex
 	FlagCoding_getAttributeDouble
-	FlagCoding_getAttributeUTC
+	FlagCoding_getAttributeUTC2
+	FlagCoding_getAttributeUTC1
 	FlagCoding_getAttributeInt
 	FlagCoding_setAttributeInt
 	FlagCoding_setAttributeDouble
@@ -1045,6 +1057,7 @@ EXPORTS
 	ProductUtils_createGeoBoundary1
 	ProductUtils_createGeoBoundary2
 	ProductUtils_createGeoBoundary3
+	ProductUtils_getClosestGeoPos
 	ProductUtils_createGeoBoundary4
 	ProductUtils_createGeoBoundaryPaths1
 	ProductUtils_createGeoBoundaryPaths2

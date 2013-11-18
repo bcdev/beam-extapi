@@ -145,7 +145,8 @@ PyObject* BeamPyIndexCoding_getAttribute(PyObject* self, PyObject* args);
 PyObject* BeamPyIndexCoding_containsAttribute(PyObject* self, PyObject* args);
 PyObject* BeamPyIndexCoding_getAttributeIndex(PyObject* self, PyObject* args);
 PyObject* BeamPyIndexCoding_getAttributeDouble(PyObject* self, PyObject* args);
-PyObject* BeamPyIndexCoding_getAttributeUTC(PyObject* self, PyObject* args);
+PyObject* BeamPyIndexCoding_getAttributeUTC2(PyObject* self, PyObject* args);
+PyObject* BeamPyIndexCoding_getAttributeUTC1(PyObject* self, PyObject* args);
 PyObject* BeamPyIndexCoding_getAttributeInt(PyObject* self, PyObject* args);
 PyObject* BeamPyIndexCoding_setAttributeInt(PyObject* self, PyObject* args);
 PyObject* BeamPyIndexCoding_setAttributeDouble(PyObject* self, PyObject* args);
@@ -259,7 +260,8 @@ PyObject* BeamPyMetadataElement_getAttribute(PyObject* self, PyObject* args);
 PyObject* BeamPyMetadataElement_containsAttribute(PyObject* self, PyObject* args);
 PyObject* BeamPyMetadataElement_getAttributeIndex(PyObject* self, PyObject* args);
 PyObject* BeamPyMetadataElement_getAttributeDouble(PyObject* self, PyObject* args);
-PyObject* BeamPyMetadataElement_getAttributeUTC(PyObject* self, PyObject* args);
+PyObject* BeamPyMetadataElement_getAttributeUTC2(PyObject* self, PyObject* args);
+PyObject* BeamPyMetadataElement_getAttributeUTC1(PyObject* self, PyObject* args);
 PyObject* BeamPyMetadataElement_getAttributeInt(PyObject* self, PyObject* args);
 PyObject* BeamPyMetadataElement_setAttributeInt(PyObject* self, PyObject* args);
 PyObject* BeamPyMetadataElement_setAttributeDouble(PyObject* self, PyObject* args);
@@ -313,7 +315,8 @@ PyObject* BeamPyProduct_setStartTime(PyObject* self, PyObject* args);
 PyObject* BeamPyProduct_getEndTime(PyObject* self, PyObject* args);
 PyObject* BeamPyProduct_setEndTime(PyObject* self, PyObject* args);
 PyObject* BeamPyProduct_getMetadataRoot(PyObject* self, PyObject* args);
-PyObject* BeamPyProduct_getBandGroup(PyObject* self, PyObject* args);
+PyObject* BeamPyProduct_getGroups(PyObject* self, PyObject* args);
+PyObject* BeamPyProduct_getGroup(PyObject* self, PyObject* args);
 PyObject* BeamPyProduct_getTiePointGridGroup(PyObject* self, PyObject* args);
 PyObject* BeamPyProduct_addTiePointGrid(PyObject* self, PyObject* args);
 PyObject* BeamPyProduct_removeTiePointGrid(PyObject* self, PyObject* args);
@@ -323,6 +326,7 @@ PyObject* BeamPyProduct_getTiePointGridNames(PyObject* self, PyObject* args);
 PyObject* BeamPyProduct_getTiePointGrids(PyObject* self, PyObject* args);
 PyObject* BeamPyProduct_getTiePointGrid(PyObject* self, PyObject* args);
 PyObject* BeamPyProduct_containsTiePointGrid(PyObject* self, PyObject* args);
+PyObject* BeamPyProduct_getBandGroup(PyObject* self, PyObject* args);
 PyObject* BeamPyProduct_addBand(PyObject* self, PyObject* args);
 PyObject* BeamPyProduct_addNewBand(PyObject* self, PyObject* args);
 PyObject* BeamPyProduct_addComputedBand(PyObject* self, PyObject* args);
@@ -343,6 +347,8 @@ PyObject* BeamPyProduct_getIndexCodingGroup(PyObject* self, PyObject* args);
 PyObject* BeamPyProduct_containsPixel(PyObject* self, PyObject* args);
 PyObject* BeamPyProduct_getGcpGroup(PyObject* self, PyObject* args);
 PyObject* BeamPyProduct_getPinGroup(PyObject* self, PyObject* args);
+PyObject* BeamPyProduct_getNumResolutionsMax(PyObject* self, PyObject* args);
+PyObject* BeamPyProduct_setNumResolutionsMax(PyObject* self, PyObject* args);
 PyObject* BeamPyProduct_isCompatibleProduct(PyObject* self, PyObject* args);
 PyObject* BeamPyProduct_parseExpression(PyObject* self, PyObject* args);
 PyObject* BeamPyProduct_acceptVisitor(PyObject* self, PyObject* args);
@@ -367,7 +373,9 @@ PyObject* BeamPyProduct_getPreferredTileSize(PyObject* self, PyObject* args);
 PyObject* BeamPyProduct_setPreferredTileSize(PyObject* self, PyObject* args);
 PyObject* BeamPyProduct_getAllFlagNames(PyObject* self, PyObject* args);
 PyObject* BeamPyProduct_getAutoGrouping(PyObject* self, PyObject* args);
-PyObject* BeamPyProduct_setAutoGrouping(PyObject* self, PyObject* args);
+PyObject* BeamPyProduct_setAutoGrouping2(PyObject* self, PyObject* args);
+PyObject* BeamPyProduct_setAutoGrouping1(PyObject* self, PyObject* args);
+PyObject* BeamPyProduct_addMask(PyObject* self, PyObject* args);
 PyObject* BeamPyProduct_addComputedMask(PyObject* self, PyObject* args);
 PyObject* BeamPyProduct_addBitmaskDef(PyObject* self, PyObject* args);
 PyObject* BeamPyProduct_getBitmaskDefNames(PyObject* self, PyObject* args);
@@ -393,7 +401,8 @@ PyObject* BeamPyProduct_updateExpression(PyObject* self, PyObject* args);
 PyObject* BeamPyProduct_removeFromFile(PyObject* self, PyObject* args);
 PyObject* BeamPyProduct_getExtension(PyObject* self, PyObject* args);
 PyObject* BeamPyColorPaletteDef_newColorPaletteDefFromRange(PyObject* self, PyObject* args);
-PyObject* BeamPyColorPaletteDef_newColorPaletteDefFromPoints(PyObject* self, PyObject* args);
+PyObject* BeamPyColorPaletteDef_newColorPaletteDef1(PyObject* self, PyObject* args);
+PyObject* BeamPyColorPaletteDef_newColorPaletteDef2(PyObject* self, PyObject* args);
 PyObject* BeamPyColorPaletteDef_isDiscrete(PyObject* self, PyObject* args);
 PyObject* BeamPyColorPaletteDef_setDiscrete(PyObject* self, PyObject* args);
 PyObject* BeamPyColorPaletteDef_getNumColors(PyObject* self, PyObject* args);
@@ -429,6 +438,7 @@ PyObject* BeamPyImageInfo_getColorPaletteDef(PyObject* self, PyObject* args);
 PyObject* BeamPyImageInfo_getRgbChannelDef(PyObject* self, PyObject* args);
 PyObject* BeamPyImageInfo_getNoDataColor(PyObject* self, PyObject* args);
 PyObject* BeamPyImageInfo_setNoDataColor(PyObject* self, PyObject* args);
+PyObject* BeamPyImageInfo_getHistogramMatching1(PyObject* self, PyObject* args);
 PyObject* BeamPyImageInfo_setHistogramMatching(PyObject* self, PyObject* args);
 PyObject* BeamPyImageInfo_isLogScaled(PyObject* self, PyObject* args);
 PyObject* BeamPyImageInfo_setLogScaled(PyObject* self, PyObject* args);
@@ -441,7 +451,7 @@ PyObject* BeamPyImageInfo_createDeepCopy(PyObject* self, PyObject* args);
 PyObject* BeamPyImageInfo_dispose(PyObject* self, PyObject* args);
 PyObject* BeamPyImageInfo_setColors(PyObject* self, PyObject* args);
 PyObject* BeamPyImageInfo_setColorPaletteDef(PyObject* self, PyObject* args);
-PyObject* BeamPyImageInfo_getHistogramMatching(PyObject* self, PyObject* args);
+PyObject* BeamPyImageInfo_getHistogramMatching2(PyObject* self, PyObject* args);
 PyObject* BeamPyProductManager_newProductManager(PyObject* self, PyObject* args);
 PyObject* BeamPyProductManager_getProductCount(PyObject* self, PyObject* args);
 PyObject* BeamPyProductManager_getProduct(PyObject* self, PyObject* args);
@@ -474,6 +484,7 @@ PyObject* BeamPyImageGeometry_calculateEastingNorthing(PyObject* self, PyObject*
 PyObject* BeamPyImageGeometry_calculateProductSize(PyObject* self, PyObject* args);
 PyObject* BeamPyImageGeometry_createTargetGeometry(PyObject* self, PyObject* args);
 PyObject* BeamPyImageGeometry_createCollocationTargetGeometry(PyObject* self, PyObject* args);
+PyObject* BeamPyImageGeometry_createValidRect(PyObject* self, PyObject* args);
 PyObject* BeamPyBand_newBand(PyObject* self, PyObject* args);
 PyObject* BeamPyBand_getFlagCoding(PyObject* self, PyObject* args);
 PyObject* BeamPyBand_isFlagBand(PyObject* self, PyObject* args);
@@ -867,7 +878,8 @@ PyObject* BeamPyFlagCoding_getAttribute(PyObject* self, PyObject* args);
 PyObject* BeamPyFlagCoding_containsAttribute(PyObject* self, PyObject* args);
 PyObject* BeamPyFlagCoding_getAttributeIndex(PyObject* self, PyObject* args);
 PyObject* BeamPyFlagCoding_getAttributeDouble(PyObject* self, PyObject* args);
-PyObject* BeamPyFlagCoding_getAttributeUTC(PyObject* self, PyObject* args);
+PyObject* BeamPyFlagCoding_getAttributeUTC2(PyObject* self, PyObject* args);
+PyObject* BeamPyFlagCoding_getAttributeUTC1(PyObject* self, PyObject* args);
 PyObject* BeamPyFlagCoding_getAttributeInt(PyObject* self, PyObject* args);
 PyObject* BeamPyFlagCoding_setAttributeInt(PyObject* self, PyObject* args);
 PyObject* BeamPyFlagCoding_setAttributeDouble(PyObject* self, PyObject* args);
@@ -1084,6 +1096,7 @@ PyObject* BeamPyProductUtils_createMapBoundary(PyObject* self, PyObject* args);
 PyObject* BeamPyProductUtils_createGeoBoundary1(PyObject* self, PyObject* args);
 PyObject* BeamPyProductUtils_createGeoBoundary2(PyObject* self, PyObject* args);
 PyObject* BeamPyProductUtils_createGeoBoundary3(PyObject* self, PyObject* args);
+PyObject* BeamPyProductUtils_getClosestGeoPos(PyObject* self, PyObject* args);
 PyObject* BeamPyProductUtils_createGeoBoundary4(PyObject* self, PyObject* args);
 PyObject* BeamPyProductUtils_createGeoBoundaryPaths1(PyObject* self, PyObject* args);
 PyObject* BeamPyProductUtils_createGeoBoundaryPaths2(PyObject* self, PyObject* args);
@@ -1274,7 +1287,9 @@ jclass BPy_SimpleFeatureType_Class;
 jclass BPy_ProductData_UTC_Class;
 jclass BPy_RenderedImage_Class;
 jclass BPy_Iterator_Class;
+jclass BPy_Mask_ImageType_Class;
 jclass BPy_File_Class;
+jclass BPy_Rectangle2D_Class;
 jclass BPy_GeoPos_Class;
 jclass BPy_ProductNodeGroup_Class;
 jclass BPy_ProductManager_Class;
@@ -1315,6 +1330,7 @@ static PyMethodDef ImageGeometry_methods[] = {
     {"calculateProductSize", (PyCFunction) BeamPyImageGeometry_calculateProductSize, METH_VARARGS | METH_STATIC, ""},
     {"createTargetGeometry", (PyCFunction) BeamPyImageGeometry_createTargetGeometry, METH_VARARGS | METH_STATIC, ""},
     {"createCollocationTargetGeometry", (PyCFunction) BeamPyImageGeometry_createCollocationTargetGeometry, METH_VARARGS | METH_STATIC, ""},
+    {"createValidRect", (PyCFunction) BeamPyImageGeometry_createValidRect, METH_VARARGS | METH_STATIC, ""},
     {NULL, NULL, 0, NULL} /*Sentinel*/
 };
 
@@ -1570,7 +1586,8 @@ static PyMethodDef IndexCoding_methods[] = {
     {"containsAttribute", (PyCFunction) BeamPyIndexCoding_containsAttribute, METH_VARARGS, "Checks whether this node has an element with the given name.\nReturns Parameter name: the attribute name\nReturns true if so"},
     {"getAttributeIndex", (PyCFunction) BeamPyIndexCoding_getAttributeIndex, METH_VARARGS, "Gets the index of the given attribute.\nReturns Parameter attribute: The attribute.\nReturns the attribute's index, or -1.\nSince version:  BEAM 4.7"},
     {"getAttributeDouble", (PyCFunction) BeamPyIndexCoding_getAttributeDouble, METH_VARARGS, "Returns the double value of the attribute with the given name. The given default value is returned if an\nattribute with the given name could not be found in this node.\nReturns Parameter name: the attribute name\nReturns Parameter defaultValue: the default value\nReturns the attribute value as double.\n@throws NumberFormatException if the attribute type is ASCII but cannot be converted to a number"},
-    {"getAttributeUTC", (PyCFunction) BeamPyIndexCoding_getAttributeUTC, METH_VARARGS, "Returns the UTC value of the attribute with the given name. The given default value is returned if an\nattribute with the given name could not be found in this node.\nReturns Parameter name: the attribute name\nReturns Parameter defaultValue: the default value\nReturns the attribute value as UTC."},
+    {"getAttributeUTC2", (PyCFunction) BeamPyIndexCoding_getAttributeUTC2, METH_VARARGS, "Returns the UTC value of the attribute with the given name. The given default value is returned if an\nattribute with the given name could not be found in this node.\nReturns Parameter name: the attribute name\nReturns Parameter defaultValue: the default value\nReturns the attribute value as UTC."},
+    {"getAttributeUTC1", (PyCFunction) BeamPyIndexCoding_getAttributeUTC1, METH_VARARGS, "Returns the UTC value of the attribute with the given name.\nReturns Parameter name: the attribute name\nReturns the attribute value as UTC.\n@throws IllegalArgumentException if an attribute with the given name could not be found"},
     {"getAttributeInt", (PyCFunction) BeamPyIndexCoding_getAttributeInt, METH_VARARGS, "Returns the integer value of the attribute with the given name. The given default value is returned if an\nattribute with the given name could not be found in this node.\nReturns Parameter name: the attribute name\nReturns Parameter defaultValue: the default value\nReturns the attribute value as integer.\n@throws NumberFormatException if the attribute type is ASCII but cannot be converted to a number"},
     {"setAttributeInt", (PyCFunction) BeamPyIndexCoding_setAttributeInt, METH_VARARGS, "Sets the attribute with the given name to the given integer value. A new attribute with\nProductData.TYPE_INT32 is added to this node if an attribute with the given name could not be found\nin this node.\nReturns Parameter name: the attribute name\nReturns Parameter value: the new value"},
     {"setAttributeDouble", (PyCFunction) BeamPyIndexCoding_setAttributeDouble, METH_VARARGS, "Sets the attribute with the given name to the given double value. A new attribute with\nProductData.TYPE_FLOAT64 is added to this node if an attribute with the given name could not be found\nin this node.\nReturns Parameter name: the attribute name\nReturns Parameter value: the new value"},
@@ -2445,7 +2462,7 @@ static PyMethodDef Band_methods[] = {
     {"getNumDataElems", (PyCFunction) BeamPyBand_getNumDataElems, METH_VARARGS, "Gets the number of data elements in this data node."},
     {"setData", (PyCFunction) BeamPyBand_setData, METH_VARARGS, "Sets the data of this data node."},
     {"getData", (PyCFunction) BeamPyBand_getData, METH_VARARGS, "Gets the data of this data node."},
-    {"setDataElems", (PyCFunction) BeamPyBand_setDataElems, METH_VARARGS, "Sets the data elements of this data node.\n@see ProductData#setElems(Object)"},
+    {"setDataElems", (PyCFunction) BeamPyBand_setDataElems, METH_VARARGS, "Sets the data elements of this data node.\n@deprecated since 5.0\n@see ProductData#setElems(Object)"},
     {"getDataElems", (PyCFunction) BeamPyBand_getDataElems, METH_VARARGS, "Gets the data elements of this data node.\n@see ProductData#getElems()"},
     {"getDataElemSize", (PyCFunction) BeamPyBand_getDataElemSize, METH_VARARGS, "Gets the data element size in bytes.\n@see ProductData#getElemSize(int)"},
     {"setReadOnly", (PyCFunction) BeamPyBand_setReadOnly, METH_VARARGS, ""},
@@ -3115,7 +3132,8 @@ static PyMethodDef MetadataElement_methods[] = {
     {"containsAttribute", (PyCFunction) BeamPyMetadataElement_containsAttribute, METH_VARARGS, "Checks whether this node has an element with the given name.\nReturns Parameter name: the attribute name\nReturns true if so"},
     {"getAttributeIndex", (PyCFunction) BeamPyMetadataElement_getAttributeIndex, METH_VARARGS, "Gets the index of the given attribute.\nReturns Parameter attribute: The attribute.\nReturns the attribute's index, or -1.\nSince version:  BEAM 4.7"},
     {"getAttributeDouble", (PyCFunction) BeamPyMetadataElement_getAttributeDouble, METH_VARARGS, "Returns the double value of the attribute with the given name. The given default value is returned if an\nattribute with the given name could not be found in this node.\nReturns Parameter name: the attribute name\nReturns Parameter defaultValue: the default value\nReturns the attribute value as double.\n@throws NumberFormatException if the attribute type is ASCII but cannot be converted to a number"},
-    {"getAttributeUTC", (PyCFunction) BeamPyMetadataElement_getAttributeUTC, METH_VARARGS, "Returns the UTC value of the attribute with the given name. The given default value is returned if an\nattribute with the given name could not be found in this node.\nReturns Parameter name: the attribute name\nReturns Parameter defaultValue: the default value\nReturns the attribute value as UTC."},
+    {"getAttributeUTC2", (PyCFunction) BeamPyMetadataElement_getAttributeUTC2, METH_VARARGS, "Returns the UTC value of the attribute with the given name. The given default value is returned if an\nattribute with the given name could not be found in this node.\nReturns Parameter name: the attribute name\nReturns Parameter defaultValue: the default value\nReturns the attribute value as UTC."},
+    {"getAttributeUTC1", (PyCFunction) BeamPyMetadataElement_getAttributeUTC1, METH_VARARGS, "Returns the UTC value of the attribute with the given name.\nReturns Parameter name: the attribute name\nReturns the attribute value as UTC.\n@throws IllegalArgumentException if an attribute with the given name could not be found"},
     {"getAttributeInt", (PyCFunction) BeamPyMetadataElement_getAttributeInt, METH_VARARGS, "Returns the integer value of the attribute with the given name. The given default value is returned if an\nattribute with the given name could not be found in this node.\nReturns Parameter name: the attribute name\nReturns Parameter defaultValue: the default value\nReturns the attribute value as integer.\n@throws NumberFormatException if the attribute type is ASCII but cannot be converted to a number"},
     {"setAttributeInt", (PyCFunction) BeamPyMetadataElement_setAttributeInt, METH_VARARGS, "Sets the attribute with the given name to the given integer value. A new attribute with\nProductData.TYPE_INT32 is added to this node if an attribute with the given name could not be found\nin this node.\nReturns Parameter name: the attribute name\nReturns Parameter value: the new value"},
     {"setAttributeDouble", (PyCFunction) BeamPyMetadataElement_setAttributeDouble, METH_VARARGS, "Sets the attribute with the given name to the given double value. A new attribute with\nProductData.TYPE_FLOAT64 is added to this node if an attribute with the given name could not be found\nin this node.\nReturns Parameter name: the attribute name\nReturns Parameter value: the new value"},
@@ -3428,7 +3446,8 @@ static PyMethodDef Product_methods[] = {
     {"getEndTime", (PyCFunction) BeamPyProduct_getEndTime, METH_VARARGS, "Gets the (sensing) stop time associated with the last raster data line.\n\nFor Level-1/2 products this is\nthe data-take time associated with the last raster data line.\nFor Level-3 products, this could be the end time of last input product\ncontributing data.\nReturns the stop time , can be null e.g. for non-swath products"},
     {"setEndTime", (PyCFunction) BeamPyProduct_setEndTime, METH_VARARGS, "Sets the (sensing) stop time associated with the first raster data line.\n\nFor Level-1/2 products this is\nthe data-take time associated with the last raster data line.\nFor Level-3 products, this could be the end time of last input product\ncontributing data.\nReturns Parameter endTime: the sensing stop time, can be null"},
     {"getMetadataRoot", (PyCFunction) BeamPyProduct_getMetadataRoot, METH_VARARGS, "Gets the root element of the associated metadata.\nReturns the metadata root element"},
-    {"getBandGroup", (PyCFunction) BeamPyProduct_getBandGroup, METH_VARARGS, "Gets the band group of this product.\nReturns the group of all bands.\nSince version:  BEAM 4.7"},
+    {"getGroups", (PyCFunction) BeamPyProduct_getGroups, METH_VARARGS, "Returns the group which contains all other product node groups.\nSince version:  BEAM 5.0"},
+    {"getGroup", (PyCFunction) BeamPyProduct_getGroup, METH_VARARGS, "Returns Parameter name: The group name.\nReturns the group with the given name, or {@code null} if no such group exists.\nSince version:  BEAM 5.0"},
     {"getTiePointGridGroup", (PyCFunction) BeamPyProduct_getTiePointGridGroup, METH_VARARGS, "Gets the tie-point grid group of this product.\nReturns the group of all tie-point grids.\nSince version:  BEAM 4.7"},
     {"addTiePointGrid", (PyCFunction) BeamPyProduct_addTiePointGrid, METH_VARARGS, "Adds the given tie-point grid to this product.\nReturns Parameter tiePointGrid: the tie-point grid to added, ignored if null"},
     {"removeTiePointGrid", (PyCFunction) BeamPyProduct_removeTiePointGrid, METH_VARARGS, "Removes the tie-point grid from this product.\nReturns Parameter tiePointGrid: the tie-point grid to be removed, ignored if null\nReturns true if node could be removed"},
@@ -3438,6 +3457,7 @@ static PyMethodDef Product_methods[] = {
     {"getTiePointGrids", (PyCFunction) BeamPyProduct_getTiePointGrids, METH_VARARGS, "Returns an array of tie-point grids contained in this product\nReturns an array of tie-point grids contained in this product. If this product has no  tie-point grids a\nzero-length-array is returned."},
     {"getTiePointGrid", (PyCFunction) BeamPyProduct_getTiePointGrid, METH_VARARGS, "Returns the tie-point grid with the given name.\nReturns Parameter name: the tie-point grid name\nReturns the tie-point grid with the given name or null if a tie-point grid with the given name is\nnot contained in this product."},
     {"containsTiePointGrid", (PyCFunction) BeamPyProduct_containsTiePointGrid, METH_VARARGS, "Tests if a tie-point grid with the given name is contained in this product.\nReturns Parameter name: the name, must not be null\nReturns true if a tie-point grid with the given name is contained in this product,\nfalse otherwise"},
+    {"getBandGroup", (PyCFunction) BeamPyProduct_getBandGroup, METH_VARARGS, "Gets the band group of this product.\nReturns the group of all bands.\nSince version:  BEAM 4.7"},
     {"addBand", (PyCFunction) BeamPyProduct_addBand, METH_VARARGS, "Adds the given band to this product.\nReturns Parameter band: the band to added, must not be null"},
     {"addNewBand", (PyCFunction) BeamPyProduct_addNewBand, METH_VARARGS, "Creates a new band with the given name and data type and adds it to this product and returns it.\nReturns Parameter bandName: the new band's name\nReturns Parameter dataType: the raster data type, must be one of the multiple ProductData.TYPE_X\nconstants\nReturns the new band which has just been added"},
     {"addComputedBand", (PyCFunction) BeamPyProduct_addComputedBand, METH_VARARGS, "Creates a new band with the given name and adds it to this product and returns it.\nThe new band's data type is {@code float} and it's samples are computed from the given band maths expression.\nReturns Parameter bandName: the new band's name\nReturns Parameter expression: the band maths expression\nReturns the new band which has just been added\nSince version:  BEAM 4.9"},
@@ -3456,8 +3476,10 @@ static PyMethodDef Product_methods[] = {
     {"getFlagCodingGroup", (PyCFunction) BeamPyProduct_getFlagCodingGroup, METH_VARARGS, ""},
     {"getIndexCodingGroup", (PyCFunction) BeamPyProduct_getIndexCodingGroup, METH_VARARGS, ""},
     {"containsPixel", (PyCFunction) BeamPyProduct_containsPixel, METH_VARARGS, "Tests if the given pixel position is within the product pixel bounds.\nReturns Parameter x: the x coordinate of the pixel position\nReturns Parameter y: the y coordinate of the pixel position\nReturns true, if so\n@see #containsPixel(PixelPos)"},
-    {"getGcpGroup", (PyCFunction) BeamPyProduct_getGcpGroup, METH_VARARGS, "Gets the group of ground-control points (GCPs).\nNote that this method will create the group, if none exists already.\nReturns the GCP group."},
-    {"getPinGroup", (PyCFunction) BeamPyProduct_getPinGroup, METH_VARARGS, "Gets the group of pins.\nNote that this method will create the group, if none exists already.\nReturns the pin group."},
+    {"getGcpGroup", (PyCFunction) BeamPyProduct_getGcpGroup, METH_VARARGS, "Gets the group of ground-control points (GCPs).\nReturns the GCP group."},
+    {"getPinGroup", (PyCFunction) BeamPyProduct_getPinGroup, METH_VARARGS, "Gets the group of pins.\nReturns the pin group."},
+    {"getNumResolutionsMax", (PyCFunction) BeamPyProduct_getNumResolutionsMax, METH_VARARGS, "Returns the maximum number of resolution levels common to all band images.\nIf less than or equal to zero, the  number of resolution levels is considered to be unknown.\nSince version:  BEAM 5.0"},
+    {"setNumResolutionsMax", (PyCFunction) BeamPyProduct_setNumResolutionsMax, METH_VARARGS, "Returns Parameter numResolutionsMax: The maximum number of resolution levels common to all band images.\nIf less than or equal to zero, the  number of resolution levels is considered to be unknown.\nSince version:  BEAM 5.0"},
     {"isCompatibleProduct", (PyCFunction) BeamPyProduct_isCompatibleProduct, METH_VARARGS, "Checks whether or not the given product is compatible with this product.\nReturns Parameter product: the product to compare with\nReturns Parameter eps: the maximum lat/lon error in degree\nReturns false if the scene dimensions or geocoding are different, true otherwise."},
     {"parseExpression", (PyCFunction) BeamPyProduct_parseExpression, METH_VARARGS, "Parses a mathematical expression given as a text string.\nReturns Parameter expression: a expression given as a text string, e.g. \"radiance_4 / (1.0 + radiance_11)\".\nReturns a term parsed from the given expression string\n@throws ParseException if the expression could not successfully be parsed"},
     {"acceptVisitor", (PyCFunction) BeamPyProduct_acceptVisitor, METH_VARARGS, "Accepts the given visitor. This method implements the well known 'Visitor' design pattern of the gang-of-four.\nThe visitor pattern allows to define new operations on the product data model without the need to add more code\nto it. The new operation is implemented by the visitor.\n\nThe method subsequentially visits (calls acceptVisitor for) all bands, tie-point grids and flag\ncodings. Finally it visits product metadata root element and calls visitor.visit(this).\nReturns Parameter visitor: the visitor, must not be null"},
@@ -3482,7 +3504,9 @@ static PyMethodDef Product_methods[] = {
     {"setPreferredTileSize", (PyCFunction) BeamPyProduct_setPreferredTileSize, METH_VARARGS, "Sets the preferred tile size which may be used for a the {@link java.awt.image.RenderedImage rendered image}\ncreated for a {@link RasterDataNode} of this product.\nReturns Parameter tileWidth: the preferred tile width\nReturns Parameter tileHeight: the preferred tile height\n@see #setPreferredTileSize(java.awt.Dimension)"},
     {"getAllFlagNames", (PyCFunction) BeamPyProduct_getAllFlagNames, METH_VARARGS, "Returns the names of all flags of all flag datasets contained this product.\n\nA flag name contains the dataset (a band of this product) and the actual flag name as defined in the\nflag-coding associated with the dataset. The general format for the flag name strings returned is therefore\n\"dataset.flag_name\".\n\nThe method is used to find out which flags a product has in order to use them in bit-mask expressions.\nReturns the array of all flag names. If this product does not support flags, an empty array is returned, but\nnever null.\n@see #parseExpression(String)"},
     {"getAutoGrouping", (PyCFunction) BeamPyProduct_getAutoGrouping, METH_VARARGS, "Gets the auto-grouping applicable to product nodes contained in this product.\nReturns the auto-grouping or {@code null}.\nSince version:  BEAM 4.8"},
-    {"setAutoGrouping", (PyCFunction) BeamPyProduct_setAutoGrouping, METH_VARARGS, "Sets the auto-grouping applicable to product nodes contained in this product.\nA given {@code pattern} parameter is a textual representation of the auto-grouping.\nThe syntax for the pattern is:\n<pre>\npattern    :=  &lt;groupPath&gt; {':' &lt;groupPath&gt;} | \"\" (empty string)\ngroupPath  :=  &lt;groupName&gt; {'/' &lt;groupName&gt;}\ngroupName  :=  any non-empty string without characters ':' and '/'\n</pre>\nAn example for {@code pattern} applicable to Envisat AATSR data is\n<pre>\nnadir/reflec:nadir/btemp:fward/reflec:fward/btemp:nadir:fward\n</pre>\nReturns Parameter pattern: The auto-grouping pattern.\nSince version:  BEAM 4.8"},
+    {"setAutoGrouping2", (PyCFunction) BeamPyProduct_setAutoGrouping2, METH_VARARGS, "Sets the auto-grouping applicable to product nodes contained in this product.\nReturns Parameter autoGrouping: The auto-grouping or {@code null}.\nSince version:  BEAM 4.8"},
+    {"setAutoGrouping1", (PyCFunction) BeamPyProduct_setAutoGrouping1, METH_VARARGS, "Sets the auto-grouping applicable to product nodes contained in this product.\nA given {@code pattern} parameter is a textual representation of the auto-grouping.\nThe syntax for the pattern is:\n<pre>\npattern    :=  &lt;groupPath&gt; {':' &lt;groupPath&gt;} | \"\" (empty string)\ngroupPath  :=  &lt;groupName&gt; {'/' &lt;groupName&gt;}\ngroupName  :=  any non-empty string without characters ':' and '/'\n</pre>\nAn example for {@code pattern} applicable to Envisat AATSR data is\n<pre>\nnadir/reflec:nadir/btemp:fward/reflec:fward/btemp:nadir:fward\n</pre>\nReturns Parameter pattern: The auto-grouping pattern.\nSince version:  BEAM 4.8"},
+    {"addMask", (PyCFunction) BeamPyProduct_addMask, METH_VARARGS, "Creates a new mask with the given name and image type and adds it to this product and returns it.\nThe new mask's samples are computed from the given image type.\nReturns Parameter maskName: the new mask's name\nReturns Parameter imageType: the image data type used to compute the mask samples\nReturns the new mask which has just been added\nSince version:  BEAM 4.10"},
     {"addComputedMask", (PyCFunction) BeamPyProduct_addComputedMask, METH_VARARGS, "Creates a new mask using a band arithmetic expression\nand adds it to this product and returns it.\nReturns Parameter maskName: the new mask's name\nReturns Parameter expression: the band arithmetic expression\nReturns Parameter description: the mask's description\nReturns Parameter color: the display color\nReturns Parameter transparency: the display transparency\nReturns the new mask which has just been added\nSince version:  BEAM 4.10"},
     {"addBitmaskDef", (PyCFunction) BeamPyProduct_addBitmaskDef, METH_VARARGS, "Adds the given bitmask definition to this product.\nReturns Parameter bitmaskDef: the bitmask definition to added, ignored if null\n@deprecated since BEAM 4.7, use {@link #getMaskGroup()} instead"},
     {"getBitmaskDefNames", (PyCFunction) BeamPyProduct_getBitmaskDefNames, METH_VARARGS, "Returns a string array containing the names of the bitmask definitions contained in this product.\nReturns a string array containing the names of the bitmask definitions contained in this product. If this product\nhas no bitmask definitions a zero-length-array is returned.\n@deprecated since BEAM 4.7, use {@link #getMaskGroup()} instead"},
@@ -3490,9 +3514,9 @@ static PyMethodDef Product_methods[] = {
     {"getValidMask", (PyCFunction) BeamPyProduct_getValidMask, METH_VARARGS, "Gets a valid-mask for the given ID.\nReturns Parameter id: the ID\nReturns a cached valid mask for the given ID or null\n@see #createValidMask(String, com.bc.ceres.core.ProgressMonitor)\n@deprecated since BEAM 4.7, use {@link #getMaskGroup()} instead"},
     {"setValidMask", (PyCFunction) BeamPyProduct_setValidMask, METH_VARARGS, "Sets a valid-mask for the given ID.\nReturns Parameter id: the ID\nReturns Parameter validMask: the pixel mask\n@see #createValidMask(String, com.bc.ceres.core.ProgressMonitor)\n@deprecated since BEAM 4.7, use {@link #getMaskGroup()} instead"},
     {"createValidMask2", (PyCFunction) BeamPyProduct_createValidMask2, METH_VARARGS, "Creates a bit-packed valid-mask for all pixels of the scene covered by this product.\nThe given expression is considered to be boolean, if it evaluates to true\nthe related bit in the mask is set.\nReturns Parameter expression: the boolean expression, e.g. \"l2_flags.LAND && reflec_10 >= 0.0\"\nReturns Parameter pm: a progress monitor\nReturns a bit-packed mask for all pixels of the scene, never null\n@throws IOException if an I/O error occurs\n@see #parseExpression(String)\n@deprecated since BEAM 4.7, use {@link #getMaskGroup()} instead"},
-    {"createValidMask1", (PyCFunction) BeamPyProduct_createValidMask1, METH_VARARGS, "Creates a bit-packed mask for all pixels of the scene covered by this product.\nThe given term is considered to be boolean, if it evaluates to true\nthe related bit in the mask is set.\nReturns Parameter term: the boolean term, e.g. \"l2_flags.LAND && reflec_10 >= 0.0\"\nReturns Parameter pm: a progress monitor\nReturns a bit-packed mask for all pixels of the scene, never null\n@throws IOException if an I/O error occurs\n@see #createValidMask(String, com.bc.ceres.core.ProgressMonitor)\n@deprecated since BEAM 4.7, use {@link #getMaskGroup()} instead"},
-    {"readBitmask2", (PyCFunction) BeamPyProduct_readBitmask2, METH_VARARGS, "Creates a bit-mask by evaluating the given bit-mask term.\n The method first creates an evaluation context for the given bit-mask term and the specified region and then\nevaluates the term for each pixel in the subset (line-by-line, X varies fastest). The result of each evaluation -\nthe resulting bitmask - is stored in the given boolean array buffer bitmask in the same order as\npixels appear in the given region. The buffer must at least have a length equal to width * height\nelements.\n\n If flag providing datasets are referenced in the given bit-mask expression which are currently not completely\nloaded, the method reloads the spatial subset from the data source in order to create the evaluation context.\n\n The {@link #parseExpression(String)} method can be used to create a bit-mask\nterm from a textual bit-mask expression.\n\nReturns Parameter offsetX: the X-offset of the spatial subset in pixel co-ordinates\nReturns Parameter offsetY: the Y-offset of the spatial subset in pixel co-ordinates\nReturns Parameter width: the width of the spatial subset in pixel co-ordinates\nReturns Parameter height: the height of the spatial subset in pixel co-ordinates\nReturns Parameter bitmaskTerm: a bit-mask term, as returned by the {@link #parseExpression(String)} method\nReturns Parameter bitmask: a buffer used to hold the results of the bit-mask evaluations for each pixel in the given\nspatial subset\nReturns Parameter pm: a monitor to inform the user about progress\n@throws IOException if an I/O error occurs, when referenced flag datasets are reloaded\n@see #parseExpression(String)\n@deprecated since BEAM 4.7, use {@link #getMaskGroup()} instead"},
-    {"readBitmask1", (PyCFunction) BeamPyProduct_readBitmask1, METH_VARARGS, "Creates a bit-mask by evaluating the given bit-mask term.\n\n The method first creates an evaluation context for the given bit-mask term and the specified region and then\nevaluates the term for each pixel in the subset (line-by-line, X varies fastest). The result of each evaluation -\nthe resulting bitmask - is stored in the given boolean array buffer bitmask in the same order as\npixels appear in the given region. The buffer must at least have a length equal to width * height\nelements.\n\n If flag providing datasets are referenced in the given bit-mask expression which are currently not completely\nloaded, the method reloads the spatial subset from the data source in order to create the evaluation context.\n\n The {@link #parseExpression(String)} method can be used to create a bit-mask\nterm from a textual bit-mask expression.\nReturns Parameter offsetX: the X-offset of the spatial subset in pixel co-ordinates\nReturns Parameter offsetY: the Y-offset of the spatial subset in pixel co-ordinates\nReturns Parameter width: the width of the spatial subset in pixel co-ordinates\nReturns Parameter height: the height of the spatial subset in pixel co-ordinates\nReturns Parameter bitmaskTerm: a bit-mask term, as returned by the {@link #parseExpression(String)}\nmethod\nReturns Parameter bitmask: a byte buffer used to hold the results of the bit-mask evaluations for each pixel in the given\nspatial subset\nReturns Parameter trueValue: the byte value to be set if the bitmask-term evauates to true\nReturns Parameter falseValue: the byte value to be set if the bitmask-term evauates to false\n@throws IOException if an I/O error occurs, when referenced flag datasets are reloaded\n@see #parseExpression(String)\n@deprecated since BEAM 4.7, use {@link #getMaskGroup()} instead"},
+    {"createValidMask1", (PyCFunction) BeamPyProduct_createValidMask1, METH_VARARGS, "Creates a bit-packed mask for all pixels of the scene covered by this product.\nThe given term is considered to be boolean, if it evaluates to true\nthe related bit in the mask is set.\nReturns Parameter term: the boolean term, e.g. \"l2_flags.LAND && reflec_10 >= 0.0\"\nReturns Parameter pm: a progress monitor\nReturns a bit-packed mask for all pixels of the scene, never null\n@throws IOException if an I/O error occurs\n@see #createValidMask(String, com.bc.ceres.core.ProgressMonitor)\n@deprecated since BEAM 4.7, use {@link Mask.BandMathsType#create(String, String, int, int, String, java.awt.Color, double) Mask.BandMathsType.create()}\nand {@link #getMaskGroup()}) instead"},
+    {"readBitmask2", (PyCFunction) BeamPyProduct_readBitmask2, METH_VARARGS, "Creates a bit-mask by evaluating the given bit-mask term.\n The method first creates an evaluation context for the given bit-mask term and the specified region and then\nevaluates the term for each pixel in the subset (line-by-line, X varies fastest). The result of each evaluation -\nthe resulting bitmask - is stored in the given boolean array buffer bitmask in the same order as\npixels appear in the given region. The buffer must at least have a length equal to width * height\nelements.\n\n If flag providing datasets are referenced in the given bit-mask expression which are currently not completely\nloaded, the method reloads the spatial subset from the data source in order to create the evaluation context.\n\n The {@link #parseExpression(String)} method can be used to create a bit-mask\nterm from a textual bit-mask expression.\n\nReturns Parameter offsetX: the X-offset of the spatial subset in pixel co-ordinates\nReturns Parameter offsetY: the Y-offset of the spatial subset in pixel co-ordinates\nReturns Parameter width: the width of the spatial subset in pixel co-ordinates\nReturns Parameter height: the height of the spatial subset in pixel co-ordinates\nReturns Parameter bitmaskTerm: a bit-mask term, as returned by the {@link #parseExpression(String)} method\nReturns Parameter bitmask: a buffer used to hold the results of the bit-mask evaluations for each pixel in the given\nspatial subset\nReturns Parameter pm: a monitor to inform the user about progress\n@throws IOException if an I/O error occurs, when referenced flag datasets are reloaded\n@see #parseExpression(String)\n@deprecated since BEAM 4.7, add a new mask to product\n(see {@link Mask.BandMathsType#create(String, String, int, int, String, java.awt.Color, double) Mask.BandMathsType.create()}\nand {@link #getMaskGroup()}) and use its source image instead"},
+    {"readBitmask1", (PyCFunction) BeamPyProduct_readBitmask1, METH_VARARGS, "Creates a bit-mask by evaluating the given bit-mask term.\n\n The method first creates an evaluation context for the given bit-mask term and the specified region and then\nevaluates the term for each pixel in the subset (line-by-line, X varies fastest). The result of each evaluation -\nthe resulting bitmask - is stored in the given boolean array buffer bitmask in the same order as\npixels appear in the given region. The buffer must at least have a length equal to width * height\nelements.\n\n If flag providing datasets are referenced in the given bit-mask expression which are currently not completely\nloaded, the method reloads the spatial subset from the data source in order to create the evaluation context.\n\n The {@link #parseExpression(String)} method can be used to create a bit-mask\nterm from a textual bit-mask expression.\nReturns Parameter offsetX: the X-offset of the spatial subset in pixel co-ordinates\nReturns Parameter offsetY: the Y-offset of the spatial subset in pixel co-ordinates\nReturns Parameter width: the width of the spatial subset in pixel co-ordinates\nReturns Parameter height: the height of the spatial subset in pixel co-ordinates\nReturns Parameter bitmaskTerm: a bit-mask term, as returned by the {@link #parseExpression(String)}\nmethod\nReturns Parameter bitmask: a byte buffer used to hold the results of the bit-mask evaluations for each pixel in the given\nspatial subset\nReturns Parameter trueValue: the byte value to be set if the bitmask-term evauates to true\nReturns Parameter falseValue: the byte value to be set if the bitmask-term evauates to false\n@throws IOException if an I/O error occurs, when referenced flag datasets are reloaded\n@see #parseExpression(String)\n@deprecated since BEAM 4.7, add a new mask to product\n(see {@link Mask.BandMathsType#create(String, String, int, int, String, java.awt.Color, double) Mask.BandMathsType.create()}\nand {@link #getMaskGroup()}) and use its source image instead"},
     {"getOwner", (PyCFunction) BeamPyProduct_getOwner, METH_VARARGS, "Returns the owner node of this node."},
     {"getName", (PyCFunction) BeamPyProduct_getName, METH_VARARGS, "Returns this node's name."},
     {"setName", (PyCFunction) BeamPyProduct_setName, METH_VARARGS, "Sets this product's name.\nReturns Parameter name: The name."},
@@ -3932,7 +3956,8 @@ PyTypeObject ProductManager_Listener_Type = {
 
 static PyMethodDef ColorPaletteDef_methods[] = {
     {"newColorPaletteDefFromRange", (PyCFunction) BeamPyColorPaletteDef_newColorPaletteDefFromRange, METH_VARARGS | METH_STATIC, ""},
-    {"newColorPaletteDefFromPoints", (PyCFunction) BeamPyColorPaletteDef_newColorPaletteDefFromPoints, METH_VARARGS | METH_STATIC, ""},
+    {"newColorPaletteDef1", (PyCFunction) BeamPyColorPaletteDef_newColorPaletteDef1, METH_VARARGS | METH_STATIC, ""},
+    {"newColorPaletteDef2", (PyCFunction) BeamPyColorPaletteDef_newColorPaletteDef2, METH_VARARGS | METH_STATIC, ""},
     {"isDiscrete", (PyCFunction) BeamPyColorPaletteDef_isDiscrete, METH_VARARGS, ""},
     {"setDiscrete", (PyCFunction) BeamPyColorPaletteDef_setDiscrete, METH_VARARGS, ""},
     {"getNumColors", (PyCFunction) BeamPyColorPaletteDef_getNumColors, METH_VARARGS, ""},
@@ -4074,6 +4099,7 @@ static PyMethodDef ImageInfo_methods[] = {
     {"getRgbChannelDef", (PyCFunction) BeamPyImageInfo_getRgbChannelDef, METH_VARARGS, "Gets the RGB(A) channel definition as used for images created from 3 tp 4 bands.\nReturns the RGB(A) channel definition.\nCan be {@code null}. In this case {@link #getColorPaletteDef()} is non-null."},
     {"getNoDataColor", (PyCFunction) BeamPyImageInfo_getNoDataColor, METH_VARARGS, ""},
     {"setNoDataColor", (PyCFunction) BeamPyImageInfo_setNoDataColor, METH_VARARGS, ""},
+    {"getHistogramMatching1", (PyCFunction) BeamPyImageInfo_getHistogramMatching1, METH_VARARGS, ""},
     {"setHistogramMatching", (PyCFunction) BeamPyImageInfo_setHistogramMatching, METH_VARARGS, ""},
     {"isLogScaled", (PyCFunction) BeamPyImageInfo_isLogScaled, METH_VARARGS, ""},
     {"setLogScaled", (PyCFunction) BeamPyImageInfo_setLogScaled, METH_VARARGS, ""},
@@ -4086,7 +4112,7 @@ static PyMethodDef ImageInfo_methods[] = {
     {"dispose", (PyCFunction) BeamPyImageInfo_dispose, METH_VARARGS, "Releases all of the resources used by this object instance and all of its owned children. Its primary use is to\nallow the garbage collector to perform a vanilla job.\n\nThis method should be called only if it is for sure that this object instance will never be used again. The\nresults of referencing an instance of this class after a call to dispose() are undefined.\n\nOverrides of this method should always call super.dispose(); after disposing this instance."},
     {"setColors", (PyCFunction) BeamPyImageInfo_setColors, METH_VARARGS, "Sets the colours of the colour palette of this image info.\nReturns Parameter colors: the new colours"},
     {"setColorPaletteDef", (PyCFunction) BeamPyImageInfo_setColorPaletteDef, METH_VARARGS, "Transfers the colour palette into this image info.\nReturns Parameter colorPaletteDef: another colour palette\nReturns Parameter minSample: the minium allowed sample value in the new colour palette\nReturns Parameter maxSample: the maximum allowed sample value in the new colour palette\nReturns Parameter autoDistribute: if true, points are distributed between minSample/maxSample."},
-    {"getHistogramMatching", (PyCFunction) BeamPyImageInfo_getHistogramMatching, METH_VARARGS | METH_STATIC, "Converts a string to a histogram matching.\nReturns Parameter mode: the histogram matching string\nReturns the histogram matching. {@link ImageInfo.HistogramMatching#None} if {@code maode} is not \"Equalize\" or \"Normalize\"."},
+    {"getHistogramMatching2", (PyCFunction) BeamPyImageInfo_getHistogramMatching2, METH_VARARGS | METH_STATIC, "Converts a string to a histogram matching.\nReturns Parameter mode: the histogram matching string\nReturns the histogram matching. {@link ImageInfo.HistogramMatching#None} if {@code maode} is not \"Equalize\" or \"Normalize\"."},
     {NULL, NULL, 0, NULL} /*Sentinel*/
 };
 
@@ -4385,7 +4411,7 @@ static PyMethodDef TiePointGrid_methods[] = {
     {"getNumDataElems", (PyCFunction) BeamPyTiePointGrid_getNumDataElems, METH_VARARGS, "Gets the number of data elements in this data node."},
     {"setData", (PyCFunction) BeamPyTiePointGrid_setData, METH_VARARGS, "Sets the data of this data node."},
     {"getData", (PyCFunction) BeamPyTiePointGrid_getData, METH_VARARGS, "Gets the data of this data node."},
-    {"setDataElems", (PyCFunction) BeamPyTiePointGrid_setDataElems, METH_VARARGS, "Sets the data elements of this data node.\n@see ProductData#setElems(Object)"},
+    {"setDataElems", (PyCFunction) BeamPyTiePointGrid_setDataElems, METH_VARARGS, "Sets the data elements of this data node.\n@deprecated since 5.0\n@see ProductData#setElems(Object)"},
     {"getDataElems", (PyCFunction) BeamPyTiePointGrid_getDataElems, METH_VARARGS, "Gets the data elements of this data node.\n@see ProductData#getElems()"},
     {"getDataElemSize", (PyCFunction) BeamPyTiePointGrid_getDataElemSize, METH_VARARGS, "Gets the data element size in bytes.\n@see ProductData#getElemSize(int)"},
     {"setReadOnly", (PyCFunction) BeamPyTiePointGrid_setReadOnly, METH_VARARGS, ""},
@@ -5774,6 +5800,59 @@ PyTypeObject Iterator_Type = {
     NULL,                         /* tp_new */
 };
 
+static PyMethodDef Mask_ImageType_methods[] = {
+    {NULL, NULL, 0, NULL} /*Sentinel*/
+};
+
+// Note: this is unused, experimental code
+
+/**
+ * Implements the BeamPy_JObjectType class singleton.
+ *
+ * THIS TYPE IS NOT YET IN USE: we currently use
+ * (<type_string>, <pointer>) tuples to represent Java JNI objects.
+ */
+PyTypeObject Mask_ImageType_Type = {
+    PyVarObject_HEAD_INIT(NULL, 0)
+    "beampy.Mask_ImageType",        /* tp_name */
+    sizeof (JObject),             /* tp_basicsize */
+    0,                            /* tp_itemsize */
+    (destructor)JObject_dealloc,  /* tp_dealloc */
+    NULL,                         /* tp_print */
+    NULL,                         /* tp_getattr */
+    NULL,                         /* tp_setattr */
+    NULL,                         /* tp_reserved */
+    NULL,                         /* tp_repr */
+    NULL,                         /* tp_as_number */
+    NULL,                         /* tp_as_sequence */
+    NULL,                         /* tp_as_mapping */
+    NULL,                         /* tp_hash  */
+    NULL,                         /* tp_call */
+    NULL,                         /* tp_str */
+    NULL,                         /* tp_getattro */
+    NULL,                         /* tp_setattro */
+    NULL,                         /* tp_as_buffer */
+    Py_TPFLAGS_DEFAULT,           /* tp_flags */
+    "Specifies a factory for the {@link RasterDataNode#getSourceImage() source image} used by a {@link Mask}.",                /* tp_doc */
+    NULL,                         /* tp_traverse */
+    NULL,                         /* tp_clear */
+    NULL,                         /* tp_richcompare */
+    0,                            /* tp_weaklistoffset */
+    NULL,                         /* tp_iter */
+    NULL,                         /* tp_iternext */
+    Mask_ImageType_methods,         /* tp_methods */
+    NULL,                         /* tp_members */
+    NULL,                         /* tp_getset */
+    NULL,                         /* tp_base */
+    NULL,                         /* tp_dict */
+    NULL,                         /* tp_descr_get */
+    NULL,                         /* tp_descr_set */
+    0,                            /* tp_dictoffset */
+    (initproc) JObject_init,      /* tp_init */
+    NULL,                         /* tp_alloc */
+    NULL,                         /* tp_new */
+};
+
 static PyMethodDef File_methods[] = {
     {NULL, NULL, 0, NULL} /*Sentinel*/
 };
@@ -5815,6 +5894,59 @@ PyTypeObject File_Type = {
     NULL,                         /* tp_iter */
     NULL,                         /* tp_iternext */
     File_methods,         /* tp_methods */
+    NULL,                         /* tp_members */
+    NULL,                         /* tp_getset */
+    NULL,                         /* tp_base */
+    NULL,                         /* tp_dict */
+    NULL,                         /* tp_descr_get */
+    NULL,                         /* tp_descr_set */
+    0,                            /* tp_dictoffset */
+    (initproc) JObject_init,      /* tp_init */
+    NULL,                         /* tp_alloc */
+    NULL,                         /* tp_new */
+};
+
+static PyMethodDef Rectangle2D_methods[] = {
+    {NULL, NULL, 0, NULL} /*Sentinel*/
+};
+
+// Note: this is unused, experimental code
+
+/**
+ * Implements the BeamPy_JObjectType class singleton.
+ *
+ * THIS TYPE IS NOT YET IN USE: we currently use
+ * (<type_string>, <pointer>) tuples to represent Java JNI objects.
+ */
+PyTypeObject Rectangle2D_Type = {
+    PyVarObject_HEAD_INIT(NULL, 0)
+    "beampy.Rectangle2D",        /* tp_name */
+    sizeof (JObject),             /* tp_basicsize */
+    0,                            /* tp_itemsize */
+    (destructor)JObject_dealloc,  /* tp_dealloc */
+    NULL,                         /* tp_print */
+    NULL,                         /* tp_getattr */
+    NULL,                         /* tp_setattr */
+    NULL,                         /* tp_reserved */
+    NULL,                         /* tp_repr */
+    NULL,                         /* tp_as_number */
+    NULL,                         /* tp_as_sequence */
+    NULL,                         /* tp_as_mapping */
+    NULL,                         /* tp_hash  */
+    NULL,                         /* tp_call */
+    NULL,                         /* tp_str */
+    NULL,                         /* tp_getattro */
+    NULL,                         /* tp_setattro */
+    NULL,                         /* tp_as_buffer */
+    Py_TPFLAGS_DEFAULT,           /* tp_flags */
+    "",                /* tp_doc */
+    NULL,                         /* tp_traverse */
+    NULL,                         /* tp_clear */
+    NULL,                         /* tp_richcompare */
+    0,                            /* tp_weaklistoffset */
+    NULL,                         /* tp_iter */
+    NULL,                         /* tp_iternext */
+    Rectangle2D_methods,         /* tp_methods */
     NULL,                         /* tp_members */
     NULL,                         /* tp_getset */
     NULL,                         /* tp_base */
@@ -6140,7 +6272,8 @@ static PyMethodDef FlagCoding_methods[] = {
     {"containsAttribute", (PyCFunction) BeamPyFlagCoding_containsAttribute, METH_VARARGS, "Checks whether this node has an element with the given name.\nReturns Parameter name: the attribute name\nReturns true if so"},
     {"getAttributeIndex", (PyCFunction) BeamPyFlagCoding_getAttributeIndex, METH_VARARGS, "Gets the index of the given attribute.\nReturns Parameter attribute: The attribute.\nReturns the attribute's index, or -1.\nSince version:  BEAM 4.7"},
     {"getAttributeDouble", (PyCFunction) BeamPyFlagCoding_getAttributeDouble, METH_VARARGS, "Returns the double value of the attribute with the given name. The given default value is returned if an\nattribute with the given name could not be found in this node.\nReturns Parameter name: the attribute name\nReturns Parameter defaultValue: the default value\nReturns the attribute value as double.\n@throws NumberFormatException if the attribute type is ASCII but cannot be converted to a number"},
-    {"getAttributeUTC", (PyCFunction) BeamPyFlagCoding_getAttributeUTC, METH_VARARGS, "Returns the UTC value of the attribute with the given name. The given default value is returned if an\nattribute with the given name could not be found in this node.\nReturns Parameter name: the attribute name\nReturns Parameter defaultValue: the default value\nReturns the attribute value as UTC."},
+    {"getAttributeUTC2", (PyCFunction) BeamPyFlagCoding_getAttributeUTC2, METH_VARARGS, "Returns the UTC value of the attribute with the given name. The given default value is returned if an\nattribute with the given name could not be found in this node.\nReturns Parameter name: the attribute name\nReturns Parameter defaultValue: the default value\nReturns the attribute value as UTC."},
+    {"getAttributeUTC1", (PyCFunction) BeamPyFlagCoding_getAttributeUTC1, METH_VARARGS, "Returns the UTC value of the attribute with the given name.\nReturns Parameter name: the attribute name\nReturns the attribute value as UTC.\n@throws IllegalArgumentException if an attribute with the given name could not be found"},
     {"getAttributeInt", (PyCFunction) BeamPyFlagCoding_getAttributeInt, METH_VARARGS, "Returns the integer value of the attribute with the given name. The given default value is returned if an\nattribute with the given name could not be found in this node.\nReturns Parameter name: the attribute name\nReturns Parameter defaultValue: the default value\nReturns the attribute value as integer.\n@throws NumberFormatException if the attribute type is ASCII but cannot be converted to a number"},
     {"setAttributeInt", (PyCFunction) BeamPyFlagCoding_setAttributeInt, METH_VARARGS, "Sets the attribute with the given name to the given integer value. A new attribute with\nProductData.TYPE_INT32 is added to this node if an attribute with the given name could not be found\nin this node.\nReturns Parameter name: the attribute name\nReturns Parameter value: the new value"},
     {"setAttributeDouble", (PyCFunction) BeamPyFlagCoding_setAttributeDouble, METH_VARARGS, "Sets the attribute with the given name to the given double value. A new attribute with\nProductData.TYPE_FLOAT64 is added to this node if an attribute with the given name could not be found\nin this node.\nReturns Parameter name: the attribute name\nReturns Parameter value: the new value"},
@@ -6504,6 +6637,7 @@ static PyMethodDef ProductUtils_methods[] = {
     {"createGeoBoundary1", (PyCFunction) BeamPyProductUtils_createGeoBoundary1, METH_VARARGS | METH_STATIC, "Creates the geographical boundary of the given product and returns it as a list of geographical coordinates.\nReturns Parameter product: the input product, must not be null\nReturns Parameter step: the step given in pixels\nReturns an array of geographical coordinates\n@throws IllegalArgumentException if product is null or if the product's {@link GeoCoding} is null"},
     {"createGeoBoundary2", (PyCFunction) BeamPyProductUtils_createGeoBoundary2, METH_VARARGS | METH_STATIC, "Creates the geographical boundary of the given region within the given product and returns it as a list of\ngeographical coordinates.\n This method delegates to {@link #createGeoBoundary(Product, java.awt.Rectangle, int, boolean) createGeoBoundary(Product, Rectangle, int, boolean)}\nand the additional boolean parameter usePixelCenter is true.\nReturns Parameter product: the input product, must not be null\nReturns Parameter region: the region rectangle in product pixel coordinates, can be null for entire product\nReturns Parameter step: the step given in pixels\nReturns an array of geographical coordinates\n@throws IllegalArgumentException if product is null or if the product's {@link GeoCoding} is null\n@see #createPixelBoundary(RasterDataNode, java.awt.Rectangle, int)"},
     {"createGeoBoundary3", (PyCFunction) BeamPyProductUtils_createGeoBoundary3, METH_VARARGS | METH_STATIC, "Creates the geographical boundary of the given region within the given product and returns it as a list of\ngeographical coordinates.\nReturns Parameter product: the input product, must not be null\nReturns Parameter region: the region rectangle in product pixel coordinates, can be null for entire product\nReturns Parameter step: the step given in pixels\nReturns Parameter usePixelCenter: true if the pixel center should be used to create the boundary\nReturns an array of geographical coordinates\n@throws IllegalArgumentException if product is null or if the product's {@link GeoCoding} is null\n@see #createPixelBoundary(Product, java.awt.Rectangle, int, boolean)"},
+    {"getClosestGeoPos", (PyCFunction) BeamPyProductUtils_getClosestGeoPos, METH_VARARGS | METH_STATIC, "Searches for a valid GeoPos by considering the vicinity of a {@link PixelPos}. It does not check\nthe original pixel position, but uses it for determining which pixel positions to examine.\nReturns Parameter gc: the GeoCoding, must not be null\nReturns Parameter origPos: the original pixel position, must not be null\nReturns Parameter region: the rectangle which determines the valid pixel positions, must not be null\nReturns Parameter step: determines the step size between pixels which is used in the search process. Small step\nsizes will increase the accuracy, but need more computational time\nReturns a {@link GeoPos}. This will be valid if the search was successful. If not, a {@link GeoPos} with\nNaN-values for latitude and longitude will be returned."},
     {"createGeoBoundary4", (PyCFunction) BeamPyProductUtils_createGeoBoundary4, METH_VARARGS | METH_STATIC, "Creates the geographical boundary of the given region within the given raster and returns it as a list of\ngeographical coordinates.\nReturns Parameter raster: the input raster, must not be null\nReturns Parameter region: the region rectangle in raster pixel coordinates, can be null for entire raster\nReturns Parameter step: the step given in pixels\nReturns an array of geographical coordinates\n@throws IllegalArgumentException if raster is null or if the raster has no {@link GeoCoding} is null\n@see #createPixelBoundary(RasterDataNode, java.awt.Rectangle, int)"},
     {"createGeoBoundaryPaths1", (PyCFunction) BeamPyProductUtils_createGeoBoundaryPaths1, METH_VARARGS | METH_STATIC, "Converts the geographic boundary entire product into one, two or three shape objects. If the product does not\nintersect the 180 degree meridian, a single general path is returned. Otherwise two or three shapes are created\nand returned in the order from west to east.\n\nThe geographic boundary of the given product are returned as shapes comprising (longitude,latitude) pairs.\nReturns Parameter product: the input product\nReturns an array of shape objects\n@throws IllegalArgumentException if product is null or if the product's {@link GeoCoding} is null\n@see #createGeoBoundary(Product, int)"},
     {"createGeoBoundaryPaths2", (PyCFunction) BeamPyProductUtils_createGeoBoundaryPaths2, METH_VARARGS | METH_STATIC, "Converts the geographic boundary of the region within the given product into one, two or three shape objects. If\nthe product does not intersect the 180 degree meridian, a single general path is returned. Otherwise two or three\nshapes are created and returned in the order from west to east.\n\nThis method delegates to {@link #createGeoBoundaryPaths(Product, java.awt.Rectangle, int, boolean) createGeoBoundaryPaths(Product, Rectangle, int, boolean)}\nand the additional parameter usePixelCenter is true.\n\nThe geographic boundary of the given product are returned as shapes comprising (longitude,latitude) pairs.\nReturns Parameter product: the input product\nReturns Parameter region: the region rectangle in product pixel coordinates, can be null for entire product\nReturns Parameter step: the step given in pixels\nReturns an array of shape objects\n@throws IllegalArgumentException if product is null or if the product's {@link GeoCoding} is null\n@see #createGeoBoundary(Product, java.awt.Rectangle, int)"},
@@ -7493,7 +7627,7 @@ static PyMethodDef MetadataAttribute_methods[] = {
     {"getNumDataElems", (PyCFunction) BeamPyMetadataAttribute_getNumDataElems, METH_VARARGS, "Gets the number of data elements in this data node."},
     {"setData", (PyCFunction) BeamPyMetadataAttribute_setData, METH_VARARGS, "Sets the data of this data node."},
     {"getData", (PyCFunction) BeamPyMetadataAttribute_getData, METH_VARARGS, "Gets the data of this data node."},
-    {"setDataElems", (PyCFunction) BeamPyMetadataAttribute_setDataElems, METH_VARARGS, "Sets the data elements of this data node.\n@see ProductData#setElems(Object)"},
+    {"setDataElems", (PyCFunction) BeamPyMetadataAttribute_setDataElems, METH_VARARGS, "Sets the data elements of this data node.\n@deprecated since 5.0\n@see ProductData#setElems(Object)"},
     {"getDataElems", (PyCFunction) BeamPyMetadataAttribute_getDataElems, METH_VARARGS, "Gets the data elements of this data node.\n@see ProductData#getElems()"},
     {"getDataElemSize", (PyCFunction) BeamPyMetadataAttribute_getDataElemSize, METH_VARARGS, "Gets the data element size in bytes.\n@see ProductData#getElemSize(int)"},
     {"setReadOnly", (PyCFunction) BeamPyMetadataAttribute_setReadOnly, METH_VARARGS, ""},
@@ -8297,6 +8431,14 @@ int BPy_RegisterJObjectSubtypes(PyObject* module)
     Py_INCREF(&Iterator_Type);
     PyModule_AddObject(module, "Iterator", (PyObject*) &Iterator_Type);
 
+    // Register Mask_ImageType:
+    Mask_ImageType_Type.tp_base = &JObject_Type;
+    if (PyType_Ready(&Mask_ImageType_Type) < 0) {
+        return 0;
+    }
+    Py_INCREF(&Mask_ImageType_Type);
+    PyModule_AddObject(module, "Mask_ImageType", (PyObject*) &Mask_ImageType_Type);
+
     // Register File:
     File_Type.tp_base = &JObject_Type;
     if (PyType_Ready(&File_Type) < 0) {
@@ -8304,6 +8446,14 @@ int BPy_RegisterJObjectSubtypes(PyObject* module)
     }
     Py_INCREF(&File_Type);
     PyModule_AddObject(module, "File", (PyObject*) &File_Type);
+
+    // Register Rectangle2D:
+    Rectangle2D_Type.tp_base = &JObject_Type;
+    if (PyType_Ready(&Rectangle2D_Type) < 0) {
+        return 0;
+    }
+    Py_INCREF(&Rectangle2D_Type);
+    PyModule_AddObject(module, "Rectangle2D", (PyObject*) &Rectangle2D_Type);
 
     // Register GeoPos:
     GeoPos_Type.tp_base = &JObject_Type;
@@ -8741,7 +8891,9 @@ jboolean BPy_InitApi(void)
     if (!BPy_InitJClass(&BPy_ProductData_UTC_Class, "org/esa/beam/framework/datamodel/ProductData$UTC")) return 0;
     if (!BPy_InitJClass(&BPy_RenderedImage_Class, "java/awt/image/RenderedImage")) return 0;
     if (!BPy_InitJClass(&BPy_Iterator_Class, "java/util/Iterator")) return 0;
+    if (!BPy_InitJClass(&BPy_Mask_ImageType_Class, "org/esa/beam/framework/datamodel/Mask$ImageType")) return 0;
     if (!BPy_InitJClass(&BPy_File_Class, "java/io/File")) return 0;
+    if (!BPy_InitJClass(&BPy_Rectangle2D_Class, "java/awt/geom/Rectangle2D")) return 0;
     if (!BPy_InitJClass(&BPy_GeoPos_Class, "org/esa/beam/framework/datamodel/GeoPos")) return 0;
     if (!BPy_InitJClass(&BPy_ProductNodeGroup_Class, "org/esa/beam/framework/datamodel/ProductNodeGroup")) return 0;
     if (!BPy_InitJClass(&BPy_ProductManager_Class, "org/esa/beam/framework/datamodel/ProductManager")) return 0;
@@ -11504,7 +11656,7 @@ PyObject* BeamPyIndexCoding_getAttributeDouble(PyObject* self, PyObject* args)
     return PyFloat_FromDouble(_result);
 }
 
-PyObject* BeamPyIndexCoding_getAttributeUTC(PyObject* self, PyObject* args)
+PyObject* BeamPyIndexCoding_getAttributeUTC2(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
     
@@ -11518,7 +11670,7 @@ PyObject* BeamPyIndexCoding_getAttributeUTC(PyObject* self, PyObject* args)
     if (!BPy_InitApi()) {
         return NULL;
     }
-    if (!BPy_InitJMethod(&_method, BPy_IndexCoding_Class, "org.esa.beam.framework.datamodel.IndexCoding", "getAttributeUTC", "(Ljava/lang/String;Lorg/esa/beam/framework/datamodel/ProductData/UTC;)Lorg/esa/beam/framework/datamodel/ProductData/UTC;", 0)) {
+    if (!BPy_InitJMethod(&_method, BPy_IndexCoding_Class, "org.esa.beam.framework.datamodel.IndexCoding", "getAttributeUTC", "(Ljava/lang/String;Lorg/esa/beam/framework/datamodel/ProductData$UTC;)Lorg/esa/beam/framework/datamodel/ProductData$UTC;", 0)) {
         return NULL;
     }
     _thisJObj = JObject_AsJObjectRefT(self, BPy_IndexCoding_Class);
@@ -11538,7 +11690,39 @@ PyObject* BeamPyIndexCoding_getAttributeUTC(PyObject* self, PyObject* args)
         }
     }
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, nameJObj, defaultValueJObj);
-    CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.IndexCoding#getAttributeUTC(Ljava/lang/String;Lorg/esa/beam/framework/datamodel/ProductData/UTC;)Lorg/esa/beam/framework/datamodel/ProductData/UTC;");
+    CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.IndexCoding#getAttributeUTC(Ljava/lang/String;Lorg/esa/beam/framework/datamodel/ProductData$UTC;)Lorg/esa/beam/framework/datamodel/ProductData$UTC;");
+    _resultPyObj = BPy_FromJObject(&ProductData_UTC_Type, _resultJObj);
+    (*jenv)->DeleteLocalRef(jenv, nameJObj);
+    (*jenv)->DeleteLocalRef(jenv, _resultJObj);
+    return _resultPyObj;
+}
+
+PyObject* BeamPyIndexCoding_getAttributeUTC1(PyObject* self, PyObject* args)
+{
+    static jmethodID _method = NULL;
+    
+    jobject _thisJObj = NULL;
+    const char* name = NULL;
+    jstring nameJObj = NULL;
+    PyObject* _resultPyObj = NULL;
+    jobject _resultJObj = NULL;
+    if (!BPy_InitApi()) {
+        return NULL;
+    }
+    if (!BPy_InitJMethod(&_method, BPy_IndexCoding_Class, "org.esa.beam.framework.datamodel.IndexCoding", "getAttributeUTC", "(Ljava/lang/String;)Lorg/esa/beam/framework/datamodel/ProductData$UTC;", 0)) {
+        return NULL;
+    }
+    _thisJObj = JObject_AsJObjectRefT(self, BPy_IndexCoding_Class);
+    if (_thisJObj == NULL) {
+        PyErr_SetString(PyExc_ValueError, "argument 'self' must be of type 'IndexCoding' (Java object reference)");
+        return NULL;
+    }
+    if (!PyArg_ParseTuple(args, "s:getAttributeUTC", &name)) {
+        return NULL;
+    }
+    nameJObj =(*jenv)->NewStringUTF(jenv, name);
+    _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, nameJObj);
+    CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.IndexCoding#getAttributeUTC(Ljava/lang/String;)Lorg/esa/beam/framework/datamodel/ProductData$UTC;");
     _resultPyObj = BPy_FromJObject(&ProductData_UTC_Type, _resultJObj);
     (*jenv)->DeleteLocalRef(jenv, nameJObj);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
@@ -11645,7 +11829,7 @@ PyObject* BeamPyIndexCoding_setAttributeUTC(PyObject* self, PyObject* args)
     if (!BPy_InitApi()) {
         return NULL;
     }
-    if (!BPy_InitJMethod(&_method, BPy_IndexCoding_Class, "org.esa.beam.framework.datamodel.IndexCoding", "setAttributeUTC", "(Ljava/lang/String;Lorg/esa/beam/framework/datamodel/ProductData/UTC;)V", 0)) {
+    if (!BPy_InitJMethod(&_method, BPy_IndexCoding_Class, "org.esa.beam.framework.datamodel.IndexCoding", "setAttributeUTC", "(Ljava/lang/String;Lorg/esa/beam/framework/datamodel/ProductData$UTC;)V", 0)) {
         return NULL;
     }
     _thisJObj = JObject_AsJObjectRefT(self, BPy_IndexCoding_Class);
@@ -11665,7 +11849,7 @@ PyObject* BeamPyIndexCoding_setAttributeUTC(PyObject* self, PyObject* args)
         }
     }
     (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, nameJObj, valueJObj);
-    CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.IndexCoding#setAttributeUTC(Ljava/lang/String;Lorg/esa/beam/framework/datamodel/ProductData/UTC;)V");
+    CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.IndexCoding#setAttributeUTC(Ljava/lang/String;Lorg/esa/beam/framework/datamodel/ProductData$UTC;)V");
     (*jenv)->DeleteLocalRef(jenv, nameJObj);
     return Py_BuildValue("");
 }
@@ -14670,7 +14854,7 @@ PyObject* BeamPyMetadataElement_getAttributeDouble(PyObject* self, PyObject* arg
     return PyFloat_FromDouble(_result);
 }
 
-PyObject* BeamPyMetadataElement_getAttributeUTC(PyObject* self, PyObject* args)
+PyObject* BeamPyMetadataElement_getAttributeUTC2(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
     
@@ -14684,7 +14868,7 @@ PyObject* BeamPyMetadataElement_getAttributeUTC(PyObject* self, PyObject* args)
     if (!BPy_InitApi()) {
         return NULL;
     }
-    if (!BPy_InitJMethod(&_method, BPy_MetadataElement_Class, "org.esa.beam.framework.datamodel.MetadataElement", "getAttributeUTC", "(Ljava/lang/String;Lorg/esa/beam/framework/datamodel/ProductData/UTC;)Lorg/esa/beam/framework/datamodel/ProductData/UTC;", 0)) {
+    if (!BPy_InitJMethod(&_method, BPy_MetadataElement_Class, "org.esa.beam.framework.datamodel.MetadataElement", "getAttributeUTC", "(Ljava/lang/String;Lorg/esa/beam/framework/datamodel/ProductData$UTC;)Lorg/esa/beam/framework/datamodel/ProductData$UTC;", 0)) {
         return NULL;
     }
     _thisJObj = JObject_AsJObjectRefT(self, BPy_MetadataElement_Class);
@@ -14704,7 +14888,39 @@ PyObject* BeamPyMetadataElement_getAttributeUTC(PyObject* self, PyObject* args)
         }
     }
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, nameJObj, defaultValueJObj);
-    CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.MetadataElement#getAttributeUTC(Ljava/lang/String;Lorg/esa/beam/framework/datamodel/ProductData/UTC;)Lorg/esa/beam/framework/datamodel/ProductData/UTC;");
+    CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.MetadataElement#getAttributeUTC(Ljava/lang/String;Lorg/esa/beam/framework/datamodel/ProductData$UTC;)Lorg/esa/beam/framework/datamodel/ProductData$UTC;");
+    _resultPyObj = BPy_FromJObject(&ProductData_UTC_Type, _resultJObj);
+    (*jenv)->DeleteLocalRef(jenv, nameJObj);
+    (*jenv)->DeleteLocalRef(jenv, _resultJObj);
+    return _resultPyObj;
+}
+
+PyObject* BeamPyMetadataElement_getAttributeUTC1(PyObject* self, PyObject* args)
+{
+    static jmethodID _method = NULL;
+    
+    jobject _thisJObj = NULL;
+    const char* name = NULL;
+    jstring nameJObj = NULL;
+    PyObject* _resultPyObj = NULL;
+    jobject _resultJObj = NULL;
+    if (!BPy_InitApi()) {
+        return NULL;
+    }
+    if (!BPy_InitJMethod(&_method, BPy_MetadataElement_Class, "org.esa.beam.framework.datamodel.MetadataElement", "getAttributeUTC", "(Ljava/lang/String;)Lorg/esa/beam/framework/datamodel/ProductData$UTC;", 0)) {
+        return NULL;
+    }
+    _thisJObj = JObject_AsJObjectRefT(self, BPy_MetadataElement_Class);
+    if (_thisJObj == NULL) {
+        PyErr_SetString(PyExc_ValueError, "argument 'self' must be of type 'MetadataElement' (Java object reference)");
+        return NULL;
+    }
+    if (!PyArg_ParseTuple(args, "s:getAttributeUTC", &name)) {
+        return NULL;
+    }
+    nameJObj =(*jenv)->NewStringUTF(jenv, name);
+    _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, nameJObj);
+    CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.MetadataElement#getAttributeUTC(Ljava/lang/String;)Lorg/esa/beam/framework/datamodel/ProductData$UTC;");
     _resultPyObj = BPy_FromJObject(&ProductData_UTC_Type, _resultJObj);
     (*jenv)->DeleteLocalRef(jenv, nameJObj);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
@@ -14811,7 +15027,7 @@ PyObject* BeamPyMetadataElement_setAttributeUTC(PyObject* self, PyObject* args)
     if (!BPy_InitApi()) {
         return NULL;
     }
-    if (!BPy_InitJMethod(&_method, BPy_MetadataElement_Class, "org.esa.beam.framework.datamodel.MetadataElement", "setAttributeUTC", "(Ljava/lang/String;Lorg/esa/beam/framework/datamodel/ProductData/UTC;)V", 0)) {
+    if (!BPy_InitJMethod(&_method, BPy_MetadataElement_Class, "org.esa.beam.framework.datamodel.MetadataElement", "setAttributeUTC", "(Ljava/lang/String;Lorg/esa/beam/framework/datamodel/ProductData$UTC;)V", 0)) {
         return NULL;
     }
     _thisJObj = JObject_AsJObjectRefT(self, BPy_MetadataElement_Class);
@@ -14831,7 +15047,7 @@ PyObject* BeamPyMetadataElement_setAttributeUTC(PyObject* self, PyObject* args)
         }
     }
     (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, nameJObj, valueJObj);
-    CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.MetadataElement#setAttributeUTC(Ljava/lang/String;Lorg/esa/beam/framework/datamodel/ProductData/UTC;)V");
+    CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.MetadataElement#setAttributeUTC(Ljava/lang/String;Lorg/esa/beam/framework/datamodel/ProductData$UTC;)V");
     (*jenv)->DeleteLocalRef(jenv, nameJObj);
     return Py_BuildValue("");
 }
@@ -16045,7 +16261,7 @@ PyObject* BeamPyProduct_getStartTime(PyObject* self, PyObject* args)
     if (!BPy_InitApi()) {
         return NULL;
     }
-    if (!BPy_InitJMethod(&_method, BPy_Product_Class, "org.esa.beam.framework.datamodel.Product", "getStartTime", "()Lorg/esa/beam/framework/datamodel/ProductData/UTC;", 0)) {
+    if (!BPy_InitJMethod(&_method, BPy_Product_Class, "org.esa.beam.framework.datamodel.Product", "getStartTime", "()Lorg/esa/beam/framework/datamodel/ProductData$UTC;", 0)) {
         return NULL;
     }
     _thisJObj = JObject_AsJObjectRefT(self, BPy_Product_Class);
@@ -16054,7 +16270,7 @@ PyObject* BeamPyProduct_getStartTime(PyObject* self, PyObject* args)
         return NULL;
     }
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.Product#getStartTime()Lorg/esa/beam/framework/datamodel/ProductData/UTC;");
+    CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.Product#getStartTime()Lorg/esa/beam/framework/datamodel/ProductData$UTC;");
     _resultPyObj = BPy_FromJObject(&ProductData_UTC_Type, _resultJObj);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
@@ -16070,7 +16286,7 @@ PyObject* BeamPyProduct_setStartTime(PyObject* self, PyObject* args)
     if (!BPy_InitApi()) {
         return NULL;
     }
-    if (!BPy_InitJMethod(&_method, BPy_Product_Class, "org.esa.beam.framework.datamodel.Product", "setStartTime", "(Lorg/esa/beam/framework/datamodel/ProductData/UTC;)V", 0)) {
+    if (!BPy_InitJMethod(&_method, BPy_Product_Class, "org.esa.beam.framework.datamodel.Product", "setStartTime", "(Lorg/esa/beam/framework/datamodel/ProductData$UTC;)V", 0)) {
         return NULL;
     }
     _thisJObj = JObject_AsJObjectRefT(self, BPy_Product_Class);
@@ -16089,7 +16305,7 @@ PyObject* BeamPyProduct_setStartTime(PyObject* self, PyObject* args)
         }
     }
     (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, startTimeJObj);
-    CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.Product#setStartTime(Lorg/esa/beam/framework/datamodel/ProductData/UTC;)V");
+    CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.Product#setStartTime(Lorg/esa/beam/framework/datamodel/ProductData$UTC;)V");
     return Py_BuildValue("");
 }
 
@@ -16103,7 +16319,7 @@ PyObject* BeamPyProduct_getEndTime(PyObject* self, PyObject* args)
     if (!BPy_InitApi()) {
         return NULL;
     }
-    if (!BPy_InitJMethod(&_method, BPy_Product_Class, "org.esa.beam.framework.datamodel.Product", "getEndTime", "()Lorg/esa/beam/framework/datamodel/ProductData/UTC;", 0)) {
+    if (!BPy_InitJMethod(&_method, BPy_Product_Class, "org.esa.beam.framework.datamodel.Product", "getEndTime", "()Lorg/esa/beam/framework/datamodel/ProductData$UTC;", 0)) {
         return NULL;
     }
     _thisJObj = JObject_AsJObjectRefT(self, BPy_Product_Class);
@@ -16112,7 +16328,7 @@ PyObject* BeamPyProduct_getEndTime(PyObject* self, PyObject* args)
         return NULL;
     }
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.Product#getEndTime()Lorg/esa/beam/framework/datamodel/ProductData/UTC;");
+    CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.Product#getEndTime()Lorg/esa/beam/framework/datamodel/ProductData$UTC;");
     _resultPyObj = BPy_FromJObject(&ProductData_UTC_Type, _resultJObj);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
@@ -16128,7 +16344,7 @@ PyObject* BeamPyProduct_setEndTime(PyObject* self, PyObject* args)
     if (!BPy_InitApi()) {
         return NULL;
     }
-    if (!BPy_InitJMethod(&_method, BPy_Product_Class, "org.esa.beam.framework.datamodel.Product", "setEndTime", "(Lorg/esa/beam/framework/datamodel/ProductData/UTC;)V", 0)) {
+    if (!BPy_InitJMethod(&_method, BPy_Product_Class, "org.esa.beam.framework.datamodel.Product", "setEndTime", "(Lorg/esa/beam/framework/datamodel/ProductData$UTC;)V", 0)) {
         return NULL;
     }
     _thisJObj = JObject_AsJObjectRefT(self, BPy_Product_Class);
@@ -16147,7 +16363,7 @@ PyObject* BeamPyProduct_setEndTime(PyObject* self, PyObject* args)
         }
     }
     (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, endTimeJObj);
-    CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.Product#setEndTime(Lorg/esa/beam/framework/datamodel/ProductData/UTC;)V");
+    CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.Product#setEndTime(Lorg/esa/beam/framework/datamodel/ProductData$UTC;)V");
     return Py_BuildValue("");
 }
 
@@ -16176,7 +16392,7 @@ PyObject* BeamPyProduct_getMetadataRoot(PyObject* self, PyObject* args)
     return _resultPyObj;
 }
 
-PyObject* BeamPyProduct_getBandGroup(PyObject* self, PyObject* args)
+PyObject* BeamPyProduct_getGroups(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
     
@@ -16186,7 +16402,7 @@ PyObject* BeamPyProduct_getBandGroup(PyObject* self, PyObject* args)
     if (!BPy_InitApi()) {
         return NULL;
     }
-    if (!BPy_InitJMethod(&_method, BPy_Product_Class, "org.esa.beam.framework.datamodel.Product", "getBandGroup", "()Lorg/esa/beam/framework/datamodel/ProductNodeGroup;", 0)) {
+    if (!BPy_InitJMethod(&_method, BPy_Product_Class, "org.esa.beam.framework.datamodel.Product", "getGroups", "()Lorg/esa/beam/framework/datamodel/ProductNodeGroup;", 0)) {
         return NULL;
     }
     _thisJObj = JObject_AsJObjectRefT(self, BPy_Product_Class);
@@ -16195,8 +16411,40 @@ PyObject* BeamPyProduct_getBandGroup(PyObject* self, PyObject* args)
         return NULL;
     }
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.Product#getBandGroup()Lorg/esa/beam/framework/datamodel/ProductNodeGroup;");
+    CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.Product#getGroups()Lorg/esa/beam/framework/datamodel/ProductNodeGroup;");
     _resultPyObj = BPy_FromJObject(&ProductNodeGroup_Type, _resultJObj);
+    (*jenv)->DeleteLocalRef(jenv, _resultJObj);
+    return _resultPyObj;
+}
+
+PyObject* BeamPyProduct_getGroup(PyObject* self, PyObject* args)
+{
+    static jmethodID _method = NULL;
+    
+    jobject _thisJObj = NULL;
+    const char* name = NULL;
+    jstring nameJObj = NULL;
+    PyObject* _resultPyObj = NULL;
+    jobject _resultJObj = NULL;
+    if (!BPy_InitApi()) {
+        return NULL;
+    }
+    if (!BPy_InitJMethod(&_method, BPy_Product_Class, "org.esa.beam.framework.datamodel.Product", "getGroup", "(Ljava/lang/String;)Lorg/esa/beam/framework/datamodel/ProductNodeGroup;", 0)) {
+        return NULL;
+    }
+    _thisJObj = JObject_AsJObjectRefT(self, BPy_Product_Class);
+    if (_thisJObj == NULL) {
+        PyErr_SetString(PyExc_ValueError, "argument 'self' must be of type 'Product' (Java object reference)");
+        return NULL;
+    }
+    if (!PyArg_ParseTuple(args, "s:getGroup", &name)) {
+        return NULL;
+    }
+    nameJObj =(*jenv)->NewStringUTF(jenv, name);
+    _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, nameJObj);
+    CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.Product#getGroup(Ljava/lang/String;)Lorg/esa/beam/framework/datamodel/ProductNodeGroup;");
+    _resultPyObj = BPy_FromJObject(&ProductNodeGroup_Type, _resultJObj);
+    (*jenv)->DeleteLocalRef(jenv, nameJObj);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -16453,6 +16701,31 @@ PyObject* BeamPyProduct_containsTiePointGrid(PyObject* self, PyObject* args)
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.Product#containsTiePointGrid(Ljava/lang/String;)Z");
     (*jenv)->DeleteLocalRef(jenv, nameJObj);
     return PyBool_FromLong(_result);
+}
+
+PyObject* BeamPyProduct_getBandGroup(PyObject* self, PyObject* args)
+{
+    static jmethodID _method = NULL;
+    
+    jobject _thisJObj = NULL;
+    PyObject* _resultPyObj = NULL;
+    jobject _resultJObj = NULL;
+    if (!BPy_InitApi()) {
+        return NULL;
+    }
+    if (!BPy_InitJMethod(&_method, BPy_Product_Class, "org.esa.beam.framework.datamodel.Product", "getBandGroup", "()Lorg/esa/beam/framework/datamodel/ProductNodeGroup;", 0)) {
+        return NULL;
+    }
+    _thisJObj = JObject_AsJObjectRefT(self, BPy_Product_Class);
+    if (_thisJObj == NULL) {
+        PyErr_SetString(PyExc_ValueError, "argument 'self' must be of type 'Product' (Java object reference)");
+        return NULL;
+    }
+    _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
+    CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.Product#getBandGroup()Lorg/esa/beam/framework/datamodel/ProductNodeGroup;");
+    _resultPyObj = BPy_FromJObject(&ProductNodeGroup_Type, _resultJObj);
+    (*jenv)->DeleteLocalRef(jenv, _resultJObj);
+    return _resultPyObj;
 }
 
 PyObject* BeamPyProduct_addBand(PyObject* self, PyObject* args)
@@ -17018,6 +17291,53 @@ PyObject* BeamPyProduct_getPinGroup(PyObject* self, PyObject* args)
     _resultPyObj = BPy_FromJObject(&PlacemarkGroup_Type, _resultJObj);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
+}
+
+PyObject* BeamPyProduct_getNumResolutionsMax(PyObject* self, PyObject* args)
+{
+    static jmethodID _method = NULL;
+    
+    jobject _thisJObj = NULL;
+    jint _result = (jint) 0;
+    if (!BPy_InitApi()) {
+        return NULL;
+    }
+    if (!BPy_InitJMethod(&_method, BPy_Product_Class, "org.esa.beam.framework.datamodel.Product", "getNumResolutionsMax", "()I", 0)) {
+        return NULL;
+    }
+    _thisJObj = JObject_AsJObjectRefT(self, BPy_Product_Class);
+    if (_thisJObj == NULL) {
+        PyErr_SetString(PyExc_ValueError, "argument 'self' must be of type 'Product' (Java object reference)");
+        return NULL;
+    }
+    _result = (*jenv)->CallIntMethod(jenv, _thisJObj, _method);
+    CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.Product#getNumResolutionsMax()I");
+    return PyLong_FromLong(_result);
+}
+
+PyObject* BeamPyProduct_setNumResolutionsMax(PyObject* self, PyObject* args)
+{
+    static jmethodID _method = NULL;
+    
+    jobject _thisJObj = NULL;
+    jint numResolutionsMax = (jint) 0;
+    if (!BPy_InitApi()) {
+        return NULL;
+    }
+    if (!BPy_InitJMethod(&_method, BPy_Product_Class, "org.esa.beam.framework.datamodel.Product", "setNumResolutionsMax", "(I)V", 0)) {
+        return NULL;
+    }
+    _thisJObj = JObject_AsJObjectRefT(self, BPy_Product_Class);
+    if (_thisJObj == NULL) {
+        PyErr_SetString(PyExc_ValueError, "argument 'self' must be of type 'Product' (Java object reference)");
+        return NULL;
+    }
+    if (!PyArg_ParseTuple(args, "i:setNumResolutionsMax", &numResolutionsMax)) {
+        return NULL;
+    }
+    (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, numResolutionsMax);
+    CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.Product#setNumResolutionsMax(I)V");
+    return Py_BuildValue("");
 }
 
 PyObject* BeamPyProduct_isCompatibleProduct(PyObject* self, PyObject* args)
@@ -17678,7 +17998,7 @@ PyObject* BeamPyProduct_getAutoGrouping(PyObject* self, PyObject* args)
     if (!BPy_InitApi()) {
         return NULL;
     }
-    if (!BPy_InitJMethod(&_method, BPy_Product_Class, "org.esa.beam.framework.datamodel.Product", "getAutoGrouping", "()Lorg/esa/beam/framework/datamodel/Product/AutoGrouping;", 0)) {
+    if (!BPy_InitJMethod(&_method, BPy_Product_Class, "org.esa.beam.framework.datamodel.Product", "getAutoGrouping", "()Lorg/esa/beam/framework/datamodel/Product$AutoGrouping;", 0)) {
         return NULL;
     }
     _thisJObj = JObject_AsJObjectRefT(self, BPy_Product_Class);
@@ -17687,13 +18007,46 @@ PyObject* BeamPyProduct_getAutoGrouping(PyObject* self, PyObject* args)
         return NULL;
     }
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.Product#getAutoGrouping()Lorg/esa/beam/framework/datamodel/Product/AutoGrouping;");
+    CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.Product#getAutoGrouping()Lorg/esa/beam/framework/datamodel/Product$AutoGrouping;");
     _resultPyObj = BPy_FromJObject(&Product_AutoGrouping_Type, _resultJObj);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
 
-PyObject* BeamPyProduct_setAutoGrouping(PyObject* self, PyObject* args)
+PyObject* BeamPyProduct_setAutoGrouping2(PyObject* self, PyObject* args)
+{
+    static jmethodID _method = NULL;
+    
+    jobject _thisJObj = NULL;
+    PyObject* autoGroupingPyObj = NULL;
+    jobject autoGroupingJObj = NULL;
+    if (!BPy_InitApi()) {
+        return NULL;
+    }
+    if (!BPy_InitJMethod(&_method, BPy_Product_Class, "org.esa.beam.framework.datamodel.Product", "setAutoGrouping", "(Lorg/esa/beam/framework/datamodel/Product$AutoGrouping;)V", 0)) {
+        return NULL;
+    }
+    _thisJObj = JObject_AsJObjectRefT(self, BPy_Product_Class);
+    if (_thisJObj == NULL) {
+        PyErr_SetString(PyExc_ValueError, "argument 'self' must be of type 'Product' (Java object reference)");
+        return NULL;
+    }
+    if (!PyArg_ParseTuple(args, "O:setAutoGrouping", &autoGroupingPyObj)) {
+        return NULL;
+    }
+    {
+        jboolean ok = 1;
+        autoGroupingJObj = BPy_ToJObjectT(autoGroupingPyObj, BPy_Product_AutoGrouping_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
+    }
+    (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, autoGroupingJObj);
+    CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.Product#setAutoGrouping(Lorg/esa/beam/framework/datamodel/Product$AutoGrouping;)V");
+    return Py_BuildValue("");
+}
+
+PyObject* BeamPyProduct_setAutoGrouping1(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
     
@@ -17719,6 +18072,47 @@ PyObject* BeamPyProduct_setAutoGrouping(PyObject* self, PyObject* args)
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.Product#setAutoGrouping(Ljava/lang/String;)V");
     (*jenv)->DeleteLocalRef(jenv, patternJObj);
     return Py_BuildValue("");
+}
+
+PyObject* BeamPyProduct_addMask(PyObject* self, PyObject* args)
+{
+    static jmethodID _method = NULL;
+    
+    jobject _thisJObj = NULL;
+    const char* maskName = NULL;
+    jstring maskNameJObj = NULL;
+    PyObject* imageTypePyObj = NULL;
+    jobject imageTypeJObj = NULL;
+    PyObject* _resultPyObj = NULL;
+    jobject _resultJObj = NULL;
+    if (!BPy_InitApi()) {
+        return NULL;
+    }
+    if (!BPy_InitJMethod(&_method, BPy_Product_Class, "org.esa.beam.framework.datamodel.Product", "addMask", "(Ljava/lang/String;Lorg/esa/beam/framework/datamodel/Mask$ImageType;)Lorg/esa/beam/framework/datamodel/Mask;", 0)) {
+        return NULL;
+    }
+    _thisJObj = JObject_AsJObjectRefT(self, BPy_Product_Class);
+    if (_thisJObj == NULL) {
+        PyErr_SetString(PyExc_ValueError, "argument 'self' must be of type 'Product' (Java object reference)");
+        return NULL;
+    }
+    if (!PyArg_ParseTuple(args, "sO:addMask", &maskName, &imageTypePyObj)) {
+        return NULL;
+    }
+    maskNameJObj =(*jenv)->NewStringUTF(jenv, maskName);
+    {
+        jboolean ok = 1;
+        imageTypeJObj = BPy_ToJObjectT(imageTypePyObj, BPy_Mask_ImageType_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
+    }
+    _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, maskNameJObj, imageTypeJObj);
+    CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.Product#addMask(Ljava/lang/String;Lorg/esa/beam/framework/datamodel/Mask$ImageType;)Lorg/esa/beam/framework/datamodel/Mask;");
+    _resultPyObj = BPy_FromJObject(&Mask_Type, _resultJObj);
+    (*jenv)->DeleteLocalRef(jenv, maskNameJObj);
+    (*jenv)->DeleteLocalRef(jenv, _resultJObj);
+    return _resultPyObj;
 }
 
 PyObject* BeamPyProduct_addComputedMask(PyObject* self, PyObject* args)
@@ -18545,7 +18939,38 @@ PyObject* BeamPyColorPaletteDef_newColorPaletteDefFromRange(PyObject* self, PyOb
     return _resultPyObj;
 }
 
-PyObject* BeamPyColorPaletteDef_newColorPaletteDefFromPoints(PyObject* self, PyObject* args)
+PyObject* BeamPyColorPaletteDef_newColorPaletteDef1(PyObject* self, PyObject* args)
+{
+    static jmethodID _method = NULL;
+    PyObject* pointsPyObj = NULL;
+    jarray pointsJObj = NULL;
+    PyObject* _resultPyObj = NULL;
+    jobject _resultJObj = NULL;
+    if (!BPy_InitApi()) {
+        return NULL;
+    }
+    if (!BPy_InitJMethod(&_method, BPy_ColorPaletteDef_Class, "org.esa.beam.framework.datamodel.ColorPaletteDef", "<init>", "([Lorg/esa/beam/framework/datamodel/ColorPaletteDef$Point;)V", 0)) {
+        return NULL;
+    }
+    if (!PyArg_ParseTuple(args, "O:<init>", &pointsPyObj)) {
+        return NULL;
+    }
+    {
+        jboolean ok = 1;
+        pointsJObj = BPy_ToJObjectArrayT(pointsPyObj, BPy_ColorPaletteDef_Point_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
+    }
+    _resultJObj = (*jenv)->NewObject(jenv, BPy_ColorPaletteDef_Class, _method, pointsJObj);
+    CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.ColorPaletteDef#<init>([Lorg/esa/beam/framework/datamodel/ColorPaletteDef$Point;)V");
+    _resultPyObj = BPy_FromJObject(&ColorPaletteDef_Type, _resultJObj);
+    (*jenv)->DeleteLocalRef(jenv, pointsJObj);
+    (*jenv)->DeleteLocalRef(jenv, _resultJObj);
+    return _resultPyObj;
+}
+
+PyObject* BeamPyColorPaletteDef_newColorPaletteDef2(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
     PyObject* pointsPyObj = NULL;
@@ -18556,7 +18981,7 @@ PyObject* BeamPyColorPaletteDef_newColorPaletteDefFromPoints(PyObject* self, PyO
     if (!BPy_InitApi()) {
         return NULL;
     }
-    if (!BPy_InitJMethod(&_method, BPy_ColorPaletteDef_Class, "org.esa.beam.framework.datamodel.ColorPaletteDef", "<init>", "([Lorg/esa/beam/framework/datamodel/ColorPaletteDef/Point;I)V", 0)) {
+    if (!BPy_InitJMethod(&_method, BPy_ColorPaletteDef_Class, "org.esa.beam.framework.datamodel.ColorPaletteDef", "<init>", "([Lorg/esa/beam/framework/datamodel/ColorPaletteDef$Point;I)V", 0)) {
         return NULL;
     }
     if (!PyArg_ParseTuple(args, "Oi:<init>", &pointsPyObj, &numColors)) {
@@ -18570,7 +18995,7 @@ PyObject* BeamPyColorPaletteDef_newColorPaletteDefFromPoints(PyObject* self, PyO
         }
     }
     _resultJObj = (*jenv)->NewObject(jenv, BPy_ColorPaletteDef_Class, _method, pointsJObj, numColors);
-    CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.ColorPaletteDef#<init>([Lorg/esa/beam/framework/datamodel/ColorPaletteDef/Point;I)V");
+    CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.ColorPaletteDef#<init>([Lorg/esa/beam/framework/datamodel/ColorPaletteDef$Point;I)V");
     _resultPyObj = BPy_FromJObject(&ColorPaletteDef_Type, _resultJObj);
     (*jenv)->DeleteLocalRef(jenv, pointsJObj);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
@@ -18776,7 +19201,7 @@ PyObject* BeamPyColorPaletteDef_getPointAt(PyObject* self, PyObject* args)
     if (!BPy_InitApi()) {
         return NULL;
     }
-    if (!BPy_InitJMethod(&_method, BPy_ColorPaletteDef_Class, "org.esa.beam.framework.datamodel.ColorPaletteDef", "getPointAt", "(I)Lorg/esa/beam/framework/datamodel/ColorPaletteDef/Point;", 0)) {
+    if (!BPy_InitJMethod(&_method, BPy_ColorPaletteDef_Class, "org.esa.beam.framework.datamodel.ColorPaletteDef", "getPointAt", "(I)Lorg/esa/beam/framework/datamodel/ColorPaletteDef$Point;", 0)) {
         return NULL;
     }
     _thisJObj = JObject_AsJObjectRefT(self, BPy_ColorPaletteDef_Class);
@@ -18788,7 +19213,7 @@ PyObject* BeamPyColorPaletteDef_getPointAt(PyObject* self, PyObject* args)
         return NULL;
     }
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, index);
-    CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.ColorPaletteDef#getPointAt(I)Lorg/esa/beam/framework/datamodel/ColorPaletteDef/Point;");
+    CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.ColorPaletteDef#getPointAt(I)Lorg/esa/beam/framework/datamodel/ColorPaletteDef$Point;");
     _resultPyObj = BPy_FromJObject(&ColorPaletteDef_Point_Type, _resultJObj);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
@@ -18804,7 +19229,7 @@ PyObject* BeamPyColorPaletteDef_getFirstPoint(PyObject* self, PyObject* args)
     if (!BPy_InitApi()) {
         return NULL;
     }
-    if (!BPy_InitJMethod(&_method, BPy_ColorPaletteDef_Class, "org.esa.beam.framework.datamodel.ColorPaletteDef", "getFirstPoint", "()Lorg/esa/beam/framework/datamodel/ColorPaletteDef/Point;", 0)) {
+    if (!BPy_InitJMethod(&_method, BPy_ColorPaletteDef_Class, "org.esa.beam.framework.datamodel.ColorPaletteDef", "getFirstPoint", "()Lorg/esa/beam/framework/datamodel/ColorPaletteDef$Point;", 0)) {
         return NULL;
     }
     _thisJObj = JObject_AsJObjectRefT(self, BPy_ColorPaletteDef_Class);
@@ -18813,7 +19238,7 @@ PyObject* BeamPyColorPaletteDef_getFirstPoint(PyObject* self, PyObject* args)
         return NULL;
     }
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.ColorPaletteDef#getFirstPoint()Lorg/esa/beam/framework/datamodel/ColorPaletteDef/Point;");
+    CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.ColorPaletteDef#getFirstPoint()Lorg/esa/beam/framework/datamodel/ColorPaletteDef$Point;");
     _resultPyObj = BPy_FromJObject(&ColorPaletteDef_Point_Type, _resultJObj);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
@@ -18829,7 +19254,7 @@ PyObject* BeamPyColorPaletteDef_getLastPoint(PyObject* self, PyObject* args)
     if (!BPy_InitApi()) {
         return NULL;
     }
-    if (!BPy_InitJMethod(&_method, BPy_ColorPaletteDef_Class, "org.esa.beam.framework.datamodel.ColorPaletteDef", "getLastPoint", "()Lorg/esa/beam/framework/datamodel/ColorPaletteDef/Point;", 0)) {
+    if (!BPy_InitJMethod(&_method, BPy_ColorPaletteDef_Class, "org.esa.beam.framework.datamodel.ColorPaletteDef", "getLastPoint", "()Lorg/esa/beam/framework/datamodel/ColorPaletteDef$Point;", 0)) {
         return NULL;
     }
     _thisJObj = JObject_AsJObjectRefT(self, BPy_ColorPaletteDef_Class);
@@ -18838,7 +19263,7 @@ PyObject* BeamPyColorPaletteDef_getLastPoint(PyObject* self, PyObject* args)
         return NULL;
     }
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.ColorPaletteDef#getLastPoint()Lorg/esa/beam/framework/datamodel/ColorPaletteDef/Point;");
+    CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.ColorPaletteDef#getLastPoint()Lorg/esa/beam/framework/datamodel/ColorPaletteDef$Point;");
     _resultPyObj = BPy_FromJObject(&ColorPaletteDef_Point_Type, _resultJObj);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
@@ -18899,7 +19324,7 @@ PyObject* BeamPyColorPaletteDef_insertPointAfter(PyObject* self, PyObject* args)
     if (!BPy_InitApi()) {
         return NULL;
     }
-    if (!BPy_InitJMethod(&_method, BPy_ColorPaletteDef_Class, "org.esa.beam.framework.datamodel.ColorPaletteDef", "insertPointAfter", "(ILorg/esa/beam/framework/datamodel/ColorPaletteDef/Point;)V", 0)) {
+    if (!BPy_InitJMethod(&_method, BPy_ColorPaletteDef_Class, "org.esa.beam.framework.datamodel.ColorPaletteDef", "insertPointAfter", "(ILorg/esa/beam/framework/datamodel/ColorPaletteDef$Point;)V", 0)) {
         return NULL;
     }
     _thisJObj = JObject_AsJObjectRefT(self, BPy_ColorPaletteDef_Class);
@@ -18918,7 +19343,7 @@ PyObject* BeamPyColorPaletteDef_insertPointAfter(PyObject* self, PyObject* args)
         }
     }
     (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, index, pointJObj);
-    CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.ColorPaletteDef#insertPointAfter(ILorg/esa/beam/framework/datamodel/ColorPaletteDef/Point;)V");
+    CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.ColorPaletteDef#insertPointAfter(ILorg/esa/beam/framework/datamodel/ColorPaletteDef$Point;)V");
     return Py_BuildValue("");
 }
 
@@ -19031,7 +19456,7 @@ PyObject* BeamPyColorPaletteDef_addPoint(PyObject* self, PyObject* args)
     if (!BPy_InitApi()) {
         return NULL;
     }
-    if (!BPy_InitJMethod(&_method, BPy_ColorPaletteDef_Class, "org.esa.beam.framework.datamodel.ColorPaletteDef", "addPoint", "(Lorg/esa/beam/framework/datamodel/ColorPaletteDef/Point;)V", 0)) {
+    if (!BPy_InitJMethod(&_method, BPy_ColorPaletteDef_Class, "org.esa.beam.framework.datamodel.ColorPaletteDef", "addPoint", "(Lorg/esa/beam/framework/datamodel/ColorPaletteDef$Point;)V", 0)) {
         return NULL;
     }
     _thisJObj = JObject_AsJObjectRefT(self, BPy_ColorPaletteDef_Class);
@@ -19050,7 +19475,7 @@ PyObject* BeamPyColorPaletteDef_addPoint(PyObject* self, PyObject* args)
         }
     }
     (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, pointJObj);
-    CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.ColorPaletteDef#addPoint(Lorg/esa/beam/framework/datamodel/ColorPaletteDef/Point;)V");
+    CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.ColorPaletteDef#addPoint(Lorg/esa/beam/framework/datamodel/ColorPaletteDef$Point;)V");
     return Py_BuildValue("");
 }
 
@@ -19064,7 +19489,7 @@ PyObject* BeamPyColorPaletteDef_getPoints(PyObject* self, PyObject* args)
     if (!BPy_InitApi()) {
         return NULL;
     }
-    if (!BPy_InitJMethod(&_method, BPy_ColorPaletteDef_Class, "org.esa.beam.framework.datamodel.ColorPaletteDef", "getPoints", "()[Lorg/esa/beam/framework/datamodel/ColorPaletteDef/Point;", 0)) {
+    if (!BPy_InitJMethod(&_method, BPy_ColorPaletteDef_Class, "org.esa.beam.framework.datamodel.ColorPaletteDef", "getPoints", "()[Lorg/esa/beam/framework/datamodel/ColorPaletteDef$Point;", 0)) {
         return NULL;
     }
     _thisJObj = JObject_AsJObjectRefT(self, BPy_ColorPaletteDef_Class);
@@ -19073,7 +19498,7 @@ PyObject* BeamPyColorPaletteDef_getPoints(PyObject* self, PyObject* args)
         return NULL;
     }
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.ColorPaletteDef#getPoints()[Lorg/esa/beam/framework/datamodel/ColorPaletteDef/Point;");
+    CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.ColorPaletteDef#getPoints()[Lorg/esa/beam/framework/datamodel/ColorPaletteDef$Point;");
     _resultPyObj = BPy_FromJObjectArray((jarray) _resultJObj);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
@@ -19089,7 +19514,7 @@ PyObject* BeamPyColorPaletteDef_setPoints(PyObject* self, PyObject* args)
     if (!BPy_InitApi()) {
         return NULL;
     }
-    if (!BPy_InitJMethod(&_method, BPy_ColorPaletteDef_Class, "org.esa.beam.framework.datamodel.ColorPaletteDef", "setPoints", "([Lorg/esa/beam/framework/datamodel/ColorPaletteDef/Point;)V", 0)) {
+    if (!BPy_InitJMethod(&_method, BPy_ColorPaletteDef_Class, "org.esa.beam.framework.datamodel.ColorPaletteDef", "setPoints", "([Lorg/esa/beam/framework/datamodel/ColorPaletteDef$Point;)V", 0)) {
         return NULL;
     }
     _thisJObj = JObject_AsJObjectRefT(self, BPy_ColorPaletteDef_Class);
@@ -19108,7 +19533,7 @@ PyObject* BeamPyColorPaletteDef_setPoints(PyObject* self, PyObject* args)
         }
     }
     (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, pointsJObj);
-    CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.ColorPaletteDef#setPoints([Lorg/esa/beam/framework/datamodel/ColorPaletteDef/Point;)V");
+    CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.ColorPaletteDef#setPoints([Lorg/esa/beam/framework/datamodel/ColorPaletteDef$Point;)V");
     (*jenv)->DeleteLocalRef(jenv, pointsJObj);
     return Py_BuildValue("");
 }
@@ -19542,6 +19967,31 @@ PyObject* BeamPyImageInfo_setNoDataColor(PyObject* self, PyObject* args)
     return Py_BuildValue("");
 }
 
+PyObject* BeamPyImageInfo_getHistogramMatching1(PyObject* self, PyObject* args)
+{
+    static jmethodID _method = NULL;
+    
+    jobject _thisJObj = NULL;
+    PyObject* _resultPyObj = NULL;
+    jobject _resultJObj = NULL;
+    if (!BPy_InitApi()) {
+        return NULL;
+    }
+    if (!BPy_InitJMethod(&_method, BPy_ImageInfo_Class, "org.esa.beam.framework.datamodel.ImageInfo", "getHistogramMatching", "()Lorg/esa/beam/framework/datamodel/ImageInfo$HistogramMatching;", 0)) {
+        return NULL;
+    }
+    _thisJObj = JObject_AsJObjectRefT(self, BPy_ImageInfo_Class);
+    if (_thisJObj == NULL) {
+        PyErr_SetString(PyExc_ValueError, "argument 'self' must be of type 'ImageInfo' (Java object reference)");
+        return NULL;
+    }
+    _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
+    CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.ImageInfo#getHistogramMatching()Lorg/esa/beam/framework/datamodel/ImageInfo$HistogramMatching;");
+    _resultPyObj = BPy_FromJObject(&ImageInfo_HistogramMatching_Type, _resultJObj);
+    (*jenv)->DeleteLocalRef(jenv, _resultJObj);
+    return _resultPyObj;
+}
+
 PyObject* BeamPyImageInfo_setHistogramMatching(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
@@ -19552,7 +20002,7 @@ PyObject* BeamPyImageInfo_setHistogramMatching(PyObject* self, PyObject* args)
     if (!BPy_InitApi()) {
         return NULL;
     }
-    if (!BPy_InitJMethod(&_method, BPy_ImageInfo_Class, "org.esa.beam.framework.datamodel.ImageInfo", "setHistogramMatching", "(Lorg/esa/beam/framework/datamodel/ImageInfo/HistogramMatching;)V", 0)) {
+    if (!BPy_InitJMethod(&_method, BPy_ImageInfo_Class, "org.esa.beam.framework.datamodel.ImageInfo", "setHistogramMatching", "(Lorg/esa/beam/framework/datamodel/ImageInfo$HistogramMatching;)V", 0)) {
         return NULL;
     }
     _thisJObj = JObject_AsJObjectRefT(self, BPy_ImageInfo_Class);
@@ -19571,7 +20021,7 @@ PyObject* BeamPyImageInfo_setHistogramMatching(PyObject* self, PyObject* args)
         }
     }
     (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, histogramMatchingJObj);
-    CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.ImageInfo#setHistogramMatching(Lorg/esa/beam/framework/datamodel/ImageInfo/HistogramMatching;)V");
+    CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.ImageInfo#setHistogramMatching(Lorg/esa/beam/framework/datamodel/ImageInfo$HistogramMatching;)V");
     return Py_BuildValue("");
 }
 
@@ -19872,7 +20322,7 @@ PyObject* BeamPyImageInfo_setColorPaletteDef(PyObject* self, PyObject* args)
     return Py_BuildValue("");
 }
 
-PyObject* BeamPyImageInfo_getHistogramMatching(PyObject* self, PyObject* args)
+PyObject* BeamPyImageInfo_getHistogramMatching2(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
     const char* mode = NULL;
@@ -19882,7 +20332,7 @@ PyObject* BeamPyImageInfo_getHistogramMatching(PyObject* self, PyObject* args)
     if (!BPy_InitApi()) {
         return NULL;
     }
-    if (!BPy_InitJMethod(&_method, BPy_ImageInfo_Class, "org.esa.beam.framework.datamodel.ImageInfo", "getHistogramMatching", "(Ljava/lang/String;)Lorg/esa/beam/framework/datamodel/ImageInfo/HistogramMatching;", 1)) {
+    if (!BPy_InitJMethod(&_method, BPy_ImageInfo_Class, "org.esa.beam.framework.datamodel.ImageInfo", "getHistogramMatching", "(Ljava/lang/String;)Lorg/esa/beam/framework/datamodel/ImageInfo$HistogramMatching;", 1)) {
         return NULL;
     }
     if (!PyArg_ParseTuple(args, "s:getHistogramMatching", &mode)) {
@@ -19890,7 +20340,7 @@ PyObject* BeamPyImageInfo_getHistogramMatching(PyObject* self, PyObject* args)
     }
     modeJObj =(*jenv)->NewStringUTF(jenv, mode);
     _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, BPy_ImageInfo_Class, _method, modeJObj);
-    CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.ImageInfo#getHistogramMatching(Ljava/lang/String;)Lorg/esa/beam/framework/datamodel/ImageInfo/HistogramMatching;");
+    CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.ImageInfo#getHistogramMatching(Ljava/lang/String;)Lorg/esa/beam/framework/datamodel/ImageInfo$HistogramMatching;");
     _resultPyObj = BPy_FromJObject(&ImageInfo_HistogramMatching_Type, _resultJObj);
     (*jenv)->DeleteLocalRef(jenv, modeJObj);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
@@ -20330,7 +20780,7 @@ PyObject* BeamPyProductManager_addListener(PyObject* self, PyObject* args)
     if (!BPy_InitApi()) {
         return NULL;
     }
-    if (!BPy_InitJMethod(&_method, BPy_ProductManager_Class, "org.esa.beam.framework.datamodel.ProductManager", "addListener", "(Lorg/esa/beam/framework/datamodel/ProductManager/Listener;)Z", 0)) {
+    if (!BPy_InitJMethod(&_method, BPy_ProductManager_Class, "org.esa.beam.framework.datamodel.ProductManager", "addListener", "(Lorg/esa/beam/framework/datamodel/ProductManager$Listener;)Z", 0)) {
         return NULL;
     }
     _thisJObj = JObject_AsJObjectRefT(self, BPy_ProductManager_Class);
@@ -20349,7 +20799,7 @@ PyObject* BeamPyProductManager_addListener(PyObject* self, PyObject* args)
         }
     }
     _result = (*jenv)->CallBooleanMethod(jenv, _thisJObj, _method, listenerJObj);
-    CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.ProductManager#addListener(Lorg/esa/beam/framework/datamodel/ProductManager/Listener;)Z");
+    CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.ProductManager#addListener(Lorg/esa/beam/framework/datamodel/ProductManager$Listener;)Z");
     return PyBool_FromLong(_result);
 }
 
@@ -20364,7 +20814,7 @@ PyObject* BeamPyProductManager_removeListener(PyObject* self, PyObject* args)
     if (!BPy_InitApi()) {
         return NULL;
     }
-    if (!BPy_InitJMethod(&_method, BPy_ProductManager_Class, "org.esa.beam.framework.datamodel.ProductManager", "removeListener", "(Lorg/esa/beam/framework/datamodel/ProductManager/Listener;)Z", 0)) {
+    if (!BPy_InitJMethod(&_method, BPy_ProductManager_Class, "org.esa.beam.framework.datamodel.ProductManager", "removeListener", "(Lorg/esa/beam/framework/datamodel/ProductManager$Listener;)Z", 0)) {
         return NULL;
     }
     _thisJObj = JObject_AsJObjectRefT(self, BPy_ProductManager_Class);
@@ -20383,7 +20833,7 @@ PyObject* BeamPyProductManager_removeListener(PyObject* self, PyObject* args)
         }
     }
     _result = (*jenv)->CallBooleanMethod(jenv, _thisJObj, _method, listenerJObj);
-    CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.ProductManager#removeListener(Lorg/esa/beam/framework/datamodel/ProductManager/Listener;)Z");
+    CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.ProductManager#removeListener(Lorg/esa/beam/framework/datamodel/ProductManager$Listener;)Z");
     return PyBool_FromLong(_result);
 }
 
@@ -20948,6 +21398,36 @@ PyObject* BeamPyImageGeometry_createCollocationTargetGeometry(PyObject* self, Py
     _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, BPy_ImageGeometry_Class, _method, targetProductJObj, collocationProductJObj);
     CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.ImageGeometry#createCollocationTargetGeometry(Lorg/esa/beam/framework/datamodel/Product;Lorg/esa/beam/framework/datamodel/Product;)Lorg/esa/beam/framework/datamodel/ImageGeometry;");
     _resultPyObj = BPy_FromJObject(&ImageGeometry_Type, _resultJObj);
+    (*jenv)->DeleteLocalRef(jenv, _resultJObj);
+    return _resultPyObj;
+}
+
+PyObject* BeamPyImageGeometry_createValidRect(PyObject* self, PyObject* args)
+{
+    static jmethodID _method = NULL;
+    PyObject* productPyObj = NULL;
+    jobject productJObj = NULL;
+    PyObject* _resultPyObj = NULL;
+    jobject _resultJObj = NULL;
+    if (!BPy_InitApi()) {
+        return NULL;
+    }
+    if (!BPy_InitJMethod(&_method, BPy_ImageGeometry_Class, "org.esa.beam.framework.datamodel.ImageGeometry", "createValidRect", "(Lorg/esa/beam/framework/datamodel/Product;)Ljava/awt/geom/Rectangle2D;", 1)) {
+        return NULL;
+    }
+    if (!PyArg_ParseTuple(args, "O:createValidRect", &productPyObj)) {
+        return NULL;
+    }
+    {
+        jboolean ok = 1;
+        productJObj = BPy_ToJObjectT(productPyObj, BPy_Product_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
+    }
+    _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, BPy_ImageGeometry_Class, _method, productJObj);
+    CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.ImageGeometry#createValidRect(Lorg/esa/beam/framework/datamodel/Product;)Ljava/awt/geom/Rectangle2D;");
+    _resultPyObj = BPy_FromJObject(&Rectangle2D_Type, _resultJObj);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }
@@ -32588,7 +33068,7 @@ PyObject* BeamPyFlagCoding_getAttributeDouble(PyObject* self, PyObject* args)
     return PyFloat_FromDouble(_result);
 }
 
-PyObject* BeamPyFlagCoding_getAttributeUTC(PyObject* self, PyObject* args)
+PyObject* BeamPyFlagCoding_getAttributeUTC2(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
     
@@ -32602,7 +33082,7 @@ PyObject* BeamPyFlagCoding_getAttributeUTC(PyObject* self, PyObject* args)
     if (!BPy_InitApi()) {
         return NULL;
     }
-    if (!BPy_InitJMethod(&_method, BPy_FlagCoding_Class, "org.esa.beam.framework.datamodel.FlagCoding", "getAttributeUTC", "(Ljava/lang/String;Lorg/esa/beam/framework/datamodel/ProductData/UTC;)Lorg/esa/beam/framework/datamodel/ProductData/UTC;", 0)) {
+    if (!BPy_InitJMethod(&_method, BPy_FlagCoding_Class, "org.esa.beam.framework.datamodel.FlagCoding", "getAttributeUTC", "(Ljava/lang/String;Lorg/esa/beam/framework/datamodel/ProductData$UTC;)Lorg/esa/beam/framework/datamodel/ProductData$UTC;", 0)) {
         return NULL;
     }
     _thisJObj = JObject_AsJObjectRefT(self, BPy_FlagCoding_Class);
@@ -32622,7 +33102,39 @@ PyObject* BeamPyFlagCoding_getAttributeUTC(PyObject* self, PyObject* args)
         }
     }
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, nameJObj, defaultValueJObj);
-    CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.FlagCoding#getAttributeUTC(Ljava/lang/String;Lorg/esa/beam/framework/datamodel/ProductData/UTC;)Lorg/esa/beam/framework/datamodel/ProductData/UTC;");
+    CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.FlagCoding#getAttributeUTC(Ljava/lang/String;Lorg/esa/beam/framework/datamodel/ProductData$UTC;)Lorg/esa/beam/framework/datamodel/ProductData$UTC;");
+    _resultPyObj = BPy_FromJObject(&ProductData_UTC_Type, _resultJObj);
+    (*jenv)->DeleteLocalRef(jenv, nameJObj);
+    (*jenv)->DeleteLocalRef(jenv, _resultJObj);
+    return _resultPyObj;
+}
+
+PyObject* BeamPyFlagCoding_getAttributeUTC1(PyObject* self, PyObject* args)
+{
+    static jmethodID _method = NULL;
+    
+    jobject _thisJObj = NULL;
+    const char* name = NULL;
+    jstring nameJObj = NULL;
+    PyObject* _resultPyObj = NULL;
+    jobject _resultJObj = NULL;
+    if (!BPy_InitApi()) {
+        return NULL;
+    }
+    if (!BPy_InitJMethod(&_method, BPy_FlagCoding_Class, "org.esa.beam.framework.datamodel.FlagCoding", "getAttributeUTC", "(Ljava/lang/String;)Lorg/esa/beam/framework/datamodel/ProductData$UTC;", 0)) {
+        return NULL;
+    }
+    _thisJObj = JObject_AsJObjectRefT(self, BPy_FlagCoding_Class);
+    if (_thisJObj == NULL) {
+        PyErr_SetString(PyExc_ValueError, "argument 'self' must be of type 'FlagCoding' (Java object reference)");
+        return NULL;
+    }
+    if (!PyArg_ParseTuple(args, "s:getAttributeUTC", &name)) {
+        return NULL;
+    }
+    nameJObj =(*jenv)->NewStringUTF(jenv, name);
+    _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method, nameJObj);
+    CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.FlagCoding#getAttributeUTC(Ljava/lang/String;)Lorg/esa/beam/framework/datamodel/ProductData$UTC;");
     _resultPyObj = BPy_FromJObject(&ProductData_UTC_Type, _resultJObj);
     (*jenv)->DeleteLocalRef(jenv, nameJObj);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
@@ -32729,7 +33241,7 @@ PyObject* BeamPyFlagCoding_setAttributeUTC(PyObject* self, PyObject* args)
     if (!BPy_InitApi()) {
         return NULL;
     }
-    if (!BPy_InitJMethod(&_method, BPy_FlagCoding_Class, "org.esa.beam.framework.datamodel.FlagCoding", "setAttributeUTC", "(Ljava/lang/String;Lorg/esa/beam/framework/datamodel/ProductData/UTC;)V", 0)) {
+    if (!BPy_InitJMethod(&_method, BPy_FlagCoding_Class, "org.esa.beam.framework.datamodel.FlagCoding", "setAttributeUTC", "(Ljava/lang/String;Lorg/esa/beam/framework/datamodel/ProductData$UTC;)V", 0)) {
         return NULL;
     }
     _thisJObj = JObject_AsJObjectRefT(self, BPy_FlagCoding_Class);
@@ -32749,7 +33261,7 @@ PyObject* BeamPyFlagCoding_setAttributeUTC(PyObject* self, PyObject* args)
         }
     }
     (*jenv)->CallVoidMethod(jenv, _thisJObj, _method, nameJObj, valueJObj);
-    CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.FlagCoding#setAttributeUTC(Ljava/lang/String;Lorg/esa/beam/framework/datamodel/ProductData/UTC;)V");
+    CHECK_JVM_EXCEPTION("org.esa.beam.framework.datamodel.FlagCoding#setAttributeUTC(Ljava/lang/String;Lorg/esa/beam/framework/datamodel/ProductData$UTC;)V");
     (*jenv)->DeleteLocalRef(jenv, nameJObj);
     return Py_BuildValue("");
 }
@@ -38782,6 +39294,55 @@ PyObject* BeamPyProductUtils_createGeoBoundary3(PyObject* self, PyObject* args)
     return _resultPyObj;
 }
 
+PyObject* BeamPyProductUtils_getClosestGeoPos(PyObject* self, PyObject* args)
+{
+    static jmethodID _method = NULL;
+    PyObject* gcPyObj = NULL;
+    jobject gcJObj = NULL;
+    PyObject* origPosPyObj = NULL;
+    jobject origPosJObj = NULL;
+    PyObject* regionPyObj = NULL;
+    jobject regionJObj = NULL;
+    jint step = (jint) 0;
+    PyObject* _resultPyObj = NULL;
+    jobject _resultJObj = NULL;
+    if (!BPy_InitApi()) {
+        return NULL;
+    }
+    if (!BPy_InitJMethod(&_method, BPy_ProductUtils_Class, "org.esa.beam.util.ProductUtils", "getClosestGeoPos", "(Lorg/esa/beam/framework/datamodel/GeoCoding;Lorg/esa/beam/framework/datamodel/PixelPos;Ljava/awt/Rectangle;I)Lorg/esa/beam/framework/datamodel/GeoPos;", 1)) {
+        return NULL;
+    }
+    if (!PyArg_ParseTuple(args, "OOOi:getClosestGeoPos", &gcPyObj, &origPosPyObj, &regionPyObj, &step)) {
+        return NULL;
+    }
+    {
+        jboolean ok = 1;
+        gcJObj = BPy_ToJObjectT(gcPyObj, BPy_GeoCoding_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
+    }
+    {
+        jboolean ok = 1;
+        origPosJObj = BPy_ToJObjectT(origPosPyObj, BPy_PixelPos_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
+    }
+    {
+        jboolean ok = 1;
+        regionJObj = BPy_ToJObjectT(regionPyObj, BPy_Rectangle_Class, &ok);
+        if (!ok) {
+            return NULL;
+        }
+    }
+    _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, BPy_ProductUtils_Class, _method, gcJObj, origPosJObj, regionJObj, step);
+    CHECK_JVM_EXCEPTION("org.esa.beam.util.ProductUtils#getClosestGeoPos(Lorg/esa/beam/framework/datamodel/GeoCoding;Lorg/esa/beam/framework/datamodel/PixelPos;Ljava/awt/Rectangle;I)Lorg/esa/beam/framework/datamodel/GeoPos;");
+    _resultPyObj = BPy_FromJObject(&GeoPos_Type, _resultJObj);
+    (*jenv)->DeleteLocalRef(jenv, _resultJObj);
+    return _resultPyObj;
+}
+
 PyObject* BeamPyProductUtils_createGeoBoundary4(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
@@ -40764,7 +41325,7 @@ PyObject* BeamPyProductUtils_getScanLineTime(PyObject* self, PyObject* args)
     if (!BPy_InitApi()) {
         return NULL;
     }
-    if (!BPy_InitJMethod(&_method, BPy_ProductUtils_Class, "org.esa.beam.util.ProductUtils", "getScanLineTime", "(Lorg/esa/beam/framework/datamodel/Product;D)Lorg/esa/beam/framework/datamodel/ProductData/UTC;", 1)) {
+    if (!BPy_InitJMethod(&_method, BPy_ProductUtils_Class, "org.esa.beam.util.ProductUtils", "getScanLineTime", "(Lorg/esa/beam/framework/datamodel/Product;D)Lorg/esa/beam/framework/datamodel/ProductData$UTC;", 1)) {
         return NULL;
     }
     if (!PyArg_ParseTuple(args, "Od:getScanLineTime", &productPyObj, &y)) {
@@ -40778,7 +41339,7 @@ PyObject* BeamPyProductUtils_getScanLineTime(PyObject* self, PyObject* args)
         }
     }
     _resultJObj = (*jenv)->CallStaticObjectMethod(jenv, BPy_ProductUtils_Class, _method, productJObj, y);
-    CHECK_JVM_EXCEPTION("org.esa.beam.util.ProductUtils#getScanLineTime(Lorg/esa/beam/framework/datamodel/Product;D)Lorg/esa/beam/framework/datamodel/ProductData/UTC;");
+    CHECK_JVM_EXCEPTION("org.esa.beam.util.ProductUtils#getScanLineTime(Lorg/esa/beam/framework/datamodel/Product;D)Lorg/esa/beam/framework/datamodel/ProductData$UTC;");
     _resultPyObj = BPy_FromJObject(&ProductData_UTC_Type, _resultJObj);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
