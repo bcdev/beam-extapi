@@ -108,7 +108,7 @@ public class CParameterGeneratorTest {
                         "const Band bandsElems, int bandsLength",
                         null,
                         "jarray bandsArray = NULL;",
-                        "bandsArray = beam_newJObjectArray(bandsElems, bandsLength, classBand);",
+                        "bandsArray = beam_newJObjectArray(bandsElems, bandsLength, _BandClass);",
                         "bandsArray",
                         null);
 
@@ -116,7 +116,7 @@ public class CParameterGeneratorTest {
                         "Band bandsElems, int bandsLength",
                         null,
                         "jarray bandsArray = NULL;",
-                        "bandsArray = beam_newJObjectArray(bandsElems, bandsLength, classBand);",
+                        "bandsArray = beam_newJObjectArray(bandsElems, bandsLength, _BandClass);",
                         "bandsArray",
                         null);
 
@@ -124,7 +124,7 @@ public class CParameterGeneratorTest {
                         "Band bandsElems, int bandsLength",
                         null,
                         "jarray bandsArray = NULL;",
-                        "bandsArray = beam_newJObjectArray(bandsElems, bandsLength, classBand);",
+                        "bandsArray = beam_newJObjectArray(bandsElems, bandsLength, _BandClass);",
                         "bandsArray",
                         null);
     }

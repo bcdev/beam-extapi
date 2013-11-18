@@ -2,20 +2,20 @@ PyObject* BeamPyTestClass2_getDuration(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
     
-    const char* _thisType = NULL;
-    unsigned PY_LONG_LONG _this = 0;
     jobject _thisJObj = NULL;
     jlong _result = (jlong) 0;
-    if (!beampy_initApi()) {
+    if (!BPy_InitApi()) {
         return NULL;
     }
-    if (!beampy_initJMethod(&_method, classTestClass2, "org.esa.beam.extapi.gen.test.TestClass2", "getDuration", "()J", 0)) {
+    if (!BPy_InitJMethod(&_method, BPy_TestClass2_Class, "org.esa.beam.extapi.gen.test.TestClass2", "getDuration", "()J", 0)) {
         return NULL;
     }
-    if (!PyArg_ParseTuple(args, "(sK):BeamPyTestClass2_getDuration", &_thisType, &_this)) {
+    _thisJObj = JObject_AsJObjectRefT(self, BPy_TestClass2_Class);
+    if (_thisJObj == NULL) {
+        PyErr_SetString(PyExc_ValueError, "argument 'self' must be of type 'TestClass2' (Java object reference)");
         return NULL;
     }
-    _thisJObj = (jobject) _this;
     _result = (*jenv)->CallLongMethod(jenv, _thisJObj, _method);
+    CHECK_JVM_EXCEPTION("org.esa.beam.extapi.gen.test.TestClass2#getDuration()J");
     return PyLong_FromLongLong(_result);
 }

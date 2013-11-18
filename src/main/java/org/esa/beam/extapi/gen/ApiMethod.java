@@ -4,7 +4,6 @@ import com.sun.javadoc.ExecutableMemberDoc;
 import com.sun.javadoc.MethodDoc;
 import com.sun.javadoc.Parameter;
 import com.sun.javadoc.Type;
-import com.sun.javadoc.TypeVariable;
 
 import static org.esa.beam.extapi.gen.ApiInfo.unfoldType;
 

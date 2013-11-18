@@ -44,48 +44,78 @@ public class PyCParameterGeneratorTest {
     @Test
     public void test_CodeGenParameter_ObjectScalar() {
         testObjectScalar("product", Product.class, Modifier.IN,
-                         "const char* productType = NULL;\n" +
-                                 "unsigned PY_LONG_LONG product = 0;",
+                         "PyObject* productPyObj = NULL;",
                          "jobject productJObj = NULL;",
-                         "productJObj = (jobject) product;",
+                         "{\n" +
+                                 "    jboolean ok = 1;\n" +
+                                 "    productJObj = BPy_ToJObjectT(productPyObj, _ProductClass, &ok);\n" +
+                                 "    if (!ok) {\n" +
+                                 "        return NULL;\n" +
+                                 "    }\n" +
+                                 "}",
                          "productJObj", null, null);
         testObjectScalar("band", Band.class, Modifier.IN,
-                         "const char* bandType = NULL;\n" +
-                                 "unsigned PY_LONG_LONG band = 0;",
+                         "PyObject* bandPyObj = NULL;",
                          "jobject bandJObj = NULL;",
-                         "bandJObj = (jobject) band;",
+                         "{\n" +
+                                 "    jboolean ok = 1;\n" +
+                                 "    bandJObj = BPy_ToJObjectT(bandPyObj, _BandClass, &ok);\n" +
+                                 "    if (!ok) {\n" +
+                                 "        return NULL;\n" +
+                                 "    }\n" +
+                                 "}",
                          "bandJObj", null, null);
         testObjectScalar("data", ProductData.UShort.class, Modifier.IN,
-                         "const char* dataType = NULL;\n" +
-                                 "unsigned PY_LONG_LONG data = 0;",
+                         "PyObject* dataPyObj = NULL;",
                          "jobject dataJObj = NULL;",
-                         "dataJObj = (jobject) data;",
+                         "{\n" +
+                                 "    jboolean ok = 1;\n" +
+                                 "    dataJObj = BPy_ToJObjectT(dataPyObj, _UShortClass, &ok);\n" +
+                                 "    if (!ok) {\n" +
+                                 "        return NULL;\n" +
+                                 "    }\n" +
+                                 "}",
                          "dataJObj", null, null);
     }
 
     @Test
     public void test_CodeGenParameter_ObjectScalar_nonAPI() {
         testObjectScalar("point", Point2D.Double.class, Modifier.IN,
-                         "const char* pointType = NULL;\n" +
-                                 "unsigned PY_LONG_LONG point = 0;",
+                         "PyObject* pointPyObj = NULL;",
                          "jobject pointJObj = NULL;",
-                         "pointJObj = (jobject) point;",
+                         "{\n" +
+                                 "    jboolean ok = 1;\n" +
+                                 "    pointJObj = BPy_ToJObjectT(pointPyObj, _DoubleClass, &ok);\n" +
+                                 "    if (!ok) {\n" +
+                                 "        return NULL;\n" +
+                                 "    }\n" +
+                                 "}",
                          "pointJObj",
                          null,
                          null);
         testObjectScalar("file", File.class, Modifier.IN,
-                         "const char* fileType = NULL;\n" +
-                                 "unsigned PY_LONG_LONG file = 0;",
+                         "PyObject* filePyObj = NULL;",
                          "jobject fileJObj = NULL;",
-                         "fileJObj = (jobject) file;",
+                         "{\n" +
+                                 "    jboolean ok = 1;\n" +
+                                 "    fileJObj = BPy_ToJObjectT(filePyObj, _FileClass, &ok);\n" +
+                                 "    if (!ok) {\n" +
+                                 "        return NULL;\n" +
+                                 "    }\n" +
+                                 "}",
                          "fileJObj",
                          null,
                          null);
         testObjectScalar("parameters", Map.class, Modifier.IN,
-                         "const char* parametersType = NULL;\n" +
-                                 "unsigned PY_LONG_LONG parameters = 0;",
+                         "PyObject* parametersPyObj = NULL;",
                          "jobject parametersJObj = NULL;",
-                         "parametersJObj = (jobject) parameters;",
+                         "{\n" +
+                                 "    jboolean ok = 1;\n" +
+                                 "    parametersJObj = BPy_ToJObjectT(parametersPyObj, _MapClass, &ok);\n" +
+                                 "    if (!ok) {\n" +
+                                 "        return NULL;\n" +
+                                 "    }\n" +
+                                 "}",
                          "parametersJObj",
                          null,
                          null);
@@ -110,13 +140,13 @@ public class PyCParameterGeneratorTest {
                                    "PyObject* dataPyObj = NULL;\n" +
                                    "Py_buffer dataBuf;",
                            "jarray dataJObj = NULL;",
-                           "dataPyObj = beampy_getPrimitiveArrayBufferReadOnly(dataPyObj, &dataBuf, \"b\", -1);\n" +
+                           "dataPyObj = BPy_ToPrimitiveArrayBufferReadOnly(dataPyObj, &dataBuf, \"b\", -1);\n" +
                                    "if (dataPyObj == NULL) {\n" +
                                    "    return NULL;\n" +
                                    "}\n" +
                                    "dataData = (jboolean*) dataBuf.buf;\n" +
                                    "dataLength = dataBuf.len / dataBuf.itemsize;\n" +
-                                   "dataJObj = beampy_newJBooleanArrayFromBuffer(dataData, dataLength);\n" +
+                                   "dataJObj = BPy_NewJBooleanArrayFromBuffer(dataData, dataLength);\n" +
                                    "if (dataJObj == NULL) {\n" +
                                    "    return NULL;\n" +
                                    "}",
@@ -131,18 +161,18 @@ public class PyCParameterGeneratorTest {
                                    "PyObject* dataPyObj = NULL;\n" +
                                    "Py_buffer dataBuf;",
                            "jarray dataJObj = NULL;",
-                           "dataPyObj = beampy_getPrimitiveArrayBufferWritable(dataPyObj, &dataBuf, \"i\", -1);\n" +
+                           "dataPyObj = BPy_ToPrimitiveArrayBufferWritable(dataPyObj, &dataBuf, \"i\", -1);\n" +
                                    "if (dataPyObj == NULL) {\n" +
                                    "    return NULL;\n" +
                                    "}\n" +
                                    "dataData = (jint*) dataBuf.buf;\n" +
                                    "dataLength = dataBuf.len / dataBuf.itemsize;\n" +
-                                   "dataJObj = beampy_newJIntArrayFromBuffer(dataData, dataLength);\n" +
+                                   "dataJObj = BPy_NewJIntArrayFromBuffer(dataData, dataLength);\n" +
                                    "if (dataJObj == NULL) {\n" +
                                    "    return NULL;\n" +
                                    "}",
                            "dataJObj",
-                           "beampy_copyJIntArrayToBuffer((jarray) dataJObj, dataData, dataLength, dataPyObj);",
+                           "BPy_CopyJIntArrayToBuffer((jarray) dataJObj, dataData, dataLength, dataPyObj);",
                            "PyBuffer_Release(&dataBuf);\n" +
                                    "(*jenv)->DeleteLocalRef(jenv, dataJObj);");
 
@@ -152,21 +182,21 @@ public class PyCParameterGeneratorTest {
                                    "PyObject* dataPyObj = NULL;\n" +
                                    "Py_buffer dataBuf;",
                            "jarray dataJObj = NULL;",
-                           "dataPyObj = beampy_getPrimitiveArrayBufferWritable(dataPyObj, &dataBuf, \"d\", -1);\n" +
+                           "dataPyObj = BPy_ToPrimitiveArrayBufferWritable(dataPyObj, &dataBuf, \"d\", -1);\n" +
                                    "if (dataPyObj == NULL) {\n" +
                                    "    return NULL;\n" +
                                    "}\n" +
                                    "dataData = (jdouble*) dataBuf.buf;\n" +
                                    "dataLength = dataBuf.len / dataBuf.itemsize;\n" +
-                                   "dataJObj = beampy_newJDoubleArrayFromBuffer(dataData, dataLength);\n" +
+                                   "dataJObj = BPy_NewJDoubleArrayFromBuffer(dataData, dataLength);\n" +
                                    "if (dataJObj == NULL) {\n" +
                                    "    return NULL;\n" +
                                    "}",
                            "dataJObj",
                            "if (dataData != NULL && (*jenv)->IsSameObject(jenv, _resultJObj, dataJObj)) {\n" +
-                                   "    _resultPyObj = beampy_copyJDoubleArrayToBuffer((jarray) dataJObj, dataData, dataLength, dataPyObj);\n" +
+                                   "    _resultPyObj = BPy_CopyJDoubleArrayToBuffer((jarray) dataJObj, dataData, dataLength, dataPyObj);\n" +
                                    "} else {\n" +
-                                   "    _resultPyObj = beampy_newPyObjectFromJDoubleArray((jarray) dataJObj);\n" +
+                                   "    _resultPyObj = BPy_FromJDoubleArray((jarray) dataJObj);\n" +
                                    "}",
                            "PyBuffer_Release(&dataBuf);\n" +
                                    "(*jenv)->DeleteLocalRef(jenv, dataJObj);");
@@ -177,29 +207,46 @@ public class PyCParameterGeneratorTest {
         testObjectArray("bands", Band[].class, Modifier.IN,
                         "PyObject* bandsPyObj = NULL;",
                         "jarray bandsJObj = NULL;",
-                        "bandsJObj = beampy_newJObjectArrayFromPySeq(bandsPyObj, \"Band\");\n" +
-                                "if (bandsJObj == NULL) {\n" +
-                                "    return NULL;\n" +
-                                "}", "bandsJObj", null, "(*jenv)->DeleteLocalRef(jenv, bandsJObj);"
+                        "{\n" +
+                                "    jboolean ok = 1;\n" +
+                                "    bandsJObj = BPy_ToJObjectArrayT(bandsPyObj, _BandClass, &ok);\n" +
+                                "    if (!ok) {\n" +
+                                "        return NULL;\n" +
+                                "    }\n" +
+                                "}",
+                        "bandsJObj",
+                        null,
+                        "(*jenv)->DeleteLocalRef(jenv, bandsJObj);"
         );
 
         testObjectArray("bands", Band[].class, Modifier.OUT,
                         "PyObject* bandsPyObj = NULL;",
                         "jarray bandsJObj = NULL;",
-                        "bandsJObj = beampy_newJObjectArrayFromPySeq(bandsPyObj, \"Band\");\n" +
-                                "if (bandsJObj == NULL) {\n" +
-                                "    return NULL;\n" +
-                                "}", "bandsJObj", null, "(*jenv)->DeleteLocalRef(jenv, bandsJObj);"
+                        "{\n" +
+                                "    jboolean ok = 1;\n" +
+                                "    bandsJObj = BPy_ToJObjectArrayT(bandsPyObj, _BandClass, &ok);\n" +
+                                "    if (!ok) {\n" +
+                                "        return NULL;\n" +
+                                "    }\n" +
+                                "}",
+                        "bandsJObj",
+                        null,
+                        "(*jenv)->DeleteLocalRef(jenv, bandsJObj);"
         );
 
         testObjectArray("bands", Band[].class, Modifier.RETURN,
                         "PyObject* bandsPyObj = NULL;",
                         "jarray bandsJObj = NULL;",
-                        "bandsJObj = beampy_newJObjectArrayFromPySeq(bandsPyObj, \"Band\");\n" +
-                                "if (bandsJObj == NULL) {\n" +
-                                "    return NULL;\n" +
-                                "}", "bandsJObj",
-                        null, "(*jenv)->DeleteLocalRef(jenv, bandsJObj);"
+                        "{\n" +
+                                "    jboolean ok = 1;\n" +
+                                "    bandsJObj = BPy_ToJObjectArrayT(bandsPyObj, _BandClass, &ok);\n" +
+                                "    if (!ok) {\n" +
+                                "        return NULL;\n" +
+                                "    }\n" +
+                                "}",
+                        "bandsJObj",
+                        null,
+                        "(*jenv)->DeleteLocalRef(jenv, bandsJObj);"
         );
     }
 
@@ -208,9 +255,12 @@ public class PyCParameterGeneratorTest {
         testStringArray("names", String[].class, Modifier.IN,
                         "PyObject* namesPyObj = NULL;",
                         "jarray namesJObj = NULL;",
-                        "namesJObj = beampy_newJStringArrayFromPySeq(namesPyObj);\n" +
-                                "if (namesJObj == NULL) {\n" +
-                                "    return NULL;\n" +
+                        "{\n" +
+                                "    jboolean ok = 1;\n" +
+                                "    namesJObj = BPy_ToJStringArray(namesPyObj, &ok);\n" +
+                                "    if (!ok) {\n" +
+                                "        return NULL;\n" +
+                                "    }\n" +
                                 "}",
                         "namesJObj",
                         null,
@@ -220,9 +270,12 @@ public class PyCParameterGeneratorTest {
         testStringArray("names", String[].class, Modifier.OUT,
                         "PyObject* namesPyObj = NULL;",
                         "jarray namesJObj = NULL;",
-                        "namesJObj = beampy_newJStringArrayFromPySeq(namesPyObj);\n" +
-                                "if (namesJObj == NULL) {\n" +
-                                "    return NULL;\n" +
+                        "{\n" +
+                                "    jboolean ok = 1;\n" +
+                                "    namesJObj = BPy_ToJStringArray(namesPyObj, &ok);\n" +
+                                "    if (!ok) {\n" +
+                                "        return NULL;\n" +
+                                "    }\n" +
                                 "}",
                         "namesJObj",
                         null,
@@ -232,9 +285,12 @@ public class PyCParameterGeneratorTest {
         testStringArray("names", String[].class, Modifier.RETURN,
                         "PyObject* namesPyObj = NULL;",
                         "jarray namesJObj = NULL;",
-                        "namesJObj = beampy_newJStringArrayFromPySeq(namesPyObj);\n" +
-                                "if (namesJObj == NULL) {\n" +
-                                "    return NULL;\n" +
+                        "{\n" +
+                                "    jboolean ok = 1;\n" +
+                                "    namesJObj = BPy_ToJStringArray(namesPyObj, &ok);\n" +
+                                "    if (!ok) {\n" +
+                                "        return NULL;\n" +
+                                "    }\n" +
                                 "}",
                         "namesJObj",
                         null,

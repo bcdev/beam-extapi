@@ -2,23 +2,23 @@ PyObject* BeamPyTestClass2_getTimestamp(PyObject* self, PyObject* args)
 {
     static jmethodID _method = NULL;
     
-    const char* _thisType = NULL;
-    unsigned PY_LONG_LONG _this = 0;
     jobject _thisJObj = NULL;
     PyObject* _resultPyObj = NULL;
     jobject _resultJObj = NULL;
-    if (!beampy_initApi()) {
+    if (!BPy_InitApi()) {
         return NULL;
     }
-    if (!beampy_initJMethod(&_method, classTestClass2, "org.esa.beam.extapi.gen.test.TestClass2", "getTimestamp", "()Ljava/util/Date;", 0)) {
+    if (!BPy_InitJMethod(&_method, BPy_TestClass2_Class, "org.esa.beam.extapi.gen.test.TestClass2", "getTimestamp", "()Ljava/util/Date;", 0)) {
         return NULL;
     }
-    if (!PyArg_ParseTuple(args, "(sK):BeamPyTestClass2_getTimestamp", &_thisType, &_this)) {
+    _thisJObj = JObject_AsJObjectRefT(self, BPy_TestClass2_Class);
+    if (_thisJObj == NULL) {
+        PyErr_SetString(PyExc_ValueError, "argument 'self' must be of type 'TestClass2' (Java object reference)");
         return NULL;
     }
-    _thisJObj = (jobject) _this;
     _resultJObj = (*jenv)->CallObjectMethod(jenv, _thisJObj, _method);
-    _resultPyObj = beampy_newPyObjectFromJObject(_resultJObj, "Date");
+    CHECK_JVM_EXCEPTION("org.esa.beam.extapi.gen.test.TestClass2#getTimestamp()Ljava/util/Date;");
+    _resultPyObj = BPy_FromJObject(&Date_Type, _resultJObj);
     (*jenv)->DeleteLocalRef(jenv, _resultJObj);
     return _resultPyObj;
 }

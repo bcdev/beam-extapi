@@ -42,10 +42,12 @@ public class ApiGeneratorConfigImplTest {
         final ApiGeneratorConfig config = ApiGeneratorConfigImpl.load();
         String[] sourcePaths = config.getPackages();
         assertArrayEquals(new String[]{
-                "org.esa.beam.framework.datamodel",
-                "org.esa.beam.framework.dataio",
-                "org.esa.beam.framework.gpf",
-                "org.esa.beam.util"
+                "org.esa.beam.framework.datamodel" ,
+                        "org.esa.beam.framework.dataio" ,
+                        "org.esa.beam.framework.gpf" ,
+                        "org.esa.beam.gpf.operators.standard" ,
+                        "org.esa.beam.util" ,
+                        "org.esa.beam.util.converters",
         }, sourcePaths);
     }
 }
