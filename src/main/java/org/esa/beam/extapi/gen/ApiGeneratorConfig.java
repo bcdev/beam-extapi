@@ -8,6 +8,8 @@ public interface ApiGeneratorConfig {
 
     boolean getIncludeDeprecatedMethods();
 
+    String getVersion();
+
     boolean isApiClass(String className);
 
     boolean isApiMethod(String className, String methodName, String methodSignature);

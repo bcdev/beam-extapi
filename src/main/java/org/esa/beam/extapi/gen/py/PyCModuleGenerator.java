@@ -75,6 +75,7 @@ public class PyCModuleGenerator extends ModuleGenerator {
         super(apiInfo, new PyCFunctionGeneratorFactory(apiInfo));
         getTemplateEval().add("libName", BEAM_PYAPI_NAME);
         getTemplateEval().add("libNameUC", BEAM_PYAPI_NAME.toUpperCase());
+        getTemplateEval().add("libVersion", apiInfo.getConfig().getVersion());
     }
 
     @Override

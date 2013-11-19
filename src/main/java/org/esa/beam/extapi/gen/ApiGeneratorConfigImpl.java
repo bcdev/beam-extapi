@@ -20,6 +20,7 @@ public class ApiGeneratorConfigImpl implements ApiGeneratorConfig {
     private final Map<String, Map<String, MethodConfig>> methodConfigsMap;
     private final boolean includeDeprecatedClasses;
     private final boolean includeDeprecatedMethods;
+    private final String version;
 
     @Override
     public boolean getIncludeDeprecatedClasses() {
@@ -31,6 +32,10 @@ public class ApiGeneratorConfigImpl implements ApiGeneratorConfig {
         return includeDeprecatedMethods;
     }
 
+    @Override
+    public String getVersion() {
+        return version;
+    }
 
     @Override
     public String[] getSourcePaths() {
@@ -95,9 +100,11 @@ public class ApiGeneratorConfigImpl implements ApiGeneratorConfig {
         ClassConfig[] classConfigs = parseClassConfigs(rootElement);
         String deprecatedClasses = rootElement.getAttributeValue("deprecatedClasses");
         String deprecatedMethods = rootElement.getAttributeValue("deprecatedMethods");
+        String version = rootElement.getChild("version").getValue();
         return new ApiGeneratorConfigImpl(sourcePaths, packages, classConfigs,
                                           deprecatedClasses != null && deprecatedClasses.equals("true"),
-                                          deprecatedMethods != null && deprecatedMethods.equals("true"));
+                                          deprecatedMethods != null && deprecatedMethods.equals("true"),
+                                          version);
     }
 
     private static Map<String, Map<String, MethodConfig>> createMethodConfigsMap(ClassConfig[] classConfigs) {
@@ -113,12 +120,18 @@ public class ApiGeneratorConfigImpl implements ApiGeneratorConfig {
         return classMap;
     }
 
-    private ApiGeneratorConfigImpl(String[] sourcePaths, String[] packages, ClassConfig[] classConfigs, boolean includeDeprecatedClasses, boolean includeDeprecatedMethods) {
+    private ApiGeneratorConfigImpl(String[] sourcePaths,
+                                   String[] packages,
+                                   ClassConfig[] classConfigs,
+                                   boolean includeDeprecatedClasses,
+                                   boolean includeDeprecatedMethods,
+                                   String version) {
         this.sourcePaths = sourcePaths;
         this.packages = packages;
         this.methodConfigsMap = createMethodConfigsMap(classConfigs);
         this.includeDeprecatedClasses = includeDeprecatedClasses;
         this.includeDeprecatedMethods = includeDeprecatedMethods;
+        this.version = version;
     }
 
     private static String[] getSourcePaths(Element rootElement, TemplateEval templateEval) {

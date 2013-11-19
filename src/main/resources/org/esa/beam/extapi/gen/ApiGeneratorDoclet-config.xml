@@ -1,6 +1,8 @@
 <config deprecatedClasses="false"
         deprecatedMethods="true">
 
+    <version>0.1</version>
+
     <sourcePaths>
         <path>${beamSourceDir}/beam-core/src/main/java</path>
         <path>${beamSourceDir}/beam-gpf/src/main/java</path>

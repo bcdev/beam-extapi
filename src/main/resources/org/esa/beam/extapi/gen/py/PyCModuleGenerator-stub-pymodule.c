@@ -25,6 +25,7 @@ int BPy_RegisterJObjectSubtypes(PyObject* module);
 PyMODINIT_FUNC PyInit_${libName}(void)
 {
     PyObject* module;
+    PyObject* version;
 
     fprintf(stdout, "${libName}: enter PyInit_${libName}()\n");
 
@@ -42,6 +43,13 @@ PyMODINIT_FUNC PyInit_${libName}(void)
     BeamPy_Error = PyErr_NewException("beampy.BeamError", NULL, NULL);
     Py_INCREF(BeamPy_Error);
     PyModule_AddObject(module, "error", BeamPy_Error);
+
+    /////////////////////////////////////////////////////////////////////////
+    // Register API version info
+
+    version = PyUnicode_FromString("${libVersion}");
+    Py_INCREF(version);
+    PyModule_AddObject(module, "version", version);
 
     /////////////////////////////////////////////////////////////////////////
     // Register CArray_Type

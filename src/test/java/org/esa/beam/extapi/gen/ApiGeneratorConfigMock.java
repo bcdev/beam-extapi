@@ -30,6 +30,11 @@ public class ApiGeneratorConfigMock implements ApiGeneratorConfig {
     }
 
     @Override
+    public String getVersion() {
+        return "test";
+    }
+
+    @Override
     public boolean isApiClass(String className) {
         return classMap.containsKey(className);
     }

@@ -48,6 +48,7 @@ public class CModuleGenerator extends ModuleGenerator {
         super(apiInfo, new CFunctionGeneratorFactory(apiInfo));
         getTemplateEval().add("libName", BEAM_CAPI_NAME);
         getTemplateEval().add("libNameUC", BEAM_CAPI_NAME.toUpperCase().replace("-", "_"));
+        getTemplateEval().add("libVersion", apiInfo.getConfig().getVersion());
     }
 
     @Override
