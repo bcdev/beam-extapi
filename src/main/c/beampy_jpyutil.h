@@ -92,6 +92,9 @@ jobjectArray BPy_ToJStringArray(PyObject* arg, jboolean* ok);
 
 jobject BPy_ToJMap(PyObject* arg, jboolean* ok);
 jobject BPy_ToJList(PyObject* arg, jboolean* ok);
+
+// Note: the following set of BPy_ToJ<Type>Array functions are not yet in use because we use buffers only (see BPy_ToPrimitiveArrayBuffer<mode>)
+
 /*
 jarray BPy_ToJBooleanArray(PyObject* arg, jboolean* ok);
 jarray BPy_ToJCharArray(PyObject* arg, jboolean* ok);
@@ -102,6 +105,7 @@ jarray BPy_ToJLongArray(PyObject* arg, jboolean* ok);
 jarray BPy_ToJFloatArray(PyObject* arg, jboolean* ok);
 jarray BPy_ToJDoubleArray(PyObject* arg, jboolean* ok);
 */
+
 /**@}*/
 
 

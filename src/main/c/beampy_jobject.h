@@ -62,9 +62,8 @@ jobjectArray JObject_AsJObjectArrayRef(PyObject* anyPyObj);
 
 jobjectArray JObject_AsJObjectArrayRefT(PyObject* anyPyObj, jclass requestedCompType);
 
-// todo - check if we need them here (should be local in C-file)
-//        used in derived type decls, but maybe PyType_Ready does the job?
 int JObject_init(JObject* self, PyObject* args, PyObject* kwds);
+
 void JObject_dealloc(JObject* self);
 
 

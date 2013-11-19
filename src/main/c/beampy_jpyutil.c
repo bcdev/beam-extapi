@@ -227,6 +227,7 @@ jstring BPy_NewJStringFromStr(PyObject* arg, jboolean* ok)
     }
 
     // todo: from Python 3.3 on, remove the following code...
+    // {{{
     if (sizeof (jchar) == sizeof (wchar_t)) {
         wchar_t* ucStr;
         Py_ssize_t ucLen;
@@ -262,6 +263,7 @@ jstring BPy_NewJStringFromStr(PyObject* arg, jboolean* ok)
         }
         strJObj = (*jenv)->NewStringUTF(jenv, ascStr);
     }
+    // }}}
 
     // todo: ... and use this one instead
     /* // {{{
@@ -508,7 +510,6 @@ jobjectArray BPy_ToJStringArray(PyObject* arg, jboolean* ok)
     return BPy_ToJObjectArrayT(arg, BPy_StringClass, ok);
 }
 
-
 jobjectArray BPy_ToJObjectArrayT(PyObject* arg, jclass compType, jboolean* ok)
 {
     jobjectArray argJObj = BPy_ToJObjectArrayDefault(arg, compType, ok);
@@ -523,46 +524,53 @@ jobjectArray BPy_ToJObjectArrayT(PyObject* arg, jclass compType, jboolean* ok)
     return BPy_ConvFailure("argument must be a sequence", ok);
 }
 
+// Note: the following set of BPy_ToJ<Type>Array functions are not yet in use because we use buffers only (see BPy_ToPrimitiveArrayBuffer<mode>)
+//{{{
+
 /*
+
 jarray BPy_ToJBooleanArray(PyObject* arg, jboolean* ok)
 {
-    return BPy_ConvFailure("TODO - implement conversion to Java boolean[]", ok);
+    return BPy_ConvFailure("not implemented:  conversion to Java boolean[]", ok);
 }
 
 jarray BPy_ToJCharArray(PyObject* arg, jboolean* ok)
 {
-    return BPy_ConvFailure("TODO - implement conversion to Java char[]", ok);
+    return BPy_ConvFailure("not implemented:  conversion to Java char[]", ok);
 }
 
 jarray BPy_ToJByteArray(PyObject* arg, jboolean* ok)
 {
-    return BPy_ConvFailure("TODO - implement conversion to Java byte[]", ok);
+    return BPy_ConvFailure("not implemented: conversion to Java byte[]", ok);
 }
 
 jarray BPy_ToJShortArray(PyObject* arg, jboolean* ok)
 {
-    return BPy_ConvFailure("TODO - implement conversion to Java short[]", ok);
+    return BPy_ConvFailure("not implemented: conversion to Java short[]", ok);
 }
 
 jarray BPy_ToJIntArray(PyObject* arg, jboolean* ok)
 {
-    return BPy_ConvFailure("TODO - implement conversion to Java int[]", ok);
+    return BPy_ConvFailure("not implemented: conversion to Java int[]", ok);
 }
 
 jarray BPy_ToJLongArray(PyObject* arg, jboolean* ok)
 {
-    return BPy_ConvFailure("TODO - implement conversion to Java long[]", ok);
+    return BPy_ConvFailure("not implemented: conversion to Java long[]", ok);
 }
 
 jarray BPy_ToJFloatArray(PyObject* arg, jboolean* ok)
 {
-    return BPy_ConvFailure("TODO - implement conversion to Java float[]", ok);
+    return BPy_ConvFailure("not implemented: conversion to Java float[]", ok);
 }
 
 jarray BPy_ToJDoubleArray(PyObject* arg, jboolean* ok)
 {
-    return BPy_ConvFailure("TODO - implement conversion to Java double[]", ok);
+    return BPy_ConvFailure("not implemented: conversion to Java double[]", ok);
 }
+
+//}}}
+
 */
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -680,8 +688,6 @@ PyObject* BPy_FromJString(jstring arg)
 
     return strPyObj;
 }
-
-// todo - implement the following BPy_FromJ<T>Array functions
 
 PyObject* BPy_FromJBooleanArray(jarray arg)
 {
