@@ -11,8 +11,8 @@ static PyObject* BeamPy_Error;
 jboolean BPy_InitApi(void);
 
 /**
- * Test Python --> Java conversion.
- * Registered as a beampy-module function.
+ * This is a test for Python --> Java conversions.
+ * Registered as a beampy-module function 'to_jobject'.
  * In Python, use e.g.: beampy.to_jobject('abc')
  */
 PyObject* BPy_to_jobject(PyObject* self, PyObject* args)
