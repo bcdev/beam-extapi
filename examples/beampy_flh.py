@@ -1,6 +1,5 @@
 import sys
 import numpy
-
 from beampy import String
 from beampy import Product
 from beampy import ProductData
@@ -23,12 +22,11 @@ k = 1.03
 
 width = sourceProduct.getSceneRasterWidth()
 height = sourceProduct.getSceneRasterHeight()
-targetName = 'FLH_Product'
-targetProduct = Product.newProduct(targetName, 'test', width, height)
+targetProduct = Product.newProduct('FLH_Product', 'FLH_Type', width, height)
 targetBand = targetProduct.addNewBand('FLH', ProductData.TYPE_FLOAT32)
 ProductUtils.copyGeoCoding(sourceProduct, targetProduct)
 targetProduct.setProductWriter(ProductIO.getProductWriter('GeoTIFF'))
-targetProduct.writeHeader(String.newString(targetName + '.tif'))
+targetProduct.writeHeader(String.newString('FLH_Product.tif'))
 
 r1 = numpy.zeros(width, dtype=numpy.float32)
 r2 = numpy.zeros(width, dtype=numpy.float32)
