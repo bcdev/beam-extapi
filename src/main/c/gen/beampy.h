@@ -79,7 +79,6 @@ extern PyTypeObject RenderedImage_Type;
 extern PyTypeObject Iterator_Type;
 extern PyTypeObject Mask_ImageType_Type;
 extern PyTypeObject File_Type;
-extern PyTypeObject Rectangle2D_Type;
 extern PyTypeObject GeoPos_Type;
 extern PyTypeObject ProductNodeGroup_Type;
 extern PyTypeObject ProductManager_Type;
