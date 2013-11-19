@@ -71,6 +71,13 @@ public class TestClass2 extends TestClass1 {
     }
 
     /*
+     * For testing of primitive array parameter passing.
+     */
+    public double[] transformCoordinates(double[] in) {
+        return null;
+    }
+
+    /*
      * For testing inner classes.
      */
     public static class Geom {

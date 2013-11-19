@@ -275,13 +275,13 @@ public abstract class PyCParameterGenerator implements ParameterGenerator {
             return eval("" +
                                 "${arg}PyObj = BPy_ToPrimitiveArrayBuffer${bufferMode}(${arg}PyObj, &${arg}Buf, \"${format}\", ${lengthExpr});\n" +
                                 "if (${arg}PyObj == NULL) {\n" +
-                                "    return NULL;\n" +  // todo - goto error label and release all buffers and JNI vars
+                                "    return NULL;\n" +  // todo - goto error label and release all buffers and deref all JNI vars
                                 "}\n" +
                                 "${arg}Data = (j${type}*) ${arg}Buf.buf;\n" +
                                 "${arg}Length = ${arg}Buf.len / ${arg}Buf.itemsize;\n" +
                                 "${arg}JObj = BPy_NewJ${primType}ArrayFromBuffer(${arg}Data, ${arg}Length);\n" +
                                 "if (${arg}JObj == NULL) {\n" +
-                                "    return NULL;\n" +  // todo - goto error label and release all buffers and JNI vars
+                                "    return NULL;\n" +  // todo - goto error label and release all buffers and deref all JNI vars
                                 "}",
                         kv("arg", getName()),
                         kv("type", typeName),

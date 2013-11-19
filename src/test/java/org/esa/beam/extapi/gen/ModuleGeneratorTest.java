@@ -117,6 +117,11 @@ public abstract class ModuleGeneratorTest {
     }
 
     @Test
+    public void testFunctionGenerators_TestClass2_transformCoordinates() throws Exception {
+        testFunctionGenerator(testClass2, "TestClass2_transformCoordinates.c", "transformCoordinates", "([D)[D");
+    }
+
+    @Test
     public void testFunctionGenerators_TestClass2_Geom_getId() throws Exception {
         testFunctionGenerator(testClass2Geom, "TestClass2_Geom_getId.c", "transform", "(Lorg/esa/beam/extapi/gen/test/TestClass2$Geom;)Lorg/esa/beam/extapi/gen/test/TestClass2$Geom;");
     }

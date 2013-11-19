@@ -81,7 +81,7 @@ public class ApiInfoTest {
 
         List<ApiMethod> apiMethods = apiInfo.getMethodsOf(apiClass1);
         assertNotNull(apiMethods);
-        assertEquals(11, apiMethods.size());
+        assertEquals(12, apiMethods.size());
 
         testMethod(apiMethods, "<init>", "()V");
         testMethod(apiMethods, "getPixel", "(II)F");
@@ -94,6 +94,7 @@ public class ApiInfoTest {
         testMethod(apiMethods, "getFiles", "(Ljava/lang/String;)[Ljava/io/File;");
         testMethod(apiMethods, "getPixelsForType", "(Ljava/lang/Class;)Ljava/lang/Object;");
         testMethod(apiMethods, "getPixelsForRect", "(Ljava/awt/geom/Rectangle2D;)[F");
+        testMethod(apiMethods, "transformCoordinates", "([D)[D");
 
         List<ApiConstant> apiConstants = apiInfo.getConstantsOf(apiClass1);
         assertEquals(3, apiConstants.size());
