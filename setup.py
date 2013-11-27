@@ -54,7 +54,8 @@ if WIN32:
 if LINUX:
     include_dirs += [JDK_HOME + '/include', JDK_HOME + '/include/linux']
     libraries = ['jvm']
-    library_dirs = [JDK_HOME + '/jre/lib/i386/server',
+    library_dirs = [JDK_HOME + '/jre/lib/amd64/server',
+                    JDK_HOME + '/jre/lib/i386/server',
                     JDK_HOME + '/lib']
 
 if DARWIN:
