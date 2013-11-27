@@ -25,7 +25,12 @@ How to build the Python API
 
 3. Compile generated BEAM Python API code and install Python module
 
-Unix:
+Notes:
+
+For generating beampy C code, we need the checked out BEAM source code.
+For building beampy, we need JDK_HOME in order to add a server JVM (libjvm.so/jmv.dll) to the compiler's library path (see setup.py)
+
+ Unix:
     export BEAM_HOME=<your-beam-home>
     export LD_LIBRARY_PATH=$BEAM_HOME/jre/lib/client:$LD_LIBRARY_PATH
     export JDK_HOME=<your-jdk-home>
@@ -38,6 +43,10 @@ Windows:
     python3 setup.py install
 
 4. Test
+
+For running beampy,
+* let BEAM_HOME point to a valid BEAM installation directory in order to let beampy collect the classpath from all JARs.
+* let LD_LIBRARY_PATH/PATH include a path to a server JVM (libjvm.so/jmv.dll)
 
     python3 examples/beampy_ndvi.py <some-meris-l1b-file>
 
