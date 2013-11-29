@@ -1,7 +1,42 @@
-Add BeamHelpers.py to API:
-- function to create product subset
-- function to create product reprojection
-
-Add BeamNumpy.py to API:
-- convert ProductData.TYPE_xxx to numpy data type value
+beam_jvm: Java VM successfully created
+beampy: exit PyInit_beampy()
+>>> p = beampy.ProductIO.readProduct('/mnt/hgfs/EOData/binning_L1/MER_RR__1PPBCM20110803.N1')
+>>> p
+beampy.Product(0x1eb3860)
+>>> p.getName()
+'MER_RR__1PPBCM20110803.N1'
+>>> p.getSceneRasterWidth()
+1121
+>>> p.getSceneRasterHeight()
+881
+>>> p.getNumBands()
+17
+>>> p.getBands()
+beampy.JObjectArray(0x1eb3858)
+>>> b = p.getBands()
+>>> a = []
+>>> a += b
+Exception in thread "main" java.lang.ArrayIndexOutOfBoundsException: 17
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+RuntimeError: JObjectArray_sq_item: jenv->GetObjectArrayElement() failed
+>>> len(b)
+17
+>>> b[0]
+beampy.JObject(0x1ea5070)
+>>> b[0].getName()
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+AttributeError: 'beampy.JObject' object has no attribute 'getName'
+>>> str(b[0])
+'org.esa.beam.framework.datamodel.Band[radiance_1,uint16,1121,881,0,412.691,9.937,1666.7998]'
+>>> exit
+Use exit() or Ctrl-D (i.e. EOF) to exit
+>>>
+norman@ubuntu:~/IdeaProjects/beam-extapi$ python3 examples/beampy_ndvi.py /mnt/hgfs/EOData/binning_L1/MER_RR__1PPBCM20110803.N1
+Traceback (most recent call last):
+  File "examples/beampy_ndvi.py", line 2, in <module>
+    import numpy
+ImportError: No module named numpy
+norman@ubuntu:~/IdeaProjects/beam-extapi$
 
