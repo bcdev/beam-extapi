@@ -144,6 +144,13 @@ char* beam_createJvmClassPathOption(void)
     Util_listDir(path, beam_createJvmClassPathOptionHandler, &class_path);
     free(path);
 
+    Util_appendString(&class_path, OS_PATHSEP);
+    Util_appendString(&class_path, beam_home);
+    Util_appendString(&class_path, OS_FILESEP);
+    Util_appendString(&class_path, "bin");
+    Util_appendString(&class_path, OS_FILESEP);
+    Util_appendString(&class_path, "ceres-launcher.jar");
+
     return class_path;
 }
 
