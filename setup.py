@@ -13,12 +13,9 @@ if JDK_HOME is None:
     exit(1)
 
 IS64 = sys.maxsize > 2 ** 32
-WIN32 = platform.system() == 'Windows'
-LINUX = platform.system() == 'Linux'
-DARWIN = platform.system() == 'Darwin'
 print('Building a %s-bit library for a %s system' % ('64' if IS64 else '32', platform.system()))
 
-if WIN32 and os.environ.get('VS90COMNTOOLS', None) is None:
+if platform.system() == 'Windows' and os.environ.get('VS90COMNTOOLS', None) is None:
     print('Note: If you get an error saying "Unable to find vcvarsall.bat",')
     print('      you may need to set environment variable VS90COMNTOOLS.')
     print('      If you use Visual Studio 2011, then: SET VS90COMNTOOLS=%VS100COMNTOOLS%,')
@@ -28,6 +25,8 @@ if len(sys.argv) > 1 and sys.argv[1] == 'install':
     print('Note: In order to use the "beampy" module, you need to set BEAM_HOME')
     print('      to a valid BEAM (>= v4.11) installation directory.')
     print('      Currently, BEAM_HOME =', os.environ.get('BEAM_HOME', None))
+
+print('Note: If the build fails, retry using the latest Oracle JDK v1.7')
 
 sources = ['src/main/c/beam_util.c',
            'src/main/c/beam_jvm.c',
@@ -44,32 +43,27 @@ define_macros = []
 extra_link_args = []
 extra_compile_args = []
 
-if WIN32:
+if platform.system() == 'Windows':
     define_macros += [('WIN32', '1')]
     include_dirs += [JDK_HOME + '/include', JDK_HOME + '/include/win32']
     libraries = ['jvm']
     library_dirs = [JDK_HOME + '/jre/lib/i386/server',
                     JDK_HOME + '/lib']
-
-if LINUX:
+elif platform.system() == 'Linux':
     include_dirs += [JDK_HOME + '/include', JDK_HOME + '/include/linux']
     libraries = ['jvm']
     library_dirs = [JDK_HOME + '/jre/lib/amd64/server',
                     JDK_HOME + '/jre/lib/i386/server',
                     JDK_HOME + '/lib']
+elif platform.system() == 'Darwin':
+    include_dirs += [JDK_HOME + '/include', JDK_HOME + '/include/darwin']
+    libraries = ['jvm']
+    library_dirs = [JDK_HOME + '/jre/lib/server/',
+                    JDK_HOME + '/lib']
+else:
+    print('Error: unsupported platform "'+platform.system()+'", please contact the BEAM user forum')
+    exit(1)
 
-if DARWIN:
-    include_dirs += [JDK_HOME + '/Headers']
-    libraries = ['server']
-    library_dirs = [JDK_HOME + '/Libraries']
-    extra_link_args += ['-framework JavaVM']
-    extra_compile_args += ['-framework JavaVM']
-    JDK_HOME = '/System/Library/Frameworks/JavaVM.framework'
-    BEAM_HOME = '/Applications/beam-4.11'
-    # todo - adapt settings for Mac OS X, JDK_HOME dir seems to have different structure
-    # see http://docs.python.org/3.2/distutils/setupscript.html
-    # see http://docs.python.org/3.2/distutils/apiref.html?highlight=setup#distutils.core.setup
-    # sudo ln -s /System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Libraries/libclient64.dylib /usr/lib/libclient.dylib
 
 setup(name='beampy',
       description='BEAM Python API',
